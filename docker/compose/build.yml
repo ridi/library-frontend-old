@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  www:
+    build:
+      context: ../../
+      dockerfile: ./docker/www/Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT}
+    image: ${ENVIRONMENT}/renderer/www:${TAG}
+  nginx:
+    build:
+      context: ../../
+      dockerfile: ./docker/nginx/Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT}
+    image: ${ENVIRONMENT}/renderer/nginx:${TAG}

@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  www:
+    extends:
+      file: common.yml
+      service: www
+    mem_limit: 1024m
+    mem_reservation: 512m
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /renderer/ecs/www/pm2
+        awslogs-region: ap-northeast-2
+        awslogs-stream-prefix: pm2
+  nginx:
+    extends:
+      file: common.yml
+      service: nginx
+    mem_limit: 512m
+    mem_reservation: 64m
+    restart: always
+    ports:
+      - 80
+    links:
+      - www
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /renderer/ecs/www/nginx
+        awslogs-region: ap-northeast-2
+        awslogs-stream-prefix: nginx
