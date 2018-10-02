@@ -4,10 +4,10 @@
   "description": "Rendering server with next.js",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "pm2-dev start pm2.config.js",
     "build": "next build src",
     "export": "next export src -o ./out",
-    "start": "NODE_ENV=production node server.js"
+    "start": "pm2 start pm2.config.js --env production"
   },
   "author": "",
   "license": "MIT",
