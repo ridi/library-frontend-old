@@ -1,0 +1,26 @@
+{
+  "name": "library-render",
+  "version": "0.0.1",
+  "description": "Rendering server with next.js",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build src",
+    "export": "next export src -o ./out",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^7.0.0",
+    "next-redux-wrapper": "^2.0.0",
+    "next-routes": "^1.4.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0"
+  }
+}
