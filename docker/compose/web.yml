@@ -10,9 +10,9 @@ services:
     logging:
       driver: awslogs
       options:
-        awslogs-group: /renderer/ecs/www/pm2
+        awslogs-group: /renderer/ecs/www/node
         awslogs-region: ap-northeast-2
-        awslogs-stream-prefix: pm2
+        awslogs-stream-prefix: node
   nginx:
     extends:
       file: common.yml
