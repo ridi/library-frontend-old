@@ -3,8 +3,8 @@ const next = require('next');
 const routes = require('./src/routes');
 const nextConfig = require('./next.config');
 
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev, dir: './src', conf: nextConfig });
+const isLocal = process.env.NODE_ENV === 'local';
+const app = next({ dev: isLocal, dir: './src', conf: nextConfig });
 
 const handle = routes.getRequestHandler(app);
 
