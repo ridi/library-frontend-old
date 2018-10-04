@@ -9,7 +9,7 @@ import Layout from '../components/Layout';
 
 const PostLink = ({ id, name }) => (
   <li>
-    <Link as={`/p/${id}`} href={`/post?id=${id}`}>
+    <Link prefetch as={`/p/${id}`} href={`/post?id=${id}`}>
       <a>{name}</a>
     </Link>
   </li>
