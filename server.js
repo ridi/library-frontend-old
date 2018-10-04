@@ -13,7 +13,7 @@ app.prepare()
     const server = express();
 
     server.get('/health', (req, res) => {
-      return handle(req, res);
+      res.send('I am healthy');
     });
 
     server.get('*', (req, res) => {
@@ -26,7 +26,7 @@ app.prepare()
       console.log('> Ready on ' + port);
     });
   })
-  .catch((ex) => {
-    console.error(ex.stack);
+  .catch(exc => {
+    console.error(exc.stack);
     process.exit(1);
   });

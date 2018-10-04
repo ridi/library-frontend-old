@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: "Library Rendering Server",
-      script: "./src/server.js",
+      script: "./server.js",
       env: {
         "PORT": 8080,
         "NODE_ENV": "development"
