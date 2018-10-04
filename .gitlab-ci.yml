@@ -22,9 +22,14 @@ build:
   only:
     - master
   script:
+    - apk add yarn
     - export TAG=${CI_COMMIT_SHA::8}
     - "`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`"
     - sh scripts/push.sh
+    - yarn install
+    - yarn build
+    - yarn export
+    - aws s3 sync ./out library-static.dev.ridi.io
     - sh scripts/deploy.sh
   
 
