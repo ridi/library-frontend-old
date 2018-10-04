@@ -5,8 +5,8 @@ services:
     extends:
       file: common.yml
       service: www
-    mem_limit: 1024m
-    mem_reservation: 512m
+    mem_limit: 512m
+    mem_reservation: 256m
     logging:
       driver: awslogs
       options:
