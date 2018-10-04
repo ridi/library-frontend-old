@@ -24,8 +24,8 @@ build:
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - "`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`"
-    - sh script/push.sh
-    - sh script/deploy.sh
+    - sh scripts/push.sh
+    - sh scripts/deploy.sh
   
 
 development:
