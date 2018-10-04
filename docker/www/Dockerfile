@@ -4,8 +4,10 @@ ADD . /htdocs/www/
 RUN chown -R www-data.www-data /htdocs/www/
 WORKDIR /htdocs/www
 
-RUN npm install -g yarn
+RUN yarn global add pm2
 RUN yarn install
 
+ARG ENVIRONMENT
 EXPOSE 8080
-CMD [ "yarn", "run", "start" ]
+ENTRYPOINT ["yarn"]
+CMD [ "run", "start", "--", "--env", $ENVIRONMENT ]

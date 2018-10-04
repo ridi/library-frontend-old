@@ -3,6 +3,6 @@ version: '2'
 services:
   www:
     image: ${ECR_REPO_URL}/${ENVIRONMENT}/renderer/www:${TAG}
-
+    command: [run", "start", "--", "--env", $ENVIRONMENT]
   nginx:
     image: ${ECR_REPO_URL}/${ENVIRONMENT}/renderer/nginx:${TAG}
