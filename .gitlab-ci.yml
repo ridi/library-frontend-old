@@ -15,7 +15,7 @@ build:
   stage: build
   script:
     - export TAG=${CI_COMMIT_SHA::8}
-    - S3_PATH=$DEV_S3_PATH sh scripts/upload.sh
+    - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID DEV_AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh scripts/upload.sh
     - ENVIRONMENT=development docker-compose -f ./docker/compose/build.yml build
 
 
