@@ -26,4 +26,4 @@ if [ $? -ne 0 ]; then
 fi
 
 
-curl -X POST --data-urlencode "payload={\"text\": \"[$ENVIRONMENT - $TAG] 구매목록 SSR서버 배포가 완료되었습니다!!!!!!!\nRepo: https://gitlab.ridi.io/account/library-render\"}" $SLACK_DEPLOY_HOOK
+curl -X POST --data-urlencode "payload={\"text\": \"[$ENVIRONMENT - $TAG] 내 서재 배포가 완료되었습니다!!!!!!!\nRepo: https://gitlab.ridi.io/account/library-render\"}" $SLACK_DEPLOY_HOOK

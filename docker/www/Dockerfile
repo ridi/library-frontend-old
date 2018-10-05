@@ -6,7 +6,6 @@ WORKDIR /htdocs/www
 
 RUN yarn global add pm2
 RUN yarn install
-RUN yarn run build
 
 ARG ENVIRONMENT
 EXPOSE 8080

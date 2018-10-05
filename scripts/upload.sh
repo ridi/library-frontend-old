@@ -2,6 +2,6 @@
 set -e
 
 yarn install
-yarn build
-yarn export
+yarn run build
+yarn run export
 aws s3 sync ./out $S3_PATH

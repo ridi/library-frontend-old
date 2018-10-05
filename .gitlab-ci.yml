@@ -7,11 +7,15 @@ stages:
 .aws-docker: &aws-docker
   image: ridibooks/gitlab-ci-docker-aws:latest
 
+before_script:
+  - apk add nodejs yarn
+
 build:
   <<: *aws-docker
   stage: build
   script:
     - export TAG=${CI_COMMIT_SHA::8}
+    - S3_PATH=$DEV_S3_PATH sh scripts/upload.sh
     - ENVIRONMENT=development docker-compose -f ./docker/compose/build.yml build
 
 
@@ -22,11 +26,9 @@ build:
   only:
     - master
   script:
-    - apk add nodejs yarn
     - export TAG=${CI_COMMIT_SHA::8}
     - "`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`"
     - sh scripts/push.sh
-    - sh scripts/upload.sh
     - sh scripts/deploy.sh
   
 
@@ -38,3 +40,23 @@ development:
     ECR_REPO_URL: $DEV_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+
+
+staging:
+  <<: *deployment
+  variables:
+    ENVIRONMENT: "staging"
+    S3_PATH: $STAGING_S3_PATH
+    ECR_REPO_URL: $STAGING_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+
+
+production:
+  <<: *deployment
+  variables:
+    ENVIRONMENT: "production"
+    S3_PATH: $PROD_S3_PATH
+    ECR_REPO_URL: $PROD_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
