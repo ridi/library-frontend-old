@@ -37,7 +37,6 @@ development:
   <<: *deployment
   variables:
     ENVIRONMENT: "development"
-    S3_PATH: $DEV_S3_PATH
     ECR_REPO_URL: $DEV_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
@@ -47,7 +46,6 @@ staging:
   <<: *deployment
   variables:
     ENVIRONMENT: "staging"
-    S3_PATH: $STAGING_S3_PATH
     ECR_REPO_URL: $STAGING_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
@@ -57,7 +55,6 @@ production:
   <<: *deployment
   variables:
     ENVIRONMENT: "production"
-    S3_PATH: $PROD_S3_PATH
     ECR_REPO_URL: $PROD_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
