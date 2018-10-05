@@ -19,6 +19,10 @@ build:
     - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh scripts/upload.sh
     - ENVIRONMENT=development docker-compose -f ./docker/compose/build.yml build
 
+    - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH sh scripts/upload.sh
+    - ENVIRONMENT=production docker-compose -f ./docker/compose/build.yml build
+    - ENVIRONMENT=staging docker-compose -f ./docker/compose/build.yml build
+
 
 .deployment-template: &deployment
   <<: *aws-docker
@@ -43,12 +47,21 @@ development:
 
 
 staging:
-  <<: *deployment
+  <<: *aws-docker
+  stage: deploy
+  when: manual
+  only:
+    - master
   variables:
     ENVIRONMENT: "staging"
-    ECR_REPO_URL: $STAGING_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+    ECR_REPO_URL: $PROD_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+  script:
+    - export TAG=${CI_COMMIT_SHA::8}
+    - "`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`"
+    - sh scripts/push.sh
+    - sh scripts/staging_deploy.sh
 
 
 production:
