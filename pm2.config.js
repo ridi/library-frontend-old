@@ -4,6 +4,7 @@ module.exports = {
     {
       name: "Library Rendering Server",
       script: "./server.js",
+      kill_timeout: 3000,
       env: {
         "PORT": 8080,
         "NODE_ENV": "local",

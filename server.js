@@ -30,3 +30,15 @@ app.prepare()
     console.error(exc.stack);
     process.exit(1);
   });
+
+
+  process.on('SIGINT', () => {
+    console.info('SIGINT signal received.')
+
+    server.close((err) => {
+      if (err) {
+        console.log(err);
+        process.exit(1);
+      }
+    });
+  });
