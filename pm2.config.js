@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: "Library Rendering Server",
-      script: "./server.js",
+      script: "server.js",
       kill_timeout: 3000,
       env: {
         "PORT": 8080,

@@ -5,7 +5,6 @@ const nextConfig = require('./next.config');
 
 const isLocal = process.env.NODE_ENV === 'local';
 const app = next({ dev: isLocal, dir: './src', conf: nextConfig });
-
 const handle = routes.getRequestHandler(app);
 
 app.prepare()
@@ -21,7 +20,7 @@ app.prepare()
     });
 
     const port = process.env.PORT || 8080;
-    server.listen(port, (err) => {
+    const listener = server.listen(port, (err) => {
       if (err) throw err;
       console.log('> Ready on ' + port);
     });
@@ -29,7 +28,7 @@ app.prepare()
     process.on('SIGINT', () => {
       console.info('SIGINT signal received.')
 
-      server.close((err) => {
+      listener.close((err) => {
         if (err) {
           console.log(err);
           process.exit(1);
