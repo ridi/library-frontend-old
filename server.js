@@ -25,20 +25,19 @@ app.prepare()
       if (err) throw err;
       console.log('> Ready on ' + port);
     });
+
+    process.on('SIGINT', () => {
+      console.info('SIGINT signal received.')
+
+      server.close((err) => {
+        if (err) {
+          console.log(err);
+          process.exit(1);
+        }
+      });
+    });
   })
   .catch(exc => {
     console.error(exc.stack);
     process.exit(1);
-  });
-
-
-  process.on('SIGINT', () => {
-    console.info('SIGINT signal received.')
-
-    server.close((err) => {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-    });
   });
