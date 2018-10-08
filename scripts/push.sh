@@ -19,8 +19,8 @@ run_and_check_exit_code() {
 }
 
 # push image
-run_and_check_exit_code "ecs-cli push $ENVIRONMENT/library/www:$TAG"
-run_and_check_exit_code "ecs-cli push $ENVIRONMENT/library/nginx:$TAG"
+run_and_check_exit_code "ecs-cli push $ENVIRONMENT/library_web/www:$TAG"
+run_and_check_exit_code "ecs-cli push $ENVIRONMENT/library_web/nginx:$TAG"
 
 if [ $? -ne 0 ]; then
     echo "push fails"
