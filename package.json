@@ -6,7 +6,7 @@
   "scripts": {
     "build": "next build src",
     "export": "next export src -o ./out",
-    "start": "pm2 start pm2.config.js --no-daemon"
+    "start": "pm2-runtime start pm2.config.js"
   },
   "author": "",
   "license": "MIT",
