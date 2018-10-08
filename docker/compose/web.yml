@@ -10,7 +10,7 @@ services:
     logging:
       driver: awslogs
       options:
-        awslogs-group: /renderer/ecs/www/node
+        awslogs-group: /library_web/ecs/www/node
         awslogs-region: ap-northeast-2
         awslogs-stream-prefix: node
   nginx:
@@ -27,6 +27,6 @@ services:
     logging:
       driver: awslogs
       options:
-        awslogs-group: /renderer/ecs/www/nginx
+        awslogs-group: /library_web/ecs/www/nginx
         awslogs-region: ap-northeast-2
         awslogs-stream-prefix: nginx

@@ -7,11 +7,11 @@ services:
       dockerfile: ./docker/www/Dockerfile
       args:
         ENVIRONMENT: ${ENVIRONMENT}
-    image: ${ENVIRONMENT}/library/www:${TAG}
+    image: ${ENVIRONMENT}/library_web/www:${TAG}
   nginx:
     build:
       context: ../../
       dockerfile: ./docker/nginx/Dockerfile
       args:
         ENVIRONMENT: ${ENVIRONMENT}
-    image: ${ENVIRONMENT}/library/nginx:${TAG}
+    image: ${ENVIRONMENT}/library_web/nginx:${TAG}
