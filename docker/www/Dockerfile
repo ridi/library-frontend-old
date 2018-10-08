@@ -9,5 +9,5 @@ RUN yarn install
 
 ARG ENVIRONMENT
 EXPOSE 8080
-ENTRYPOINT ["yarn"]
-CMD [ "run", "start", "--env", $ENVIRONMENT ]
+ENTRYPOINT ["pm2-runtime"]
+CMD [ "start", "pm2.config.js", "--env", $ENVIRONMENT ]

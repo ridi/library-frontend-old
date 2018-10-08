@@ -3,6 +3,6 @@ version: '2'
 services:
   www:
     image: ${ECR_REPO_URL}/${ENVIRONMENT}/library_web/www:${TAG}
-    command: ["run", "start", "--env", $ENVIRONMENT]
+    command: ["start", "pm2.config.js", "--env", $ENVIRONMENT]
   nginx:
     image: ${ECR_REPO_URL}/${ENVIRONMENT}/library_web/nginx:${TAG}
