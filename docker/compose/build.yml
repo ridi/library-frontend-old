@@ -5,8 +5,6 @@ services:
     build:
       context: ../../
       dockerfile: ./docker/www/Dockerfile
-      args:
-        ENVIRONMENT: ${ENVIRONMENT}
     image: ${ENVIRONMENT}/library_web/www:${TAG}
   nginx:
     build:
