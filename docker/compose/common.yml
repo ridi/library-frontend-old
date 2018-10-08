@@ -2,7 +2,7 @@ version: '2'
 
 services:
   www:
-    image: ${ECR_REPO_URL}/${ENVIRONMENT}/renderer/www:${TAG}
+    image: ${ECR_REPO_URL}/${ENVIRONMENT}/library/www:${TAG}
     command: ["run", "start", "--env", $ENVIRONMENT]
   nginx:
-    image: ${ECR_REPO_URL}/${ENVIRONMENT}/renderer/nginx:${TAG}
+    image: ${ECR_REPO_URL}/${ENVIRONMENT}/library/nginx:${TAG}
