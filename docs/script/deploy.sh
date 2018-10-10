@@ -18,7 +18,7 @@ run_and_check_exit_code() {
     done
 }
 
-run_and_check_exit_code "ecs-cli compose --cluster library-staging-cluster --project-name library-staging-web -f docker/compose/web.yml service up"
+run_and_check_exit_code "ecs-cli compose --cluster library-cluster --project-name library-web -f docs/docker/compose/web.yml service up"
 
 if [ $? -ne 0 ]; then
     echo "deploy fails"
