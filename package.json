@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "local": "pm2-runtime start pm2.config.js --only App --env local",
-    "dev": "pm2-runtime start pm2.config.js --only App --env development",
     "build": "next build src",
     "export": "next export src -o ./out"
   },
