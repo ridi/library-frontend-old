@@ -25,15 +25,24 @@ app.prepare()
       console.log('> Ready on ' + port);
     });
 
-    process.on('SIGINT', () => {
-      console.info('SIGINT signal received.')
 
+    // Register Signals
+    const closeListener = () => {
       listener.close((err) => {
         if (err) {
           console.log(err);
           process.exit(1);
         }
       });
+    };
+
+    process.on('SIGINT', () => {
+      console.info('SIGINT signal received.')
+      closeListener();
+    });
+    process.on('SIGTERM', function () {
+      console.log('SIGTERM received');
+      closeListener();
     });
   })
   .catch(exc => {
