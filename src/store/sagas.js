@@ -5,6 +5,6 @@ import showsRootSaga from '../services/shows/sagas';
 
 export default function* rootSaga() {
   yield all([
-
+    showsRootSaga(),
   ]);
 }
