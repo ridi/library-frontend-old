@@ -1,9 +1,10 @@
 
 import withRedux from 'next-redux-wrapper';
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga'
 
 import rootReducer from './reducers';
+import rootSaga from './sagas';
 import bootstrap from './bootstrap';
 
 const makeMiddlewares = () => {
@@ -25,12 +26,19 @@ const makeStore = (initialState = {}, context) => {
 
   const composeEnhancer = makeComposeEnhancer(isServer);
   const middlewares = makeMiddlewares();
+
+  const sagaMiddleware = createSagaMiddleware();
   
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancer(applyMiddleware(...middlewares))
+    composeEnhancer(applyMiddleware(sagaMiddleware, ...middlewares))
   );
+
+  store.runSagaTask = () => {
+    store.sagaTask = sagaMiddleware.run(rootSaga);
+  };
+  store.runSagaTask();
 
   bootstrap(store, isServer);
   return store;

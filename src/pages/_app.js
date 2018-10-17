@@ -1,11 +1,12 @@
 
 import { Provider } from "react-redux";
 import App, { Container } from "next/app";
+import withReduxSaga from "next-redux-saga";
 
+import flow from '../utils/flow';
 import injectStore from '../store';
 
-
-export default injectStore(class extends App {
+class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };
@@ -21,4 +22,6 @@ export default injectStore(class extends App {
         </Container>
     );
   }
-});
+};
+
+export default flow([withReduxSaga, injectStore], LibraryApp);

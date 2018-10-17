@@ -3148,6 +3148,11 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.5.2.tgz#489105ce7bc54e709d736b195f82135048c50fcc"
   integrity sha512-vdqTKI9GBIYcAEbFAcpKPErKINfPF5zIuz3/niBfq8WUZjpT2tytLlFVrBgWdOtqI4uaA/Rb6No0hux39XXDuw==
 
+next-redux-saga@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/next-redux-saga/-/next-redux-saga-3.0.0.tgz#8a934483fc48149ff1fd6f091fbbbf884fd2883b"
+  integrity sha512-uc7CgbS03sZUQEdlkiUEP5J/ZGRMvq417BPYD5x7qqyowCyeus3Gtooo801vCM1PvSHlv/WU8BqoQX1cYzhCpg==
+
 next-redux-wrapper@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/next-redux-wrapper/-/next-redux-wrapper-2.0.0.tgz#74587381ff9c762cd85676d9739a51a3aeceed58"
@@ -3871,10 +3876,10 @@ recursive-copy@2.0.6:
     promise "^7.0.1"
     slash "^1.0.0"
 
-redux-thunk@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
-  integrity sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==
+redux-saga@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.16.2.tgz#993662e86bc945d8509ac2b8daba3a8c615cc971"
+  integrity sha512-iIjKnRThI5sKPEASpUvySemjzwqwI13e3qP7oLub+FycCRDysLSAOwt958niZW6LhxfmS6Qm1BzbU70w/Koc4w==
 
 redux@^4.0.0:
   version "4.0.0"
