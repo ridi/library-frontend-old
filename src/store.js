@@ -8,7 +8,7 @@ import rootSaga from './sagas';
 import bootstrap from './bootstrap';
 
 const makeMiddlewares = () => {
-  const middlewares = [thunk];
+  const middlewares = [];
   return middlewares;
 };
 
