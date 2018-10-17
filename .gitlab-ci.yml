@@ -13,6 +13,8 @@ before_script:
 build:
   <<: *aws-docker
   stage: build
+  only:
+    - master
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - sh docs/script/export.sh
