@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import shows from './shows';
+import showsReducer from '../services/shows/reducers';
 
 export default combineReducers({
-  shows,
+  shows: showsReducer,
 });

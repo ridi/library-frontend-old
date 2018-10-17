@@ -1,6 +1,9 @@
 
 import { SET_SHOWS } from './actions';
-import initialState from './state';
+
+const initialState = {
+  shows: [],
+};
 
 const showsReducer = (state = initialState, action) => {
   switch(action.type) {
