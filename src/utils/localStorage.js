@@ -7,7 +7,4 @@ const localStorage = (() => ({
   clear: () => {},
 }))();
 
-
-export const loadStateFromLocalstorage = () => {};
-
 export default localStorage;

@@ -25,13 +25,15 @@ const makeStore = (initialState = {}, context) => {
 
   const composeEnhancer = makeComposeEnhancer(isServer);
   const middlewares = makeMiddlewares();
-  const initialState = bootstrap(initialState);
   
-  return createStore(
+  const store = createStore(
     rootReducer,
     initialState,
     composeEnhancer(applyMiddleware(...middlewares))
   );
+
+  bootstrap(store);
+  return store;
 };
 
 const injectStore = withRedux(makeStore);
