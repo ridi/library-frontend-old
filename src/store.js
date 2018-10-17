@@ -3,7 +3,8 @@ import withRedux from 'next-redux-wrapper';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import rootReducer from './reducers'
+import rootReducer from './reducers';
+import bootstrap from './bootstrap';
 
 const makeMiddlewares = () => {
   const middlewares = [thunk];
@@ -24,6 +25,7 @@ const makeStore = (initialState = {}, context) => {
 
   const composeEnhancer = makeComposeEnhancer(isServer);
   const middlewares = makeMiddlewares();
+  const initialState = bootstrap(initialState);
   
   return createStore(
     rootReducer,
