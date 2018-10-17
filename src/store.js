@@ -32,7 +32,7 @@ const makeStore = (initialState = {}, context) => {
     composeEnhancer(applyMiddleware(...middlewares))
   );
 
-  bootstrap(store);
+  bootstrap(store, isServer);
   return store;
 };
 
