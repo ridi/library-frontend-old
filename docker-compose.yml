@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  web:
+    image: node:8
+    volumes:
+      - .:/htdocs/www
+    working_dir: /htdocs/www
+    command:
+      - /bin/sh
+      - -c
+      - |
+        yarn global add pm2
+        yarn install
+        yarn run local
+
+  nginx:
+    image: nginx:stable
+    restart: always
+    volumes:
+      - ./docs/dev/nginx:/etc/nginx/conf.d:ro
+      - ./docs/dev/cert:/etc/nginx/cert/:ro
+    ports:
+      - 443:443
+    depends_on:
+      - web
+    links:
+      - web
