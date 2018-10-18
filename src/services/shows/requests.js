@@ -1,8 +1,10 @@
 
-import fetch from 'isomorphic-unfetch'
+import { put } from 'redux-saga/effects';
+import { getAPI } from "../../api/actions";
 
-export const fetchShows = async () => {
-  const res = await fetch('https://api.tvmaze.com/search/shows?q=batman');
-  const data = await res.json();
+
+export function* fetchShows () {
+  const api = yield put(getAPI());
+  const data = await api.get('https://api.tvmaze.com/search/shows?q=batman');
   return data;
 };

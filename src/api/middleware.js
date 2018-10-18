@@ -4,7 +4,7 @@ import axios from 'axios';
 import createInterceptor from './interceptor';
 import API from './api';
 
-import GET_API from './actions';
+import { GET_API } from './actions';
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
@@ -31,8 +31,7 @@ const createApi = context => {
   
   if (isServer) {
     const { token } = req;
-    const http = axios({
-      baseURL: '',
+    const http = axios.create({
       headers: {
         cookie: `ridi-at: ${token};`,
       }
@@ -41,8 +40,7 @@ const createApi = context => {
     const api = new API(http);
     return api;
   } else {
-    const http = axios({
-      baseURL: '',
+    const http = axios.create({
       withCredentials: true
     });
     const api = new API(http);
