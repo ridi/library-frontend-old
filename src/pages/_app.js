@@ -1,7 +1,7 @@
 
-import { Provider } from "react-redux";
-import App, { Container } from "next/app";
-import withReduxSaga from "next-redux-saga";
+import { Provider } from 'react-redux';
+import App, { Container } from 'next/app';
+import withReduxSaga from 'next-redux-saga';
 
 import flow from '../utils/flow';
 import injectStore from '../store';
