@@ -38,9 +38,7 @@ const createApi = context => {
     });
     return api;
   } else {
-    const api = new API({
-      withCredentials: true
-    });
+    const api = new API({ withCredentials: true });
     api.addInterceptor(authorizationInterceptor);
     api.registerInterceptor();
 
