@@ -2,12 +2,14 @@
 import { SET_USER_INFO } from './actions';
 
 const accountReducer = (state = {}, action) => {
-  switch (action) {
+  switch (action.type) {
     case SET_USER_INFO:
       return {
         ...state,
-        ...aciton.payload.userInfo,
+        userInfo: action.payload.userInfo,
       }
+    default:
+      return state;
   }
 };
 

@@ -10,6 +10,6 @@ export const loadUserInfo = () => ({
 export const setUserInfo = userInfo => ({
   type: SET_USER_INFO,
   payload: {
-    userInfo,
+    userInfo: userInfo.result,
   }
 });
