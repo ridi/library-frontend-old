@@ -6,6 +6,6 @@ import config from '../../config';
 
 export function* fetchUserInfo () {
   const api = yield put(getAPI());
-  const data = yield api.get(`${config.ACCOUNT_BASE_URL}/accounts/me`);
-  return data;
+  const response = yield api.get(`${config.ACCOUNT_BASE_URL}/accounts/me`);
+  return response.data;
 }

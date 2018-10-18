@@ -5,6 +5,6 @@ import { getAPI } from "../../api/actions";
 
 export function* fetchShows () {
   const api = yield put(getAPI());
-  const data = yield api.get('https://api.tvmaze.com/search/shows?q=batman');
-  return data;
+  const response = yield api.get('https://api.tvmaze.com/search/shows?q=batman');
+  return response.data;
 };
