@@ -4,13 +4,15 @@ import axios from 'axios';
 import createInterceptor from './interceptor';
 import API from './api';
 
+import config from '../config';
 import { GET_API } from './actions';
+
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
     const response = error.response;
     if (response.status === 401) {
-      return axios.post('/ridi/token', null, { withCredentials: true })
+      return axios.post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, { withCredentials: true })
         .then(() => {
           return axios(response.config);
         })

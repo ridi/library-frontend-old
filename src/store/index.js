@@ -6,7 +6,7 @@ import createSagaMiddleware from 'redux-saga'
 import createApiMiddleware from '../api/middleware';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
-import bootstrap from '../bootstrap';
+import bootstrap from './bootstrap';
 
 
 const makeComposeEnhancer = isServer => {
