@@ -1,6 +1,5 @@
 
-import { takeEvery } from 'redux-saga';
-import { all, call, put } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 
 import { LOAD_USER_INFO, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
