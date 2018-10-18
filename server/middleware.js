@@ -12,6 +12,7 @@ const jwtAuth = (req, res, next) => {
   const token = req.cookies['ridi-at'];
   if (!token) {
     redirect();
+    return;
   }
 
   try {
