@@ -31,19 +31,16 @@ const createApi = context => {
   
   if (isServer) {
     const { token } = req;
-    const http = axios.create({
+    const api = new API({
       headers: {
         cookie: `ridi-at: ${token};`,
       }
     });
-
-    const api = new API(http);
     return api;
   } else {
-    const http = axios.create({
+    const api = new API({
       withCredentials: true
     });
-    const api = new API(http);
     api.addInterceptor(authorizationInterceptor);
     api.registerInterceptor();
 

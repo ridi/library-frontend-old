@@ -1,7 +1,10 @@
 
+import axios from 'axios';
+
+
 export default class API {
-  constructor(http) {
-    this.http = http;
+  constructor(config) {
+    this.http = axios.create(config);
     this.interceptors = [];
   }
 
