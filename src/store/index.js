@@ -40,7 +40,9 @@ const makeStore = (initialState = {}, context) => {
   };
   store.runSagaTask();
 
-  bootstrap(store, isServer);
+  if (!isServer) {
+    bootstrap(store);
+  }
   return store;
 };
 
