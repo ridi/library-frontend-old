@@ -13,5 +13,5 @@ function* loadShows () {
 export default function* showsRootSaga () {
   yield all([
     takeEvery(LOAD_SHOWS, loadShows)
-  ])
+  ]);
 }
