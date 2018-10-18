@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const next = require('next');
@@ -7,7 +8,11 @@ const nextConfig = require('../next.config');
 const middleware = require('./middleware');
 
 const isLocal = process.env.NODE_ENV === 'local';
-const app = next({ dev: isLocal, dir: '../src', conf: nextConfig });
+const app = next({
+  dev: isLocal,
+  dir: path.resolve(__dirname, '../src'),
+  conf: nextConfig
+});
 const handle = routes.getRequestHandler(app);
 
 app.prepare()

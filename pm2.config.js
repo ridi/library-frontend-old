@@ -3,7 +3,7 @@ module.exports = {
   apps: [
     {
       name: "App",
-      script: "server.js",
+      script: "server/entry.js",
       kill_timeout: 3000,
       env: {
         "PORT": 8080,
