@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const next = require('next');
-const routes = require('../src/routes');
+const routes = require('./routes');
 const nextConfig = require('../next.config');
 
 const middleware = require('./middleware');
@@ -18,16 +18,19 @@ const handle = routes.getRequestHandler(app);
 app.prepare()
   .then(() => {
     const server = express();
-    server.use(cookieParser());
-    server.use(middleware.jwtAuth);
-
+    // For health check
     server.get('/health', (req, res) => {
       res.send('I am healthy');
     });
 
-    server.get('*', (req, res) => {
+    const ssrRouter = express.Router();
+    ssrRouter.use(cookieParser());
+    ssrRouter.use(middleware.jwtAuth);
+    ssrRouter.get('*', (req, res) => {
       return handle(req, res);
     });
+
+    server.use('/', ssrRouter);
 
     const port = process.env.PORT || 8080;
     const listener = server.listen(port, (err) => {

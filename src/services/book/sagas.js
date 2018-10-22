@@ -7,6 +7,8 @@ import {
   LOAD_BOOK_DATA_FROM_STORAGE,
   START_PERSIST_TIMER,
   STOP_PERSIST_TIMER,
+
+  setBookData,
 } from './actions';
 
 import { fetchBookData } from './requests';
