@@ -1,7 +1,7 @@
 
 import { loadUserInfo } from '../services/account/actions';
 
-import { loadBookData, startPersistTimer } from '../services/book/actions';
+import { loadBookData, loadBookDataFromStorage, startPersistTimer } from '../services/book/actions';
 
 
 const bootstrap = async store => {
