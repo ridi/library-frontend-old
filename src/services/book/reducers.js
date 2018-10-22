@@ -6,17 +6,32 @@ const initialState = {
 };
 
 
+const _mergeBooks = (existedBooks, newBooks) => {
+  const books = {
+    ...existedBooks,
+  };
+
+  Object.keys(newBooks).forEach(value => {
+    const existedBook = books[value];
+    const newBook = newBooks[value];
+    if (existedBook) {
+      // TTL 비교 후 새로운 데이터가 더 크면 새로운 데이터로 교체
+      if (existedBook.ttl < newBook.ttl) {
+        books[newBook.id] = newBook;
+      }
+    } else {
+      books[newBook.id] = newBook;
+    }
+  });
+  return books;
+};
+
 const bookReducer = (state = initialState, action) => {
   switch(action.type) {
     case SET_BOOK_DATA:
-      const newState = {
-        books: {
-          ...state.books,
-          ...action.payload.books,
-        }
+      return {
+        books: _mergeBooks(state.books, action.payload.books),
       };
-
-      return newState;
     default:
       return state;
   }
