@@ -14,14 +14,14 @@ const _makeTTL = () => {
 
 const _toMap = books => {
   const ttl = _makeTTL();
-
   return books.reduce((previous, current) => {
-    const book = {
-      ...current,
-      ttl,
-    };
-
-    return previous[book.id] = book;
+    return {
+      ...previous,
+      [current.id]: {
+        ...current,
+        ttl,
+      },
+    }
   }, {});
 };
 
