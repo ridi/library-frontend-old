@@ -4,22 +4,23 @@ import axios from 'axios';
 
 export default class API {
   constructor(config) {
-    this.http = axios.create(config);
+    this.http = axios.create();
+    this.config = config;
     this.interceptors = [];
   }
 
   // Request
   get(url) {
-    return this.http.get(url);
+    return this.http.get(url, this.config);
   }
   post(url, data) {
-    return this.http.post(url, data);
+    return this.http.post(url, data, this.config);
   }
   put(url, data) {
-    return this.http.put(url, data);
+    return this.http.put(url, data, this.config);
   }
   delete(url) {
-    return this.http.delete(url);
+    return this.http.delete(url, this.config);
   }
 
   // Interceptor
