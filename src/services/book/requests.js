@@ -7,8 +7,8 @@ import config from '../../config';
 
 const _TTL_MINS = 10;
 const _makeTTL = () => {
-  let now = new Date();
-  now = now.setMinutes(now.getMinutes() + _TTL_MINS);
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + _TTL_MINS);
   return parseInt(now.getTime() / 1000, 10);
 };
 
@@ -27,10 +27,6 @@ const _toMap = books => {
 
 export function* fetchBookData (bookIds) {
   const api = yield put(getAPI());
-  // const response = yield api.post(`${config.PLATFORM_API_BASE_URL}/books`, {
-  //   b_ids: bookIds
-  // });
-
-  const response = yield api.get(`${config.PLATFORM_API_BASE_URL}/books?b_ids=${bookIds.join(',')}`)
+  const response = yield api.get(`${config.PLATFORM_API_BASE_URL}/books?b_ids=${bookIds.join(',')}`);
   return _toMap(response.data);
 }

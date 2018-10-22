@@ -13,9 +13,7 @@ const authorizationInterceptor = {
     const response = error.response;
     if (response.status === 401) {
       return axios.post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, { withCredentials: true })
-        .then(() => {
-          return axios(response.config);
-        })
+        .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(error => {
           if (error.response.status !== 401) {
             console.log('error token refresh');
