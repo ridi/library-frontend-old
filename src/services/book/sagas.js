@@ -36,7 +36,6 @@ function* timerTick () {
     yield call(delay, PERSIST_DELAY);
     const books = yield select(state => state.books.books);
     Storage.save(books);
-    console.log('hi');
   }
 }
 
