@@ -3,8 +3,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   LOAD_BOOK_DATA,
-  LOAD_BOOK_DATA_FROM_STORAGE,
-  PERSIST_BOOK_DATA_TO_STORAGE
+  LOAD_BOOK_DATA_FROM_STORAGE
 } from './actions';
 
 import { fetchBookData } from './requests';
