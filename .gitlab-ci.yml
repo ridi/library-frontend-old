@@ -13,8 +13,8 @@ before_script:
 build:
   <<: *aws-docker
   stage: build
-  # only:
-  #   - master
+  only:
+    - master
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - sh docs/script/export.sh
@@ -30,8 +30,8 @@ build:
   <<: *aws-docker
   stage: deploy
   when: manual
-  # only:
-  #   - master
+  only:
+    - master
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - "`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`"
