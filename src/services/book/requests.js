@@ -4,25 +4,17 @@ import { getAPI } from "../../api/actions";
 
 import config from '../../config';
 
-
-const _TTL_MINS = 10;
-const _makeTTL = () => {
-  const now = new Date();
-  now.setMinutes(now.getMinutes() + _TTL_MINS);
-  return parseInt(now.getTime() / 1000, 10);
-};
+import { makeTTL } from '../../utils/ttl';
 
 const _toMap = books => {
-  const ttl = _makeTTL();
-  return books.reduce((previous, current) => {
-    return {
-      ...previous,
-      [current.id]: {
-        ...current,
-        ttl,
-      },
-    }
-  }, {});
+  const ttl = makeTTL();
+  return books.reduce((previous, current) => ({
+    ...previous,
+    [current.id]: {
+      ...current,
+      ttl,
+    },
+  }), {});
 };
 
 export function* fetchBookData (bookIds) {

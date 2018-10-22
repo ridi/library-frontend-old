@@ -1,29 +1,45 @@
 
 import { SET_BOOK_DATA } from './actions';
 
+import { getNow } from '../../utils/ttl';
+
+
 const initialState = {
   books: {},
 };
 
 
 const _mergeBooks = (existedBooks, newBooks) => {
-  const books = {
-    ...existedBooks,
-  };
+  const now = getNow();
+  const reducedBooks = Object.keys(existedBooks).reduce((previous, current) => {
+    const existedBook = existedBooks[current];
 
-  Object.keys(newBooks).forEach(value => {
-    const existedBook = books[value];
-    const newBook = newBooks[value];
-    if (existedBook) {
-      // TTL 비교 후 새로운 데이터가 더 크면 새로운 데이터로 교체
-      if (existedBook.ttl < newBook.ttl) {
-        books[newBook.id] = newBook;
-      }
-    } else {
-      books[newBook.id] = newBook;
+    // TTL이 초과한 데이터 제거
+    if (existedBook.ttl < now) {
+      return previous;
     }
-  });
-  return books;
+
+    return {
+      ...previous,
+      [existedBook.id]: existedBook,
+    }
+  }, {});
+
+  const reducedNewBooks = Object.keys(newBooks).reduce((previous, current) => {
+    const existedBook = reducedBooks[current];
+    const newBook = newBooks[current];
+
+    if (existedBook && existedBook.ttl >= newBook.ttl) {
+      return previous
+    }
+
+    return {
+      ...previous,
+      [newBook.id]: newBook,
+    }
+  }, {});
+
+  return { ...reducedBooks, ...reducedNewBooks };
 };
 
 const bookReducer = (state = initialState, action) => {
