@@ -1,6 +1,6 @@
 
 import { all, call, put, select, takeEvery, take, cancel, fork } from 'redux-saga/effects';
-import { delay } from '../../utils/sagas';
+import { delay } from 'redux-saga';
 
 import {
   LOAD_BOOK_DATA,
@@ -36,6 +36,7 @@ function* timerTick () {
     yield call(delay, PERSIST_DELAY);
     const books = yield select(state => state.books.books);
     Storage.save(books);
+    console.log('hi');
   }
 }
 
