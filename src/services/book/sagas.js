@@ -14,21 +14,22 @@ import {
 import { fetchBookData } from './requests';
 
 import Storage from '../../utils/storage';
-import { getCriterionTTL } from '../../utils/ttl';
+import { getCriterion } from '../../utils/ttl';
 import { getExpiredBookIds, getNotExistBookIds } from './utils';
 
 
 function* loadBookData (action) {
   // Step 1. Get exist book data
-  // Step 2. Filter expired or not cached book data
+  // Step 2. Filter expired or not cached book data via payload.bookIds
   // Step 3. Fetch book data
   // Step 4. Set book data
 
-  const criterionTTL = getCriterionTTL();
+  const _bookIds = action.payload.bookIds;
+  const criterion = getCriterion();
   const existBooks = yield select(state => state.books.books);
 
-  const expiredBookIds = getExpiredBookIds(existBooks, criterionTTL);
-  const notExistBookIds = getNotExistBookIds(action.payload.bookIds, existBooks, criterionTTL);
+  const expiredBookIds = getExpiredBookIds(_bookIds, existBooks, criterion);
+  const notExistBookIds = getNotExistBookIds(_bookIds, existBooks);
 
   const books = yield call(fetchBookData, [...expiredBookIds, ...notExistBookIds]);
   yield put(setBookData(books));

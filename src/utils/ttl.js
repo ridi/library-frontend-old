@@ -9,9 +9,8 @@ export const makeTTL = () => {
 };
 
 
-export const getCriterionTTL = (offsetMins = _DEFAULT_OFFSET_MINS) => {
+export const getCriterion = (offsetMins = _DEFAULT_OFFSET_MINS) => {
   const now = new Date();
-
   if (!offsetMins) {
     return parseInt(now.getTime() / 1000, 10);
   }
@@ -20,6 +19,6 @@ export const getCriterionTTL = (offsetMins = _DEFAULT_OFFSET_MINS) => {
     throw Error('offset은 TTL값을 초과할 수 없습니다.');
   }
 
-  now.setMinutes(now.getMinutes - offsetMins);
+  now.setMinutes(now.getMinutes() - offsetMins);
   return parseInt(now.getTime() / 1000, 10);
 };

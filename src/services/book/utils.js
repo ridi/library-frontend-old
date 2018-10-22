@@ -1,9 +1,14 @@
 
 
-export function getExpiredBookIds (books, criterionTTL) {
-  return Object.keys(books).reduce((previous, current) => {
-    const book = books[current];
-    if (book.ttl < criterionTTL) {
+export function getExpiredBookIds (targetBookIds, books, criterion) {
+  return targetBookIds.reduce((previous, bookId) => {
+    const book = books[bookId];
+
+    if (!book) {
+      return previous;
+    }
+
+    if (book.ttl > criterion) {
       return previous;
     }
     
