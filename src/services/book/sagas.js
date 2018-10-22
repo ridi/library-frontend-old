@@ -14,12 +14,23 @@ import {
 import { fetchBookData } from './requests';
 
 import Storage from '../../utils/storage';
+import { getCriterionTTL } from '../../utils/ttl';
+import { getExpiredBookIds, getNotExistBookIds } from './utils';
 
 
 function* loadBookData (action) {
-  // Step 1. Fetch book data
-  // Step 2. Set book data
-  const books = yield call(fetchBookData, action.payload.bookIds);
+  // Step 1. Get exist book data
+  // Step 2. Filter expired or not cached book data
+  // Step 3. Fetch book data
+  // Step 4. Set book data
+
+  const criterionTTL = getCriterionTTL();
+  const existBooks = yield select(state => state.books.books);
+
+  const expiredBookIds = getExpiredBookIds(existBooks, criterionTTL);
+  const notExistBookIds = getNotExistBookIds(action.payload.bookIds, existBooks, criterionTTL);
+
+  const books = yield call(fetchBookData, [...expiredBookIds, ...notExistBookIds]);
   yield put(setBookData(books));
 }
 
@@ -32,10 +43,10 @@ function* loadBookDataFromStorage () {
 }
 
 function* timerTick () {
-  const PERSIST_DELAY = 1000 * 30;
+  const PERSIST_DELAY_MILLISECS = 1000 * 30;
 
   while (true) {
-    yield call(delay, PERSIST_DELAY);
+    yield call(delay, PERSIST_DELAY_MILLISECS);
     const books = yield select(state => state.books.books);
     Storage.save(books);
   }

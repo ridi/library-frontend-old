@@ -1,35 +1,17 @@
 
 import { SET_BOOK_DATA } from './actions';
 
-import { getNow } from '../../utils/ttl';
-
 
 const initialState = {
   books: {},
 };
 
-
-const _mergeBooks = (existedBooks, newBooks) => {
-  const now = getNow();
-  const reducedBooks = Object.keys(existedBooks).reduce((previous, current) => {
-    const existedBook = existedBooks[current];
-
-    // TTL이 초과한 데이터 제거
-    if (existedBook.ttl < now) {
-      return previous;
-    }
-
-    return {
-      ...previous,
-      [existedBook.id]: existedBook,
-    }
-  }, {});
-
+const _mergeBooks = (existBooks, newBooks) => {
   const reducedNewBooks = Object.keys(newBooks).reduce((previous, current) => {
-    const existedBook = reducedBooks[current];
+    const existBook = existBooks[current];
     const newBook = newBooks[current];
 
-    if (existedBook && existedBook.ttl >= newBook.ttl) {
+    if (existBook && existBook.ttl >= newBook.ttl) {
       return previous
     }
 
@@ -39,7 +21,7 @@ const _mergeBooks = (existedBooks, newBooks) => {
     }
   }, {});
 
-  return { ...reducedBooks, ...reducedNewBooks };
+  return { ...existBooks, ...reducedNewBooks };
 };
 
 const bookReducer = (state = initialState, action) => {
