@@ -1,15 +1,25 @@
 
-import initialState from './state';
 import { SET_BOOK_DATA } from './actions';
 
+const initialState = {
+  books: {},
+};
 
-const BookReducer = (state = initialState, action) => {
+
+const bookReducer = (state = initialState, action) => {
   switch(action.type) {
     case SET_BOOK_DATA:
-      return state;
+      const newState = {
+        books: {
+          ...state.books,
+          ...action.payload.books,
+        }
+      };
+
+      return newState;
     default:
       return state;
   }
 }
 
-export default BookReducer;
+export default bookReducer;
