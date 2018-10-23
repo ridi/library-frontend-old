@@ -63,9 +63,12 @@ function* loadBookData (action) {
   const expiredBookIds = _getExpiredBookIds(_bookIds, existBooks, criterion);
   const notExistBookIds = _getNotExistBookIds(_bookIds, existBooks);
 
-  const books = yield call(fetchBookData, [...expiredBookIds, ...notExistBookIds]);
-  yield put(setBookData(books));
-  yield fork(persistBookDataToStorage);
+  const bookIds = [...expiredBookIds, ...notExistBookIds];
+  if (bookIds.length > 0) {
+    const books = yield call(fetchBookData, bookIds);
+    yield put(setBookData(books));
+    yield fork(persistBookDataToStorage);
+  }
 }
 
 
@@ -78,7 +81,7 @@ function* loadBookDataFromStorage () {
 }
 
 
-function* persistBookDataToStorage (books) {
+function* persistBookDataToStorage () {
   // Step 1. Select book data in redux store.
   // Step 2. Save to storage.
   const books = yield select(state => state.books.books);
@@ -88,7 +91,6 @@ function* persistBookDataToStorage (books) {
 
 export default function* bookRootSaga () {
   yield all([
-    persistTimer(),
     takeEvery(LOAD_BOOK_DATA, loadBookData),
     takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
   ]);
