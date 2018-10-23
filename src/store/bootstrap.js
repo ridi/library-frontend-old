@@ -22,12 +22,10 @@ const beforeCreatingStore = (initialState, context) => {
 }
 
 const afterCreatingStore = async (store, context) => {
-
   if (!context.isServer) {
     await store.dispatch(loadUserInfo());
     await store.dispatch(loadBookDataFromStorage());
   }
-  await store.dispatch(loadBookData([102066210, 1534064409]));
 };
 
 export default {
