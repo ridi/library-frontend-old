@@ -6,7 +6,7 @@ import {
   LOAD_BOOK_DATA_FROM_STORAGE,
 
   setBookData,
-  setBookDataFromStorage
+  setBookDataFromStorage,
 } from './actions';
 
 import { fetchBookData } from './requests';
@@ -35,7 +35,7 @@ function* loadBookData (action) {
       return book.value.id;
     }
 
-    return null;
+    return;
   });
 
   if (bookIds.length > 0) {
@@ -61,7 +61,6 @@ function* persistBookDataToStorage () {
   const books = yield select(state => state.books.books);
   Storage.save(books.toJSON());
 }
-
 
 export default function* bookRootSaga () {
   yield all([
