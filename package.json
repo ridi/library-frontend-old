@@ -4,13 +4,20 @@
   "description": "Rendering server with next.js",
   "main": "server.js",
   "scripts": {
-    "local": "pm2-runtime start pm2.config.js --only App --env local",
+    "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.js' -- prettier --write {{changed}}",
     "build": "next build src",
     "export": "next export src -o ./out"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "emotion": "^9.2.12",
+    "emotion-server": "^9.2.12",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^7.0.0",
@@ -18,8 +25,27 @@
     "next-routes": "^1.4.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-emotion": "^9.2.12",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
-  }
+  },
+  "devDependencies": {
+    "@ridi/eslint-config": "^4.1.1",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-emotion": "^9.2.11",
+    "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^1.1.2",
+    "onchange": "^5.0.2",
+    "prettier": "^1.14.3",
+    "pretty-quick": "^1.8.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "Android >= 4.2",
+    "iOS >= 10",
+    "ie > 10"
+  ]
 }
