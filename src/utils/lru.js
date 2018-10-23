@@ -19,6 +19,10 @@ class LRUCache extends _LRUCache {
     if (!keepOrigin) {
       this._keymap = {};
     }
+
+    if (!entries) {
+      return;
+    }
     
     entries.forEach(entry => {
       if (!this.oldest) {
