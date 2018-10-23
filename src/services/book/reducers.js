@@ -1,35 +1,25 @@
 
-import { SET_BOOK_DATA } from './actions';
-
-const initialState = {
-  books: {},
-};
+import { SET_BOOK_DATA, SET_BOOK_DATA_FROM_STORAGE } from './actions';
 
 
-const _mergeBooks = (existBooks, newBooks) => {
-  const reducedNewBooks = Object.keys(newBooks).reduce((previous, current) => {
-    const existBook = existBooks[current];
-    const newBook = newBooks[current];
+const makeEntries = books => books.map(book => ({ 'key': book.id, value: book }));
+const compareWithTTL = (oldValue, newValue) => (oldValue.ttl < newValue.ttl);
 
-    if (existBook && existBook.ttl >= newBook.ttl) {
-      return previous
-    }
-
-    return {
-      ...previous,
-      [newBook.id]: newBook,
-    }
-  }, {});
-
-  return { ...existBooks, ...reducedNewBooks };
-};
-
-const bookReducer = (state = initialState, action) => {
+const bookReducer = (state = {}, action) => {
   switch(action.type) {
     case SET_BOOK_DATA:
-      return {
-        books: _mergeBooks(state.books, action.payload.books),
-      };
+      state.books.merge(
+        makeEntries(action.payload.books),
+        compareWithTTL
+      );
+      return state;
+    case SET_BOOK_DATA_FROM_STORAGE:
+      state.books.assign(
+        makeEntries(action.payload.books),
+        compareWithTTL,
+        true
+      );
+      return state;
     default:
       return state;
   }
