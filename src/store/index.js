@@ -18,10 +18,9 @@ const makeComposeEnhancer = isServer => {
   return composeEnhancer;
 };
 
-const makeStore = (initialState = {}, context) => {
-  const { isServer } = context;
 
-  const composeEnhancer = makeComposeEnhancer(isServer);
+const makeStore = (initialState, context) => {
+  const composeEnhancer = makeComposeEnhancer(context.isServer);
 
   const apiMiddleware = createApiMiddleware(context);
   const sagaMiddleware = createSagaMiddleware();
@@ -38,11 +37,16 @@ const makeStore = (initialState = {}, context) => {
   };
   store.runSagaTask();
 
-  if (!isServer) {
-    bootstrap(store);
-  }
   return store;
-};
+}
 
-const injectStore = withRedux(makeStore);
+
+const injectStore = withRedux(
+  (initialState = {}, context) => {
+    const preloadState = bootstrap.beforeCreatingStore(initialState, context);
+    const store = makeStore(preloadState, context);
+    bootstrap.afterCreatingStore(store, context);
+    return store;
+  }
+);
 export default injectStore;

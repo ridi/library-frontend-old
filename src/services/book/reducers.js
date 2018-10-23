@@ -1,10 +1,10 @@
 
 import { SET_BOOK_DATA } from './actions';
 
-
 const initialState = {
   books: {},
 };
+
 
 const _mergeBooks = (existBooks, newBooks) => {
   const reducedNewBooks = Object.keys(newBooks).reduce((previous, current) => {
