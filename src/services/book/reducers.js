@@ -15,7 +15,7 @@ const bookReducer = (state = {}, action) => {
       return state;
     case SET_BOOK_DATA_FROM_STORAGE:
       state.books.assign(
-        makeEntries(action.payload.books),
+        action.payload.books,
         compareWithTTL,
         true
       );
