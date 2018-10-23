@@ -1,12 +1,9 @@
 
-import { all, call, put, select, takeEvery, take, cancel, fork } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
 import {
   LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
-  START_PERSIST_TIMER,
-  STOP_PERSIST_TIMER,
 
   setBookData,
 } from './actions';
@@ -15,7 +12,42 @@ import { fetchBookData } from './requests';
 
 import Storage from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
-import { getExpiredBookIds, getNotExistBookIds } from './utils';
+
+
+function _getExpiredBookIds (targetBookIds, books, criterion) {
+  return targetBookIds.reduce((previous, bookId) => {
+    const book = books[bookId];
+
+    if (!book) {
+      return previous;
+    }
+
+    if (book.ttl > criterion) {
+      return previous;
+    }
+
+    return [
+      ...previous, book.id,
+    ]
+  }, []);
+};
+
+
+function _getNotExistBookIds (bookIds, existBooks) {
+  return bookIds.reduce((previous, current) => {
+    const existBook = existBooks[current];
+
+    // 기존의 책이 없을때
+    if (!existBook) {
+      return [
+        ...previous,
+        current,
+      ];
+    }
+
+    return previous;
+  }, []);
+}
 
 
 function* loadBookData (action) {
@@ -28,11 +60,12 @@ function* loadBookData (action) {
   const criterion = getCriterion();
   const existBooks = yield select(state => state.books.books);
 
-  const expiredBookIds = getExpiredBookIds(_bookIds, existBooks, criterion);
-  const notExistBookIds = getNotExistBookIds(_bookIds, existBooks);
+  const expiredBookIds = _getExpiredBookIds(_bookIds, existBooks, criterion);
+  const notExistBookIds = _getNotExistBookIds(_bookIds, existBooks);
 
   const books = yield call(fetchBookData, [...expiredBookIds, ...notExistBookIds]);
   yield put(setBookData(books));
+  yield fork(persistBookDataToStorage);
 }
 
 
@@ -41,27 +74,17 @@ function* loadBookDataFromStorage () {
   // Step 2. Set book data
   const books = Storage.load();
   yield put(setBookData(books));
+  yield fork(persistBookDataToStorage);
 }
 
-function* timerTick () {
-  const PERSIST_DELAY_MILLISECS = 1000 * 30;
 
-  while (true) {
-    yield call(delay, PERSIST_DELAY_MILLISECS);
-    const books = yield select(state => state.books.books);
-    Storage.save(books);
-  }
-}
-
-export function* persistTimer () {
+function* persistBookDataToStorage (books) {
   // Step 1. Select book data in redux store.
   // Step 2. Save to storage.
-  while(yield take(START_PERSIST_TIMER)) {
-    const timer = yield fork(timerTick);
-    yield take(STOP_PERSIST_TIMER);
-    yield cancel(timer);
-  }
+  const books = yield select(state => state.books.books);
+  Storage.save(books);
 }
+
 
 export default function* bookRootSaga () {
   yield all([
