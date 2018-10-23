@@ -47,6 +47,11 @@ const injectStore = withRedux(
     const store = makeStore(preloadState, context);
     bootstrap.afterCreatingStore(store, context);
     return store;
+  }, {
+    serializeState: state => {
+      state.books.books = state.books.books.toJSON();
+      return state;
+    },
   }
 );
 export default injectStore;
