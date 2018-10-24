@@ -1,15 +1,15 @@
-import Window from './window';
+import Window, { LOCAL_STORAGE } from './window';
 
-const LOCAL_STORAGE_KEY = 'library.books';
+const STORAGE_KEY = 'library.books';
 
 export default {
   load: () => {
-    const storage = Window.get('localStorage');
+    const storage = Window.get(LOCAL_STORAGE);
     if (!storage) {
       return [];
     }
 
-    const data = storage.getItem(LOCAL_STORAGE_KEY);
+    const data = storage.getItem(STORAGE_KEY);
     if (!data) {
       return [];
     }
@@ -17,15 +17,15 @@ export default {
     return JSON.parse(data);
   },
   save: state => {
-    const storage = Window.get('localStorage');
+    const storage = Window.get(LOCAL_STORAGE);
     if (!storage) {
       return;
     }
 
     try {
-      storage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+      storage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
-      storage.removeItem(LOCAL_STORAGE_KEY);
+      storage.removeItem(STORAGE_KEY);
     }
   },
 };

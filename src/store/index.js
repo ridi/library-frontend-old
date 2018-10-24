@@ -7,13 +7,12 @@ import rootReducer from './reducers';
 import rootSaga from './sagas';
 import bootstrap from './bootstrap';
 
-import Window from '../utils/window';
+import Window, { REDUX_DEV_TOOLS } from '../utils/window';
 
 const makeComposeEnhancer = isServer => {
   let composeEnhancer = compose;
   if (!isServer) {
-    composeEnhancer =
-      Window.get('__REDUX_DEVTOOLS_EXTENSION_COMPOSE__') || compose;
+    composeEnhancer = Window.get(REDUX_DEV_TOOLS) || compose;
   }
 
   return composeEnhancer;
