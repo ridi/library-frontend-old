@@ -20,8 +20,6 @@ function* accountTracker() {
 
     if (userInfo.idx !== newUserInfo.idx) {
       window.location.reload();
-    } else {
-      yield put(setUserInfo(newUserInfo));
     }
   }
 }
