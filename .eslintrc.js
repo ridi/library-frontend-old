@@ -71,6 +71,10 @@ module.exports = {
       },
     ],
 
+    // account team rules
+    'import/prefer-default-export': 'off',
+    'no-underscore-dangle': 'off',
+
     // jsx
     'react/no-unknown-property': [
       'warn',

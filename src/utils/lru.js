@@ -1,5 +1,12 @@
 import { LRUCache as _LRUCache } from 'lru-fast';
 
+const makeEntry = (key, value) => ({
+  key,
+  value,
+  older: undefined,
+  newer: undefined,
+});
+
 class LRUCache extends _LRUCache {
   constructor(limit, entries) {
     super(limit);
@@ -14,7 +21,7 @@ class LRUCache extends _LRUCache {
     }
   }
 
-  assign(entries, compare = (oldValue, newValue) => true, keepOrigin = false) {
+  assign(entries, compare = () => true, keepOrigin = false) {
     if (!keepOrigin) {
       this._keymap = {};
     }
@@ -25,7 +32,7 @@ class LRUCache extends _LRUCache {
 
     entries.forEach(entry => {
       if (!this.oldest) {
-        this.oldest = this._makeEntry(entry.key, entry.value);
+        this.oldest = makeEntry(entry.key, entry.value);
         return;
       }
 
@@ -37,7 +44,7 @@ class LRUCache extends _LRUCache {
           this._keymap[entry.key].value = entry.value;
         }
       } else {
-        const newEntry = this._makeEntry(entry.key, entry.value);
+        const newEntry = makeEntry(entry.key, entry.value);
 
         this.oldest.older = newEntry;
         newEntry.newer = this.oldest;
@@ -48,7 +55,7 @@ class LRUCache extends _LRUCache {
     this.size = Object.keys(this._keymap).length;
   }
 
-  merge(entries, compare = (oldValue, newValue) => true) {
+  merge(entries, compare = () => true) {
     entries.forEach(entry => {
       const oldEntry = this._keymap[entry.key];
 
@@ -62,10 +69,6 @@ class LRUCache extends _LRUCache {
         this.put(entry.key, entry.value);
       }
     });
-  }
-
-  _makeEntry(key, value) {
-    return { key, value, older: undefined, newer: undefined };
   }
 }
 
