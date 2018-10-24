@@ -5,6 +5,8 @@ import config from '../../config';
 
 import { makeTTL } from '../../utils/ttl';
 
+const _reduceBooks = books => books;
+
 const _attatchTTL = books => {
   const ttl = makeTTL();
   return books.map(book => {
@@ -18,5 +20,6 @@ export function* fetchBookData(bookIds) {
   const response = yield api.get(
     `${config.PLATFORM_API_BASE_URL}/books?b_ids=${bookIds.join(',')}`,
   );
-  return _attatchTTL(response.data);
+
+  return _attatchTTL(_reduceBooks(response.data));
 }
