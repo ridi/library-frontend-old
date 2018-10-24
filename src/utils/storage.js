@@ -1,12 +1,15 @@
+import Window from './window';
+
 const LOCAL_STORAGE_KEY = 'library.books';
 
 export default {
   load: () => {
-    if (typeof localStorage === 'undefined' || localStorage === null) {
+    const storage = Window.get('localStorage');
+    if (!storage) {
       return [];
     }
 
-    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const data = storage.getItem(LOCAL_STORAGE_KEY);
     if (!data) {
       return [];
     }
@@ -14,14 +17,15 @@ export default {
     return JSON.parse(data);
   },
   save: state => {
-    if (typeof localStorage === 'undefined' || localStorage === null) {
+    const storage = Window.get('localStorage');
+    if (!storage) {
       return;
     }
 
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+      storage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      storage.removeItem(LOCAL_STORAGE_KEY);
     }
   },
 };

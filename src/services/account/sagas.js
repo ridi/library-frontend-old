@@ -4,6 +4,8 @@ import { delay } from 'redux-saga';
 import { LOAD_USER_INFO, START_ACCOUNT_TRACKER, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
+import Window from '../../utils/window';
+
 function* loadUserInfo() {
   const data = yield call(fetchUserInfo);
   yield put(setUserInfo(data));
@@ -19,7 +21,7 @@ function* accountTracker() {
     const newUserInfo = yield call(fetchUserInfo);
 
     if (userInfo.idx !== newUserInfo.idx) {
-      window.location.reload();
+      Window.get('location').reload();
     }
   }
 }
