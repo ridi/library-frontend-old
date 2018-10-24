@@ -71,6 +71,9 @@ module.exports = {
       },
     ],
 
+    // account team rules
+    'import/prefer-default-export': 'off',
+
     // jsx
     'react/no-unknown-property': [
       'warn',
