@@ -24,10 +24,10 @@ function* loadUserInfo() {
 }
 
 function* track() {
-  const TRACI_DELAY_MILLISECS = 1000 * 60 * 3;
+  const TRACK_DELAY_MILLISECS = 1000 * 60 * 3;
 
   while (true) {
-    yield call(delay, TRACI_DELAY_MILLISECS);
+    yield call(delay, TRACK_DELAY_MILLISECS);
 
     const userInfo = yield select(state => state.account.userInfo);
     const newUserInfo = yield call(fetchUserInfo);
