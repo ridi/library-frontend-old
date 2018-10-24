@@ -2,9 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 
-import { fetchShows } from '../apis';
-
 import Layout from '../components/Layout';
+import { loadShows } from '../services/shows/actions';
 
 
 const PostLink = ({ id, name }) => (
@@ -17,7 +16,7 @@ const PostLink = ({ id, name }) => (
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(fetchShows);
+    await store.dispatch(loadShows());
   }
 
   render() {

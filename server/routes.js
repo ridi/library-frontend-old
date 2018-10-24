@@ -9,5 +9,4 @@ const APP_ROUTES = [
 ];
 
 APP_ROUTES.forEach(route => routes.add(route));
-
 module.exports = routes;

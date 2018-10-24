@@ -1,30 +1,42 @@
+const path = require('path');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const next = require('next');
-const routes = require('./src/routes');
-const nextConfig = require('./next.config');
+const routes = require('./routes');
+const nextConfig = require('../next.config');
+
+const middleware = require('./middleware');
 
 const isLocal = process.env.NODE_ENV === 'local';
-const app = next({ dev: isLocal, dir: './src', conf: nextConfig });
+const app = next({
+  dev: isLocal,
+  dir: path.resolve(__dirname, '../src'),
+  conf: nextConfig
+});
 const handle = routes.getRequestHandler(app);
 
 app.prepare()
   .then(() => {
     const server = express();
-
+    // For health check
     server.get('/health', (req, res) => {
       res.send('I am healthy');
     });
 
-    server.get('*', (req, res) => {
+    const ssrRouter = express.Router();
+    ssrRouter.use(cookieParser());
+    ssrRouter.use(middleware.jwtAuth);
+    ssrRouter.get('*', (req, res) => {
       return handle(req, res);
     });
+
+    server.use('/', ssrRouter);
 
     const port = process.env.PORT || 8080;
     const listener = server.listen(port, (err) => {
       if (err) throw err;
       console.log('> Ready on ' + port);
     });
-
 
     // Register Signals
     const closeListener = () => {
