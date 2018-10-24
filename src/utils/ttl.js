@@ -1,4 +1,3 @@
-
 const _TTL_MINS = 10;
 const _DEFAULT_OFFSET_MINS = 1;
 
@@ -7,7 +6,6 @@ export const makeTTL = () => {
   now.setMinutes(now.getMinutes() + _TTL_MINS);
   return parseInt(now.getTime() / 1000, 10);
 };
-
 
 export const getCriterion = (offsetMins = _DEFAULT_OFFSET_MINS) => {
   const now = new Date();

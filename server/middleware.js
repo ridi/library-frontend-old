@@ -1,11 +1,10 @@
-
 const jwt = require('jsonwebtoken');
 const config = require('./config');
 const utils = require('./utils');
 
 const jwtAuth = (req, res, next) => {
   const redirect = () => {
-    const loginUrl = `${config.LOGIN_URL}?return_url=${utils.getFullPath(req)}`
+    const loginUrl = `${config.LOGIN_URL}?return_url=${utils.getFullPath(req)}`;
     res.redirect(301, loginUrl);
   };
 
@@ -19,7 +18,7 @@ const jwtAuth = (req, res, next) => {
     jwt.verify(token, config.JWT_SECRET);
     req.token = token;
     next();
-  } catch(err) {
+  } catch (err) {
     redirect();
   }
 };

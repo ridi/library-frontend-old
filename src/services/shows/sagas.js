@@ -1,16 +1,13 @@
-
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 
 import { LOAD_SHOWS, setShows } from './actions';
 import { fetchShows } from './requests';
 
-function* loadShows () {
+function* loadShows() {
   const data = yield call(fetchShows);
   yield put(setShows(data));
 }
 
-export default function* showsRootSaga () {
-  yield all([
-    takeEvery(LOAD_SHOWS, loadShows)
-  ]);
+export default function* showsRootSaga() {
+  yield all([takeEvery(LOAD_SHOWS, loadShows)]);
 }

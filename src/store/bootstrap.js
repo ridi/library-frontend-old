@@ -1,10 +1,8 @@
-
 import { loadUserInfo } from '../services/account/actions';
 
 import { loadBookDataFromStorage } from '../services/book/actions';
 
 import LRUCache from '../utils/lru';
-
 
 const beforeCreatingStore = (initialState, context) => {
   const books = {};
@@ -18,7 +16,7 @@ const beforeCreatingStore = (initialState, context) => {
     ...initialState,
     books,
   };
-}
+};
 
 const afterCreatingStore = async (store, context) => {
   if (!context.isServer) {
@@ -29,5 +27,5 @@ const afterCreatingStore = async (store, context) => {
 
 export default {
   beforeCreatingStore,
-  afterCreatingStore
+  afterCreatingStore,
 };

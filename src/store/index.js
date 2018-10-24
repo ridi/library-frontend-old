@@ -1,13 +1,11 @@
-
 import withRedux from 'next-redux-wrapper';
 import { createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware from 'redux-saga';
 
 import createApiMiddleware from '../api/middleware';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 import bootstrap from './bootstrap';
-
 
 const makeComposeEnhancer = isServer => {
   let composeEnhancer = compose;
@@ -17,7 +15,6 @@ const makeComposeEnhancer = isServer => {
 
   return composeEnhancer;
 };
-
 
 const makeStore = (initialState, context) => {
   const composeEnhancer = makeComposeEnhancer(context.isServer);
@@ -29,7 +26,7 @@ const makeStore = (initialState, context) => {
   const store = createStore(
     rootReducer,
     initialState,
-    composeEnhancer(applyMiddleware(...middlewares))
+    composeEnhancer(applyMiddleware(...middlewares)),
   );
 
   store.runSagaTask = () => {
@@ -38,15 +35,12 @@ const makeStore = (initialState, context) => {
   store.runSagaTask();
 
   return store;
-}
+};
 
-
-const injectStore = withRedux(
-  (initialState = {}, context) => {
-    const preloadState = bootstrap.beforeCreatingStore(initialState, context);
-    const store = makeStore(preloadState, context);
-    bootstrap.afterCreatingStore(store, context);
-    return store;
-  }
-);
+const injectStore = withRedux((initialState = {}, context) => {
+  const preloadState = bootstrap.beforeCreatingStore(initialState, context);
+  const store = makeStore(preloadState, context);
+  bootstrap.afterCreatingStore(store, context);
+  return store;
+});
 export default injectStore;

@@ -11,11 +11,12 @@ const isLocal = process.env.NODE_ENV === 'local';
 const app = next({
   dev: isLocal,
   dir: path.resolve(__dirname, '../src'),
-  conf: nextConfig
+  conf: nextConfig,
 });
 const handle = routes.getRequestHandler(app);
 
-app.prepare()
+app
+  .prepare()
   .then(() => {
     const server = express();
     // For health check
@@ -33,14 +34,14 @@ app.prepare()
     server.use('/', ssrRouter);
 
     const port = process.env.PORT || 8080;
-    const listener = server.listen(port, (err) => {
+    const listener = server.listen(port, err => {
       if (err) throw err;
       console.log('> Ready on ' + port);
     });
 
     // Register Signals
     const closeListener = () => {
-      listener.close((err) => {
+      listener.close(err => {
         if (err) {
           console.log(err);
           process.exit(1);
@@ -50,10 +51,10 @@ app.prepare()
     };
 
     process.on('SIGINT', () => {
-      console.info('SIGINT signal received.')
+      console.info('SIGINT signal received.');
       closeListener();
     });
-    process.on('SIGTERM', function () {
+    process.on('SIGTERM', function() {
       console.log('SIGTERM received');
       closeListener();
     });

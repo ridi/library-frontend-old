@@ -1,4 +1,3 @@
-
 import { LRUCache as _LRUCache } from 'lru-fast';
 
 class LRUCache extends _LRUCache {
@@ -23,7 +22,7 @@ class LRUCache extends _LRUCache {
     if (!entries) {
       return;
     }
-    
+
     entries.forEach(entry => {
       if (!this.oldest) {
         this.oldest = this._makeEntry(entry.key, entry.value);
@@ -52,7 +51,7 @@ class LRUCache extends _LRUCache {
   merge(entries, compare = (oldValue, newValue) => true) {
     entries.forEach(entry => {
       const oldEntry = this._keymap[entry.key];
-      
+
       if (oldEntry) {
         if (compare(oldEntry.value, entry.value)) {
           this.put(entry.key, entry.value);

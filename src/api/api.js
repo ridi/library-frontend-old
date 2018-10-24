@@ -1,6 +1,4 @@
-
 import axios from 'axios';
-
 
 export default class API {
   constructor(config) {
@@ -37,8 +35,14 @@ export default class API {
       const _requestInterceptor = interceptor.request;
       const _responseInterceptor = interceptor.response;
 
-      this._bindInterceptor(this.http.interceptors.request, _requestInterceptor);
-      this._bindInterceptor(this.http.interceptors.response, _responseInterceptor);
+      this._bindInterceptor(
+        this.http.interceptors.request,
+        _requestInterceptor,
+      );
+      this._bindInterceptor(
+        this.http.interceptors.response,
+        _responseInterceptor,
+      );
     });
   }
 

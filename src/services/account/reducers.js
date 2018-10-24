@@ -1,4 +1,3 @@
-
 import { SET_USER_INFO } from './actions';
 
 const accountReducer = (state = {}, action) => {
@@ -7,7 +6,7 @@ const accountReducer = (state = {}, action) => {
       return {
         ...state,
         userInfo: action.payload.userInfo,
-      }
+      };
     default:
       return state;
   }

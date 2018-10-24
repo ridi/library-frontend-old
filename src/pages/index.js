@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Layout from '../components/Layout';
 import { loadShows } from '../services/shows/actions';
 
-
 const PostLink = ({ id, name }) => (
   <li>
     <Link as={`/p/${id}`} href={`/post?id=${id}`}>
@@ -30,7 +29,7 @@ class Index extends React.Component {
           ))}
         </ul>
       </Layout>
-    )
+    );
   }
 }
 

@@ -1,4 +1,3 @@
-
-export default function flow (hocs, component) {
+export default function flow(hocs, component) {
   return hocs.reduce((prev, current) => current(prev), component);
-};
+}

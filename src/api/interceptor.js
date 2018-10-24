@@ -1,5 +1,3 @@
-
-
 const createInterceptor = (onSuccess, onFailure) => {
   return {
     onSuccess: data => {
@@ -8,7 +6,7 @@ const createInterceptor = (onSuccess, onFailure) => {
       }
 
       return data;
-    }, 
+    },
     onFailure: error => {
       if (onFailure) {
         return onFailure(error);
@@ -16,6 +14,6 @@ const createInterceptor = (onSuccess, onFailure) => {
       return error;
     },
   };
-}
+};
 
 export default createInterceptor;

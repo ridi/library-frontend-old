@@ -1,4 +1,3 @@
-
 const LOCAL_STORAGE_KEY = 'library.books';
 
 export default {
@@ -21,7 +20,7 @@ export default {
 
     try {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
-    }  catch(e) {
+    } catch (e) {
       localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
   },
