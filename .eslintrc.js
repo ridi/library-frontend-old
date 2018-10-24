@@ -7,6 +7,9 @@ module.exports = {
       experimentalObjectRestSpread: true,
     },
   },
+  globals: {
+    window: true,
+  },
   env: {
     browser: true,
     jest: true,
