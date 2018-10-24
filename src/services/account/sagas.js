@@ -1,21 +1,7 @@
-import {
-  all,
-  call,
-  put,
-  takeEvery,
-  take,
-  fork,
-  cancel,
-  select,
-} from 'redux-saga/effects';
+import { all, call, put, takeEvery, take, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
-import {
-  LOAD_USER_INFO,
-  START_ACCOUNT_TRACKER,
-  STOP_ACCOUNT_TRACKER,
-  setUserInfo,
-} from './actions';
+import { LOAD_USER_INFO, START_ACCOUNT_TRACKER, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
 function* loadUserInfo() {
@@ -23,9 +9,9 @@ function* loadUserInfo() {
   yield put(setUserInfo(data));
 }
 
-function* track() {
+function* accountTracker() {
   const TRACK_DELAY_MILLISECS = 1000 * 60 * 3;
-
+  yield take(START_ACCOUNT_TRACKER);
   while (true) {
     yield call(delay, TRACK_DELAY_MILLISECS);
 
@@ -37,14 +23,6 @@ function* track() {
     } else {
       yield put(setUserInfo(newUserInfo));
     }
-  }
-}
-
-function* accountTracker() {
-  while (yield take(START_ACCOUNT_TRACKER)) {
-    const tracker = yield fork(track);
-    yield take(STOP_ACCOUNT_TRACKER);
-    yield cancel(tracker);
   }
 }
 
