@@ -1,13 +1,12 @@
-import fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch';
 import Layout from '../components/Layout';
 
-
 const Post = props => (
-    <Layout>
-       <h1>{props.show.name}</h1>
-       <p>{props.show.summary.replace(/<[/]?p>/g, '')}</p>
-       <img src={props.show.image.medium}/>
-    </Layout>
+  <Layout>
+    <h1>{props.show.name}</h1>
+    <p>{props.show.summary.replace(/<[/]?p>/g, '')}</p>
+    <img src={props.show.image.medium} />
+  </Layout>
 );
 
 Post.getInitialProps = async function(context) {
@@ -18,6 +17,6 @@ Post.getInitialProps = async function(context) {
   console.log(`Fetched show: ${show.name}`);
 
   return { show };
-}
+};
 
 export default Post;
