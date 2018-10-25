@@ -3,23 +3,18 @@ import { stringify } from 'qs';
 
 import config from '../../config';
 import { snakelize } from '../../utils/snakelize';
+import { calcOffset } from '../../utils/pagination';
 import { getAPI } from '../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT } from './constants';
 
-export function* fetchPurchaseItems(
-  orderType,
-  orderBy,
-  filter,
-  offset,
-  limit = LIBRARY_ITEMS_LIMIT,
-) {
+export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   const options = snakelize({
     orderType,
     orderBy,
     filter,
-    offset,
-    limit,
+    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT),
+    limit: LIBRARY_ITEMS_LIMIT,
   });
 
   const api = yield put(getAPI());
