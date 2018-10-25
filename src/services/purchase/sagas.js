@@ -18,8 +18,8 @@ function* loadPurchaseItems() {
   );
 
   const [itemResponse, countResponse] = yield all([
-    call(fetchPurchaseItems(orderType, orderBy, category, page)),
-    call(fetchPurchaseItemsTotalCount(orderType, orderBy, category)),
+    call(fetchPurchaseItems, orderType, orderBy, category, page),
+    call(fetchPurchaseItemsTotalCount, orderType, orderBy, category),
   ]);
   const bookIds = getBookIdsFromItems(itemResponse.items);
 

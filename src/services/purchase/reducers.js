@@ -2,6 +2,7 @@ import { initialState } from './state';
 
 import {
   SET_PURCHASE_ITEMS,
+  SET_PURCHASE_TOTAL_COUNT,
   CHANGE_PURCHASE_PAGE,
   CHANGE_PURCHASE_OPTION,
 } from './actions';
@@ -12,6 +13,12 @@ const purchaseReducer = (state = initialState, action) => {
       return {
         ...state,
         items: action.payload.items,
+      };
+    case SET_PURCHASE_TOTAL_COUNT:
+      return {
+        ...state,
+        unitTotalCount: action.payload.unitTotalCount,
+        itemTotalCount: action.payload.itemTotalCount,
       };
     case CHANGE_PURCHASE_OPTION:
       return {

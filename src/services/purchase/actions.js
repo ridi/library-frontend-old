@@ -11,7 +11,7 @@ export const loadPurchaseItems = () => ({
 
 export const setPurchaseItems = items => ({
   type: SET_PURCHASE_ITEMS,
-  paylaod: {
+  payload: {
     items,
   },
 });

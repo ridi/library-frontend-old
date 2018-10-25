@@ -12,15 +12,22 @@ import { fetchBookData } from './requests';
 import Storage from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 
+function* persistBookDataToStorage() {
+  // Step 1. Select book data in redux store.
+  // Step 2. Save to storage.
+  const books = yield select(state => state.books.books);
+  Storage.save(books.toJSON());
+}
+
 function* loadBookData(action) {
   // Step 1. Get exist book data
   // Step 2. Filter expired or not cached book data via payload.bookIds
   // Step 3. Fetch book data
   // Step 4. Set book data
   const criterion = getCriterion();
-  const books = yield select(state => state.books.books);
+  const existbooks = yield select(state => state.books.books);
   const bookIds = action.payload.bookIds.map(bookId => {
-    const book = books.find(bookId);
+    const book = existbooks.find(bookId);
 
     if (!book) {
       // 없거나
@@ -32,7 +39,7 @@ function* loadBookData(action) {
       return book.value.id;
     }
 
-    return;
+    return undefined;
   });
 
   if (bookIds.length > 0) {
@@ -48,13 +55,6 @@ function* loadBookDataFromStorage() {
   const books = Storage.load();
   yield put(setBookDataFromStorage(books));
   yield fork(persistBookDataToStorage);
-}
-
-function* persistBookDataToStorage() {
-  // Step 1. Select book data in redux store.
-  // Step 2. Save to storage.
-  const books = yield select(state => state.books.books);
-  Storage.save(books.toJSON());
 }
 
 export default function* bookRootSaga() {
