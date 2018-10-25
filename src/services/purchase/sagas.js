@@ -33,6 +33,6 @@ function* loadPurchaseItems() {
   );
 }
 
-export default function* showsRootSaga() {
+export default function* purchaseRootSaga() {
   yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems)]);
 }
