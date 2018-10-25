@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Layout from '../components/Layout';
 import { loadShows } from '../services/shows/actions';
+import { loadPurchaseItems } from '../services/purchase/actions';
 
 const PostLink = ({ id, name }) => (
   <li>
@@ -16,6 +17,7 @@ const PostLink = ({ id, name }) => (
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadShows());
+    await store.dispatch(loadPurchaseItems());
   }
 
   render() {
@@ -28,6 +30,8 @@ class Index extends React.Component {
             <PostLink id={show.id} name={show.name} />
           ))}
         </ul>
+        <br />
+        <hr />
       </Layout>
     );
   }
