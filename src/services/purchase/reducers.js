@@ -20,6 +20,7 @@ const purchaseReducer = (state = initialState, action) => {
           ...state.options,
           [action.payload.key]: action.payload.value,
         },
+        page: 1,
       };
     case CHANGE_PURCHASE_PAGE:
       return {
