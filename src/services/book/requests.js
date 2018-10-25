@@ -5,7 +5,23 @@ import config from '../../config';
 
 import { makeTTL } from '../../utils/ttl';
 
-const _reduceBooks = books => books;
+const _reduceBooks = books => {
+  const reducedBooks = books.map(book => ({
+    id: book.id,
+    title: book.title,
+    file: book.file,
+    thumbnail: book.thumbnail,
+    property: book.property,
+    authors: book.authors,
+    series: book.series,
+    setbook: book.setbook,
+
+    // RSG Book Component에서 사용함
+    categories: book.categories,
+  }));
+
+  return reducedBooks;
+};
 
 const _attatchTTL = books => {
   const ttl = makeTTL();
