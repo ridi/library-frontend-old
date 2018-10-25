@@ -1,6 +1,10 @@
 export const initialState = {
   items: [],
-  options: {},
+  options: {
+    orderType: 'purchase_date',
+    orderBy: 'desc',
+    category: '',
+  },
 
   page: 1,
   unitTotalCount: 0,
