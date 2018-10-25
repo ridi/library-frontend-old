@@ -26,21 +26,21 @@ function* loadBookData(action) {
   // Step 4. Set book data
   const criterion = getCriterion();
   const existbooks = yield select(state => state.books.books);
-  const bookIds = action.payload.bookIds.map(bookId => {
+  const bookIds = action.payload.bookIds.reduce((previous, bookId) => {
     const book = existbooks.find(bookId);
 
     if (!book) {
       // 없거나
-      return bookId;
+      return [...previous, bookId];
     }
 
     if (book.value.ttl <= criterion) {
       // TTL이 만료되었거나
-      return book.value.id;
+      return [...previous, book.value.id];
     }
 
-    return undefined;
-  });
+    return previous;
+  }, []);
 
   if (bookIds.length > 0) {
     const books = yield call(fetchBookData, bookIds);
