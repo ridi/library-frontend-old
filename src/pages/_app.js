@@ -26,6 +26,6 @@ class LibraryApp extends App {
 }
 
 export default flow(
-  [withReduxSaga, injectStore],
+  [withReduxSaga({ async: true }), injectStore],
   LibraryApp,
 );
