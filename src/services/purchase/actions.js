@@ -5,6 +5,10 @@ export const SET_PURCHASE_TOTAL_COUNT = 'SET_PURCHASE_TOTAL_COUNT';
 export const CHANGE_PURCHASE_PAGE = 'CHANGE_PURCHASE_PAGE';
 export const CHANGE_PURCHASE_OPTION = 'CHANGE_PURCHASE_OPTION';
 
+export const loadPurchaseItems = () => ({
+  type: LOAD_PURCHASE_ITEMS,
+});
+
 export const setPurchaseItems = items => ({
   type: SET_PURCHASE_ITEMS,
   paylaod: {
