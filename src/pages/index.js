@@ -9,7 +9,7 @@ import { loadPurchaseItems } from '../services/purchase/actions';
 const PostLink = ({ id, name }) => (
   <li>
     <Link as={`/p/${id}`} href={`/post?id=${id}`}>
-      <a>{name}</a>
+      {name}
     </Link>
   </li>
 );

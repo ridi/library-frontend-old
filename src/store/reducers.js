@@ -9,5 +9,5 @@ export default combineReducers({
   shows: showsReducer,
   account: accountReducer,
   books: bookReducer,
-  purchaseReducer,
+  purchase: purchaseReducer,
 });
