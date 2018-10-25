@@ -1,5 +1,3 @@
-const initialState = {
+export const initialState = {
   items: [],
 };
-
-export default initialState;
