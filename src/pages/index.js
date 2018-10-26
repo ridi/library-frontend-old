@@ -20,6 +20,19 @@ class Index extends React.Component {
     await store.dispatch(loadPurchaseItems());
   }
 
+  renderBooks() {
+    const { purchaseItems, books } = this.props;
+    return purchaseItems.map(purchaseItem => (
+      <div>
+        {books[purchaseItem.b_id].title}
+        {purchaseItem.service_type}
+        {purchaseItem.b_id}
+        {purchaseItem.expire_date}
+        {purchaseItem.purchase_date}
+      </div>
+    ));
+  }
+
   render() {
     const { shows } = this.props;
     return (
@@ -37,8 +50,19 @@ class Index extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  shows: state.shows.shows,
-});
+const mapStateToProps = state => {
+  const purchaseItems = state.purchase.items;
+  const bookIds = purchaseItems.map(item => item.b_id);
+  const books = bookIds.reduce((previous, bookId) => {
+    previous[bookId] = state.books.books.get(bookId);
+    return previous;
+  }, {});
+
+  return {
+    shows: state.shows.shows,
+    purchaseItems,
+    books,
+  };
+};
 
 export default connect(mapStateToProps)(Index);
