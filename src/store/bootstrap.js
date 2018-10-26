@@ -8,7 +8,6 @@ const beforeCreatingStore = (initialState, context) => {
   if (initialState.books) {
     bookCache.assign(initialState.books.books);
   }
-  console.log(bookCache);
 
   return {
     ...initialState,
