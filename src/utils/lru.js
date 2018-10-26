@@ -33,14 +33,14 @@ class LRUCache extends _LRUCache {
     entries.forEach(entry => {
       if (!this.oldest) {
         this.oldest = makeEntry(entry.key, entry.value);
+        this._keymap[entry.key] = makeEntry(entry.key, entry.value);
         return;
       }
 
-      const oldEntry = this._keymap[entry.key];
-
-      if (oldEntry) {
+      const existEntry = this._keymap[entry.key];
+      if (existEntry) {
         // 이미 존재하는 Entry 있음
-        if (compare(oldEntry.value, entry.value)) {
+        if (compare(existEntry.value, entry.value)) {
           this._keymap[entry.key].value = entry.value;
         }
       } else {
@@ -49,6 +49,7 @@ class LRUCache extends _LRUCache {
         this.oldest.older = newEntry;
         newEntry.newer = this.oldest;
         this.oldest = newEntry;
+        this._keymap[entry.key] = newEntry;
       }
     });
 

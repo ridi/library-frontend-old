@@ -4,16 +4,17 @@ import { loadBookDataFromStorage } from '../services/book/actions';
 import LRUCache from '../utils/lru';
 
 const beforeCreatingStore = (initialState, context) => {
-  const books = {};
-  if (!initialState.books) {
-    books.books = new LRUCache(500);
-  } else {
-    books.books = new LRUCache(500, initialState.books.books);
+  const bookCache = new LRUCache(500);
+  if (initialState.books) {
+    bookCache.assign(initialState.books.books);
   }
+  console.log(bookCache);
 
   return {
     ...initialState,
-    books,
+    books: {
+      books: bookCache,
+    },
   };
 };
 
