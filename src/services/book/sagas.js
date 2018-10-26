@@ -1,7 +1,6 @@
 import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
 import {
-  LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
   setBookData,
   setBookDataFromStorage,
@@ -19,14 +18,22 @@ function* persistBookDataToStorage() {
   Storage.save(books.toJSON());
 }
 
-function* loadBookData(action) {
+function* loadBookDataFromStorage() {
+  // Step 1. Load book data from storage
+  // Step 2. Set book data
+  const books = Storage.load();
+  yield put(setBookDataFromStorage(books));
+  yield fork(persistBookDataToStorage);
+}
+
+export function* loadBookData(bookIds) {
   // Step 1. Get exist book data
   // Step 2. Filter expired or not cached book data via payload.bookIds
   // Step 3. Fetch book data
   // Step 4. Set book data
   const criterion = getCriterion();
   const existbooks = yield select(state => state.books.books);
-  const bookIds = action.payload.bookIds.reduce((previous, bookId) => {
+  const filteredBookIds = bookIds.reduce((previous, bookId) => {
     const book = existbooks.find(bookId);
 
     if (!book) {
@@ -42,24 +49,13 @@ function* loadBookData(action) {
     return previous;
   }, []);
 
-  if (bookIds.length > 0) {
-    const books = yield call(fetchBookData, bookIds);
+  if (filteredBookIds.length > 0) {
+    const books = yield call(fetchBookData, filteredBookIds);
     yield put(setBookData(books));
     yield fork(persistBookDataToStorage);
   }
 }
 
-function* loadBookDataFromStorage() {
-  // Step 1. Load book data from storage
-  // Step 2. Set book data
-  const books = Storage.load();
-  yield put(setBookDataFromStorage(books));
-  yield fork(persistBookDataToStorage);
-}
-
 export default function* bookRootSaga() {
-  yield all([
-    takeEvery(LOAD_BOOK_DATA, loadBookData),
-    takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
-  ]);
+  yield all([takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage)]);
 }

@@ -7,7 +7,7 @@ import {
 } from './actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount } from './requests';
 
-import { loadBookData } from '../book/actions';
+import { loadBookData } from '../book/sagas';
 
 const getBookIdsFromItems = items => items.map(item => item.b_id);
 
@@ -21,9 +21,11 @@ function* loadPurchaseItems() {
     call(fetchPurchaseItems, orderType, orderBy, category, page),
     call(fetchPurchaseItemsTotalCount, orderType, orderBy, category),
   ]);
-  const bookIds = getBookIdsFromItems(itemResponse.items);
 
-  yield put(loadBookData(bookIds));
+  // Request BookData
+  const bookIds = getBookIdsFromItems(itemResponse.items);
+  yield call(loadBookData, bookIds);
+
   yield put(setPurchaseItems(itemResponse.items));
   yield put(
     setPurchaseTotalCount(
