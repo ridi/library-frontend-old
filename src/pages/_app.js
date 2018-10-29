@@ -3,6 +3,7 @@ import App, { Container } from 'next/app';
 import withReduxSaga from 'next-redux-saga';
 
 import flow from '../utils/flow';
+import { isEmpty } from '../utils/dict';
 import injectStore from '../store';
 
 class LibraryApp extends App {
@@ -11,7 +12,7 @@ class LibraryApp extends App {
       ? await Component.getInitialProps(ctx)
       : {};
 
-    if (router.query) {
+    if (ctx.isServer && !isEmpty(router.query)) {
       await this.parseQueryString(this.store, router.pathname, router.query);
     }
 
