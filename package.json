@@ -24,6 +24,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.3.0",
     "lru-fast": "^0.2.2",
+    "moment": "^2.22.2",
     "next": "^7.0.0",
     "next-redux-saga": "^3.0.0",
     "next-redux-wrapper": "^2.0.0",
