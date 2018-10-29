@@ -24,7 +24,7 @@ class Index extends React.Component {
     const { purchaseItems, books } = this.props;
     return purchaseItems.map(purchaseItem => (
       <div>
-        {books[purchaseItem.b_id].title}
+        {books[purchaseItem.b_id].title.main}
         {purchaseItem.service_type}
         {purchaseItem.b_id}
         {purchaseItem.expire_date}
@@ -45,6 +45,7 @@ class Index extends React.Component {
         </ul>
         <br />
         <hr />
+        <div>{this.renderBooks()}</div>
       </Layout>
     );
   }
