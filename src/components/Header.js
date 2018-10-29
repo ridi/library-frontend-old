@@ -9,7 +9,7 @@ const Header = () => (
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
-    <Link href="/about">
+    <Link href={{ pathname: '/about', query: { keyword: '123' } }}>
       <a style={linkStyle}>About</a>
     </Link>
   </div>
