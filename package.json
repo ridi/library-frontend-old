@@ -34,7 +34,8 @@
     "react-emotion": "^9.2.12",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.1",
