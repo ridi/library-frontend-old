@@ -56,8 +56,8 @@ class Index extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const items = getItemsByPage(state.purchase);
-  const books = getBooks(state.books, toFlatten(items, 'b_id'));
+  const items = getItemsByPage(state);
+  const books = getBooks(state, toFlatten(items, 'b_id'));
   return {
     shows: state.shows.shows,
     items,

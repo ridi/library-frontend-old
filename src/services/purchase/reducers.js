@@ -14,7 +14,7 @@ const purchaseReducer = (state = initialState, action) => {
     case SET_PURCHASE_ITEMS:
       return {
         ...state,
-        itemsIds: {
+        itemIds: {
           ...state.itemIds,
           [state.page]: toFlatten(action.payload.items, 'unit_id'),
         },
