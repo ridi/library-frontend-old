@@ -6,7 +6,7 @@ export const getItemsByPage = createSelector(
   getPurchaseState,
   purchaseState => {
     const { page } = purchaseState;
-    const itemIdsByPage = purchaseState.itemIds[page];
+    const itemIdsByPage = purchaseState.itemIds[page] || [];
     return itemIdsByPage.map(itemId => purchaseState.items[itemId]);
   },
 );
