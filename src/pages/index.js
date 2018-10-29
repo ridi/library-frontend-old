@@ -6,6 +6,10 @@ import Layout from '../components/Layout';
 import { loadShows } from '../services/shows/actions';
 import { loadPurchaseItems } from '../services/purchase/actions';
 
+import { getBooks } from '../services/book/selectors';
+import { getItemsByPage } from '../services/purchase/selectors';
+import { toFlatten } from '../utils/array';
+
 const PostLink = ({ id, name }) => (
   <li>
     <Link as={`/p/${id}`} href={`/post?id=${id}`}>
@@ -21,14 +25,14 @@ class Index extends React.Component {
   }
 
   renderBooks() {
-    const { purchaseItems, books } = this.props;
-    return purchaseItems.map(purchaseItem => (
+    const { items, books } = this.props;
+    return items.map(item => (
       <div>
-        {books[purchaseItem.b_id].title.main}
-        {purchaseItem.service_type}
-        {purchaseItem.b_id}
-        {purchaseItem.expire_date}
-        {purchaseItem.purchase_date}
+        {books[item.b_id].title.main}
+        {item.service_type}
+        {item.b_id}
+        {item.expire_date}
+        {item.purchase_date}
       </div>
     ));
   }
@@ -52,16 +56,11 @@ class Index extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const purchaseItems = state.purchase.items;
-  const bookIds = purchaseItems.map(item => item.b_id);
-  const books = bookIds.reduce((previous, bookId) => {
-    previous[bookId] = state.books.books.get(bookId);
-    return previous;
-  }, {});
-
+  const items = getItemsByPage(state.purchase);
+  const books = getBooks(state.books, toFlatten(items, 'b_id'));
   return {
     shows: state.shows.shows,
-    purchaseItems,
+    items,
     books,
   };
 };

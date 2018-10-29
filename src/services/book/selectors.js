@@ -1,10 +1,9 @@
-export const getBooks = bookIds => {
-  return state => {
-    if (bookIds.length === 0) {
-      return [];
-    }
-    return bookIds
-      .map(bookId => state.books.books.get(bookId))
-      .filter(value => value);
-  };
-};
+import { createSelector } from 'reselect';
+
+export const getBooks = (bookState, bookIds) =>
+  createSelector(state =>
+    bookIds.reduce((previous, bookId) => {
+      previous[bookId] = state.books.get(bookId);
+      return previous;
+    }, {}),
+  )(bookState);
