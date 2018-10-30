@@ -87,7 +87,7 @@ module.exports = {
     'react/jsx-filename-extension': [
       'warn',
       {
-        extensions: ['.js', '.jsx', '.vue'],
+        extensions: ['.js', '.jsx'],
       },
     ],
     'jsx-a11y/anchor-is-valid': [
