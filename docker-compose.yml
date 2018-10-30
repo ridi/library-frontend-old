@@ -10,7 +10,7 @@ services:
       - /bin/sh
       - -c
       - |
-        yarn global add pm2
+        yarn global add https://github.com/JungleKim/pm2
         yarn install
         yarn run local
 
