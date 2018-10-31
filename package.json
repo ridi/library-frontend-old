@@ -16,10 +16,12 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@ridi/rsg": "^2.0.13",
     "axios": "^0.18.0",
     "cookie-parser": "^1.4.3",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
+    "esm": "^3.0.84",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.3.0",

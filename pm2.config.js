@@ -3,6 +3,7 @@ module.exports = {
     {
       name: 'App',
       script: 'server/entry.js',
+      node_args: '-r esm',
       kill_timeout: 3000,
       env: {
         PORT: 8080,
