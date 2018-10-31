@@ -7,8 +7,8 @@ import { fetchUserInfo } from './requests';
 import Window, { LOCATION } from '../../utils/window';
 
 function* loadUserInfo() {
-  const data = yield call(fetchUserInfo);
-  yield put(setUserInfo(data));
+  const userInfo = yield call(fetchUserInfo);
+  yield put(setUserInfo(userInfo));
 }
 
 function* accountTracker() {
