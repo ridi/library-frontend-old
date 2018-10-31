@@ -9,6 +9,7 @@ import { loadPurchaseItems } from '../services/purchase/actions';
 import { getBooks } from '../services/book/selectors';
 import { getItemsByPage } from '../services/purchase/selectors';
 import { toFlatten } from '../utils/array';
+import LibraryBook from '../components/LibraryBook';
 
 const PostLink = ({ id, name }) => (
   <li>
@@ -27,13 +28,7 @@ class Index extends React.Component {
   renderBooks() {
     const { items, books } = this.props;
     return items.map(item => (
-      <div>
-        {books[item.b_id].title.main}
-        {item.service_type}
-        {item.b_id}
-        {item.expire_date}
-        {item.purchase_date}
-      </div>
+      <LibraryBook item={item} book={books[item.b_id]} />
     ));
   }
 
