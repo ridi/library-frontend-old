@@ -21,7 +21,7 @@ class LibraryApp extends App {
     return (
       <Container>
         <Provider store={store}>
-          <ConnectedRouter store={store}>
+          <ConnectedRouter>
             <Component {...pageProps} />
           </ConnectedRouter>
         </Provider>

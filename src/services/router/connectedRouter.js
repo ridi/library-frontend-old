@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 
@@ -13,6 +14,7 @@ const createConnectedRouter = () => {
 
     constructor(props, context) {
       super(props, context);
+      this.store = context.store;
       this.listenRouteChange = this.listenRouteChange.bind(this);
       this.finishRouteChange = this.finishRouteChange.bind(this);
     }
@@ -31,8 +33,8 @@ const createConnectedRouter = () => {
 
     listenRouteChange(as) {
       const location = locationFromUrl(as);
-      const { store } = this.props;
-      store.dispatch(setLocation(location));
+      const { setLocation: dispatchSetLocation } = this.props;
+      dispatchSetLocation(location);
     }
 
     finishRouteChange() {
@@ -45,8 +47,7 @@ const createConnectedRouter = () => {
     }
 
     checkMismatch() {
-      const { store } = this.props;
-      const state = store.getState();
+      const state = this.store.getState();
       const {
         pathname: pathnameInStore,
         search: searchInStore,
@@ -67,15 +68,15 @@ const createConnectedRouter = () => {
     }
 
     commit() {
-      const { store } = this.props;
-      store.dispatch(commitLocation());
+      const { commitLocation: dispatchCommitLocation } = this.props;
+      dispatchCommitLocation();
     }
 
     rollback(url, as = url) {
       // Router의 Events를 보내지 않고 페이지 복구를 위해 Router코드를 직접 호출함
       // `change` 메소드의 간소화 버전, https://github.com/zeit/next.js/blob/canary/packages/next-server/lib/router/router.js
-      const { store } = this.props;
-      store.dispatch(rollbackLocation());
+      const { rollbackLocation: dispatchRollbackLocation } = this.props;
+      dispatchRollbackLocation();
 
       if (Router.router.onlyAHashChange(url)) {
         Router.router.changeState('replaceState', url, as);
@@ -99,7 +100,20 @@ const createConnectedRouter = () => {
       return children;
     }
   }
-  return withRouter;
+  withRouter.contextTypes = {
+    store: PropTypes.shape({
+      getState: PropTypes.func.isRequired,
+    }),
+  };
+
+  return connect(
+    null,
+    {
+      setLocation,
+      commitLocation,
+      rollbackLocation,
+    },
+  )(withRouter);
 };
 
 export default createConnectedRouter;

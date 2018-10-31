@@ -29,6 +29,7 @@
     "next-redux-saga": "^3.0.0",
     "next-redux-wrapper": "^2.0.0",
     "next-routes": "^1.4.2",
+    "prop-types": "^15.6.2",
     "qs": "^6.5.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
