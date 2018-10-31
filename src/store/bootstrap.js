@@ -18,6 +18,7 @@ const beforeCreatingStore = (initialState, context) => {
 
   if (context.isServer) {
     newInitialState.router = {
+      beforeLocation: null,
       location: locationFromUrl(context.asPath),
     };
   }
