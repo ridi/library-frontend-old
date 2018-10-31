@@ -18,6 +18,7 @@
   "dependencies": {
     "@ridi/rsg": "^2.0.13",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
     "cookie-parser": "^1.4.3",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
