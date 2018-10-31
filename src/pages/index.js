@@ -9,6 +9,8 @@ import { loadPurchaseItems } from '../services/purchase/actions';
 import { getBooks } from '../services/book/selectors';
 import { getItemsByPage } from '../services/purchase/selectors';
 import { toFlatten } from '../utils/array';
+
+import BookList from '../components/BookList';
 import LibraryBook from '../components/LibraryBook';
 
 const PostLink = ({ id, name }) => (
@@ -27,9 +29,13 @@ class Index extends React.Component {
 
   renderBooks() {
     const { items, books } = this.props;
-    return items.map(item => (
-      <LibraryBook item={item} book={books[item.b_id]} />
-    ));
+    return (
+      <BookList>
+        {items.map(item => (
+          <LibraryBook item={item} book={books[item.b_id]} />
+        ))}
+      </BookList>
+    );
   }
 
   render() {
@@ -44,7 +50,7 @@ class Index extends React.Component {
         </ul>
         <br />
         <hr />
-        <div>{this.renderBooks()}</div>
+        {this.renderBooks()}
       </Layout>
     );
   }
