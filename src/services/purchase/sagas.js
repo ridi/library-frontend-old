@@ -4,14 +4,24 @@ import {
   LOAD_PURCHASE_ITEMS,
   setPurchaseItems,
   setPurchaseTotalCount,
+  setPurchasePage,
 } from './actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount } from './requests';
 
 import { loadBookData } from '../book/sagas';
+import { getQueries } from '../router/selectors';
 
 const getBookIdsFromItems = items => items.map(item => item.b_id);
 
+function* persistPageOptionsFromQuries() {
+  const queries = yield select(getQueries);
+  const page = parseInt(queries.page, 10) || 1;
+  yield put(setPurchasePage(page));
+}
+
 function* loadPurchaseItems() {
+  yield call(persistPageOptionsFromQuries);
+
   const page = yield select(state => state.purchase.page);
   const { orderType, orderBy, category } = yield select(
     state => state.purchase.options,

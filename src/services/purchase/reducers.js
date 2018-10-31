@@ -3,8 +3,8 @@ import { initialState } from './state';
 import {
   SET_PURCHASE_ITEMS,
   SET_PURCHASE_TOTAL_COUNT,
-  CHANGE_PURCHASE_PAGE,
-  CHANGE_PURCHASE_OPTION,
+  SET_PURCHASE_PAGE,
+  SET_PURCHASE_OPTION,
 } from './actions';
 
 import { toDict, toFlatten } from '../../utils/array';
@@ -29,7 +29,12 @@ const purchaseReducer = (state = initialState, action) => {
         unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case CHANGE_PURCHASE_OPTION:
+    case SET_PURCHASE_PAGE:
+      return {
+        ...state,
+        page: action.payload.page,
+      };
+    case SET_PURCHASE_OPTION:
       return {
         ...state,
         options: {
@@ -37,11 +42,6 @@ const purchaseReducer = (state = initialState, action) => {
           [action.payload.key]: action.payload.value,
         },
         page: 1,
-      };
-    case CHANGE_PURCHASE_PAGE:
-      return {
-        ...state,
-        page: action.payload.page,
       };
     default:
       return state;
