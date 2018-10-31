@@ -12,8 +12,7 @@ const createConnectedRouter = () => {
     }
 
     constructor(props, context) {
-      super(props);
-      this.store = context.store;
+      super(props, context);
       this.listenRouteChange = this.listenRouteChange.bind(this);
       this.finishRouteChange = this.finishRouteChange.bind(this);
     }
@@ -31,9 +30,9 @@ const createConnectedRouter = () => {
     }
 
     listenRouteChange(as) {
-      const { setLocation: dispatchSetLocation } = this.props;
       const location = locationFromUrl(as);
-      dispatchSetLocation(location);
+      const { store } = this.props;
+      store.dispatch(setLocation(location));
     }
 
     finishRouteChange() {
@@ -46,7 +45,8 @@ const createConnectedRouter = () => {
     }
 
     checkMismatch() {
-      const state = this.store.getState();
+      const { store } = this.props;
+      const state = store.getState();
       const {
         pathname: pathnameInStore,
         search: searchInStore,
@@ -58,7 +58,6 @@ const createConnectedRouter = () => {
         search: searchInHistory,
         hash: hashInHistory,
       } = locationFromUrl(Router.asPath);
-
       return [
         pathnameInStore !== pathnameInHistory ||
           searchInStore !== searchInHistory ||
@@ -68,15 +67,15 @@ const createConnectedRouter = () => {
     }
 
     commit() {
-      const { commitLocation: dispatchCommitLocation } = this.props;
-      dispatchCommitLocation();
+      const { store } = this.props;
+      store.dispatch(commitLocation());
     }
 
     rollback(url, as = url) {
       // Router의 Events를 보내지 않고 페이지 복구를 위해 Router코드를 직접 호출함
       // `change` 메소드의 간소화 버전, https://github.com/zeit/next.js/blob/canary/packages/next-server/lib/router/router.js
-      const { rollbackLocation: dispatchRollbackLocation } = this.props;
-      dispatchRollbackLocation();
+      const { store } = this.props;
+      store.dispatch(rollbackLocation());
 
       if (Router.router.onlyAHashChange(url)) {
         Router.router.changeState('replaceState', url, as);
@@ -100,14 +99,7 @@ const createConnectedRouter = () => {
       return children;
     }
   }
-  return connect(
-    null,
-    {
-      setLocation,
-      commitLocation,
-      rollbackLocation,
-    },
-  )(withRouter);
+  return withRouter;
 };
 
 export default createConnectedRouter;
