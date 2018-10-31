@@ -1,6 +1,4 @@
-const getFullPath = req => {
-  return `https://${req.get('host')}${req.originalUrl}`;
-};
+const getFullPath = req => `https://${req.get('host')}${req.originalUrl}`;
 
 module.exports = {
   getFullPath,
