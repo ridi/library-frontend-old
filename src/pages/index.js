@@ -7,11 +7,13 @@ import { loadShows } from '../services/shows/actions';
 import { loadPurchaseItems } from '../services/purchase/actions';
 
 import { getBooks } from '../services/book/selectors';
-import { getItemsByPage } from '../services/purchase/selectors';
+import { getItemsByPage, getPageInfo } from '../services/purchase/selectors';
 import { toFlatten } from '../utils/array';
 
 import BookList from '../components/BookList';
 import LibraryBook from '../components/LibraryBook';
+import Paginator from '../components/Paginator';
+import { PAGE_COUNT } from '../constants';
 
 const PostLink = ({ id, name }) => (
   <li>
@@ -38,6 +40,21 @@ class Index extends React.Component {
     );
   }
 
+  renderPaginator() {
+    const {
+      pageInfo: { currentPage, totalPages },
+    } = this.props;
+
+    return (
+      <Paginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pageCount={PAGE_COUNT}
+        pathname="/"
+      />
+    );
+  }
+
   render() {
     const { shows } = this.props;
     return (
@@ -51,16 +68,19 @@ class Index extends React.Component {
         <br />
         <hr />
         {this.renderBooks()}
+        {this.renderPaginator()}
       </Layout>
     );
   }
 }
 
 const mapStateToProps = state => {
+  const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   return {
     shows: state.shows.shows,
+    pageInfo,
     items,
     books,
   };

@@ -1,3 +1,5 @@
+export const PAGE_COUNT = 5;
+
 export class ServiceType {
   static get RENT() {
     return 'rent';
