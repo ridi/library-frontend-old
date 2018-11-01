@@ -5,3 +5,6 @@ export const toDict = (arr, key) =>
   }, {});
 
 export const toFlatten = (arr, key) => arr.map(value => value[key]);
+
+export const makeRange = (start, end) =>
+  Array.from({ length: end - start + 1 }, (_, k) => k + start);
