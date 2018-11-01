@@ -2,42 +2,51 @@ import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
 
-import { makeRange } from '../utils/array';
-
-export const PageItem = ({ element, children, props }) => (
-  <element {...props}>{children}</element>
-);
+import { calcPageBlock, makePageRange } from '../utils/pagination';
 
 export default class Paginator extends React.Component {
-  calcPageRange() {
-    const { currentPage, totalPages, pageCount } = this.props;
-
-    const start = Math.max(1, currentPage - pageCount);
-    const end = Math.min(currentPage + pageCount, totalPages);
-
-    return makeRange(start, end);
-  }
-
-  makeProps(page) {
+  makeHref(page) {
     const { pathname } = this.props;
-    return { href: { pathname, query: { page } } };
+    return { pathname, query: { page } };
   }
 
   renderGoFirst() {
     const { currentPage, pageCount } = this.props;
 
-    if (currentPage > pageCount + 1) {
+    if (currentPage <= pageCount) {
       return null;
     }
 
     return (
       <>
-        <PageItem element={Link} props={this.makeProps(1)}>
-          처음
-        </PageItem>
+        <Link href={this.makeHref(1)}>
+          <a>처음</a>
+        </Link>
         <span className="Pagination_Dots">
           <Icon name="dotdotdot" className="Pagination_DeviderIcon" />
         </span>
+      </>
+    );
+  }
+
+  renderGoLast() {
+    const { currentPage, totalPages, pageCount } = this.props;
+
+    if (
+      calcPageBlock(currentPage, pageCount) ===
+      calcPageBlock(totalPages, pageCount)
+    ) {
+      return null;
+    }
+
+    return (
+      <>
+        <span className="Pagination_Dots">
+          <Icon name="dotdotdot" className="Pagination_DeviderIcon" />
+        </span>
+        <Link href={this.makeHref(totalPages)}>
+          <a>마지막</a>
+        </Link>
       </>
     );
   }
@@ -50,9 +59,11 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <PageItem element={Link} props={this.makeProps(currentPage - 1)}>
-        <Icon name="arrow_8_left" className="Pagination_GoPrevIcon" />
-      </PageItem>
+      <Link href={this.makeHref(currentPage - 1)}>
+        <a>
+          <Icon name="arrow_8_left" className="Pagination_GoPrevIcon" />
+        </a>
+      </Link>
     );
   }
 
@@ -64,38 +75,22 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <PageItem element={Link} props={this.makeProps(currentPage + 1)}>
-        <Icon name="arrow_8_right" className="Pagination_GoPrevIcon" />
-      </PageItem>
-    );
-  }
-
-  renderGoLast() {
-    const { currentPage, totalPages } = this.props;
-
-    if (currentPage === totalPages) {
-      return null;
-    }
-
-    return (
-      <>
-        <span className="Pagination_Dots">
-          <Icon name="dotdotdot" className="Pagination_DeviderIcon" />
-        </span>
-        <PageItem element={Link} props={this.makeProps(totalPages)}>
-          마지막
-        </PageItem>
-      </>
+      <Link href={this.makeHref(currentPage + 1)}>
+        <a>
+          <Icon name="arrow_8_right" className="Pagination_GoPrevIcon" />
+        </a>
+      </Link>
     );
   }
 
   renderPageItems() {
-    const pageRange = this.calcPageRange();
+    const { currentPage, totalPages, pageCount } = this.props;
+    const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
       <li>
-        <PageItem element={Link} props={this.makeProps(page)}>
-          {page}
-        </PageItem>
+        <Link href={this.makeHref(page)}>
+          <a>{page}</a>
+        </Link>
       </li>
     ));
   }

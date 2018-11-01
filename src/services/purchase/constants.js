@@ -1,1 +1,1 @@
-export const LIBRARY_ITEMS_LIMIT = 20;
+export const LIBRARY_ITEMS_LIMIT = 3;
