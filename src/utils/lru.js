@@ -26,14 +26,19 @@ class LRUCache extends _LRUCache {
       this._keymap = {};
     }
 
-    if (!entries) {
+    if (!entries || entries.length === 0) {
       return;
     }
 
     entries.forEach(entry => {
+      if (!entry) {
+        return;
+      }
+
       if (!this.oldest) {
-        this.oldest = makeEntry(entry.key, entry.value);
-        this._keymap[entry.key] = makeEntry(entry.key, entry.value);
+        const _entry = makeEntry(entry.key, entry.value);
+        this.oldest = _entry;
+        this._keymap[entry.key] = _entry;
         return;
       }
 

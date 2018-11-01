@@ -1,5 +1,4 @@
 export const initialState = {
-  itemIds: {},
   items: {},
   options: {
     orderType: 'purchase_date',

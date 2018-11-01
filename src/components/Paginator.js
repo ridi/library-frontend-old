@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
 
-import { makeRange } from '../../utils/array';
+import { makeRange } from '../utils/array';
 
 export const PageItem = ({ element, children, props }) => (
   <element {...props}>{children}</element>
