@@ -1,8 +1,72 @@
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
+import { css } from 'emotion';
+import classNames from 'classnames';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
+
+const paginatorCss = css`
+  height: 30px;
+  margin: 0;
+  padding: 20px 0 0;
+  line-height: 30px;
+  text-align: center;
+  white-space: nowrap;
+`;
+
+const horizontalWrapperCss = css`
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+`;
+
+const pageItemCss = css`
+  display: inline-block;
+  min-width: 42px;
+  height: 32px;
+  margin-left: -1px;
+  padding: 0 10px;
+  line-height: 30px;
+}`;
+
+const pageItemIconCss = css`
+  width: 6px;
+  height: 9px;
+  fill: #818a92;
+`;
+
+const pageItemGroupCss = css`
+  display: inline-block;
+  margin: 0 6px;
+
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const pageItemGroupMemberCss = css`
+  float: left;
+`;
+
+const paginatorDotsCss = css`
+  display: inline-block;
+  width: 8px;
+  height: var(--Paging-height);
+  padding: 0 3px;
+`;
+
+const paginatorDeviderDotsCss = css`
+  width: 100%;
+  vertical-align: middle;
+  fill: #bfc4c8;
+`;
 
 export default class Paginator extends React.Component {
   makeHref(page) {
@@ -19,11 +83,13 @@ export default class Paginator extends React.Component {
 
     return (
       <>
-        <Link href={this.makeHref(1)}>
-          <a>처음</a>
-        </Link>
-        <span className="Pagination_Dots">
-          <Icon name="dotdotdot" className="Pagination_DeviderIcon" />
+        <div className={pageItemCss}>
+          <Link href={this.makeHref(1)}>
+            <a>처음</a>
+          </Link>
+        </div>
+        <span className={paginatorDotsCss}>
+          <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
         </span>
       </>
     );
@@ -41,12 +107,14 @@ export default class Paginator extends React.Component {
 
     return (
       <>
-        <span className="Pagination_Dots">
-          <Icon name="dotdotdot" className="Pagination_DeviderIcon" />
+        <span className={paginatorDotsCss}>
+          <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
         </span>
-        <Link href={this.makeHref(totalPages)}>
-          <a>마지막</a>
-        </Link>
+        <div className={pageItemCss}>
+          <Link href={this.makeHref(totalPages)}>
+            <a>마지막</a>
+          </Link>
+        </div>
       </>
     );
   }
@@ -59,11 +127,13 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <Link href={this.makeHref(currentPage - 1)}>
-        <a>
-          <Icon name="arrow_8_left" className="Pagination_GoPrevIcon" />
-        </a>
-      </Link>
+      <div className={pageItemCss}>
+        <Link href={this.makeHref(currentPage - 1)}>
+          <a>
+            <Icon name="arrow_8_left" className={pageItemIconCss} />
+          </a>
+        </Link>
+      </div>
     );
   }
 
@@ -75,11 +145,13 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <Link href={this.makeHref(currentPage + 1)}>
-        <a>
-          <Icon name="arrow_8_right" className="Pagination_GoPrevIcon" />
-        </a>
-      </Link>
+      <div className={pageItemCss}>
+        <Link href={this.makeHref(currentPage + 1)}>
+          <a>
+            <Icon name="arrow_8_right" className={pageItemIconCss} />
+          </a>
+        </Link>
+      </div>
     );
   }
 
@@ -87,7 +159,7 @@ export default class Paginator extends React.Component {
     const { currentPage, totalPages, pageCount } = this.props;
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
-      <li>
+      <li className={classNames(pageItemCss, pageItemGroupMemberCss)}>
         <Link href={this.makeHref(page)}>
           <a>{page}</a>
         </Link>
@@ -102,13 +174,15 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <ul>
-        {this.renderGoFirst()}
-        {this.renderGoPrev()}
-        {this.renderPageItems()}
-        {this.renderGoNext()}
-        {this.renderGoLast()}
-      </ul>
+      <div className={paginatorCss}>
+        <div className={horizontalWrapperCss}>
+          {this.renderGoFirst()}
+          {this.renderGoPrev()}
+          <ul className={pageItemGroupCss}>{this.renderPageItems()}</ul>
+          {this.renderGoNext()}
+          {this.renderGoLast()}
+        </div>
+      </div>
     );
   }
 }
