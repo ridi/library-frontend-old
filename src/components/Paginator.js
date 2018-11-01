@@ -4,7 +4,9 @@ import { Icon } from '@ridi/rsg';
 
 import { makeRange } from '../../utils/array';
 
-import { PageItem } from './PageItem';
+export const PageItem = ({ element, children, props }) => (
+  <element {...props}>{children}</element>
+);
 
 export default class Paginator extends React.Component {
   calcPageRange() {
