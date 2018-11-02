@@ -3,7 +3,8 @@ export const LOAD_PURCHASE_ITEMS = 'LOAD_PURCHASE_ITEMS';
 export const SET_PURCHASE_ITEMS = 'SET_PURCHASE_ITEMS';
 export const SET_PURCHASE_TOTAL_COUNT = 'SET_PURCHASE_TOTAL_COUNT';
 export const SET_PURCHASE_PAGE = 'SET_PURCHASE_PAGE';
-export const SET_PURCHASE_OPTION = 'SET_PURCHASE_OPTION';
+export const SET_PURCHASE_ORDER = 'SET_PURCHASE_ORDER';
+export const SET_PURCHASE_FILTER = 'SET_PURCHASE_FILTER';
 
 export const loadPurchaseItems = () => ({
   type: LOAD_PURCHASE_ITEMS,
@@ -31,10 +32,16 @@ export const setPurchasePage = page => ({
   },
 });
 
-export const setPurchaseOption = (key, value) => ({
-  type: SET_PURCHASE_OPTION,
+export const setPurchaseOrder = order => ({
+  type: SET_PURCHASE_ORDER,
   payload: {
-    key,
-    value,
+    order,
+  },
+});
+
+export const setPurchaseFilter = filter => ({
+  type: SET_PURCHASE_FILTER,
+  payload: {
+    filter,
   },
 });

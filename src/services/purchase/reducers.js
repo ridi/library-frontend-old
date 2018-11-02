@@ -4,7 +4,8 @@ import {
   SET_PURCHASE_ITEMS,
   SET_PURCHASE_TOTAL_COUNT,
   SET_PURCHASE_PAGE,
-  SET_PURCHASE_OPTION,
+  SET_PURCHASE_ORDER,
+  SET_PURCHASE_FILTER,
 } from './actions';
 
 const purchaseReducer = (state = initialState, action) => {
@@ -28,14 +29,15 @@ const purchaseReducer = (state = initialState, action) => {
         ...state,
         page: action.payload.page,
       };
-    case SET_PURCHASE_OPTION:
+    case SET_PURCHASE_ORDER:
       return {
         ...state,
-        options: {
-          ...state.options,
-          [action.payload.key]: action.payload.value,
-        },
-        page: 1,
+        order: state.payload.order,
+      };
+    case SET_PURCHASE_FILTER:
+      return {
+        ...state,
+        filter: state.payload.filter,
       };
     default:
       return state;

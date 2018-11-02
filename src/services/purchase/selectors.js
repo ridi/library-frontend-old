@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 
+import { mainOrderOptions } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT } from './constants';
 import { calcPage } from '../../utils/pagination';
 
@@ -20,3 +21,15 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
     totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT),
   };
 });
+
+export const getOrderOption = createSelector(
+  getPurchaseState,
+  purchaseState => {
+    const { order } = purchaseState;
+    const option = mainOrderOptions.find(_opt => _opt.value === order);
+    return {
+      orderType: option.order_type,
+      orderBy: option.order_by,
+    };
+  },
+);

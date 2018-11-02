@@ -1,6 +1,6 @@
 import { Book } from '@ridi/rsg';
 import classNames from 'classnames';
-import { ServiceType } from '../../constants';
+import { ServiceType } from '../../constants/serviceType';
 import { isExpired } from '../../utils/datetime';
 
 import { portraitBookCSS, bookCss } from './styles';

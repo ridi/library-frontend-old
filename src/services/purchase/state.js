@@ -1,9 +1,11 @@
+import { mainOrderOptions } from '../../constants/orderOptions';
+
 export const initialState = {
   items: {},
-  options: {
-    orderType: 'purchase_date',
-    orderBy: 'desc',
-    category: '',
+  order: mainOrderOptions[0].value,
+  filter: {
+    options: [],
+    selected: '',
   },
 
   page: 1,

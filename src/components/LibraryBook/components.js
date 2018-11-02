@@ -1,7 +1,7 @@
 import { Icon } from '@ridi/rsg';
 import classNames from 'classnames';
 
-import { ServiceType } from '../../constants';
+import { ServiceType } from '../../constants/serviceType';
 import { timeLeft, formatExpiredDate, isExpired } from '../../utils/datetime';
 
 import {

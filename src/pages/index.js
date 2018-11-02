@@ -13,7 +13,7 @@ import { toFlatten } from '../utils/array';
 import BookList from '../components/BookList';
 import LibraryBook from '../components/LibraryBook';
 import Paginator from '../components/Paginator';
-import { PAGE_COUNT } from '../constants';
+import { PAGE_COUNT } from '../constants/page';
 
 const PostLink = ({ id, name }) => (
   <li>
