@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 
-import { mainOrderOptions } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT } from './constants';
 import { calcPage } from '../../utils/pagination';
 
@@ -27,7 +26,17 @@ export const getOrder = createSelector(
   purchaseState => purchaseState.order,
 );
 
+export const getFilterOptions = createSelector(
+  getPurchaseState,
+  purchaseState => purchaseState.filter.options,
+);
+
 export const getFilter = createSelector(
   getPurchaseState,
-  purchaseState => purchaseState.filter,
+  purchaseState => purchaseState.filter.selected,
+);
+
+export const getPurchaseOptions = createSelector(
+  [getOrder, getFilter],
+  (order, filter) => ({ order, category: filter }),
 );

@@ -1,8 +1,8 @@
-import { mainOrderOptions } from '../../constants/orderOptions';
+import { MainOrderOptions } from '../../constants/orderOptions';
 
 export const initialState = {
   items: {},
-  order: mainOrderOptions[0].value,
+  order: MainOrderOptions.DEFAULT,
   filter: {
     options: [],
     selected: null,

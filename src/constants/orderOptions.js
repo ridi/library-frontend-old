@@ -78,8 +78,37 @@ const collectionOrder = [
   },
 ];
 
-export const mainOrderOptions = mainOrder.map(generateAndAttachValue);
-export const seriesOrderOptions = seriesOrder.map(generateAndAttachValue);
-export const collectionOrderOptions = collectionOrder.map(
-  generateAndAttachValue,
-);
+class BaseOrderOptions {
+  static parse(option) {
+    const _option = this.options.find(opt => opt.value === option);
+    return {
+      orderBy: _option.order_by,
+      OrderType: _option.order_type,
+    };
+  }
+
+  static register(options) {
+    this.options = options;
+  }
+
+  static get DEFAULT() {
+    throw new Error('Need Implement Default');
+  }
+
+  static toList() {
+    return this.options;
+  }
+}
+BaseOrderOptions.options = [];
+
+export class MainOrderOptions extends BaseOrderOptions {
+  static get DEFAULT() {
+    return this.options[0].value;
+  }
+}
+MainOrderOptions.register(mainOrder.map(generateAndAttachValue));
+
+// export const seriesOrderOptions = seriesOrder.map(generateAndAttachValue);
+// export const collectionOrderOptions = collectionOrder.map(
+//   generateAndAttachValue,
+// );
