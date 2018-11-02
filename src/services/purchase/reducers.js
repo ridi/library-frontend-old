@@ -37,7 +37,10 @@ const purchaseReducer = (state = initialState, action) => {
     case SET_PURCHASE_FILTER:
       return {
         ...state,
-        filter: state.payload.filter,
+        filter: {
+          ...state.filter,
+          selected: state.payload.filter,
+        },
       };
     default:
       return state;

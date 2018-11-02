@@ -5,7 +5,7 @@ export const initialState = {
   order: mainOrderOptions[0].value,
   filter: {
     options: [],
-    selected: '',
+    selected: null,
   },
 
   page: 1,

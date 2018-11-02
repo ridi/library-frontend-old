@@ -22,14 +22,12 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
   };
 });
 
-export const getOrderOption = createSelector(
+export const getOrder = createSelector(
   getPurchaseState,
-  purchaseState => {
-    const { order } = purchaseState;
-    const option = mainOrderOptions.find(_opt => _opt.value === order);
-    return {
-      orderType: option.order_type,
-      orderBy: option.order_by,
-    };
-  },
+  purchaseState => purchaseState.order,
+);
+
+export const getFilter = createSelector(
+  getPurchaseState,
+  purchaseState => purchaseState.filter,
 );

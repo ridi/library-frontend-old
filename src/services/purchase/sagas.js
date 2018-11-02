@@ -48,12 +48,6 @@ function* loadPurchaseItems() {
     ),
   );
 }
-
-function* changeOrder() {
-  // Step 1. Get Options (filter, order, page=1)
-  // Step 2. reload
-}
-
 export default function* purchaseRootSaga() {
   yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems)]);
 }
