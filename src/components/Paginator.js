@@ -85,7 +85,7 @@ export default class Paginator extends React.Component {
       <>
         <div className={pageItemCss}>
           <Link href={this.makeHref(1)}>
-            <a>처음</a>
+            <div>처음</div>
           </Link>
         </div>
         <span className={paginatorDotsCss}>
@@ -112,7 +112,7 @@ export default class Paginator extends React.Component {
         </span>
         <div className={pageItemCss}>
           <Link href={this.makeHref(totalPages)}>
-            <a>마지막</a>
+            <div>마지막</div>
           </Link>
         </div>
       </>
@@ -129,9 +129,9 @@ export default class Paginator extends React.Component {
     return (
       <div className={pageItemCss}>
         <Link href={this.makeHref(currentPage - 1)}>
-          <a>
+          <div>
             <Icon name="arrow_8_left" className={pageItemIconCss} />
-          </a>
+          </div>
         </Link>
       </div>
     );
@@ -147,9 +147,9 @@ export default class Paginator extends React.Component {
     return (
       <div className={pageItemCss}>
         <Link href={this.makeHref(currentPage + 1)}>
-          <a>
+          <div>
             <Icon name="arrow_8_right" className={pageItemIconCss} />
-          </a>
+          </div>
         </Link>
       </div>
     );
@@ -161,7 +161,7 @@ export default class Paginator extends React.Component {
     return pageRange.map(page => (
       <li className={classNames(pageItemCss, pageItemGroupMemberCss)}>
         <Link href={this.makeHref(page)}>
-          <a>{page}</a>
+          <div>{page}</div>
         </Link>
       </li>
     ));
