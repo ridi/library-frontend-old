@@ -32,14 +32,14 @@ const purchaseReducer = (state = initialState, action) => {
     case SET_PURCHASE_ORDER:
       return {
         ...state,
-        order: state.payload.order,
+        order: action.payload.order,
       };
     case SET_PURCHASE_FILTER:
       return {
         ...state,
         filter: {
           ...state.filter,
-          selected: state.payload.filter,
+          selected: action.payload.filter,
         },
       };
     default:

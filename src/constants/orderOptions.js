@@ -83,7 +83,7 @@ class BaseOrderOptions {
     const _option = this.options.find(opt => opt.value === option);
     return {
       orderBy: _option.order_by,
-      OrderType: _option.order_type,
+      orderType: _option.order_type,
     };
   }
 

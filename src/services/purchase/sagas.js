@@ -28,10 +28,8 @@ function* loadPurchaseItems() {
   yield call(persistPageOptionsFromQuries);
 
   const page = yield select(state => state.purchase.page);
-
   const { order, category } = yield select(getPurchaseOptions);
   const { orderBy, orderType } = MainOrderOptions.parse(order);
-  console.log(MainOrderOptions.toList());
 
   const [itemResponse, countResponse] = yield all([
     call(fetchPurchaseItems, orderType, orderBy, category, page),
