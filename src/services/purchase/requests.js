@@ -16,6 +16,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT),
     limit: LIBRARY_ITEMS_LIMIT,
   });
+
   const api = yield put(getAPI());
   const response = yield api.get(
     `${config.LIBRARY_API_BASE_URL}/items/?${stringify(options)}`,
