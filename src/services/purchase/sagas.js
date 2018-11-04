@@ -2,6 +2,7 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   LOAD_PURCHASE_ITEMS,
+  CHANGE_PURCHASE_ORDER,
   setPurchaseItems,
   setPurchaseTotalCount,
   setPurchasePage,
@@ -48,6 +49,14 @@ function* loadPurchaseItems() {
     ),
   );
 }
+
+function* changePurchaseOrder(action) {
+  console.log(action.payload.order);
+}
+
 export default function* purchaseRootSaga() {
-  yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems)]);
+  yield all([
+    takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
+    takeEvery(CHANGE_PURCHASE_ORDER, changePurchaseOrder),
+  ]);
 }

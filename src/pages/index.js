@@ -9,7 +9,10 @@ import Paginator from '../components/Paginator';
 import SelectBox from '../components/SelectBox';
 
 import { loadShows } from '../services/shows/actions';
-import { loadPurchaseItems } from '../services/purchase/actions';
+import {
+  loadPurchaseItems,
+  changePurchaseOrder,
+} from '../services/purchase/actions';
 
 import { getBooks } from '../services/book/selectors';
 import { getItemsByPage, getPageInfo } from '../services/purchase/selectors';
@@ -35,11 +38,16 @@ class Index extends React.Component {
   renderPageOptions() {
     const {
       pageInfo: { order },
+      changePurchaseOrder: dispatchChangePurchaseOrder,
     } = this.props;
-    console.log(order);
+
     return (
       <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} />
+        <SelectBox
+          selected={order}
+          options={MainOrderOptions.toList()}
+          onChange={value => dispatchChangePurchaseOrder(value)}
+        />
       </>
     );
   }
@@ -103,4 +111,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Index);
+const mapDispatchToProps = {
+  changePurchaseOrder,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Index);

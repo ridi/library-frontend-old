@@ -6,6 +6,8 @@ export const SET_PURCHASE_PAGE = 'SET_PURCHASE_PAGE';
 export const SET_PURCHASE_ORDER = 'SET_PURCHASE_ORDER';
 export const SET_PURCHASE_FILTER = 'SET_PURCHASE_FILTER';
 
+export const CHANGE_PURCHASE_ORDER = 'CHANGE_PURCHASE_ORDER';
+
 export const loadPurchaseItems = () => ({
   type: LOAD_PURCHASE_ITEMS,
 });
@@ -43,5 +45,12 @@ export const setPurchaseFilter = filter => ({
   type: SET_PURCHASE_FILTER,
   payload: {
     filter,
+  },
+});
+
+export const changePurchaseOrder = order => ({
+  type: CHANGE_PURCHASE_ORDER,
+  payload: {
+    order,
   },
 });
