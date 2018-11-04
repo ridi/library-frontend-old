@@ -4,7 +4,14 @@ export const initialState = {
   items: {},
   order: MainOrderOptions.DEFAULT,
   filter: {
-    options: [],
+    options: [
+      {
+        title: '전체 카테고리',
+        value: '',
+        hasChildren: false,
+        children: null,
+      },
+    ],
     selected: null,
   },
 

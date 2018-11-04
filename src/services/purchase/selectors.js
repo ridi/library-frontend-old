@@ -14,11 +14,17 @@ export const getItemsByPage = createSelector(
 );
 
 export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
-  const { page, unitTotalCount, order } = purchaseState;
+  const {
+    page,
+    unitTotalCount,
+    order,
+    filter: { selected },
+  } = purchaseState;
   return {
     currentPage: page,
     totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT),
     order,
+    filter: selected,
   };
 });
 

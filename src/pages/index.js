@@ -12,10 +12,15 @@ import { loadShows } from '../services/shows/actions';
 import {
   loadPurchaseItems,
   changePurchaseOrder,
+  changePurchaseFilter,
 } from '../services/purchase/actions';
 
 import { getBooks } from '../services/book/selectors';
-import { getItemsByPage, getPageInfo } from '../services/purchase/selectors';
+import {
+  getItemsByPage,
+  getPageInfo,
+  getFilterOptions,
+} from '../services/purchase/selectors';
 
 import { toFlatten } from '../utils/array';
 import { PAGE_COUNT } from '../constants/page';
@@ -37,8 +42,10 @@ class Index extends React.Component {
 
   renderPageOptions() {
     const {
-      pageInfo: { order },
+      pageInfo: { order, filter },
+      filterOptions,
       changePurchaseOrder: dispatchChangePurchaseOrder,
+      changePurchaseFilter: dispatchChangePurchaseFilter,
     } = this.props;
 
     return (
@@ -47,6 +54,11 @@ class Index extends React.Component {
           selected={order}
           options={MainOrderOptions.toList()}
           onChange={value => dispatchChangePurchaseOrder(value)}
+        />
+        <SelectBox
+          selected={filter}
+          options={filterOptions}
+          onChange={value => dispatchChangePurchaseFilter(value)}
         />
       </>
     );
@@ -65,7 +77,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, order },
+      pageInfo: { currentPage, totalPages, order, filter },
     } = this.props;
 
     return (
@@ -74,7 +86,7 @@ class Index extends React.Component {
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
         pathname="/"
-        query={{ order }}
+        query={{ order, filter }}
       />
     );
   }
@@ -101,11 +113,13 @@ class Index extends React.Component {
 
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
+  const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   return {
     shows: state.shows.shows,
     pageInfo,
+    filterOptions,
     items,
     books,
   };
@@ -113,6 +127,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   changePurchaseOrder,
+  changePurchaseFilter,
 };
 
 export default connect(

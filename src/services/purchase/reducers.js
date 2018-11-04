@@ -6,6 +6,7 @@ import {
   SET_PURCHASE_PAGE,
   SET_PURCHASE_ORDER,
   SET_PURCHASE_FILTER,
+  SET_PURCHASE_FILTER_OPTIONS,
 } from './actions';
 
 const purchaseReducer = (state = initialState, action) => {
@@ -40,6 +41,14 @@ const purchaseReducer = (state = initialState, action) => {
         filter: {
           ...state.filter,
           selected: action.payload.filter,
+        },
+      };
+    case SET_PURCHASE_FILTER_OPTIONS:
+      return {
+        ...state,
+        filter: {
+          ...state.filter,
+          options: action.payload.options,
         },
       };
     default:
