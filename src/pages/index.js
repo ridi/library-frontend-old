@@ -3,17 +3,20 @@ import Link from 'next/link';
 import { connect } from 'react-redux';
 
 import Layout from '../components/Layout';
+import BookList from '../components/BookList';
+import LibraryBook from '../components/LibraryBook';
+import Paginator from '../components/Paginator';
+import SelectBox from '../components/SelectBox';
+
 import { loadShows } from '../services/shows/actions';
 import { loadPurchaseItems } from '../services/purchase/actions';
 
 import { getBooks } from '../services/book/selectors';
 import { getItemsByPage, getPageInfo } from '../services/purchase/selectors';
-import { toFlatten } from '../utils/array';
 
-import BookList from '../components/BookList';
-import LibraryBook from '../components/LibraryBook';
-import Paginator from '../components/Paginator';
+import { toFlatten } from '../utils/array';
 import { PAGE_COUNT } from '../constants/page';
+import { MainOrderOptions } from '../constants/orderOptions';
 
 const PostLink = ({ id, name }) => (
   <li>
@@ -30,7 +33,15 @@ class Index extends React.Component {
   }
 
   renderPageOptions() {
-    return <></>;
+    const {
+      pageInfo: { order },
+    } = this.props;
+    console.log(order);
+    return (
+      <>
+        <SelectBox selected={order} options={MainOrderOptions.toList()} />
+      </>
+    );
   }
 
   renderBooks() {
