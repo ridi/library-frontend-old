@@ -1,4 +1,4 @@
-const generateValue = item => `${item.order_type}+${item.order_by}`;
+const generateValue = item => `${item.order_type}__${item.order_by}`;
 const generateAndAttachValue = item => ({
   ...item,
   value: generateValue(item),
