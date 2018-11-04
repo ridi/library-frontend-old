@@ -29,6 +29,10 @@ class Index extends React.Component {
     await store.dispatch(loadPurchaseItems());
   }
 
+  renderPageOptions() {
+    return <></>;
+  }
+
   renderBooks() {
     const { items, books } = this.props;
     return (
@@ -42,7 +46,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages },
+      pageInfo: { currentPage, totalPages, order },
     } = this.props;
 
     return (
@@ -51,6 +55,7 @@ class Index extends React.Component {
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
         pathname="/"
+        query={{ order }}
       />
     );
   }
@@ -67,6 +72,7 @@ class Index extends React.Component {
         </ul>
         <br />
         <hr />
+        {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
       </Layout>

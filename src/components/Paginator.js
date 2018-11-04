@@ -70,8 +70,8 @@ const paginatorDeviderDotsCss = css`
 
 export default class Paginator extends React.Component {
   makeHref(page) {
-    const { pathname } = this.props;
-    return { pathname, query: { page } };
+    const { pathname, query } = this.props;
+    return { pathname, query: { ...query, page } };
   }
 
   renderGoFirst() {
