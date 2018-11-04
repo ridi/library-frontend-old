@@ -22,6 +22,11 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
   };
 });
 
+export const getPage = createSelector(
+  getPurchaseState,
+  purchaseState => purchaseState.page,
+);
+
 export const getOrder = createSelector(
   getPurchaseState,
   purchaseState => purchaseState.order,
@@ -38,6 +43,6 @@ export const getFilter = createSelector(
 );
 
 export const getPurchaseOptions = createSelector(
-  [getOrder, getFilter],
-  (order, filter) => ({ order, category: filter }),
+  [getPage, getOrder, getFilter],
+  (page, order, filter) => ({ page, order, filter }),
 );

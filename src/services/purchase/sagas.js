@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
@@ -13,23 +14,23 @@ import { fetchPurchaseItems, fetchPurchaseItemsTotalCount } from './requests';
 import { MainOrderOptions } from '../../constants/orderOptions';
 
 import { loadBookData } from '../book/sagas';
-import { getQueries } from '../router/selectors';
+import { getQuery } from '../router/selectors';
 import { getPurchaseOptions } from './selectors';
+import { makeURI } from '../../utils/uri';
 
 const getBookIdsFromItems = items => items.map(item => item.b_id);
 
 function* persistPageOptionsFromQuries() {
-  const queries = yield select(getQueries);
-  const page = parseInt(queries.page, 10) || 1;
-  const order = queries.order || MainOrderOptions.DEFAULT;
+  const query = yield select(getQuery);
+  const page = parseInt(query.page, 10) || 1;
+  const order = query.order || MainOrderOptions.DEFAULT;
   yield all([put(setPurchasePage(page)), put(setPurchaseOrder(order))]);
 }
 
 function* loadPurchaseItems() {
   yield call(persistPageOptionsFromQuries);
 
-  const page = yield select(state => state.purchase.page);
-  const { order, category } = yield select(getPurchaseOptions);
+  const { page, order, filter: category } = yield select(getPurchaseOptions);
   const { orderBy, orderType } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse] = yield all([
@@ -51,7 +52,13 @@ function* loadPurchaseItems() {
 }
 
 function* changePurchaseOrder(action) {
-  console.log(action.payload.order);
+  const { page, filter } = yield select(getPurchaseOptions);
+  const query = {
+    page,
+    order: action.payload.order,
+    filter,
+  };
+  Router.push(makeURI('/', query));
 }
 
 export default function* purchaseRootSaga() {
