@@ -1,4 +1,5 @@
 const nextRoutes = require('next-routes');
+
 const routes = nextRoutes();
 
 const APP_ROUTES = [

@@ -2,19 +2,28 @@ import { loadUserInfo, startAccountTracker } from '../services/account/actions';
 import { loadBookDataFromStorage } from '../services/book/actions';
 
 import LRUCache from '../utils/lru';
+import { locationFromUrl } from '../services/router/utils';
 
 const beforeCreatingStore = (initialState, context) => {
-  const books = {};
-  if (!initialState.books) {
-    books.books = new LRUCache(500);
-  } else {
-    books.books = new LRUCache(500, initialState.books.books);
+  const newInitialState = {
+    ...initialState,
+    books: {
+      books: new LRUCache(500),
+    },
+  };
+
+  if (initialState.books) {
+    newInitialState.books.books.assign(initialState.books.books);
   }
 
-  return {
-    ...initialState,
-    books,
-  };
+  if (context.isServer) {
+    newInitialState.router = {
+      beforeLocation: null,
+      location: locationFromUrl(context.asPath),
+    };
+  }
+
+  return newInitialState;
 };
 
 const afterCreatingStore = async (store, context) => {
