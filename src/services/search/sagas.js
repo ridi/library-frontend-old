@@ -1,12 +1,14 @@
-import { all, call, select, takeEvery } from 'redux-saga/effects';
+import { all, call, select, put, takeEvery } from 'redux-saga/effects';
 
 import { getQuery } from '../router/selectors';
-import { LOAD_SEARCH_PAGE } from './actions';
+import { LOAD_SEARCH_PAGE, setSearchPage, setSearchKeyword } from './actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
+  const page = parseInt(query.page, 10) || 1;
+  const keyword = query.keyword || '';
 
-  console.log(query);
+  yield all([put(setSearchPage(page)), put(setSearchKeyword(keyword))]);
 }
 
 function* loadSearchPage() {
