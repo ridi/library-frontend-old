@@ -31,11 +31,12 @@ function* persistPageOptionsFromQuries() {
   const page = parseInt(query.page, 10) || 1;
 
   const {
-    orderType = MainOrderOptions.DEFAULT.order_type,
-    orderBy = MainOrderOptions.DEFAULT.order_by,
+    order_type: orderType = MainOrderOptions.DEFAULT.order_type,
+    order_by: orderBy = MainOrderOptions.DEFAULT.order_by,
   } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = query.filter || '';
+
   yield all([
     put(setPurchasePage(page)),
     put(setPurchaseOrder(order)),
@@ -48,8 +49,6 @@ function* loadPurchaseItems() {
 
   const { page, order, filter: category } = yield select(getPurchaseOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  console.log(orderType);
-  console.log(orderBy);
 
   const [itemResponse, countResponse, categories] = yield all([
     call(fetchPurchaseItems, orderType, orderBy, category, page),

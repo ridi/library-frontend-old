@@ -77,7 +77,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, order, filter },
+      pageInfo: { currentPage, totalPages, orderType, orderBy, filter },
     } = this.props;
 
     return (
@@ -86,7 +86,7 @@ class Index extends React.Component {
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
         pathname="/"
-        query={{ order, filter }}
+        query={{ orderType, orderBy, filter }}
       />
     );
   }

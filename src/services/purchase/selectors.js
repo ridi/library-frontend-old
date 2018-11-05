@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 import { LIBRARY_ITEMS_LIMIT } from './constants';
 import { calcPage } from '../../utils/pagination';
+import { MainOrderOptions } from '../../constants/orderOptions';
 
 const getPurchaseState = state => state.purchase;
 
@@ -20,10 +21,14 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
     order,
     filter: { selected },
   } = purchaseState;
+  const { orderType, orderBy } = MainOrderOptions.parse(order);
+
   return {
     currentPage: page,
     totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT),
     order,
+    orderType,
+    orderBy,
     filter: selected,
   };
 });
