@@ -29,7 +29,12 @@ const getBookIdsFromItems = items => items.map(item => item.b_id);
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
-  const order = query.order || MainOrderOptions.DEFAULT;
+
+  const {
+    orderType = MainOrderOptions.DEFAULT.order_type,
+    orderBy = MainOrderOptions.DEFAULT.order_by,
+  } = query;
+  const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = query.filter || '';
   yield all([
     put(setPurchasePage(page)),
@@ -42,7 +47,9 @@ function* loadPurchaseItems() {
   yield call(persistPageOptionsFromQuries);
 
   const { page, order, filter: category } = yield select(getPurchaseOptions);
-  const { orderBy, orderType } = MainOrderOptions.parse(order);
+  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  console.log(orderType);
+  console.log(orderBy);
 
   const [itemResponse, countResponse, categories] = yield all([
     call(fetchPurchaseItems, orderType, orderBy, category, page),
@@ -68,11 +75,20 @@ function* loadPurchaseItems() {
 
 function* changePurchaseOption(action) {
   const { page, order, filter } = yield select(getPurchaseOptions);
+  let { orderBy, orderType } = MainOrderOptions.parse(order);
+  let _filter = filter;
+
+  if (action.payload.key === 'order') {
+    ({ orderBy, orderType } = MainOrderOptions.parse(action.payload.value));
+  } else if (action.payload.key === 'filter') {
+    _filter = action.payload.value;
+  }
+
   const query = {
     page,
-    order,
-    filter,
-    [action.payload.key]: action.payload.value,
+    orderBy,
+    orderType,
+    filter: _filter,
   };
 
   Router.push(makeURI('/', query));
