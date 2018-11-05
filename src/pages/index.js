@@ -69,7 +69,7 @@ class Index extends React.Component {
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook item={item} book={books[item.b_id]} />
+          <LibraryBook key={item.b_id} item={item} book={books[item.b_id]} />
         ))}
       </BookList>
     );
