@@ -74,8 +74,7 @@ function* changePurchaseOption(action) {
     filter,
     [action.payload.key]: action.payload.value,
   };
-  console.log(query);
-  console.log(makeURI('/', query));
+
   Router.push(makeURI('/', query));
 }
 
