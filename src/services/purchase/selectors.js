@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { LIBRARY_ITEMS_LIMIT } from './constants';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { calcPage } from '../../utils/pagination';
 import { MainOrderOptions } from '../../constants/orderOptions';
 
@@ -25,7 +25,7 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
 
   return {
     currentPage: page,
-    totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT),
+    totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     order,
     orderType,
     orderBy,
