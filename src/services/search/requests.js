@@ -20,7 +20,7 @@ export function* fetchSearchItems(keyword, page) {
   const response = yield api.get(
     makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL),
   );
-  return response;
+  return response.data;
 }
 
 export function* fetchSearchItemsTotalCount(keyword) {
@@ -32,5 +32,5 @@ export function* fetchSearchItemsTotalCount(keyword) {
   const response = yield api.get(
     makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL),
   );
-  return response;
+  return response.data;
 }
