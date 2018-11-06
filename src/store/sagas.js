@@ -4,6 +4,7 @@ import showsRootSaga from '../services/shows/sagas';
 import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import purchaseRootSaga from '../services/purchase/sagas';
+import searchRootSaga from '../services/search/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -11,5 +12,6 @@ export default function* rootSaga() {
     accountRootSaga(),
     bookRootSaga(),
     purchaseRootSaga(),
+    searchRootSaga(),
   ]);
 }
