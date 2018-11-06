@@ -4,6 +4,12 @@ import { connect } from 'react-redux';
 import { loadSearchPage } from '../services/search/actions';
 
 import Layout from '../components/Layout';
+import {
+  getSearchPageInfo,
+  getSearchItemsByPage,
+} from '../services/search/selectors';
+import { getBooks } from '../services/book/selectors';
+import { toFlatten } from '../utils/array';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -15,7 +21,17 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+  const pageInfo = getSearchPageInfo(state);
+  const items = getSearchItemsByPage(state);
+  const books = getBooks(state, toFlatten(items, 'b_id'));
+
+  return {
+    pageInfo,
+    items,
+    books,
+  };
+};
 const mapDispatchToProps = {};
 
 export default connect(
