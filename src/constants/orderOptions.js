@@ -61,9 +61,7 @@ class BaseOrderOptions {
   }
 
   static toIndex(orderType, orderBy) {
-    const index = this.toList().findIndex(
-      value => value.order_type === orderType && value.order_by === orderBy,
-    );
+    const index = this.toList().findIndex(value => value.order_type === orderType && value.order_by === orderBy);
 
     return index;
   }
@@ -79,12 +77,7 @@ class BaseOrderOptions {
 
 export class MainOrderOptions extends BaseOrderOptions {
   static toList() {
-    return [
-      this.PURCHASE_DATE,
-      this.EXPIRE_DATE,
-      this.UNIT_TITLE,
-      this.UNIT_AUTHOR,
-    ];
+    return [this.PURCHASE_DATE, this.EXPIRE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR];
   }
 
   static get DEFAULT() {

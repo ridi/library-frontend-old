@@ -27,11 +27,7 @@ export const UnitCount = ({ item, unit = '권' }) => (
   </div>
 );
 
-export const ExpireDate = ({
-  expireDate,
-  serviceType,
-  isExpired: _isExpired,
-}) =>
+export const ExpireDate = ({ expireDate, serviceType, isExpired: _isExpired }) =>
   ServiceType.isExpirable(serviceType) ? (
     <div
       className={classNames(expireDateTextCss, {
@@ -49,10 +45,7 @@ export const ExpireDate = ({
 
 export const ExpiredBand = () => (
   <p className={bandCss}>
-    <Icon
-      name="timer"
-      className={classNames(bandIconCss, expiredBandIconCss)}
-    />
+    <Icon name="timer" className={classNames(bandIconCss, expiredBandIconCss)} />
     <span className={bandTextCss}>기간 만료</span>
   </p>
 );
@@ -60,18 +53,13 @@ export const ExpiredBand = () => (
 export const ExpiredCover = ({ isRidiSelect, hasItems, isLandscape }) => (
   <div className="LibraryBook_ExpiredCover">
     <span className="LibraryBook_ExpiredCover_Icon" />
-    {isLandscape
-      ? !isRidiSelect && <ExpiredBand />
-      : !isRidiSelect && !hasItems && <ExpiredBand />}
+    {isLandscape ? !isRidiSelect && <ExpiredBand /> : !isRidiSelect && !hasItems && <ExpiredBand />}
   </div>
 );
 
 export const RidiSelectBand = () => (
   <div className={bandCss}>
-    <Icon
-      name="book_1"
-      className={classNames(bandIconCss, ridiselectBandIconCss)}
-    />
+    <Icon name="book_1" className={classNames(bandIconCss, ridiselectBandIconCss)} />
     <span className={bandTextCss}>리디셀렉트</span>
   </div>
 );

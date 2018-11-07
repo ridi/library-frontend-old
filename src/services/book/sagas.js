@@ -1,10 +1,6 @@
 import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
-import {
-  LOAD_BOOK_DATA_FROM_STORAGE,
-  setBookData,
-  setBookDataFromStorage,
-} from './actions';
+import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage } from './actions';
 
 import { fetchBookData } from './requests';
 

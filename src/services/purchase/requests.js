@@ -18,9 +18,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(
-    `${config.LIBRARY_API_BASE_URL}/items/?${stringify(options)}`,
-  );
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/?${stringify(options)}`);
 
   return response.data;
 }
@@ -29,9 +27,7 @@ export function* fetchPurchaseItemsTotalCount(orderType, orderBy, filter) {
   const options = snakelize({ orderType, orderBy, filter });
 
   const api = yield put(getAPI());
-  const response = yield api.get(
-    `${config.LIBRARY_API_BASE_URL}/items/count?${stringify(options)}`,
-  );
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/count?${stringify(options)}`);
   return response.data;
 }
 
@@ -44,14 +40,8 @@ const _reformatCategories = categories =>
   categories.reduce(
     (previous, value) => {
       const hasChildren = value.children && value.children.length > 0;
-      const filterOption = _createFilterOption(
-        value.name,
-        value.id,
-        hasChildren,
-      );
-      filterOption.children = hasChildren
-        ? _reformatCategories(value.children)
-        : null;
+      const filterOption = _createFilterOption(value.name, value.id, hasChildren);
+      filterOption.children = hasChildren ? _reformatCategories(value.children) : null;
 
       previous.push(filterOption);
       return previous;
@@ -61,9 +51,7 @@ const _reformatCategories = categories =>
 
 export function* fetchPurchaseCategories() {
   const api = yield put(getAPI());
-  const response = yield api.get(
-    `${config.LIBRARY_API_BASE_URL}/items/categories`,
-  );
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/categories`);
 
   return _reformatCategories(response.data.categories);
 }

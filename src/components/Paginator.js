@@ -100,10 +100,7 @@ export default class Paginator extends React.Component {
   renderGoLast() {
     const { currentPage, totalPages, pageCount } = this.props;
 
-    if (
-      calcPageBlock(currentPage, pageCount) ===
-      calcPageBlock(totalPages, pageCount)
-    ) {
+    if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
     }
 

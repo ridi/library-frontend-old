@@ -6,10 +6,5 @@ import bookRootSaga from '../services/book/sagas';
 import purchaseRootSaga from '../services/purchase/sagas';
 
 export default function* rootSaga() {
-  yield all([
-    showsRootSaga(),
-    accountRootSaga(),
-    bookRootSaga(),
-    purchaseRootSaga(),
-  ]);
+  yield all([showsRootSaga(), accountRootSaga(), bookRootSaga(), purchaseRootSaga()]);
 }

@@ -14,16 +14,10 @@ export const timeLeft = date => {
   const hours = duration.hours();
   const minutes = duration.minutes();
 
-  return `${[
-    years && `${years}년`,
-    days && `${days}일`,
-    hours && !years && `${hours}시간`,
-    minutes && !years && !days && `${minutes}분`,
-  ]
+  return `${[years && `${years}년`, days && `${days}일`, hours && !years && `${hours}시간`, minutes && !years && !days && `${minutes}분`]
     .filter(t => !!t)
     .join(' ')} 남음`;
 };
 
-export const formatExpiredDate = date =>
-  `${moment(date).format('YYYY.MM.DD.')} 만료`;
+export const formatExpiredDate = date => `${moment(date).format('YYYY.MM.DD.')} 만료`;
 export const isExpired = date => !moment(date).isAfter();

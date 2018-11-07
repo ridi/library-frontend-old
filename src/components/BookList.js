@@ -8,8 +8,6 @@ const BookListCss = css`
   margin-bottom: 30px;
 `;
 
-const BookList = ({ children }) => (
-  <div className={BookListCss}>{children}</div>
-);
+const BookList = ({ children }) => <div className={BookListCss}>{children}</div>;
 
 export default BookList;
