@@ -4,6 +4,7 @@ const routes = nextRoutes();
 
 const APP_ROUTES = [
   { page: 'index', pattern: '/' },
+  { page: 'purchased/purchasedUnit', pattern: '/purchased/:unitId' },
   { page: 'about', pattern: '/about' },
   { page: 'post', pattern: '/post/:id' },
   { page: 'post', pattern: '/p/:id' },
