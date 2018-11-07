@@ -24,6 +24,9 @@ module.exports = {
     'no-constant-condition': 'error',
     'no-plusplus': 'error',
 
+    // account-team rules
+    'max-len': ['error', { code: 140 }],
+
     // store rules
     'no-unused-expressions': [
       'error',
