@@ -61,9 +61,7 @@ class BaseOrderOptions {
   }
 
   static toIndex(orderType, orderBy) {
-    const index = this.toList().findIndex(value => value.order_type === orderType && value.order_by === orderBy);
-
-    return index;
+    return this.toList().findIndex(value => value.order_type === orderType && value.order_by === orderBy);
   }
 
   static toList() {
