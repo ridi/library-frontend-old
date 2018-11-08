@@ -57,7 +57,7 @@ function* loadPurchaseUnitItems() {
 }
 
 function* changePurchasedUnitOption(action) {
-  const { page, order, filter } = yield select(getPurchasedUnitOptions);
+  const { unitId, page, order, filter } = yield select(getPurchasedUnitOptions);
 
   let { orderBy, orderType } = MainOrderOptions.parse(order);
   let _filter = filter;
@@ -75,7 +75,7 @@ function* changePurchasedUnitOption(action) {
     filter: _filter,
   };
 
-  Router.push(makeURI('/', query));
+  Router.push(makeURI(`/purchased/${unitId}`, query));
 }
 
 export default function* purchaseRootSaga() {

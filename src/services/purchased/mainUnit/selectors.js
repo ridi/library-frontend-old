@@ -43,4 +43,9 @@ export const getFilterOptions = createSelector(getPurchasedUnitState, purchasedU
 
 export const getFilter = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.filter.selected);
 
-export const getPurchasedUnitOptions = createSelector([getPage, getOrder, getFilter], (page, order, filter) => ({ page, order, filter }));
+export const getPurchasedUnitOptions = createSelector([getUnitId, getPage, getOrder, getFilter], (unitId, page, order, filter) => ({
+  unitId,
+  page,
+  order,
+  filter,
+}));

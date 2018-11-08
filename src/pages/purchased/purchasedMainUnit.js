@@ -56,7 +56,7 @@ class PurchasedMainUnit extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, orderType, orderBy, filter },
+      pageInfo: { currentPage, totalPages, orderType, orderBy, filter, unitId },
     } = this.props;
 
     return (
@@ -64,7 +64,7 @@ class PurchasedMainUnit extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/"
+        pathname={`/purchased/${unitId}`}
         query={{ orderType, orderBy, filter }}
       />
     );
