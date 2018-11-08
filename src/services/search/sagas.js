@@ -1,11 +1,14 @@
+import Router from 'next/router';
 import { all, call, select, put, takeEvery } from 'redux-saga/effects';
 
 import { getQuery } from '../router/selectors';
 import { loadBookData } from '../book/sagas';
 import { toFlatten } from '../../utils/array';
+import { makeURI } from '../../utils/uri';
 
 import {
   LOAD_SEARCH_PAGE,
+  CHANGE_SEARCH_KEYWORD,
   setSearchPage,
   setSearchKeyword,
   setSearchTotalCount,
@@ -44,6 +47,18 @@ function* loadSearchPage() {
   ]);
 }
 
+function changeSearchKeyword(action) {
+  const query = {
+    page: 1,
+    keyword: action.payload.keyword,
+  };
+
+  Router.push(makeURI('/purchased/search', query));
+}
+
 export default function* searchRootSaga() {
-  yield all([takeEvery(LOAD_SEARCH_PAGE, loadSearchPage)]);
+  yield all([
+    takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
+    takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
+  ]);
 }
