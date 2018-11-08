@@ -8,7 +8,7 @@ import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 
 import { getBooks } from '../../services/book/selectors';
-import { loadPurchaseHiddenItems } from '../../services/purchased/hidden/actions';
+import { loadPurchasedHiddenItems } from '../../services/purchased/hidden/actions';
 import { getItemsByPage, getPageInfo, getItemTotalCount } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 
@@ -16,7 +16,7 @@ import { toFlatten } from '../../utils/array';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadPurchaseHiddenItems());
+    await store.dispatch(loadPurchasedHiddenItems());
   }
 
   renderBooks() {

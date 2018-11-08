@@ -3,24 +3,24 @@ import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT } from '../../purchase/constants';
 import { calcPage } from '../../../utils/pagination';
 
-const getPurchaseHiddenState = state => state.purchaseHidden;
+const getPurchasedHiddenState = state => state.purchasedHidden;
 
-export const getItemsByPage = createSelector(getPurchaseHiddenState, purchaseHiddenState => {
-  const { page } = purchaseHiddenState;
-  return purchaseHiddenState.items[page] || [];
+export const getItemsByPage = createSelector(getPurchasedHiddenState, purchasedHiddenState => {
+  const { page } = purchasedHiddenState;
+  return purchasedHiddenState.items[page] || [];
 });
 
-export const getPageInfo = createSelector(getPurchaseHiddenState, purchaseHiddenState => {
-  const { page, itemTotalCount } = purchaseHiddenState;
+export const getPageInfo = createSelector(getPurchasedHiddenState, purchasedHiddenState => {
+  const { page, itemTotalCount } = purchasedHiddenState;
   return {
     currentPage: page,
     totalPages: calcPage(itemTotalCount, LIBRARY_ITEMS_LIMIT),
   };
 });
 
-export const getPage = createSelector(getPurchaseHiddenState, purchaseHiddenState => purchaseHiddenState.page);
+export const getPage = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.page);
 
 export const getItemTotalCount = createSelector(
-  getPurchaseHiddenState,
-  purchaseHiddenState => purchaseHiddenState.itemTotalCount,
+  getPurchasedHiddenState,
+  purchasedHiddenState => purchasedHiddenState.itemTotalCount,
 );

@@ -1,9 +1,9 @@
 import { initialState } from './state';
-import { SET_PURCHASE_HIDDEN_ITEMS, SET_PURCHASE_HIDDEN_TOTAL_COUNT, SET_PURCHASE_HIDDEN_PAGE } from './actions';
+import { SET_PURCHASED_HIDDEN_ITEMS, SET_PURCHASED_HIDDEN_TOTAL_COUNT, SET_PURCHASED_HIDDEN_PAGE } from './actions';
 
-const purchaseHiddenReducer = (state = initialState, action) => {
+const purchasedHiddenReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_PURCHASE_HIDDEN_ITEMS:
+    case SET_PURCHASED_HIDDEN_ITEMS:
       return {
         ...state,
         items: {
@@ -11,12 +11,12 @@ const purchaseHiddenReducer = (state = initialState, action) => {
           [state.page]: action.payload.items,
         },
       };
-    case SET_PURCHASE_HIDDEN_TOTAL_COUNT:
+    case SET_PURCHASED_HIDDEN_TOTAL_COUNT:
       return {
         ...state,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case SET_PURCHASE_HIDDEN_PAGE:
+    case SET_PURCHASED_HIDDEN_PAGE:
       return {
         ...state,
         page: action.payload.page,
@@ -26,4 +26,4 @@ const purchaseHiddenReducer = (state = initialState, action) => {
   }
 };
 
-export default purchaseHiddenReducer;
+export default purchasedHiddenReducer;

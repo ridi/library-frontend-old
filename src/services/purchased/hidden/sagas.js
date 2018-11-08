@@ -1,10 +1,10 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
-  LOAD_PURCHASE_HIDDEN_ITEMS,
-  setPurchaseHiddenItems,
-  setPurchaseHiddenPage,
-  setPurchaseHiddenTotalCount,
+  LOAD_PURCHASED_HIDDEN_ITEMS,
+  setPurchasedHiddenItems,
+  setPurchasedHiddenPage,
+  setPurchasedHiddenTotalCount,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
@@ -12,10 +12,10 @@ import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from '
 
 const getBookIdsFromItems = items => items.map(item => item.b_id);
 
-function* loadPurchaseHiddenItems() {
+function* loadPurchasedHiddenItems() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
-  yield put(setPurchaseHiddenPage(page));
+  yield put(setPurchasedHiddenPage(page));
 
   const [itemResponse, countResponse] = yield all([
     call(fetchPurchasedHiddenItems, page),
@@ -24,11 +24,11 @@ function* loadPurchaseHiddenItems() {
   const bookIds = getBookIdsFromItems(itemResponse.items);
   yield call(loadBookData, bookIds);
   yield all([
-    put(setPurchaseHiddenItems(itemResponse.items)),
-    put(setPurchaseHiddenTotalCount(countResponse.item_total_count)),
+    put(setPurchasedHiddenItems(itemResponse.items)),
+    put(setPurchasedHiddenTotalCount(countResponse.item_total_count)),
   ]);
 }
 
-export default function* purchaseHiddenRootSaga() {
-  yield takeEvery(LOAD_PURCHASE_HIDDEN_ITEMS, loadPurchaseHiddenItems);
+export default function* purchasedHiddenSaga() {
+  yield takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems);
 }
