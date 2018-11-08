@@ -66,13 +66,6 @@ module.exports = {
         },
       },
     ],
-    'object-curly-newline': [
-      'error',
-      {
-        multiline: true,
-        consistent: true,
-      },
-    ],
 
     // account team rules
     'import/prefer-default-export': 'off',
@@ -93,12 +86,6 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     ],
-    'jsx-a11y/anchor-is-valid': [
-      'error',
-      {
-        components: ['Link'],
-        specialLink: ['to'],
-      },
-    ],
+    'jsx-a11y/anchor-is-valid': 'off',
   },
 };

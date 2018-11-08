@@ -4,7 +4,7 @@
   "description": "Rendering server with next.js",
   "main": "server/entry.js",
   "scripts": {
-    "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.js' -- prettier --write {{changed}}",
+    "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.{js,jsx}' -- prettier --write {{changed}}",
     "build": "next build src",
     "export": "next export src -o ./out"
   },

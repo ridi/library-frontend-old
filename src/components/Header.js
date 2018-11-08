@@ -14,7 +14,7 @@ const Header = () => (
     <Link href={{ pathname: '/about', query: { keyword: '123' } }}>
       <a style={linkStyle}>About</a>
     </Link>
-    <Link href="/hidden">
+    <Link href="/purchase/hidden">
       <a style={linkStyle}>숨김 페이지</a>
     </Link>
   </div>

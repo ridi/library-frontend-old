@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { connect } from 'react-redux';
+import shortid from 'shortid';
 
 import Layout from '../components/Layout';
 import BookList from '../components/BookList';
@@ -43,8 +44,18 @@ class Index extends React.Component {
 
     return (
       <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
-        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+        <SelectBox
+          selected={order}
+          options={MainOrderOptions.toList()}
+          onChange={value => dispatchChangePurchaseOrder(value)}
+          value="333"
+        />
+        <SelectBox
+          selected={filter}
+          options={filterOptions}
+          onChange={value => dispatchChangePurchaseFilter(value)}
+          value="333"
+        />
       </>
     );
   }
@@ -86,7 +97,7 @@ class Index extends React.Component {
         <h1>Batman TV Shows</h1>
         <ul>
           {shows.map(({ show }) => (
-            <PostLink id={show.id} name={show.name} />
+            <PostLink id={show.id} name={show.name} key={shortid.generate()} />
           ))}
         </ul>
         <br />

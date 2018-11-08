@@ -16,7 +16,6 @@ export default class Paginator extends React.Component {
 
   renderGoFirst() {
     const { currentPage, pageCount } = this.props;
-
     if (currentPage <= pageCount) {
       return null;
     }
