@@ -8,8 +8,8 @@ import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 
 import { getBooks } from '../../services/book/selectors';
-import { loadPurchaseHiddenItems } from '../../services/purchase/hidden/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount } from '../../services/purchase/hidden/selectors';
+import { loadPurchaseHiddenItems } from '../../services/purchased/hidden/actions';
+import { getItemsByPage, getPageInfo, getItemTotalCount } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 
 import { toFlatten } from '../../utils/array';
@@ -40,7 +40,7 @@ class Hidden extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/purchase/hidden/"
+        pathname="/purchased/hidden/"
         query={{}}
       />
     );

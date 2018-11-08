@@ -7,7 +7,7 @@ const APP_ROUTES = [
   { page: 'about', pattern: '/about' },
   { page: 'post', pattern: '/post/:id' },
   { page: 'post', pattern: '/p/:id' },
-  { page: 'purchase/hidden', pattern: '/purchase/hidden' },
+  { page: 'purchased/hidden', pattern: '/purchased/hidden' },
 ];
 
 APP_ROUTES.forEach(route => routes.add(route));

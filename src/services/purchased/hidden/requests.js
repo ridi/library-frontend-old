@@ -6,7 +6,7 @@ import { snakelize } from '../../../utils/snakelize';
 import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
-import { LIBRARY_ITEMS_LIMIT } from '../constants';
+import { LIBRARY_ITEMS_LIMIT } from '../../purchase/constants';
 
 export function* fetchPurchasedHiddenItems(page) {
   const options = snakelize({

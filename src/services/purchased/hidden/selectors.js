@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { LIBRARY_ITEMS_LIMIT } from '../constants';
+import { LIBRARY_ITEMS_LIMIT } from '../../purchase/constants';
 import { calcPage } from '../../../utils/pagination';
 
 const getPurchaseHiddenState = state => state.purchaseHidden;

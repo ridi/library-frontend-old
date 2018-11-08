@@ -4,7 +4,7 @@ import showsReducer from '../services/shows/reducers';
 import accountReducer from '../services/account/reducers';
 import bookReducer from '../services/book/reducers';
 import purchaseReducer from '../services/purchase/reducers';
-import purchaseHiddenReducer from '../services/purchase/hidden/reducers';
+import purchaseHiddenReducer from '../services/purchased/hidden/reducers';
 import routerReducer from '../services/router/reducers';
 
 export default combineReducers({
