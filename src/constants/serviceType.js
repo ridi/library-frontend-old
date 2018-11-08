@@ -12,11 +12,7 @@ export class ServiceType {
   }
 
   static isExpirable(serviceType) {
-    return (
-      serviceType === this.RENT ||
-      serviceType === this.FLATRATE ||
-      serviceType === this.RIDISELECT
-    );
+    return serviceType === this.RENT || serviceType === this.FLATRATE || serviceType === this.RIDISELECT;
   }
 
   static isRidiselect(serviceType) {

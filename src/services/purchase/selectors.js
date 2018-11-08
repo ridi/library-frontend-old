@@ -18,6 +18,7 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
     order,
     filter: { selected },
   } = purchaseState;
+
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   return {

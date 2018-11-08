@@ -64,7 +64,5 @@ const changePurchaseOption = (key, value) => ({
   },
 });
 
-export const changePurchaseOrder = order =>
-  changePurchaseOption('order', order);
-export const changePurchaseFilter = filter =>
-  changePurchaseOption('filter', filter);
+export const changePurchaseOrder = order => changePurchaseOption('order', order);
+export const changePurchaseFilter = filter => changePurchaseOption('filter', filter);
