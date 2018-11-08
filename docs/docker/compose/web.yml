@@ -5,6 +5,9 @@ services:
     extends:
       file: common.yml
       service: www
+    environment:
+      - LOGIN_URL=${LOGIN_URL}
+      - JWT_SECRET=${JWT_SECRET}
     mem_limit: 512m
     mem_reservation: 256m
     logging:

@@ -27,16 +27,13 @@ app
     const ssrRouter = express.Router();
     ssrRouter.use(cookieParser());
     ssrRouter.use(middleware.jwtAuth);
-    ssrRouter.get('*', (req, res) => {
-      return handle(req, res);
-    });
-
+    ssrRouter.get('*', (req, res) => handle(req, res));
     server.use('/', ssrRouter);
 
     const port = process.env.PORT || 8080;
     const listener = server.listen(port, err => {
       if (err) throw err;
-      console.log('> Ready on ' + port);
+      console.log(`> Ready on ${port}`);
     });
 
     // Register Signals
@@ -54,7 +51,7 @@ app
       console.info('SIGINT signal received.');
       closeListener();
     });
-    process.on('SIGTERM', function() {
+    process.on('SIGTERM', () => {
       console.log('SIGTERM received');
       closeListener();
     });
