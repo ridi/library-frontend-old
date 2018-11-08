@@ -12,16 +12,16 @@ import {
   changePurchasedUnitOrder,
   changePurchasedUnitFilter,
   setPurchasedUnitId,
-} from '../../services/purchased/unit/actions';
+} from '../../services/purchased/mainUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/unit/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/mainUnit/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
 
-class PurchasedUnit extends React.Component {
+class PurchasedMainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setPurchasedUnitId(query.unitId));
     await store.dispatch(loadPurchasedUnitItems());
@@ -103,4 +103,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PurchasedUnit);
+)(PurchasedMainUnit);

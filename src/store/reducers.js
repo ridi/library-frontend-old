@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import accountReducer from '../services/account/reducers';
 import bookReducer from '../services/book/reducers';
 import purchaseReducer from '../services/purchase/reducers';
-import purchasedUnitReducer from '../services/purchased/unit/reducers';
+import purchasedUnitReducer from '../services/purchased/mainUnit/reducers';
 
 import routerReducer from '../services/router/reducers';
 
