@@ -32,7 +32,8 @@ export const ExpireDate = ({ expireDate, serviceType, isExpired: _isExpired }) =
     <div
       className={classNames(expireDateTextCss, {
         [expireDateExpiredCss]: isExpired,
-      })}>
+      })}
+    >
       <Icon
         name="timer"
         className={classNames(expireDateIconCss, {

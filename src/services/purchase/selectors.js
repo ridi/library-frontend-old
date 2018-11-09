@@ -39,4 +39,8 @@ export const getFilterOptions = createSelector(getPurchaseState, purchaseState =
 
 export const getFilter = createSelector(getPurchaseState, purchaseState => purchaseState.filter.selected);
 
-export const getPurchaseOptions = createSelector([getPage, getOrder, getFilter], (page, order, filter) => ({ page, order, filter }));
+export const getPurchaseOptions = createSelector([getPage, getOrder, getFilter], (page, order, filter) => ({
+  page,
+  order,
+  filter,
+}));

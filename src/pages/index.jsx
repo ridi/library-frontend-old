@@ -1,6 +1,8 @@
 import React from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { connect } from 'react-redux';
+import shortid from 'shortid';
 
 import Layout from '../components/Layout';
 import BookList from '../components/BookList';
@@ -40,7 +42,11 @@ class Index extends React.Component {
 
     return (
       <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
+        <SelectBox
+          selected={order}
+          options={MainOrderOptions.toList()}
+          onChange={value => dispatchChangePurchaseOrder(value)}
+        />
         <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );

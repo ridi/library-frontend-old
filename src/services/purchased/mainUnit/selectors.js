@@ -39,13 +39,22 @@ export const getPage = createSelector(getPurchasedUnitState, purchasedUnitState 
 
 export const getOrder = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.order);
 
-export const getFilterOptions = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.filter.options);
+export const getFilterOptions = createSelector(
+  getPurchasedUnitState,
+  purchasedUnitState => purchasedUnitState.filter.options,
+);
 
-export const getFilter = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.filter.selected);
+export const getFilter = createSelector(
+  getPurchasedUnitState,
+  purchasedUnitState => purchasedUnitState.filter.selected,
+);
 
-export const getPurchasedUnitOptions = createSelector([getUnitId, getPage, getOrder, getFilter], (unitId, page, order, filter) => ({
-  unitId,
-  page,
-  order,
-  filter,
-}));
+export const getPurchasedUnitOptions = createSelector(
+  [getUnitId, getPage, getOrder, getFilter],
+  (unitId, page, order, filter) => ({
+    unitId,
+    page,
+    order,
+    filter,
+  }),
+);

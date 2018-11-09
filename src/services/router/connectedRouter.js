@@ -50,7 +50,9 @@ const createConnectedRouter = () => {
       const state = this.store.getState();
       const { pathname: pathnameInStore, search: searchInStore, hash: hashInStore } = state.router.location;
 
-      const { pathname: pathnameInHistory, search: searchInHistory, hash: hashInHistory } = locationFromUrl(Router.asPath);
+      const { pathname: pathnameInHistory, search: searchInHistory, hash: hashInHistory } = locationFromUrl(
+        Router.asPath,
+      );
       return [
         pathnameInStore !== pathnameInHistory || searchInStore !== searchInHistory || hashInStore !== hashInHistory,
         `${pathnameInStore}${searchInStore}${hashInStore}`,
