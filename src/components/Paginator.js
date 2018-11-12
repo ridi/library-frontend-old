@@ -168,7 +168,7 @@ export default class Paginator extends React.Component {
 
   render() {
     const { totalPages } = this.props;
-    if (totalPages === 1) {
+    if (totalPages === 0 || totalPages === 1) {
       return null;
     }
 

@@ -19,8 +19,7 @@ import { loadBookData } from '../book/sagas';
 import { getQuery } from '../router/selectors';
 import { getPurchaseOptions } from './selectors';
 import { makeURI } from '../../utils/uri';
-
-const getBookIdsFromItems = items => items.map(item => item.b_id);
+import { toFlatten } from '../../utils/array';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -49,7 +48,7 @@ function* loadPurchaseItems() {
   ]);
 
   // Request BookData
-  const bookIds = getBookIdsFromItems(itemResponse.items);
+  const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
   yield all([
