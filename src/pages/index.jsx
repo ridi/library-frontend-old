@@ -1,6 +1,8 @@
 import React from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { connect } from 'react-redux';
+import shortid from 'shortid';
 
 import Layout from '../components/Layout';
 import BookList from '../components/BookList';
@@ -8,19 +10,10 @@ import LibraryBook from '../components/LibraryBook';
 import Paginator from '../components/Paginator';
 import SelectBox from '../components/SelectBox';
 
-import { loadShows } from '../services/shows/actions';
-import {
-  loadPurchaseItems,
-  changePurchaseOrder,
-  changePurchaseFilter,
-} from '../services/purchase/actions';
+import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../services/purchase/actions';
 
 import { getBooks } from '../services/book/selectors';
-import {
-  getItemsByPage,
-  getPageInfo,
-  getFilterOptions,
-} from '../services/purchase/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions } from '../services/purchase/selectors';
 
 import { toFlatten } from '../utils/array';
 import { PAGE_COUNT } from '../constants/page';
@@ -36,7 +29,6 @@ const PostLink = ({ id, name }) => (
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadShows());
     await store.dispatch(loadPurchaseItems());
   }
 
@@ -55,11 +47,7 @@ class Index extends React.Component {
           options={MainOrderOptions.toList()}
           onChange={value => dispatchChangePurchaseOrder(value)}
         />
-        <SelectBox
-          selected={filter}
-          options={filterOptions}
-          onChange={value => dispatchChangePurchaseFilter(value)}
-        />
+        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );
   }
@@ -92,17 +80,8 @@ class Index extends React.Component {
   }
 
   render() {
-    const { shows } = this.props;
     return (
       <Layout>
-        <h1>Batman TV Shows</h1>
-        <ul>
-          {shows.map(({ show }) => (
-            <PostLink id={show.id} name={show.name} />
-          ))}
-        </ul>
-        <br />
-        <hr />
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
@@ -117,7 +96,6 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   return {
-    shows: state.shows.shows,
     pageInfo,
     filterOptions,
     items,

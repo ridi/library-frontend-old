@@ -24,6 +24,5 @@ export const timeLeft = date => {
     .join(' ')} 남음`;
 };
 
-export const formatExpiredDate = date =>
-  `${moment(date).format('YYYY.MM.DD.')} 만료`;
+export const formatExpiredDate = date => `${moment(date).format('YYYY.MM.DD.')} 만료`;
 export const isExpired = date => !moment(date).isAfter();

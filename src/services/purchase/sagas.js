@@ -11,11 +11,7 @@ import {
   setPurchaseFilter,
   setPurchaseFilterOptions,
 } from './actions';
-import {
-  fetchPurchaseItems,
-  fetchPurchaseItemsTotalCount,
-  fetchPurchaseCategories,
-} from './requests';
+import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
 
 import { MainOrderOptions } from '../../constants/orderOptions';
 
@@ -36,11 +32,7 @@ function* persistPageOptionsFromQuries() {
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = query.filter || '';
 
-  yield all([
-    put(setPurchasePage(page)),
-    put(setPurchaseOrder(order)),
-    put(setPurchaseFilter(filter)),
-  ]);
+  yield all([put(setPurchasePage(page)), put(setPurchaseOrder(order)), put(setPurchaseFilter(filter))]);
 }
 
 function* loadPurchaseItems() {
@@ -61,12 +53,7 @@ function* loadPurchaseItems() {
 
   yield all([
     put(setPurchaseItems(itemResponse.items)),
-    put(
-      setPurchaseTotalCount(
-        countResponse.unit_total_count,
-        countResponse.item_total_count,
-      ),
-    ),
+    put(setPurchaseTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
     put(setPurchaseFilterOptions(categories)),
   ]);
 }

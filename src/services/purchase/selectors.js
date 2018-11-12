@@ -6,13 +6,10 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 
 const getPurchaseState = state => state.purchase;
 
-export const getItemsByPage = createSelector(
-  getPurchaseState,
-  purchaseState => {
-    const { page } = purchaseState;
-    return purchaseState.items[page] || [];
-  },
-);
+export const getItemsByPage = createSelector(getPurchaseState, purchaseState => {
+  const { page } = purchaseState;
+  return purchaseState.items[page] || [];
+});
 
 export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
   const {
@@ -21,6 +18,7 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
     order,
     filter: { selected },
   } = purchaseState;
+
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   return {
@@ -33,27 +31,16 @@ export const getPageInfo = createSelector(getPurchaseState, purchaseState => {
   };
 });
 
-export const getPage = createSelector(
-  getPurchaseState,
-  purchaseState => purchaseState.page,
-);
+export const getPage = createSelector(getPurchaseState, purchaseState => purchaseState.page);
 
-export const getOrder = createSelector(
-  getPurchaseState,
-  purchaseState => purchaseState.order,
-);
+export const getOrder = createSelector(getPurchaseState, purchaseState => purchaseState.order);
 
-export const getFilterOptions = createSelector(
-  getPurchaseState,
-  purchaseState => purchaseState.filter.options,
-);
+export const getFilterOptions = createSelector(getPurchaseState, purchaseState => purchaseState.filter.options);
 
-export const getFilter = createSelector(
-  getPurchaseState,
-  purchaseState => purchaseState.filter.selected,
-);
+export const getFilter = createSelector(getPurchaseState, purchaseState => purchaseState.filter.selected);
 
-export const getPurchaseOptions = createSelector(
-  [getPage, getOrder, getFilter],
-  (page, order, filter) => ({ page, order, filter }),
-);
+export const getPurchaseOptions = createSelector([getPage, getOrder, getFilter], (page, order, filter) => ({
+  page,
+  order,
+  filter,
+}));

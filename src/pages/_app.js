@@ -9,9 +9,7 @@ import createConnectedRouter from '../services/router/connectedRouter';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
-    const pageProps = Component.getInitialProps
-      ? await Component.getInitialProps(ctx)
-      : {};
+    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };
   }
 

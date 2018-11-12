@@ -11,12 +11,15 @@ export default class API {
   get(url) {
     return this.http.get(url, this.config);
   }
+
   post(url, data) {
     return this.http.post(url, data, this.config);
   }
+
   put(url, data) {
     return this.http.put(url, data, this.config);
   }
+
   delete(url) {
     return this.http.delete(url, this.config);
   }
@@ -35,18 +38,12 @@ export default class API {
       const _requestInterceptor = interceptor.request;
       const _responseInterceptor = interceptor.response;
 
-      this._bindInterceptor(
-        this.http.interceptors.request,
-        _requestInterceptor,
-      );
-      this._bindInterceptor(
-        this.http.interceptors.response,
-        _responseInterceptor,
-      );
+      API._bindInterceptor(this.http.interceptors.request, _requestInterceptor);
+      API._bindInterceptor(this.http.interceptors.response, _responseInterceptor);
     });
   }
 
-  _bindInterceptor(target, interceptor) {
+  static _bindInterceptor(target, interceptor) {
     if (!interceptor) {
       return;
     }

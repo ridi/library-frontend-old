@@ -25,11 +25,7 @@ const makeStore = (initialState, context) => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [apiMiddleware, sagaMiddleware];
 
-  const store = createStore(
-    rootReducer,
-    initialState,
-    composeEnhancer(applyMiddleware(...middlewares)),
-  );
+  const store = createStore(rootReducer, initialState, composeEnhancer(applyMiddleware(...middlewares)));
 
   store.runSagaTask = () => {
     store.sagaTask = sagaMiddleware.run(rootSaga);
