@@ -37,11 +37,7 @@ class PurchasedMainUnit extends React.Component {
 
     return (
       <>
-        <SelectBox
-          selected={order}
-          options={MainOrderOptions.toList()}
-          onChange={value => dispatchChangePurchaseOrder(value)}
-        />
+        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
         <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );
