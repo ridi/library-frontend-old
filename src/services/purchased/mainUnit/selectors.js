@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { LIBRARY_ITEMS_LIMIT } from './constants';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
@@ -25,7 +25,7 @@ export const getPageInfo = createSelector(getPurchasedUnitState, purchasedUnitSt
   return {
     unitId,
     currentPage: page,
-    totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT),
+    totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     order,
     orderType,
     orderBy,
@@ -39,22 +39,13 @@ export const getPage = createSelector(getPurchasedUnitState, purchasedUnitState 
 
 export const getOrder = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.order);
 
-export const getFilterOptions = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.filter.options,
-);
+export const getFilterOptions = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.filter.options);
 
-export const getFilter = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.filter.selected,
-);
+export const getFilter = createSelector(getPurchasedUnitState, purchasedUnitState => purchasedUnitState.filter.selected);
 
-export const getPurchasedUnitOptions = createSelector(
-  [getUnitId, getPage, getOrder, getFilter],
-  (unitId, page, order, filter) => ({
-    unitId,
-    page,
-    order,
-    filter,
-  }),
-);
+export const getPurchasedUnitOptions = createSelector([getUnitId, getPage, getOrder, getFilter], (unitId, page, order, filter) => ({
+  unitId,
+  page,
+  order,
+  filter,
+}));

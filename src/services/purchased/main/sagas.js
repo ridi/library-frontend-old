@@ -13,13 +13,13 @@ import {
 } from './actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
 
-import { MainOrderOptions } from '../../constants/orderOptions';
+import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../book/sagas';
-import { getQuery } from '../router/selectors';
+import { loadBookData } from '../../book/sagas';
+import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions } from './selectors';
-import { makeURI } from '../../utils/uri';
-import { toFlatten } from '../../utils/array';
+import { makeURI } from '../../../utils/uri';
+import { toFlatten } from '../../../utils/array';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -76,6 +76,6 @@ function* changePurchaseOption(action) {
   Router.push(makeURI('/', query));
 }
 
-export default function* purchaseRootSaga() {
+export default function* purchaseMainRootSaga() {
   yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems), takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption)]);
 }

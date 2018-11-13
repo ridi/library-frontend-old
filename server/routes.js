@@ -3,11 +3,11 @@ const nextRoutes = require('next-routes');
 const routes = nextRoutes();
 
 const APP_ROUTES = [
-  { page: 'index', pattern: '/' },
-  { page: 'index', pattern: '/purchased' },
-  { page: 'search', pattern: '/purchased/search' },
+  { page: 'purchased/main', pattern: '/' },
+  { page: 'purchased/main', pattern: '/purchased' },
+  { page: 'purchased/search', pattern: '/purchased/search' },
   { page: 'purchased/hidden', pattern: '/purchased/hidden' },
-  { page: 'purchased/purchasedMainUnit', pattern: '/purchased/:unitId' },
+  { page: 'purchased/mainUnit', pattern: '/purchased/:unitId' },
 ];
 
 APP_ROUTES.forEach(route => routes.add(route));

@@ -2,7 +2,7 @@ import { initialState } from './state';
 
 import { SET_SEARCH_ITEMS, SET_SEARCH_TOTAL_COUNT, SET_SEARCH_PAGE, SET_SEARCH_KEYWORD } from './actions';
 
-const searchReducer = (state = initialState, action) => {
+const purchasedSearchReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_SEARCH_ITEMS:
       return {
@@ -33,4 +33,4 @@ const searchReducer = (state = initialState, action) => {
   }
 };
 
-export default searchReducer;
+export default purchasedSearchReducer;

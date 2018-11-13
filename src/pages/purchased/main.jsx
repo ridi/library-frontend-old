@@ -1,30 +1,27 @@
 import React from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
 import { connect } from 'react-redux';
+import shortid from 'shortid';
 
 import Layout from '../../components/Layout';
 import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook/index';
+import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
-import SelectBox from '../../components/SelectBox/index';
+import SelectBox from '../../components/SelectBox';
 
-import {
-  loadPurchasedUnitItems,
-  changePurchasedUnitOrder,
-  changePurchasedUnitFilter,
-  setPurchasedUnitId,
-} from '../../services/purchased/mainUnit/actions';
+import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/mainUnit/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
 
-class PurchasedMainUnit extends React.Component {
-  static async getInitialProps({ store, query }) {
-    await store.dispatch(setPurchasedUnitId(query.unitId));
-    await store.dispatch(loadPurchasedUnitItems());
+class Index extends React.Component {
+  static async getInitialProps({ store }) {
+    await store.dispatch(loadPurchaseItems());
   }
 
   renderPageOptions() {
@@ -37,11 +34,7 @@ class PurchasedMainUnit extends React.Component {
 
     return (
       <>
-        <SelectBox
-          selected={order}
-          options={MainOrderOptions.toList()}
-          onChange={value => dispatchChangePurchaseOrder(value)}
-        />
+        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
         <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );
@@ -60,7 +53,7 @@ class PurchasedMainUnit extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, orderType, orderBy, filter, unitId },
+      pageInfo: { currentPage, totalPages, orderType, orderBy, filter },
     } = this.props;
 
     return (
@@ -68,7 +61,7 @@ class PurchasedMainUnit extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname={`/purchased/${unitId}`}
+        pathname="/"
         query={{ orderType, orderBy, filter }}
       />
     );
@@ -77,7 +70,6 @@ class PurchasedMainUnit extends React.Component {
   render() {
     return (
       <Layout>
-        <div>Unit id: {this.props.pageInfo.unitId}</div>
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
@@ -100,11 +92,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseOrder: changePurchasedUnitOrder,
-  changePurchaseFilter: changePurchasedUnitFilter,
+  changePurchaseOrder,
+  changePurchaseFilter,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PurchasedMainUnit);
+)(Index);

@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { loadSearchPage, changeSearchKeyword } from '../services/search/actions';
+import { loadSearchPage, changeSearchKeyword } from '../../services/purchased/search/actions';
 
-import Layout from '../components/Layout';
-import SearchBar from '../components/SearchBar';
-import Paginator from '../components/Paginator';
-import BookList from '../components/BookList';
-import LibraryBook from '../components/LibraryBook';
+import Layout from '../../components/Layout';
+import SearchBar from '../../components/SearchBar';
+import Paginator from '../../components/Paginator';
+import BookList from '../../components/BookList';
+import LibraryBook from '../../components/LibraryBook';
 
-import { toFlatten } from '../utils/array';
-import { PAGE_COUNT } from '../constants/page';
-import { getSearchPageInfo, getSearchItemsByPage } from '../services/search/selectors';
-import { getBooks } from '../services/book/selectors';
+import { toFlatten } from '../../utils/array';
+import { PAGE_COUNT } from '../../constants/page';
+import { getSearchPageInfo, getSearchItemsByPage } from '../../services/purchased/search/selectors';
+import { getBooks } from '../../services/book/selectors';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {

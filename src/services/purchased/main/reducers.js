@@ -9,7 +9,7 @@ import {
   SET_PURCHASE_FILTER_OPTIONS,
 } from './actions';
 
-const purchaseReducer = (state = initialState, action) => {
+const purchasedMainReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PURCHASE_ITEMS:
       return {
@@ -56,4 +56,4 @@ const purchaseReducer = (state = initialState, action) => {
   }
 };
 
-export default purchaseReducer;
+export default purchasedMainReducer;
