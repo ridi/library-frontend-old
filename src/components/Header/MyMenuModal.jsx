@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GNBPopup = ({ userId }) => (
+const MyMenuModal = ({ userId }) => (
   <div>
     <p>
       <strong>{userId}</strong> 님
@@ -17,4 +17,4 @@ const GNBPopup = ({ userId }) => (
   </div>
 );
 
-export default GNBPopup;
+export default MyMenuModal;

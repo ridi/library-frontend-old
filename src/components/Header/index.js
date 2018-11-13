@@ -1,18 +1,18 @@
 import React from 'react';
 import { Icon } from '@ridi/rsg';
-import GNBPopup from './GNBPopup';
+import MyMenuModal from './MyMenuModal';
 
-export default class GNB extends React.Component {
+export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPopupActive: false,
+      isModalActive: false,
     };
   }
 
   render() {
     const { ridibooksUrl, ridiSelectUrl, userId } = this.props;
-    const { isPopupActive } = this.state;
+    const { isModalActive } = this.state;
     return (
       <header>
         <div>
@@ -34,7 +34,7 @@ export default class GNB extends React.Component {
         </div>
         <div>
           <button type="button">마이리디</button>
-          {isPopupActive && <GNBPopup userId={userId} />}
+          {isModalActive && <MyMenuModal userId={userId} />}
         </div>
       </header>
     );

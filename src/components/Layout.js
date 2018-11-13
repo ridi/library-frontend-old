@@ -1,6 +1,5 @@
-import GNB from './GNB';
-import Footer from './Footer';
 import Header from './Header';
+import Footer from './Footer';
 
 const layoutStyle = {
   margin: 20,
@@ -11,12 +10,9 @@ const layoutStyle = {
 const Layout = props => {
   const { children } = props;
   return (
-    <div>
-      <GNB />
-      <div style={layoutStyle}>
-        <Header />
-        {children}
-      </div>
+    <div className="Library">
+      <Header />
+      <div style={layoutStyle}>{children}</div>
       <Footer />
     </div>
   );
