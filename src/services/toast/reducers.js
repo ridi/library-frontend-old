@@ -1,4 +1,4 @@
-import { SHOW_TOAST, CLOSE_TOAST } from './actions';
+import { SET_TOAST, UNSET_TOAST } from './actions';
 
 const initialState = {
   toast: null,
@@ -6,11 +6,11 @@ const initialState = {
 
 const toastReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SHOW_TOAST:
+    case SET_TOAST:
       return {
         toast: action.payload,
       };
-    case CLOSE_TOAST:
+    case UNSET_TOAST:
       return {
         toast: null,
       };

@@ -8,6 +8,7 @@ import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedUnitReducer from '../services/purchased/mainUnit/reducers';
 
 import routerReducer from '../services/router/reducers';
+import toastReducer from '../services/toast/reducers';
 
 export default combineReducers({
   account: accountReducer,
@@ -18,4 +19,5 @@ export default combineReducers({
   purchasedUnit: purchasedUnitReducer,
 
   router: routerReducer,
+  toast: toastReducer,
 });
