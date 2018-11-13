@@ -4,28 +4,20 @@ import Link from 'next/link';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 
-import Layout from '../components/Layout';
-import BookList from '../components/BookList';
-import LibraryBook from '../components/LibraryBook';
-import Paginator from '../components/Paginator';
-import SelectBox from '../components/SelectBox';
+import Layout from '../../components/Layout';
+import BookList from '../../components/BookList';
+import LibraryBook from '../../components/LibraryBook';
+import Paginator from '../../components/Paginator';
+import SelectBox from '../../components/SelectBox';
 
-import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../services/purchase/actions';
+import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
-import { getBooks } from '../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions } from '../services/purchase/selectors';
+import { getBooks } from '../../services/book/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
 
-import { toFlatten } from '../utils/array';
-import { PAGE_COUNT } from '../constants/page';
-import { MainOrderOptions } from '../constants/orderOptions';
-
-const PostLink = ({ id, name }) => (
-  <li>
-    <Link as={`/p/${id}`} href={`/post?id=${id}`}>
-      <a>{name}</a>
-    </Link>
-  </li>
-);
+import { toFlatten } from '../../utils/array';
+import { PAGE_COUNT } from '../../constants/page';
+import { MainOrderOptions } from '../../constants/orderOptions';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
@@ -42,11 +34,7 @@ class Index extends React.Component {
 
     return (
       <>
-        <SelectBox
-          selected={order}
-          options={MainOrderOptions.toList()}
-          onChange={value => dispatchChangePurchaseOrder(value)}
-        />
+        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
         <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );

@@ -1,4 +1,4 @@
-import { MainOrderOptions } from '../../constants/orderOptions';
+import { MainOrderOptions } from '../../../constants/orderOptions';
 
 export const initialState = {
   items: {},

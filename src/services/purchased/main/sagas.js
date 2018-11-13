@@ -13,22 +13,19 @@ import {
 } from './actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
 
-import { MainOrderOptions } from '../../constants/orderOptions';
+import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../book/sagas';
-import { getQuery } from '../router/selectors';
+import { loadBookData } from '../../book/sagas';
+import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions } from './selectors';
-import { makeURI } from '../../utils/uri';
-import { toFlatten } from '../../utils/array';
+import { makeURI } from '../../../utils/uri';
+import { toFlatten } from '../../../utils/array';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
-  const {
-    order_type: orderType = MainOrderOptions.DEFAULT.order_type,
-    order_by: orderBy = MainOrderOptions.DEFAULT.order_by,
-  } = query;
+  const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = query.filter || '';
 
@@ -79,9 +76,6 @@ function* changePurchaseOption(action) {
   Router.push(makeURI('/', query));
 }
 
-export default function* purchaseRootSaga() {
-  yield all([
-    takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
-    takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption),
-  ]);
+export default function* purchaseMainRootSaga() {
+  yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems), takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption)]);
 }
