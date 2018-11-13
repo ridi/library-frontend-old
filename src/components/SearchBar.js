@@ -30,12 +30,7 @@ export default class SearchBar extends React.Component {
     const { keyword } = this.state;
     return (
       <form onSubmit={this.handleSubmit}>
-        <input
-          placeholder="검색어를 입력해주세요."
-          type="text"
-          value={keyword}
-          onChange={this.handleChange}
-        />
+        <input placeholder="검색어를 입력해주세요." type="text" value={keyword} onChange={this.handleChange} />
         <button type="submit">검색</button>
       </form>
     );

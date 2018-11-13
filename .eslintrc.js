@@ -86,6 +86,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     ],
+    'react/jsx-one-expression-per-line': 'allow',
     'jsx-a11y/anchor-is-valid': 'off',
   },
 };

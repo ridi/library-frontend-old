@@ -6,12 +6,12 @@ import { snakelize } from '../../../utils/snakelize';
 import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
-import { LIBRARY_ITEMS_LIMIT } from '../../purchase/constants';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
 export function* fetchPurchasedHiddenItems(page) {
   const options = snakelize({
-    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT),
-    limit: LIBRARY_ITEMS_LIMIT,
+    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
+    limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
 
   const api = yield put(getAPI());

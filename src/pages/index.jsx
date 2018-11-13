@@ -1,8 +1,5 @@
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { connect } from 'react-redux';
-import shortid from 'shortid';
 
 import Layout from '../components/Layout';
 import BookList from '../components/BookList';
@@ -19,14 +16,6 @@ import { toFlatten } from '../utils/array';
 import { PAGE_COUNT } from '../constants/page';
 import { MainOrderOptions } from '../constants/orderOptions';
 
-const PostLink = ({ id, name }) => (
-  <li>
-    <Link as={`/p/${id}`} href={`/post?id=${id}`}>
-      <a>{name}</a>
-    </Link>
-  </li>
-);
-
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadPurchaseItems());
@@ -42,11 +31,7 @@ class Index extends React.Component {
 
     return (
       <>
-        <SelectBox
-          selected={order}
-          options={MainOrderOptions.toList()}
-          onChange={value => dispatchChangePurchaseOrder(value)}
-        />
+        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
         <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
       </>
     );

@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  loadSearchPage,
-  changeSearchKeyword,
-} from '../services/search/actions';
+import { loadSearchPage, changeSearchKeyword } from '../services/search/actions';
 
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
@@ -14,10 +11,7 @@ import LibraryBook from '../components/LibraryBook';
 
 import { toFlatten } from '../utils/array';
 import { PAGE_COUNT } from '../constants/page';
-import {
-  getSearchPageInfo,
-  getSearchItemsByPage,
-} from '../services/search/selectors';
+import { getSearchPageInfo, getSearchItemsByPage } from '../services/search/selectors';
 import { getBooks } from '../services/book/selectors';
 
 class Search extends React.Component {
@@ -31,12 +25,7 @@ class Search extends React.Component {
       changeSearchKeyword: dispatchChangeSearchKeyword,
     } = this.props;
 
-    return (
-      <SearchBar
-        keyword={keyword}
-        onSubmit={value => dispatchChangeSearchKeyword(value)}
-      />
-    );
+    return <SearchBar keyword={keyword} onSubmit={value => dispatchChangeSearchKeyword(value)} />;
   }
 
   renderBooks() {

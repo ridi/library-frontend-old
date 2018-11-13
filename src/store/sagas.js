@@ -8,12 +8,5 @@ import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 import purchasedUnitSaga from '../services/purchased/mainUnit/sagas';
 
 export default function* rootSaga() {
-  yield all([
-    accountRootSaga(),
-    bookRootSaga(),
-    purchaseRootSaga(),
-    searchRootSaga(),
-    purchasedHiddenSaga(),
-    purchasedUnitSaga()
-  ]);
+  yield all([accountRootSaga(), bookRootSaga(), purchaseRootSaga(), searchRootSaga(), purchasedHiddenSaga(), purchasedUnitSaga()]);
 }

@@ -6,14 +6,7 @@ import { loadBookData } from '../book/sagas';
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 
-import {
-  LOAD_SEARCH_PAGE,
-  CHANGE_SEARCH_KEYWORD,
-  setSearchPage,
-  setSearchKeyword,
-  setSearchTotalCount,
-  setSearchItems,
-} from './actions';
+import { LOAD_SEARCH_PAGE, CHANGE_SEARCH_KEYWORD, setSearchPage, setSearchKeyword, setSearchTotalCount, setSearchItems } from './actions';
 import { getSearchOptions } from './selectors';
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 
@@ -29,21 +22,13 @@ function* loadSearchPage() {
   yield call(persistPageOptionsFromQueries);
 
   const { page, keyword } = yield select(getSearchOptions);
-  const [itemResponse, countResponse] = yield all([
-    call(fetchSearchItems, keyword, page),
-    call(fetchSearchItemsTotalCount, keyword),
-  ]);
+  const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
   yield all([
     put(setSearchItems(itemResponse.items)),
-    put(
-      setSearchTotalCount(
-        countResponse.unit_total_count,
-        countResponse.item_total_count,
-      ),
-    ),
+    put(setSearchTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
   ]);
 }
 
@@ -57,8 +42,5 @@ function changeSearchKeyword(action) {
 }
 
 export default function* searchRootSaga() {
-  yield all([
-    takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
-    takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
-  ]);
+  yield all([takeEvery(LOAD_SEARCH_PAGE, loadSearchPage), takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword)]);
 }

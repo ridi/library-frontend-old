@@ -1,11 +1,6 @@
 import { initialState } from './state';
 
-import {
-  SET_SEARCH_ITEMS,
-  SET_SEARCH_TOTAL_COUNT,
-  SET_SEARCH_PAGE,
-  SET_SEARCH_KEYWORD,
-} from './actions';
+import { SET_SEARCH_ITEMS, SET_SEARCH_TOTAL_COUNT, SET_SEARCH_PAGE, SET_SEARCH_KEYWORD } from './actions';
 
 const searchReducer = (state = initialState, action) => {
   switch (action.type) {
