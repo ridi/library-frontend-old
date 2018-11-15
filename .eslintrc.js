@@ -87,5 +87,6 @@ module.exports = {
       },
     ],
     'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/mouse-events-have-key-events': 'off',
   },
 };

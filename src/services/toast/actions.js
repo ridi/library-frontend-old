@@ -4,11 +4,15 @@ export const UNSET_TOAST = 'UNSET_TOAST';
 export const SHOW_TOAST = 'SHOW_TOAST';
 export const CLOSE_TOAST = 'CLOSE_TOAST';
 
-export const setToast = (message, uri) => ({
+export const CLOSE_WITH_DELAY = 'CLOSE_WITH_DELAY';
+export const CANCEL_CLOSE = 'CANCEL';
+
+export const setToast = (message, uri, duration) => ({
   type: SET_TOAST,
   payload: {
     message,
     uri,
+    duration,
   },
 });
 
@@ -27,4 +31,15 @@ export const showToast = (duration, message, uri) => ({
 
 export const closeToast = () => ({
   type: CLOSE_TOAST,
+});
+
+export const closeWithDelay = duration => ({
+  type: CLOSE_WITH_DELAY,
+  payload: {
+    duration,
+  },
+});
+
+export const cancelClose = () => ({
+  type: CANCEL_CLOSE,
 });
