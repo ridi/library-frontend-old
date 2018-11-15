@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { getToast } from '../services/toast/selectors';
 import { closeToast, closeWithDelay, cancelClose } from '../services/toast/actions';
 
-class Toast extends React.Component {
+class Toaster extends React.Component {
   constructor(props) {
     super(props);
 
@@ -83,4 +83,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Toast);
+)(Toaster);

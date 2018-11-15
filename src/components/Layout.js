@@ -1,6 +1,6 @@
 import Header from './Header';
 
-import Toast from './Toast';
+import Toaster from './Toaster';
 
 const layoutStyle = {
   margin: 20,
@@ -12,7 +12,7 @@ const Layout = ({ children }) => (
   <div style={layoutStyle}>
     <Header />
     {children}
-    <Toast />
+    <Toaster />
   </div>
 );
 
