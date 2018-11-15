@@ -1,8 +1,9 @@
 import classNames from 'classnames';
+import styles from './styles';
 
 const TabItem = ({ title, onClick, isActive }) => (
-  <li>
-    <button type="button" onClick={onClick} className={classNames('TabBar_TabItem', { 'TabBar_TabItem-active': isActive })}>
+  <li className={styles.TabItemWrapper}>
+    <button type="button" onClick={onClick} className={classNames(styles.TabItem, { [styles.TabItemActive]: isActive })}>
       {title}
     </button>
   </li>

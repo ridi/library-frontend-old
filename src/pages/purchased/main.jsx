@@ -6,6 +6,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import SelectBox from '../../components/SelectBox';
+import LibraryTabBar from '../../components/LibraryTabBar';
 
 import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
@@ -19,6 +20,10 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadPurchaseItems());
+  }
+
+  renderHeader() {
+    return <LibraryTabBar />;
   }
 
   renderPageOptions() {
@@ -67,6 +72,7 @@ class Index extends React.Component {
   render() {
     return (
       <Layout>
+        {this.renderHeader()}
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}

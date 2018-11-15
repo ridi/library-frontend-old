@@ -1,5 +1,3 @@
-import Header from './Header';
-
 import Toaster from './Toaster';
 
 const layoutStyle = {
@@ -10,7 +8,6 @@ const layoutStyle = {
 
 const Layout = ({ children }) => (
   <div style={layoutStyle}>
-    <Header />
     {children}
     <Toaster />
   </div>

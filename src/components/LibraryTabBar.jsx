@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { TabBar, TabItem } from './Tabbar';
 
-class LibraryTabbar extends React.Component {
+class LibraryTabBar extends React.Component {
   onClickAllBooks() {
     console.log('onClickAllBooks');
   }
@@ -23,4 +23,4 @@ const mapDispatchToProps = {};
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LibraryTabbar);
+)(LibraryTabBar);
