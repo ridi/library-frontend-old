@@ -1,8 +1,5 @@
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { connect } from 'react-redux';
-import shortid from 'shortid';
 
 import Layout from '../../components/Layout';
 import BookList from '../../components/BookList';
