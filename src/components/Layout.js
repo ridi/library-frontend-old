@@ -1,3 +1,4 @@
+import ConnectedLNB from './lnb';
 import Toaster from './Toaster';
 
 const layoutStyle = {
@@ -8,6 +9,7 @@ const layoutStyle = {
 
 const Layout = ({ children }) => (
   <div style={layoutStyle}>
+    <ConnectedLNB />
     {children}
     <Toaster />
   </div>

@@ -1,12 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import SelectBox from '../../components/SelectBox';
-import LibraryTabBar from '../../components/LibraryTabBar';
 
 import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
@@ -67,12 +65,11 @@ class Index extends React.Component {
 
   render() {
     return (
-      <Layout>
-        <LibraryTabBar />
+      <>
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
-      </Layout>
+      </>
     );
   }
 }

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import { TabBar, TabItem } from './Tabbar';
 
+import { getLocation } from '../services/router/selectors';
+
 const TabBarRoutes = ['/purchased/main', '/purchased/search'];
 const TitleBarRoutes = [];
 
@@ -55,7 +57,13 @@ class LNB extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+  const location = getLocation(state);
+
+  return {
+    location,
+  };
+};
 const mapDisaptchToProps = {};
 
 export default connect(

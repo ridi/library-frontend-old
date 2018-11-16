@@ -7,6 +7,8 @@ import injectStore from '../store';
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
+import Layout from '../components/Layout';
+
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
@@ -20,7 +22,9 @@ class LibraryApp extends App {
       <Container>
         <Provider store={store}>
           <ConnecterRouterWrapper>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </ConnecterRouterWrapper>
         </Provider>
       </Container>
