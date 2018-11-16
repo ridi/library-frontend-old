@@ -1,0 +1,44 @@
+<<<<<<< HEAD
+import ConnectedGNB from './gnb';
+import ConnectedLNB from './lnb';
+import Toaster from './Toaster';
+import Footer from './footer';
+=======
+import { injectGlobal } from 'emotion';
+import { globalReset } from './globalStyles';
+import GNB from './GNB';
+import Footer from './Footer';
+
+injectGlobal(globalReset);
+>>>>>>> feature/Layout
+
+const layoutStyle = {
+  margin: 20,
+  padding: 20,
+  border: '1px solid #DDD',
+};
+
+<<<<<<< HEAD
+const Layout = ({ children }) => (
+  <div style={layoutStyle}>
+    <ConnectedGNB />
+    <ConnectedLNB />
+    {children}
+    <Footer />
+    <Toaster />
+  </div>
+);
+=======
+const Layout = props => {
+  const { children } = props;
+  return (
+    <div className="Library">
+      <GNB />
+      <div style={layoutStyle}>{children}</div>
+      <Footer />
+    </div>
+  );
+};
+>>>>>>> feature/Layout
+
+export default Layout;

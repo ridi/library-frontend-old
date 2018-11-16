@@ -1,17 +1,16 @@
-import ConnectedGNB from './gnb';
-import ConnectedLNB from './lnb';
-import Toaster from './Toaster';
-import Footer from './footer';
+import { injectGlobal } from 'emotion';
+import { globalReset } from './globalStyles';
 
-const layoutStyle = {
-  margin: 20,
-  padding: 20,
-  border: '1px solid #DDD',
-};
+import ConnectedLNB from './lnb';
+import Footer from './Footer';
+import GNB from './GNB';
+import Toaster from './Toaster';
+
+injectGlobal(globalReset);
 
 const Layout = ({ children }) => (
-  <div style={layoutStyle}>
-    <ConnectedGNB />
+  <div>
+    <GNB />
     <ConnectedLNB />
     {children}
     <Footer />
