@@ -65,11 +65,11 @@ class Index extends React.Component {
 
   render() {
     return (
-      <>
+      <main>
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
-      </>
+      </main>
     );
   }
 }
