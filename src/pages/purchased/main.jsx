@@ -22,10 +22,6 @@ class Index extends React.Component {
     await store.dispatch(loadPurchaseItems());
   }
 
-  renderHeader() {
-    return <LibraryTabBar />;
-  }
-
   renderPageOptions() {
     const {
       pageInfo: { order, filter },
@@ -72,7 +68,7 @@ class Index extends React.Component {
   render() {
     return (
       <Layout>
-        {this.renderHeader()}
+        <LibraryTabBar />
         {this.renderPageOptions()}
         {this.renderBooks()}
         {this.renderPaginator()}
