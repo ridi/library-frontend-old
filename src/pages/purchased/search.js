@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { loadSearchPage, changeSearchKeyword } from '../../services/purchased/search/actions';
 
-import Layout from '../../components/Layout';
+import Layout from '../base/Layout';
 import SearchBar from '../../components/SearchBar';
 import Paginator from '../../components/Paginator';
 import BookList from '../../components/BookList';

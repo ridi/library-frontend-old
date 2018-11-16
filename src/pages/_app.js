@@ -7,7 +7,7 @@ import injectStore from '../store';
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
-import Layout from '../components/Layout';
+import Layout from './base/Layout';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {

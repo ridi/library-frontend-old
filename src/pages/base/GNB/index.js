@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@ridi/rsg';
 import MyMenuModal from './MyMenuModal';
-import { hidden } from '../../styles';
+import { hidden } from '../../../styles';
 
 export default class GNB extends React.Component {
   constructor(props) {

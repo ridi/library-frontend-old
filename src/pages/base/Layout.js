@@ -1,8 +1,8 @@
-import '../styles';
-import ConnectedLNB from './lnb';
+import '../../styles';
+import ConnectedLNB from '../../components/lnb';
+import Toaster from '../../components/Toaster';
 import Footer from './Footer';
 import GNB from './GNB';
-import Toaster from './Toaster';
 
 const Layout = ({ children }) => (
   <div>
