@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon } from '@ridi/rsg';
 import MyMenuModal from './MyMenuModal';
 
-export default class Header extends React.Component {
+export default class GNB extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,13 +14,17 @@ export default class Header extends React.Component {
     const { ridibooksUrl, ridiSelectUrl, userId } = this.props;
     const { isModalActive } = this.state;
     return (
-      <header>
-        <div>
-          <h1>내 서재</h1>
-          <ul>
-            <li>
-              <a href={ridibooksUrl}>
-                <Icon name="logo_ridibooks_1" />
+      <header className="GNB">
+        <div className="GNB_TitleWrapper">
+          <h1 className="GNB_Title">
+            <a className="TitleLink" href="/">
+              내 서재
+            </a>
+          </h1>
+          <ul className="GNB_OtherService_List">
+            <li className="GNB_OtherService_Item">
+              <a className="OtherServiceLink" href={ridibooksUrl}>
+                <Icon className="ServiceIcon_Ridibooks" name="logo_ridibooks_1" />
                 RIDIBOOKS
               </a>
             </li>
@@ -32,8 +36,10 @@ export default class Header extends React.Component {
             </li>
           </ul>
         </div>
-        <div>
-          <button type="button">마이리디</button>
+        <div className="GNB_MyMenuWrapper">
+          <button className="MyMenu_ToggleButton" type="button">
+            마이메뉴
+          </button>
           {isModalActive && <MyMenuModal userId={userId} />}
         </div>
       </header>

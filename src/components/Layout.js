@@ -1,6 +1,6 @@
 import { injectGlobal } from 'emotion';
 import { globalReset } from './globalStyles';
-import Header from './Header';
+import GNB from './GNB';
 import Footer from './Footer';
 
 injectGlobal(globalReset);
@@ -15,7 +15,7 @@ const Layout = props => {
   const { children } = props;
   return (
     <div className="Library">
-      <Header />
+      <GNB />
       <div style={layoutStyle}>{children}</div>
       <Footer />
     </div>
