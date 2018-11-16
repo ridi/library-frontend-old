@@ -1,5 +1,9 @@
+import { injectGlobal } from 'emotion';
+import { globalReset } from './globalStyles';
 import Header from './Header';
 import Footer from './Footer';
+
+injectGlobal(globalReset);
 
 const layoutStyle = {
   margin: 20,
