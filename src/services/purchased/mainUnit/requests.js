@@ -14,7 +14,7 @@ export function* fetchPurchasedUnitItems(unitId, orderType, orderBy, filter, pag
     orderBy,
     filter,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-    limit: LIBRARY_ITLIBRARY_ITEMS_LIMIT_PER_PAGEEMS_LIMIT,
+    limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
 
   const api = yield put(getAPI());

@@ -7,14 +7,14 @@ import { TabBar, TabItem } from './Tabbar';
 
 import { getLocation } from '../services/router/selectors';
 
-const TabBarRoutes = ['/purchased/main', '/purchased/search'];
+const TabBarRoutes = ['/purchased', '/purchased/search'];
 const TitleBarRoutes = [];
 
 const TabMenus = [
   {
     name: '모든 책',
-    pathname: '/purchased/main',
-    pathRegExp: /\/purchased\/(main|search)$/,
+    pathname: '/purchased',
+    pathRegExp: /\/purchased(\/search)?$/,
   },
 ];
 
