@@ -5,7 +5,7 @@ import withReduxSaga from 'next-redux-saga';
 import flow from '../utils/flow';
 import injectStore from '../store';
 
-import createConnectedRouter from '../services/router/connectedRouter';
+import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -15,13 +15,13 @@ class LibraryApp extends App {
 
   render() {
     const { Component, pageProps, store } = this.props;
-    const ConnectedRouter = createConnectedRouter();
+    const ConnecterRouterWrapper = createConnectedRouterWrapper();
     return (
       <Container>
         <Provider store={store}>
-          <ConnectedRouter>
+          <ConnecterRouterWrapper>
             <Component {...pageProps} />
-          </ConnectedRouter>
+          </ConnecterRouterWrapper>
         </Provider>
       </Container>
     );

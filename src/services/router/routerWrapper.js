@@ -6,8 +6,8 @@ import Router from 'next/router';
 import { setLocation, commitLocation, rollbackLocation } from './actions';
 import { locationFromUrl } from './utils';
 
-const createConnectedRouter = () => {
-  class withRouter extends React.Component {
+const createConnectedRouterWrapper = () => {
+  class RouterWrapper extends React.Component {
     static toRoute(path) {
       return path.replace(/\/$/, '') || '/';
     }
@@ -90,7 +90,7 @@ const createConnectedRouter = () => {
       return children;
     }
   }
-  withRouter.contextTypes = {
+  RouterWrapper.contextTypes = {
     store: PropTypes.shape({
       getState: PropTypes.func.isRequired,
     }),
@@ -103,7 +103,7 @@ const createConnectedRouter = () => {
       commitLocation,
       rollbackLocation,
     },
-  )(withRouter);
+  )(RouterWrapper);
 };
 
-export default createConnectedRouter;
+export default createConnectedRouterWrapper;
