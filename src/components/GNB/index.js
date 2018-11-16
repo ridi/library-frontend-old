@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from '@ridi/rsg';
 import MyMenuModal from './MyMenuModal';
+import { hidden } from '../../styles';
 
 export default class GNB extends React.Component {
   constructor(props) {
@@ -25,13 +26,13 @@ export default class GNB extends React.Component {
             <li className="GNB_OtherService_Item">
               <a className="OtherServiceLink" href={ridibooksUrl}>
                 <Icon className="ServiceIcon_Ridibooks" name="logo_ridibooks_1" />
-                RIDIBOOKS
+                <span className={hidden}>RIDIBOOKS</span>
               </a>
             </li>
             <li>
               <a href={ridiSelectUrl}>
                 <Icon name="logo_ridiselect_1" />
-                RIDI Select
+                <span className={hidden}>RIDI Select</span>
               </a>
             </li>
           </ul>

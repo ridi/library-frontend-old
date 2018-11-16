@@ -1,12 +1,8 @@
-import { injectGlobal } from 'emotion';
-import { globalReset } from './globalStyles';
-
+import '../styles';
 import ConnectedLNB from './lnb';
 import Footer from './Footer';
 import GNB from './GNB';
 import Toaster from './Toaster';
-
-injectGlobal(globalReset);
 
 const Layout = ({ children }) => (
   <div>
