@@ -11,6 +11,10 @@ export const fontFamily = [
   'sans-serif',
 ].join(', ');
 
+export const cursorPointer = {
+  cursor: 'pointer',
+};
+
 export const inheritFont = {
   color: 'inherit',
   letterSpacing: 'inherit',
@@ -44,18 +48,21 @@ export const resetLayout = {
 };
 
 export const globalReset = {
-  a: {
+  a: [
     inheritFont,
     resetHighlight,
-    '&:link, &:visited': {
-      color: 'inherit',
-      textDecoration: 'none',
+    cursorPointer,
+    {
+      '&:link, &:visited': {
+        color: 'inherit',
+        textDecoration: 'none',
+      },
     },
-  },
+  ],
   article: [resetLayout],
   aside: [resetLayout],
   body: [resetLayout],
-  button: [inheritFont, resetAppearance, resetHighlight, resetLayout],
+  button: [cursorPointer, inheritFont, resetAppearance, resetHighlight, resetLayout],
   canvas: [resetLayout],
   dd: [resetLayout],
   details: [resetLayout],
