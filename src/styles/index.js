@@ -3,8 +3,6 @@ import { globalReset } from './reset';
 
 injectGlobal(globalReset);
 
-export const LAYOUT_BREAK_POINT = 833;
-
 export const hidden = css({
   fontSize: 0,
   width: 0,
@@ -13,7 +11,10 @@ export const hidden = css({
   overflow: 'none',
 });
 
-export const media = {
+export const LAYOUT_BREAK_POINT = 833;
+export const PAGE_MAX_WIDTH = 1000;
+
+export const screenSize = {
   isMobile: cls => ({
     [`@media (max-width: ${LAYOUT_BREAK_POINT}px)`]: {
       ...cls,

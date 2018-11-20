@@ -1,18 +1,20 @@
 import { css } from 'emotion';
-import { media } from '../../../styles';
+import { screenSize, PAGE_MAX_WIDTH } from '../../../styles';
 
 export const GNB = css([
-  {
-    background: 'white',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  media.isMobile({
+  screenSize.isMobile({
     padding: '2px 0',
   }),
+  { background: 'white' },
 ]);
 
-export const TitleWrapper = css({});
+export const FlexWrapper = css({
+  background: 'white',
+  display: 'flex',
+  justifyContent: 'space-between',
+  maxWidth: PAGE_MAX_WIDTH,
+  margin: '0 auto',
+});
 
 export const Title = css({
   display: 'inline-block',
@@ -76,6 +78,7 @@ export const RidiSelectIcon = css({
 
 export const MyMenuWrapper = css({
   padding: '7px 10px 7px 0',
+  position: 'relative',
 });
 
 export const MyMenuToggleButton = css({
