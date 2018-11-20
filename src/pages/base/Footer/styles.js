@@ -7,10 +7,6 @@ export const Footer = css({
   padding: '40px 0 0 0',
   textAlign: 'center',
   background: 'white',
-  position: 'fixed',
-  left: 0,
-  bottom: 0,
-  width: '100%',
 });
 
 export const ContentsWrapper = css({
