@@ -58,7 +58,6 @@ export const globalReset = {
     cursorPointer,
     {
       '&:link, &:visited': {
-        color: 'inherit',
         textDecoration: 'none',
       },
     },
