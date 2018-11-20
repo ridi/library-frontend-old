@@ -9,7 +9,6 @@ export const GNB = css([
 ]);
 
 export const FlexWrapper = css({
-  background: 'white',
   display: 'flex',
   justifyContent: 'space-between',
   maxWidth: PAGE_MAX_WIDTH,
