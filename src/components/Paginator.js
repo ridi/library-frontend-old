@@ -5,7 +5,6 @@ import { css } from 'emotion';
 import classNames from 'classnames';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
-import { snakelize } from '../utils/snakelize';
 
 const paginatorCss = css`
   height: 30px;
@@ -70,20 +69,8 @@ const paginatorDeviderDotsCss = css`
 `;
 
 export default class Paginator extends React.Component {
-  makeHref(page) {
-    const { pathname, query } = this.props;
-    const _query = snakelize(query);
-    return { pathname, query: { ..._query, page } };
-  }
-
-  makeAs(page) {
-    const { asPathname, query } = this.props;
-    const _query = snakelize(query);
-    return { pathname: asPathname, query: { ..._query, page } };
-  }
-
   renderGoFirst() {
-    const { currentPage, pageCount } = this.props;
+    const { currentPage, pageCount, onClickPageItem } = this.props;
 
     if (currentPage <= pageCount) {
       return null;
@@ -92,9 +79,9 @@ export default class Paginator extends React.Component {
     return (
       <>
         <div className={pageItemCss}>
-          <Link href={this.makeHref(1)} as={this.makeAs(1)}>
-            <div>처음</div>
-          </Link>
+          <button type="button" onClick={() => onClickPageItem(1)}>
+            처음
+          </button>
         </div>
         <span className={paginatorDotsCss}>
           <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
@@ -104,7 +91,7 @@ export default class Paginator extends React.Component {
   }
 
   renderGoLast() {
-    const { currentPage, totalPages, pageCount } = this.props;
+    const { currentPage, totalPages, pageCount, onClickPageItem } = this.props;
 
     if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
@@ -116,16 +103,16 @@ export default class Paginator extends React.Component {
           <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
         </span>
         <div className={pageItemCss}>
-          <Link href={this.makeHref(totalPages)} as={this.makeAs(totalPages)}>
-            <div>마지막</div>
-          </Link>
+          <button type="button" onClick={() => onClickPageItem(totalPages)}>
+            마지막
+          </button>
         </div>
       </>
     );
   }
 
   renderGoPrev() {
-    const { currentPage } = this.props;
+    const { currentPage, onClickPageItem } = this.props;
 
     if (currentPage === 1) {
       return null;
@@ -133,17 +120,16 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <Link href={this.makeHref(currentPage - 1)} as={this.makeAs(currentPage - 1)}>
-          <div>
-            <Icon name="arrow_8_left" className={pageItemIconCss} />
-          </div>
-        </Link>
+        <button type="button" onClick={() => onClickPageItem(currentPage - 1)}>
+          <Icon name="arrow_8_left" className={pageItemIconCss} />
+          <span className="a11y">이전 페이지</span>
+        </button>
       </div>
     );
   }
 
   renderGoNext() {
-    const { currentPage, totalPages } = this.props;
+    const { currentPage, totalPages, onClickPageItem } = this.props;
 
     if (currentPage === totalPages) {
       return null;
@@ -151,23 +137,22 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <Link href={this.makeHref(currentPage + 1)} as={this.makeAs(currentPage + 1)}>
-          <div>
-            <Icon name="arrow_8_right" className={pageItemIconCss} />
-          </div>
-        </Link>
+        <button type="button" onClick={() => onClickPageItem(currentPage + 1)}>
+          <Icon name="arrow_8_right" className={pageItemIconCss} />
+          <span className="a11y">다음 페이지</span>
+        </button>
       </div>
     );
   }
 
   renderPageItems() {
-    const { currentPage, totalPages, pageCount } = this.props;
+    const { currentPage, totalPages, pageCount, onClickPageItem } = this.props;
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
       <li key={page} className={classNames(pageItemCss, pageItemGroupMemberCss)}>
-        <Link href={this.makeHref(page)} as={this.makeAs(page)}>
+        <button type="button" onClick={() => onClickPageItem(page)}>
           <div>{page}</div>
-        </Link>
+        </button>
       </li>
     ));
   }

@@ -8,7 +8,7 @@ import SelectBox from '../../components/SelectBox';
 
 import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 
-import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
+import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter, changePurchasePage } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
@@ -51,7 +51,8 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, orderType, orderBy, filter },
+      pageInfo: { currentPage, totalPages },
+      changePurchasePage: dispatchChangePurchasePage,
     } = this.props;
 
     return (
@@ -59,9 +60,7 @@ class Index extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/purchased/main"
-        asPathname="/purchased"
-        query={{ orderType, orderBy, filter }}
+        onClickPageItem={page => dispatchChangePurchasePage(page)}
       />
     );
   }
@@ -94,9 +93,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  loadPurchaseItems,
   changePurchaseOrder,
   changePurchaseFilter,
+  changePurchasePage,
 };
 
 export default connect(

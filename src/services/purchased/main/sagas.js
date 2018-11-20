@@ -59,15 +59,18 @@ function* changePurchaseOption(action) {
   const { page, order, filter } = yield select(getPurchaseOptions);
   let { orderBy, orderType } = MainOrderOptions.parse(order);
   let _filter = filter;
+  let _page = page;
 
   if (action.payload.key === 'order') {
     ({ orderBy, orderType } = MainOrderOptions.parse(action.payload.value));
   } else if (action.payload.key === 'filter') {
     _filter = action.payload.value;
+  } else if (action.payload.key === 'page') {
+    _page = action.payload.value;
   }
 
   const query = {
-    page,
+    page: _page,
     orderBy,
     orderType,
     filter: _filter,

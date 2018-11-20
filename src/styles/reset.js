@@ -115,7 +115,7 @@ export const globalReset = {
   th: [resetLayout],
   ul: [resetLayout, { listStyle: 'none' }],
 
-  a11y: {
+  '.a11y': {
     position: 'absolute',
     width: 1,
     height: 1,
