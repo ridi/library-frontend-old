@@ -3,6 +3,7 @@ import Head from 'next/head';
 import '../../styles';
 import ConnectedLNB from '../../components/lnb';
 import Toaster from '../../components/Toaster';
+import Favicon from './Favicon';
 import Footer from './Footer';
 import GNB from './GNB';
 
@@ -13,6 +14,7 @@ const Layout = ({ children }) => (
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
       <title>내 서재 - 리디북스</title>
+      <Favicon />
     </Head>
     <GNB />
     <ConnectedLNB />

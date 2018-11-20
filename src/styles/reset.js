@@ -11,6 +11,10 @@ export const fontFamily = [
   'sans-serif',
 ].join(', ');
 
+export const cursorDefault = {
+  cursor: 'default',
+};
+
 export const cursorPointer = {
   cursor: 'pointer',
 };
@@ -61,7 +65,13 @@ export const globalReset = {
   ],
   article: [resetLayout],
   aside: [resetLayout],
-  body: [resetLayout],
+  body: [
+    resetLayout,
+    cursorDefault,
+    {
+      background: '#f3f4f5',
+    },
+  ],
   button: [cursorPointer, inheritFont, resetAppearance, resetHighlight, resetLayout],
   canvas: [resetLayout],
   dd: [resetLayout],
