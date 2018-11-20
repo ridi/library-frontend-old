@@ -47,10 +47,10 @@ class GNB extends React.Component {
           </div>
           <div className={styles.MyMenuWrapper}>
             <button className={styles.MyMenuToggleButton} onClick={this.onClickMyMenu} type="button">
-              <Icon className={styles.MyMenuIcon} name="setting_1" />
+              <Icon className={`${styles.MyMenuIcon} ${isModalActive ? styles.IconRotate : ''}`} name="setting_1" />
               <span className={hidden}>마이메뉴</span>
             </button>
-            {isModalActive && <MyMenuModal userId={userId} />}
+            <MyMenuModal userId={userId} isActive={isModalActive} />
           </div>
         </div>
       </header>
