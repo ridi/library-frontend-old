@@ -3,8 +3,8 @@ import { Icon } from '@ridi/rsg';
 import * as styles from './styles';
 import { hidden } from '../../../styles';
 
-const MyMenuModal = ({ userId }) => (
-  <section className={styles.MyMenuModal}>
+const MyMenuModal = ({ userId, isActive }) => (
+  <section className={`${styles.MyMenuModal} ${isActive ? styles.ModalActive : ''}`}>
     <h2 className={hidden}>마이메뉴</h2>
     <div className={styles.MenuItem}>
       <p className={styles.UserId}>

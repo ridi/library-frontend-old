@@ -88,4 +88,11 @@ export const MyMenuIcon = css({
   width: 20,
   height: 20,
   fill: '#808991',
+  transformOrigin: 'center center',
+  transform: 'rotate(0)',
+  transition: 'transform .3s',
+});
+
+export const IconRotate = css({
+  transform: 'rotate(90deg)',
 });
