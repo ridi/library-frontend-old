@@ -114,4 +114,15 @@ export const globalReset = {
   textarea: [inheritFont, resetLayout],
   th: [resetLayout],
   ul: [resetLayout, { listStyle: 'none' }],
+
+  a11y: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    margin: -1,
+    padding: 0,
+    overflow: 'hidden',
+    border: 0,
+    clip: 'rect(0, 0, 0, 0)',
+  },
 };

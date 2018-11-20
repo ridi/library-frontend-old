@@ -6,6 +6,8 @@ import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import SelectBox from '../../components/SelectBox';
 
+import ConnectedLNBTabBar from '../base/lnb/LNBTabBar';
+
 import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -65,11 +67,14 @@ class Index extends React.Component {
 
   render() {
     return (
-      <main>
-        {this.renderPageOptions()}
-        {this.renderBooks()}
-        {this.renderPaginator()}
-      </main>
+      <>
+        <ConnectedLNBTabBar />
+        <main>
+          {this.renderPageOptions()}
+          {this.renderBooks()}
+          {this.renderPaginator()}
+        </main>
+      </>
     );
   }
 }
