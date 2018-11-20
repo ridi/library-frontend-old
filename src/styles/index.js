@@ -16,14 +16,14 @@ export const hidden = css({
 });
 
 export const screenSize = {
-  isMobile: cls => ({
+  isMobile: styles => ({
     [`@media (max-width: ${LAYOUT_BREAK_POINT}px)`]: {
-      ...cls,
+      ...styles,
     },
   }),
-  isPc: cls => ({
+  isPc: styles => ({
     [`@media (min-width: ${LAYOUT_BREAK_POINT + 1}px)`]: {
-      ...cls,
+      ...styles,
     },
   }),
 };

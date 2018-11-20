@@ -4,7 +4,7 @@ import * as styles from './styles';
 import { hidden } from '../../../styles';
 
 const MyMenuModal = ({ userId, isActive }) => (
-  <section className={`${styles.MyMenuModal} ${isActive ? styles.ModalActive : ''}`}>
+  <section className={styles.MyMenuModal(isActive)}>
     <h2 className={hidden}>마이메뉴</h2>
     <div className={styles.MenuItem}>
       <p className={styles.UserId}>
