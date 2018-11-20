@@ -10,14 +10,12 @@ export default class GNB extends React.Component {
     this.state = {
       isModalActive: false,
     };
-
-    this.onClickMyMenu = this.onClickMyMenu.bind(this);
   }
 
-  onClickMyMenu() {
+  onClickMyMenu = () => {
     const { isModalActive } = this.state;
     this.setState({ isModalActive: !isModalActive });
-  }
+  };
 
   render() {
     const { ridibooksUrl, ridiSelectUrl, userId } = this.props;

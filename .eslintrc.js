@@ -1,7 +1,7 @@
 module.exports = {
   extends: ['@ridi', 'prettier'],
+  parser: 'babel-eslint',
   parserOptions: {
-    parser: 'babel-eslint',
     ecmaVersion: 2017,
     ecmaFeatures: {
       experimentalObjectRestSpread: true,
