@@ -10,6 +10,13 @@ export default class GNB extends React.Component {
     this.state = {
       isModalActive: false,
     };
+
+    this.onClickMyMenu = this.onClickMyMenu.bind(this);
+  }
+
+  onClickMyMenu() {
+    const { isModalActive } = this.state;
+    this.setState({ isModalActive: !isModalActive });
   }
 
   render() {
@@ -39,7 +46,7 @@ export default class GNB extends React.Component {
           </ul>
         </div>
         <div className={styles.MyMenuWrapper}>
-          <button className={styles.MyMenuToggleButton} type="button">
+          <button className={styles.MyMenuToggleButton} onClick={this.onClickMyMenu} type="button">
             <Icon className={styles.MyMenuIcon} name="setting_1" />
             <span className={hidden}>마이메뉴</span>
           </button>

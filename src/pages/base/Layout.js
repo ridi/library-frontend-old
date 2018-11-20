@@ -1,3 +1,4 @@
+import React from 'react';
 import Head from 'next/head';
 import '../../styles';
 import ConnectedLNB from '../../components/lnb';
@@ -6,7 +7,7 @@ import Footer from './Footer';
 import GNB from './GNB';
 
 const Layout = ({ children }) => (
-  <div>
+  <>
     <Head>
       <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
       <meta charset="UTF-8" />
@@ -18,7 +19,7 @@ const Layout = ({ children }) => (
     {children}
     <Footer />
     <Toaster />
-  </div>
+  </>
 );
 
 export default Layout;
