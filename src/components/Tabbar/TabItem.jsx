@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import styles from './styles';
+import * as styles from './styles';
 
 const TabItem = ({ name, onClick, isActive }) => (
   <li className={styles.TabItemWrapper}>
