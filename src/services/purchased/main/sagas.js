@@ -73,7 +73,8 @@ function* changePurchaseOption(action) {
     filter: _filter,
   };
 
-  Router.push(makeURI('/', query));
+  const uri = makeURI('/purchased', query);
+  Router.push(uri, { shallow: true });
 }
 
 export default function* purchaseMainRootSaga() {

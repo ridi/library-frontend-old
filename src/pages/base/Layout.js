@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import '../../styles';
-import ConnectedLNB from '../../components/lnb';
 import Toaster from '../../components/Toaster';
 import Footer from './Footer';
 import GNB from './GNB';
@@ -15,7 +14,6 @@ const Layout = ({ children }) => (
       <title>내 서재 - 리디북스</title>
     </Head>
     <GNB />
-    <ConnectedLNB />
     {children}
     <Footer />
     <Toaster />
