@@ -1,5 +1,6 @@
 import React from 'react';
 import Router from 'next/router';
+import shortid from 'shortid';
 
 import { connect } from 'react-redux';
 
@@ -19,7 +20,12 @@ const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
   <nav>
     <TabBar>
       {TabMenus.map(menu => (
-        <TabItem name={menu.name} isActive={!!currentPathname.match(menu.pathRegExp)} onClick={() => Router.push(menu.pathname)} />
+        <TabItem
+          key={shortid.generate()}
+          name={menu.name}
+          isActive={!!currentPathname.match(menu.pathRegExp)}
+          onClick={() => Router.push(menu.pathname)}
+        />
       ))}
     </TabBar>
   </nav>

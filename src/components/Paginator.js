@@ -76,6 +76,12 @@ export default class Paginator extends React.Component {
     return { pathname, query: { ..._query, page } };
   }
 
+  makeAs(page) {
+    const { asPathname, query } = this.props;
+    const _query = snakelize(query);
+    return { pathname: asPathname, query: { ..._query, page } };
+  }
+
   renderGoFirst() {
     const { currentPage, pageCount } = this.props;
 
@@ -86,7 +92,7 @@ export default class Paginator extends React.Component {
     return (
       <>
         <div className={pageItemCss}>
-          <Link href={this.makeHref(1)}>
+          <Link href={this.makeHref(1)} as={this.makeAs(1)}>
             <div>처음</div>
           </Link>
         </div>
@@ -110,7 +116,7 @@ export default class Paginator extends React.Component {
           <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
         </span>
         <div className={pageItemCss}>
-          <Link href={this.makeHref(totalPages)}>
+          <Link href={this.makeHref(totalPages)} as={this.makeAs(totalPages)}>
             <div>마지막</div>
           </Link>
         </div>
@@ -127,7 +133,7 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <Link href={this.makeHref(currentPage - 1)}>
+        <Link href={this.makeHref(currentPage - 1)} as={this.makeAs(currentPage - 1)}>
           <div>
             <Icon name="arrow_8_left" className={pageItemIconCss} />
           </div>
@@ -145,7 +151,7 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <Link href={this.makeHref(currentPage + 1)}>
+        <Link href={this.makeHref(currentPage + 1)} as={this.makeAs(currentPage + 1)}>
           <div>
             <Icon name="arrow_8_right" className={pageItemIconCss} />
           </div>
@@ -158,8 +164,8 @@ export default class Paginator extends React.Component {
     const { currentPage, totalPages, pageCount } = this.props;
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
-      <li className={classNames(pageItemCss, pageItemGroupMemberCss)}>
-        <Link href={this.makeHref(page)}>
+      <li key={page} className={classNames(pageItemCss, pageItemGroupMemberCss)}>
+        <Link href={this.makeHref(page)} as={this.makeAs(page)}>
           <div>{page}</div>
         </Link>
       </li>

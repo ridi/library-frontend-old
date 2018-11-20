@@ -6,7 +6,7 @@ import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import SelectBox from '../../components/SelectBox';
 
-import ConnectedLNBTabBar from '../base/lnb/LNBTabBar';
+import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 
 import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
 
@@ -59,7 +59,8 @@ class Index extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/"
+        pathname="/purchased/main"
+        asPathname="/purchased"
         query={{ orderType, orderBy, filter }}
       />
     );
@@ -93,6 +94,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  loadPurchaseItems,
   changePurchaseOrder,
   changePurchaseFilter,
 };
