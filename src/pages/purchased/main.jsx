@@ -5,6 +5,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import SelectBox from '../../components/SelectBox';
+import ConnectedEditingBar from '../../components/EditingBar';
 
 import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 
@@ -20,6 +21,47 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadPurchaseItems());
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isEditing: false,
+    };
+
+    this.toggleEditingMode = this.toggleEditingMode.bind(this);
+  }
+
+  toggleEditingMode() {
+    const { isEditing } = this.state;
+    this.setState({ isEditing: !isEditing });
+  }
+
+  renderToolBar() {
+    const { isEditing } = this.state;
+    const {
+      pageInfo: { order, filter },
+      filterOptions,
+      changePurchaseOrder: dispatchChangePurchaseOrder,
+      changePurchaseFilter: dispatchChangePurchaseFilter,
+    } = this.props;
+
+    if (isEditing) {
+      return <ConnectedEditingBar onClickSuccessButton={this.toggleEditingMode} />;
+    }
+
+    return (
+      <div>
+        <button type="button" onClick={this.toggleEditingMode}>
+          편집
+          <span className="a11y">편집</span>
+        </button>
+        <div>
+          <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
+          <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+        </div>
+      </div>
+    );
   }
 
   renderPageOptions() {
@@ -70,7 +112,7 @@ class Index extends React.Component {
       <>
         <ConnectedLNBTabBar />
         <main>
-          {this.renderPageOptions()}
+          {this.renderToolBar()}
           {this.renderBooks()}
           {this.renderPaginator()}
         </main>
