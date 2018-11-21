@@ -17,6 +17,7 @@ import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/pu
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
+import Responsive from '../base/Responsive';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
@@ -54,10 +55,12 @@ class Index extends React.Component {
     return (
       <>
         <ConnectedLNBTabBar />
+        <ConnectedMainToolBar />
         <main>
-          <ConnectedMainToolBar />
-          {this.renderBooks()}
-          {this.renderPaginator()}
+          <Responsive>
+            {this.renderBooks()}
+            {this.renderPaginator()}
+          </Responsive>
         </main>
       </>
     );
