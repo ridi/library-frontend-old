@@ -9,6 +9,8 @@ import { TabBar, TabItem } from '../../../components/Tabbar';
 import { getLocation } from '../../../services/router/selectors';
 import Responsive from '../Responsive';
 
+import * as styles from './styles';
+
 const TabMenus = [
   {
     name: '모든 책',
@@ -18,7 +20,7 @@ const TabMenus = [
 ];
 
 const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
-  <nav>
+  <nav className={styles.LNBTabBarWrapper}>
     <Responsive>
       <TabBar>
         {TabMenus.map(menu => (

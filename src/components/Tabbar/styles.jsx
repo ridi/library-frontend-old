@@ -6,14 +6,9 @@ export const TabBar = css`
   padding: 0;
   width: 100%;
   height: 40px;
-
-  background-color: #ffffff;
 `;
 export const TabItemWrapper = css`
   float: left;
-  margin: 0 5px;
-  padding: 0 5px;
-
   height: 100%;
 `;
 
