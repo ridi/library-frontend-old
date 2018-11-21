@@ -6,7 +6,7 @@ const config = {
   ACCOUNT_BASE_URL: ACCOUNT_BASE_URL || 'https://account.ridibooks.com',
   LIBRARY_API_BASE_URL: LIBRARY_API_BASE_URL || 'https://library-api.ridibooks.com',
   PLATFORM_API_BASE_URL: PLATFORM_API_BASE_URL || 'https://platform-api.ridibooks.com',
-  STATIC_URL: STATIC_URL || 'https://library-static.ridibooks.com',
+  STATIC_URL,
 };
 
 export default config;

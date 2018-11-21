@@ -64,22 +64,6 @@ class Index extends React.Component {
     );
   }
 
-  renderPageOptions() {
-    const {
-      pageInfo: { order, filter },
-      filterOptions,
-      changePurchaseOrder: dispatchChangePurchaseOrder,
-      changePurchaseFilter: dispatchChangePurchaseFilter,
-    } = this.props;
-
-    return (
-      <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
-        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
-      </>
-    );
-  }
-
   renderBooks() {
     const { items, books } = this.props;
     return (
