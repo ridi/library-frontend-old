@@ -20,7 +20,7 @@ const SortModal = props => {
     <section className={classnames(styles.SortModal, isActive && styles.ModalActive)}>
       <MenuGroup title="정렬순서">
         {MainOrderOptions.toList().map((option, index) => (
-          <MenuItem title={option.title} showIcon={index === order} icon="document" onClick={() => dispatchChangePurchaseOrder(index)} />
+          <MenuItem title={option.title} showIcon={index === order} icon="check_1" onClick={() => dispatchChangePurchaseOrder(index)} />
         ))}
       </MenuGroup>
     </section>
