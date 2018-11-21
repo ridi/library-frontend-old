@@ -8,12 +8,12 @@ export const MenuGroup = css({
 
 export const MenuGroupTitle = css({
   width: '100%',
-  height: 32,
-  padding: 8,
+  height: 16,
 
   fontSize: 13,
   letterSpacing: -0.1,
   color: '#808991',
+  padding: '16px 14px 8px 14px',
 });
 
 export const MenuGroupList = css({
@@ -28,6 +28,11 @@ export const MenuGroupItemWrapper = css({
 export const MenuGroupItem = css({
   width: '100%',
   height: '100%',
+
+  position: 'relative',
+  padding: '11px 11px 10px 42px',
+
+  textAlign: 'left',
 });
 
 export const MenuGroupItemTitle = css({
@@ -36,11 +41,14 @@ export const MenuGroupItemTitle = css({
   color: '#40474d',
 });
 
-export const MenuGroupItemIconWrapper = css({
-  padding: '12px 10px 12px 14px',
-});
-
 export const MenuGroupItemIcon = css({
+  position: 'absolute',
   width: 20,
   height: 20,
+  left: 14,
+  top: '50%',
+  webkitTransform: 'translate3d(0, -50%, 0)',
+  msTransform: 'translate3d(0, -50%, 0)',
+  transform: 'translate3d(0, -50%, 0)',
+  fill: '#9ea7ad',
 });

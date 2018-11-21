@@ -9,14 +9,14 @@ import ConnectedEditingBar from '../../components/EditingBar';
 
 import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 
-import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter, changePurchasePage } from '../../services/purchased/main/actions';
+import { loadPurchaseItems, changePurchaseFilter, changePurchasePage } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
-import { MainOrderOptions } from '../../constants/orderOptions';
+import ConnectedSortModal from '../base/MainModal/SortModal';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
@@ -27,9 +27,11 @@ class Index extends React.Component {
     super(props);
     this.state = {
       isEditing: false,
+      isActiveSortModal: false,
     };
 
     this.toggleEditingMode = this.toggleEditingMode.bind(this);
+    this.toggleSortModal = this.toggleSortModal.bind(this);
   }
 
   toggleEditingMode() {
@@ -37,12 +39,26 @@ class Index extends React.Component {
     this.setState({ isEditing: !isEditing });
   }
 
+  toggleSortModal() {
+    const { isActiveSortModal } = this.state;
+    this.setState({ isActiveSortModal: !isActiveSortModal });
+  }
+
+  renderModal() {
+    const { isActiveSortModal } = this.state;
+
+    return (
+      <>
+        <ConnectedSortModal isActive={isActiveSortModal} />
+      </>
+    );
+  }
+
   renderToolBar() {
     const { isEditing } = this.state;
     const {
-      pageInfo: { order, filter },
+      pageInfo: { filter },
       filterOptions,
-      changePurchaseOrder: dispatchChangePurchaseOrder,
       changePurchaseFilter: dispatchChangePurchaseFilter,
     } = this.props;
 
@@ -57,8 +73,10 @@ class Index extends React.Component {
           <span className="a11y">편집</span>
         </button>
         <div>
-          <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
           <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+          <button type="button" onClick={this.toggleSortModal}>
+            정렬
+          </button>
         </div>
       </div>
     );
@@ -100,6 +118,7 @@ class Index extends React.Component {
           {this.renderBooks()}
           {this.renderPaginator()}
         </main>
+        {this.renderModal()}
       </>
     );
   }
@@ -119,7 +138,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseOrder,
   changePurchaseFilter,
   changePurchasePage,
 };
