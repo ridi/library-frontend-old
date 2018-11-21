@@ -8,7 +8,7 @@ export const EditingBarWrapper = css({
 });
 
 export const EditingBar = css({
-  padding: '8px 16px',
+  padding: '8px 0',
   height: 30,
 });
 
@@ -24,7 +24,7 @@ export const EditingBarIcon = css({
   width: 12,
   height: 9,
   top: '50%',
-  left: 12,
+  left: 16,
   webkitTransform: 'translate3d(0, -50%, 0)',
   msTransform: 'translate3d(0, -50%, 0)',
   transform: 'translate3d(0, -50%, 0)',
@@ -38,6 +38,12 @@ export const EditingBarSelectCount = css({
   color: '#ffffff',
   lineHeight: '20px',
 });
+
+export const EditingBarButtonWrapper = css({
+  float: 'right',
+  marginRight: 16,
+});
+
 export const EditingBarAllSelect = css({
   marginRight: 16,
   fontSize: 15,
@@ -59,8 +65,4 @@ export const EditingBarCompleteButton = css({
   letterSpacing: '-0.3',
   textAlign: 'center',
   color: '#0077d9',
-});
-
-export const floatRight = css({
-  float: 'right',
 });

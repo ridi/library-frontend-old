@@ -13,7 +13,7 @@ const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
           <Icon name="check_1" className={styles.EditingBarIcon} />
           <div className={styles.EditingBarSelectCount}>{totalSelectedCount}권 선택</div>
         </div>
-        <div className={styles.floatRight}>
+        <div className={styles.EditingBarButtonWrapper}>
           <button type="button" className={styles.EditingBarAllSelect}>
             전체 선택
           </button>
