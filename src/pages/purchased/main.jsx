@@ -17,6 +17,7 @@ import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/pu
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
 import ConnectedSortModal from '../base/MainModal/SortModal';
+import IconButton from '../../components/IconButton';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
@@ -68,16 +69,9 @@ class Index extends React.Component {
 
     return (
       <div>
-        <button type="button" onClick={this.toggleEditingMode}>
-          편집
-          <span className="a11y">편집</span>
-        </button>
-        <div>
-          <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
-          <button type="button" onClick={this.toggleSortModal}>
-            정렬
-          </button>
-        </div>
+        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+        <IconButton icon="document" a11y="편집" onClick={this.toggleEditingMode} />
+        <IconButton icon="document" a11y="정렬" onClick={this.toggleSortModal} />
       </div>
     );
   }
