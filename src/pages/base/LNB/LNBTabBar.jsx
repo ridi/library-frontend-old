@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { TabBar, TabItem } from '../../../components/Tabbar';
 
 import { getLocation } from '../../../services/router/selectors';
+import Responsive from '../Responsive';
 
 const TabMenus = [
   {
@@ -18,16 +19,18 @@ const TabMenus = [
 
 const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
   <nav>
-    <TabBar>
-      {TabMenus.map(menu => (
-        <TabItem
-          key={shortid.generate()}
-          name={menu.name}
-          isActive={!!currentPathname.match(menu.pathRegExp)}
-          onClick={() => Router.push(menu.pathname)}
-        />
-      ))}
-    </TabBar>
+    <Responsive>
+      <TabBar>
+        {TabMenus.map(menu => (
+          <TabItem
+            key={shortid.generate()}
+            name={menu.name}
+            isActive={!!currentPathname.match(menu.pathRegExp)}
+            onClick={() => Router.push(menu.pathname)}
+          />
+        ))}
+      </TabBar>
+    </Responsive>
   </nav>
 );
 

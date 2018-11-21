@@ -5,7 +5,9 @@ export const TabBar = css`
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 30px;
+  height: 40px;
+
+  background-color: #ffffff;
 `;
 export const TabItemWrapper = css`
   float: left;
@@ -16,16 +18,21 @@ export const TabItemWrapper = css`
 `;
 
 export const TabItem = css`
-  color: gray;
-  font-size: 14px;
-
-  border: 0;
+  margin: 0px 16px;
+  padding: 8px;
   height: 100%;
+
+  color: #808991;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  text-align: center;
+
+  box-sizing: border-box;
+  border: 0;
 `;
 
 export const TabItemActive = css`
-  color: black;
+  color: #40474d;
   font-weight: bolder;
-
-  border-bottom: 3px solid black;
+  border-bottom: 3px solid #9ea7ad;
 `;
