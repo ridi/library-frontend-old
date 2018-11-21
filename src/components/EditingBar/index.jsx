@@ -11,7 +11,7 @@ const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
       <div className={styles.EditingBar}>
         <div className={styles.EditingBarIconWrapper}>
           <Icon name="check_1" className={styles.EditingBarIcon} />
-          <div className={styles.EditingBarSelectCount}>{totalSelectedCount}권 선택</div>
+          <div className={styles.EditingBarSelectCount}>{totalSelectedCount}권</div>
         </div>
         <div className={styles.EditingBarButtonWrapper}>
           <button type="button" className={styles.EditingBarAllSelect}>
