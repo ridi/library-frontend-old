@@ -13,10 +13,12 @@ export const MyMenuModal = isActive =>
       opacity: 0,
       transform: 'translate3d(0, 20px, 0)',
       transition: 'opacity .3s, transform .3s',
+      pointerEvents: 'none',
     },
     isActive && {
       opacity: 1,
       transform: 'translate3d(0, 0, 0)',
+      pointerEvents: 'auto',
     },
   ]);
 
