@@ -1,5 +1,5 @@
 import { css } from 'emotion';
-import { screenSize, PAGE_MAX_WIDTH } from '../../../styles';
+import { screenSize, maxWidthWrapper } from '../../../styles';
 
 export const GNB = css([
   screenSize.isMobile({
@@ -11,8 +11,7 @@ export const GNB = css([
 export const FlexWrapper = css({
   display: 'flex',
   justifyContent: 'space-between',
-  maxWidth: PAGE_MAX_WIDTH,
-  margin: '0 auto',
+  ...maxWidthWrapper,
 });
 
 export const Title = css({

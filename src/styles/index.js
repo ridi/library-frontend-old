@@ -1,19 +1,23 @@
 import { css, injectGlobal } from 'emotion';
 import { globalReset } from './reset';
 
-export const FOOTER_HEIGHT = 254;
 export const LAYOUT_BREAK_POINT = 833;
 export const PAGE_MAX_WIDTH = 1000;
 
 injectGlobal(globalReset);
 
-export const hidden = css({
+export const Hidden = css({
   fontSize: 0,
   width: 0,
   height: 0,
   color: 'transparent',
   overflow: 'none',
 });
+
+export const maxWidthWrapper = {
+  maxWidth: PAGE_MAX_WIDTH,
+  margin: '0 auto',
+};
 
 export const screenSize = {
   isMobile: styles => ({
