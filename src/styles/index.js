@@ -1,10 +1,7 @@
-import { css, injectGlobal } from 'emotion';
-import { globalReset } from './reset';
+import { css } from 'emotion';
 
 export const LAYOUT_BREAK_POINT = 833;
 export const PAGE_MAX_WIDTH = 1000;
-
-injectGlobal(globalReset);
 
 export const Hidden = css({
   fontSize: 0,

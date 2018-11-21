@@ -1,10 +1,17 @@
-import React from 'react';
 import Head from 'next/head';
-import '../../styles';
-import Toaster from '../../components/Toaster';
+import { hydrate, injectGlobal } from 'react-emotion';
+import React from 'react';
+
 import Favicon from './Favicon';
 import Footer from './Footer';
 import GNB from './GNB';
+import { reset } from '../../styles/reset';
+import Toaster from '../../components/Toaster';
+
+injectGlobal(reset);
+if (typeof window !== 'undefined') {
+  hydrate(window.__NEXT_DATA__.ids);
+}
 
 const Layout = ({ children }) => (
   <>

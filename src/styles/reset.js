@@ -51,7 +51,7 @@ export const resetLayout = {
   margin: 0,
 };
 
-export const globalReset = {
+export const reset = {
   a: [
     inheritFont,
     resetHighlight,
