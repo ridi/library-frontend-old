@@ -18,6 +18,7 @@ import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
 import ConnectedSortModal from '../base/MainModal/SortModal';
 import IconButton from '../../components/IconButton';
+import Responsive from '../base/Responsive';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
@@ -69,9 +70,11 @@ class Index extends React.Component {
 
     return (
       <div>
-        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
-        <IconButton icon="document" a11y="편집" onClick={this.toggleEditingMode} />
-        <IconButton icon="document" a11y="정렬" onClick={this.toggleSortModal} />
+        <Responsive>
+          <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+          <IconButton icon="setting" a11y="편집" onClick={this.toggleEditingMode} />
+          <IconButton icon="document" a11y="정렬" onClick={this.toggleSortModal} />
+        </Responsive>
       </div>
     );
   }

@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Responsive from '../../pages/base/Responsive';
 
 const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
   <div>
-    <span>{totalSelectedCount}권 선택</span>
-    <button type="button" onClick={onClickSuccessButton}>
-      완료
-    </button>
+    <Responsive>
+      <span>{totalSelectedCount}권 선택</span>
+      <button type="button" onClick={onClickSuccessButton}>
+        완료
+      </button>
+    </Responsive>
   </div>
 );
 
