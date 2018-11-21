@@ -1,11 +1,11 @@
 import React from 'react';
 import { Icon } from '@ridi/rsg';
 import * as styles from './styles';
-import { hidden } from '../../../styles';
+import { Hidden } from '../../../styles';
 
 const MyMenuModal = ({ userId, isActive }) => (
-  <section className={`${styles.MyMenuModal} ${isActive ? styles.ModalActive : ''}`}>
-    <h2 className={hidden}>마이메뉴</h2>
+  <section className={styles.MyMenuModal(isActive)}>
+    <h2 className={Hidden}>마이메뉴</h2>
     <div className={styles.MenuItem}>
       <p className={styles.UserId}>
         <strong>{userId}</strong> 님

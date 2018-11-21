@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from '@ridi/rsg';
 import MyMenuModal from '../MyMenuModal';
 import * as styles from './styles';
-import { hidden } from '../../../styles';
+import { Hidden } from '../../../styles';
 
 class GNB extends React.Component {
   constructor(props) {
@@ -13,9 +13,23 @@ class GNB extends React.Component {
     };
   }
 
-  onClickMyMenu = () => {
+  componentWillUnmount() {
+    document.removeEventListener('click', this.onOutSideClick);
+  }
+
+  onOutSideClick = event => {
+    const externalTarget = document.getElementById('MyMenuToggleButton');
+    if (event.target !== externalTarget && event.target.parentNode !== externalTarget) {
+      this.setState({ isModalActive: false });
+      document.removeEventListener('click', this.onOutSideClick);
+    }
+  };
+
+  onMyMenuClick = () => {
     const { isModalActive } = this.state;
-    this.setState({ isModalActive: !isModalActive });
+    this.setState({ isModalActive: !isModalActive }, () => {
+      !isModalActive ? document.addEventListener('click', this.onOutSideClick) : document.removeEventListener('click', this.onOutSideClick);
+    });
   };
 
   render() {
@@ -34,21 +48,21 @@ class GNB extends React.Component {
               <li className={styles.FamilyServiceItem}>
                 <a className={styles.FamilyServiceLink} href={ridibooksUrl}>
                   <Icon className={styles.RidibooksIcon} name="logo_ridibooks_1" />
-                  <span className={hidden}>RIDIBOOKS</span>
+                  <span className={Hidden}>RIDIBOOKS</span>
                 </a>
               </li>
               <li className={styles.FamilyServiceItem}>
                 <a className={styles.FamilyServiceLink} href={ridiSelectUrl}>
                   <Icon className={styles.RidiSelectIcon} name="logo_ridiselect_1" />
-                  <span className={hidden}>RIDI Select</span>
+                  <span className={Hidden}>RIDI Select</span>
                 </a>
               </li>
             </ul>
           </div>
           <div className={styles.MyMenuWrapper}>
-            <button className={styles.MyMenuToggleButton} onClick={this.onClickMyMenu} type="button">
-              <Icon className={`${styles.MyMenuIcon} ${isModalActive ? styles.IconRotate : ''}`} name="setting_1" />
-              <span className={hidden}>마이메뉴</span>
+            <button id="MyMenuToggleButton" className={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
+              <Icon className={styles.MyMenuIcon(isModalActive)} name="setting_1" />
+              <span className={Hidden}>마이메뉴</span>
             </button>
             <MyMenuModal userId={userId} isActive={isModalActive} />
           </div>

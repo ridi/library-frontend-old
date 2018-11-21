@@ -1,5 +1,7 @@
 import { css } from 'emotion';
-import { FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../../../styles';
+import { maxWidthWrapper } from '../../../styles';
+
+export const FOOTER_HEIGHT = 254;
 
 export const Footer = css({
   height: FOOTER_HEIGHT,
@@ -10,8 +12,7 @@ export const Footer = css({
 });
 
 export const ContentsWrapper = css({
-  maxWidth: PAGE_MAX_WIDTH,
-  margin: '0 auto',
+  ...maxWidthWrapper,
 });
 
 export const HeadlineItem = css({

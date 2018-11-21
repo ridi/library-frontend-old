@@ -1,5 +1,5 @@
 import { css } from 'emotion';
-import { screenSize, PAGE_MAX_WIDTH } from '../../../styles';
+import { screenSize, maxWidthWrapper } from '../../../styles';
 
 export const GNB = css([
   screenSize.isMobile({
@@ -11,8 +11,7 @@ export const GNB = css([
 export const FlexWrapper = css({
   display: 'flex',
   justifyContent: 'space-between',
-  maxWidth: PAGE_MAX_WIDTH,
-  margin: '0 auto',
+  ...maxWidthWrapper,
 });
 
 export const Title = css({
@@ -84,15 +83,17 @@ export const MyMenuToggleButton = css({
   padding: '6px 10px',
 });
 
-export const MyMenuIcon = css({
-  width: 20,
-  height: 20,
-  fill: '#808991',
-  transformOrigin: 'center center',
-  transform: 'rotate(0)',
-  transition: 'transform .3s',
-});
-
-export const IconRotate = css({
-  transform: 'rotate(90deg)',
-});
+export const MyMenuIcon = isActive =>
+  css([
+    {
+      width: 20,
+      height: 20,
+      fill: '#808991',
+      transformOrigin: 'center center',
+      transform: 'rotate(0)',
+      transition: 'transform .3s',
+    },
+    isActive && {
+      transform: 'rotate(180deg)',
+    },
+  ]);
