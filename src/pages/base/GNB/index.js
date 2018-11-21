@@ -14,21 +14,21 @@ class GNB extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('click', this.onClickOutSide);
+    document.removeEventListener('click', this.onOutSideClick);
   }
 
-  onClickOutSide = event => {
+  onOutSideClick = event => {
     const externalTarget = document.getElementById('MyMenuToggleButton');
     if (event.target !== externalTarget && event.target.parentNode !== externalTarget) {
       this.setState({ isModalActive: false });
-      document.removeEventListener('click', this.onClickOutSide);
+      document.removeEventListener('click', this.onOutSideClick);
     }
   };
 
-  onClickMyMenu = () => {
+  onMyMenuClick = () => {
     const { isModalActive } = this.state;
     this.setState({ isModalActive: !isModalActive }, () => {
-      !isModalActive ? document.addEventListener('click', this.onClickOutSide) : document.removeEventListener('click', this.onClickOutSide);
+      !isModalActive ? document.addEventListener('click', this.onOutSideClick) : document.removeEventListener('click', this.onOutSideClick);
     });
   };
 
@@ -60,7 +60,7 @@ class GNB extends React.Component {
             </ul>
           </div>
           <div className={styles.MyMenuWrapper}>
-            <button id="MyMenuToggleButton" className={styles.MyMenuToggleButton} onClick={this.onClickMyMenu} type="button">
+            <button id="MyMenuToggleButton" className={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
               <Icon className={styles.MyMenuIcon(isModalActive)} name="setting_1" />
               <span className={hidden}>마이메뉴</span>
             </button>
