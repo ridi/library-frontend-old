@@ -73,7 +73,7 @@ class Index extends React.Component {
         <Responsive>
           <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
           <IconButton icon="setting" a11y="편집" onClick={this.toggleEditingMode} />
-          <IconButton icon="document" a11y="정렬" onClick={this.toggleSortModal} />
+          <IconButton icon="check_1" a11y="정렬" onClick={this.toggleSortModal} />
         </Responsive>
       </div>
     );

@@ -4,7 +4,7 @@ import shortid from 'shortid';
 
 import { connect } from 'react-redux';
 
-import { TabBar, TabItem } from '../../../components/Tabbar';
+import { TabBar, TabItem } from '../../../components/TabBar';
 
 import { getLocation } from '../../../services/router/selectors';
 import Responsive from '../Responsive';
