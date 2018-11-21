@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
-import SelectBox from '../../components/SelectBox';
 import ConnectedEditingBar from '../../components/EditingBar';
+import ConnectedMainToolBar from '../base/MainToolBar';
+import ConnectedSortModal from '../base/MainModal/SortModal';
 
 import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 
@@ -16,67 +17,10 @@ import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/pu
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
-import ConnectedSortModal from '../base/MainModal/SortModal';
-import IconButton from '../../components/IconButton';
-import Responsive from '../base/Responsive';
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadPurchaseItems());
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEditing: false,
-      isActiveSortModal: false,
-    };
-
-    this.toggleEditingMode = this.toggleEditingMode.bind(this);
-    this.toggleSortModal = this.toggleSortModal.bind(this);
-  }
-
-  toggleEditingMode() {
-    const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing });
-  }
-
-  toggleSortModal() {
-    const { isActiveSortModal } = this.state;
-    this.setState({ isActiveSortModal: !isActiveSortModal });
-  }
-
-  renderModal() {
-    const { isActiveSortModal } = this.state;
-
-    return (
-      <>
-        <ConnectedSortModal isActive={isActiveSortModal} />
-      </>
-    );
-  }
-
-  renderToolBar() {
-    const { isEditing } = this.state;
-    const {
-      pageInfo: { filter },
-      filterOptions,
-      changePurchaseFilter: dispatchChangePurchaseFilter,
-    } = this.props;
-
-    if (isEditing) {
-      return <ConnectedEditingBar onClickSuccessButton={this.toggleEditingMode} />;
-    }
-
-    return (
-      <div>
-        <Responsive>
-          <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
-          <IconButton icon="setting" a11y="편집" onClick={this.toggleEditingMode} />
-          <IconButton icon="check_1" a11y="정렬" onClick={this.toggleSortModal} />
-        </Responsive>
-      </div>
-    );
   }
 
   renderBooks() {
@@ -111,11 +55,10 @@ class Index extends React.Component {
       <>
         <ConnectedLNBTabBar />
         <main>
-          {this.renderToolBar()}
+          <ConnectedMainToolBar />
           {this.renderBooks()}
           {this.renderPaginator()}
         </main>
-        {this.renderModal()}
       </>
     );
   }
