@@ -20,6 +20,7 @@ import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions } from './selectors';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -76,9 +77,8 @@ function* changePurchaseOption(action) {
     filter: _filter,
   };
 
-  const uri = makeURI('/purchased/main', query);
-  const as = makeURI('/purchased', query);
-  Router.push(uri, as);
+  const { href, as } = URLMap.main;
+  Router.push(makeURI(href, query), makeURI(as, query));
 }
 
 export default function* purchaseMainRootSaga() {
