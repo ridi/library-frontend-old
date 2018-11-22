@@ -27,6 +27,9 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 
 const styles = {
+  Main: css({
+    position: 'relative',
+  }),
   MainToolBarWrapper: css({
     height: 46,
     backgroundColor: '#f3f4f5',
@@ -214,12 +217,12 @@ class Index extends React.Component {
         <ConnectedLNBTabBar />
         {this.renderToolBar()}
         <main>
-          <Responsive>
+          <Responsive className={styles.Main}>
             {this.renderBooks()}
             {this.renderPaginator()}
+            {this.renderModal()}
           </Responsive>
         </main>
-        {this.renderModal()}
       </>
     );
   }
