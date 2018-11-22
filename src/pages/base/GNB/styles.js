@@ -16,7 +16,7 @@ export const FlexWrapper = css({
 
 export const Title = css({
   display: 'inline-block',
-  padding: '12px 6px 12px 16px',
+  padding: '12px 6px 12px 0',
   fontSize: 20,
   fontWeight: 900,
   color: '#212529',
@@ -75,12 +75,12 @@ export const RidiSelectIcon = css({
 });
 
 export const MyMenuWrapper = css({
-  padding: '7px 10px 7px 0',
+  padding: '7px 0',
   position: 'relative',
 });
 
 export const MyMenuToggleButton = css({
-  padding: '6px 10px',
+  padding: '6px 0',
 });
 
 export const MyMenuIcon = isActive =>

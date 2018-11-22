@@ -4,6 +4,7 @@ import { Icon } from '@ridi/rsg';
 import MyMenuModal from '../MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
+import Responsive from '../Responsive';
 
 class GNB extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class GNB extends React.Component {
     const { isModalActive } = this.state;
     return (
       <header className={styles.GNB}>
-        <div className={styles.FlexWrapper}>
+        <Responsive className={styles.FlexWrapper}>
           <div>
             <h1 className={styles.Title}>
               <a className={styles.TitleLink} href="/">
@@ -66,7 +67,7 @@ class GNB extends React.Component {
             </button>
             <MyMenuModal userId={userId} isActive={isModalActive} />
           </div>
-        </div>
+        </Responsive>
       </header>
     );
   }
