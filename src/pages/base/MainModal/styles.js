@@ -12,6 +12,7 @@ export const FilterModal = css({
   opacity: 0,
   transform: 'translate3d(0, 20px, 0)',
   transition: 'opacity .3s, transform .3s',
+  pointerEvents: 'none',
 });
 
 export const SortModal = css({
@@ -26,6 +27,7 @@ export const SortModal = css({
   opacity: 0,
   transform: 'translate3d(0, 20px, 0)',
   transition: 'opacity .3s, transform .3s',
+  pointerEvents: 'none',
 });
 
 export const ModalActive = css({

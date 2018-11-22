@@ -34,7 +34,7 @@ const styles = {
     height: '100%',
     fontSize: 13,
     letterSpacing: -0.7,
-    color: '#9ea7ad',
+    color: '#40474d',
   }),
   SearchBarClearButton: css({
     display: 'none',
