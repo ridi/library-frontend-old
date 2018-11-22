@@ -1,6 +1,7 @@
 import { css } from 'emotion';
 
 export const FilterModal = css({
+  width: 200,
   position: 'absolute',
   right: 8,
   top: 47,

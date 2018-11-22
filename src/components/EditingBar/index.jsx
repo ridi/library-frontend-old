@@ -26,8 +26,4 @@ const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
   </div>
 );
 
-const mapStateToProps = state => ({
-  totalSelectedCount: 0,
-});
-
-export default connect(mapStateToProps)(EditingBar);
+export default EditingBar;
