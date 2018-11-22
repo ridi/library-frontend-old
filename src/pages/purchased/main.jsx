@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classname from 'classnames';
 import { css } from 'emotion';
+import Router from 'next/router';
 
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
@@ -9,6 +11,7 @@ import IconButton from '../../components/IconButton';
 import Responsive from '../base/Responsive';
 import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
 import EditingBar from '../../components/EditingBar';
+import SearchBar from '../../components/SearchBar';
 import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
@@ -18,8 +21,10 @@ import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
+import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
+import { URLMap } from '../../constants/urls';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -30,24 +35,32 @@ const styles = {
     borderBottom: '1px solid #d1d5d9',
   }),
   MainToolBar: css({
-    padding: '8px 14px',
+    padding: '0 16px',
+    boxSizing: 'border-box',
+    display: 'flex',
   }),
   MainToolBarSearchBarWrapper: css({
-    float: 'left',
     padding: '8px 0',
     height: 30,
+    flex: 1,
+    maxWidth: 600,
+  }),
+  MainToolBarSearchBarWrapperActive: css({
+    maxWidth: 'initial',
   }),
   MainToolBarToolsWrapper: css({
-    float: 'right',
     height: 30,
     padding: '8px 2px 8px 18px',
+    marginLeft: 'auto',
   }),
   MainToolBarIcon: css({
     margin: '3px 0',
-    marginRight: 16,
     width: 24,
     height: 24,
-
+    marginRight: 16,
+    '&:last-of-type': {
+      marginRight: 0,
+    },
     '.RSGIcon': {
       width: 24,
       height: 24,
@@ -67,11 +80,16 @@ class Index extends React.Component {
       isEditing: false,
       showMoreModal: false,
       showFilterModal: false,
+      hideTools: false,
     };
 
     this.toggleEditingMode = this.toggleEditingMode.bind(this);
     this.toggleFilterModal = this.toggleFilterModal.bind(this);
     this.toggleMoreModal = this.toggleMoreModal.bind(this);
+
+    this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
+    this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
+    this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
   }
 
   toggleEditingMode() {
@@ -106,20 +124,45 @@ class Index extends React.Component {
     dispatchChangePurchaseOrder(order);
   }
 
+  handleOnSubmitSearchBar(value) {
+    const { href, as } = URLMap.search;
+    Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
+  }
+
+  handleOnFocusSearchBar() {
+    this.setState({
+      hideTools: true,
+      showFilterModal: false,
+      showMoreModal: false,
+    });
+  }
+
+  handleOnBlurSearchBar() {
+    this.setState({
+      hideTools: false,
+      showFilterModal: false,
+      showMoreModal: false,
+    });
+  }
+
   renderToolBar() {
-    const { isEditing } = this.state;
+    const { isEditing, hideTools } = this.state;
 
     if (isEditing) return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
 
     return (
       <div className={styles.MainToolBarWrapper}>
-        <Responsive>
-          <div className={styles.MainToolBarSearchBarWrapper} />
-          <div className={styles.MainToolBarToolsWrapper}>
-            <IconButton icon="check_2" a11y="필터" className={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
-            <IconButton icon="setting" a11y="편집" className={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-            <IconButton icon="check_1" a11y="정렬" className={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+        <Responsive className={styles.MainToolBar}>
+          <div className={classname(styles.MainToolBarSearchBarWrapper, hideTools && styles.MainToolBarSearchBarWrapperActive)}>
+            <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
           </div>
+          {hideTools ? null : (
+            <div className={styles.MainToolBarToolsWrapper}>
+              <IconButton icon="setting" a11y="필터" className={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
+              <IconButton icon="check_3" a11y="편집" className={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
+              <IconButton icon="check_1" a11y="정렬" className={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+            </div>
+          )}
         </Responsive>
       </div>
     );
