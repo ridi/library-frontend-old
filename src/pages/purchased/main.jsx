@@ -35,8 +35,6 @@ const styles = {
     borderBottom: '1px solid #d1d5d9',
   }),
   MainToolBar: css({
-    padding: '0 16px',
-    boxSizing: 'border-box',
     display: 'flex',
   }),
   MainToolBarSearchBarWrapper: css({

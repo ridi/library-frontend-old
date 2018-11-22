@@ -1,33 +1,40 @@
 import { css } from 'emotion';
 
 export const TabBar = css`
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 40px;
-`;
-export const TabItemWrapper = css`
-  float: left;
-  height: 100%;
+  list-style: none,
+  margin: 0,
+  padding: 0,
+  width: 100%,
+  height: 40px,
 `;
 
-export const TabItem = css`
-  margin: 0px 16px;
-  padding: 8px;
-  height: 100%;
+export const TabItem = css({
+  float: 'left',
+  height: '100%',
 
-  color: #808991;
-  font-size: 16px;
-  letter-spacing: -0.3px;
-  text-align: center;
+  marginLeft: 8,
+  '&:first-of-type': {
+    marginLeft: 0,
+  },
+  '& button': {
+    color: '#808991',
+    fontSize: 16,
+    letterSpacing: -0.3,
+    textAlign: 'center',
+  },
+});
 
-  box-sizing: border-box;
-  border: 0;
-`;
+export const TabItemActive = css({
+  '& button': {
+    color: '#40474d',
+    fontWeight: 'bolder',
+    borderBottom: '3px solid #9ea7ad',
+  },
+});
 
-export const TabItemActive = css`
-  color: #40474d;
-  font-weight: bolder;
-  border-bottom: 3px solid #9ea7ad;
-`;
+export const TabButton = css({
+  padding: 8,
+  height: '100%',
+  boxSizing: 'border-box',
+  border: 0,
+});
