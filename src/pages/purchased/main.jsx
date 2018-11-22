@@ -87,10 +87,15 @@ class Index extends React.Component {
     this.toggleEditingMode = this.toggleEditingMode.bind(this);
     this.toggleFilterModal = this.toggleFilterModal.bind(this);
     this.toggleMoreModal = this.toggleMoreModal.bind(this);
+    this.handleOnClickOutOfModal = this.handleOnClickOutOfModal.bind(this);
 
     this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
     this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
     this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOnClickOutOfModal);
   }
 
   toggleEditingMode() {
@@ -105,12 +110,26 @@ class Index extends React.Component {
 
   toggleFilterModal() {
     const { showFilterModal } = this.state;
-    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
+    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false }, () => {
+      if (!showFilterModal) {
+        document.addEventListener('click', this.handleOnClickOutOfModal);
+      }
+    });
   }
 
   toggleMoreModal() {
     const { showMoreModal } = this.state;
-    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
+    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false }, () => {
+      if (!showMoreModal) {
+        document.addEventListener('click', this.handleOnClickOutOfModal);
+      }
+    });
+  }
+
+  handleOnClickOutOfModal() {
+    this.setState({ showMoreModal: false, showFilterModal: false }, () => {
+      document.removeEventListener('click', this.handleOnClickOutOfModal);
+    });
   }
 
   handleChangeFilter(filter) {
