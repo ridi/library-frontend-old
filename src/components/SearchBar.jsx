@@ -88,7 +88,8 @@ export default class SearchBar extends React.Component {
     });
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
+    e.preventDefault();
     const { onSubmit } = this.props;
     const { keyword } = this.state;
 
