@@ -63,7 +63,7 @@ export default class SearchBar extends React.Component {
     super(props);
 
     this.state = {
-      keyword: '',
+      keyword: props.keyword || '',
     };
 
     this.input = null;
@@ -72,14 +72,6 @@ export default class SearchBar extends React.Component {
     this.handleOnClickCancel = this.handleOnClickCancel.bind(this);
     this.handleOnFocusInput = this.handleOnFocusInput.bind(this);
     this.handleOnBlurInput = this.handleOnBlurInput.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.keyword && nextProps.keyword !== prevState.keyword) {
-      return { keyword: nextProps.keyword };
-    }
-
-    return null;
   }
 
   handleChange(e) {
