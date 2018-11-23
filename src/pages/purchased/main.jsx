@@ -89,6 +89,9 @@ class Index extends React.Component {
     this.toggleMoreModal = this.toggleMoreModal.bind(this);
     this.handleOnClickOutOfModal = this.handleOnClickOutOfModal.bind(this);
 
+    this.handleChangeFilter = this.handleChangeFilter.bind(this);
+    this.handleChangeOrder = this.handleChangeOrder.bind(this);
+
     this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
     this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
     this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);

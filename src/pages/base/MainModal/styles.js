@@ -33,4 +33,5 @@ export const SortModal = css({
 export const ModalActive = css({
   opacity: 1,
   transform: 'translate3d(0, 0, 0)',
+  pointerEvents: 'initial',
 });
