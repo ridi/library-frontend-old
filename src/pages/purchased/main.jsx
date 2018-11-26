@@ -171,7 +171,9 @@ class Index extends React.Component {
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
 
-    if (isEditing) return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+    if (isEditing) {
+      return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+    }
 
     return (
       <div className={styles.MainToolBarWrapper}>
