@@ -6,6 +6,8 @@ import { TabBar, TabItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
 import * as styles from './styles';
 
+import { URLMap } from '../../../constants/urls';
+
 export const TabMenuTypes = {
   ALL_BOOKS: 'ALL BOOKS',
 };
@@ -14,7 +16,7 @@ const TabMenus = [
   {
     type: TabMenuTypes.ALL_BOOKS,
     name: '모든 책',
-    pathname: '/purchased',
+    pathname: URLMap.main.as,
   },
 ];
 
