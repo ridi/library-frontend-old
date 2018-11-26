@@ -27,15 +27,15 @@ class LibraryApp extends App {
 
   render() {
     const { Component, pageProps, store } = this.props;
-    const ConnecterRouterWrapper = createConnectedRouterWrapper();
+    const ConnectedRouterWrapper = createConnectedRouterWrapper();
     return (
       <Container>
         <Provider store={store}>
-          <ConnecterRouterWrapper>
+          <ConnectedRouterWrapper>
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </ConnecterRouterWrapper>
+          </ConnectedRouterWrapper>
         </Provider>
       </Container>
     );
