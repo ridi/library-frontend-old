@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const config = require('./config');
 const utils = require('./utils');
 
-const getLoginUrl = next => `${config.LOGIN_URL}?client_id${config.CLIENT_ID}&redirect_uri=${next}`;
+const getLoginUrl = next => `${config.LOGIN_URL}?client_id=${config.CLIENT_ID}&redirect_uri=${next}`;
 
 const jwtAuth = (req, res, next) => {
   const redirect = () => {
