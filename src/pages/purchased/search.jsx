@@ -6,7 +6,7 @@ import Router from 'next/router';
 
 import { loadSearchPage, changeSearchKeyword } from '../../services/purchased/search/actions';
 
-import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
+import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import SearchBar from '../../components/SearchBar';
 import Paginator from '../../components/Paginator';
 import BookList from '../../components/BookList';
@@ -171,7 +171,7 @@ class Search extends React.Component {
   render() {
     return (
       <>
-        <ConnectedLNBTabBar />
+        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>
           <Responsive>

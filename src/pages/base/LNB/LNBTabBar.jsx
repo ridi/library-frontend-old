@@ -2,24 +2,23 @@ import React from 'react';
 import Router from 'next/router';
 import shortid from 'shortid';
 
-import { connect } from 'react-redux';
-
 import { TabBar, TabItem } from '../../../components/TabBar';
-
-import { getLocation } from '../../../services/router/selectors';
 import Responsive from '../Responsive';
-
 import * as styles from './styles';
+
+export const TabMenuTypes = {
+  ALL_BOOKS: 'ALL BOOKS',
+};
 
 const TabMenus = [
   {
+    type: TabMenuTypes.ALL_BOOKS,
     name: '모든 책',
     pathname: '/purchased',
-    pathRegExp: /\/purchased(\/search)?$/,
   },
 ];
 
-const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
+const LNBTabBar = ({ activeMenu }) => (
   <nav className={styles.LNBTabBarWrapper}>
     <Responsive>
       <TabBar>
@@ -27,7 +26,7 @@ const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
           <TabItem
             key={shortid.generate()}
             name={menu.name}
-            isActive={!!currentPathname.match(menu.pathRegExp)}
+            isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
             onClick={() => Router.push(menu.pathname)}
           />
         ))}
@@ -36,16 +35,4 @@ const LNBTabBar = ({ location: { pathname: currentPathname } }) => (
   </nav>
 );
 
-const mapStateToProps = state => {
-  const location = getLocation(state);
-
-  return {
-    location,
-  };
-};
-const mapDisaptchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDisaptchToProps,
-)(LNBTabBar);
+export default LNBTabBar;

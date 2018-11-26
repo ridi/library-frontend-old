@@ -9,7 +9,7 @@ import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
 import Responsive from '../base/Responsive';
-import ConnectedLNBTabBar from '../base/LNB/LNBTabBar';
+import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import EditingBar from '../../components/EditingBar';
 import SearchBar from '../../components/SearchBar';
 import FilterModal from '../base/MainModal/FilterModal';
@@ -236,7 +236,7 @@ class Index extends React.Component {
   render() {
     return (
       <>
-        <ConnectedLNBTabBar />
+        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>
           <Responsive className={styles.Main}>
