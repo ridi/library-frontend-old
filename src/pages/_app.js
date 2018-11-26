@@ -14,6 +14,7 @@ import Layout from './base/Layout';
 class LibraryApp extends App {
   constructor() {
     super();
+    // emotion을 통해 중복 CSS를 만들지 않기 위해서 hydrate 로직을 추가한다.
     if (typeof window !== 'undefined') {
       hydrate(window.__NEXT_DATA__.ids);
     }
