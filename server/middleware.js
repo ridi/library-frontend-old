@@ -5,7 +5,7 @@ const utils = require('./utils');
 const jwtAuth = (req, res, next) => {
   const redirect = () => {
     const loginUrl = `${config.LOGIN_URL}?return_url=${utils.getFullPath(req)}`;
-    res.redirect(301, loginUrl);
+    res.redirect(302, loginUrl);
   };
 
   const token = req.cookies['ridi-at'];
