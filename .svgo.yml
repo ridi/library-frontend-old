@@ -14,5 +14,3 @@ plugins:
         - 'viewBox'
         - 'class'
   - collapseGroups: true
-  - addClassesToSVGElement:
-      classNames: ['ridi_icon']
