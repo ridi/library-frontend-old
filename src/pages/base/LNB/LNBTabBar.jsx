@@ -3,7 +3,8 @@ import { css } from 'emotion';
 import Router from 'next/router';
 import shortid from 'shortid';
 
-import { TabBar, TabItem } from '../../../components/TabBar';
+import TabBar from '../../../components/TabBar';
+import TabItem from '../../../components/TabItem';
 import Responsive from '../Responsive';
 
 import { URLMap } from '../../../constants/urls';

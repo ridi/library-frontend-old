@@ -10,7 +10,7 @@ import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
 import ModalBackground from '../../components/ModalBackground';
 import Responsive from '../base/Responsive';
-import { LNBTabBar, TabMenuTypes } from '../base/LNB';
+import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import EditingBar from '../../components/EditingBar';
 import SearchBar from '../../components/SearchBar';
 import FilterModal from '../base/MainModal/FilterModal';

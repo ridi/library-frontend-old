@@ -6,7 +6,7 @@ import Router from 'next/router';
 
 import { loadSearchPage, changeSearchKeyword } from '../../services/purchased/search/actions';
 
-import { LNBTabBar, TabMenuTypes } from '../base/LNB';
+import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import SearchBar from '../../components/SearchBar';
 import Paginator from '../../components/Paginator';
 import BookList from '../../components/BookList';
