@@ -1,43 +1,203 @@
 import React from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
 import { connect } from 'react-redux';
-import shortid from 'shortid';
+import classname from 'classnames';
+import { css } from 'emotion';
+import Router from 'next/router';
 
-import Layout from '../../components/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
-import SelectBox from '../../components/SelectBox';
+import IconButton from '../../components/IconButton';
+import ModalBackground from '../../components/ModalBackground';
+import Responsive from '../base/Responsive';
+import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
+import EditingBar from '../../components/EditingBar';
+import SearchBar from '../../components/SearchBar';
+import FilterModal from '../base/MainModal/FilterModal';
+import SortModal from '../base/MainModal/SortModal';
 
-import { loadPurchaseItems, changePurchaseOrder, changePurchaseFilter } from '../../services/purchased/main/actions';
+import { loadPurchaseItems, changePurchaseFilter, changePurchaseOrder, changePurchasePage } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
+import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
+import { URLMap } from '../../constants/urls';
+
+const styles = {
+  Main: css({
+    position: 'relative',
+  }),
+  MainToolBarWrapper: css({
+    height: 46,
+    backgroundColor: '#f3f4f5',
+    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
+    boxSizing: 'border-box',
+    borderBottom: '1px solid #d1d5d9',
+  }),
+  MainToolBar: css({
+    display: 'flex',
+  }),
+  MainToolBarSearchBarWrapper: css({
+    padding: '8px 0',
+    height: 30,
+    flex: 1,
+    maxWidth: 600,
+  }),
+  MainToolBarSearchBarWrapperActive: css({
+    maxWidth: 'initial',
+  }),
+  MainToolBarToolsWrapper: css({
+    height: 30,
+    padding: '8px 2px 8px 18px',
+    marginLeft: 'auto',
+  }),
+  MainToolBarIcon: css({
+    margin: '3px 0',
+    width: 24,
+    height: 24,
+    marginRight: 16,
+    '&:last-of-type': {
+      marginRight: 0,
+    },
+    '.RSGIcon': {
+      width: 24,
+      height: 24,
+    },
+  }),
+};
 
 class Index extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(loadPurchaseItems());
   }
 
-  renderPageOptions() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isEditing: false,
+      showMoreModal: false,
+      showFilterModal: false,
+      hideTools: false,
+    };
+
+    this.toggleEditingMode = this.toggleEditingMode.bind(this);
+    this.toggleFilterModal = this.toggleFilterModal.bind(this);
+    this.toggleMoreModal = this.toggleMoreModal.bind(this);
+    this.handleOnClickOutOfModal = this.handleOnClickOutOfModal.bind(this);
+
+    this.handleChangeFilter = this.handleChangeFilter.bind(this);
+    this.handleChangeOrder = this.handleChangeOrder.bind(this);
+
+    this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
+    this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
+    this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
+  }
+
+  toggleEditingMode() {
+    const { isEditing } = this.state;
+
+    if (isEditing === true) {
+      // 현재 Editing 모드면 나가면서 선택해둔 것들 클리어
+    }
+
+    this.setState({ isEditing: !isEditing, showFilterModal: false, showMoreModal: false });
+  }
+
+  toggleFilterModal() {
+    const { showFilterModal } = this.state;
+    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
+  }
+
+  toggleMoreModal() {
+    const { showMoreModal } = this.state;
+    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
+  }
+
+  handleOnClickOutOfModal() {
+    this.setState({ showMoreModal: false, showFilterModal: false });
+  }
+
+  handleChangeFilter(filter) {
+    const { changePurchaseFilter: dispatchChangePurchaseFilter } = this.props;
+    this.setState({ showFilterModal: false });
+    dispatchChangePurchaseFilter(filter);
+  }
+
+  handleChangeOrder(order) {
+    const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
+    this.setState({ showMoreModal: false });
+    dispatchChangePurchaseOrder(order);
+  }
+
+  handleOnSubmitSearchBar(value) {
+    const { href, as } = URLMap.search;
+    Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
+  }
+
+  handleOnFocusSearchBar() {
+    this.setState({
+      hideTools: true,
+      showFilterModal: false,
+      showMoreModal: false,
+    });
+  }
+
+  handleOnBlurSearchBar() {
+    this.setState({
+      hideTools: false,
+      showFilterModal: false,
+      showMoreModal: false,
+    });
+  }
+
+  renderToolBar() {
+    const { isEditing, hideTools } = this.state;
+
+    if (isEditing) {
+      return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+    }
+
+    return (
+      <div className={styles.MainToolBarWrapper}>
+        <Responsive className={styles.MainToolBar}>
+          <div className={classname(styles.MainToolBarSearchBarWrapper, hideTools && styles.MainToolBarSearchBarWrapperActive)}>
+            <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
+          </div>
+          {hideTools ? null : (
+            <div className={styles.MainToolBarToolsWrapper}>
+              <IconButton icon="setting" a11y="필터" className={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
+              <IconButton icon="check_3" a11y="편집" className={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
+              <IconButton icon="check_1" a11y="정렬" className={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+            </div>
+          )}
+        </Responsive>
+      </div>
+    );
+  }
+
+  renderModal() {
+    const { showFilterModal, showMoreModal } = this.state;
     const {
       pageInfo: { order, filter },
       filterOptions,
-      changePurchaseOrder: dispatchChangePurchaseOrder,
-      changePurchaseFilter: dispatchChangePurchaseFilter,
     } = this.props;
 
     return (
       <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
-        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
+        <FilterModal filter={filter} filterOptions={filterOptions} onClick={this.handleChangeFilter} isActive={showFilterModal} />
+        <SortModal order={order} orderOptions={MainOrderOptions.toList()} onClick={this.handleChangeOrder} isActive={showMoreModal} />
       </>
     );
+  }
+
+  renderModalBackground() {
+    const { showFilterModal, showMoreModal } = this.state;
+    return <ModalBackground isActive={showFilterModal || showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
   }
 
   renderBooks() {
@@ -53,7 +213,8 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages, orderType, orderBy, filter },
+      pageInfo: { currentPage, totalPages },
+      changePurchasePage: dispatchChangePurchasePage,
     } = this.props;
 
     return (
@@ -61,19 +222,25 @@ class Index extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/"
-        query={{ orderType, orderBy, filter }}
+        onClickPageItem={page => dispatchChangePurchasePage(page)}
       />
     );
   }
 
   render() {
     return (
-      <Layout>
-        {this.renderPageOptions()}
-        {this.renderBooks()}
-        {this.renderPaginator()}
-      </Layout>
+      <>
+        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+        {this.renderToolBar()}
+        <main>
+          <Responsive className={styles.Main}>
+            {this.renderBooks()}
+            {this.renderPaginator()}
+            {this.renderModal()}
+          </Responsive>
+        </main>
+        {this.renderModalBackground()}
+      </>
     );
   }
 }
@@ -92,8 +259,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseOrder,
   changePurchaseFilter,
+  changePurchaseOrder,
+  changePurchasePage,
 };
 
 export default connect(

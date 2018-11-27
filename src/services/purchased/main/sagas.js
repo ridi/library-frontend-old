@@ -20,6 +20,7 @@ import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions } from './selectors';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -27,7 +28,7 @@ function* persistPageOptionsFromQuries() {
 
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
-  const filter = query.filter || '';
+  const filter = parseInt(query.filter, 10) || null;
 
   yield all([put(setPurchasePage(page)), put(setPurchaseOrder(order)), put(setPurchaseFilter(filter))]);
 }
@@ -59,21 +60,25 @@ function* changePurchaseOption(action) {
   const { page, order, filter } = yield select(getPurchaseOptions);
   let { orderBy, orderType } = MainOrderOptions.parse(order);
   let _filter = filter;
+  let _page = page;
 
   if (action.payload.key === 'order') {
     ({ orderBy, orderType } = MainOrderOptions.parse(action.payload.value));
   } else if (action.payload.key === 'filter') {
     _filter = action.payload.value;
+  } else if (action.payload.key === 'page') {
+    _page = action.payload.value;
   }
 
   const query = {
-    page,
+    page: _page,
     orderBy,
     orderType,
     filter: _filter,
   };
 
-  Router.push(makeURI('/', query));
+  const { href, as } = URLMap.main;
+  Router.push(makeURI(href, query), makeURI(as, query));
 }
 
 export default function* purchaseMainRootSaga() {

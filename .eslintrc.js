@@ -1,7 +1,7 @@
 module.exports = {
   extends: ['@ridi', 'prettier'],
+  parser: 'babel-eslint',
   parserOptions: {
-    parser: 'babel-eslint',
     ecmaVersion: 2017,
     ecmaFeatures: {
       experimentalObjectRestSpread: true,
@@ -86,6 +86,8 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     ],
+    'react/jsx-one-expression-per-line': 'allow',
     'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/mouse-events-have-key-events': 'off',
   },
 };

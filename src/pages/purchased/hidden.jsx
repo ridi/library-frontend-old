@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Layout from '../../components/Layout';
+import Layout from '../base/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
@@ -35,15 +35,7 @@ class Hidden extends React.Component {
       pageInfo: { currentPage, totalPages },
     } = this.props;
 
-    return (
-      <Paginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        pageCount={PAGE_COUNT}
-        pathname="/purchased/hidden/"
-        query={{}}
-      />
-    );
+    return <Paginator currentPage={currentPage} totalPages={totalPages} pageCount={PAGE_COUNT} pathname="/purchased/hidden/" query={{}} />;
   }
 
   render() {

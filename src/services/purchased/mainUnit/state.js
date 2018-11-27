@@ -7,7 +7,7 @@ export const initialState = {
     options: [
       {
         title: '전체 카테고리',
-        value: '',
+        value: null,
         hasChildren: false,
         children: null,
       },
