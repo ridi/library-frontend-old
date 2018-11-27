@@ -1,28 +1,30 @@
 const focusFreeClass = 'focus-free';
 
-function addFocusOnTabKeyup(element) {
-  window.addEventListener('keyup', event => {
+export function registerTabKeyUpEvent(element) {
+  const keyupHandler = event => {
     const code = event.keyCode || event.which;
     if (Number(code) === 9) {
       element.classList.remove(focusFreeClass);
     }
-  });
+  };
+
+  window.addEventListener('keyup', keyupHandler);
+  return () => window.removeEventListener('keyup', keyupHandler);
 }
 
-function removeFocusOnMouseDown(element) {
-  window.addEventListener('mousedown', () => {
+export function registerMouseDownEvent(element) {
+  const mouseDownHandler = () => {
     element.classList.add(focusFreeClass);
-  });
+  };
+
+  window.addEventListener('mousedown', mouseDownHandler);
+  return () => window.removeEventListener('mousedown', mouseDownHandler);
 }
 
-export default function setTabKeyFocus() {
-  window.addEventListener('DOMContentLoaded', () => {
-    const body = document.querySelector('body');
-    if (!body) {
-      return;
-    }
-    body.classList.add(focusFreeClass);
-    addFocusOnTabKeyup(body);
-    removeFocusOnMouseDown(body);
-  });
+export function initializeTabKeyFocus() {
+  const body = document.querySelector('body');
+  if (!body) {
+    return;
+  }
+  body.classList.add(focusFreeClass);
 }

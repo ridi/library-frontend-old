@@ -6,24 +6,41 @@ import { hydrate, injectGlobal } from 'emotion';
 import { reset } from '../styles/reset';
 import injectStore from '../store';
 import flow from '../utils/flow';
+import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from '../utils/tabFocus';
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
 import Layout from './base/Layout';
 
 class LibraryApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+    return { pageProps };
+  }
+
   constructor() {
     super();
     // emotion을 통해 중복 CSS를 만들지 않기 위해서 hydrate 로직을 추가한다.
     if (typeof window !== 'undefined') {
       hydrate(window.__NEXT_DATA__.ids);
+      initializeTabKeyFocus();
     }
     injectGlobal(reset);
+
+    this.disposeBag = [];
   }
 
-  static async getInitialProps({ Component, ctx }) {
-    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-    return { pageProps };
+  componentDidMount() {
+    const body = document.querySelector('body');
+    this.disposeBag.push(registerTabKeyUpEvent(body));
+    this.disposeBag.push(registerMouseDownEvent(body));
+  }
+
+  componentWillUnmount() {
+    this.disposeBag.forEach(callback => {
+      callback();
+    });
+    this.disposeBag = [];
   }
 
   render() {
