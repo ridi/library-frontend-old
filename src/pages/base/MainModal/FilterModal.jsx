@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import classnames from 'classnames';
 import * as styles from './styles';
 
@@ -11,7 +12,13 @@ const FilterModal = props => {
     <section className={classnames(styles.FilterModal, isActive && styles.ModalActive)}>
       <MenuGroup title="모든 책 카테고리">
         {filterOptions.map(option => (
-          <MenuItem title={option.title} showIcon={option.value === filter} icon="check_1" onClick={() => onClick(option.value)} />
+          <MenuItem
+            key={shortid.generate()}
+            title={option.title}
+            showIcon={option.value === filter}
+            icon="check_1"
+            onClick={() => onClick(option.value)}
+          />
         ))}
       </MenuGroup>
     </section>

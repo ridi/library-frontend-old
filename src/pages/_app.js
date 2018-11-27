@@ -4,13 +4,12 @@ import withReduxSaga from 'next-redux-saga';
 import { hydrate, injectGlobal } from 'emotion';
 
 import { reset } from '../styles/reset';
-import flow from '../utils/flow';
 import injectStore from '../store';
+import flow from '../utils/flow';
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
 import Layout from './base/Layout';
-import setTabKeyFocus from '../utils/tabFocus';
 
 class LibraryApp extends App {
   constructor() {
@@ -20,7 +19,6 @@ class LibraryApp extends App {
       hydrate(window.__NEXT_DATA__.ids);
     }
     injectGlobal(reset);
-    setTabKeyFocus();
   }
 
   static async getInitialProps({ Component, ctx }) {
