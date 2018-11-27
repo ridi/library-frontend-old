@@ -13,17 +13,17 @@ before_script:
 build:
   <<: *aws-docker
   stage: build
-  # only:
-  #   - master
+  only:
+    - master
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - sh docs/script/export.sh
-    # - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh docs/script/upload.sh
-    # - ENVIRONMENT=development docker-compose -f ./docs/docker/compose/build.yml build
+    - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh docs/script/upload.sh
+    - ENVIRONMENT=development docker-compose -f ./docs/docker/compose/build.yml build
 
-    # - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH sh docs/script/upload.sh
-    # - ENVIRONMENT=production docker-compose -f ./docs/docker/compose/build.yml build
-    # - ENVIRONMENT=staging docker-compose -f ./docs/docker/compose/build.yml build
+    - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH sh docs/script/upload.sh
+    - ENVIRONMENT=production docker-compose -f ./docs/docker/compose/build.yml build
+    - ENVIRONMENT=staging docker-compose -f ./docs/docker/compose/build.yml build
 
 .deployment-template: &deployment
   <<: *aws-docker
