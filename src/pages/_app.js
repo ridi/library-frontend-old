@@ -10,6 +10,7 @@ import injectStore from '../store';
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 
 import Layout from './base/Layout';
+import setTabKeyFocus from '../utils/tabFocus';
 
 class LibraryApp extends App {
   constructor() {
@@ -19,6 +20,7 @@ class LibraryApp extends App {
       hydrate(window.__NEXT_DATA__.ids);
     }
     injectGlobal(reset);
+    setTabKeyFocus();
   }
 
   static async getInitialProps({ Component, ctx }) {

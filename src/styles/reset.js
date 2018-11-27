@@ -70,6 +70,12 @@ export const reset = {
     {
       background: '#f3f4f5',
     },
+    {
+      '&.focus-free *': {
+        outline: 'none',
+        webKitTapHighlightColor: 'transparent',
+      },
+    },
   ],
   button: [cursorPointer, inheritFont, resetAppearance, resetHighlight, resetLayout],
   canvas: [resetLayout],
