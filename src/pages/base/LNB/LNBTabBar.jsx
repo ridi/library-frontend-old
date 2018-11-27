@@ -1,15 +1,24 @@
 import React from 'react';
+import { css } from 'emotion';
 import Router from 'next/router';
 import shortid from 'shortid';
 
-import { TabBar, TabItem } from '../../../components/TabBar';
+import TabBar from '../../../components/TabBar';
+import TabItem from '../../../components/TabItem';
 import Responsive from '../Responsive';
-import * as styles from './styles';
 
 import { URLMap } from '../../../constants/urls';
 
 export const TabMenuTypes = {
   ALL_BOOKS: 'ALL BOOKS',
+};
+
+const styles = {
+  LNBTabBarWrapper: css({
+    height: 40,
+    backgroundColor: '#ffffff',
+    borderBottom: '1px solid #d1d5d9',
+  }),
 };
 
 const TabMenus = [

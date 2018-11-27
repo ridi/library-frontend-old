@@ -28,9 +28,6 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 
 const styles = {
-  Main: css({
-    position: 'relative',
-  }),
   MainToolBarWrapper: css({
     height: 46,
     backgroundColor: '#f3f4f5',
@@ -233,7 +230,7 @@ class Index extends React.Component {
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>
-          <Responsive className={styles.Main}>
+          <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
             {this.renderModal()}

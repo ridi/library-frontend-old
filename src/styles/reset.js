@@ -41,11 +41,6 @@ export const resetFont = {
   '-moz-osx-font-smoothing': 'grayscale',
 };
 
-export const resetHighlight = {
-  outline: 'none',
-  '-webkit-tap-highlight-color': 'rgba(0, 0, 0, 0)',
-};
-
 export const resetLayout = {
   padding: 0,
   margin: 0,
@@ -54,7 +49,6 @@ export const resetLayout = {
 export const reset = {
   a: [
     inheritFont,
-    resetHighlight,
     cursorPointer,
     {
       '&:link, &:visited': {
@@ -70,8 +64,14 @@ export const reset = {
     {
       background: '#f3f4f5',
     },
+    {
+      '&.focus-free *': {
+        outline: 'none',
+        '-webkit-tap-highlight-color': 'transparent',
+      },
+    },
   ],
-  button: [cursorPointer, inheritFont, resetAppearance, resetHighlight, resetLayout],
+  button: [cursorPointer, inheritFont, resetAppearance, resetLayout],
   canvas: [resetLayout],
   dd: [resetLayout],
   details: [resetLayout],
@@ -103,14 +103,14 @@ export const reset = {
     border: 0,
     '-ms-interpolation-mode': 'bicubic',
   },
-  input: [inheritFont, resetAppearance, resetHighlight, resetLayout],
+  input: [inheritFont, resetAppearance, resetLayout],
   legend: [resetLayout],
   li: [resetLayout],
   nav: [resetLayout],
   ol: [resetLayout, { listStyle: 'none' }],
   p: [resetLayout],
   section: [resetLayout],
-  select: [inheritFont, resetAppearance, resetHighlight, resetLayout],
+  select: [inheritFont, resetAppearance, resetLayout],
   summary: [resetLayout],
   table: [
     resetLayout,

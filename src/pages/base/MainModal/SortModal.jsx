@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import classnames from 'classnames';
 import * as styles from './styles';
 
@@ -11,7 +12,13 @@ const SortModal = props => {
     <section className={classnames(styles.SortModal, isActive && styles.ModalActive)}>
       <MenuGroup title="정렬순서">
         {orderOptions.map((option, index) => (
-          <MenuItem title={option.title} showIcon={index === order} icon="check_1" onClick={() => onClick(index)} />
+          <MenuItem
+            key={shortid.generate()}
+            title={option.title}
+            showIcon={index === order}
+            icon="check_1"
+            onClick={() => onClick(index)}
+          />
         ))}
       </MenuGroup>
     </section>
