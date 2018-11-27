@@ -28,7 +28,7 @@ function* persistPageOptionsFromQuries() {
 
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
-  const filter = query.filter || '';
+  const filter = parseInt(query.filter, 10) || null;
 
   yield all([put(setPurchasePage(page)), put(setPurchaseOrder(order)), put(setPurchaseFilter(filter))]);
 }

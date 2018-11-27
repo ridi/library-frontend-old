@@ -46,7 +46,7 @@ const _reformatCategories = categories =>
       previous.push(filterOption);
       return previous;
     },
-    [_createFilterOption('전체 카테고리', '')],
+    [_createFilterOption('전체 카테고리', null)],
   );
 
 export function* fetchPurchaseCategories() {
