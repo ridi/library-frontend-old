@@ -2,7 +2,6 @@ import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Layout from '../base/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
@@ -41,14 +40,16 @@ class Hidden extends React.Component {
   render() {
     const { itemTotalCount } = this.props;
     return (
-      <Layout>
+      <>
         <Head>
           <title>리디북스 - 숨김목록</title>
         </Head>
-        <h1>{`숨김 목록 - 총 ${itemTotalCount}권`}</h1>
-        {this.renderBooks()}
-        {this.renderPaginator()}
-      </Layout>
+        <main>
+          <h1>{`숨김 목록 - 총 ${itemTotalCount}권`}</h1>
+          {this.renderBooks()}
+          {this.renderPaginator()}
+        </main>
+      </>
     );
   }
 }
