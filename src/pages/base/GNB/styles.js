@@ -76,7 +76,6 @@ export const RidiSelectIcon = css({
 
 export const MyMenuWrapper = css({
   padding: '7px 0',
-  position: 'relative',
 });
 
 export const MyMenuToggleButton = css({
