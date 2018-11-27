@@ -8,6 +8,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
+import ModalBackground from '../../components/ModalBackground';
 import Responsive from '../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import EditingBar from '../../components/EditingBar';
@@ -97,10 +98,6 @@ class Index extends React.Component {
     this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleOnClickOutOfModal);
-  }
-
   toggleEditingMode() {
     const { isEditing } = this.state;
 
@@ -113,26 +110,16 @@ class Index extends React.Component {
 
   toggleFilterModal() {
     const { showFilterModal } = this.state;
-    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false }, () => {
-      if (!showFilterModal) {
-        document.addEventListener('click', this.handleOnClickOutOfModal);
-      }
-    });
+    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
   }
 
   toggleMoreModal() {
     const { showMoreModal } = this.state;
-    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false }, () => {
-      if (!showMoreModal) {
-        document.addEventListener('click', this.handleOnClickOutOfModal);
-      }
-    });
+    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
   }
 
   handleOnClickOutOfModal() {
-    this.setState({ showMoreModal: false, showFilterModal: false }, () => {
-      document.removeEventListener('click', this.handleOnClickOutOfModal);
-    });
+    this.setState({ showMoreModal: false, showFilterModal: false });
   }
 
   handleChangeFilter(filter) {
@@ -208,6 +195,11 @@ class Index extends React.Component {
     );
   }
 
+  renderModalBackground() {
+    const { showFilterModal, showMoreModal } = this.state;
+    return <ModalBackground isActive={showFilterModal || showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
+  }
+
   renderBooks() {
     const { items, books } = this.props;
     return (
@@ -247,6 +239,7 @@ class Index extends React.Component {
             {this.renderModal()}
           </Responsive>
         </main>
+        {this.renderModalBackground()}
       </>
     );
   }
