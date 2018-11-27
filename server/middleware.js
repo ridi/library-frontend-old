@@ -7,7 +7,7 @@ const getLoginUrl = next => `${config.LOGIN_URL}?client_id=${config.CLIENT_ID}&r
 const jwtAuth = (req, res, next) => {
   const redirect = () => {
     const loginUrl = getLoginUrl(utils.getFullPath(req));
-    res.redirect(301, loginUrl);
+    res.redirect(302, loginUrl);
   };
 
   const token = req.cookies['ridi-at'];
