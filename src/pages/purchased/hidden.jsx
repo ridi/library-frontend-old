@@ -6,7 +6,7 @@ import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
-import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitlaBar';
+import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
 import Responsive from '../base/Responsive';
 
 import { getBooks } from '../../services/book/selectors';
