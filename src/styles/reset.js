@@ -67,7 +67,7 @@ export const reset = {
     {
       '&.focus-free *': {
         outline: 'none',
-        webkitTapHighlightColor: 'transparent',
+        '-webkit-tap-highlight-color': 'transparent',
       },
     },
   ],
