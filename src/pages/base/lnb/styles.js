@@ -10,6 +10,7 @@ export const LNBTitleBarWrapper = css({
   height: 46,
   backgroundColor: '#ffffff',
   boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
+  boxSizing: 'border-box',
   borderBottom: '1px solid #d1d5d9',
 });
 
