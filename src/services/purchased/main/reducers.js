@@ -7,6 +7,8 @@ import {
   SET_PURCHASE_ORDER,
   SET_PURCHASE_FILTER,
   SET_PURCHASE_FILTER_OPTIONS,
+  CLEAR_SELECTED_BOOKS,
+  TOGGLE_SELECT_BOOK,
 } from './actions';
 
 const purchasedMainReducer = (state = initialState, action) => {
@@ -50,6 +52,23 @@ const purchasedMainReducer = (state = initialState, action) => {
           ...state.filter,
           options: action.payload.options,
         },
+      };
+    case CLEAR_SELECTED_BOOKS:
+      return {
+        ...state,
+        selectedBooks: {},
+      };
+    case TOGGLE_SELECT_BOOK:
+      const { selectedBooks } = state;
+      if (state.selectedBooks[action.payload.bookId]) {
+        delete selectedBooks[action.payload.bookId];
+      } else {
+        selectedBooks[action.payload.bookId] = 1;
+      }
+
+      return {
+        ...state,
+        selectedBooks,
       };
     default:
       return state;

@@ -21,11 +21,12 @@ import {
   changePurchaseFilter,
   changePurchaseOrder,
   changePurchasePage,
+  clearSelectedBooks,
   toggleSelectBook,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions, getSelectedBooks } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -103,9 +104,10 @@ class Index extends React.Component {
 
   toggleEditingMode() {
     const { isEditing } = this.state;
+    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
-      // 현재 Editing 모드면 나가면서 선택해둔 것들 클리어
+      dispatchClearSelectedBooks();
     }
 
     this.setState({ isEditing: !isEditing, showFilterModal: false, showMoreModal: false });
@@ -160,9 +162,10 @@ class Index extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
+    const { selectedBooks } = this.props;
 
     if (isEditing) {
-      return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
     }
 
     return (
@@ -205,7 +208,8 @@ class Index extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+
     return (
       <BookList>
         {items.map(item => (
@@ -214,7 +218,7 @@ class Index extends React.Component {
             item={item}
             book={books[item.b_id]}
             isEditing={isEditing}
-            checked
+            checked={!!selectedBooks[item.b_id]}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
@@ -261,11 +265,13 @@ const mapStateToProps = state => {
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const selectedBooks = getSelectedBooks(state);
   return {
     pageInfo,
     filterOptions,
     items,
     books,
+    selectedBooks,
   };
 };
 
@@ -273,6 +279,7 @@ const mapDispatchToProps = {
   changePurchaseFilter,
   changePurchaseOrder,
   changePurchasePage,
+  clearSelectedBooks,
   toggleSelectBook,
 };
 

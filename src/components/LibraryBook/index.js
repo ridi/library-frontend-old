@@ -14,7 +14,7 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
     <div className={bookCss}>
       {isEditing ? (
         <label onClick={e => e.stopPropagation()}>
-          {checked ? '선택됨' : '선택해제'}
+          {checked ? '선택됨' : '선택해제됨'}
           <input type="checkbox" checked={checked} onChange={onChangeCheckbox} />
         </label>
       ) : null}

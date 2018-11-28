@@ -44,3 +44,5 @@ export const getPurchaseOptions = createSelector([getPage, getOrder, getFilter],
   order,
   filter,
 }));
+
+export const getSelectedBooks = createSelector(getPurchasedMainState, purchasedMainState => purchasedMainState.selectedBooks);
