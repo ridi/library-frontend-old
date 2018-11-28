@@ -9,6 +9,10 @@ export const SET_PURCHASE_FILTER_OPTIONS = 'SET_PURCHASE_FILTER_OPTIONS';
 
 export const CHANGE_PURCHASE_OPTION = 'CHANGE_PURCHASE_OPTION';
 
+export const SELECT_ALL_BOOKS = 'SELECT_ALL_BOOKS';
+export const CLEAR_SELECTED_BOOKS = 'CLEAR_SELECTED_BOOKS';
+export const TOGGLE_SELECT_BOOK = 'TOGGLE_SELECT_BOOK';
+
 export const loadPurchaseItems = () => ({
   type: LOAD_PURCHASE_ITEMS,
 });
@@ -67,3 +71,14 @@ const changePurchaseOption = (key, value) => ({
 export const changePurchaseOrder = order => changePurchaseOption('order', order);
 export const changePurchaseFilter = filter => changePurchaseOption('filter', filter);
 export const changePurchasePage = page => changePurchaseOption('page', page);
+
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_BOOKS,
+});
+
+export const toggleSelectBook = bookId => ({
+  type: TOGGLE_SELECT_BOOK,
+  payload: {
+    bookId,
+  },
+});

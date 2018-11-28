@@ -16,7 +16,13 @@ import SearchBar from '../../components/SearchBar';
 import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
-import { loadPurchaseItems, changePurchaseFilter, changePurchaseOrder, changePurchasePage } from '../../services/purchased/main/actions';
+import {
+  loadPurchaseItems,
+  changePurchaseFilter,
+  changePurchaseOrder,
+  changePurchasePage,
+  toggleSelectBook,
+} from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
@@ -198,11 +204,19 @@ class Index extends React.Component {
   }
 
   renderBooks() {
-    const { items, books } = this.props;
+    const { isEditing } = this.state;
+    const { items, books, toggleSelectBook: dispatchToggleSelectBook } = this.props;
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook key={item.b_id} item={item} book={books[item.b_id]} />
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+          />
         ))}
       </BookList>
     );
@@ -259,6 +273,7 @@ const mapDispatchToProps = {
   changePurchaseFilter,
   changePurchaseOrder,
   changePurchasePage,
+  toggleSelectBook,
 };
 
 export default connect(
