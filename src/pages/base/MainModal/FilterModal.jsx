@@ -1,7 +1,6 @@
 import React from 'react';
 import shortid from 'shortid';
 import classnames from 'classnames';
-import shortid from 'shortid';
 import * as styles from './styles';
 
 import { MenuGroup, MenuItem } from '../../../components/Menu';
