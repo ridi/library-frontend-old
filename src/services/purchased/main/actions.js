@@ -13,6 +13,9 @@ export const SELECT_ALL_BOOKS = 'SELECT_ALL_BOOKS';
 export const CLEAR_SELECTED_BOOKS = 'CLEAR_SELECTED_BOOKS';
 export const TOGGLE_SELECT_BOOK = 'TOGGLE_SELECT_BOOK';
 
+export const HIDE_SELECTED_BOOKS = 'HIDE_SELECTED_BOOKS';
+export const DOWNLOAD_SELECTED_BOOKS = 'DOWNLOAD_SELECTED_BOOKS';
+
 export const loadPurchaseItems = () => ({
   type: LOAD_PURCHASE_ITEMS,
 });
@@ -81,4 +84,12 @@ export const toggleSelectBook = bookId => ({
   payload: {
     bookId,
   },
+});
+
+export const hideSelectedBooks = () => ({
+  type: HIDE_SELECTED_BOOKS,
+});
+
+export const downloadSelectedBooks = () => ({
+  type: DOWNLOAD_SELECTED_BOOKS,
 });

@@ -4,6 +4,8 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import {
   LOAD_PURCHASE_ITEMS,
   CHANGE_PURCHASE_OPTION,
+  HIDE_SELECTED_BOOKS,
+  DOWNLOAD_SELECTED_BOOKS,
   setPurchaseItems,
   setPurchaseTotalCount,
   setPurchasePage,
@@ -81,6 +83,15 @@ function* changePurchaseOption(action) {
   Router.push(makeURI(href, query), makeURI(as, query));
 }
 
+function* hideSelectedBooks() {}
+
+function* downloadSelectedBooks() {}
+
 export default function* purchaseMainRootSaga() {
-  yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems), takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption)]);
+  yield all([
+    takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
+    takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption),
+    takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
+  ]);
 }
