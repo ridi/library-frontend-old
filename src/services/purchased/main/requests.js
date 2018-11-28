@@ -12,7 +12,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   const options = snakelize({
     orderType,
     orderBy,
-    filter,
+    category: filter,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
@@ -24,7 +24,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
 }
 
 export function* fetchPurchaseItemsTotalCount(orderType, orderBy, filter) {
-  const options = snakelize({ orderType, orderBy, filter });
+  const options = snakelize({ orderType, orderBy, category: filter });
 
   const api = yield put(getAPI());
   const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/count?${stringify(options)}`);
