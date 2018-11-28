@@ -23,6 +23,8 @@ import {
   changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -95,21 +97,9 @@ class Index extends React.Component {
       showFilterModal: false,
       hideTools: false,
     };
-
-    this.toggleEditingMode = this.toggleEditingMode.bind(this);
-    this.toggleFilterModal = this.toggleFilterModal.bind(this);
-    this.toggleMoreModal = this.toggleMoreModal.bind(this);
-    this.handleOnClickOutOfModal = this.handleOnClickOutOfModal.bind(this);
-
-    this.handleChangeFilter = this.handleChangeFilter.bind(this);
-    this.handleChangeOrder = this.handleChangeOrder.bind(this);
-
-    this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
-    this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
-    this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
   }
 
-  toggleEditingMode() {
+  toggleEditingMode = () => {
     const { isEditing } = this.state;
     const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
@@ -118,54 +108,70 @@ class Index extends React.Component {
     }
 
     this.setState({ isEditing: !isEditing, showFilterModal: false, showMoreModal: false });
-  }
+  };
 
-  toggleFilterModal() {
+  toggleFilterModal = () => {
     const { showFilterModal } = this.state;
     this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
-  }
+  };
 
-  toggleMoreModal() {
+  toggleMoreModal = () => {
     const { showMoreModal } = this.state;
     this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
-  }
+  };
 
-  handleOnClickOutOfModal() {
+  handleOnClickOutOfModal = () => {
     this.setState({ showMoreModal: false, showFilterModal: false });
-  }
+  };
 
-  handleChangeFilter(filter) {
+  handleChangeFilter = filter => {
     const { changePurchaseFilter: dispatchChangePurchaseFilter } = this.props;
     this.setState({ showFilterModal: false });
     dispatchChangePurchaseFilter(filter);
-  }
+  };
 
-  handleChangeOrder(order) {
+  handleChangeOrder = order => {
     const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
     this.setState({ showMoreModal: false });
     dispatchChangePurchaseOrder(order);
-  }
+  };
 
-  handleOnSubmitSearchBar(value) {
+  handleOnSubmitSearchBar = value => {
     const { href, as } = URLMap.search;
     Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
-  }
+  };
 
-  handleOnFocusSearchBar() {
+  handleOnFocusSearchBar = () => {
     this.setState({
       hideTools: true,
       showFilterModal: false,
       showMoreModal: false,
     });
-  }
+  };
 
-  handleOnBlurSearchBar() {
+  handleOnBlurSearchBar = () => {
     this.setState({
       hideTools: false,
       showFilterModal: false,
       showMoreModal: false,
     });
-  }
+  };
+
+  handleOnClickHide = () => {
+    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+
+    dispatchHideSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
+  handleOnClickDownload = () => {
+    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
@@ -259,20 +265,11 @@ class Index extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton
-          name="선택 숨기기"
-          className={styles.MainButtonActionLeft}
-          onClick={() => {
-            console.log('숨기기');
-          }}
-          disable={disable}
-        />
+        <BottomActionButton name="선택 숨기기" className={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
         <BottomActionButton
           name="선택 다운로드"
           className={styles.MainButtonActionRight}
-          onClick={() => {
-            console.log('다운로드');
-          }}
+          onClick={this.handleOnClickDownload}
           disable={disable}
         />
       </BottomActionBar>
@@ -319,6 +316,8 @@ const mapDispatchToProps = {
   changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 };
 
 export default connect(

@@ -83,9 +83,12 @@ function* changePurchaseOption(action) {
   Router.push(makeURI(href, query), makeURI(as, query));
 }
 
-function* hideSelectedBooks() {}
-
-function* downloadSelectedBooks() {}
+function* hideSelectedBooks() {
+  console.log('hideSelectedBooks');
+}
+function* downloadSelectedBooks() {
+  console.log('downloadSelectedBooks');
+}
 
 export default function* purchaseMainRootSaga() {
   yield all([
