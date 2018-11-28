@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from 'emotion';
-import Responsive from '../pages/base/Responsive';
+import Responsive from '../../pages/base/Responsive';
 
 const styles = {
   BottomActionBar: css({
@@ -12,7 +12,7 @@ const styles = {
     backgroundColor: '#f7f9fa',
     boxShadow: '0 -2px 10px 0 rgba(0, 0, 0, 0.04)',
     boxSizing: 'border-box',
-    borderBottom: '1px solid #d1d5d9',
+    borderTop: '1px solid #d1d5d9',
   }),
 };
 

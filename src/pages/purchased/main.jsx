@@ -33,6 +33,7 @@ import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
+import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -71,6 +72,12 @@ const styles = {
       width: 24,
       height: 24,
     },
+  }),
+  MainButtonActionLeft: css({
+    float: 'left',
+  }),
+  MainButtonActionRight: css({
+    float: 'right',
   }),
 };
 
@@ -242,6 +249,36 @@ class Index extends React.Component {
     );
   }
 
+  renderBottomActionBar() {
+    const { isEditing } = this.state;
+    const { selectedBooks } = this.props;
+    if (!isEditing) {
+      return null;
+    }
+
+    const disable = Object.keys(selectedBooks).length === 0;
+    return (
+      <BottomActionBar>
+        <BottomActionButton
+          name="선택 숨기기"
+          className={styles.MainButtonActionLeft}
+          onClick={() => {
+            console.log('숨기기');
+          }}
+          disable={disable}
+        />
+        <BottomActionButton
+          name="선택 다운로드"
+          className={styles.MainButtonActionRight}
+          onClick={() => {
+            console.log('다운로드');
+          }}
+          disable={disable}
+        />
+      </BottomActionBar>
+    );
+  }
+
   render() {
     return (
       <>
@@ -254,6 +291,7 @@ class Index extends React.Component {
             {this.renderModal()}
           </Responsive>
         </main>
+        {this.renderBottomActionBar()}
         {this.renderModalBackground()}
       </>
     );
