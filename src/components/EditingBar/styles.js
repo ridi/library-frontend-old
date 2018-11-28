@@ -14,7 +14,7 @@ export const EditingBar = css({
 
 export const EditingBarIconWrapper = css({
   height: 30,
-  paddingLeft: 36,
+  paddingLeft: 16,
   float: 'left',
   position: 'relative',
 });
@@ -24,7 +24,7 @@ export const EditingBarIcon = css({
   width: 12,
   height: 9,
   top: '50%',
-  left: 16,
+  left: 0,
   webkitTransform: 'translate3d(0, -50%, 0)',
   msTransform: 'translate3d(0, -50%, 0)',
   transform: 'translate3d(0, -50%, 0)',
@@ -41,7 +41,6 @@ export const EditingBarSelectCount = css({
 
 export const EditingBarButtonWrapper = css({
   float: 'right',
-  marginRight: 16,
 });
 
 export const EditingBarAllSelect = css({

@@ -5,7 +5,6 @@ import Layout from '../base/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
-import SelectBox from '../../components/SelectBox/index';
 
 import {
   loadPurchasedUnitItems,
@@ -19,28 +18,11 @@ import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/pu
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
-import { MainOrderOptions } from '../../constants/orderOptions';
 
 class PurchasedMainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setPurchasedUnitId(query.unitId));
     await store.dispatch(loadPurchasedUnitItems());
-  }
-
-  renderPageOptions() {
-    const {
-      pageInfo: { order, filter },
-      filterOptions,
-      changePurchaseOrder: dispatchChangePurchaseOrder,
-      changePurchaseFilter: dispatchChangePurchaseFilter,
-    } = this.props;
-
-    return (
-      <>
-        <SelectBox selected={order} options={MainOrderOptions.toList()} onChange={value => dispatchChangePurchaseOrder(value)} />
-        <SelectBox selected={filter} options={filterOptions} onChange={value => dispatchChangePurchaseFilter(value)} />
-      </>
-    );
   }
 
   renderBooks() {
