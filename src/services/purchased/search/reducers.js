@@ -1,6 +1,13 @@
 import { initialState } from './state';
 
-import { SET_SEARCH_ITEMS, SET_SEARCH_TOTAL_COUNT, SET_SEARCH_PAGE, SET_SEARCH_KEYWORD } from './actions';
+import {
+  SET_SEARCH_ITEMS,
+  SET_SEARCH_TOTAL_COUNT,
+  SET_SEARCH_PAGE,
+  SET_SEARCH_KEYWORD,
+  CLEAR_SELECTED_SEARCH_BOOKS,
+  TOGGLE_SELECT_SEARCH_BOOK,
+} from './actions';
 
 const purchasedSearchReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -27,6 +34,23 @@ const purchasedSearchReducer = (state = initialState, action) => {
       return {
         ...state,
         keyword: action.payload.keyword,
+      };
+    case CLEAR_SELECTED_SEARCH_BOOKS:
+      return {
+        ...state,
+        selectedBooks: {},
+      };
+    case TOGGLE_SELECT_SEARCH_BOOK:
+      const { selectedBooks } = state;
+      if (state.selectedBooks[action.payload.bookId]) {
+        delete selectedBooks[action.payload.bookId];
+      } else {
+        selectedBooks[action.payload.bookId] = 1;
+      }
+
+      return {
+        ...state,
+        selectedBooks,
       };
     default:
       return state;

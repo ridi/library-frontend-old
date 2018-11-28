@@ -24,7 +24,7 @@ import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 import { URLMap } from '../../../constants/urls';
 
-import { getRevision, getSyncStatus } from '../../common/requests';
+import { getRevision } from '../../common/requests';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
