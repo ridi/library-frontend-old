@@ -49,7 +49,7 @@ const styles = {
   }),
   MainToolBarToolsWrapper: css({
     height: 30,
-    padding: '8px 2px 8px 18px',
+    padding: '8px 0 8px 16px',
     marginLeft: 'auto',
   }),
   MainToolBarIcon: css({

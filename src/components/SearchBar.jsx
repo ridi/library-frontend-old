@@ -67,17 +67,24 @@ export default class SearchBar extends React.Component {
     };
 
     this.input = null;
+    this.searchBarForm = null;
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleOnClickCancel = this.handleOnClickCancel.bind(this);
-    this.handleOnFocusInput = this.handleOnFocusInput.bind(this);
-    this.handleOnBlurInput = this.handleOnBlurInput.bind(this);
+    this.handleOnClickOutOfSearchBar = this.handleOnClickOutOfSearchBar.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({
-      keyword: e.target.value,
-    });
+  setActivation(isActive) {
+    const { onFocus, onBlur } = this.props;
+    document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
+    if (!isActive) {
+      onBlur && onBlur();
+      return;
+    }
+
+    document.addEventListener('click', this.handleOnClickOutOfSearchBar, true);
+    onFocus && onFocus();
   }
 
   handleSubmit(e) {
@@ -92,29 +99,35 @@ export default class SearchBar extends React.Component {
     onSubmit(keyword);
   }
 
+  handleChange(e) {
+    this.setState({
+      keyword: e.target.value,
+    });
+  }
+
   handleOnClickCancel() {
     this.setState({ keyword: '' });
-    this.input && this.input.blur();
+    this.input && this.input.focus();
   }
 
-  handleOnFocusInput() {
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus();
+  handleOnClickOutOfSearchBar(e) {
+    if (this.searchBarForm && this.searchBarForm.contains(e.target)) {
+      return;
     }
-  }
 
-  handleOnBlurInput() {
-    const { onBlur } = this.props;
-    if (onBlur) {
-      onBlur();
-    }
+    this.setActivation(false);
   }
 
   render() {
     const { keyword } = this.state;
     return (
-      <form className={classname(styles.SearchBarForm, keyword && styles.SearchBarFormActive)} onSubmit={this.handleSubmit}>
+      <form
+        ref={ref => {
+          this.searchBarForm = ref;
+        }}
+        className={classname(styles.SearchBarForm, keyword && styles.SearchBarFormActive)}
+        onSubmit={this.handleSubmit}
+      >
         <Icon name="search" className={styles.SearchBarIcon} />
         <input
           ref={ref => {
@@ -125,8 +138,7 @@ export default class SearchBar extends React.Component {
           className={styles.SearchBarInput}
           value={keyword}
           onChange={this.handleChange}
-          onFocus={this.handleOnFocusInput}
-          onBlur={this.handleOnBlurInput}
+          onFocus={() => this.setActivation(true)}
         />
         <IconButton
           icon="check_4"
