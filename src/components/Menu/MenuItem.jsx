@@ -14,7 +14,7 @@ export const MenuItem = ({ title, showIcon, icon, onClick }) => (
 
 export const MenuLinkItem = ({ title, showIcon, icon, href, as }) => (
   <li className={styles.MenuGroupItemWrapper}>
-    <Link className={styles.MenuGroupItem} href={href} as={as}>
+    <Link href={href} as={as}>
       <a className={styles.MenuGroupItem}>
         {showIcon ? <Icon name={icon} className={styles.MenuGroupItemIcon} /> : null}
         <span className={styles.MenuGroupItemTitle}>{title}</span>

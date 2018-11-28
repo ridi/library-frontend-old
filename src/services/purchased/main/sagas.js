@@ -13,16 +13,18 @@ import {
   setPurchaseFilter,
   setPurchaseFilterOptions,
 } from './actions';
-import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
+import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories, requestHide, requestDownload } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getPurchaseOptions } from './selectors';
+import { getPurchaseOptions, getSelectedBooks } from './selectors';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 import { URLMap } from '../../../constants/urls';
+
+import { getRevision, getSyncStatus } from '../../common/requests';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -84,8 +86,19 @@ function* changePurchaseOption(action) {
 }
 
 function* hideSelectedBooks() {
-  console.log('hideSelectedBooks');
+  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBookIds = Object.keys(selectedBooks);
+
+  // TODO: Get Book Ids
+
+  const revision = yield call(getRevision);
+  const queueIds = yield call(requestHide, selectedBookIds, revision);
+
+  // TODO: Check Queue Status
+
+  yield call(loadPurchaseItems);
 }
+
 function* downloadSelectedBooks() {
   console.log('downloadSelectedBooks');
 }
