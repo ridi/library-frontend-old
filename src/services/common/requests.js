@@ -21,7 +21,7 @@ export function* triggerDownload(bookIds) {
   return response.data;
 }
 
-export function* getBookIdsByUnitIds(orderType, orderBy, unitIds) {
+export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
   if (unitIds.length === 0) {
     return {};
   }

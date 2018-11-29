@@ -22,12 +22,12 @@ import { URLMap } from '../../../constants/urls';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 
-import { loadBookData } from '../../book/sagas';
-import { download, getBookIdsByUnitIds } from '../../common/sagas';
 import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
 
+import { loadBookData } from '../../book/sagas';
 import { getRevision, triggerDownload } from '../../common/requests';
+import { download, getBookIdsByUnitIds } from '../../common/sagas';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);

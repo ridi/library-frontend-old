@@ -8,6 +8,8 @@ import Window, { LOCATION } from '../../utils/window';
 
 import { showToast } from '../toast/actions';
 
+import { requestGetBookIdsByUnitIds } from './requests';
+
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   yield call(delay, 300);
 
@@ -90,7 +92,7 @@ const _flattenBookIds = bookIdsInUnitData =>
 
 export function* getBookIdsByUnitIds(items, selectedBookIds, orderType, orderBy) {
   const { bookIds, unitIds } = _reduceSelectedBookIds(items, selectedBookIds);
-  const bookIdsInUnitData = yield call(getBookIdsByUnitIds, orderType, orderBy, unitIds);
+  const bookIdsInUnitData = yield call(requestGetBookIdsByUnitIds, orderType, orderBy, unitIds);
   const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
 
   return [...bookIds, bookIdsInUnit];
