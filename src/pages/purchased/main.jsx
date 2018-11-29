@@ -301,6 +301,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+
   return {
     pageInfo,
     filterOptions,

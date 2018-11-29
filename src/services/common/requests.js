@@ -6,7 +6,7 @@ import { getAPI } from '../../api/actions';
 
 export function* getRevision() {
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/commands/items/u/revision/', null, config.LIBRARY_API_BASE_URL));
+  const response = yield api.get(makeURI('/commands/items/u/revision/', {}, config.LIBRARY_API_BASE_URL));
   return response.data.revision;
 }
 
@@ -22,6 +22,10 @@ export function* triggerDownload(bookIds) {
 }
 
 export function* getBookIdsByUnitIds(orderType, orderBy, unitIds) {
+  if (unitIds.length === 0) {
+    return {};
+  }
+
   const query = {
     orderType,
     orderBy,
@@ -30,5 +34,5 @@ export function* getBookIdsByUnitIds(orderType, orderBy, unitIds) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/items/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  return response.data.result;
 }

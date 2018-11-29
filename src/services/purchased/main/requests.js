@@ -66,4 +66,3 @@ export function* requestHide(bookIds, revision) {
 
   return toFlatten(response.data.items, 'id');
 }
-export function* requestDownload(bookIds) {}

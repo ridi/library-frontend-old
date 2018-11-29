@@ -25,9 +25,32 @@ import { toFlatten } from '../../../utils/array';
 import { loadBookData } from '../../book/sagas';
 import { download } from '../../common/sagas';
 import { getQuery } from '../../router/selectors';
-import { getPurchaseOptions, getSelectedBooks } from './selectors';
+import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
 
-import { getRevision, triggerDownload } from '../../common/requests';
+import { getRevision, triggerDownload, getBookIdsByUnitIds } from '../../common/requests';
+
+const _reduceSelectedBookIds = (items, selectedBookIds) => {
+  const reduced = selectedBookIds.reduce(
+    (previous, bookId) => {
+      const item = items[bookId];
+      if (item.unit_count === 1) {
+        previous.bookIds.push(item.b_id);
+      } else {
+        previous.unitIds.push(item.unit_id);
+      }
+      return previous;
+    },
+    { bookIds: [], unitIds: [] },
+  );
+
+  return reduced;
+};
+
+const _flattenBookIds = bookIdsInUnitData =>
+  Object.keys(bookIdsInUnitData).reduce((previous, key) => {
+    const _bookIds = bookIdsInUnitData[key];
+    return [...previous, ..._bookIds];
+  }, []);
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -89,12 +112,17 @@ function* changePurchaseOption(action) {
 }
 
 function* hideSelectedBooks() {
+  const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
-  const selectedBookIds = Object.keys(selectedBooks);
 
-  // TODO: Get Book Ids
+  const { order } = yield select(getPurchaseOptions);
+  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { bookIds, unitIds } = _reduceSelectedBookIds(items, Object.keys(selectedBooks));
+  const bookIdsInUnitData = yield call(getBookIdsByUnitIds, orderType, orderBy, unitIds);
+  const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
+
   const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, selectedBookIds, revision);
+  const queueIds = yield call(requestHide, [...bookIds, ...bookIdsInUnit], revision);
 
   // TODO: Check Queue Status
   yield call(delay, 3000); // Temporary Sleep
@@ -103,11 +131,16 @@ function* hideSelectedBooks() {
 }
 
 function* downloadSelectedBooks() {
+  const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
-  const selectedBookIds = Object.keys(selectedBooks);
 
-  // TODO: Get Book Ids
-  const triggerResponse = yield call(triggerDownload, selectedBookIds);
+  const { order } = yield select(getPurchaseOptions);
+  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { bookIds, unitIds } = _reduceSelectedBookIds(items, Object.keys(selectedBooks));
+  const bookIdsInUnitData = yield call(getBookIdsByUnitIds, orderType, orderBy, unitIds);
+  const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
+
+  const triggerResponse = yield call(triggerDownload, [...bookIds, ...bookIdsInUnit]);
 
   if (triggerResponse.result) {
     yield call(download, triggerResponse.b_ids, triggerResponse.url);
