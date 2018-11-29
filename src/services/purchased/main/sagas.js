@@ -18,16 +18,16 @@ import { showToast } from '../../toast/actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories, requestHide, requestDownload } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
-
-import { loadBookData } from '../../book/sagas';
-import { getQuery } from '../../router/selectors';
-import { getPurchaseOptions, getSelectedBooks } from './selectors';
+import { URLMap } from '../../../constants/urls';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
-import { URLMap } from '../../../constants/urls';
+
+import { loadBookData } from '../../book/sagas';
+import { download } from '../../common/sagas';
+import { getQuery } from '../../router/selectors';
+import { getPurchaseOptions, getSelectedBooks } from './selectors';
 
 import { getRevision, triggerDownload } from '../../common/requests';
-import download from '../../../utils/download';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -110,7 +110,7 @@ function* downloadSelectedBooks() {
   const triggerResponse = yield call(triggerDownload, selectedBookIds);
 
   if (triggerResponse.result) {
-    download(triggerResponse.b_ids, triggerResponse.url);
+    yield call(download, triggerResponse.b_ids, triggerResponse.url);
   } else {
     yield put(showToast(triggerResponse.message));
   }
