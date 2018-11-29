@@ -11,6 +11,8 @@ import {
   TOGGLE_SELECT_BOOK,
 } from './actions';
 
+import { toDict, toFlatten } from '../../../utils/array';
+
 const purchasedMainReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_PURCHASE_ITEMS:
@@ -18,7 +20,11 @@ const purchasedMainReducer = (state = initialState, action) => {
         ...state,
         items: {
           ...state.items,
-          [state.page]: action.payload.items,
+          ...toDict(action.payload.items, 'b_id'),
+        },
+        itemIdsForPage: {
+          ...state.itemIdsForPage,
+          [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
     case SET_PURCHASE_TOTAL_COUNT:

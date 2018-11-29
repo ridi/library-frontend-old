@@ -7,8 +7,9 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 const getPurchasedMainState = state => state.purchasedMain;
 
 export const getItemsByPage = createSelector(getPurchasedMainState, purchasedMainState => {
-  const { page } = purchasedMainState;
-  return purchasedMainState.items[page] || [];
+  const { page, itemIdsForPage, items } = purchasedMainState;
+  const itemIds = itemIdsForPage[page] || [];
+  return itemIds.map(itemId => items[itemId]);
 });
 
 export const getPageInfo = createSelector(getPurchasedMainState, purchasedMainState => {
