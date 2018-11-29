@@ -7,12 +7,13 @@ import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import { toFlatten } from '../../../utils/array';
 
 export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   const options = snakelize({
     orderType,
     orderBy,
-    filter,
+    category: filter,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
@@ -24,7 +25,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
 }
 
 export function* fetchPurchaseItemsTotalCount(orderType, orderBy, filter) {
-  const options = snakelize({ orderType, orderBy, filter });
+  const options = snakelize({ orderType, orderBy, category: filter });
 
   const api = yield put(getAPI());
   const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/count?${stringify(options)}`);
@@ -55,3 +56,14 @@ export function* fetchPurchaseCategories() {
 
   return _reformatCategories(response.data.categories);
 }
+
+export function* requestHide(bookIds, revision) {
+  const api = yield put(getAPI());
+  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/hide/`, {
+    b_ids: bookIds,
+    revision,
+  });
+
+  return toFlatten(response.data.items, 'id');
+}
+export function* requestDownload(bookIds) {}

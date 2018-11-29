@@ -4,7 +4,13 @@ import { css } from 'emotion';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 
-import { loadSearchPage, changeSearchKeyword } from '../../services/purchased/search/actions';
+import {
+  loadSearchPage,
+  changeSearchKeyword,
+  clearSelectedSearchBooks,
+  toggleSelectSearchBook,
+  hideSelectedSearchBooks,
+} from '../../services/purchased/search/actions';
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import SearchBar from '../../components/SearchBar';
@@ -13,6 +19,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import IconButton from '../../components/IconButton';
 import EditingBar from '../../components/EditingBar';
+import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import Responsive from '../base/Responsive';
 
@@ -20,7 +27,7 @@ import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getSearchItemsByPage } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getSearchItemsByPage, getSelectedSearchBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
@@ -64,6 +71,12 @@ const styles = {
       height: 24,
     },
   }),
+  ButtonActionLeft: css({
+    float: 'left',
+  }),
+  ButtonActionRight: css({
+    float: 'right',
+  }),
 };
 
 class Search extends React.Component {
@@ -78,47 +91,67 @@ class Search extends React.Component {
       isEditing: false,
       hideTools: false,
     };
-
-    this.toggleEditingMode = this.toggleEditingMode.bind(this);
-    this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
-    this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
-    this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
   }
 
-  toggleEditingMode() {
+  toggleEditingMode = () => {
     const { isEditing } = this.state;
+    const { clearSelectedSearchBooks: disaptchClearSelectedSearchBooks } = this.props;
 
     if (isEditing === true) {
-      // 현재 Editing 모드면 나가면서 선택해둔 것들 클리어
+      disaptchClearSelectedSearchBooks();
     }
 
     this.setState({ isEditing: !isEditing });
-  }
+  };
 
-  handleOnSubmitSearchBar(value) {
+  handleOnSubmitSearchBar = value => {
     const { href, as } = URLMap.search;
     Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
-  }
+  };
 
-  handleOnFocusSearchBar() {
+  handleOnFocusSearchBar = () => {
     this.setState({
       hideTools: true,
     });
-  }
+  };
 
-  handleOnBlurSearchBar() {
+  handleOnBlurSearchBar = () => {
     this.setState({
       hideTools: false,
     });
-  }
+  };
+
+  handleOnClickHide = () => {
+    const {
+      hideSelectedSearchBooks: dispatchHideSelectedSearchBooks,
+      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
+    } = this.props;
+
+    dispatchHideSelectedSearchBooks();
+    dispatchClearSelectedSearchBooks();
+    this.setState({ isEditing: false });
+  };
+
+  handleOnClickDownload = () => {
+    const {
+      downloadSelectedSearchBooks: dispatchDownloadSelectedSearchBooks,
+      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
+    } = this.props;
+    dispatchDownloadSelectedSearchBooks();
+    dispatchClearSelectedSearchBooks();
+    this.setState({ isEditing: false });
+  };
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
     const {
       pageInfo: { keyword },
+      selectedBooks,
     } = this.props;
 
-    if (isEditing) return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+    if (isEditing) {
+      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
+    }
 
     return (
       <div className={styles.SearchToolBarWrapper}>
@@ -142,11 +175,19 @@ class Search extends React.Component {
   }
 
   renderBooks() {
-    const { items, books } = this.props;
+    const { isEditing } = this.state;
+    const { items, books, selectedBooks, toggleSelectSearchBook: dispatchToggleSelectSearchBook } = this.props;
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook key={item.b_id} item={item} book={books[item.b_id]} />
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectSearchBook(item.b_id)}
+          />
         ))}
       </BookList>
     );
@@ -168,6 +209,27 @@ class Search extends React.Component {
     );
   }
 
+  renderBottomActionBar() {
+    const { isEditing } = this.state;
+    const { selectedBooks } = this.props;
+    if (!isEditing) {
+      return null;
+    }
+
+    const disable = Object.keys(selectedBooks).length === 0;
+    return (
+      <BottomActionBar>
+        <BottomActionButton name="선택 숨기기" className={styles.ButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton
+          name="선택 다운로드"
+          className={styles.ButtonActionRight}
+          onClick={this.handleOnClickDownload}
+          disable={disable}
+        />
+      </BottomActionBar>
+    );
+  }
+
   render() {
     return (
       <>
@@ -179,6 +241,7 @@ class Search extends React.Component {
             {this.renderPaginator()}
           </Responsive>
         </main>
+        {this.renderBottomActionBar()}
       </>
     );
   }
@@ -188,15 +251,19 @@ const mapStateToProps = state => {
   const pageInfo = getSearchPageInfo(state);
   const items = getSearchItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
-
+  const selectedBooks = getSelectedSearchBooks(state);
   return {
     pageInfo,
     items,
     books,
+    selectedBooks,
   };
 };
 const mapDispatchToProps = {
   changeSearchKeyword,
+  clearSelectedSearchBooks,
+  toggleSelectSearchBook,
+  hideSelectedSearchBooks,
 };
 
 export default connect(

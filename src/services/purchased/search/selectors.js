@@ -24,3 +24,5 @@ export const getPage = createSelector(getPurchasedSearchState, purchasedSearchSt
 export const getKeyword = createSelector(getPurchasedSearchState, purchasedSearchState => purchasedSearchState.keyword);
 
 export const getSearchOptions = createSelector([getPage, getKeyword], (page, keyword) => ({ page, keyword }));
+
+export const getSelectedSearchBooks = createSelector(getPurchasedSearchState, purchasedSearchState => purchasedSearchState.selectedBooks);

@@ -4,6 +4,8 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import {
   LOAD_PURCHASE_ITEMS,
   CHANGE_PURCHASE_OPTION,
+  HIDE_SELECTED_BOOKS,
+  DOWNLOAD_SELECTED_BOOKS,
   setPurchaseItems,
   setPurchaseTotalCount,
   setPurchasePage,
@@ -11,16 +13,18 @@ import {
   setPurchaseFilter,
   setPurchaseFilterOptions,
 } from './actions';
-import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
+import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories, requestHide, requestDownload } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getPurchaseOptions } from './selectors';
+import { getPurchaseOptions, getSelectedBooks } from './selectors';
 import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 import { URLMap } from '../../../constants/urls';
+
+import { getRevision } from '../../common/requests';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -81,6 +85,29 @@ function* changePurchaseOption(action) {
   Router.push(makeURI(href, query), makeURI(as, query));
 }
 
+function* hideSelectedBooks() {
+  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBookIds = Object.keys(selectedBooks);
+
+  // TODO: Get Book Ids
+
+  const revision = yield call(getRevision);
+  const queueIds = yield call(requestHide, selectedBookIds, revision);
+
+  // TODO: Check Queue Status
+
+  yield call(loadPurchaseItems);
+}
+
+function* downloadSelectedBooks() {
+  console.log('downloadSelectedBooks');
+}
+
 export default function* purchaseMainRootSaga() {
-  yield all([takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems), takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption)]);
+  yield all([
+    takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
+    takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption),
+    takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
+  ]);
 }

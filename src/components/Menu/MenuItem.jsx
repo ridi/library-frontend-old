@@ -1,8 +1,9 @@
 import React from 'react';
+import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
 import * as styles from './styles';
 
-const MenuItem = ({ title, showIcon, icon, onClick }) => (
+export const MenuItem = ({ title, showIcon, icon, onClick }) => (
   <li className={styles.MenuGroupItemWrapper}>
     <button type="button" className={styles.MenuGroupItem} onClick={onClick}>
       {showIcon ? <Icon name={icon} className={styles.MenuGroupItemIcon} /> : null}
@@ -11,4 +12,13 @@ const MenuItem = ({ title, showIcon, icon, onClick }) => (
   </li>
 );
 
-export default MenuItem;
+export const MenuLinkItem = ({ title, showIcon, icon, href, as }) => (
+  <li className={styles.MenuGroupItemWrapper}>
+    <Link href={href} as={as}>
+      <a className={styles.MenuGroupItem}>
+        {showIcon ? <Icon name={icon} className={styles.MenuGroupItemIcon} /> : null}
+        <span className={styles.MenuGroupItemTitle}>{title}</span>
+      </a>
+    </Link>
+  </li>
+);

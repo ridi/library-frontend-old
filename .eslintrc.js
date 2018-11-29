@@ -70,6 +70,7 @@ module.exports = {
     // account team rules
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 'off',
+    'no-case-declarations': 'off',
 
     // jsx
     'react/no-unknown-property': [

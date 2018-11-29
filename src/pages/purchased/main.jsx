@@ -8,6 +8,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
+import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 import ModalBackground from '../../components/ModalBackground';
 import Responsive from '../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -16,10 +17,19 @@ import SearchBar from '../../components/SearchBar';
 import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
-import { loadPurchaseItems, changePurchaseFilter, changePurchaseOrder, changePurchasePage } from '../../services/purchased/main/actions';
+import {
+  loadPurchaseItems,
+  changePurchaseFilter,
+  changePurchaseOrder,
+  changePurchasePage,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
+} from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/main/selectors';
+import { getItemsByPage, getPageInfo, getFilterOptions, getSelectedBooks } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -49,7 +59,7 @@ const styles = {
   }),
   MainToolBarToolsWrapper: css({
     height: 30,
-    padding: '8px 2px 8px 18px',
+    padding: '8px 0 8px 16px',
     marginLeft: 'auto',
   }),
   MainToolBarIcon: css({
@@ -64,6 +74,12 @@ const styles = {
       width: 24,
       height: 24,
     },
+  }),
+  MainButtonActionLeft: css({
+    float: 'left',
+  }),
+  MainButtonActionRight: css({
+    float: 'right',
   }),
 };
 
@@ -81,82 +97,88 @@ class Index extends React.Component {
       showFilterModal: false,
       hideTools: false,
     };
-
-    this.toggleEditingMode = this.toggleEditingMode.bind(this);
-    this.toggleFilterModal = this.toggleFilterModal.bind(this);
-    this.toggleMoreModal = this.toggleMoreModal.bind(this);
-    this.handleOnClickOutOfModal = this.handleOnClickOutOfModal.bind(this);
-
-    this.handleChangeFilter = this.handleChangeFilter.bind(this);
-    this.handleChangeOrder = this.handleChangeOrder.bind(this);
-
-    this.handleOnSubmitSearchBar = this.handleOnSubmitSearchBar.bind(this);
-    this.handleOnFocusSearchBar = this.handleOnFocusSearchBar.bind(this);
-    this.handleOnBlurSearchBar = this.handleOnBlurSearchBar.bind(this);
   }
 
-  toggleEditingMode() {
+  toggleEditingMode = () => {
     const { isEditing } = this.state;
+    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
-      // 현재 Editing 모드면 나가면서 선택해둔 것들 클리어
+      dispatchClearSelectedBooks();
     }
 
     this.setState({ isEditing: !isEditing, showFilterModal: false, showMoreModal: false });
-  }
+  };
 
-  toggleFilterModal() {
+  toggleFilterModal = () => {
     const { showFilterModal } = this.state;
     this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
-  }
+  };
 
-  toggleMoreModal() {
+  toggleMoreModal = () => {
     const { showMoreModal } = this.state;
     this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
-  }
+  };
 
-  handleOnClickOutOfModal() {
+  handleOnClickOutOfModal = () => {
     this.setState({ showMoreModal: false, showFilterModal: false });
-  }
+  };
 
-  handleChangeFilter(filter) {
+  handleChangeFilter = filter => {
     const { changePurchaseFilter: dispatchChangePurchaseFilter } = this.props;
     this.setState({ showFilterModal: false });
     dispatchChangePurchaseFilter(filter);
-  }
+  };
 
-  handleChangeOrder(order) {
+  handleChangeOrder = order => {
     const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
     this.setState({ showMoreModal: false });
     dispatchChangePurchaseOrder(order);
-  }
+  };
 
-  handleOnSubmitSearchBar(value) {
+  handleOnSubmitSearchBar = value => {
     const { href, as } = URLMap.search;
     Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
-  }
+  };
 
-  handleOnFocusSearchBar() {
+  handleOnFocusSearchBar = () => {
     this.setState({
       hideTools: true,
       showFilterModal: false,
       showMoreModal: false,
     });
-  }
+  };
 
-  handleOnBlurSearchBar() {
+  handleOnBlurSearchBar = () => {
     this.setState({
       hideTools: false,
       showFilterModal: false,
       showMoreModal: false,
     });
-  }
+  };
+
+  handleOnClickHide = () => {
+    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+
+    dispatchHideSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
+  handleOnClickDownload = () => {
+    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
+    const { selectedBooks } = this.props;
 
     if (isEditing) {
-      return <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />;
+      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
     }
 
     return (
@@ -198,11 +220,20 @@ class Index extends React.Component {
   }
 
   renderBooks() {
-    const { items, books } = this.props;
+    const { isEditing } = this.state;
+    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook key={item.b_id} item={item} book={books[item.b_id]} />
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+          />
         ))}
       </BookList>
     );
@@ -224,6 +255,27 @@ class Index extends React.Component {
     );
   }
 
+  renderBottomActionBar() {
+    const { isEditing } = this.state;
+    const { selectedBooks } = this.props;
+    if (!isEditing) {
+      return null;
+    }
+
+    const disable = Object.keys(selectedBooks).length === 0;
+    return (
+      <BottomActionBar>
+        <BottomActionButton name="선택 숨기기" className={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton
+          name="선택 다운로드"
+          className={styles.MainButtonActionRight}
+          onClick={this.handleOnClickDownload}
+          disable={disable}
+        />
+      </BottomActionBar>
+    );
+  }
+
   render() {
     return (
       <>
@@ -236,6 +288,7 @@ class Index extends React.Component {
             {this.renderModal()}
           </Responsive>
         </main>
+        {this.renderBottomActionBar()}
         {this.renderModalBackground()}
       </>
     );
@@ -247,11 +300,13 @@ const mapStateToProps = state => {
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const selectedBooks = getSelectedBooks(state);
   return {
     pageInfo,
     filterOptions,
     items,
     books,
+    selectedBooks,
   };
 };
 
@@ -259,6 +314,10 @@ const mapDispatchToProps = {
   changePurchaseFilter,
   changePurchaseOrder,
   changePurchasePage,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 };
 
 export default connect(
