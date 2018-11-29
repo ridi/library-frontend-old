@@ -22,3 +22,5 @@ export const getPageInfo = createSelector(getPurchasedHiddenState, purchasedHidd
 export const getPage = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.page);
 
 export const getItemTotalCount = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.itemTotalCount);
+
+export const getSelectedHiddenBooks = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.selectedBooks);
