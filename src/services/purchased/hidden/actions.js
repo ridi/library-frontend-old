@@ -4,7 +4,7 @@ export const SET_PURCHASED_HIDDEN_ITEMS = 'SET_PURCHASED_HIDDEN_ITEMS';
 export const SET_PURCHASED_HIDDEN_TOTAL_COUNT = 'SET_PURCHASED_HIDDEN_TOTAL_COUNT';
 export const SET_PURCHASED_HIDDEN_PAGE = 'SET_PURCHASED_HIDDEN_PAGE';
 
-export const UNHIDE_SELECTED_BOOKS = 'UNHIDE_SELECTED_BOOKS';
+export const SHOW_SELECTED_BOOKS = 'SHOW_SELECTED_BOOKS';
 export const DELETE_SELECTED_BOOKS = 'DELETE_SELECTED_BOOKS';
 
 export const SELECT_ALL_HIDDEN_BOOKS = 'SELECT_ALL_HIDDEN_BOOKS';
@@ -47,8 +47,8 @@ export const toggleSelectHiddenBook = bookId => ({
   },
 });
 
-export const unhideSelectedBooks = () => ({
-  type: UNHIDE_SELECTED_BOOKS,
+export const showSelectedBooks = () => ({
+  type: SHOW_SELECTED_BOOKS,
 });
 
 export const deleteSelectedBooks = () => ({

@@ -5,7 +5,7 @@ import {
   setPurchasedHiddenItems,
   setPurchasedHiddenPage,
   setPurchasedHiddenTotalCount,
-  UNHIDE_SELECTED_BOOKS,
+  SHOW_SELECTED_BOOKS,
   DELETE_SELECTED_BOOKS,
 } from './actions';
 import { getQuery } from '../../router/selectors';
@@ -24,8 +24,8 @@ function* loadPurchasedHiddenItems() {
   yield all([put(setPurchasedHiddenItems(itemResponse.items)), put(setPurchasedHiddenTotalCount(countResponse.item_total_count))]);
 }
 
-function* unhideSelectedBooks() {
-  console.log('unhide');
+function* showSelectedBooks() {
+  console.log('show');
 }
 function* deleteSelectedBooks() {
   console.log('deleteSelectedBooks');
@@ -34,7 +34,7 @@ function* deleteSelectedBooks() {
 export default function* purchasedHiddenSaga() {
   yield all([
     takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems),
-    takeEvery(UNHIDE_SELECTED_BOOKS, unhideSelectedBooks),
+    takeEvery(SHOW_SELECTED_BOOKS, showSelectedBooks),
     takeEvery(DELETE_SELECTED_BOOKS, deleteSelectedBooks),
   ]);
 }

@@ -16,7 +16,7 @@ import {
   loadPurchasedHiddenItems,
   clearSelectedHiddenBooks,
   toggleSelectHiddenBook,
-  unhideSelectedBooks,
+  showSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
 import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedHiddenBooks } from '../../services/purchased/hidden/selectors';
@@ -66,10 +66,10 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  handleOnClickUnhide = () => {
-    const { unhideSelectedBooks: dispatchUnhideSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+  handleOnClickShow = () => {
+    const { showSelectedBooks: dispatchShowSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
 
-    dispatchUnhideSelectedBooks();
+    dispatchShowSelectedBooks();
     dispatchClearSelectedHiddenBooks();
     this.setState({ isEditing: false });
   };
@@ -121,7 +121,7 @@ class Hidden extends React.Component {
         <BottomActionButton
           name="선택 숨김 해제"
           className={styles.HiddenButtonActionRight}
-          onClick={this.handleOnClickUnhide}
+          onClick={this.handleOnClickShow}
           disable={disable}
         />
       </BottomActionBar>
@@ -177,7 +177,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   clearSelectedHiddenBooks,
   toggleSelectHiddenBook,
-  unhideSelectedBooks,
+  showSelectedBooks,
   deleteSelectedBooks,
 };
 
