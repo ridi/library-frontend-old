@@ -64,3 +64,34 @@ export function* download(bookIds, url) {
   yield call(_launchAppToDownload, isIos, isAndroid, isFirefox, appUri);
   yield cancel(installTimer);
 }
+
+const _reduceSelectedBookIds = (items, selectedBookIds) => {
+  const reduced = selectedBookIds.reduce(
+    (previous, bookId) => {
+      const item = items[bookId];
+      if (item.unit_count === 1) {
+        previous.bookIds.push(item.b_id);
+      } else {
+        previous.unitIds.push(item.unit_id);
+      }
+      return previous;
+    },
+    { bookIds: [], unitIds: [] },
+  );
+
+  return reduced;
+};
+
+const _flattenBookIds = bookIdsInUnitData =>
+  Object.keys(bookIdsInUnitData).reduce((previous, key) => {
+    const _bookIds = bookIdsInUnitData[key];
+    return [...previous, ..._bookIds];
+  }, []);
+
+export function* getBookIdsByUnitIds(items, selectedBookIds, orderType, orderBy) {
+  const { bookIds, unitIds } = _reduceSelectedBookIds(items, selectedBookIds);
+  const bookIdsInUnitData = yield call(getBookIdsByUnitIds, orderType, orderBy, unitIds);
+  const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
+
+  return [...bookIds, bookIdsInUnit];
+}
