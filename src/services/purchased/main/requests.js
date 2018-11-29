@@ -56,13 +56,3 @@ export function* fetchPurchaseCategories() {
 
   return _reformatCategories(response.data.categories);
 }
-
-export function* requestHide(bookIds, revision) {
-  const api = yield put(getAPI());
-  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/hide/`, {
-    b_ids: bookIds,
-    revision,
-  });
-
-  return toFlatten(response.data.items, 'id');
-}

@@ -18,9 +18,9 @@ import {
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
-import { fetchSearchItems, fetchSearchItemsTotalCount, requestHide } from './requests';
 
-import { getRevision, triggerDownload } from '../../common/requests';
+import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
+import { getRevision, triggerDownload, requestHide } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
 import { loadBookData } from '../../book/sagas';
 

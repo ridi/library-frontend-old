@@ -15,7 +15,7 @@ import {
   setPurchaseFilterOptions,
 } from './actions';
 import { showToast } from '../../toast/actions';
-import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories, requestHide } from './requests';
+import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
@@ -26,7 +26,7 @@ import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
 
 import { loadBookData } from '../../book/sagas';
-import { getRevision, triggerDownload } from '../../common/requests';
+import { getRevision, triggerDownload, requestHide } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
 
 function* persistPageOptionsFromQuries() {
