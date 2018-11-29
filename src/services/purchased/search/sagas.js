@@ -59,9 +59,8 @@ function* hideSelectedSearchBooks() {
   const items = yield select(getSearchItems);
   const selectedBooks = yield select(getSelectedSearchBooks);
 
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
-
   const revision = yield call(getRevision);
+  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestHide, bookIds, revision);
 
   // TODO: Check Queue Status
