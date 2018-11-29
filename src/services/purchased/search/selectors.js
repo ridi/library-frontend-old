@@ -5,8 +5,9 @@ import { calcPage } from '../../../utils/pagination';
 const getPurchasedSearchState = state => state.purchasedSearch;
 
 export const getSearchItemsByPage = createSelector(getPurchasedSearchState, purchasedSearchState => {
-  const { page } = purchasedSearchState;
-  return purchasedSearchState.items[page] || [];
+  const { page, itemIdsForPage, items } = purchasedSearchState;
+  const itemIds = itemIdsForPage[page] || [];
+  return itemIds.map(itemId => items[itemId]);
 });
 
 export const getSearchPageInfo = createSelector(getPurchasedSearchState, purchasedSearchState => {

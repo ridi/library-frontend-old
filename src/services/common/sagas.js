@@ -1,4 +1,4 @@
-import { call, put, race, fork, cancel } from 'redux-saga/effects';
+import { call, put, fork, cancel } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { stringify } from 'qs';
 
