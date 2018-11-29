@@ -39,6 +39,20 @@ export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
   return response.data.result;
 }
 
+export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
+  if (unitIds.length === 0) {
+    return {};
+  }
+
+  const query = {
+    unitIds,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/items/hidden/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
+  return response.data.result;
+}
+
 export function* requestShow(bookIds, revision) {
   const api = yield put(getAPI());
   const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/show/`, {

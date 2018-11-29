@@ -16,7 +16,7 @@ import { toFlatten } from '../../../utils/array';
 import { getHiddenItems, getSelectedHiddenBooks } from './selectors';
 
 import { getRevision, requestShow } from '../../common/requests';
-import { getBookIdsByUnitIds } from '../../common/sagas';
+import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 
 function* loadPurchasedHiddenItems() {
   const query = yield select(getQuery);
@@ -34,7 +34,7 @@ function* showSelectedBooks() {
   const selectedBooks = yield select(getSelectedHiddenBooks);
 
   const revision = yield call(getRevision);
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
+  const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestShow, bookIds, revision);
 
   // TODO: Check Queue Status
