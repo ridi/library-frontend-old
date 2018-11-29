@@ -95,5 +95,5 @@ export function* getBookIdsByUnitIds(items, selectedBookIds, orderType, orderBy)
   const bookIdsInUnitData = yield call(requestGetBookIdsByUnitIds, orderType, orderBy, unitIds);
   const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
 
-  return [...bookIds, bookIdsInUnit];
+  return [...bookIds, ...bookIdsInUnit];
 }
