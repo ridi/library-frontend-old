@@ -97,7 +97,7 @@ function* hideSelectedBooks() {
   const queueIds = yield call(requestHide, selectedBookIds, revision);
 
   // TODO: Check Queue Status
-  yield call(delay, 3000);
+  yield call(delay, 3000); // Temporary Sleep
 
   yield call(loadPurchaseItems);
 }
