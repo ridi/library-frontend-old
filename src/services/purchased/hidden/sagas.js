@@ -44,7 +44,17 @@ function* showSelectedBooks() {
 }
 
 function* deleteSelectedBooks() {
-  console.log('deleteSelectedBooks');
+  const items = yield select(getHiddenItems);
+  const selectedBooks = yield select(getSelectedHiddenBooks);
+
+  const revision = yield call(getRevision);
+  const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
+  // TODO: CSRF Token 어떻게 할지 결정되어야 한다.
+  console.log('삭제 되었따고 치고');
+
+  yield call(delay, 3000); // Temporary Sleep
+
+  yield call(loadPurchasedHiddenItems);
 }
 
 export default function* purchasedHiddenSaga() {
