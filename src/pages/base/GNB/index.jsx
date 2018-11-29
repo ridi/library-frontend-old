@@ -4,6 +4,7 @@ import { Icon } from '@ridi/rsg';
 import MyMenuModal from '../MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
+import MyMenu from '../../../svgs/MyMenu.svg';
 import Responsive from '../Responsive';
 
 import ModalBackground from '../../../components/ModalBackground';
@@ -60,7 +61,7 @@ class GNB extends React.Component {
             </div>
             <div className={styles.MyMenuWrapper}>
               <button id="MyMenuToggleButton" className={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-                <Icon className={styles.MyMenuIcon(isModalActive)} name="setting_1" />
+                <MyMenu className={styles.MyMenuIcon(isModalActive)} />
                 <span className={Hidden}>마이메뉴</span>
               </button>
             </div>

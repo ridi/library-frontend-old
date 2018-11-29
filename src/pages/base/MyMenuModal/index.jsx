@@ -1,7 +1,10 @@
 import React from 'react';
-import { Icon } from '@ridi/rsg';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
+import Download from '../../../svgs/Download.svg';
+import Logout from '../../../svgs/Logout.svg';
+import Note from '../../../svgs/Note.svg';
+import Review from '../../../svgs/Review.svg';
 
 const MyMenuModal = ({ userId, isActive }) => (
   <section className={styles.MyMenuModal(isActive)}>
@@ -14,20 +17,27 @@ const MyMenuModal = ({ userId, isActive }) => (
     <ul className={styles.MenuList}>
       <li className={styles.MenuItem}>
         <button className={styles.MenuButton} type="button">
-          <Icon className={styles.MenuIcon} name="document" />
-          숨김 도서 목록
+          <Note className={styles.MenuIcon} />
+          독서노트
         </button>
       </li>
       <li className={styles.MenuItem}>
         <button className={styles.MenuButton} type="button">
-          <Icon className={styles.MenuIcon} name="document" />
+          <Review className={styles.MenuIcon} />내 리뷰 관리
+        </button>
+      </li>
+    </ul>
+    <ul className={styles.MenuList}>
+      <li className={styles.MenuItem}>
+        <button className={styles.MenuButton} type="button">
+          <Download className={styles.MenuIcon} />
           구매 목록 엑셀 다운로드
         </button>
       </li>
     </ul>
     <div className={styles.MenuItem}>
       <button className={styles.MenuButton} type="button">
-        <Icon className={styles.MenuIcon} name="document" />
+        <Logout className={styles.MenuIcon} />
         로그아웃
       </button>
     </div>

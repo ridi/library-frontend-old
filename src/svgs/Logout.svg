@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.4 (67378) - http://www.bohemiancoding.com/sketch -->
+    <title>myMenu_list_logout</title>
+    <desc>Created with Sketch.</desc>
+    <g id="myMenu_list_logout" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M19.5,19.5 L4.5,19.5 L4.5,12.707 L14.104,12.707 L10.47,16.341 C10.177,16.634 10.177,17.108 10.47,17.401 C10.616,17.548 10.808,17.621 11,17.621 C11.192,17.621 11.384,17.548 11.53,17.401 L16.444,12.487 C16.737,12.194 16.737,11.72 16.444,11.427 L11.53,6.513 C11.237,6.22 10.763,6.22 10.47,6.513 C10.177,6.806 10.177,7.28 10.47,7.573 L14.104,11.207 L4.5,11.207 L4.5,4.5 L19.5,4.5 L19.5,19.5 Z M19.5,3 L4.5,3 C3.672,3 3,3.672 3,4.5 L3,19.5 C3,20.328 3.672,21 4.5,21 L19.5,21 C20.328,21 21,20.328 21,19.5 L21,4.5 C21,3.672 20.328,3 19.5,3 Z" id="Fill-6" fill="#9EA7AD"></path>
+    </g>
+</svg>
