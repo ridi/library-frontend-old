@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import {
   LOAD_PURCHASE_ITEMS,
@@ -13,6 +14,7 @@ import {
   setPurchaseFilter,
   setPurchaseFilterOptions,
 } from './actions';
+import { showToast } from '../../toast/actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories, requestHide, requestDownload } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
@@ -24,7 +26,8 @@ import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 import { URLMap } from '../../../constants/urls';
 
-import { getRevision } from '../../common/requests';
+import { getRevision, triggerDownload } from '../../common/requests';
+import download from '../../../utils/download';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -90,17 +93,27 @@ function* hideSelectedBooks() {
   const selectedBookIds = Object.keys(selectedBooks);
 
   // TODO: Get Book Ids
-
   const revision = yield call(getRevision);
   const queueIds = yield call(requestHide, selectedBookIds, revision);
 
   // TODO: Check Queue Status
+  yield call(delay, 3000);
 
   yield call(loadPurchaseItems);
 }
 
 function* downloadSelectedBooks() {
-  console.log('downloadSelectedBooks');
+  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBookIds = Object.keys(selectedBooks);
+
+  // TODO: Get Book Ids
+  const triggerResponse = yield call(triggerDownload, selectedBookIds);
+
+  if (triggerResponse.result) {
+    download(triggerResponse.b_ids, triggerResponse.url);
+  } else {
+    yield put(showToast(triggerResponse.message));
+  }
 }
 
 export default function* purchaseMainRootSaga() {
