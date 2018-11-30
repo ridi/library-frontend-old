@@ -1,21 +1,39 @@
-import Head from 'next/head';
 import React from 'react';
+import { css } from 'emotion';
+import Head from 'next/head';
 import { connect } from 'react-redux';
 
+import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
+import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
-import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
-import Responsive from '../base/Responsive';
+import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import { getBooks } from '../../services/book/selectors';
-import { loadPurchasedHiddenItems } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount } from '../../services/purchased/hidden/selectors';
+import {
+  loadPurchasedHiddenItems,
+  clearSelectedHiddenBooks,
+  toggleSelectHiddenBook,
+  showSelectedBooks,
+  deleteSelectedBooks,
+} from '../../services/purchased/hidden/actions';
+import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedHiddenBooks } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
+import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
-import { URLMap } from '../../constants/urls';
+
+const styles = {
+  HiddenButtonActionLeft: css({
+    color: '#e64938',
+    float: 'left',
+  }),
+  HiddenButtonActionRight: css({
+    float: 'right',
+  }),
+};
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -27,26 +45,50 @@ class Hidden extends React.Component {
     this.state = {
       isEditing: false,
     };
-
-    this.toggleEditingMode = this.toggleEditingMode.bind(this);
   }
 
-  toggleEditingMode() {
+  toggleEditingMode = () => {
     const { isEditing } = this.state;
+    const { clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
 
     if (isEditing === true) {
-      // 현재 Editing 모드면 나가면서 선택해둔 것들 클리어
+      dispatchClearSelectedHiddenBooks();
     }
 
     this.setState({ isEditing: !isEditing });
-  }
+  };
+
+  handleOnClickDelete = () => {
+    const { deleteSelectedBooks: dispatchDeleteSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+
+    dispatchDeleteSelectedBooks();
+    dispatchClearSelectedHiddenBooks();
+    this.setState({ isEditing: false });
+  };
+
+  handleOnClickShow = () => {
+    const { showSelectedBooks: dispatchShowSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+
+    dispatchShowSelectedBooks();
+    dispatchClearSelectedHiddenBooks();
+    this.setState({ isEditing: false });
+  };
 
   renderBooks() {
-    const { items, books } = this.props;
+    const { isEditing } = this.state;
+    const { items, books, selectedBooks, toggleSelectHiddenBook: dispatchToggleSelectHiddenBook } = this.props;
+
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook key={item.b_id} item={item} book={books[item.b_id]} />
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectHiddenBook(item.b_id)}
+          />
         ))}
       </BookList>
     );
@@ -60,16 +102,42 @@ class Hidden extends React.Component {
     return <Paginator currentPage={currentPage} totalPages={totalPages} pageCount={PAGE_COUNT} pathname="/purchased/hidden/" query={{}} />;
   }
 
+  renderBottomActionBar() {
+    const { isEditing } = this.state;
+    const { selectedBooks } = this.props;
+    if (!isEditing) {
+      return null;
+    }
+
+    const disable = Object.keys(selectedBooks).length === 0;
+    return (
+      <BottomActionBar>
+        <BottomActionButton
+          name="선택 영구 삭제"
+          className={styles.HiddenButtonActionLeft}
+          onClick={this.handleOnClickDelete}
+          disable={disable}
+        />
+        <BottomActionButton
+          name="선택 숨김 해제"
+          className={styles.HiddenButtonActionRight}
+          onClick={this.handleOnClickShow}
+          disable={disable}
+        />
+      </BottomActionBar>
+    );
+  }
+
   render() {
     const { isEditing } = this.state;
-    const { itemTotalCount } = this.props;
+    const { itemTotalCount, selectedBooks } = this.props;
     return (
       <>
         <Head>
           <title>리디북스 - 숨김목록</title>
         </Head>
         {isEditing ? (
-          <EditingBar totalSelectedCount={0} onClickSuccessButton={this.toggleEditingMode} />
+          <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />
         ) : (
           <LNBHiddenTitleBar
             title="숨긴 도서 목록"
@@ -85,6 +153,7 @@ class Hidden extends React.Component {
             {this.renderPaginator()}
           </Responsive>
         </main>
+        {isEditing ? this.renderBottomActionBar() : null}
       </>
     );
   }
@@ -95,12 +164,24 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const itemTotalCount = getItemTotalCount(state);
+  const selectedBooks = getSelectedHiddenBooks(state);
   return {
     pageInfo,
     items,
     books,
     itemTotalCount,
+    selectedBooks,
   };
 };
 
-export default connect(mapStateToProps)(Hidden);
+const mapDispatchToProps = {
+  clearSelectedHiddenBooks,
+  toggleSelectHiddenBook,
+  showSelectedBooks,
+  deleteSelectedBooks,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Hidden);

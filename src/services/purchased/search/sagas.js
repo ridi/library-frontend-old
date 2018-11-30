@@ -1,8 +1,8 @@
 import Router from 'next/router';
 import { all, call, select, put, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import { getQuery } from '../../router/selectors';
-import { loadBookData } from '../../book/sagas';
 import { toFlatten } from '../../../utils/array';
 import { makeURI } from '../../../utils/uri';
 
@@ -14,11 +14,15 @@ import {
   setSearchKeyword,
   setSearchTotalCount,
   setSearchItems,
+  DOWNLOAD_SELECTED_SEARCH_BOOKS,
 } from './actions';
-import { getSearchOptions, getSelectedSearchBooks } from './selectors';
-import { fetchSearchItems, fetchSearchItemsTotalCount, requestHide } from './requests';
+import { showToast } from '../../toast/actions';
+import { getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
 
-import { getRevision } from '../../common/requests';
+import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
+import { getRevision, triggerDownload, requestHide } from '../../common/requests';
+import { download, getBookIdsByUnitIds } from '../../common/sagas';
+import { loadBookData } from '../../book/sagas';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -52,21 +56,31 @@ function changeSearchKeyword(action) {
 }
 
 function* hideSelectedSearchBooks() {
+  const items = yield select(getSearchItems);
   const selectedBooks = yield select(getSelectedSearchBooks);
-  const selectedBookIds = Object.keys(selectedBooks);
-
-  // TODO: Get Book Ids
 
   const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, selectedBookIds, revision);
+  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
+  const queueIds = yield call(requestHide, bookIds, revision);
 
   // TODO: Check Queue Status
+  yield call(delay, 3000); // Temporary Sleep
 
   yield call(loadSearchPage);
 }
 
 function* downloadSelectedSearchBooks() {
-  console.log('downloadSelectedBooks');
+  const items = yield select(getSearchItems);
+  const selectedBooks = yield select(getSelectedSearchBooks);
+
+  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
+
+  const triggerResponse = yield call(triggerDownload, bookIds);
+  if (triggerResponse.result) {
+    yield call(download, triggerResponse.b_ids, triggerResponse.url);
+  } else {
+    yield put(showToast(triggerResponse.message));
+  }
 }
 
 export default function* searchRootSaga() {
@@ -74,5 +88,6 @@ export default function* searchRootSaga() {
     takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
     takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
     takeEvery(HIDE_SELECTED_SEARCH_BOOKS, hideSelectedSearchBooks),
+    takeEvery(DOWNLOAD_SELECTED_SEARCH_BOOKS, downloadSelectedSearchBooks),
   ]);
 }

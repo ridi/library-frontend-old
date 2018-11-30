@@ -1,34 +1,66 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import {
   LOAD_PURCHASED_HIDDEN_ITEMS,
   setPurchasedHiddenItems,
   setPurchasedHiddenPage,
   setPurchasedHiddenTotalCount,
+  SHOW_SELECTED_BOOKS,
+  DELETE_SELECTED_BOOKS,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
 import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from './requests';
+import { toFlatten } from '../../../utils/array';
+import { getHiddenItems, getSelectedHiddenBooks } from './selectors';
 
-const getBookIdsFromItems = items => items.map(item => item.b_id);
+import { getRevision, requestShow } from '../../common/requests';
+import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 
 function* loadPurchasedHiddenItems() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
   yield put(setPurchasedHiddenPage(page));
 
-  const [itemResponse, countResponse] = yield all([
-    call(fetchPurchasedHiddenItems, page),
-    call(fetchPurchasedHiddenItemsTotalCount),
-  ]);
-  const bookIds = getBookIdsFromItems(itemResponse.items);
+  const [itemResponse, countResponse] = yield all([call(fetchPurchasedHiddenItems, page), call(fetchPurchasedHiddenItemsTotalCount)]);
+  const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([
-    put(setPurchasedHiddenItems(itemResponse.items)),
-    put(setPurchasedHiddenTotalCount(countResponse.item_total_count)),
-  ]);
+  yield all([put(setPurchasedHiddenItems(itemResponse.items)), put(setPurchasedHiddenTotalCount(countResponse.item_total_count))]);
+}
+
+function* showSelectedBooks() {
+  const items = yield select(getHiddenItems);
+  const selectedBooks = yield select(getSelectedHiddenBooks);
+
+  const revision = yield call(getRevision);
+  const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
+  const queueIds = yield call(requestShow, bookIds, revision);
+
+  // TODO: Check Queue Status
+  yield call(delay, 3000); // Temporary Sleep
+
+  yield call(loadPurchasedHiddenItems);
+}
+
+function* deleteSelectedBooks() {
+  const items = yield select(getHiddenItems);
+  const selectedBooks = yield select(getSelectedHiddenBooks);
+
+  const revision = yield call(getRevision);
+  const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
+  // TODO: CSRF Token 어떻게 할지 결정되어야 한다.
+  console.log('삭제 되었따고 치고');
+
+  yield call(delay, 3000); // Temporary Sleep
+
+  yield call(loadPurchasedHiddenItems);
 }
 
 export default function* purchasedHiddenSaga() {
-  yield takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems);
+  yield all([
+    takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems),
+    takeEvery(SHOW_SELECTED_BOOKS, showSelectedBooks),
+    takeEvery(DELETE_SELECTED_BOOKS, deleteSelectedBooks),
+  ]);
 }

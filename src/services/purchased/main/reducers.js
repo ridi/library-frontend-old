@@ -7,9 +7,11 @@ import {
   SET_PURCHASE_ORDER,
   SET_PURCHASE_FILTER,
   SET_PURCHASE_FILTER_OPTIONS,
-  CLEAR_SELECTED_BOOKS,
-  TOGGLE_SELECT_BOOK,
+  CLEAR_SELECTED_MAIN_BOOKS,
+  TOGGLE_SELECT_MAIN_BOOK,
 } from './actions';
+
+import { toDict, toFlatten } from '../../../utils/array';
 
 const purchasedMainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -18,7 +20,11 @@ const purchasedMainReducer = (state = initialState, action) => {
         ...state,
         items: {
           ...state.items,
-          [state.page]: action.payload.items,
+          ...toDict(action.payload.items, 'b_id'),
+        },
+        itemIdsForPage: {
+          ...state.itemIdsForPage,
+          [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
     case SET_PURCHASE_TOTAL_COUNT:
@@ -53,12 +59,12 @@ const purchasedMainReducer = (state = initialState, action) => {
           options: action.payload.options,
         },
       };
-    case CLEAR_SELECTED_BOOKS:
+    case CLEAR_SELECTED_MAIN_BOOKS:
       return {
         ...state,
         selectedBooks: {},
       };
-    case TOGGLE_SELECT_BOOK:
+    case TOGGLE_SELECT_MAIN_BOOK:
       const { selectedBooks } = state;
       if (state.selectedBooks[action.payload.bookId]) {
         delete selectedBooks[action.payload.bookId];

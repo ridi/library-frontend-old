@@ -5,9 +5,11 @@ import { calcPage } from '../../../utils/pagination';
 
 const getPurchasedHiddenState = state => state.purchasedHidden;
 
+export const getHiddenItems = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.items);
 export const getItemsByPage = createSelector(getPurchasedHiddenState, purchasedHiddenState => {
-  const { page } = purchasedHiddenState;
-  return purchasedHiddenState.items[page] || [];
+  const { page, itemIdsForPage, items } = purchasedHiddenState;
+  const itemIds = itemIdsForPage[page] || [];
+  return itemIds.map(itemId => items[itemId]);
 });
 
 export const getPageInfo = createSelector(getPurchasedHiddenState, purchasedHiddenState => {
@@ -21,3 +23,5 @@ export const getPageInfo = createSelector(getPurchasedHiddenState, purchasedHidd
 export const getPage = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.page);
 
 export const getItemTotalCount = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.itemTotalCount);
+
+export const getSelectedHiddenBooks = createSelector(getPurchasedHiddenState, purchasedHiddenState => purchasedHiddenState.selectedBooks);
