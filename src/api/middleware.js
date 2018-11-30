@@ -18,7 +18,8 @@ const authorizationInterceptor = {
         .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(err => {
           if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            return;
+            // TODO: Add Redirecting To Authorization URL
+            return null;
           }
 
           console.log('error token refresh');
