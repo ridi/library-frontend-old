@@ -5,20 +5,23 @@ import API from './api';
 
 import config from '../config';
 import { GET_API } from './actions';
+import { HttpStatusCode } from './constants';
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
     const { response } = error;
-    if (response.status === 401) {
+    if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
       return axios
         .post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
           withCredentials: true,
         })
         .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(err => {
-          if (err.response.status !== 401) {
-            console.log('error token refresh');
+          if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+            return;
           }
+
+          console.log('error token refresh');
           return Promise.reject(err);
         });
     }
