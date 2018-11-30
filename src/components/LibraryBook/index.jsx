@@ -10,6 +10,9 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
   const _isExpired = isExpired(item.expire_date) && ServiceType.isExpirable(item.service_type);
   const hasItems = item.unit_count > 1;
   const isRidiSelect = ServiceType.isRidiselect(item.service_type);
+
+  // Thumbnail과 Meta를 Focusing하기 위해 button으로 Wrapping 했다.
+  // 후에 Link로 변경 하자
   return (
     <div className={bookCss}>
       {isEditing ? (

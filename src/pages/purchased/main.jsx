@@ -19,8 +19,6 @@ import SortModal from '../base/MainModal/SortModal';
 
 import {
   loadPurchaseItems,
-  changePurchaseFilter,
-  changePurchaseOrder,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
@@ -316,8 +314,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseFilter,
-  changePurchaseOrder,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,

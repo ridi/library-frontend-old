@@ -1,10 +1,8 @@
-import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
 import {
   LOAD_PURCHASE_ITEMS,
-  CHANGE_PURCHASE_OPTION,
   HIDE_SELECTED_BOOKS,
   DOWNLOAD_SELECTED_BOOKS,
   setPurchaseItems,
@@ -18,8 +16,6 @@ import { showToast } from '../../toast/actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
-import { URLMap } from '../../../constants/urls';
-import { makeURI } from '../../../utils/uri';
 import { toFlatten } from '../../../utils/array';
 
 import { getQuery } from '../../router/selectors';
@@ -63,31 +59,6 @@ function* loadPurchaseItems() {
   ]);
 }
 
-function* changePurchaseOption(action) {
-  const { page, order, filter } = yield select(getPurchaseOptions);
-  let { orderBy, orderType } = MainOrderOptions.parse(order);
-  let _filter = filter;
-  let _page = page;
-
-  if (action.payload.key === 'order') {
-    ({ orderBy, orderType } = MainOrderOptions.parse(action.payload.value));
-  } else if (action.payload.key === 'filter') {
-    _filter = action.payload.value;
-  } else if (action.payload.key === 'page') {
-    _page = action.payload.value;
-  }
-
-  const query = {
-    page: _page,
-    orderBy,
-    orderType,
-    filter: _filter,
-  };
-
-  const { href, as } = URLMap.main;
-  Router.push(makeURI(href, query), makeURI(as, query));
-}
-
 function* hideSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
@@ -124,7 +95,6 @@ function* downloadSelectedBooks() {
 export default function* purchaseMainRootSaga() {
   yield all([
     takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
-    takeEvery(CHANGE_PURCHASE_OPTION, changePurchaseOption),
     takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
     takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
   ]);
