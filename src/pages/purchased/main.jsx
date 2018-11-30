@@ -21,7 +21,6 @@ import {
   loadPurchaseItems,
   changePurchaseFilter,
   changePurchaseOrder,
-  changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
@@ -241,8 +240,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages },
-      changePurchasePage: dispatchChangePurchasePage,
+      pageInfo: { order, filter, currentPage, totalPages },
     } = this.props;
 
     return (
@@ -250,7 +248,12 @@ class Index extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        onClickPageItem={page => dispatchChangePurchasePage(page)}
+        href={URLMap.main.href}
+        as={URLMap.main.as}
+        query={{
+          order,
+          filter,
+        }}
       />
     );
   }
@@ -314,7 +317,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   changePurchaseFilter,
   changePurchaseOrder,
-  changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
