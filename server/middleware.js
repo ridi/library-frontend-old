@@ -2,12 +2,14 @@ const jwt = require('jsonwebtoken');
 const config = require('./config');
 const utils = require('./utils');
 
-const getLoginUrl = next => `${config.LOGIN_URL}?client_id=${config.CLIENT_ID}&redirect_uri=${next}`;
+const _make_ridi_authorize_url = req => {
+  const redirect_uri = utils.getFullPath(req);
+  return `${config.RIDI_TOKEN_AUTHORIZE_URL}?client_id=${config.RIDI_OAUTH2_CLIENT_ID}&response_type=code&redirect_uri=${redirect_uri}`;
+};
 
 const jwtAuth = (req, res, next) => {
   const redirect = () => {
-    const loginUrl = getLoginUrl(utils.getFullPath(req));
-    res.redirect(302, loginUrl);
+    res.redirect(302, _make_ridi_authorize_url(req));
   };
 
   const token = req.cookies['ridi-at'];
@@ -17,7 +19,7 @@ const jwtAuth = (req, res, next) => {
   }
 
   try {
-    jwt.verify(token, config.JWT_SECRET);
+    jwt.verify(token, config.RIDI_OAUTH2_JWT_SECRET);
     req.token = token;
     next();
   } catch (err) {

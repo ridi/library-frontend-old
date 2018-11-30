@@ -6,8 +6,9 @@ services:
       file: common.yml
       service: www
     environment:
-      - LOGIN_URL=${LOGIN_URL}
-      - JWT_SECRET=${JWT_SECRET}
+      - RIDI_TOKEN_AUTHORIZE_URL=${LOGIN_URL}
+      - RIDI_OAUTH2_CLIENT_ID=${RIDI_OAUTH2_CLIENT_ID}
+      - RIDI_OAUTH2_JWT_SECRET=${RIDI_OAUTH2_JWT_SECRET}
     mem_limit: 512m
     mem_reservation: 256m
     logging:
@@ -16,6 +17,7 @@ services:
         awslogs-group: /library_web/ecs/www/node
         awslogs-region: ap-northeast-2
         awslogs-stream-prefix: node
+
   nginx:
     extends:
       file: common.yml
