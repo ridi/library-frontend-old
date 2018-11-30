@@ -201,14 +201,14 @@ class Index extends React.Component {
   renderModal() {
     const { showFilterModal, showMoreModal } = this.state;
     const {
-      pageInfo: { order, filter },
+      pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
     } = this.props;
 
     return (
       <>
-        <FilterModal filter={filter} filterOptions={filterOptions} onClick={this.handleChangeFilter} isActive={showFilterModal} />
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} onClick={this.handleChangeOrder} isActive={showMoreModal} />
+        <FilterModal filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} isActive={showFilterModal} />
+        <SortModal order={order} orderOptions={MainOrderOptions.toList()} query={{ filter }} isActive={showMoreModal} />
       </>
     );
   }
@@ -240,7 +240,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { order, filter, currentPage, totalPages },
+      pageInfo: { orderType, orderBy, filter, currentPage, totalPages },
     } = this.props;
 
     return (
@@ -251,7 +251,8 @@ class Index extends React.Component {
         href={URLMap.main.href}
         as={URLMap.main.as}
         query={{
-          order,
+          orderType,
+          orderBy,
           filter,
         }}
       />

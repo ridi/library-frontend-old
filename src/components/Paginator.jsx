@@ -5,6 +5,7 @@ import { css } from 'emotion';
 import classNames from 'classnames';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
+import { snakelize } from '../utils/snakelize';
 
 const paginatorCss = css`
   height: 30px;
@@ -71,20 +72,19 @@ const paginatorDeviderDotsCss = css`
 export default class Paginator extends React.Component {
   getLinkProps(page) {
     const { href, as, query } = this.props;
+    const _query = snakelize({
+      ...query,
+      page,
+    });
+
     return {
       href: {
         pathname: href,
-        query: {
-          ...query,
-          page,
-        },
+        query: _query,
       },
       as: {
         pathname: as,
-        query: {
-          ...query,
-          page,
-        },
+        query: _query,
       },
     };
   }
