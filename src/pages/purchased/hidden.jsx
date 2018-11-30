@@ -99,7 +99,9 @@ class Hidden extends React.Component {
       pageInfo: { currentPage, totalPages },
     } = this.props;
 
-    return <Paginator currentPage={currentPage} totalPages={totalPages} pageCount={PAGE_COUNT} pathname="/purchased/hidden/" query={{}} />;
+    return (
+      <Paginator currentPage={currentPage} totalPages={totalPages} pageCount={PAGE_COUNT} href={URLMap.hidden.href} as={URLMap.hidden.as} />
+    );
   }
 
   renderBottomActionBar() {

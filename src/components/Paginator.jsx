@@ -71,7 +71,7 @@ const paginatorDeviderDotsCss = css`
 
 export default class Paginator extends React.Component {
   getLinkProps(page) {
-    const { href, as, query } = this.props;
+    const { href, as, query = {} } = this.props;
     const _query = snakelize({
       ...query,
       page,
