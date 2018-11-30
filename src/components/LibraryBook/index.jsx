@@ -21,18 +21,22 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
       <Book className={classNames('RSGBook-preset-portrait', portraitBookCSS)} dto={book}>
         {({ Thumbnail, Metadata }) => (
           <>
-            <Thumbnail.wrapper thumbnailSize={90} link="unused">
-              <Thumbnail.coverImage />
-              <Thumbnail.setBooklet />
-              <Thumbnail.adultOnlyBadge />
-              {_isExpired && <ExpiredCover isRidiSelect={isRidiSelect} hasItems={hasItems} isLandscape={false} />}
-              {isRidiSelect && !hasItems && <RidiSelectBand />}
-              {hasItems && <UnitCount item={item} unit={book.series && book.series.property.unit} />}
-            </Thumbnail.wrapper>
-            <Metadata.wrapper>
-              <Metadata.title link="unused" />
-              <ExpireDate expireDate={item.expire_date} serviceType={item.service_type} isExpired={_isExpired} />
-            </Metadata.wrapper>
+            <button type="button">
+              <Thumbnail.wrapper thumbnailSize={90} link="unused">
+                <Thumbnail.coverImage />
+                <Thumbnail.setBooklet />
+                <Thumbnail.adultOnlyBadge />
+                {_isExpired && <ExpiredCover isRidiSelect={isRidiSelect} hasItems={hasItems} isLandscape={false} />}
+                {isRidiSelect && !hasItems && <RidiSelectBand />}
+                {hasItems && <UnitCount item={item} unit={book.series && book.series.property.unit} />}
+              </Thumbnail.wrapper>
+            </button>
+            <button type="button">
+              <Metadata.wrapper>
+                <Metadata.title link="unused" />
+                <ExpireDate expireDate={item.expire_date} serviceType={item.service_type} isExpired={_isExpired} />
+              </Metadata.wrapper>
+            </button>
           </>
         )}
       </Book>
