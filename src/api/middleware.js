@@ -22,6 +22,7 @@ const authorizationInterceptor = {
             return null;
           }
 
+          // TODO: Add Sentry
           console.log('error token refresh');
           return Promise.reject(err);
         });
