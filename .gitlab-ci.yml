@@ -8,7 +8,7 @@ stages:
   image: ridibooks/gitlab-ci-docker-aws:latest
 
 before_script:
-  - apk add nodejs yarn python3.6
+  - apk add nodejs yarn python3
 
 build:
   <<: *aws-docker
