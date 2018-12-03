@@ -5,6 +5,7 @@ import { css } from 'emotion';
 import classNames from 'classnames';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
+import { snakelize } from '../utils/snakelize';
 
 const paginatorCss = css`
   height: 30px;
@@ -69,8 +70,27 @@ const paginatorDeviderDotsCss = css`
 `;
 
 export default class Paginator extends React.Component {
+  getLinkProps(page) {
+    const { href, as, query = {} } = this.props;
+    const _query = snakelize({
+      ...query,
+      page,
+    });
+
+    return {
+      href: {
+        pathname: href,
+        query: _query,
+      },
+      as: {
+        pathname: as,
+        query: _query,
+      },
+    };
+  }
+
   renderGoFirst() {
-    const { currentPage, pageCount, onClickPageItem } = this.props;
+    const { currentPage, pageCount } = this.props;
 
     if (currentPage <= pageCount) {
       return null;
@@ -79,9 +99,9 @@ export default class Paginator extends React.Component {
     return (
       <>
         <div className={pageItemCss}>
-          <button type="button" onClick={() => onClickPageItem(1)}>
-            처음
-          </button>
+          <Link {...this.getLinkProps(1)}>
+            <a>처음</a>
+          </Link>
         </div>
         <span className={paginatorDotsCss}>
           <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
@@ -91,7 +111,7 @@ export default class Paginator extends React.Component {
   }
 
   renderGoLast() {
-    const { currentPage, totalPages, pageCount, onClickPageItem } = this.props;
+    const { currentPage, totalPages, pageCount } = this.props;
 
     if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
@@ -103,16 +123,16 @@ export default class Paginator extends React.Component {
           <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
         </span>
         <div className={pageItemCss}>
-          <button type="button" onClick={() => onClickPageItem(totalPages)}>
-            마지막
-          </button>
+          <Link {...this.getLinkProps(totalPages)}>
+            <a>마지막</a>
+          </Link>
         </div>
       </>
     );
   }
 
   renderGoPrev() {
-    const { currentPage, onClickPageItem } = this.props;
+    const { currentPage } = this.props;
 
     if (currentPage === 1) {
       return null;
@@ -120,16 +140,18 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <button type="button" onClick={() => onClickPageItem(currentPage - 1)}>
-          <Icon name="arrow_8_left" className={pageItemIconCss} />
-          <span className="a11y">이전 페이지</span>
-        </button>
+        <Link {...this.getLinkProps(currentPage - 1)}>
+          <a>
+            <Icon name="arrow_8_left" className={pageItemIconCss} />
+            <span className="a11y">이전 페이지</span>
+          </a>
+        </Link>
       </div>
     );
   }
 
   renderGoNext() {
-    const { currentPage, totalPages, onClickPageItem } = this.props;
+    const { currentPage, totalPages } = this.props;
 
     if (currentPage === totalPages) {
       return null;
@@ -137,22 +159,24 @@ export default class Paginator extends React.Component {
 
     return (
       <div className={pageItemCss}>
-        <button type="button" onClick={() => onClickPageItem(currentPage + 1)}>
-          <Icon name="arrow_8_right" className={pageItemIconCss} />
-          <span className="a11y">다음 페이지</span>
-        </button>
+        <Link {...this.getLinkProps(currentPage + 1)}>
+          <a>
+            <Icon name="arrow_8_right" className={pageItemIconCss} />
+            <span className="a11y">다음 페이지</span>
+          </a>
+        </Link>
       </div>
     );
   }
 
   renderPageItems() {
-    const { currentPage, totalPages, pageCount, onClickPageItem } = this.props;
+    const { currentPage, totalPages, pageCount } = this.props;
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
       <li key={page} className={classNames(pageItemCss, pageItemGroupMemberCss)}>
-        <button type="button" onClick={() => onClickPageItem(page)}>
-          <div>{page}</div>
-        </button>
+        <Link {...this.getLinkProps(page)}>
+          <a>{page}</a>
+        </Link>
       </li>
     ));
   }

@@ -7,8 +7,6 @@ export const SET_PURCHASE_ORDER = 'SET_PURCHASE_ORDER';
 export const SET_PURCHASE_FILTER = 'SET_PURCHASE_FILTER';
 export const SET_PURCHASE_FILTER_OPTIONS = 'SET_PURCHASE_FILTER_OPTIONS';
 
-export const CHANGE_PURCHASE_OPTION = 'CHANGE_PURCHASE_OPTION';
-
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
@@ -62,18 +60,6 @@ export const setPurchaseFilterOptions = options => ({
     options,
   },
 });
-
-const changePurchaseOption = (key, value) => ({
-  type: CHANGE_PURCHASE_OPTION,
-  payload: {
-    key,
-    value,
-  },
-});
-
-export const changePurchaseOrder = order => changePurchaseOption('order', order);
-export const changePurchaseFilter = filter => changePurchaseOption('filter', filter);
-export const changePurchasePage = page => changePurchaseOption('page', page);
 
 export const clearSelectedBooks = () => ({
   type: CLEAR_SELECTED_MAIN_BOOKS,
