@@ -19,7 +19,7 @@ python-package-install:
 	@pipenv install --deploy
 
 yarn-install:
-	@yarn global add pm2 & yarn install
+	@yarn global add pm2 && yarn install
 
 
 # run

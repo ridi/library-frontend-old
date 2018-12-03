@@ -3,13 +3,15 @@ version: '3.4'
 services:
   library-web:
     image: node:8
+    container_name: library-web
     volumes:
       - .:/htdocs/www
     working_dir: /htdocs/www
     command: ['make', 'docker-all']
 
-  library-nginx:
+  library-web-nginx:
     image: nginx:stable
+    container_name: library-web-nginx
     restart: always
     volumes:
       - ./docs/dev/nginx:/etc/nginx/conf.d:ro
