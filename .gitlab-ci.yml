@@ -8,7 +8,7 @@ stages:
   image: ridibooks/python:bootstrap-django-2018.11.12.2
 
 before_script:
-  - apk add nodejs yarn
+  - apt install nodejs yarn
 
 build:
   <<: *aws-docker
