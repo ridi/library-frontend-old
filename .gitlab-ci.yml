@@ -8,12 +8,9 @@ stages:
   image: ridibooks/gitlab-ci-docker-aws:latest
 
 before_script:
-  - apk update
-  - apk add nodejs yarn
-  - apk add python3 make python3-dev gcc
-  - rm -rf /var/cache/apk/*
+  - apk add nodejs yarn python3 make python3-dev gcc
   - pip3 install --upgrade pip
-  - pip install pipenv
+  - pip install pipenv boto3
 
 build:
   <<: *aws-docker
