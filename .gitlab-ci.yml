@@ -19,7 +19,7 @@ build:
     - export TAG=${CI_COMMIT_SHA::8}
     - sh docs/script/export.sh
 
-    - make global-python-package-install
+    - make python-package-install
 
     - make ci-settings ns=development
     - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh docs/script/upload.sh
