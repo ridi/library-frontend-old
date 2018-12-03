@@ -1,21 +1,17 @@
 version: '3.4'
 
 services:
-  web:
+  library-web:
     image: node:8
+    container_name: library-web
     volumes:
       - .:/htdocs/www
     working_dir: /htdocs/www
-    command:
-      - /bin/sh
-      - -c
-      - |
-        yarn global add pm2
-        yarn install
-        yarn run local
+    command: ['make', 'docker-all']
 
-  nginx:
+  library-web-nginx:
     image: nginx:stable
+    container_name: library-web-nginx
     restart: always
     volumes:
       - ./docs/dev/nginx:/etc/nginx/conf.d:ro
@@ -23,6 +19,6 @@ services:
     ports:
       - 443:443
     depends_on:
-      - web
+      - library-web
     links:
-      - web
+      - library-web

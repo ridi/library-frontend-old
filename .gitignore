@@ -1,6 +1,9 @@
 .DS_Store
+.idea
 
 yarn-error.log
 node_modules/
 build/
 out/
+
+/secrets.json

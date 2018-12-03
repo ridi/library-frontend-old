@@ -18,11 +18,19 @@ build:
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - sh docs/script/export.sh
+
+    - make global-python-package-install
+
+    - make ci-settings ns=development
     - AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY S3_PATH=$DEV_S3_PATH sh docs/script/upload.sh
     - ENVIRONMENT=development docker-compose -f ./docs/docker/compose/build.yml build
 
     - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH sh docs/script/upload.sh
+    - make ci-settings ns=production
     - ENVIRONMENT=production docker-compose -f ./docs/docker/compose/build.yml build
+
+    - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH sh docs/script/upload.sh
+    - make ci-settings ns=staging
     - ENVIRONMENT=staging docker-compose -f ./docs/docker/compose/build.yml build
 
 .deployment-template: &deployment
@@ -56,8 +64,9 @@ staging:
     ECR_REPO_URL: $PROD_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-    LOGIN_URL: $PROD_LOGIN_URL
-    CLIENT_ID: $PROD_CLIENT_ID
+    RIDI_TOKEN_AUTHORIZE_URL: $PROD_LOGIN_URL
+    RIDI_OAUTH2_CLIENT_ID: $PROD_CLIENT_ID
+    RIDI_OAUTH2_JWT_SECRET: $PROD_JWT_SECRET
   script:
     - export TAG=${CI_COMMIT_SHA::8}
     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
@@ -71,6 +80,6 @@ production:
     ECR_REPO_URL: $PROD_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-    LOGIN_URL: $PROD_LOGIN_URL
-    CLIENT_ID: $PROD_CLIENT_ID
-    JWT_SECRET: $PROD_JWT_SECRET
+    RIDI_TOKEN_AUTHORIZE_URL: $PROD_LOGIN_URL
+    RIDI_OAUTH2_CLIENT_ID: $PROD_CLIENT_ID
+    RIDI_OAUTH2_JWT_SECRET: $PROD_JWT_SECRET
