@@ -5,10 +5,10 @@ stages:
   - deploy
 
 .aws-docker: &aws-docker
-  image: ridibooks/python:bootstrap-django-2018.11.12.2
+  image: ridibooks/gitlab-ci-docker-aws:latest
 
 before_script:
-  - apt install nodejs yarn
+  - apk add nodejs yarn python3.6 pipenv
 
 build:
   <<: *aws-docker
