@@ -5,3 +5,5 @@ yarn-error.log
 node_modules/
 build/
 out/
+
+secrets.json

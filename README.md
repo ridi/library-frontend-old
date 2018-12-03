@@ -1,19 +1,18 @@
-
 # Library-Web
 
 ## Infra Structure
-![Infra](/docs/images/infra.png)
 
+![Infra](/docs/images/infra.png)
 
 ## Installation
 
-``` 
-yarn global add pm2
-yarn install
+```
+make yarn-install
+make secret-init
 ```
 
 ## Run Development
-```
-yarn local
-```
 
+```
+make run-local
+```
