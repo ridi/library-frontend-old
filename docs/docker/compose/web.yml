@@ -6,7 +6,7 @@ services:
       file: common.yml
       service: www
     environment:
-      - RIDI_TOKEN_AUTHORIZE_URL=${LOGIN_URL}
+      - RIDI_TOKEN_AUTHORIZE_URL=${RIDI_TOKEN_AUTHORIZE_URL}
       - RIDI_OAUTH2_CLIENT_ID=${RIDI_OAUTH2_CLIENT_ID}
       - RIDI_OAUTH2_JWT_SECRET=${RIDI_OAUTH2_JWT_SECRET}
     mem_limit: 512m
