@@ -6,4 +6,4 @@ node_modules/
 build/
 out/
 
-secrets.json
+/secrets.json
