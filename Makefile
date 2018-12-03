@@ -28,7 +28,7 @@ run-local:
 
 
 # docker
-docker-up:
+docker-up: python-package-install settings
 	@docker-compose up
 
 docker-logs:
