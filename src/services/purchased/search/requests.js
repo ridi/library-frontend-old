@@ -4,7 +4,6 @@ import config from '../../../config';
 import { snakelize } from '../../../utils/snakelize';
 import { calcOffset } from '../../../utils/pagination';
 import { makeURI } from '../../../utils/uri';
-import { toFlatten } from '../../../utils/array';
 
 import { getAPI } from '../../../api/actions';
 
@@ -31,14 +30,3 @@ export function* fetchSearchItemsTotalCount(keyword) {
   const response = yield api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
-
-export function* requestHide(bookIds, revision) {
-  const api = yield put(getAPI());
-  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/hide/`, {
-    b_ids: bookIds,
-    revision,
-  });
-
-  return toFlatten(response.data.items, 'id');
-}
-export function* requestDownload(bookIds) {}

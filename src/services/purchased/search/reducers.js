@@ -8,6 +8,7 @@ import {
   CLEAR_SELECTED_SEARCH_BOOKS,
   TOGGLE_SELECT_SEARCH_BOOK,
 } from './actions';
+import { toDict, toFlatten } from '../../../utils/array';
 
 const purchasedSearchReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -16,7 +17,11 @@ const purchasedSearchReducer = (state = initialState, action) => {
         ...state,
         items: {
           ...state.items,
-          [state.page]: action.payload.items,
+          ...toDict(action.payload.items, 'b_id'),
+        },
+        itemIdsForPage: {
+          ...state.itemIdsForPage,
+          [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
     case SET_SEARCH_TOTAL_COUNT:

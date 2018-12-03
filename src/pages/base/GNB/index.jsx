@@ -9,6 +9,9 @@ import Responsive from '../Responsive';
 
 import ModalBackground from '../../../components/ModalBackground';
 
+const RIDIBOOKS_URL = 'https://ridibooks.com';
+const RIDISELECT_URL = 'https://select.ridibooks.com';
+
 class GNB extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +35,7 @@ class GNB extends React.Component {
   }
 
   render() {
-    const { ridibooksUrl, ridiSelectUrl, userId } = this.props;
+    const { userId } = this.props;
     const { isModalActive } = this.state;
     return (
       <>
@@ -46,13 +49,13 @@ class GNB extends React.Component {
               </h1>
               <ul className={styles.FamilyServiceList}>
                 <li className={styles.FamilyServiceItem}>
-                  <a className={styles.FamilyServiceLink} href={ridibooksUrl}>
+                  <a className={styles.FamilyServiceLink} href={RIDIBOOKS_URL}>
                     <Icon className={styles.RidibooksIcon} name="logo_ridibooks_1" />
                     <span className={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
                 <li className={styles.FamilyServiceItem}>
-                  <a className={styles.FamilyServiceLink} href={ridiSelectUrl}>
+                  <a className={styles.FamilyServiceLink} href={RIDISELECT_URL}>
                     <Icon className={styles.RidiSelectIcon} name="logo_ridiselect_1" />
                     <span className={Hidden}>RIDI Select</span>
                   </a>

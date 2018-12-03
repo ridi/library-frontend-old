@@ -203,7 +203,8 @@ class Search extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname="/purchased/search"
+        href={URLMap.search.href}
+        as={URLMap.search.as}
         query={{ keyword }}
       />
     );

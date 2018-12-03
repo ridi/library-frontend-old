@@ -1,3 +1,5 @@
+import { Duration } from './constants';
+
 export const SET_TOAST = 'SET_TOAST';
 export const UNSET_TOAST = 'UNSET_TOAST';
 
@@ -20,7 +22,7 @@ export const unsetToast = () => ({
   type: UNSET_TOAST,
 });
 
-export const showToast = (duration, message, uri) => ({
+export const showToast = (message, uri, duration = Duration.NORMAL) => ({
   type: SHOW_TOAST,
   payload: {
     duration,

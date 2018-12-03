@@ -19,9 +19,6 @@ import SortModal from '../base/MainModal/SortModal';
 
 import {
   loadPurchaseItems,
-  changePurchaseFilter,
-  changePurchaseOrder,
-  changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
@@ -202,14 +199,14 @@ class Index extends React.Component {
   renderModal() {
     const { showFilterModal, showMoreModal } = this.state;
     const {
-      pageInfo: { order, filter },
+      pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
     } = this.props;
 
     return (
       <>
-        <FilterModal filter={filter} filterOptions={filterOptions} onClick={this.handleChangeFilter} isActive={showFilterModal} />
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} onClick={this.handleChangeOrder} isActive={showMoreModal} />
+        <FilterModal filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} isActive={showFilterModal} />
+        <SortModal order={order} orderOptions={MainOrderOptions.toList()} query={{ filter }} isActive={showMoreModal} />
       </>
     );
   }
@@ -241,8 +238,7 @@ class Index extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { currentPage, totalPages },
-      changePurchasePage: dispatchChangePurchasePage,
+      pageInfo: { orderType, orderBy, filter, currentPage, totalPages },
     } = this.props;
 
     return (
@@ -250,7 +246,13 @@ class Index extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        onClickPageItem={page => dispatchChangePurchasePage(page)}
+        href={URLMap.main.href}
+        as={URLMap.main.as}
+        query={{
+          orderType,
+          orderBy,
+          filter,
+        }}
       />
     );
   }
@@ -301,6 +303,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+
   return {
     pageInfo,
     filterOptions,
@@ -311,9 +314,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseFilter,
-  changePurchaseOrder,
-  changePurchasePage,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
