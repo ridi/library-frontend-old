@@ -5,7 +5,7 @@ stages:
   - deploy
 
 .aws-docker: &aws-docker
-  image: ridibooks/gitlab-ci-docker-aws:latest
+  image: ridibooks/python:bootstrap-django-2018.11.12.2
 
 before_script:
   - apk add nodejs yarn
