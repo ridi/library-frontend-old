@@ -16,8 +16,8 @@ stages:
   only:
     - master
   before_script:
-    - apk add nodejs yarn make
-    - pip install pipenv boto3
+    - apk add nodejs yarn python3
+    - pip install pipenv
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
 
