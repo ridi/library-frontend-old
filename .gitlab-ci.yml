@@ -5,7 +5,7 @@ stages:
   - manual-deploy
   - deploy-development
   - deploy-staging
-  - deploy-productiuon
+  - deploy-production
 
 .aws-docker: &aws-docker
   image: ridibooks/gitlab-ci-docker-aws:latest
