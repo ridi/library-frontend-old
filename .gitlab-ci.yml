@@ -50,7 +50,6 @@ build-production:
 
 .deployment-template: &deployment
   <<: *aws-docker
-  stage: deploy
   only:
     - master
   before_script:
@@ -101,9 +100,8 @@ production:
   except:
     - master
   before_script:
-    - apk add nodejs yarn python3 make python3-dev gcc
-    - pip3 install --upgrade pip
-    - pip install pipenv boto3
+    - apk add nodejs yarn python3
+    - pip install pipenv
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
