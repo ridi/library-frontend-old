@@ -73,6 +73,7 @@ development:
 staging:
   <<: *deployment
   stage: deploy-staging
+  when: manual
   variables:
     ENVIRONMENT: 'staging'
     ECR_REPO_URL: $STAGING_LIBRARY_ECR
