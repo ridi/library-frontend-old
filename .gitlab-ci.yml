@@ -32,6 +32,7 @@ build-development:
     ENVIRONMENT: 'development'
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $DEV_S3_PATH
 
 build-staging:
   <<: *build
@@ -39,6 +40,7 @@ build-staging:
     ENVIRONMENT: 'staging'
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $STAGING_S3_PATH
 
 build-production:
   <<: *build
@@ -46,6 +48,7 @@ build-production:
     ENVIRONMENT: 'production'
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $PROD_S3_PATH
 
 .deployment-template: &deployment
   <<: *aws-docker
