@@ -2,58 +2,67 @@ image: python:3.6
 
 stages:
   - build
-  - deploy
+  - manual-deploy
+  - deploy-development
+  - deploy-staging
+  - deploy-productiuon
 
 .aws-docker: &aws-docker
   image: ridibooks/gitlab-ci-docker-aws:latest
 
-build:
+.build-template: &build
   <<: *aws-docker
   stage: build
   only:
     - master
   before_script:
-    - apk add nodejs yarn python3 make python3-dev gcc
-    - pip3 install --upgrade pip
+    - apk add nodejs yarn make
     - pip install pipenv boto3
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
 
   script:
-    - export AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID
-    - export AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY
-    - export S3_PATH=$DEV_S3_PATH
-    - make ci-settings ns=development
+    - make ci-settings ns=$ENVIRONMENT
     - sh docs/script/export.sh
     - sh docs/script/upload.sh
-    - ENVIRONMENT=development docker-compose -f ./docs/docker/compose/build.yml build
+    - docker-compose -f ./docs/docker/compose/build.yml build
 
-    - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH
-    - make ci-settings ns=production
-    - sh docs/script/export.sh
-    - sh docs/script/upload.sh
-    - ENVIRONMENT=production docker-compose -f ./docs/docker/compose/build.yml build
+build-development:
+  <<: *build
+  variables:
+    ENVIRONMENT: 'development'
+    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
 
-    - AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY S3_PATH=$PROD_S3_PATH
-    - make ci-settings ns=staging
-    - sh docs/script/export.sh
-    - sh docs/script/upload.sh
-    - ENVIRONMENT=staging docker-compose -f ./docs/docker/compose/build.yml build
+build-staging:
+  <<: *build
+  variables:
+    ENVIRONMENT: 'staging'
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+
+build-production:
+  <<: *build
+  variables:
+    ENVIRONMENT: 'production'
+    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
 
 .deployment-template: &deployment
   <<: *aws-docker
   stage: deploy
-  when: manual
   only:
     - master
-  script:
+  before_script:
     - export TAG=${CI_COMMIT_SHA::8}
     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
+  script:
     - sh docs/script/push.sh
     - sh docs/script/deploy.sh
 
 development:
   <<: *deployment
+  stage: deploy-development
   variables:
     ENVIRONMENT: 'development'
     ECR_REPO_URL: $DEV_LIBRARY_ECR
@@ -62,31 +71,64 @@ development:
 
 staging:
   <<: *aws-docker
-  stage: deploy
+  stage: deploy-staging
   when: manual
   only:
     - master
   variables:
     ENVIRONMENT: 'staging'
-    ECR_REPO_URL: $PROD_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-    RIDI_TOKEN_AUTHORIZE_URL: $PROD_LOGIN_URL
-    RIDI_OAUTH2_CLIENT_ID: $PROD_CLIENT_ID
-    RIDI_OAUTH2_JWT_SECRET: $PROD_JWT_SECRET
+    ECR_REPO_URL: $STAGING_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
   script:
-    - export TAG=${CI_COMMIT_SHA::8}
-    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
     - sh docs/script/push.sh
     - sh docs/script/staging_deploy.sh
 
 production:
   <<: *deployment
+  stage: deploy-production
+  when: manual
   variables:
     ENVIRONMENT: 'production'
     ECR_REPO_URL: $PROD_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-    RIDI_TOKEN_AUTHORIZE_URL: $PROD_LOGIN_URL
-    RIDI_OAUTH2_CLIENT_ID: $PROD_CLIENT_ID
-    RIDI_OAUTH2_JWT_SECRET: $PROD_JWT_SECRET
+
+.manual-deployment-template: &manual-deployment
+  <<: *aws-docker
+  stage: manual-deploy
+  when: manual
+  except:
+    - master
+  before_script:
+    - apk add nodejs yarn python3 make python3-dev gcc
+    - pip3 install --upgrade pip
+    - pip install pipenv boto3
+    - make python-package-install
+    - export TAG=${CI_COMMIT_SHA::8}
+    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
+  script:
+    - make ci-settings ns=$ENVIRONMENT
+    - sh docs/script/export.sh
+    - sh docs/script/upload.sh
+    - docker-compose -f ./docs/docker/compose/build.yml build
+
+    - sh docs/script/push.sh
+    - sh docs/script/deploy.sh
+
+development-manual:
+  <<: *manual-deployment
+  variables:
+    ENVIRONMENT: 'development'
+    DOMAIN: $DEV_DOMAIN
+    ECR_REPO_URL: $DEV_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+
+staging-manual:
+  <<: *manual-deployment
+  variables:
+    ENVIRONMENT: 'staging'
+    ECR_REPO_URL: $STAGING_LIBRARY_ECR
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY

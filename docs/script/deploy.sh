@@ -18,7 +18,12 @@ run_and_check_exit_code() {
     done
 }
 
+if [ "$ENVIRONMENT" = staging ]; then
 run_and_check_exit_code "ecs-cli compose --cluster library-cluster --project-name library-web -f docs/docker/compose/web.yml service up"
+else
+run_and_check_exit_code "ecs-cli compose --cluster library-staging-cluster --project-name library-staging-web -f docs/docker/compose/web.yml service up"
+fi
+
 
 if [ $? -ne 0 ]; then
     echo "deploy fails"
