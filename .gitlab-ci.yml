@@ -8,7 +8,7 @@ stages:
   - deploy-production
 
 .aws-docker: &aws-docker
-  image: ridibooks/gitlab-ci-docker-aws:latest
+  image: ridibooks/gitlab-ci-docker-aws:1.5.0
 
 .build-template: &build
   <<: *aws-docker
@@ -17,7 +17,6 @@ stages:
     - master
   before_script:
     - apk add nodejs yarn python3
-    - pip install pipenv
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
 
@@ -101,7 +100,6 @@ production:
     - master
   before_script:
     - apk add nodejs yarn python3
-    - pip install pipenv
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
