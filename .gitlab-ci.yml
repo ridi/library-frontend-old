@@ -71,19 +71,13 @@ development:
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
 
 staging:
-  <<: *aws-docker
+  <<: *deployment
   stage: deploy-staging
-  when: manual
-  only:
-    - master
   variables:
     ENVIRONMENT: 'staging'
     ECR_REPO_URL: $STAGING_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
-  script:
-    - sh docs/script/push.sh
-    - sh docs/script/staging_deploy.sh
 
 production:
   <<: *deployment
