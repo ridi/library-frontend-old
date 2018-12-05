@@ -13,7 +13,7 @@ settings:
 	@pipenv run python3.6 -m docs.script.secret_generator -a defaults
 
 ci-settings:
-	@python3.6 -m docs.script.secret_generator -a parameter_store -e $(ns)
+	@pipenv run python3.6 -m docs.script.secret_generator -a parameter_store -e $(ns)
 
 python-package-install:
 	@pipenv install --deploy

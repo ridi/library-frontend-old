@@ -16,7 +16,7 @@ stages:
   only:
     - master
   before_script:
-    - apk add nodejs yarn python3
+    - apk add nodejs yarn
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
 
@@ -99,7 +99,7 @@ production:
   except:
     - master
   before_script:
-    - apk add nodejs yarn python3
+    - apk add nodejs yarn
     - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
