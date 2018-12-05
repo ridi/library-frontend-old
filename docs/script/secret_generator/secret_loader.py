@@ -20,9 +20,10 @@ class DefaultSecretLoader(BaseSecretLoader):
 
 
 class ParameterStoreSecretLoader(BaseSecretLoader):
-    def __init__(self, environment: str, *args, **kwargs):
+    def __init__(self, service_name, environment: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._service_name = service_name
         self._environment = environment
 
     def _get_secrets(self) -> Dict:
-        return ParameterStoreConnector().load_parameters(self._environment)
+        return ParameterStoreConnector().load_parameters(f'{self._service_name}_{self._environment}')

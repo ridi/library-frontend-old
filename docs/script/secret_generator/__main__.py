@@ -17,7 +17,8 @@ if args.action == 'defaults':
     SecretGenerator(ROOT_PATH, DefaultSecretLoader(DEFAULT_DEV_FILE_PATH)).generate()
 
 elif args.action == 'parameter_store':
-    SecretGenerator(ROOT_PATH, ParameterStoreSecretLoader(args.environment)).generate()
+    service_name = 'library_web'
+    SecretGenerator(ROOT_PATH, ParameterStoreSecretLoader(service_name, args.environment)).generate()
 
 else:
     args_parser.print_help()
