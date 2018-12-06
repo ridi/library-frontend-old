@@ -1,4 +1,4 @@
-import getConfig from 'next/config';
+const getConfig = require('next/config').default;
 
 const { serverRuntimeConfig } = getConfig();
 const { ENVIRONMENT, RIDI_OAUTH2_JWT_SECRET, RIDI_TOKEN_AUTHORIZE_URL, RIDI_OAUTH2_CLIENT_ID } = serverRuntimeConfig;
