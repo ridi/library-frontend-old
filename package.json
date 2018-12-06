@@ -6,7 +6,7 @@
   "scripts": {
     "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.{js,jsx}' -- prettier --write {{changed}}",
     "build": "next build src",
-    "export": "next export src -o ./out"
+    "export": "STATIC_URL=https://library-static.ridibooks.com next export src -o ./out"
   },
   "husky": {
     "hooks": {
