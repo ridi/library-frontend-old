@@ -15,8 +15,9 @@ import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from '
 import { toFlatten } from '../../../utils/array';
 import { getHiddenItems, getSelectedHiddenBooks } from './selectors';
 
-import { getRevision, requestShow } from '../../common/requests';
+import { getRevision, requestShow, requestCheckQueueStatus } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
+import { showToast } from '../../toast/actions';
 
 function* loadPurchasedHiddenItems() {
   const query = yield select(getQuery);
@@ -37,9 +38,9 @@ function* showSelectedBooks() {
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestShow, bookIds, revision);
 
-  // TODO: Check Queue Status
-  yield call(delay, 3000); // Temporary Sleep
-
+  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  // TODO: Message 수정
+  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
   yield call(loadPurchasedHiddenItems);
 }
 
