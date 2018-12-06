@@ -9,6 +9,7 @@ const {
   STATIC_URL,
   RIDI_TOKEN_AUTHORIZE_URL,
   RIDI_OAUTH2_CLIENT_ID,
+  SENTRY_DSN,
 } = publicRuntimeConfig;
 
 const config = {
@@ -19,6 +20,7 @@ const config = {
   STATIC_URL,
   RIDI_TOKEN_AUTHORIZE_URL,
   RIDI_OAUTH2_CLIENT_ID,
+  SENTRY_DSN,
 };
 
 export default config;

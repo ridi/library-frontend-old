@@ -19,6 +19,7 @@ module.exports = {
 
     RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
     RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
+    SENTRY_DSN: secrets.sentry_dsn,
   },
   publicRuntimeConfig: {
     ACCOUNT_BASE_URL: process.env.ACCOUNT_BASE_URL,
@@ -29,5 +30,6 @@ module.exports = {
 
     RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
     RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
+    SENTRY_DSN: secrets.sentry_dsn,
   },
 };
