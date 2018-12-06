@@ -1,6 +1,5 @@
 import Router from 'next/router';
 import { all, call, select, put, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 
 import { getQuery } from '../../router/selectors';
 import { toFlatten } from '../../../utils/array';
@@ -20,7 +19,7 @@ import { showToast } from '../../toast/actions';
 import { getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getRevision, triggerDownload, requestHide } from '../../common/requests';
+import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
 import { loadBookData } from '../../book/sagas';
 
@@ -63,9 +62,9 @@ function* hideSelectedSearchBooks() {
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestHide, bookIds, revision);
 
-  // TODO: Check Queue Status
-  yield call(delay, 3000); // Temporary Sleep
-
+  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  // TODO: Message 수정
+  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
   yield call(loadSearchPage);
 }
 

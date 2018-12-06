@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 
 import {
   LOAD_PURCHASE_ITEMS,
@@ -22,8 +21,9 @@ import { getQuery } from '../../router/selectors';
 import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
 
 import { loadBookData } from '../../book/sagas';
-import { getRevision, triggerDownload, requestHide } from '../../common/requests';
+import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
+import { queue } from 'rxjs/internal/scheduler/queue';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -70,9 +70,9 @@ function* hideSelectedBooks() {
   const revision = yield call(getRevision);
   const queueIds = yield call(requestHide, bookIds, revision);
 
-  // TODO: Check Queue Status
-  yield call(delay, 3000); // Temporary Sleep
-
+  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  // TODO: Message 수정
+  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
   yield call(loadPurchaseItems);
 }
 
