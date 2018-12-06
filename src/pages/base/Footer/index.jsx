@@ -22,7 +22,7 @@ const Footer = () => (
       <ul css={styles.BizInfoList}>
         <li css={styles.InfoItem}>서울시 강남구 역삼동 702-28 어반벤치빌딩 10층(테헤란로 325)</li>
         <li css={styles.InfoItem}>
-          <ul css="CompanyInfoList">
+          <ul className="CompanyInfoList">
             <li css={styles.InfoItem}>리디 (주)</li>
             <li css={styles.InfoItem}>대표 배기식</li>
             <li css={styles.InfoItem}>사업자등록번호 120-87-27435</li>

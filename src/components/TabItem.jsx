@@ -34,7 +34,7 @@ const styles = {
 
 const TabItem = ({ name, onClick, isActive }) => (
   <li css={[styles.TabItem, isActive && styles.TabItemActive]}>
-    <button type="button" onClick={onClick} className={styles.TabButton}>
+    <button type="button" onClick={onClick} css={styles.TabButton}>
       {name}
     </button>
   </li>
