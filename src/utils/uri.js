@@ -22,3 +22,6 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
     'intent://',
   )}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=${packageName};end`;
 };
+
+export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
+  `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
