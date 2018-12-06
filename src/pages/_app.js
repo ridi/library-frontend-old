@@ -1,9 +1,8 @@
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withReduxSaga from 'next-redux-saga';
-import { hydrate, injectGlobal } from 'emotion';
+import { hydrate } from 'emotion';
 
-import { reset } from '../styles/reset';
 import injectStore from '../store';
 import flow from '../utils/flow';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from '../utils/tabFocus';
@@ -25,7 +24,6 @@ class LibraryApp extends App {
       hydrate(window.__NEXT_DATA__.ids);
       initializeTabKeyFocus();
     }
-    injectGlobal(reset);
 
     this.disposeBag = [];
   }
