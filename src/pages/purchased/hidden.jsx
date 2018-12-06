@@ -1,5 +1,6 @@
+/** @jsx jsx */
 import React from 'react';
-import { css } from 'emotion';
+import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 
@@ -116,16 +117,11 @@ class Hidden extends React.Component {
       <BottomActionBar>
         <BottomActionButton
           name="선택 영구 삭제"
-          className={styles.HiddenButtonActionLeft}
+          css={styles.HiddenButtonActionLeft}
           onClick={this.handleOnClickDelete}
           disable={disable}
         />
-        <BottomActionButton
-          name="선택 숨김 해제"
-          className={styles.HiddenButtonActionRight}
-          onClick={this.handleOnClickShow}
-          disable={disable}
-        />
+        <BottomActionButton name="선택 숨김 해제" css={styles.HiddenButtonActionRight} onClick={this.handleOnClickShow} disable={disable} />
       </BottomActionBar>
     );
   }

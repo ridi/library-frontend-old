@@ -1,5 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { Book } from '@ridi/rsg';
-import classNames from 'classnames';
 import { ServiceType } from '../../constants/serviceType';
 import { isExpired } from '../../utils/datetime';
 
@@ -14,14 +15,14 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
   // Thumbnail과 Meta를 Focusing하기 위해 button으로 Wrapping 했다.
   // 후에 Link로 변경 하자
   return (
-    <div className={bookCss}>
+    <div css={bookCss}>
       {isEditing ? (
         <label onClick={e => e.stopPropagation()}>
           {checked ? '선택됨' : '선택해제됨'}
           <input type="checkbox" checked={checked} onChange={onChangeCheckbox} />
         </label>
       ) : null}
-      <Book className={classNames('RSGBook-preset-portrait', portraitBookCSS)} dto={book}>
+      <Book css={portraitBookCSS} className="RSGBook-preset-portrait" dto={book}>
         {({ Thumbnail, Metadata }) => (
           <>
             <button type="button">

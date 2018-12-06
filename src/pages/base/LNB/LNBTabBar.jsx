@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 import Router from 'next/router';
 import shortid from 'shortid';
 
@@ -30,7 +30,7 @@ const TabMenus = [
 ];
 
 const LNBTabBar = ({ activeMenu }) => (
-  <nav className={styles.LNBTabBarWrapper}>
+  <nav css={styles.LNBTabBarWrapper}>
     <Responsive>
       <TabBar>
         {TabMenus.map(menu => (

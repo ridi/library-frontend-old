@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 
 const styles = {
   TabBar: css({
@@ -11,5 +11,5 @@ const styles = {
   }),
 };
 
-const TabBar = ({ children }) => <ul className={styles.TabBar}>{children}</ul>;
+const TabBar = ({ children }) => <ul css={styles.TabBar}>{children}</ul>;
 export default TabBar;

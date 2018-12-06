@@ -1,7 +1,7 @@
+/** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
-import classname from 'classnames';
-import { css } from 'emotion';
+import { css, jsx } from '@emotion/core';
 import Router from 'next/router';
 
 import BookList from '../../components/BookList';
@@ -179,16 +179,16 @@ class Index extends React.Component {
     }
 
     return (
-      <div className={styles.MainToolBarWrapper}>
-        <Responsive className={styles.MainToolBar}>
-          <div className={classname(styles.MainToolBarSearchBarWrapper, hideTools && styles.MainToolBarSearchBarWrapperActive)}>
+      <div css={styles.MainToolBarWrapper}>
+        <Responsive css={styles.MainToolBar}>
+          <div css={[styles.MainToolBarSearchBarWrapper, hideTools && styles.MainToolBarSearchBarWrapperActive]}>
             <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
           </div>
           {hideTools ? null : (
-            <div className={styles.MainToolBarToolsWrapper}>
-              <IconButton icon="setting" a11y="필터" className={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
-              <IconButton icon="check_3" a11y="편집" className={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-              <IconButton icon="check_1" a11y="정렬" className={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+            <div css={styles.MainToolBarToolsWrapper}>
+              <IconButton icon="setting" a11y="필터" css={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
+              <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
+              <IconButton icon="check_1" a11y="정렬" css={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
             </div>
           )}
         </Responsive>

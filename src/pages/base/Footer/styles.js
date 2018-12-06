@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 import { maxWidthWrapper } from '../../../styles';
 
 export const FOOTER_HEIGHT = 254;

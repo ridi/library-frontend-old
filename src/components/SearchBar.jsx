@@ -1,6 +1,6 @@
+/** @jsx jsx */
 import React from 'react';
-import classname from 'classnames';
-import { css } from 'emotion';
+import { css, jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
 
 import IconButton from './IconButton';
@@ -125,17 +125,17 @@ export default class SearchBar extends React.Component {
         ref={ref => {
           this.searchBarForm = ref;
         }}
-        className={classname(styles.SearchBarForm, keyword && styles.SearchBarFormActive)}
+        css={[styles.SearchBarForm, keyword && styles.SearchBarFormActive]}
         onSubmit={this.handleSubmit}
       >
-        <Icon name="search" className={styles.SearchBarIcon} />
+        <Icon name="search" css={styles.SearchBarIcon} />
         <input
           ref={ref => {
             this.input = ref;
           }}
           placeholder="모든 책 검색"
           type="text"
-          className={styles.SearchBarInput}
+          css={styles.SearchBarInput}
           value={keyword}
           onChange={this.handleChange}
           onFocus={() => this.setActivation(true)}
@@ -143,7 +143,7 @@ export default class SearchBar extends React.Component {
         <IconButton
           icon="check_4"
           a11y="검색어 제거"
-          className={classname(styles.SearchBarClearButton, keyword && styles.SearchBarClearButtonActive)}
+          css={[styles.SearchBarClearButton, keyword && styles.SearchBarClearButtonActive]}
           onClick={this.handleOnClickCancel}
         />
       </form>

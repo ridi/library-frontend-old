@@ -1,6 +1,10 @@
-import React from 'react';
-import classname from 'classnames';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import * as styles from './styles';
 
-const Responsive = ({ className, children }) => <div className={classname(styles.Responsive, className)}>{children}</div>;
+const Responsive = ({ className, children }) => (
+  <div css={styles.Responsive} className={className}>
+    {children}
+  </div>
+);
 export default Responsive;

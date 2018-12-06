@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 
 const BookListCss = css`
   display: flex;
@@ -8,6 +8,6 @@ const BookListCss = css`
   margin-bottom: 30px;
 `;
 
-const BookList = ({ children }) => <div className={BookListCss}>{children}</div>;
+const BookList = ({ children }) => <div css={BookListCss}>{children}</div>;
 
 export default BookList;

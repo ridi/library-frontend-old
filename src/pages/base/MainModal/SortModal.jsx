@@ -1,6 +1,6 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import shortid from 'shortid';
-import classnames from 'classnames';
 import * as styles from './styles';
 
 import { MenuGroup, MenuLinkItem } from '../../../components/Menu';
@@ -11,7 +11,7 @@ const SortModal = props => {
   const { order, orderOptions, isActive, query } = props;
 
   return (
-    <section className={classnames(styles.SortModal, isActive && styles.ModalActive)}>
+    <section css={[styles.SortModal, isActive && styles.ModalActive]}>
       <MenuGroup title="정렬 순서">
         {orderOptions.map((option, index) => (
           <MenuLinkItem

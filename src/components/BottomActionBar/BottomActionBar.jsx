@@ -1,5 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 import Responsive from '../../pages/base/Responsive';
 
 const styles = {
@@ -17,7 +17,7 @@ const styles = {
 };
 
 const BottomActionBar = ({ children }) => (
-  <div className={styles.BottomActionBar}>
+  <div css={styles.BottomActionBar}>
     <Responsive>{children}</Responsive>
   </div>
 );
