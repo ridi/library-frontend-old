@@ -14,6 +14,9 @@ export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
 export const HIDE_SELECTED_BOOKS = 'HIDE_SELECTED_BOOKS';
 export const DOWNLOAD_SELECTED_BOOKS = 'DOWNLOAD_SELECTED_BOOKS';
 
+export const SELECT_ALL_BOOKS = 'SELECT_ALL_BOOKS';
+export const UNSELECT_ALL_BOOKS = 'UNSELECT_ALL_BOOKS';
+
 export const loadPurchaseItems = () => ({
   type: LOAD_PURCHASE_ITEMS,
 });
@@ -78,4 +81,12 @@ export const hideSelectedBooks = () => ({
 
 export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_BOOKS,
+});
+
+export const selectAllBooks = () => ({
+  type: SELECT_ALL_BOOKS,
+});
+
+export const unselectAllBooks = () => ({
+  type: UNSELECT_ALL_BOOKS,
 });

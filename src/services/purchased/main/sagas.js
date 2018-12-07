@@ -23,7 +23,6 @@ import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
 import { loadBookData } from '../../book/sagas';
 import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
-import { queue } from 'rxjs/internal/scheduler/queue';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);

@@ -7,7 +7,6 @@ import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-import { toFlatten } from '../../../utils/array';
 
 export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   const options = snakelize({

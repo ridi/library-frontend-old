@@ -23,6 +23,8 @@ import {
   toggleSelectBook,
   hideSelectedBooks,
   downloadSelectedBooks,
+  selectAllBooks,
+  unselectAllBooks,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -172,10 +174,19 @@ class Index extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const { selectedBooks } = this.props;
+    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, unselectAllBooks: dispatchUnselectAllBooks } = this.props;
 
     if (isEditing) {
-      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
+      const isSelectedAllBooks = selectedBooks.length === items.length;
+      return (
+        <EditingBar
+          totalSelectedCount={Object.keys(selectedBooks).length}
+          isSelectedAllBooks={isSelectedAllBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
+          onClickUnselectAllBooks={dispatchUnselectAllBooks}
+          onClickSuccessButton={this.toggleEditingMode}
+        />
+      );
     }
 
     return (
@@ -318,6 +329,8 @@ const mapDispatchToProps = {
   toggleSelectBook,
   hideSelectedBooks,
   downloadSelectedBooks,
+  selectAllBooks,
+  unselectAllBooks,
 };
 
 export default connect(

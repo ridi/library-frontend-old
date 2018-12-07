@@ -5,7 +5,7 @@ import Responsive from '../../pages/base/Responsive';
 
 import * as styles from './styles';
 
-const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
+const EditingBar = ({ totalSelectedCount, isSelectedAllBooks, onClickSelectAllBooks, onClickUnselectAllBooks, onClickSuccessButton }) => (
   <div css={styles.EditingBarWrapper}>
     <Responsive>
       <div css={styles.EditingBar}>
@@ -14,9 +14,15 @@ const EditingBar = ({ totalSelectedCount, onClickSuccessButton }) => (
           <div css={styles.EditingBarSelectCount}>{totalSelectedCount}권</div>
         </div>
         <div css={styles.EditingBarButtonWrapper}>
-          <button type="button" css={styles.EditingBarAllSelect}>
-            전체 선택
-          </button>
+          {isSelectedAllBooks ? (
+            <button type="button" css={styles.EditingBarAllSelect} onClick={onClickSelectAllBooks}>
+              전체 선택
+            </button>
+          ) : (
+            <button type="button" css={styles.EditingBarAllSelect} onClick={onClickUnselectAllBooks}>
+              선택 해제
+            </button>
+          )}
           <button type="button" css={styles.EditingBarCompleteButton} onClick={onClickSuccessButton}>
             완료
           </button>
