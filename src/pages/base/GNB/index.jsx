@@ -1,6 +1,8 @@
+/** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
 import { Icon } from '@ridi/rsg';
+import { jsx } from '@emotion/core';
 import MyMenuModal from '../MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
@@ -39,33 +41,33 @@ class GNB extends React.Component {
     const { isModalActive } = this.state;
     return (
       <>
-        <header className={styles.GNB}>
-          <Responsive className={styles.FlexWrapper}>
+        <header css={styles.GNB}>
+          <Responsive css={styles.FlexWrapper}>
             <div>
-              <h1 className={styles.Title}>
-                <a className={styles.TitleLink} href="/">
+              <h1 css={styles.Title}>
+                <a css={styles.TitleLink} href="/">
                   내 서재
                 </a>
               </h1>
-              <ul className={styles.FamilyServiceList}>
-                <li className={styles.FamilyServiceItem}>
-                  <a className={styles.FamilyServiceLink} href={RIDIBOOKS_URL}>
-                    <Icon className={styles.RidibooksIcon} name="logo_ridibooks_1" />
-                    <span className={Hidden}>RIDIBOOKS</span>
+              <ul css={styles.FamilyServiceList}>
+                <li css={styles.FamilyServiceItem}>
+                  <a css={styles.FamilyServiceLink} href={RIDIBOOKS_URL}>
+                    <Icon css={styles.RidibooksIcon} name="logo_ridibooks_1" />
+                    <span css={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
-                <li className={styles.FamilyServiceItem}>
-                  <a className={styles.FamilyServiceLink} href={RIDISELECT_URL}>
-                    <Icon className={styles.RidiSelectIcon} name="logo_ridiselect_1" />
-                    <span className={Hidden}>RIDI Select</span>
+                <li css={styles.FamilyServiceItem}>
+                  <a css={styles.FamilyServiceLink} href={RIDISELECT_URL}>
+                    <Icon css={styles.RidiSelectIcon} name="logo_ridiselect_1" />
+                    <span css={Hidden}>RIDI Select</span>
                   </a>
                 </li>
               </ul>
             </div>
-            <div className={styles.MyMenuWrapper}>
-              <button id="MyMenuToggleButton" className={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-                <MyMenu className={styles.MyMenuIcon(isModalActive)} />
-                <span className={Hidden}>마이메뉴</span>
+            <div css={styles.MyMenuWrapper}>
+              <button id="MyMenuToggleButton" css={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
+                <MyMenu css={styles.MyMenuIcon(isModalActive)} />
+                <span css={Hidden}>마이메뉴</span>
               </button>
             </div>
             <MyMenuModal userId={userId} isActive={isModalActive} />

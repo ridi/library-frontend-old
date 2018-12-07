@@ -1,6 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
-import classname from 'classnames';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 
 const styles = {
   BottomActionButton: css({
@@ -20,7 +19,8 @@ const styles = {
 const BottomActionButton = ({ name, onClick, disable, className = null }) => (
   <button
     type="button"
-    className={classname(styles.BottomActionButton, disable && styles.BottomActionButtonDisable, className)}
+    css={[styles.BottomActionButton, disable && styles.BottomActionButtonDisable]}
+    className={className}
     onClick={onClick}
     disabled={disable}
   >

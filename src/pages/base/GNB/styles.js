@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 import { screenSize, maxWidthWrapper } from '../../../styles';
 
 export const GNB = css([

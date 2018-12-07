@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 export const Responsive = css({
   position: 'relative',

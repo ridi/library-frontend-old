@@ -1,6 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
-import classname from 'classnames';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 
 const styles = {
   modalBackgroundWrapper: css({
@@ -33,9 +32,9 @@ const styles = {
 };
 
 const ModalBackground = ({ isActive, onClickModalBackground }) => (
-  <div className={classname(styles.modalBackgroundWrapper, isActive && styles.modalBackgroundWrapperActive)}>
-    <div className={styles.modalContainer}>
-      <button type="button" className={styles.modalBackground} onClick={onClickModalBackground} />
+  <div css={[styles.modalBackgroundWrapper, isActive && styles.modalBackgroundWrapperActive]}>
+    <div css={styles.modalContainer}>
+      <button type="button" css={styles.modalBackground} onClick={onClickModalBackground} />
     </div>
   </div>
 );

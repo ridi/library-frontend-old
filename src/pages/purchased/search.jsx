@@ -1,6 +1,6 @@
+/** @jsx jsx */
 import React from 'react';
-import classname from 'classnames';
-import { css } from 'emotion';
+import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 
@@ -154,9 +154,9 @@ class Search extends React.Component {
     }
 
     return (
-      <div className={styles.SearchToolBarWrapper}>
-        <Responsive className={styles.SearchToolBar}>
-          <div className={classname(styles.SearchToolBarSearchBarWrapper, hideTools && styles.SearchToolBarSearchBarWrapperActive)}>
+      <div css={styles.SearchToolBarWrapper}>
+        <Responsive css={styles.SearchToolBar}>
+          <div css={[styles.SearchToolBarSearchBarWrapper, hideTools && styles.SearchToolBarSearchBarWrapperActive]}>
             <SearchBar
               keyword={keyword}
               onSubmit={this.handleOnSubmitSearchBar}
@@ -165,8 +165,8 @@ class Search extends React.Component {
             />
           </div>
           {hideTools ? null : (
-            <div className={styles.SearchToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" className={styles.SearchToolBarIcon} onClick={this.toggleEditingMode} />
+            <div css={styles.SearchToolBarToolsWrapper}>
+              <IconButton icon="check_3" a11y="편집" css={styles.SearchToolBarIcon} onClick={this.toggleEditingMode} />
             </div>
           )}
         </Responsive>
@@ -220,13 +220,8 @@ class Search extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" className={styles.ButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
-        <BottomActionButton
-          name="선택 다운로드"
-          className={styles.ButtonActionRight}
-          onClick={this.handleOnClickDownload}
-          disable={disable}
-        />
+        <BottomActionButton name="선택 숨기기" css={styles.ButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton name="선택 다운로드" css={styles.ButtonActionRight} onClick={this.handleOnClickDownload} disable={disable} />
       </BottomActionBar>
     );
   }

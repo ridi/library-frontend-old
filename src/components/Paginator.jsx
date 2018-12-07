@@ -1,8 +1,8 @@
+/** @jsx jsx */
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
-import { css } from 'emotion';
-import classNames from 'classnames';
+import { css, jsx } from '@emotion/core';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
 import { snakelize } from '../utils/snakelize';
@@ -98,13 +98,13 @@ export default class Paginator extends React.Component {
 
     return (
       <>
-        <div className={pageItemCss}>
+        <div css={pageItemCss}>
           <Link {...this.getLinkProps(1)}>
             <a>처음</a>
           </Link>
         </div>
-        <span className={paginatorDotsCss}>
-          <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
+        <span css={paginatorDotsCss}>
+          <Icon name="dotdotdot" css={paginatorDeviderDotsCss} />
         </span>
       </>
     );
@@ -119,10 +119,10 @@ export default class Paginator extends React.Component {
 
     return (
       <>
-        <span className={paginatorDotsCss}>
-          <Icon name="dotdotdot" className={paginatorDeviderDotsCss} />
+        <span css={paginatorDotsCss}>
+          <Icon name="dotdotdot" css={paginatorDeviderDotsCss} />
         </span>
-        <div className={pageItemCss}>
+        <div css={pageItemCss}>
           <Link {...this.getLinkProps(totalPages)}>
             <a>마지막</a>
           </Link>
@@ -139,10 +139,10 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <div className={pageItemCss}>
+      <div css={pageItemCss}>
         <Link {...this.getLinkProps(currentPage - 1)}>
           <a>
-            <Icon name="arrow_8_left" className={pageItemIconCss} />
+            <Icon name="arrow_8_left" css={pageItemIconCss} />
             <span className="a11y">이전 페이지</span>
           </a>
         </Link>
@@ -158,10 +158,10 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <div className={pageItemCss}>
+      <div css={pageItemCss}>
         <Link {...this.getLinkProps(currentPage + 1)}>
           <a>
-            <Icon name="arrow_8_right" className={pageItemIconCss} />
+            <Icon name="arrow_8_right" css={pageItemIconCss} />
             <span className="a11y">다음 페이지</span>
           </a>
         </Link>
@@ -173,7 +173,7 @@ export default class Paginator extends React.Component {
     const { currentPage, totalPages, pageCount } = this.props;
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
     return pageRange.map(page => (
-      <li key={page} className={classNames(pageItemCss, pageItemGroupMemberCss)}>
+      <li key={page} css={[pageItemCss, pageItemGroupMemberCss]}>
         <Link {...this.getLinkProps(page)}>
           <a>{page}</a>
         </Link>
@@ -188,11 +188,11 @@ export default class Paginator extends React.Component {
     }
 
     return (
-      <div className={paginatorCss}>
-        <div className={horizontalWrapperCss}>
+      <div css={paginatorCss}>
+        <div css={horizontalWrapperCss}>
           {this.renderGoFirst()}
           {this.renderGoPrev()}
-          <ul className={pageItemGroupCss}>{this.renderPageItems()}</ul>
+          <ul css={pageItemGroupCss}>{this.renderPageItems()}</ul>
           {this.renderGoNext()}
           {this.renderGoLast()}
         </div>

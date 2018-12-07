@@ -7,6 +7,9 @@ import config from '../config';
 import { GET_API } from './actions';
 import { HttpStatusCode } from './constants';
 
+import { makeLoginURI } from '../utils/uri';
+import Window, { LOCATION } from '../utils/window';
+
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
     const { response } = error;
@@ -18,7 +21,10 @@ const authorizationInterceptor = {
         .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(err => {
           if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            // TODO: Add Redirecting To Authorization URL
+            const _location = Window.get(LOCATION);
+            const currentURI = _location.href;
+            const loginURI = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, currentURI);
+            _location.href = loginURI;
             return null;
           }
 

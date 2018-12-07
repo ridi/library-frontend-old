@@ -1,6 +1,6 @@
-import React from 'react';
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import Link from 'next/link';
-import { css } from 'emotion';
 import { Icon } from '@ridi/rsg';
 import Responsive from '../Responsive';
 import IconButton from '../../../components/IconButton';
@@ -72,20 +72,20 @@ const styles = {
 };
 
 const LNBHiddenTitleBar = ({ title, hiddenTotalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
-  <nav className={styles.LNBHiddenTitleBarWrapper}>
-    <Responsive className={styles.LNBHiddenTitleBar}>
+  <nav css={styles.LNBHiddenTitleBarWrapper}>
+    <Responsive css={styles.LNBHiddenTitleBar}>
       <Link href={href} as={as}>
-        <a className={styles.LNBHiddenTitleBarBackIconWrapper}>
-          <Icon name="arrow_3_left" className={styles.LNBHiddenTitleBarBackIcon} />
+        <a css={styles.LNBHiddenTitleBarBackIconWrapper}>
+          <Icon name="arrow_3_left" css={styles.LNBHiddenTitleBarBackIcon} />
           <span className="a11y">{a11y}</span>
         </a>
       </Link>
-      <div className={styles.LNBHiddenTitleBarTitleWrapper}>
-        <span className={styles.LNBHiddenTitleBarTitle}>{title}</span>
-        <span className={styles.LNBHiddenTitleBarHiddenCount}>{hiddenTotalCount}</span>
+      <div css={styles.LNBHiddenTitleBarTitleWrapper}>
+        <span css={styles.LNBHiddenTitleBarTitle}>{title}</span>
+        <span css={styles.LNBHiddenTitleBarHiddenCount}>{hiddenTotalCount}</span>
       </div>
-      <div className={styles.LNBHiddenTitleBarToolsWrapper}>
-        <IconButton icon="check_3" a11y="편집" className={styles.LNBHiddenTitleBarTool} onClick={onClickEditingMode} />
+      <div css={styles.LNBHiddenTitleBarToolsWrapper}>
+        <IconButton icon="check_3" a11y="편집" css={styles.LNBHiddenTitleBarTool} onClick={onClickEditingMode} />
       </div>
     </Responsive>
   </nav>

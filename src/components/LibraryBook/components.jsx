@@ -1,9 +1,8 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
-import classNames from 'classnames';
-
 import { ServiceType } from '../../constants/serviceType';
 import { timeLeft, formatExpiredDate, isExpired } from '../../utils/datetime';
-
 import {
   unitCountCss,
   expireDateExpiredCss,
@@ -19,35 +18,26 @@ import {
 } from './styles';
 
 export const UnitCount = ({ item, unit = '권' }) => (
-  <div className={unitCountCss}>
-    <span className={unitCountTextCss}>
+  <div css={unitCountCss}>
+    <span css={unitCountTextCss}>
       총 {item.unit_count} {unit}
-      <Icon name="arrow_1_right" className={unitCountIconCss} />
+      <Icon name="arrow_1_right" css={unitCountIconCss} />
     </span>
   </div>
 );
 
 export const ExpireDate = ({ expireDate, serviceType, isExpired: _isExpired }) =>
   ServiceType.isExpirable(serviceType) ? (
-    <div
-      className={classNames(expireDateTextCss, {
-        [expireDateExpiredCss]: isExpired,
-      })}
-    >
-      <Icon
-        name="timer"
-        className={classNames(expireDateIconCss, {
-          [expireDateExpiredCss]: _isExpired,
-        })}
-      />
+    <div css={[expireDateTextCss, isExpired && expireDateExpiredCss]}>
+      <Icon name="timer" css={[expireDateIconCss, _isExpired && expireDateExpiredCss]} />
       {_isExpired ? formatExpiredDate(expireDate) : timeLeft(expireDate)}
     </div>
   ) : null;
 
 export const ExpiredBand = () => (
-  <p className={bandCss}>
-    <Icon name="timer" className={classNames(bandIconCss, expiredBandIconCss)} />
-    <span className={bandTextCss}>기간 만료</span>
+  <p css={bandCss}>
+    <Icon name="timer" css={[bandIconCss, expiredBandIconCss]} />
+    <span css={bandTextCss}>기간 만료</span>
   </p>
 );
 
@@ -59,8 +49,8 @@ export const ExpiredCover = ({ isRidiSelect, hasItems, isLandscape }) => (
 );
 
 export const RidiSelectBand = () => (
-  <div className={bandCss}>
-    <Icon name="book_1" className={classNames(bandIconCss, ridiselectBandIconCss)} />
-    <span className={bandTextCss}>리디셀렉트</span>
+  <div css={bandCss}>
+    <Icon name="book_1" css={[bandIconCss, ridiselectBandIconCss]} />
+    <span css={bandTextCss}>리디셀렉트</span>
   </div>
 );

@@ -1,8 +1,9 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 export const MyMenuModal = isActive =>
   css([
     {
+      display: 'block',
       position: 'absolute',
       right: 8,
       top: 47,

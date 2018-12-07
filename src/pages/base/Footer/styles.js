@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 import { maxWidthWrapper } from '../../../styles';
 
 export const FOOTER_HEIGHT = 254;
@@ -58,7 +58,7 @@ export const InfoItem = css({
   fontSize: 11,
   lineHeight: '17px',
   color: '#9ea7ad',
-  '.CompanyInfoList &': {
+  '.CompanyInfoList & ': {
     display: 'inline-block',
   },
 });

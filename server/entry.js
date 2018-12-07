@@ -5,8 +5,6 @@ const next = require('next');
 const routes = require('./routes');
 const nextConfig = require('../next.config');
 
-const middleware = require('./middleware');
-
 const isLocal = process.env.NODE_ENV === 'local';
 const app = next({
   dev: isLocal,
@@ -14,6 +12,9 @@ const app = next({
   conf: nextConfig,
 });
 const handle = routes.getRequestHandler(app);
+
+// next가 로드된 후 불러와야함
+const middleware = require('./middleware');
 
 app
   .prepare()

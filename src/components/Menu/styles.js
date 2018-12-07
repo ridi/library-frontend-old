@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 export const MenuGroup = css({
   width: '100%',
@@ -47,8 +47,6 @@ export const MenuGroupItemIcon = css({
   height: 20,
   left: 14,
   top: '50%',
-  webkitTransform: 'translate3d(0, -50%, 0)',
-  msTransform: 'translate3d(0, -50%, 0)',
   transform: 'translate3d(0, -50%, 0)',
   fill: '#9ea7ad',
 });

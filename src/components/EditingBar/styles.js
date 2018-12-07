@@ -1,4 +1,4 @@
-import { css } from 'emotion';
+import { css } from '@emotion/core';
 
 export const EditingBarWrapper = css({
   width: '100%',
@@ -25,8 +25,6 @@ export const EditingBarIcon = css({
   height: 9,
   top: '50%',
   left: 0,
-  webkitTransform: 'translate3d(0, -50%, 0)',
-  msTransform: 'translate3d(0, -50%, 0)',
   transform: 'translate3d(0, -50%, 0)',
   fill: '#ffffff',
 });
@@ -34,7 +32,7 @@ export const EditingBarSelectCount = css({
   height: 20,
   padding: '5px 0',
   fontSize: 15,
-  letterSpacing: '-0.3',
+  letterSpacing: '-0.3px',
   color: '#ffffff',
   lineHeight: '20px',
 });
@@ -46,7 +44,7 @@ export const EditingBarButtonWrapper = css({
 export const EditingBarAllSelect = css({
   marginRight: 16,
   fontSize: 15,
-  letterSpacing: '-0.3',
+  letterSpacing: '-0.3px',
   color: '#ffffff',
 });
 export const EditingBarCompleteButton = css({
@@ -59,9 +57,9 @@ export const EditingBarCompleteButton = css({
   border: '1px solid #d1d5d9',
   boxSizing: 'border-box',
 
-  fontSize: '13',
+  fontSize: 13,
   fontWeight: 'bold',
-  letterSpacing: '-0.3',
+  letterSpacing: '-0.3px',
   textAlign: 'center',
   color: '#0077d9',
 });

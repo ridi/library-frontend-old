@@ -1,6 +1,5 @@
-import React from 'react';
-import { css } from 'emotion';
-import classNames from 'classnames';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 
 const styles = {
   TabItem: css({
@@ -34,8 +33,8 @@ const styles = {
 };
 
 const TabItem = ({ name, onClick, isActive }) => (
-  <li className={classNames(styles.TabItem, { [styles.TabItemActive]: isActive })}>
-    <button type="button" onClick={onClick} className={styles.TabButton}>
+  <li css={[styles.TabItem, isActive && styles.TabItemActive]}>
+    <button type="button" onClick={onClick} css={styles.TabButton}>
       {name}
     </button>
   </li>

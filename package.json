@@ -6,7 +6,7 @@
   "scripts": {
     "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.{js,jsx}' -- prettier --write {{changed}}",
     "build": "next build src",
-    "export": "next export src -o ./out"
+    "export": "STATIC_URL=https://library-static.ridibooks.com next export src -o ./out"
   },
   "husky": {
     "hooks": {
@@ -16,12 +16,14 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@emotion/core": "^10.0.2",
     "@ridi/rsg": "^2.0.16",
+    "@sentry/browser": "^4.4.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "cookie-parser": "^1.4.3",
-    "emotion": "^9.2.12",
-    "emotion-server": "^9.2.12",
+    "emotion": "^10.0.4",
+    "emotion-server": "^10.0.2",
     "esm": "^3.0.84",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^3.0.0",
@@ -36,7 +38,7 @@
     "qs": "^6.5.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-emotion": "^9.2.12",
+    "react-emotion": "^10.0.0",
     "react-redux": "^5.0.7",
     "react-responsive": "^6.0.1",
     "redux": "^4.0.0",
@@ -48,7 +50,7 @@
     "@ridi/eslint-config": "^4.1.1",
     "@svgr/webpack": "^4.1.0",
     "babel-eslint": "^10.0.1",
-    "babel-plugin-emotion": "^9.2.11",
+    "babel-plugin-emotion": "^10.0.4",
     "eslint": "^5.7.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-prettier": "^3.0.0",

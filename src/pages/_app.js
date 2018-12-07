@@ -1,15 +1,14 @@
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withReduxSaga from 'next-redux-saga';
-import { hydrate, injectGlobal } from 'emotion';
+import { hydrate } from 'emotion';
 
-import { reset } from '../styles/reset';
 import injectStore from '../store';
 import flow from '../utils/flow';
+import { initializeSentry } from '../utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from '../utils/tabFocus';
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
-
 import Layout from './base/Layout';
 
 class LibraryApp extends App {
@@ -24,8 +23,8 @@ class LibraryApp extends App {
     if (typeof window !== 'undefined') {
       hydrate(window.__NEXT_DATA__.ids);
       initializeTabKeyFocus();
+      initializeSentry();
     }
-    injectGlobal(reset);
 
     this.disposeBag = [];
   }

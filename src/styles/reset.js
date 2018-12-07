@@ -37,8 +37,8 @@ export const resetFont = {
   fontFamily,
   fontWeight: 400,
   letterSpacing: '-.4px',
-  '-webkit-font-smoothing': 'antialiased',
-  '-moz-osx-font-smoothing': 'grayscale',
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'grayscale',
 };
 
 export const resetLayout = {
@@ -67,7 +67,7 @@ export const reset = {
     {
       '&.focus-free *': {
         outline: 'none',
-        '-webkit-tap-highlight-color': 'transparent',
+        WebkitTapHighlightColor: 'transparent',
       },
     },
   ],
@@ -101,7 +101,7 @@ export const reset = {
   iframe: [resetLayout],
   img: {
     border: 0,
-    '-ms-interpolation-mode': 'bicubic',
+    msInterpolationMode: 'bicubic',
   },
   input: [inheritFont, resetAppearance, resetLayout],
   legend: [resetLayout],
