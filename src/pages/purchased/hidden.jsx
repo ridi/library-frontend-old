@@ -15,6 +15,7 @@ import { BottomActionBar, BottomActionButton } from '../../components/BottomActi
 import { getBooks } from '../../services/book/selectors';
 import {
   loadPurchasedHiddenItems,
+  selectAllHiddenBooks,
   clearSelectedHiddenBooks,
   toggleSelectHiddenBook,
   showSelectedBooks,
@@ -75,6 +76,28 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
+  renderEditingBar() {
+    const {
+      items,
+      selectedBooks,
+      selectAllHiddenBooks: dispatchSelectAllHiddenBooks,
+      clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks,
+    } = this.props;
+
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
+
+    return (
+      <EditingBar
+        totalSelectedCount={selectedCount}
+        isSelectedAllBooks={isSelectedAllBooks}
+        onClickSelectAllBooks={dispatchSelectAllHiddenBooks}
+        onClickUnselectAllBooks={dispatchClearSelectedHiddenBooks}
+        onClickSuccessButton={this.toggleEditingMode}
+      />
+    );
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, toggleSelectHiddenBook: dispatchToggleSelectHiddenBook } = this.props;
@@ -128,14 +151,14 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { itemTotalCount, selectedBooks } = this.props;
+    const { itemTotalCount } = this.props;
     return (
       <>
         <Head>
           <title>리디북스 - 숨김목록</title>
         </Head>
         {isEditing ? (
-          <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />
+          this.renderEditingBar()
         ) : (
           <LNBHiddenTitleBar
             title="숨긴 도서 목록"
@@ -173,6 +196,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  selectAllHiddenBooks,
   clearSelectedHiddenBooks,
   toggleSelectHiddenBook,
   showSelectedBooks,

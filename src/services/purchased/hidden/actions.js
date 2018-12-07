@@ -10,6 +10,7 @@ export const DELETE_SELECTED_BOOKS = 'DELETE_SELECTED_BOOKS';
 export const SELECT_ALL_HIDDEN_BOOKS = 'SELECT_ALL_HIDDEN_BOOKS';
 export const CLEAR_SELECTED_HIDDEN_BOOKS = 'CLEAR_SELECTED_HIDDEN_BOOKS';
 export const TOGGLE_SELECT_HIDDEN_BOOK = 'TOGGLE_SELECT_HIDDEN_BOOK';
+export const SET_SELECT_HIDDEN_BOOKS = 'SET_SELECT_HIDDEN_BOOKS';
 
 export const loadPurchasedHiddenItems = () => ({
   type: LOAD_PURCHASED_HIDDEN_ITEMS,
@@ -36,6 +37,10 @@ export const setPurchasedHiddenPage = page => ({
   },
 });
 
+export const selectAllHiddenBooks = () => ({
+  type: SELECT_ALL_HIDDEN_BOOKS,
+});
+
 export const clearSelectedHiddenBooks = () => ({
   type: CLEAR_SELECTED_HIDDEN_BOOKS,
 });
@@ -44,6 +49,13 @@ export const toggleSelectHiddenBook = bookId => ({
   type: TOGGLE_SELECT_HIDDEN_BOOK,
   payload: {
     bookId,
+  },
+});
+
+export const setSelectHiddenBooks = bookIds => ({
+  type: SET_SELECT_HIDDEN_BOOKS,
+  payload: {
+    bookIds,
   },
 });
 

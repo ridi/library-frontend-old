@@ -19,6 +19,7 @@ import SortModal from '../base/MainModal/SortModal';
 
 import {
   loadPurchaseItems,
+  selectAllMainBooks,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
@@ -172,10 +173,24 @@ class Index extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const { selectedBooks } = this.props;
+    const {
+      items,
+      selectedBooks,
+      selectAllMainBooks: dispatchSelectAllMainBooks,
+      clearSelectedBooks: dispatchClearSelectedBooks,
+    } = this.props;
 
     if (isEditing) {
-      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
+      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
+      return (
+        <EditingBar
+          totalSelectedCount={Object.keys(selectedBooks).length}
+          isSelectedAllBooks={isSelectedAllBooks}
+          onClickSelectAllBooks={dispatchSelectAllMainBooks}
+          onClickUnselectAllBooks={dispatchClearSelectedBooks}
+          onClickSuccessButton={this.toggleEditingMode}
+        />
+      );
     }
 
     return (
@@ -267,10 +282,10 @@ class Index extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" className={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton name="선택 숨기기" css={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
         <BottomActionButton
           name="선택 다운로드"
-          className={styles.MainButtonActionRight}
+          css={styles.MainButtonActionRight}
           onClick={this.handleOnClickDownload}
           disable={disable}
         />
@@ -314,6 +329,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  selectAllMainBooks,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,

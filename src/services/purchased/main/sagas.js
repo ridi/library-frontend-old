@@ -4,12 +4,14 @@ import {
   LOAD_PURCHASE_ITEMS,
   HIDE_SELECTED_BOOKS,
   DOWNLOAD_SELECTED_BOOKS,
+  SELECT_ALL_MAIN_BOOKS,
   setPurchaseItems,
   setPurchaseTotalCount,
   setPurchasePage,
   setPurchaseOrder,
   setPurchaseFilter,
   setPurchaseFilterOptions,
+  setSelectBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
@@ -18,12 +20,11 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
 import { getQuery } from '../../router/selectors';
-import { getPurchaseOptions, getSelectedBooks, getItems } from './selectors';
+import { getPurchaseOptions, getSelectedBooks, getItems, getItemsByPage } from './selectors';
 
 import { loadBookData } from '../../book/sagas';
 import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
-import { queue } from 'rxjs/internal/scheduler/queue';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -92,10 +93,17 @@ function* downloadSelectedBooks() {
   }
 }
 
+function* selectAllMainBooks() {
+  const items = yield select(getItemsByPage);
+  const bookIds = toFlatten(items, 'b_id');
+  yield put(setSelectBooks(bookIds));
+}
+
 export default function* purchaseMainRootSaga() {
   yield all([
     takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
     takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
     takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
+    takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllMainBooks),
   ]);
 }

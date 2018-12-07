@@ -9,14 +9,16 @@ import {
   LOAD_SEARCH_PAGE,
   CHANGE_SEARCH_KEYWORD,
   HIDE_SELECTED_SEARCH_BOOKS,
+  DOWNLOAD_SELECTED_SEARCH_BOOKS,
+  SELECT_ALL_SEARCH_BOOKS,
   setSearchPage,
   setSearchKeyword,
   setSearchTotalCount,
   setSearchItems,
-  DOWNLOAD_SELECTED_SEARCH_BOOKS,
+  setSelectSearchBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
-import { getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
+import { getSearchItemsByPage, getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
@@ -82,11 +84,18 @@ function* downloadSelectedSearchBooks() {
   }
 }
 
+function* selectAllSearchBooks() {
+  const items = yield select(getSearchItemsByPage);
+  const bookIds = toFlatten(items, 'b_id');
+  yield put(setSelectSearchBooks(bookIds));
+}
+
 export default function* searchRootSaga() {
   yield all([
     takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
     takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
     takeEvery(HIDE_SELECTED_SEARCH_BOOKS, hideSelectedSearchBooks),
     takeEvery(DOWNLOAD_SELECTED_SEARCH_BOOKS, downloadSelectedSearchBooks),
+    takeEvery(SELECT_ALL_SEARCH_BOOKS, selectAllSearchBooks),
   ]);
 }

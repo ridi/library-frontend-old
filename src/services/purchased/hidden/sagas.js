@@ -3,17 +3,19 @@ import { delay } from 'redux-saga';
 
 import {
   LOAD_PURCHASED_HIDDEN_ITEMS,
+  SELECT_ALL_HIDDEN_BOOKS,
+  SHOW_SELECTED_BOOKS,
+  DELETE_SELECTED_BOOKS,
   setPurchasedHiddenItems,
   setPurchasedHiddenPage,
   setPurchasedHiddenTotalCount,
-  SHOW_SELECTED_BOOKS,
-  DELETE_SELECTED_BOOKS,
+  setSelectHiddenBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
 import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
-import { getHiddenItems, getSelectedHiddenBooks } from './selectors';
+import { getHiddenItems, getItemsByPage, getSelectedHiddenBooks } from './selectors';
 
 import { getRevision, requestShow, requestCheckQueueStatus } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
@@ -58,10 +60,17 @@ function* deleteSelectedBooks() {
   yield call(loadPurchasedHiddenItems);
 }
 
+function* selectAllHiddenBooks() {
+  const items = yield select(getItemsByPage);
+  const bookIds = toFlatten(items, 'b_id');
+  yield put(setSelectHiddenBooks(bookIds));
+}
+
 export default function* purchasedHiddenSaga() {
   yield all([
     takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems),
     takeEvery(SHOW_SELECTED_BOOKS, showSelectedBooks),
     takeEvery(DELETE_SELECTED_BOOKS, deleteSelectedBooks),
+    takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllHiddenBooks),
   ]);
 }

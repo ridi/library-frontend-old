@@ -10,6 +10,7 @@ export const SET_PURCHASE_FILTER_OPTIONS = 'SET_PURCHASE_FILTER_OPTIONS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
+export const SET_SELECT_MAIN_BOOKS = 'SET_SELECT_MAIN_BOOKS';
 
 export const HIDE_SELECTED_BOOKS = 'HIDE_SELECTED_BOOKS';
 export const DOWNLOAD_SELECTED_BOOKS = 'DOWNLOAD_SELECTED_BOOKS';
@@ -61,6 +62,10 @@ export const setPurchaseFilterOptions = options => ({
   },
 });
 
+export const selectAllMainBooks = () => ({
+  type: SELECT_ALL_MAIN_BOOKS,
+});
+
 export const clearSelectedBooks = () => ({
   type: CLEAR_SELECTED_MAIN_BOOKS,
 });
@@ -69,6 +74,13 @@ export const toggleSelectBook = bookId => ({
   type: TOGGLE_SELECT_MAIN_BOOK,
   payload: {
     bookId,
+  },
+});
+
+export const setSelectBooks = bookIds => ({
+  type: SET_SELECT_MAIN_BOOKS,
+  payload: {
+    bookIds,
   },
 });
 

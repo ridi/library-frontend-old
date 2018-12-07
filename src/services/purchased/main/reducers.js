@@ -9,6 +9,7 @@ import {
   SET_PURCHASE_FILTER_OPTIONS,
   CLEAR_SELECTED_MAIN_BOOKS,
   TOGGLE_SELECT_MAIN_BOOK,
+  SET_SELECT_MAIN_BOOKS,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
@@ -75,6 +76,14 @@ const purchasedMainReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedBooks,
+      };
+    case SET_SELECT_MAIN_BOOKS:
+      return {
+        ...state,
+        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
+          previous[bookId] = 1;
+          return previous;
+        }, {}),
       };
     default:
       return state;

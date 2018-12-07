@@ -146,11 +146,23 @@ class Search extends React.Component {
     const { isEditing, hideTools } = this.state;
     const {
       pageInfo: { keyword },
+      items,
       selectedBooks,
+      selectAllSearchBooks: dispatchSelectAllSearchBooks,
+      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
     } = this.props;
 
     if (isEditing) {
-      return <EditingBar totalSelectedCount={Object.keys(selectedBooks).length} onClickSuccessButton={this.toggleEditingMode} />;
+      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
+      return (
+        <EditingBar
+          totalSelectedCount={Object.keys(selectedBooks).length}
+          isSelectedAllBooks={isSelectedAllBooks}
+          onClickSelectAllBooks={dispatchSelectAllSearchBooks}
+          onClickUnselectAllBooks={dispatchClearSelectedSearchBooks}
+          onClickSuccessButton={this.toggleEditingMode}
+        />
+      );
     }
 
     return (
