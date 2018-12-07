@@ -278,10 +278,10 @@ class Index extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" className={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton name="선택 숨기기" css={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
         <BottomActionButton
           name="선택 다운로드"
-          className={styles.MainButtonActionRight}
+          css={styles.MainButtonActionRight}
           onClick={this.handleOnClickDownload}
           disable={disable}
         />
