@@ -5,6 +5,7 @@ import {
   SET_PURCHASED_HIDDEN_PAGE,
   CLEAR_SELECTED_HIDDEN_BOOKS,
   TOGGLE_SELECT_HIDDEN_BOOK,
+  SET_SELECT_HIDDEN_BOOKS,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
@@ -49,6 +50,14 @@ const purchasedHiddenReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedBooks,
+      };
+    case SET_SELECT_HIDDEN_BOOKS:
+      return {
+        ...state,
+        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
+          previous[bookId] = 1;
+          return previous;
+        }, {}),
       };
     default:
       return state;
