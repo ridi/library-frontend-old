@@ -15,8 +15,8 @@ const EditingBar = ({ totalSelectedCount, isSelectedAllBooks, onClickSelectAllBo
             <div css={styles.EditingBarSelectCount}>{totalSelectedCount}권</div>
           </div>
           <div css={styles.EditingBarButtonWrapper}>
-            {!isSelectedAllBooks ? (
-              <button type="button" css={styles.EditingBarAllSelect} onClick={onClickSelectAllBooks}>
+            {!isSelectedAllBooks || totalSelectedCount === 0 ? (
+              <button type="button" css={styles.EditingBarAllSelect} onClick={onClickSelectAllBooks} disabled={totalSelectedCount === 0}>
                 전체 선택
               </button>
             ) : (
