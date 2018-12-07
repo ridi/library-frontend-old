@@ -19,12 +19,11 @@ import SortModal from '../base/MainModal/SortModal';
 
 import {
   loadPurchaseItems,
+  selectAllMainBooks,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
   downloadSelectedBooks,
-  selectAllBooks,
-  unselectAllBooks,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -174,16 +173,21 @@ class Index extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, unselectAllBooks: dispatchUnselectAllBooks } = this.props;
+    const {
+      items,
+      selectedBooks,
+      selectAllMainBooks: dispatchSelectAllMainBooks,
+      clearSelectedBooks: dispatchClearSelectedBooks,
+    } = this.props;
 
     if (isEditing) {
-      const isSelectedAllBooks = selectedBooks.length === items.length;
+      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
       return (
         <EditingBar
           totalSelectedCount={Object.keys(selectedBooks).length}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchUnselectAllBooks}
+          onClickSelectAllBooks={dispatchSelectAllMainBooks}
+          onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
       );
@@ -325,12 +329,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  selectAllMainBooks,
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
   downloadSelectedBooks,
-  selectAllBooks,
-  unselectAllBooks,
 };
 
 export default connect(
