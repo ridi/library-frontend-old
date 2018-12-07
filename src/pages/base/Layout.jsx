@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import Footer from './Footer';
 import GNB from './GNB';
 import Toaster from '../../components/Toaster';
