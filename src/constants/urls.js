@@ -11,4 +11,8 @@ export const URLMap = {
     href: '/purchased/hidden',
     as: '/purchased/hidden',
   },
+  mainUnit: {
+    href: 'purchased/mainUnit',
+    as: unitId => `purchased/${unitId}`,
+  },
 };

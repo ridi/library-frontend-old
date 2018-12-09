@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Layout from '../base/Layout';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
@@ -18,6 +17,8 @@ import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/pu
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
+import Responsive from '../base/Responsive';
+import { URLMap } from '../../constants/urls';
 
 class PurchasedMainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -46,20 +47,27 @@ class PurchasedMainUnit extends React.Component {
         currentPage={currentPage}
         totalPages={totalPages}
         pageCount={PAGE_COUNT}
-        pathname={`/purchased/${unitId}`}
+        href={URLMap.mainUnit.href}
+        as={URLMap.mainUnit.as(unitId)}
         query={{ orderType, orderBy, filter }}
       />
     );
   }
 
   render() {
+    const {
+      pageInfo: { unitId },
+    } = this.props;
     return (
-      <Layout>
-        <div>Unit id: {this.props.pageInfo.unitId}</div>
-        {this.renderPageOptions()}
-        {this.renderBooks()}
-        {this.renderPaginator()}
-      </Layout>
+      <>
+        <div>Unit id: {unitId}</div>
+        <main>
+          <Responsive>
+            {this.renderBooks()}
+            {this.renderPaginator()}
+          </Responsive>
+        </main>
+      </>
     );
   }
 }
