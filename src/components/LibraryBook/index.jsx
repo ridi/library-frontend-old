@@ -25,7 +25,7 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
       <Book css={portraitBookCSS} className="RSGBook-preset-portrait" dto={book}>
         {({ Thumbnail, Metadata }) => (
           <>
-            <Link href={URLMap.mainUnit.href} as={URLMap.mainUnit.as(item.unit_id)}>
+            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
               <a>
                 <Thumbnail.wrapper thumbnailSize={90} link="unused">
                   <Thumbnail.coverImage />
@@ -37,7 +37,7 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
                 </Thumbnail.wrapper>
               </a>
             </Link>
-            <Link href={URLMap.mainUnit.href} as={URLMap.mainUnit.as(item.unit_id)}>
+            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
               <a>
                 <Metadata.wrapper>
                   <Metadata.title link="unused" />
