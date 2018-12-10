@@ -1,3 +1,5 @@
+import { css } from '@emotion/core';
+
 export const fontFamily = [
   'Helvetica Neue',
   'Apple SD Gothic Neo',
@@ -46,8 +48,8 @@ export const resetLayout = {
   margin: 0,
 };
 
-export const reset = {
-  a: [
+export const reset = css({
+  a: css([
     inheritFont,
     cursorPointer,
     {
@@ -55,10 +57,10 @@ export const reset = {
         textDecoration: 'none',
       },
     },
-  ],
-  article: [resetLayout],
-  aside: [resetLayout],
-  body: [
+  ]),
+  article: css([resetLayout]),
+  aside: css([resetLayout]),
+  body: css([
     resetLayout,
     cursorDefault,
     {
@@ -70,61 +72,60 @@ export const reset = {
         WebkitTapHighlightColor: 'transparent',
       },
     },
-  ],
-  button: [cursorPointer, inheritFont, resetAppearance, resetLayout],
-  canvas: [resetLayout],
-  dd: [resetLayout],
-  details: [resetLayout],
-  div: [resetLayout],
-  dl: [resetLayout],
-  dt: [resetLayout],
-  fieldset: [resetLayout],
-  figcaption: [resetLayout],
-  figure: [resetLayout],
-  footer: [resetLayout],
-  form: [resetLayout],
-  header: [resetLayout],
-  hr: { display: 'none' },
-  html: [
+  ]),
+  button: css([cursorPointer, inheritFont, resetAppearance, resetLayout]),
+  canvas: css([resetLayout]),
+  dd: css([resetLayout]),
+  details: css([resetLayout]),
+  div: css([resetLayout]),
+  dl: css([resetLayout]),
+  dt: css([resetLayout]),
+  fieldset: css([resetLayout]),
+  figcaption: css([resetLayout]),
+  figure: css([resetLayout]),
+  footer: css([resetLayout]),
+  form: css([resetLayout]),
+  header: css([resetLayout]),
+  hr: css({ display: 'none' }),
+  html: css([
     resetFont,
     resetLayout,
     {
       textSizeAdjust: '100%',
     },
-  ],
-  h1: [resetLayout],
-  h2: [resetLayout],
-  h3: [resetLayout],
-  h4: [resetLayout],
-  h5: [resetLayout],
-  h6: [resetLayout],
-  iframe: [resetLayout],
-  img: {
+  ]),
+  h1: css([resetLayout]),
+  h2: css([resetLayout]),
+  h3: css([resetLayout]),
+  h4: css([resetLayout]),
+  h5: css([resetLayout]),
+  h6: css([resetLayout]),
+  iframe: css([resetLayout]),
+  img: css({
     border: 0,
     msInterpolationMode: 'bicubic',
-  },
-  input: [inheritFont, resetAppearance, resetLayout],
-  legend: [resetLayout],
-  li: [resetLayout],
-  nav: [resetLayout],
-  ol: [resetLayout, { listStyle: 'none' }],
-  p: [resetLayout],
-  section: [resetLayout],
-  select: [inheritFont, resetAppearance, resetLayout],
-  summary: [resetLayout],
-  table: [
+  }),
+  input: css([inheritFont, resetAppearance, resetLayout]),
+  legend: css([resetLayout]),
+  li: css([resetLayout]),
+  nav: css([resetLayout]),
+  ol: css([resetLayout, { listStyle: 'none' }]),
+  p: css([resetLayout]),
+  section: css([resetLayout]),
+  select: css([inheritFont, resetAppearance, resetLayout]),
+  summary: css([resetLayout]),
+  table: css([
     resetLayout,
     {
       borderCollapse: 'collapse',
       borderSpacing: 0,
     },
-  ],
-  td: [resetLayout],
-  textarea: [inheritFont, resetLayout],
-  th: [resetLayout],
-  ul: [resetLayout, { listStyle: 'none' }],
-
-  '.a11y': {
+  ]),
+  td: css([resetLayout]),
+  textarea: css([inheritFont, resetLayout]),
+  th: css([resetLayout]),
+  ul: css([resetLayout, { listStyle: 'none' }]),
+  '.a11y': css({
     position: 'absolute',
     width: 1,
     height: 1,
@@ -133,5 +134,5 @@ export const reset = {
     overflow: 'hidden',
     border: 0,
     clip: 'rect(0, 0, 0, 0)',
-  },
-};
+  }),
+});
