@@ -1,20 +1,20 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
-  LOAD_PURCHASE_ITEMS,
+  LOAD_MAIN_ITEMS,
   HIDE_SELECTED_BOOKS,
   DOWNLOAD_SELECTED_BOOKS,
   SELECT_ALL_MAIN_BOOKS,
-  setPurchaseItems,
-  setPurchaseTotalCount,
-  setPurchasePage,
-  setPurchaseOrder,
-  setPurchaseFilter,
-  setPurchaseFilterOptions,
+  setMainItems,
+  setMainTotalCount,
+  setMainPage,
+  setMainOrder,
+  setMainFilter,
+  setMainFilterOptions,
   setSelectBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
-import { fetchPurchaseItems, fetchPurchaseItemsTotalCount, fetchPurchaseCategories } from './requests';
+import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
@@ -34,18 +34,18 @@ function* persistPageOptionsFromQuries() {
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = parseInt(query.filter, 10) || null;
 
-  yield all([put(setPurchasePage(page)), put(setPurchaseOrder(order)), put(setPurchaseFilter(filter))]);
+  yield all([put(setMainPage(page)), put(setMainOrder(order)), put(setMainFilter(filter))]);
 }
 
-function* loadPurchaseItems() {
+function* loadMainItems() {
   yield call(persistPageOptionsFromQuries);
 
   const { page, order, filter: category } = yield select(getPurchaseOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse, categories] = yield all([
-    call(fetchPurchaseItems, orderType, orderBy, category, page),
-    call(fetchPurchaseItemsTotalCount, orderType, orderBy, category),
+    call(fetchMainItems, orderType, orderBy, category, page),
+    call(fetchMainItemsTotalCount, orderType, orderBy, category),
     call(fetchPurchaseCategories),
   ]);
 
@@ -54,9 +54,9 @@ function* loadPurchaseItems() {
   yield call(loadBookData, bookIds);
 
   yield all([
-    put(setPurchaseItems(itemResponse.items)),
-    put(setPurchaseTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setPurchaseFilterOptions(categories)),
+    put(setMainItems(itemResponse.items)),
+    put(setMainTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+    put(setMainFilterOptions(categories)),
   ]);
 }
 
@@ -74,7 +74,7 @@ function* hideSelectedBooks() {
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadPurchaseItems);
+  yield call(loadMainItems);
 }
 
 function* downloadSelectedBooks() {
@@ -101,7 +101,7 @@ function* selectAllMainBooks() {
 
 export default function* purchaseMainRootSaga() {
   yield all([
-    takeEvery(LOAD_PURCHASE_ITEMS, loadPurchaseItems),
+    takeEvery(LOAD_MAIN_ITEMS, loadMainItems),
     takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
     takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
     takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllMainBooks),

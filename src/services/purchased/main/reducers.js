@@ -1,12 +1,12 @@
 import { initialState } from './state';
 
 import {
-  SET_PURCHASE_ITEMS,
-  SET_PURCHASE_TOTAL_COUNT,
-  SET_PURCHASE_PAGE,
-  SET_PURCHASE_ORDER,
-  SET_PURCHASE_FILTER,
-  SET_PURCHASE_FILTER_OPTIONS,
+  SET_MAIN_ITEMS,
+  SET_MAIN_TOTAL_COUNT,
+  SET_MAIN_PAGE,
+  SET_MAIN_ORDER,
+  SET_MAIN_FILTER,
+  SET_MAIN_FILTER_OPTIONS,
   CLEAR_SELECTED_MAIN_BOOKS,
   TOGGLE_SELECT_MAIN_BOOK,
   SET_SELECT_MAIN_BOOKS,
@@ -16,7 +16,7 @@ import { toDict, toFlatten } from '../../../utils/array';
 
 const purchasedMainReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_PURCHASE_ITEMS:
+    case SET_MAIN_ITEMS:
       return {
         ...state,
         items: {
@@ -28,23 +28,23 @@ const purchasedMainReducer = (state = initialState, action) => {
           [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
-    case SET_PURCHASE_TOTAL_COUNT:
+    case SET_MAIN_TOTAL_COUNT:
       return {
         ...state,
         unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case SET_PURCHASE_PAGE:
+    case SET_MAIN_PAGE:
       return {
         ...state,
         page: action.payload.page,
       };
-    case SET_PURCHASE_ORDER:
+    case SET_MAIN_ORDER:
       return {
         ...state,
         order: action.payload.order,
       };
-    case SET_PURCHASE_FILTER:
+    case SET_MAIN_FILTER:
       return {
         ...state,
         filter: {
@@ -52,7 +52,7 @@ const purchasedMainReducer = (state = initialState, action) => {
           selected: action.payload.filter,
         },
       };
-    case SET_PURCHASE_FILTER_OPTIONS:
+    case SET_MAIN_FILTER_OPTIONS:
       return {
         ...state,
         filter: {

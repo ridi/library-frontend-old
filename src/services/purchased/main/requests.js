@@ -8,7 +8,7 @@ import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
-export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
+export function* fetchMainItems(orderType, orderBy, filter, page) {
   const options = snakelize({
     orderType,
     orderBy,
@@ -23,7 +23,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   return response.data;
 }
 
-export function* fetchPurchaseItemsTotalCount(orderType, orderBy, filter) {
+export function* fetchMainItemsTotalCount(orderType, orderBy, filter) {
   const options = snakelize({ orderType, orderBy, category: filter });
 
   const api = yield put(getAPI());

@@ -18,16 +18,16 @@ import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
 import {
-  loadPurchaseItems,
-  selectAllMainBooks,
   clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
   downloadSelectedBooks,
+  hideSelectedBooks,
+  loadMainItems,
+  selectAllMainBooks,
+  toggleSelectBook,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions, getSelectedBooks } from '../../services/purchased/main/selectors';
+import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -81,9 +81,9 @@ const styles = {
   }),
 };
 
-class Index extends React.Component {
+class Main extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadPurchaseItems());
+    await store.dispatch(loadMainItems());
   }
 
   constructor(props) {
@@ -339,4 +339,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Index);
+)(Main);
