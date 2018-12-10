@@ -18,7 +18,7 @@ export function* fetchPurchaseItems(orderType, orderBy, filter, page) {
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/?${stringify(options)}`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main?${stringify(options)}`);
 
   return response.data;
 }
@@ -27,7 +27,7 @@ export function* fetchPurchaseItemsTotalCount(orderType, orderBy, filter) {
   const options = snakelize({ orderType, orderBy, category: filter });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/count?${stringify(options)}`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main/count?${stringify(options)}`);
   return response.data;
 }
 

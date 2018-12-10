@@ -18,7 +18,7 @@ export function* fetchPurchasedUnitItems(unitId, orderType, orderBy, filter, pag
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/${unitId}?${stringify(options)}`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main/${unitId}?${stringify(options)}`);
 
   return response.data;
 }
@@ -27,6 +27,6 @@ export function* fetchPurchasedUnitItemsTotalCount(unitId, orderType, orderBy, f
   const options = snakelize({ orderType, orderBy, filter });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/${unitId}/count?${stringify(options)}`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main/${unitId}/count?${stringify(options)}`);
   return response.data;
 }
