@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import Link from 'next/link';
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/rsg';
 import { ServiceType } from '../../constants/serviceType';
@@ -6,14 +7,13 @@ import { isExpired } from '../../utils/datetime';
 
 import { portraitBookCSS, bookCss } from './styles';
 import { UnitCount, RidiSelectBand, ExpireDate, ExpiredCover } from './components';
+import { URLMap } from '../../constants/urls';
 
 const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
   const _isExpired = isExpired(item.expire_date) && ServiceType.isExpirable(item.service_type);
   const hasItems = item.unit_count > 1;
   const isRidiSelect = ServiceType.isRidiselect(item.service_type);
 
-  // Thumbnail과 Meta를 Focusing하기 위해 button으로 Wrapping 했다.
-  // 후에 Link로 변경 하자
   return (
     <div css={bookCss}>
       {isEditing ? (
@@ -25,22 +25,26 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
       <Book css={portraitBookCSS} className="RSGBook-preset-portrait" dto={book}>
         {({ Thumbnail, Metadata }) => (
           <>
-            <button type="button">
-              <Thumbnail.wrapper thumbnailSize={90} link="unused">
-                <Thumbnail.coverImage />
-                <Thumbnail.setBooklet />
-                <Thumbnail.adultOnlyBadge />
-                {_isExpired && <ExpiredCover isRidiSelect={isRidiSelect} hasItems={hasItems} isLandscape={false} />}
-                {isRidiSelect && !hasItems && <RidiSelectBand />}
-                {hasItems && <UnitCount item={item} unit={book.series && book.series.property.unit} />}
-              </Thumbnail.wrapper>
-            </button>
-            <button type="button">
-              <Metadata.wrapper>
-                <Metadata.title link="unused" />
-                <ExpireDate expireDate={item.expire_date} serviceType={item.service_type} isExpired={_isExpired} />
-              </Metadata.wrapper>
-            </button>
+            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
+              <a>
+                <Thumbnail.wrapper thumbnailSize={90} link="unused">
+                  <Thumbnail.coverImage />
+                  <Thumbnail.setBooklet />
+                  <Thumbnail.adultOnlyBadge />
+                  {_isExpired && <ExpiredCover isRidiSelect={isRidiSelect} hasItems={hasItems} isLandscape={false} />}
+                  {isRidiSelect && !hasItems && <RidiSelectBand />}
+                  {hasItems && <UnitCount item={item} unit={book.series && book.series.property.unit} />}
+                </Thumbnail.wrapper>
+              </a>
+            </Link>
+            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
+              <a>
+                <Metadata.wrapper>
+                  <Metadata.title link="unused" />
+                  <ExpireDate expireDate={item.expire_date} serviceType={item.service_type} isExpired={_isExpired} />
+                </Metadata.wrapper>
+              </a>
+            </Link>
           </>
         )}
       </Book>
