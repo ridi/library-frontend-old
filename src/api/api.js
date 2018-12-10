@@ -1,27 +1,34 @@
 import axios from 'axios';
+import { retry } from '../utils/retry';
 
 export default class API {
-  constructor(config) {
+  constructor(config, retryCount = 3, retryDelay = 1000) {
     this.http = axios.create();
     this.config = config;
+    this.retryCount = retryCount;
+    this.retryDelay = retryDelay;
     this.interceptors = [];
+  }
+
+  getRetryOptions() {
+    return { retryCount: this.retryCount, retryDelay: this.retryDelay };
   }
 
   // Request
   get(url) {
-    return this.http.get(url, this.config);
+    return retry(this.getRetryOptions(), this.http.get, url, this.config);
   }
 
   post(url, data) {
-    return this.http.post(url, data, this.config);
+    return retry(this.getRetryOptions(), this.http.post, url, data, this.config);
   }
 
   put(url, data) {
-    return this.http.put(url, data, this.config);
+    return retry(this.getRetryOptions(), this.http.put, url, data, this.config);
   }
 
   delete(url) {
-    return this.http.delete(url, this.config);
+    return retry(this.getRetryOptions(), this.http.delete, url, this.config);
   }
 
   // Interceptor
