@@ -55,12 +55,8 @@ class PurchasedMainUnit extends React.Component {
   }
 
   render() {
-    const {
-      pageInfo: { unitId },
-    } = this.props;
     return (
       <>
-        <div>Unit id: {unitId}</div>
         <main>
           <Responsive>
             {this.renderBooks()}
