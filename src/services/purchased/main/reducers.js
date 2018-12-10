@@ -14,7 +14,7 @@ import {
 
 import { toDict, toFlatten } from '../../../utils/array';
 
-const purchasedMainReducer = (state = initialState, action) => {
+const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_MAIN_ITEMS:
       return {
@@ -90,4 +90,4 @@ const purchasedMainReducer = (state = initialState, action) => {
   }
 };
 
-export default purchasedMainReducer;
+export default mainReducer;

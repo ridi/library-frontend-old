@@ -4,31 +4,31 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const getPurchasedMainState = state => state.purchasedMain;
+const getMainState = state => state.purchasedMain;
 
 export const getItems = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.items,
+  getMainState,
+  mainState => mainState.items,
 );
 
 export const getItemsByPage = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => {
-    const { page, itemIdsForPage, items } = purchasedMainState;
+  getMainState,
+  mainState => {
+    const { page, itemIdsForPage, items } = mainState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
 );
 
 export const getPageInfo = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => {
+  getMainState,
+  mainState => {
     const {
       page,
       unitTotalCount,
       order,
       filter: { selected },
-    } = purchasedMainState;
+    } = mainState;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
@@ -44,26 +44,26 @@ export const getPageInfo = createSelector(
 );
 
 export const getPage = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.page,
+  getMainState,
+  mainState => mainState.page,
 );
 
 export const getOrder = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.order,
+  getMainState,
+  mainState => mainState.order,
 );
 
 export const getFilterOptions = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.filter.options,
+  getMainState,
+  mainState => mainState.filter.options,
 );
 
 export const getFilter = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.filter.selected,
+  getMainState,
+  mainState => mainState.filter.selected,
 );
 
-export const getPurchaseOptions = createSelector(
+export const getMainOptions = createSelector(
   [getPage, getOrder, getFilter],
   (page, order, filter) => ({
     page,
@@ -73,6 +73,6 @@ export const getPurchaseOptions = createSelector(
 );
 
 export const getSelectedBooks = createSelector(
-  getPurchasedMainState,
-  purchasedMainState => purchasedMainState.selectedBooks,
+  getMainState,
+  mainState => mainState.selectedBooks,
 );

@@ -36,6 +36,7 @@ const _createFilterOption = (title, value, hasChildren) => ({
   value,
   hasChildren,
 });
+
 const _reformatCategories = categories =>
   categories.reduce(
     (previous, value) => {

@@ -263,11 +263,7 @@ class Main extends React.Component {
         pageCount={PAGE_COUNT}
         href={URLMap.main.href}
         as={URLMap.main.as}
-        query={{
-          orderType,
-          orderBy,
-          filter,
-        }}
+        query={{ orderType, orderBy, filter }}
       />
     );
   }
