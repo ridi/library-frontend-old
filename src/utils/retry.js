@@ -6,7 +6,7 @@ export const retry = async (options, fn, ...params) => {
   try {
     return await fn(...params);
   } catch (err) {
-    if (retryCount === 1) {
+    if (retryCount === 0) {
       throw err;
     }
 
