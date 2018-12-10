@@ -6,11 +6,17 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 
 const getMainUnitState = state => state.purchasedMainUnit;
 
+export const getItems = createSelector(
+  getMainUnitState,
+  mainUnitState => mainUnitState.items,
+);
+
 export const getItemsByPage = createSelector(
   getMainUnitState,
   mainUnitState => {
-    const { page } = mainUnitState;
-    return mainUnitState.items[page] || [];
+    const { page, itemIdsForPage, items } = mainUnitState;
+    const itemIds = itemIdsForPage[page] || [];
+    return itemIds.map(itemId => items[itemId]);
   },
 );
 
@@ -72,4 +78,9 @@ export const getMainUnitOptions = createSelector(
     order,
     filter,
   }),
+);
+
+export const getSelectedBooks = createSelector(
+  getMainUnitState,
+  mainUnitState => mainUnitState.selectedBooks,
 );

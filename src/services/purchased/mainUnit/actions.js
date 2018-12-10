@@ -63,14 +63,3 @@ export const setMainUnitFilterOptions = options => ({
     options,
   },
 });
-
-const changeMainUnitOption = (key, value) => ({
-  type: CHANGE_MAIN_UNIT_OPTION,
-  payload: {
-    key,
-    value,
-  },
-});
-
-export const changeMainUnitOrder = order => changeMainUnitOption('order', order);
-export const changeMainUnitFilter = filter => changeMainUnitOption('filter', filter);

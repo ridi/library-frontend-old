@@ -9,6 +9,7 @@ import {
   SET_MAIN_UNIT_FILTER_OPTIONS,
   SET_MAIN_UNIT_ID,
 } from './actions';
+import { toDict, toFlatten } from '../../../utils/array';
 
 const mainUnitReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -17,7 +18,11 @@ const mainUnitReducer = (state = initialState, action) => {
         ...state,
         items: {
           ...state.items,
-          [state.page]: action.payload.items,
+          ...toDict(action.payload.items, 'b_id'),
+        },
+        itemIdsForPage: {
+          ...state.itemIdsForPage,
+          [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
     case SET_MAIN_UNIT_TOTAL_COUNT:

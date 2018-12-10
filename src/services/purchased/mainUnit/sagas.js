@@ -1,15 +1,13 @@
-import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   LOAD_MAIN_UNIT_ITEMS,
-  CHANGE_MAIN_UNIT_OPTION,
-  setMainUnitItems,
-  setMainUnitTotalCount,
-  setMainUnitPage,
-  setMainUnitOrder,
   setMainUnitFilter,
   setMainUnitFilterOptions,
+  setMainUnitItems,
+  setMainUnitOrder,
+  setMainUnitPage,
+  setMainUnitTotalCount,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
 
@@ -18,9 +16,8 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getMainUnitOptions, getUnitId } from './selectors';
-import { makeURI } from '../../../utils/uri';
 
-const getBookIdsFromItems = items => items.map(item => item.b_id);
+import { toFlatten } from '../../../utils/array';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
@@ -36,8 +33,8 @@ function* persistPageOptionsFromQuries() {
 function* loadMainUnitItems() {
   yield call(persistPageOptionsFromQuries);
 
-  const { page, order, filter: category } = yield select(getMainUnitOptions);
   const unitId = yield select(getUnitId);
+  const { page, order, filter: category } = yield select(getMainUnitOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse, categories] = yield all([
@@ -46,7 +43,7 @@ function* loadMainUnitItems() {
   ]);
 
   // Request BookData
-  const bookIds = getBookIdsFromItems(itemResponse.items);
+  const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
   yield all([
@@ -56,28 +53,6 @@ function* loadMainUnitItems() {
   ]);
 }
 
-function* changeMainUnitOption(action) {
-  const { unitId, page, order, filter } = yield select(getMainUnitOptions);
-
-  let { orderBy, orderType } = MainOrderOptions.parse(order);
-  let _filter = filter;
-
-  if (action.payload.key === 'order') {
-    ({ orderBy, orderType } = MainOrderOptions.parse(action.payload.value));
-  } else if (action.payload.key === 'filter') {
-    _filter = action.payload.value;
-  }
-
-  const query = {
-    page,
-    orderBy,
-    orderType,
-    filter: _filter,
-  };
-
-  Router.push(makeURI(`/purchased/${unitId}`, query));
-}
-
 export default function* purchaseRootSaga() {
-  yield all([takeEvery(LOAD_MAIN_UNIT_ITEMS, loadMainUnitItems), takeEvery(CHANGE_MAIN_UNIT_OPTION, changeMainUnitOption)]);
+  yield all([takeEvery(LOAD_MAIN_UNIT_ITEMS, loadMainUnitItems)]);
 }
