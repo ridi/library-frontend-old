@@ -3,7 +3,7 @@ import { maxWidthWrapper } from '../../../styles';
 
 export const FOOTER_HEIGHT = 254;
 
-export const Footer = css({
+export const footer = css({
   height: FOOTER_HEIGHT,
   boxSizing: 'border-box',
   padding: '40px 0 0 0',
@@ -15,7 +15,7 @@ export const ContentsWrapper = css({
   ...maxWidthWrapper,
 });
 
-export const HeadlineItem = css({
+export const headlineItem = css({
   position: 'relative',
   display: 'inline-block',
   padding: '0 7px 0 8px',
@@ -36,13 +36,13 @@ export const HeadlineItem = css({
   },
 });
 
-export const HeadlineLink = css({
+export const headlineLink = css({
   fontSize: 15,
   fontWeight: 900,
   color: '#40474d',
 });
 
-export const RidibooksLogoIcon = css({
+export const ridibooksLogoIcon = css({
   width: 16,
   height: 16,
   fill: '#1f8ce6',
@@ -50,11 +50,11 @@ export const RidibooksLogoIcon = css({
   verticalAlign: 'top',
 });
 
-export const BizInfoList = css({
+export const bizInfoList = css({
   marginTop: 16,
 });
 
-export const InfoItem = css({
+export const infoItem = css({
   fontSize: 11,
   lineHeight: '17px',
   color: '#9ea7ad',
@@ -63,12 +63,12 @@ export const InfoItem = css({
   },
 });
 
-export const TermsList = css({
+export const termsList = css({
   marginTop: 20,
   fontSize: 0,
 });
 
-export const TermsItem = css({
+export const termsItem = css({
   position: 'relative',
   display: 'inline-block',
   padding: '0 4px 0 5px',
@@ -88,7 +88,7 @@ export const TermsItem = css({
   },
 });
 
-export const TermLink = css({
+export const termLink = css({
   display: 'block',
   fontSize: 11,
   height: 12,
@@ -96,7 +96,7 @@ export const TermLink = css({
   color: '#808991',
 });
 
-export const Copyright = css({
+export const copyright = css({
   marginTop: 20,
   color: '#9ea7ad',
   fontSize: 14,

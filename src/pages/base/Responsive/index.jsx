@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import * as styles from './styles';
 
 const Responsive = ({ className, children }) => (
-  <div css={styles.Responsive} className={className}>
+  <div css={styles.responsive} className={className}>
     {children}
   </div>
 );

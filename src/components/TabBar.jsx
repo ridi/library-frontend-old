@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 
 const styles = {
-  TabBar: css({
+  tabBar: css({
     listStyle: 'none',
     margin: 0,
     padding: 0,
@@ -11,5 +11,5 @@ const styles = {
   }),
 };
 
-const TabBar = ({ children }) => <ul css={styles.TabBar}>{children}</ul>;
+const TabBar = ({ children }) => <ul css={styles.tabBar}>{children}</ul>;
 export default TabBar;

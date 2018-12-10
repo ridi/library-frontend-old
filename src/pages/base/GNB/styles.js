@@ -8,13 +8,13 @@ export const GNB = css([
   { background: 'white', borderBottom: '1px solid #f2f4f5' },
 ]);
 
-export const FlexWrapper = css({
+export const flexWrapper = css({
   display: 'flex',
   justifyContent: 'space-between',
   ...maxWidthWrapper,
 });
 
-export const Title = css({
+export const title = css({
   display: 'inline-block',
   padding: '12px 6px 12px 0',
   fontSize: 20,
@@ -25,15 +25,15 @@ export const Title = css({
   verticalAlign: 'top',
 });
 
-export const TitleLink = css({});
+export const titleLink = css({});
 
-export const FamilyServiceList = css({
+export const familyServiceList = css({
   display: 'inline-block',
   padding: '12px 0 14px 0',
   verticalAlign: 'top',
 });
 
-export const FamilyServiceItem = css({
+export const familyServiceItem = css({
   position: 'relative',
   display: 'inline-block',
   fontSize: 0,
@@ -57,32 +57,32 @@ export const FamilyServiceItem = css({
   },
 });
 
-export const FamilyServiceLink = css({
+export const familyServiceLink = css({
   display: 'inline-block',
   padding: 6,
 });
 
-export const RidibooksIcon = css({
+export const ridibooksIcon = css({
   width: 65,
   height: 10,
   fill: '#b8bfc4',
 });
 
-export const RidiSelectIcon = css({
+export const ridiSelectIcon = css({
   width: 62,
   height: 10,
   fill: '#b8bfc4',
 });
 
-export const MyMenuWrapper = css({
+export const myMenuWrapper = css({
   padding: '7px 0',
 });
 
-export const MyMenuToggleButton = css({
+export const myMenuToggleButton = css({
   padding: '6px 0',
 });
 
-export const MyMenuIcon = isActive =>
+export const myMenuIcon = isActive =>
   css([
     {
       width: 20,
