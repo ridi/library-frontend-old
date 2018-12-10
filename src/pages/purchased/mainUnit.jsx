@@ -5,12 +5,7 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
 
-import {
-  loadPurchasedUnitItems,
-  changePurchasedUnitOrder,
-  changePurchasedUnitFilter,
-  setPurchasedUnitId,
-} from '../../services/purchased/mainUnit/actions';
+import { loadMainUnitItems, changeMainUnitOrder, changeMainUnitFilter, setMainUnitId } from '../../services/purchased/mainUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
 import { getItemsByPage, getPageInfo, getFilterOptions } from '../../services/purchased/mainUnit/selectors';
@@ -20,10 +15,10 @@ import { PAGE_COUNT } from '../../constants/page';
 import Responsive from '../base/Responsive';
 import { URLMap } from '../../constants/urls';
 
-class PurchasedMainUnit extends React.Component {
+class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setPurchasedUnitId(query.unitId));
-    await store.dispatch(loadPurchasedUnitItems());
+    await store.dispatch(setMainUnitId(query.unitId));
+    await store.dispatch(loadMainUnitItems());
   }
 
   renderBooks() {
@@ -82,11 +77,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  changePurchaseOrder: changePurchasedUnitOrder,
-  changePurchaseFilter: changePurchasedUnitFilter,
+  changePurchaseOrder: changeMainUnitOrder,
+  changePurchaseFilter: changeMainUnitFilter,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PurchasedMainUnit);
+)(MainUnit);

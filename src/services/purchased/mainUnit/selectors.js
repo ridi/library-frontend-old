@@ -4,26 +4,26 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const getPurchasedUnitState = state => state.purchasedUnit;
+const getMainUnitState = state => state.purchasedMainUnit;
 
 export const getItemsByPage = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => {
-    const { page } = purchasedUnitState;
-    return purchasedUnitState.items[page] || [];
+  getMainUnitState,
+  mainUnitState => {
+    const { page } = mainUnitState;
+    return mainUnitState.items[page] || [];
   },
 );
 
 export const getPageInfo = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => {
+  getMainUnitState,
+  mainUnitState => {
     const {
       unitId,
       page,
       unitTotalCount,
       order,
       filter: { selected },
-    } = purchasedUnitState;
+    } = mainUnitState;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
@@ -40,31 +40,31 @@ export const getPageInfo = createSelector(
 );
 
 export const getUnitId = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.unitId,
+  getMainUnitState,
+  mainUnitState => mainUnitState.unitId,
 );
 
 export const getPage = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.page,
+  getMainUnitState,
+  mainUnitState => mainUnitState.page,
 );
 
 export const getOrder = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.order,
+  getMainUnitState,
+  mainUnitState => mainUnitState.order,
 );
 
 export const getFilterOptions = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.filter.options,
+  getMainUnitState,
+  mainUnitState => mainUnitState.filter.options,
 );
 
 export const getFilter = createSelector(
-  getPurchasedUnitState,
-  purchasedUnitState => purchasedUnitState.filter.selected,
+  getMainUnitState,
+  mainUnitState => mainUnitState.filter.selected,
 );
 
-export const getPurchasedUnitOptions = createSelector(
+export const getMainUnitOptions = createSelector(
   [getUnitId, getPage, getOrder, getFilter],
   (unitId, page, order, filter) => ({
     unitId,

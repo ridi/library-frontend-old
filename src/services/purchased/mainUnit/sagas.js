@@ -2,22 +2,22 @@ import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
-  LOAD_PURCHASED_UNIT_ITEMS,
-  CHANGE_PURCHASED_UNIT_OPTION,
-  setPurchasedUnitItems,
-  setPurchasedUnitTotalCount,
-  setPurchasedUnitPage,
-  setPurchasedUnitOrder,
-  setPurchasedUnitFilter,
-  setPurchasedUnitFilterOptions,
+  LOAD_MAIN_UNIT_ITEMS,
+  CHANGE_MAIN_UNIT_OPTION,
+  setMainUnitItems,
+  setMainUnitTotalCount,
+  setMainUnitPage,
+  setMainUnitOrder,
+  setMainUnitFilter,
+  setMainUnitFilterOptions,
 } from './actions';
-import { fetchPurchasedUnitItems, fetchPurchasedUnitItemsTotalCount } from './requests';
+import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getPurchasedUnitOptions, getUnitId } from './selectors';
+import { getMainUnitOptions, getUnitId } from './selectors';
 import { makeURI } from '../../../utils/uri';
 
 const getBookIdsFromItems = items => items.map(item => item.b_id);
@@ -30,19 +30,19 @@ function* persistPageOptionsFromQuries() {
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = query.filter || '';
 
-  yield all([put(setPurchasedUnitPage(page)), put(setPurchasedUnitOrder(order)), put(setPurchasedUnitFilter(filter))]);
+  yield all([put(setMainUnitPage(page)), put(setMainUnitOrder(order)), put(setMainUnitFilter(filter))]);
 }
 
-function* loadPurchaseUnitItems() {
+function* loadMainUnitItems() {
   yield call(persistPageOptionsFromQuries);
 
-  const { page, order, filter: category } = yield select(getPurchasedUnitOptions);
+  const { page, order, filter: category } = yield select(getMainUnitOptions);
   const unitId = yield select(getUnitId);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse, categories] = yield all([
-    call(fetchPurchasedUnitItems, unitId, orderType, orderBy, category, page),
-    call(fetchPurchasedUnitItemsTotalCount, unitId, orderType, orderBy, category),
+    call(fetchMainUnitItems, unitId, orderType, orderBy, category, page),
+    call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy, category),
   ]);
 
   // Request BookData
@@ -50,14 +50,14 @@ function* loadPurchaseUnitItems() {
   yield call(loadBookData, bookIds);
 
   yield all([
-    put(setPurchasedUnitItems(itemResponse.items)),
-    put(setPurchasedUnitTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setPurchasedUnitFilterOptions(categories)),
+    put(setMainUnitItems(itemResponse.items)),
+    put(setMainUnitTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+    put(setMainUnitFilterOptions(categories)),
   ]);
 }
 
-function* changePurchasedUnitOption(action) {
-  const { unitId, page, order, filter } = yield select(getPurchasedUnitOptions);
+function* changeMainUnitOption(action) {
+  const { unitId, page, order, filter } = yield select(getMainUnitOptions);
 
   let { orderBy, orderType } = MainOrderOptions.parse(order);
   let _filter = filter;
@@ -79,8 +79,5 @@ function* changePurchasedUnitOption(action) {
 }
 
 export default function* purchaseRootSaga() {
-  yield all([
-    takeEvery(LOAD_PURCHASED_UNIT_ITEMS, loadPurchaseUnitItems),
-    takeEvery(CHANGE_PURCHASED_UNIT_OPTION, changePurchasedUnitOption),
-  ]);
+  yield all([takeEvery(LOAD_MAIN_UNIT_ITEMS, loadMainUnitItems), takeEvery(CHANGE_MAIN_UNIT_OPTION, changeMainUnitOption)]);
 }

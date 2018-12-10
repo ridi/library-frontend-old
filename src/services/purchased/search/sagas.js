@@ -90,7 +90,7 @@ function* selectAllSearchBooks() {
   yield put(setSelectSearchBooks(bookIds));
 }
 
-export default function* searchRootSaga() {
+export default function* purcahsedSearchRootSaga() {
   yield all([
     takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
     takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),

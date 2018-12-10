@@ -1,76 +1,76 @@
-export const LOAD_PURCHASED_UNIT_ITEMS = 'LOAD_PURCHASED_UNIT_ITEMS';
+export const LOAD_MAIN_UNIT_ITEMS = 'LOAD_MAIN_UNIT_ITEMS';
 
-export const SET_PURCHASED_UNIT_ITEMS = 'SET_PURCHASED_UNIT_ITEMS';
-export const SET_PURCHASED_UNIT_TOTAL_COUNT = 'SET_PURCHASED_UNIT_TOTAL_COUNT';
-export const SET_PURCHASED_UNIT_ID = 'SET_PURCHASED_UNIT_ID';
-export const SET_PURCHASED_UNIT_PAGE = 'SET_PURCHASED_UNIT_PAGE';
-export const SET_PURCHASED_UNIT_ORDER = 'SET_PURCHASED_UNIT_ORDER';
-export const SET_PURCHASED_UNIT_FILTER = 'SET_PURCHASED_UNIT_FILTER';
-export const SET_PURCHASED_UNIT_FILTER_OPTIONS = 'SET_PURCHASED_UNIT_FILTER_OPTIONS';
+export const SET_MAIN_UNIT_ITEMS = 'SET_MAIN_UNIT_ITEMS';
+export const SET_MAIN_UNIT_TOTAL_COUNT = 'SET_MAIN_UNIT_TOTAL_COUNT';
+export const SET_MAIN_UNIT_ID = 'SET_MAIN_UNIT_ID';
+export const SET_MAIN_UNIT_PAGE = 'SET_MAIN_UNIT_PAGE';
+export const SET_MAIN_UNIT_ORDER = 'SET_MAIN_UNIT_ORDER';
+export const SET_MAIN_UNIT_FILTER = 'SET_MAIN_UNIT_FILTER';
+export const SET_MAIN_UNIT_FILTER_OPTIONS = 'SET_MAIN_UNIT_FILTER_OPTIONS';
 
-export const CHANGE_PURCHASED_UNIT_OPTION = 'CHANGE_PURCHASED_UNIT_OPTION';
+export const CHANGE_MAIN_UNIT_OPTION = 'CHANGE_MAIN_UNIT_OPTION';
 
-export const loadPurchasedUnitItems = () => ({
-  type: LOAD_PURCHASED_UNIT_ITEMS,
+export const loadMainUnitItems = () => ({
+  type: LOAD_MAIN_UNIT_ITEMS,
 });
 
-export const setPurchasedUnitItems = items => ({
-  type: SET_PURCHASED_UNIT_ITEMS,
+export const setMainUnitItems = items => ({
+  type: SET_MAIN_UNIT_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setPurchasedUnitTotalCount = (unitTotalCount, itemTotalCount) => ({
-  type: SET_PURCHASED_UNIT_TOTAL_COUNT,
+export const setMainUnitTotalCount = (unitTotalCount, itemTotalCount) => ({
+  type: SET_MAIN_UNIT_TOTAL_COUNT,
   payload: {
     unitTotalCount,
     itemTotalCount,
   },
 });
 
-export const setPurchasedUnitId = unitId => ({
-  type: SET_PURCHASED_UNIT_ID,
+export const setMainUnitId = unitId => ({
+  type: SET_MAIN_UNIT_ID,
   payload: {
     unitId,
   },
 });
 
-export const setPurchasedUnitPage = page => ({
-  type: SET_PURCHASED_UNIT_PAGE,
+export const setMainUnitPage = page => ({
+  type: SET_MAIN_UNIT_PAGE,
   payload: {
     page,
   },
 });
 
-export const setPurchasedUnitOrder = order => ({
-  type: SET_PURCHASED_UNIT_ORDER,
+export const setMainUnitOrder = order => ({
+  type: SET_MAIN_UNIT_ORDER,
   payload: {
     order,
   },
 });
 
-export const setPurchasedUnitFilter = filter => ({
-  type: SET_PURCHASED_UNIT_FILTER,
+export const setMainUnitFilter = filter => ({
+  type: SET_MAIN_UNIT_FILTER,
   payload: {
     filter,
   },
 });
 
-export const setPurchasedUnitFilterOptions = options => ({
-  type: SET_PURCHASED_UNIT_FILTER_OPTIONS,
+export const setMainUnitFilterOptions = options => ({
+  type: SET_MAIN_UNIT_FILTER_OPTIONS,
   payload: {
     options,
   },
 });
 
-const changePurchasedUnitOption = (key, value) => ({
-  type: CHANGE_PURCHASED_UNIT_OPTION,
+const changeMainUnitOption = (key, value) => ({
+  type: CHANGE_MAIN_UNIT_OPTION,
   payload: {
     key,
     value,
   },
 });
 
-export const changePurchasedUnitOrder = order => changePurchasedUnitOption('order', order);
-export const changePurchasedUnitFilter = filter => changePurchasedUnitOption('filter', filter);
+export const changeMainUnitOrder = order => changeMainUnitOption('order', order);
+export const changeMainUnitFilter = filter => changeMainUnitOption('filter', filter);

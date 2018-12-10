@@ -1,18 +1,18 @@
 import { initialState } from './state';
 
 import {
-  SET_PURCHASED_UNIT_ITEMS,
-  SET_PURCHASED_UNIT_TOTAL_COUNT,
-  SET_PURCHASED_UNIT_PAGE,
-  SET_PURCHASED_UNIT_ORDER,
-  SET_PURCHASED_UNIT_FILTER,
-  SET_PURCHASED_UNIT_FILTER_OPTIONS,
-  SET_PURCHASED_UNIT_ID,
+  SET_MAIN_UNIT_ITEMS,
+  SET_MAIN_UNIT_TOTAL_COUNT,
+  SET_MAIN_UNIT_PAGE,
+  SET_MAIN_UNIT_ORDER,
+  SET_MAIN_UNIT_FILTER,
+  SET_MAIN_UNIT_FILTER_OPTIONS,
+  SET_MAIN_UNIT_ID,
 } from './actions';
 
-const purchasedUnitReducer = (state = initialState, action) => {
+const mainUnitReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_PURCHASED_UNIT_ITEMS:
+    case SET_MAIN_UNIT_ITEMS:
       return {
         ...state,
         items: {
@@ -20,28 +20,28 @@ const purchasedUnitReducer = (state = initialState, action) => {
           [state.page]: action.payload.items,
         },
       };
-    case SET_PURCHASED_UNIT_TOTAL_COUNT:
+    case SET_MAIN_UNIT_TOTAL_COUNT:
       return {
         ...state,
         unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case SET_PURCHASED_UNIT_ID:
+    case SET_MAIN_UNIT_ID:
       return {
         ...state,
         unitId: action.payload.unitId,
       };
-    case SET_PURCHASED_UNIT_PAGE:
+    case SET_MAIN_UNIT_PAGE:
       return {
         ...state,
         page: action.payload.page,
       };
-    case SET_PURCHASED_UNIT_ORDER:
+    case SET_MAIN_UNIT_ORDER:
       return {
         ...state,
         order: action.payload.order,
       };
-    case SET_PURCHASED_UNIT_FILTER:
+    case SET_MAIN_UNIT_FILTER:
       return {
         ...state,
         filter: {
@@ -49,7 +49,7 @@ const purchasedUnitReducer = (state = initialState, action) => {
           selected: action.payload.filter,
         },
       };
-    case SET_PURCHASED_UNIT_FILTER_OPTIONS:
+    case SET_MAIN_UNIT_FILTER_OPTIONS:
       return {
         ...state,
         filter: {
@@ -62,4 +62,4 @@ const purchasedUnitReducer = (state = initialState, action) => {
   }
 };
 
-export default purchasedUnitReducer;
+export default mainUnitReducer;
