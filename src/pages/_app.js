@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withReduxSaga from 'next-redux-saga';
-import { hydrate, injectGlobal } from 'emotion';
+import { hydrate } from 'emotion';
 
 import injectStore from '../store';
 import flow from '../utils/flow';
@@ -10,7 +10,6 @@ import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } 
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 import Layout from './base/Layout';
-import { reset } from '../styles/reset';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -26,8 +25,6 @@ class LibraryApp extends App {
       initializeTabKeyFocus();
       initializeSentry();
     }
-    injectGlobal(reset);
-
     this.disposeBag = [];
   }
 
