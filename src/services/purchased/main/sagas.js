@@ -1,8 +1,8 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
-  DOWNLOAD_SELECTED_BOOKS,
-  HIDE_SELECTED_BOOKS,
+  DOWNLOAD_SELECTED_MAIN_BOOKS,
+  HIDE_SELECTED_MAIN_BOOKS,
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
   setMainFilter,
@@ -11,7 +11,7 @@ import {
   setMainOrder,
   setMainPage,
   setMainTotalCount,
-  setSelectBooks,
+  setSelectMainBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
@@ -96,14 +96,14 @@ function* downloadSelectedBooks() {
 function* selectAllMainBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectBooks(bookIds));
+  yield put(setSelectMainBooks(bookIds));
 }
 
 export default function* purchaseMainRootSaga() {
   yield all([
     takeEvery(LOAD_MAIN_ITEMS, loadMainItems),
-    takeEvery(HIDE_SELECTED_BOOKS, hideSelectedBooks),
-    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooks),
+    takeEvery(HIDE_SELECTED_MAIN_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_MAIN_BOOKS, downloadSelectedBooks),
     takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllMainBooks),
   ]);
 }

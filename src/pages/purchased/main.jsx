@@ -18,12 +18,12 @@ import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
 import {
-  clearSelectedBooks,
-  downloadSelectedBooks,
-  hideSelectedBooks,
+  clearSelectedMainBooks,
+  downloadSelectedMainBooks,
+  hideSelectedMainBooks,
   loadMainItems,
   selectAllMainBooks,
-  toggleSelectBook,
+  toggleSelectMainBook,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -120,18 +120,6 @@ class Main extends React.Component {
 
   handleOnClickOutOfModal = () => {
     this.setState({ showMoreModal: false, showFilterModal: false });
-  };
-
-  handleChangeFilter = filter => {
-    const { changePurchaseFilter: dispatchChangePurchaseFilter } = this.props;
-    this.setState({ showFilterModal: false });
-    dispatchChangePurchaseFilter(filter);
-  };
-
-  handleChangeOrder = order => {
-    const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
-    this.setState({ showMoreModal: false });
-    dispatchChangePurchaseOrder(order);
   };
 
   handleOnSubmitSearchBar = value => {
@@ -326,10 +314,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   selectAllMainBooks,
-  clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
-  downloadSelectedBooks,
+  clearSelectedBooks: clearSelectedMainBooks,
+  toggleSelectBook: toggleSelectMainBook,
+  hideSelectedBooks: hideSelectedMainBooks,
+  downloadSelectedBooks: downloadSelectedMainBooks,
 };
 
 export default connect(

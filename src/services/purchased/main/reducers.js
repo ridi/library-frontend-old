@@ -1,15 +1,15 @@
 import { initialState } from './state';
 
 import {
-  SET_MAIN_ITEMS,
-  SET_MAIN_TOTAL_COUNT,
-  SET_MAIN_PAGE,
-  SET_MAIN_ORDER,
+  CLEAR_SELECTED_MAIN_BOOKS,
   SET_MAIN_FILTER,
   SET_MAIN_FILTER_OPTIONS,
-  CLEAR_SELECTED_MAIN_BOOKS,
-  TOGGLE_SELECT_MAIN_BOOK,
+  SET_MAIN_ITEMS,
+  SET_MAIN_ORDER,
+  SET_MAIN_PAGE,
+  SET_MAIN_TOTAL_COUNT,
   SET_SELECT_MAIN_BOOKS,
+  TOGGLE_SELECT_MAIN_BOOK,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
