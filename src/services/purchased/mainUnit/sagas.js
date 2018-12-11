@@ -94,7 +94,7 @@ function* selectAllMainUnitBooks() {
   yield put(setSelectMainUnitBooks(bookIds));
 }
 
-export default function* purchaseRootSaga() {
+export default function* purchaseMainUnitRootSaga() {
   yield all([
     takeEvery(LOAD_MAIN_UNIT_ITEMS, loadMainUnitItems),
     takeEvery(HIDE_SELECTED_MAIN_UNIT_BOOKS, hideSelectedMainUnitBooks),

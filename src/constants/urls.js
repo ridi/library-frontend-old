@@ -13,6 +13,10 @@ export const URLMap = {
   },
   mainUnit: {
     href: 'purchased/mainUnit',
-    as: unitId => `purchased/${unitId}`,
+    as: unitId => `/purchased/${unitId}`,
+  },
+  searchUnit: {
+    href: 'purchased/searchUnit',
+    as: unitId => `/purchased/search/${unitId}`,
   },
 };
