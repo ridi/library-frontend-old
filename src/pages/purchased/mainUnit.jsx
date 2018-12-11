@@ -23,12 +23,12 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
 import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/mainUnit/selectors';
 import {
-  clearSelectedBooks,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  selectAllMainBooks,
-  toggleSelectBook,
-} from '../../services/purchased/main/actions';
+  clearSelectedMainUnitBooks,
+  downloadSelectedMainUnitBooks,
+  hideSelectedMainUnitBooks,
+  selectAllMainUnitBooks,
+  toggleSelectMainUnitBook,
+} from '../../services/purchased/mainUnit/actions';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -111,12 +111,6 @@ class MainUnit extends React.Component {
     this.setState({ showMoreModal: false });
   };
 
-  handleChangeOrder = order => {
-    const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
-    this.setState({ showMoreModal: false });
-    dispatchChangePurchaseOrder(order);
-  };
-
   handleOnClickHide = () => {
     const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
@@ -126,7 +120,7 @@ class MainUnit extends React.Component {
   };
 
   handleOnClickDownload = () => {
-    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedMainUnitBooks: dispatchClearSelectedBooks } = this.props;
 
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
@@ -135,12 +129,7 @@ class MainUnit extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const {
-      items,
-      selectedBooks,
-      selectAllMainBooks: dispatchSelectAllMainBooks,
-      clearSelectedBooks: dispatchClearSelectedBooks,
-    } = this.props;
+    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
       const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
@@ -148,7 +137,7 @@ class MainUnit extends React.Component {
         <EditingBar
           totalSelectedCount={Object.keys(selectedBooks).length}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllMainBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
           onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
@@ -281,11 +270,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllMainBooks,
-  clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
-  downloadSelectedBooks,
+  selectAllBooks: selectAllMainUnitBooks,
+  clearSelectedBooks: clearSelectedMainUnitBooks,
+  toggleSelectBook: toggleSelectMainUnitBook,
+  hideSelectedBooks: hideSelectedMainUnitBooks,
+  downloadSelectedBooks: downloadSelectedMainUnitBooks,
 };
 
 export default connect(

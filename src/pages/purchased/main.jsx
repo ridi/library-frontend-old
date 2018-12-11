@@ -161,12 +161,7 @@ class Main extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const {
-      items,
-      selectedBooks,
-      selectAllMainBooks: dispatchSelectAllMainBooks,
-      clearSelectedBooks: dispatchClearSelectedBooks,
-    } = this.props;
+    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
       const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
@@ -174,7 +169,7 @@ class Main extends React.Component {
         <EditingBar
           totalSelectedCount={Object.keys(selectedBooks).length}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllMainBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
           onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
@@ -313,7 +308,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllMainBooks,
+  selectAllBooks: selectAllMainBooks,
   clearSelectedBooks: clearSelectedMainBooks,
   toggleSelectBook: toggleSelectMainBook,
   hideSelectedBooks: hideSelectedMainBooks,

@@ -20,7 +20,7 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
 import { getQuery } from '../../router/selectors';
-import { getItems, getItemsByPage, getMainOptions, getSelectedBooks } from './selectors';
+import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './selectors';
 
 import { loadBookData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
@@ -40,7 +40,7 @@ function* persistPageOptionsFromQuries() {
 function* loadMainItems() {
   yield call(persistPageOptionsFromQuries);
 
-  const { page, order, filter: category } = yield select(getMainOptions);
+  const { page, order, filter: category } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse, categories] = yield all([
@@ -64,7 +64,7 @@ function* hideSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
-  const { order } = yield select(getMainOptions);
+  const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks), orderType, orderBy);
 
@@ -81,7 +81,7 @@ function* downloadSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
-  const { order } = yield select(getMainOptions);
+  const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks), orderType, orderBy);
 

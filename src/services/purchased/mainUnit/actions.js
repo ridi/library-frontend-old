@@ -8,7 +8,13 @@ export const SET_MAIN_UNIT_ORDER = 'SET_MAIN_UNIT_ORDER';
 export const SET_MAIN_UNIT_FILTER = 'SET_MAIN_UNIT_FILTER';
 export const SET_MAIN_UNIT_FILTER_OPTIONS = 'SET_MAIN_UNIT_FILTER_OPTIONS';
 
-export const CHANGE_MAIN_UNIT_OPTION = 'CHANGE_MAIN_UNIT_OPTION';
+export const SELECT_ALL_MAIN_UNIT_BOOKS = 'SELECT_ALL_MAIN_UNIT_BOOKS ';
+export const CLEAR_SELECTED_MAIN_UNIT_BOOKS = 'CLEAR_SELECTED_MAIN_UNIT_BOOKS';
+export const TOGGLE_SELECT_MAIN_UNIT_BOOK = 'TOGGLE_SELECT_MAIN_UNIT_BOOK';
+export const SET_SELECT_MAIN_UNIT_BOOKS = 'SET_SELECT_MAIN_UNIT_BOOKS';
+
+export const HIDE_SELECTED_MAIN_UNIT_BOOKS = 'HIDE_SELECTED_MAIN_UNIT_BOOKS';
+export const DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS = 'DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS';
 
 export const loadMainUnitItems = () => ({
   type: LOAD_MAIN_UNIT_ITEMS,
@@ -62,4 +68,34 @@ export const setMainUnitFilterOptions = options => ({
   payload: {
     options,
   },
+});
+
+export const selectAllMainUnitBooks = () => ({
+  type: SELECT_ALL_MAIN_UNIT_BOOKS,
+});
+
+export const clearSelectedMainUnitBooks = () => ({
+  type: CLEAR_SELECTED_MAIN_UNIT_BOOKS,
+});
+
+export const toggleSelectMainUnitBook = bookId => ({
+  type: TOGGLE_SELECT_MAIN_UNIT_BOOK,
+  payload: {
+    bookId,
+  },
+});
+
+export const setSelectMainUnitBooks = bookIds => ({
+  type: SET_SELECT_MAIN_UNIT_BOOKS,
+  payload: {
+    bookIds,
+  },
+});
+
+export const hideSelectedMainUnitBooks = () => ({
+  type: HIDE_SELECTED_MAIN_UNIT_BOOKS,
+});
+
+export const downloadSelectedMainUnitBooks = () => ({
+  type: DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
 });

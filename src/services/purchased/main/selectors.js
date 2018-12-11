@@ -4,31 +4,31 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const getMainState = state => state.purchasedMain;
+const getState = state => state.purchasedMain;
 
 export const getItems = createSelector(
-  getMainState,
-  mainState => mainState.items,
+  getState,
+  state => state.items,
 );
 
 export const getItemsByPage = createSelector(
-  getMainState,
-  mainState => {
-    const { page, itemIdsForPage, items } = mainState;
+  getState,
+  state => {
+    const { page, itemIdsForPage, items } = state;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
 );
 
 export const getPageInfo = createSelector(
-  getMainState,
-  mainState => {
+  getState,
+  state => {
     const {
       page,
       unitTotalCount,
       order,
       filter: { selected },
-    } = mainState;
+    } = state;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
@@ -44,26 +44,26 @@ export const getPageInfo = createSelector(
 );
 
 export const getPage = createSelector(
-  getMainState,
-  mainState => mainState.page,
+  getState,
+  state => state.page,
 );
 
 export const getOrder = createSelector(
-  getMainState,
-  mainState => mainState.order,
+  getState,
+  state => state.order,
 );
 
 export const getFilterOptions = createSelector(
-  getMainState,
-  mainState => mainState.filter.options,
+  getState,
+  state => state.filter.options,
 );
 
 export const getFilter = createSelector(
-  getMainState,
-  mainState => mainState.filter.selected,
+  getState,
+  state => state.filter.selected,
 );
 
-export const getMainOptions = createSelector(
+export const getOptions = createSelector(
   [getPage, getOrder, getFilter],
   (page, order, filter) => ({
     page,
@@ -73,6 +73,6 @@ export const getMainOptions = createSelector(
 );
 
 export const getSelectedBooks = createSelector(
-  getMainState,
-  mainState => mainState.selectedBooks,
+  getState,
+  state => state.selectedBooks,
 );

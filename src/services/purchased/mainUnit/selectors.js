@@ -4,32 +4,32 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const getMainUnitState = state => state.purchasedMainUnit;
+const getState = state => state.purchasedMainUnit;
 
 export const getItems = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.items,
+  getState,
+  state => state.items,
 );
 
 export const getItemsByPage = createSelector(
-  getMainUnitState,
-  mainUnitState => {
-    const { page, itemIdsForPage, items } = mainUnitState;
+  getState,
+  state => {
+    const { page, itemIdsForPage, items } = state;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
 );
 
 export const getPageInfo = createSelector(
-  getMainUnitState,
-  mainUnitState => {
+  getState,
+  state => {
     const {
       unitId,
       page,
       unitTotalCount,
       order,
       filter: { selected },
-    } = mainUnitState;
+    } = state;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
@@ -46,31 +46,31 @@ export const getPageInfo = createSelector(
 );
 
 export const getUnitId = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.unitId,
+  getState,
+  state => state.unitId,
 );
 
 export const getPage = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.page,
+  getState,
+  state => state.page,
 );
 
 export const getOrder = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.order,
+  getState,
+  state => state.order,
 );
 
 export const getFilterOptions = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.filter.options,
+  getState,
+  state => state.filter.options,
 );
 
 export const getFilter = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.filter.selected,
+  getState,
+  state => state.filter.selected,
 );
 
-export const getMainUnitOptions = createSelector(
+export const getOptions = createSelector(
   [getUnitId, getPage, getOrder, getFilter],
   (unitId, page, order, filter) => ({
     unitId,
@@ -81,6 +81,6 @@ export const getMainUnitOptions = createSelector(
 );
 
 export const getSelectedBooks = createSelector(
-  getMainUnitState,
-  mainUnitState => mainUnitState.selectedBooks,
+  getState,
+  state => state.selectedBooks,
 );
