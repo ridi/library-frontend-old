@@ -22,7 +22,7 @@ import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getItemsByPage, getSelectedBooks } from '../searchUnit/selectors';
+import { getItemsByPage, getSelectedBooks } from './selectors';
 import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';

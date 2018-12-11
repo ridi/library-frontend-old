@@ -78,6 +78,10 @@ const styles = {
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
+    var stack = new Error().stack;
+    console.log('PRINTING CALL STACK');
+    console.log(stack);
+
     await store.dispatch(setMainUnitId(query.unitId));
     await store.dispatch(loadMainUnitItems());
   }

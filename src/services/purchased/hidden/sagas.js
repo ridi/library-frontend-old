@@ -2,39 +2,50 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
 import {
-  LOAD_PURCHASED_HIDDEN_ITEMS,
+  LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
-  SHOW_SELECTED_BOOKS,
-  DELETE_SELECTED_BOOKS,
-  setPurchasedHiddenItems,
-  setPurchasedHiddenPage,
-  setPurchasedHiddenTotalCount,
+  SHOW_SELECTED_HIDDEN_BOOKS,
+  DELETE_SELECTED_HIDDEN_BOOKS,
+  setHiddenItems,
+  setHiddenPage,
+  setHiddenTotalCount,
   setSelectHiddenBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
-import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from './requests';
+import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
-import { getHiddenItems, getItemsByPage, getSelectedHiddenBooks } from './selectors';
+import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { getRevision, requestShow, requestCheckQueueStatus } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 
-function* loadPurchasedHiddenItems() {
+function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
-  yield put(setPurchasedHiddenPage(page));
+  yield put(setHiddenPage(page));
 
-  const [itemResponse, countResponse] = yield all([call(fetchPurchasedHiddenItems, page), call(fetchPurchasedHiddenItemsTotalCount)]);
+  yield all([put(setHiddenPage(page))]);
+}
+
+function* loadHiddenItems() {
+  yield call(persistPageOptionsFromQuries);
+
+  const { page } = yield select(getOptions);
+
+  const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
+
+  // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([put(setPurchasedHiddenItems(itemResponse.items)), put(setPurchasedHiddenTotalCount(countResponse.item_total_count))]);
+
+  yield all([put(setHiddenItems(itemResponse.items)), put(setHiddenTotalCount(countResponse.item_total_count))]);
 }
 
 function* showSelectedBooks() {
-  const items = yield select(getHiddenItems);
-  const selectedBooks = yield select(getSelectedHiddenBooks);
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
@@ -43,12 +54,12 @@ function* showSelectedBooks() {
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadPurchasedHiddenItems);
+  yield call(loadHiddenItems);
 }
 
 function* deleteSelectedBooks() {
-  const items = yield select(getHiddenItems);
-  const selectedBooks = yield select(getSelectedHiddenBooks);
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
@@ -57,7 +68,7 @@ function* deleteSelectedBooks() {
 
   yield call(delay, 3000); // Temporary Sleep
 
-  yield call(loadPurchasedHiddenItems);
+  yield call(loadHiddenItems);
 }
 
 function* selectAllHiddenBooks() {
@@ -68,9 +79,9 @@ function* selectAllHiddenBooks() {
 
 export default function* purchasedHiddenSaga() {
   yield all([
-    takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems),
-    takeEvery(SHOW_SELECTED_BOOKS, showSelectedBooks),
-    takeEvery(DELETE_SELECTED_BOOKS, deleteSelectedBooks),
+    takeEvery(LOAD_HIDDEN_ITEMS, loadHiddenItems),
+    takeEvery(SHOW_SELECTED_HIDDEN_BOOKS, showSelectedBooks),
+    takeEvery(DELETE_SELECTED_HIDDEN_BOOKS, deleteSelectedBooks),
     takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllHiddenBooks),
   ]);
 }

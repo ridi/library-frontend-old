@@ -14,14 +14,14 @@ import { BottomActionBar, BottomActionButton } from '../../components/BottomActi
 
 import { getBooks } from '../../services/book/selectors';
 import {
-  loadPurchasedHiddenItems,
+  loadHiddenItems,
   selectAllHiddenBooks,
   clearSelectedHiddenBooks,
   toggleSelectHiddenBook,
-  showSelectedBooks,
-  deleteSelectedBooks,
+  showSelectedHiddenBooks,
+  deleteSelectedHiddenBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedHiddenBooks } from '../../services/purchased/hidden/selectors';
+import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
@@ -39,7 +39,7 @@ const styles = {
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadPurchasedHiddenItems());
+    await store.dispatch(loadHiddenItems());
   }
 
   constructor(props) {
@@ -51,7 +51,7 @@ class Hidden extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+    const { clearSelectedBooks: dispatchClearSelectedHiddenBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedHiddenBooks();
@@ -61,7 +61,7 @@ class Hidden extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    const { deleteSelectedBooks: dispatchDeleteSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+    const { deleteSelectedBooks: dispatchDeleteSelectedBooks, clearSelectedBooks: dispatchClearSelectedHiddenBooks } = this.props;
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedHiddenBooks();
@@ -69,7 +69,7 @@ class Hidden extends React.Component {
   };
 
   handleOnClickShow = () => {
-    const { showSelectedBooks: dispatchShowSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+    const { showSelectedBooks: dispatchShowSelectedBooks, clearSelectedBooks: dispatchClearSelectedHiddenBooks } = this.props;
 
     dispatchShowSelectedBooks();
     dispatchClearSelectedHiddenBooks();
@@ -80,8 +80,8 @@ class Hidden extends React.Component {
     const {
       items,
       selectedBooks,
-      selectAllHiddenBooks: dispatchSelectAllHiddenBooks,
-      clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks,
+      selectAllBooks: dispatchSelectAllHiddenBooks,
+      clearSelectedBooks: dispatchClearSelectedHiddenBooks,
     } = this.props;
 
     const selectedCount = Object.keys(selectedBooks).length;
@@ -100,7 +100,7 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectHiddenBook: dispatchToggleSelectHiddenBook } = this.props;
+    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectHiddenBook } = this.props;
 
     return (
       <BookList>
@@ -185,7 +185,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const itemTotalCount = getItemTotalCount(state);
-  const selectedBooks = getSelectedHiddenBooks(state);
+  const selectedBooks = getSelectedBooks(state);
   return {
     pageInfo,
     items,
@@ -196,11 +196,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllHiddenBooks,
-  clearSelectedHiddenBooks,
-  toggleSelectHiddenBook,
-  showSelectedBooks,
-  deleteSelectedBooks,
+  selectAllBooks: selectAllHiddenBooks,
+  clearSelectedBooks: clearSelectedHiddenBooks,
+  toggleSelectBook: toggleSelectHiddenBook,
+  showSelectedBooks: showSelectedHiddenBooks,
+  deleteSelectedBooks: deleteSelectedHiddenBooks,
 };
 
 export default connect(

@@ -16,7 +16,7 @@ export function* fetchMainUnitItems(unitId, orderType, orderBy, filter, page) {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
-
+  console.log(`${config.LIBRARY_API_BASE_URL}/items/main/${unitId}?${stringify(options)}`);
   const api = yield put(getAPI());
   const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main/${unitId}?${stringify(options)}`);
 

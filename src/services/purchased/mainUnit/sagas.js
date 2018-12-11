@@ -19,10 +19,9 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getItemsByPage, getSelectedBooks } from '../mainUnit/selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';
