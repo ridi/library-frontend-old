@@ -6,7 +6,7 @@ import { Icon } from '@ridi/rsg';
 import IconButton from './IconButton';
 
 const styles = {
-  SearchBarForm: css({
+  searchBarForm: css({
     position: 'relative',
     width: '100%',
     height: 30,
@@ -17,7 +17,7 @@ const styles = {
     border: '1px solid #d1d5d9',
     boxSizing: 'border-box',
   }),
-  SearchBarIcon: css({
+  searchBarIcon: css({
     position: 'absolute',
     left: 0,
     top: 0,
@@ -29,14 +29,14 @@ const styles = {
       height: 12,
     },
   }),
-  SearchBarInput: css({
+  searchBarInput: css({
     width: '100%',
     height: '100%',
     fontSize: 13,
     letterSpacing: -0.7,
     color: '#40474d',
   }),
-  SearchBarClearButton: css({
+  searchBarClearButton: css({
     display: 'none',
     position: 'absolute',
     top: 0,
@@ -50,10 +50,10 @@ const styles = {
     },
   }),
 
-  SearchBarFormActive: css({
+  searchBarFormActive: css({
     paddingRight: 38,
   }),
-  SearchBarClearButtonActive: css({
+  searchBarClearButtonActive: css({
     display: 'block',
   }),
 };
@@ -125,17 +125,17 @@ export default class SearchBar extends React.Component {
         ref={ref => {
           this.searchBarForm = ref;
         }}
-        css={[styles.SearchBarForm, keyword && styles.SearchBarFormActive]}
+        css={[styles.searchBarForm, keyword && styles.searchBarFormActive]}
         onSubmit={this.handleSubmit}
       >
-        <Icon name="search" css={styles.SearchBarIcon} />
+        <Icon name="search" css={styles.searchBarIcon} />
         <input
           ref={ref => {
             this.input = ref;
           }}
           placeholder="모든 책 검색"
           type="text"
-          css={styles.SearchBarInput}
+          css={styles.searchBarInput}
           value={keyword}
           onChange={this.handleChange}
           onFocus={() => this.setActivation(true)}
@@ -143,7 +143,7 @@ export default class SearchBar extends React.Component {
         <IconButton
           icon="check_4"
           a11y="검색어 제거"
-          css={[styles.SearchBarClearButton, keyword && styles.SearchBarClearButtonActive]}
+          css={[styles.searchBarClearButton, keyword && styles.searchBarClearButtonActive]}
           onClick={this.handleOnClickCancel}
         />
       </form>

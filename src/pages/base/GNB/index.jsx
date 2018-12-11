@@ -42,31 +42,31 @@ class GNB extends React.Component {
     return (
       <>
         <header css={styles.GNB}>
-          <Responsive css={styles.FlexWrapper}>
+          <Responsive css={styles.flexWrapper}>
             <div>
-              <h1 css={styles.Title}>
-                <a css={styles.TitleLink} href="/">
+              <h1 css={styles.title}>
+                <a css={styles.titleLink} href="/">
                   내 서재
                 </a>
               </h1>
-              <ul css={styles.FamilyServiceList}>
-                <li css={styles.FamilyServiceItem}>
-                  <a css={styles.FamilyServiceLink} href={RIDIBOOKS_URL}>
-                    <Icon css={styles.RidibooksIcon} name="logo_ridibooks_1" />
+              <ul css={styles.familyServiceList}>
+                <li css={styles.familyServiceItem}>
+                  <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
+                    <Icon css={styles.ridibooksIcon} name="logo_ridibooks_1" />
                     <span css={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
-                <li css={styles.FamilyServiceItem}>
-                  <a css={styles.FamilyServiceLink} href={RIDISELECT_URL}>
-                    <Icon css={styles.RidiSelectIcon} name="logo_ridiselect_1" />
+                <li css={styles.familyServiceItem}>
+                  <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
+                    <Icon css={styles.ridiSelectIcon} name="logo_ridiselect_1" />
                     <span css={Hidden}>RIDI Select</span>
                   </a>
                 </li>
               </ul>
             </div>
-            <div css={styles.MyMenuWrapper}>
-              <button id="MyMenuToggleButton" css={styles.MyMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-                <MyMenu css={styles.MyMenuIcon(isModalActive)} />
+            <div css={styles.myMenuWrapper}>
+              <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
+                <MyMenu css={styles.myMenuIcon(isModalActive)} />
                 <span css={Hidden}>마이메뉴</span>
               </button>
             </div>
