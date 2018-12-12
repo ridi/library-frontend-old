@@ -6,11 +6,6 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 
 const getState = state => state.purchasedSearchUnit;
 
-export const getItems = createSelector(
-  getState,
-  state => state.items,
-);
-
 export const getItemsByPage = createSelector(
   getState,
   state => {
@@ -23,13 +18,7 @@ export const getItemsByPage = createSelector(
 export const getPageInfo = createSelector(
   getState,
   state => {
-    const {
-      unitId,
-      page,
-      unitTotalCount,
-      order,
-      filter: { selected },
-    } = state;
+    const { unitId, page, unitTotalCount, order } = state;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
@@ -40,7 +29,6 @@ export const getPageInfo = createSelector(
       order,
       orderType,
       orderBy,
-      filter: selected,
     };
   },
 );
@@ -60,23 +48,12 @@ export const getOrder = createSelector(
   state => state.order,
 );
 
-export const getFilterOptions = createSelector(
-  getState,
-  state => state.filter.options,
-);
-
-export const getFilter = createSelector(
-  getState,
-  state => state.filter.selected,
-);
-
 export const getOptions = createSelector(
-  [getUnitId, getPage, getOrder, getFilter],
-  (unitId, page, order, filter) => ({
+  [getUnitId, getPage, getOrder],
+  (unitId, page, order) => ({
     unitId,
     page,
     order,
-    filter,
   }),
 );
 

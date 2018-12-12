@@ -6,7 +6,7 @@ import {
   SET_HIDDEN_UNIT_ITEMS,
   SET_HIDDEN_UNIT_PAGE,
   SET_HIDDEN_UNIT_TOTAL_COUNT,
-  SET_SELECT_HIDDEN_UNIT_BOOKS,
+  SELECT_HIDDEN_UNIT_BOOKS,
   TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
@@ -58,7 +58,7 @@ const hiddenUnitReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SET_SELECT_HIDDEN_UNIT_BOOKS:
+    case SELECT_HIDDEN_UNIT_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {

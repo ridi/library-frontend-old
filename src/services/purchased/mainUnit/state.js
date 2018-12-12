@@ -4,17 +4,6 @@ export const initialState = {
   itemIdsForPage: {},
   items: {},
   order: MainOrderOptions.DEFAULT,
-  filter: {
-    options: [
-      {
-        title: '전체 카테고리',
-        value: null,
-        hasChildren: false,
-        children: null,
-      },
-    ],
-    selected: null,
-  },
 
   page: 1,
   unitTotalCount: 0,

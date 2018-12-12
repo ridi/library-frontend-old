@@ -4,10 +4,10 @@ import {
   DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
   LOAD_HIDDEN_UNIT_ITEMS,
   SELECT_ALL_HIDDEN_UNIT_BOOKS,
-  setHiddenUnitItems,
-  setHiddenUnitPage,
-  setHiddenUnitTotalCount,
-  setSelectHiddenUnitBooks,
+  setItems,
+  setPage,
+  setTotalCount,
+  selectBooks,
   UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
@@ -17,7 +17,7 @@ import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getRevision, requestCheckQueueStatus, requestShow } from '../../common/requests';
+import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { delay } from 'redux-saga';
 
@@ -25,7 +25,7 @@ function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
-  yield all([put(setHiddenUnitPage(page))]);
+  yield all([put(setPage(page))]);
 }
 
 function* loadHiddenUnitItems() {
@@ -40,10 +40,7 @@ function* loadHiddenUnitItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([
-    put(setHiddenUnitItems(itemResponse.items)),
-    put(setHiddenUnitTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-  ]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
 }
 
 function* unhideSelectedHiddenUnitBooks() {
@@ -51,7 +48,7 @@ function* unhideSelectedHiddenUnitBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = Object.keys(selectedBooks);
-  const queueIds = yield call(requestShow, bookIds, revision);
+  const queueIds = yield call(requestUnhide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
@@ -75,7 +72,7 @@ function* deleteSelectedHiddenUnitBooks() {
 function* selectAllHiddenUnitBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectHiddenUnitBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchaseHiddenUnitRootSaga() {

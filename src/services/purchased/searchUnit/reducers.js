@@ -2,8 +2,6 @@ import { initialState } from './state';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
-  SET_SEARCH_UNIT_FILTER,
-  SET_SEARCH_UNIT_FILTER_OPTIONS,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
   SET_SEARCH_UNIT_ORDER,
@@ -48,22 +46,6 @@ const searchUnitReducer = (state = initialState, action) => {
       return {
         ...state,
         order: action.payload.order,
-      };
-    case SET_SEARCH_UNIT_FILTER:
-      return {
-        ...state,
-        filter: {
-          ...state.filter,
-          selected: action.payload.filter,
-        },
-      };
-    case SET_SEARCH_UNIT_FILTER_OPTIONS:
-      return {
-        ...state,
-        filter: {
-          ...state.filter,
-          options: action.payload.options,
-        },
       };
     case CLEAR_SELECTED_SEARCH_UNIT_BOOKS:
       return {

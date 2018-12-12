@@ -7,7 +7,7 @@ import {
   SET_SEARCH_KEYWORD,
   CLEAR_SELECTED_SEARCH_BOOKS,
   TOGGLE_SELECT_SEARCH_BOOK,
-  SET_SELECT_SEARCH_BOOKS,
+  SELECT_SEARCH_BOOKS,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -58,7 +58,7 @@ const purchasedSearchReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SET_SELECT_SEARCH_BOOKS:
+    case SELECT_SEARCH_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {

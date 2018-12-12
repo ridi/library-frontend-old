@@ -8,7 +8,7 @@ import {
   SET_MAIN_ORDER,
   SET_MAIN_PAGE,
   SET_MAIN_TOTAL_COUNT,
-  SET_SELECT_MAIN_BOOKS,
+  SELECT_MAIN_BOOKS,
   TOGGLE_SELECT_MAIN_BOOK,
 } from './actions';
 
@@ -77,7 +77,7 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SET_SELECT_MAIN_BOOKS:
+    case SELECT_MAIN_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {

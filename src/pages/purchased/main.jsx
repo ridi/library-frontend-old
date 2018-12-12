@@ -18,12 +18,12 @@ import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
 import {
-  clearSelectedMainBooks,
-  downloadSelectedMainBooks,
-  hideSelectedMainBooks,
-  loadMainItems,
-  selectAllMainBooks,
-  toggleSelectMainBook,
+  clearSelectedBooks,
+  downloadSelectedBooks,
+  hideSelectedBooks,
+  loadItems,
+  selectAllBooks,
+  toggleSelectBook,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -83,7 +83,7 @@ const styles = {
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadMainItems());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -308,11 +308,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllMainBooks,
-  clearSelectedBooks: clearSelectedMainBooks,
-  toggleSelectBook: toggleSelectMainBook,
-  hideSelectedBooks: hideSelectedMainBooks,
-  downloadSelectedBooks: downloadSelectedMainBooks,
+  selectAllBooks: selectAllBooks,
+  clearSelectedBooks: clearSelectedBooks,
+  toggleSelectBook: toggleSelectBook,
+  hideSelectedBooks: hideSelectedBooks,
+  downloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(

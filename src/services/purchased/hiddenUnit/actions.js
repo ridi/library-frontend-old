@@ -5,26 +5,26 @@ export const SET_HIDDEN_UNIT_TOTAL_COUNT = 'SET_HIDDEN_UNIT_TOTAL_COUNT';
 export const SET_HIDDEN_UNIT_ID = 'SET_HIDDEN_UNIT_ID';
 export const SET_HIDDEN_UNIT_PAGE = 'SET_HIDDEN_UNIT_PAGE';
 
+export const SELECT_HIDDEN_UNIT_BOOKS = 'SELECT_HIDDEN_UNIT_BOOKS';
 export const SELECT_ALL_HIDDEN_UNIT_BOOKS = 'SELECT_ALL_HIDDEN_UNIT_BOOKS ';
-export const CLEAR_SELECTED_HIDDEN_UNIT_BOOKS = 'CLEAR_SELECTED_HIDDEN_UNIT_BOOKS';
 export const TOGGLE_SELECT_HIDDEN_UNIT_BOOK = 'TOGGLE_SELECT_HIDDEN_UNIT_BOOK';
-export const SET_SELECT_HIDDEN_UNIT_BOOKS = 'SET_SELECT_HIDDEN_UNIT_BOOKS';
+export const CLEAR_SELECTED_HIDDEN_UNIT_BOOKS = 'CLEAR_SELECTED_HIDDEN_UNIT_BOOKS';
 
 export const UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS = 'UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS';
 export const DELETE_SELECTED_HIDDEN_UNIT_BOOKS = 'DELETE_SELECTED_HIDDEN_UNIT_BOOKS';
 
-export const loadHiddenUnitItems = () => ({
+export const loadItems = () => ({
   type: LOAD_HIDDEN_UNIT_ITEMS,
 });
 
-export const setHiddenUnitItems = items => ({
+export const setItems = items => ({
   type: SET_HIDDEN_UNIT_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setHiddenUnitTotalCount = (unitTotalCount, itemTotalCount) => ({
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
   type: SET_HIDDEN_UNIT_TOTAL_COUNT,
   payload: {
     unitTotalCount,
@@ -32,46 +32,46 @@ export const setHiddenUnitTotalCount = (unitTotalCount, itemTotalCount) => ({
   },
 });
 
-export const setHiddenUnitId = unitId => ({
+export const setUnitId = unitId => ({
   type: SET_HIDDEN_UNIT_ID,
   payload: {
     unitId,
   },
 });
 
-export const setHiddenUnitPage = page => ({
+export const setPage = page => ({
   type: SET_HIDDEN_UNIT_PAGE,
   payload: {
     page,
   },
 });
 
-export const selectAllHiddenUnitBooks = () => ({
+export const selectBooks = bookIds => ({
+  type: SELECT_HIDDEN_UNIT_BOOKS,
+  payload: {
+    bookIds,
+  },
+});
+
+export const selectAllBooks = () => ({
   type: SELECT_ALL_HIDDEN_UNIT_BOOKS,
 });
 
-export const clearSelectedHiddenUnitBooks = () => ({
-  type: CLEAR_SELECTED_HIDDEN_UNIT_BOOKS,
-});
-
-export const toggleSelectHiddenUnitBook = bookId => ({
+export const toggleSelectBook = bookId => ({
   type: TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
   payload: {
     bookId,
   },
 });
 
-export const setSelectHiddenUnitBooks = bookIds => ({
-  type: SET_SELECT_HIDDEN_UNIT_BOOKS,
-  payload: {
-    bookIds,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_HIDDEN_UNIT_BOOKS,
 });
 
-export const unHideSelectedHiddenUnitBooks = () => ({
+export const unhideSelectedBooks = () => ({
   type: UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
 });
 
-export const deleteSelectedHiddenUnitBooks = () => ({
+export const deleteSelectedBooks = () => ({
   type: DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
 });

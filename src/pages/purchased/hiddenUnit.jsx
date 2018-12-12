@@ -7,13 +7,13 @@ import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
 import {
-  clearSelectedHiddenUnitBooks,
-  selectAllHiddenUnitBooks,
-  toggleSelectHiddenUnitBook,
-  deleteSelectedHiddenUnitBooks,
-  loadHiddenUnitItems,
-  setHiddenUnitId,
-  unHideSelectedHiddenUnitBooks,
+  clearSelectedBooks,
+  selectAllBooks,
+  toggleSelectBook,
+  deleteSelectedBooks,
+  loadItems,
+  setUnitId,
+  unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -77,8 +77,8 @@ const styles = {
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setHiddenUnitId(query.unitId));
-    await store.dispatch(loadHiddenUnitItems());
+    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(loadItems());
   }
   constructor(props) {
     super(props);
@@ -241,11 +241,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllHiddenUnitBooks,
-  clearSelectedBooks: clearSelectedHiddenUnitBooks,
-  toggleSelectBook: toggleSelectHiddenUnitBook,
-  unHideSelectedBooks: unHideSelectedHiddenUnitBooks,
-  deleteSelectedBooks: deleteSelectedHiddenUnitBooks,
+  selectAllBooks: selectAllBooks,
+  clearSelectedBooks: clearSelectedBooks,
+  toggleSelectBook: toggleSelectBook,
+  unHideSelectedBooks: unhideSelectedBooks,
+  deleteSelectedBooks: deleteSelectedBooks,
 };
 
 export default connect(

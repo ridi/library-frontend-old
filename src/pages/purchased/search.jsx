@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import Router from 'next/router';
 
 import {
-  loadSearchPage,
+  loadItems,
   changeSearchKeyword,
-  clearSelectedSearchBooks,
-  toggleSelectSearchBook,
-  hideSelectedSearchBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
 } from '../../services/purchased/search/actions';
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -27,7 +27,7 @@ import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getSearchItemsByPage, getSelectedSearchBooks } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
@@ -81,7 +81,7 @@ const styles = {
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadSearchPage());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -257,9 +257,9 @@ class Search extends React.Component {
 
 const mapStateToProps = state => {
   const pageInfo = getSearchPageInfo(state);
-  const items = getSearchItemsByPage(state);
+  const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
-  const selectedBooks = getSelectedSearchBooks(state);
+  const selectedBooks = getSelectedBooks(state);
   return {
     pageInfo,
     items,
@@ -269,9 +269,9 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   changeSearchKeyword,
-  clearSelectedSearchBooks,
-  toggleSelectSearchBook,
-  hideSelectedSearchBooks,
+  clearSelectedSearchBooks: clearSelectedBooks,
+  toggleSelectSearchBook: toggleSelectBook,
+  hideSelectedSearchBooks: hideSelectedBooks,
 };
 
 export default connect(

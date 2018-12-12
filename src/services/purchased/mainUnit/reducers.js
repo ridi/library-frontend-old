@@ -2,14 +2,12 @@ import { initialState } from './state';
 
 import {
   CLEAR_SELECTED_MAIN_UNIT_BOOKS,
-  SET_MAIN_UNIT_FILTER,
-  SET_MAIN_UNIT_FILTER_OPTIONS,
   SET_MAIN_UNIT_ID,
   SET_MAIN_UNIT_ITEMS,
   SET_MAIN_UNIT_ORDER,
   SET_MAIN_UNIT_PAGE,
   SET_MAIN_UNIT_TOTAL_COUNT,
-  SET_SELECT_MAIN_UNIT_BOOKS,
+  SELECT_MAIN_UNIT_BOOKS,
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
@@ -49,22 +47,6 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
         ...state,
         order: action.payload.order,
       };
-    case SET_MAIN_UNIT_FILTER:
-      return {
-        ...state,
-        filter: {
-          ...state.filter,
-          selected: action.payload.filter,
-        },
-      };
-    case SET_MAIN_UNIT_FILTER_OPTIONS:
-      return {
-        ...state,
-        filter: {
-          ...state.filter,
-          options: action.payload.options,
-        },
-      };
     case CLEAR_SELECTED_MAIN_UNIT_BOOKS:
       return {
         ...state,
@@ -82,7 +64,7 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SET_SELECT_MAIN_UNIT_BOOKS:
+    case SELECT_MAIN_UNIT_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {

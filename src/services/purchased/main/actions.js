@@ -7,26 +7,26 @@ export const SET_MAIN_ORDER = 'SET_MAIN_ORDER';
 export const SET_MAIN_FILTER = 'SET_MAIN_FILTER';
 export const SET_MAIN_FILTER_OPTIONS = 'SET_MAIN_FILTER_OPTIONS';
 
+export const SELECT_MAIN_BOOKS = 'SELECT_MAIN_BOOKS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
-export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
-export const SET_SELECT_MAIN_BOOKS = 'SET_SELECT_MAIN_BOOKS';
+export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
-export const loadMainItems = () => ({
+export const loadItems = () => ({
   type: LOAD_MAIN_ITEMS,
 });
 
-export const setMainItems = items => ({
+export const setItems = items => ({
   type: SET_MAIN_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setMainTotalCount = (unitTotalCount, itemTotalCount) => ({
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
   type: SET_MAIN_TOTAL_COUNT,
   payload: {
     unitTotalCount,
@@ -34,60 +34,60 @@ export const setMainTotalCount = (unitTotalCount, itemTotalCount) => ({
   },
 });
 
-export const setMainPage = page => ({
+export const setPage = page => ({
   type: SET_MAIN_PAGE,
   payload: {
     page,
   },
 });
 
-export const setMainOrder = order => ({
+export const setOrder = order => ({
   type: SET_MAIN_ORDER,
   payload: {
     order,
   },
 });
 
-export const setMainFilter = filter => ({
+export const setFilter = filter => ({
   type: SET_MAIN_FILTER,
   payload: {
     filter,
   },
 });
 
-export const setMainFilterOptions = options => ({
+export const setFilterOptions = options => ({
   type: SET_MAIN_FILTER_OPTIONS,
   payload: {
     options,
   },
 });
 
-export const selectAllMainBooks = () => ({
+export const selectBooks = bookIds => ({
+  type: SELECT_MAIN_BOOKS,
+  payload: {
+    bookIds,
+  },
+});
+
+export const selectAllBooks = () => ({
   type: SELECT_ALL_MAIN_BOOKS,
 });
 
-export const clearSelectedMainBooks = () => ({
-  type: CLEAR_SELECTED_MAIN_BOOKS,
-});
-
-export const toggleSelectMainBook = bookId => ({
+export const toggleSelectBook = bookId => ({
   type: TOGGLE_SELECT_MAIN_BOOK,
   payload: {
     bookId,
   },
 });
 
-export const setSelectMainBooks = bookIds => ({
-  type: SET_SELECT_MAIN_BOOKS,
-  payload: {
-    bookIds,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_MAIN_BOOKS,
 });
 
-export const hideSelectedMainBooks = () => ({
+export const hideSelectedBooks = () => ({
   type: HIDE_SELECTED_MAIN_BOOKS,
 });
 
-export const downloadSelectedMainBooks = () => ({
+export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_MAIN_BOOKS,
 });

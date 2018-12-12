@@ -4,12 +4,12 @@ import { delay } from 'redux-saga';
 import {
   LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
-  SHOW_SELECTED_HIDDEN_BOOKS,
+  UNHIDE_SELECTED_HIDDEN_BOOKS,
   DELETE_SELECTED_HIDDEN_BOOKS,
-  setHiddenItems,
-  setHiddenPage,
-  setHiddenTotalCount,
-  setSelectHiddenBooks,
+  setItems,
+  setPage,
+  setTotalCount,
+  selectBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
@@ -17,19 +17,19 @@ import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
 import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
 
-import { getRevision, requestShow, requestCheckQueueStatus } from '../../common/requests';
+import { getRevision, requestUnhide, requestCheckQueueStatus } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 
 function* persistPageOptionsFromQuries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
-  yield put(setHiddenPage(page));
+  yield put(setPage(page));
 
-  yield all([put(setHiddenPage(page))]);
+  yield all([put(setPage(page))]);
 }
 
-function* loadHiddenItems() {
+function* loadItems() {
   yield call(persistPageOptionsFromQuries);
 
   const { page } = yield select(getOptions);
@@ -40,21 +40,21 @@ function* loadHiddenItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([put(setHiddenItems(itemResponse.items)), put(setHiddenTotalCount(countResponse.item_total_count))]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
 }
 
-function* showSelectedBooks() {
+function* unhideSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestShow, bookIds, revision);
+  const queueIds = yield call(requestUnhide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadHiddenItems);
+  yield call(loadItems);
 }
 
 function* deleteSelectedBooks() {
@@ -68,20 +68,20 @@ function* deleteSelectedBooks() {
 
   yield call(delay, 3000); // Temporary Sleep
 
-  yield call(loadHiddenItems);
+  yield call(loadItems);
 }
 
-function* selectAllHiddenBooks() {
+function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectHiddenBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchasedHiddenSaga() {
   yield all([
-    takeEvery(LOAD_HIDDEN_ITEMS, loadHiddenItems),
-    takeEvery(SHOW_SELECTED_HIDDEN_BOOKS, showSelectedBooks),
+    takeEvery(LOAD_HIDDEN_ITEMS, loadItems),
+    takeEvery(UNHIDE_SELECTED_HIDDEN_BOOKS, unhideSelectedBooks),
     takeEvery(DELETE_SELECTED_HIDDEN_BOOKS, deleteSelectedBooks),
-    takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllHiddenBooks),
+    takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllBooks),
   ]);
 }

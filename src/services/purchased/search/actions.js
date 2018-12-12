@@ -1,32 +1,32 @@
-export const LOAD_SEARCH_PAGE = 'LOAD_SEARCH_PAGE';
+export const LOAD_SEARCH_ITEMS = 'LOAD_SEARCH_ITEMS';
 
 export const SET_SEARCH_ITEMS = 'SET_SEARCH_ITEMS';
 export const SET_SEARCH_TOTAL_COUNT = 'SET_SEARCH_TOTAL_COUNT';
 export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE';
-export const SET_SEARCH_KEYWORD = 'SET_SEARCH_KEYWORD';
 
+export const SET_SEARCH_KEYWORD = 'SET_SEARCH_KEYWORD';
 export const CHANGE_SEARCH_KEYWORD = 'CHANGE_SEARCH_KEYWORD';
 
+export const SELECT_SEARCH_BOOKS = 'SELECT_SEARCH_BOOKS';
 export const SELECT_ALL_SEARCH_BOOKS = 'SELECT_ALL_SEARCH_BOOKS';
-export const CLEAR_SELECTED_SEARCH_BOOKS = 'CLEAR_SELECTED_SEARCH_BOOKS';
 export const TOGGLE_SELECT_SEARCH_BOOK = 'TOGGLE_SELECT_SEARCH_BOOK';
-export const SET_SELECT_SEARCH_BOOKS = 'SET_SELECT_SEARCH_BOOKS';
+export const CLEAR_SELECTED_SEARCH_BOOKS = 'CLEAR_SELECTED_SEARCH_BOOKS';
 
 export const HIDE_SELECTED_SEARCH_BOOKS = 'HIDE_SELECTED_SEARCH_BOOKS';
 export const DOWNLOAD_SELECTED_SEARCH_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_BOOKS';
 
-export const loadSearchPage = () => ({
-  type: LOAD_SEARCH_PAGE,
+export const loadItems = () => ({
+  type: LOAD_SEARCH_ITEMS,
 });
 
-export const setSearchItems = items => ({
+export const setItems = items => ({
   type: SET_SEARCH_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setSearchTotalCount = (unitTotalCount, itemTotalCount) => ({
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
   type: SET_SEARCH_TOTAL_COUNT,
   payload: {
     unitTotalCount,
@@ -34,7 +34,7 @@ export const setSearchTotalCount = (unitTotalCount, itemTotalCount) => ({
   },
 });
 
-export const setSearchPage = page => ({
+export const setPage = page => ({
   type: SET_SEARCH_PAGE,
   payload: {
     page,
@@ -55,32 +55,32 @@ export const changeSearchKeyword = keyword => ({
   },
 });
 
-export const selectAllSearchBooks = () => ({
+export const setSelectBooks = bookIds => ({
+  type: SELECT_SEARCH_BOOKS,
+  payload: {
+    bookIds,
+  },
+});
+
+export const selectAllBooks = () => ({
   type: SELECT_ALL_SEARCH_BOOKS,
 });
 
-export const clearSelectedSearchBooks = () => ({
-  type: CLEAR_SELECTED_SEARCH_BOOKS,
-});
-
-export const toggleSelectSearchBook = bookId => ({
+export const toggleSelectBook = bookId => ({
   type: TOGGLE_SELECT_SEARCH_BOOK,
   payload: {
     bookId,
   },
 });
 
-export const setSelectSearchBooks = bookIds => ({
-  type: SET_SELECT_SEARCH_BOOKS,
-  payload: {
-    bookIds,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_SEARCH_BOOKS,
 });
 
-export const hideSelectedSearchBooks = () => ({
+export const hideSelectedBooks = () => ({
   type: HIDE_SELECTED_SEARCH_BOOKS,
 });
 
-export const downloadSelectedSearchBooks = () => ({
+export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_SEARCH_BOOKS,
 });

@@ -8,11 +8,10 @@ import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
-export function* fetchSearchUnitItems(unitId, orderType, orderBy, filter, page) {
+export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
   const options = snakelize({
     orderType,
     orderBy,
-    filter,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
@@ -23,8 +22,8 @@ export function* fetchSearchUnitItems(unitId, orderType, orderBy, filter, page) 
   return response.data;
 }
 
-export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy, filter) {
-  const options = snakelize({ orderType, orderBy, filter });
+export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
+  const options = snakelize({ orderType, orderBy });
 
   const api = yield put(getAPI());
   const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/search/${unitId}/count?${stringify(options)}`);

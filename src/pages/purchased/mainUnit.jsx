@@ -6,7 +6,7 @@ import { css, jsx } from '@emotion/core';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
-import { loadMainUnitItems, setMainUnitId } from '../../services/purchased/mainUnit/actions';
+import { loadItems, setUnitId } from '../../services/purchased/mainUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
 
@@ -21,13 +21,13 @@ import IconButton from '../../components/IconButton';
 import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
-import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/mainUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/mainUnit/selectors';
 import {
-  clearSelectedMainUnitBooks,
-  downloadSelectedMainUnitBooks,
-  hideSelectedMainUnitBooks,
-  selectAllMainUnitBooks,
-  toggleSelectMainUnitBook,
+  clearSelectedBooks,
+  downloadSelectedBooks,
+  hideSelectedBooks,
+  selectAllBooks,
+  toggleSelectBook,
 } from '../../services/purchased/mainUnit/actions';
 
 const styles = {
@@ -82,8 +82,8 @@ class MainUnit extends React.Component {
     console.log('PRINTING CALL STACK');
     console.log(stack);
 
-    await store.dispatch(setMainUnitId(query.unitId));
-    await store.dispatch(loadMainUnitItems());
+    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(loadItems());
   }
   constructor(props) {
     super(props);
@@ -165,12 +165,12 @@ class MainUnit extends React.Component {
   renderModal() {
     const { showMoreModal } = this.state;
     const {
-      pageInfo: { order, filter },
+      pageInfo: { order },
     } = this.props;
 
     return (
       <>
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} query={{ filter }} isActive={showMoreModal} />
+        <SortModal order={order} orderOptions={MainOrderOptions.toList()} isActive={showMoreModal} />
       </>
     );
   }
@@ -202,7 +202,7 @@ class MainUnit extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { orderType, orderBy, filter, currentPage, totalPages, unitId },
+      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId },
     } = this.props;
 
     return (
@@ -212,7 +212,7 @@ class MainUnit extends React.Component {
         pageCount={PAGE_COUNT}
         href={URLMap.mainUnit.href}
         as={URLMap.mainUnit.as(unitId)}
-        query={{ orderType, orderBy, filter }}
+        query={{ orderType, orderBy }}
       />
     );
   }
@@ -259,14 +259,12 @@ class MainUnit extends React.Component {
 
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
-  const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
 
   return {
     pageInfo,
-    filterOptions,
     items,
     books,
     selectedBooks,
@@ -274,11 +272,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllMainUnitBooks,
-  clearSelectedBooks: clearSelectedMainUnitBooks,
-  toggleSelectBook: toggleSelectMainUnitBook,
-  hideSelectedBooks: hideSelectedMainUnitBooks,
-  downloadSelectedBooks: downloadSelectedMainUnitBooks,
+  selectAllBooks: selectAllBooks,
+  clearSelectedBooks: clearSelectedBooks,
+  toggleSelectBook: toggleSelectBook,
+  hideSelectedBooks: hideSelectedBooks,
+  downloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(

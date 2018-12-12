@@ -6,19 +6,19 @@ import { toFlatten } from '../../../utils/array';
 import { makeURI } from '../../../utils/uri';
 
 import {
-  LOAD_SEARCH_PAGE,
+  LOAD_SEARCH_ITEMS,
   CHANGE_SEARCH_KEYWORD,
   HIDE_SELECTED_SEARCH_BOOKS,
   DOWNLOAD_SELECTED_SEARCH_BOOKS,
   SELECT_ALL_SEARCH_BOOKS,
-  setSearchPage,
+  setPage,
   setSearchKeyword,
-  setSearchTotalCount,
-  setSearchItems,
-  setSelectSearchBooks,
+  setTotalCount,
+  setItems,
+  setSelectBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
-import { getSearchItemsByPage, getSearchOptions, getSelectedSearchBooks, getSearchItems } from './selectors';
+import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './selectors';
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
@@ -30,21 +30,18 @@ function* persistPageOptionsFromQueries() {
   const page = parseInt(query.page, 10) || 1;
   const keyword = query.keyword || '';
 
-  yield all([put(setSearchPage(page)), put(setSearchKeyword(keyword))]);
+  yield all([put(setPage(page)), put(setSearchKeyword(keyword))]);
 }
 
-function* loadSearchPage() {
+function* loadPage() {
   yield call(persistPageOptionsFromQueries);
 
-  const { page, keyword } = yield select(getSearchOptions);
+  const { page, keyword } = yield select(getOptions);
   const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([
-    put(setSearchItems(itemResponse.items)),
-    put(setSearchTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-  ]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
 }
 
 function changeSearchKeyword(action) {
@@ -56,9 +53,9 @@ function changeSearchKeyword(action) {
   Router.push(makeURI('/purchased/search', query));
 }
 
-function* hideSelectedSearchBooks() {
-  const items = yield select(getSearchItems);
-  const selectedBooks = yield select(getSelectedSearchBooks);
+function* hideSelectedBooks() {
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
@@ -67,12 +64,12 @@ function* hideSelectedSearchBooks() {
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadSearchPage);
+  yield call(loadPage);
 }
 
-function* downloadSelectedSearchBooks() {
-  const items = yield select(getSearchItems);
-  const selectedBooks = yield select(getSelectedSearchBooks);
+function* downloadSelectedBooks() {
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
 
@@ -84,18 +81,18 @@ function* downloadSelectedSearchBooks() {
   }
 }
 
-function* selectAllSearchBooks() {
-  const items = yield select(getSearchItemsByPage);
+function* selectAllBooks() {
+  const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectSearchBooks(bookIds));
+  yield put(setSelectBooks(bookIds));
 }
 
 export default function* purcahsedSearchRootSaga() {
   yield all([
-    takeEvery(LOAD_SEARCH_PAGE, loadSearchPage),
+    takeEvery(LOAD_SEARCH_ITEMS, loadPage),
     takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
-    takeEvery(HIDE_SELECTED_SEARCH_BOOKS, hideSelectedSearchBooks),
-    takeEvery(DOWNLOAD_SELECTED_SEARCH_BOOKS, downloadSelectedSearchBooks),
-    takeEvery(SELECT_ALL_SEARCH_BOOKS, selectAllSearchBooks),
+    takeEvery(HIDE_SELECTED_SEARCH_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_SEARCH_BOOKS, downloadSelectedBooks),
+    takeEvery(SELECT_ALL_SEARCH_BOOKS, selectAllBooks),
   ]);
 }

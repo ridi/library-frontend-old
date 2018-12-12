@@ -5,13 +5,11 @@ import {
   HIDE_SELECTED_SEARCH_UNIT_BOOKS,
   LOAD_SEARCH_UNIT_ITEMS,
   SELECT_ALL_SEARCH_UNIT_BOOKS,
-  setSearchUnitFilter,
-  setSearchUnitFilterOptions,
-  setSearchUnitItems,
-  setSearchUnitOrder,
-  setSearchUnitPage,
-  setSearchUnitTotalCount,
-  setSelectSearchUnitBooks,
+  setItems,
+  setOrder,
+  setPage,
+  setTotalCount,
+  selectBooks,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
@@ -33,35 +31,30 @@ function* persistPageOptionsFromQuries() {
 
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
-  const filter = parseInt(query.filter, 10) || null;
 
-  yield all([put(setSearchUnitPage(page)), put(setSearchUnitOrder(order)), put(setSearchUnitFilter(filter))]);
+  yield all([put(setPage(page)), put(setOrder(order))]);
 }
 
-function* loadSearchUnitItems() {
+function* loadItems() {
   yield call(persistPageOptionsFromQuries);
 
   const unitId = yield select(getUnitId);
-  const { page, order, filter: category } = yield select(getOptions);
+  const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
-  const [itemResponse, countResponse, categories] = yield all([
-    call(fetchSearchUnitItems, unitId, orderType, orderBy, category, page),
-    call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy, category),
+  const [itemResponse, countResponse] = yield all([
+    call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
+    call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([
-    put(setSearchUnitItems(itemResponse.items)),
-    put(setSearchUnitTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setSearchUnitFilterOptions(categories)),
-  ]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
 }
 
-function* hideSelectedSearchUnitBooks() {
+function* hideSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const bookIds = Object.keys(selectedBooks);
@@ -72,10 +65,10 @@ function* hideSelectedSearchUnitBooks() {
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadSearchUnitItems);
+  yield call(loadItems);
 }
 
-function* downloadSelectedSearchUnitBooks() {
+function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const bookIds = Object.keys(selectedBooks);
@@ -88,17 +81,17 @@ function* downloadSelectedSearchUnitBooks() {
   }
 }
 
-function* selectAllSearchUnitBooks() {
+function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectSearchUnitBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchaseSearchUnitRootSaga() {
   yield all([
-    takeEvery(LOAD_SEARCH_UNIT_ITEMS, loadSearchUnitItems),
-    takeEvery(HIDE_SELECTED_SEARCH_UNIT_BOOKS, hideSelectedSearchUnitBooks),
-    takeEvery(DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS, downloadSelectedSearchUnitBooks),
-    takeEvery(SELECT_ALL_SEARCH_UNIT_BOOKS, selectAllSearchUnitBooks),
+    takeEvery(LOAD_SEARCH_UNIT_ITEMS, loadItems),
+    takeEvery(HIDE_SELECTED_SEARCH_UNIT_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS, downloadSelectedBooks),
+    takeEvery(SELECT_ALL_SEARCH_UNIT_BOOKS, selectAllBooks),
   ]);
 }

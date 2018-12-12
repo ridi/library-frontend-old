@@ -5,13 +5,13 @@ import {
   HIDE_SELECTED_MAIN_BOOKS,
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
-  setMainFilter,
-  setMainFilterOptions,
-  setMainItems,
-  setMainOrder,
-  setMainPage,
-  setMainTotalCount,
-  setSelectMainBooks,
+  setFilter,
+  setFilterOptions,
+  setItems,
+  setOrder,
+  setPage,
+  setTotalCount,
+  selectBooks,
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
@@ -34,7 +34,7 @@ function* persistPageOptionsFromQuries() {
   const order = MainOrderOptions.toIndex(orderType, orderBy);
   const filter = parseInt(query.filter, 10) || null;
 
-  yield all([put(setMainPage(page)), put(setMainOrder(order)), put(setMainFilter(filter))]);
+  yield all([put(setPage(page)), put(setOrder(order)), put(setFilter(filter))]);
 }
 
 function* loadMainItems() {
@@ -54,9 +54,9 @@ function* loadMainItems() {
   yield call(loadBookData, bookIds);
 
   yield all([
-    put(setMainItems(itemResponse.items)),
-    put(setMainTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setMainFilterOptions(categories)),
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+    put(setFilterOptions(categories)),
   ]);
 }
 
@@ -93,10 +93,10 @@ function* downloadSelectedBooks() {
   }
 }
 
-function* selectAllMainBooks() {
+function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectMainBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchaseMainRootSaga() {
@@ -104,6 +104,6 @@ export default function* purchaseMainRootSaga() {
     takeEvery(LOAD_MAIN_ITEMS, loadMainItems),
     takeEvery(HIDE_SELECTED_MAIN_BOOKS, hideSelectedBooks),
     takeEvery(DOWNLOAD_SELECTED_MAIN_BOOKS, downloadSelectedBooks),
-    takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllMainBooks),
+    takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllBooks),
   ]);
 }

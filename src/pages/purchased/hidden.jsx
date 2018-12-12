@@ -14,12 +14,12 @@ import { BottomActionBar, BottomActionButton } from '../../components/BottomActi
 
 import { getBooks } from '../../services/book/selectors';
 import {
-  loadHiddenItems,
-  selectAllHiddenBooks,
-  clearSelectedHiddenBooks,
-  toggleSelectHiddenBook,
-  showSelectedHiddenBooks,
-  deleteSelectedHiddenBooks,
+  loadItems,
+  selectAllBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  unhideSelectedBooks,
+  deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
 import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
@@ -39,7 +39,7 @@ const styles = {
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadHiddenItems());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -196,11 +196,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllHiddenBooks,
-  clearSelectedBooks: clearSelectedHiddenBooks,
-  toggleSelectBook: toggleSelectHiddenBook,
-  showSelectedBooks: showSelectedHiddenBooks,
-  deleteSelectedBooks: deleteSelectedHiddenBooks,
+  selectAllBooks: selectAllBooks,
+  clearSelectedBooks: clearSelectedBooks,
+  toggleSelectBook: toggleSelectBook,
+  showSelectedBooks: unhideSelectedBooks,
+  deleteSelectedBooks: deleteSelectedBooks,
 };
 
 export default connect(
