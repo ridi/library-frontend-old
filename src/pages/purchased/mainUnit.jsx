@@ -136,10 +136,11 @@ class MainUnit extends React.Component {
     const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
-      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
+      const selectedCount = Object.keys(selectedBooks).length;
+      const isSelectedAllBooks = selectedCount === items.length;
       return (
         <EditingBar
-          totalSelectedCount={Object.keys(selectedBooks).length}
+          totalSelectedCount={selectedCount}
           isSelectedAllBooks={isSelectedAllBooks}
           onClickSelectAllBooks={dispatchSelectAllBooks}
           onClickUnselectAllBooks={dispatchClearSelectedBooks}
