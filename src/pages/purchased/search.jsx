@@ -10,6 +10,7 @@ import {
   clearSelectedBooks,
   toggleSelectBook,
   hideSelectedBooks,
+  downloadSelectedBooks,
 } from '../../services/purchased/search/actions';
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -95,10 +96,10 @@ class Search extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedSearchBooks: disaptchClearSelectedSearchBooks } = this.props;
+    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
-      disaptchClearSelectedSearchBooks();
+      dispatchClearSelectedBooks();
     }
 
     this.setState({ isEditing: !isEditing });
@@ -122,23 +123,17 @@ class Search extends React.Component {
   };
 
   handleOnClickHide = () => {
-    const {
-      hideSelectedSearchBooks: dispatchHideSelectedSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
-    } = this.props;
+    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
-    dispatchHideSelectedSearchBooks();
-    dispatchClearSelectedSearchBooks();
+    dispatchHideSelectedBooks();
+    dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
   handleOnClickDownload = () => {
-    const {
-      downloadSelectedSearchBooks: dispatchDownloadSelectedSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
-    } = this.props;
-    dispatchDownloadSelectedSearchBooks();
-    dispatchClearSelectedSearchBooks();
+    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
@@ -148,8 +143,8 @@ class Search extends React.Component {
       pageInfo: { keyword },
       items,
       selectedBooks,
-      selectAllSearchBooks: dispatchSelectAllSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
+      selectAllSearchBooks: dispatchSelectAllBooks,
+      clearSelectedBooks: dispatchClearSelectedBooks,
     } = this.props;
 
     if (isEditing) {
@@ -158,8 +153,8 @@ class Search extends React.Component {
         <EditingBar
           totalSelectedCount={Object.keys(selectedBooks).length}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllSearchBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedSearchBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
+          onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
       );
@@ -188,7 +183,7 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectSearchBook: dispatchToggleSelectSearchBook } = this.props;
+    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
     return (
       <BookList>
         {items.map(item => (
@@ -198,7 +193,7 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectSearchBook(item.b_id)}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
       </BookList>
@@ -260,6 +255,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+
   return {
     pageInfo,
     items,
@@ -269,9 +265,10 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = {
   changeSearchKeyword,
-  clearSelectedSearchBooks: clearSelectedBooks,
-  toggleSelectSearchBook: toggleSelectBook,
-  hideSelectedSearchBooks: hideSelectedBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 };
 
 export default connect(

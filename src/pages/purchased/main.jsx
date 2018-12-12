@@ -308,11 +308,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllBooks,
-  clearSelectedBooks: clearSelectedBooks,
-  toggleSelectBook: toggleSelectBook,
-  hideSelectedBooks: hideSelectedBooks,
-  downloadSelectedBooks: downloadSelectedBooks,
+  selectAllBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 };
 
 export default connect(

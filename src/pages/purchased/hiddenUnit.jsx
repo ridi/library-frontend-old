@@ -1,33 +1,32 @@
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
+import Head from 'next/head';
 import { css, jsx } from '@emotion/core';
 
+import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
+import Responsive from '../base/Responsive';
+import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
-import {
-  clearSelectedBooks,
-  selectAllBooks,
-  toggleSelectBook,
-  deleteSelectedBooks,
-  loadItems,
-  setUnitId,
-  unhideSelectedBooks,
-} from '../../services/purchased/hiddenUnit/actions';
+import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import { getBooks } from '../../services/book/selectors';
+import {
+  clearSelectedBooks,
+  deleteSelectedBooks,
+  loadItems,
+  selectAllBooks,
+  setUnitId,
+  toggleSelectBook,
+  unhideSelectedBooks,
+} from '../../services/purchased/hiddenUnit/actions';
+import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hiddenUnit/selectors';
+import { PAGE_COUNT } from '../../constants/page';
+import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
-import { PAGE_COUNT } from '../../constants/page';
-import Responsive from '../base/Responsive';
-import { URLMap } from '../../constants/urls';
-import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
-import EditingBar from '../../components/EditingBar';
-import IconButton from '../../components/IconButton';
-import ModalBackground from '../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/hiddenUnit/selectors';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -85,8 +84,6 @@ class HiddenUnit extends React.Component {
 
     this.state = {
       isEditing: false,
-      showMoreModal: false,
-      hideTools: false,
     };
   }
 
@@ -98,15 +95,11 @@ class HiddenUnit extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing, showMoreModal: false });
+    this.setState({ isEditing: !isEditing });
   };
 
-  handleOnClickOutOfModal = () => {
-    this.setState({ showMoreModal: false });
-  };
-
-  handleOnClickUnHide = () => {
-    const { unHideSelectedBooks: dispatchUnHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+  handleOnClickUnhide = () => {
+    const { unhideSelectedBooks: dispatchUnHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     dispatchUnHideSelectedBooks();
     dispatchClearSelectedBooks();
@@ -122,38 +115,19 @@ class HiddenUnit extends React.Component {
   };
 
   renderToolBar() {
-    const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
-    if (isEditing) {
-      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={Object.keys(selectedBooks).length}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
+    const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
 
     return (
-      <div css={styles.MainToolBarWrapper}>
-        <Responsive css={styles.MainToolBar}>
-          {hideTools ? null : (
-            <div css={styles.MainToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-            </div>
-          )}
-        </Responsive>
-      </div>
+      <EditingBar
+        totalSelectedCount={Object.keys(selectedBooks).length}
+        isSelectedAllBooks={isSelectedAllBooks}
+        onClickSelectAllBooks={dispatchSelectAllBooks}
+        onClickUnselectAllBooks={dispatchClearSelectedBooks}
+        onClickSuccessButton={this.toggleEditingMode}
+      />
     );
-  }
-
-  renderModalBackground() {
-    const { showMoreModal } = this.state;
-    return <ModalBackground isActive={showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
   }
 
   renderBooks() {
@@ -202,17 +176,31 @@ class HiddenUnit extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickUnHide} disable={disable} />
+        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickUnhide} disable={disable} />
         <BottomActionButton name="영구삭제" css={styles.MainButtonActionRight} onClick={this.handleOnClickDelete} disable={disable} />
       </BottomActionBar>
     );
   }
 
   render() {
+    const { isEditing } = this.state;
+    const { itemTotalCount } = this.props;
     return (
       <>
-        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        <Head>
+          <title>리디북스 - 숨김목록</title>
+        </Head>
+        {isEditing ? (
+          this.renderToolBar()
+        ) : (
+          <LNBHiddenTitleBar
+            title="숨긴 도서 목록"
+            hiddenTotalCount={itemTotalCount}
+            onClickEditingMode={this.toggleEditingMode}
+            href={URLMap.main.href}
+            as={URLMap.main.as}
+          />
+        )}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -220,7 +208,6 @@ class HiddenUnit extends React.Component {
           </Responsive>
         </main>
         {this.renderBottomActionBar()}
-        {this.renderModalBackground()}
       </>
     );
   }
@@ -230,12 +217,14 @@ const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const itemTotalCount = getItemTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
   return {
     pageInfo,
     items,
     books,
+    itemTotalCount,
     selectedBooks,
   };
 };
@@ -244,7 +233,7 @@ const mapDispatchToProps = {
   selectAllBooks: selectAllBooks,
   clearSelectedBooks: clearSelectedBooks,
   toggleSelectBook: toggleSelectBook,
-  unHideSelectedBooks: unhideSelectedBooks,
+  unhideSelectedBooks: unhideSelectedBooks,
   deleteSelectedBooks: deleteSelectedBooks,
 };
 

@@ -45,6 +45,11 @@ export const getOptions = createSelector(
   }),
 );
 
+export const getItemTotalCount = createSelector(
+  getState,
+  state => state.itemTotalCount,
+);
+
 export const getSelectedBooks = createSelector(
   getState,
   state => state.selectedBooks,
