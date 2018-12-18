@@ -91,7 +91,6 @@ class MainUnit extends React.Component {
     this.state = {
       isEditing: false,
       showMoreModal: false,
-      hideTools: false,
     };
   }
 
@@ -132,7 +131,7 @@ class MainUnit extends React.Component {
   };
 
   renderToolBar() {
-    const { isEditing, hideTools } = this.state;
+    const { isEditing } = this.state;
     const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
@@ -152,12 +151,10 @@ class MainUnit extends React.Component {
     return (
       <div css={styles.MainToolBarWrapper}>
         <Responsive css={styles.MainToolBar}>
-          {hideTools ? null : (
-            <div css={styles.MainToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-              <IconButton icon="check_1" a11y="정렬" css={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
-            </div>
-          )}
+          <div css={styles.MainToolBarToolsWrapper}>
+            <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
+            <IconButton icon="check_1" a11y="정렬" css={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+          </div>
         </Responsive>
       </div>
     );
