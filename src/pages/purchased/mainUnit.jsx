@@ -166,11 +166,7 @@ class MainUnit extends React.Component {
       pageInfo: { order },
     } = this.props;
 
-    return (
-      <>
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} isActive={showMoreModal} />
-      </>
-    );
+    return <SortModal order={order} orderOptions={MainOrderOptions.toList()} isActive={showMoreModal} />;
   }
 
   renderModalBackground() {
