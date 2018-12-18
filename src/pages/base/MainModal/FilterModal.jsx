@@ -10,7 +10,7 @@ const FilterModal = props => {
   const { isActive, filter, filterOptions, query } = props;
 
   return (
-    <section css={[styles.FilterModal, isActive && styles.ModalActive]}>
+    <section css={[styles.filterModal, isActive && styles.modalActive]}>
       <MenuGroup title="모든 책 카테고리">
         {filterOptions.map(option => (
           <MenuLinkItem

@@ -11,7 +11,7 @@ const SortModal = props => {
   const { order, orderOptions, isActive, query } = props;
 
   return (
-    <section css={[styles.SortModal, isActive && styles.ModalActive]}>
+    <section css={[styles.sortModal, isActive && styles.modalActive]}>
       <MenuGroup title="정렬 순서">
         {orderOptions.map((option, index) => (
           <MenuLinkItem

@@ -32,34 +32,34 @@ import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../servi
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
-  Main: css({
+  main: css({
     position: 'relative',
   }),
-  SearchToolBarWrapper: css({
+  searchToolBarWrapper: css({
     height: 46,
     backgroundColor: '#f3f4f5',
     boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
     boxSizing: 'border-box',
     borderBottom: '1px solid #d1d5d9',
   }),
-  SearchToolBar: css({
+  searchToolBar: css({
     display: 'flex',
   }),
-  SearchToolBarSearchBarWrapper: css({
+  searchToolBarSearchBarWrapper: css({
     padding: '8px 0',
     height: 30,
     flex: 1,
     maxWidth: 600,
   }),
-  SearchToolBarSearchBarWrapperActive: css({
+  searchToolBarSearchBarWrapperActive: css({
     maxWidth: 'initial',
   }),
-  SearchToolBarToolsWrapper: css({
+  searchToolBarToolsWrapper: css({
     height: 30,
     padding: '8px 2px 8px 18px',
     marginLeft: 'auto',
   }),
-  SearchToolBarIcon: css({
+  searchToolBarIcon: css({
     margin: '3px 0',
     width: 24,
     height: 24,
@@ -162,9 +162,9 @@ class Search extends React.Component {
     }
 
     return (
-      <div css={styles.SearchToolBarWrapper}>
-        <Responsive css={styles.SearchToolBar}>
-          <div css={[styles.SearchToolBarSearchBarWrapper, hideTools && styles.SearchToolBarSearchBarWrapperActive]}>
+      <div css={styles.searchToolBarWrapper}>
+        <Responsive css={styles.searchToolBar}>
+          <div css={[styles.searchToolBarSearchBarWrapper, hideTools && styles.searchToolBarSearchBarWrapperActive]}>
             <SearchBar
               keyword={keyword}
               onSubmit={this.handleOnSubmitSearchBar}
@@ -173,8 +173,8 @@ class Search extends React.Component {
             />
           </div>
           {hideTools ? null : (
-            <div css={styles.SearchToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" css={styles.SearchToolBarIcon} onClick={this.toggleEditingMode} />
+            <div css={styles.searchToolBarToolsWrapper}>
+              <IconButton icon="check_3" a11y="편집" css={styles.searchToolBarIcon} onClick={this.toggleEditingMode} />
             </div>
           )}
         </Responsive>

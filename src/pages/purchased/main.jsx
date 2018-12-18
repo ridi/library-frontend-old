@@ -36,31 +36,31 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 
 const styles = {
-  MainToolBarWrapper: css({
+  mainToolBarWrapper: css({
     height: 46,
     backgroundColor: '#f3f4f5',
     boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
     boxSizing: 'border-box',
     borderBottom: '1px solid #d1d5d9',
   }),
-  MainToolBar: css({
+  mainToolBar: css({
     display: 'flex',
   }),
-  MainToolBarSearchBarWrapper: css({
+  mainToolBarSearchBarWrapper: css({
     padding: '8px 0',
     height: 30,
     flex: 1,
     maxWidth: 600,
   }),
-  MainToolBarSearchBarWrapperActive: css({
+  mainToolBarSearchBarWrapperActive: css({
     maxWidth: 'initial',
   }),
-  MainToolBarToolsWrapper: css({
+  mainToolBarToolsWrapper: css({
     height: 30,
     padding: '8px 0 8px 16px',
     marginLeft: 'auto',
   }),
-  MainToolBarIcon: css({
+  mainToolBarIcon: css({
     margin: '3px 0',
     width: 24,
     height: 24,
@@ -73,10 +73,10 @@ const styles = {
       height: 24,
     },
   }),
-  MainButtonActionLeft: css({
+  mainButtonActionLeft: css({
     float: 'left',
   }),
-  MainButtonActionRight: css({
+  mainButtonActionRight: css({
     float: 'right',
   }),
 };
@@ -178,16 +178,16 @@ class Main extends React.Component {
     }
 
     return (
-      <div css={styles.MainToolBarWrapper}>
-        <Responsive css={styles.MainToolBar}>
-          <div css={[styles.MainToolBarSearchBarWrapper, hideTools && styles.MainToolBarSearchBarWrapperActive]}>
+      <div css={styles.mainToolBarWrapper}>
+        <Responsive css={styles.mainToolBar}>
+          <div css={[styles.mainToolBarSearchBarWrapper, hideTools && styles.mainToolBarSearchBarWrapperActive]}>
             <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
           </div>
           {hideTools ? null : (
-            <div css={styles.MainToolBarToolsWrapper}>
-              <IconButton icon="setting" a11y="필터" css={styles.MainToolBarIcon} onClick={this.toggleFilterModal} />
-              <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-              <IconButton icon="check_1" a11y="정렬" css={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
+            <div css={styles.mainToolBarToolsWrapper}>
+              <IconButton icon="setting" a11y="필터" css={styles.mainToolBarIcon} onClick={this.toggleFilterModal} />
+              <IconButton icon="check_3" a11y="편집" css={styles.mainToolBarIcon} onClick={this.toggleEditingMode} />
+              <IconButton icon="check_1" a11y="정렬" css={styles.mainToolBarIcon} onClick={this.toggleMoreModal} />
             </div>
           )}
         </Responsive>
@@ -262,10 +262,10 @@ class Main extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" css={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
+        <BottomActionButton name="선택 숨기기" css={styles.mainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
         <BottomActionButton
           name="선택 다운로드"
-          css={styles.MainButtonActionRight}
+          css={styles.mainButtonActionRight}
           onClick={this.handleOnClickDownload}
           disable={disable}
         />

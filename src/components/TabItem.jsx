@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 
 const styles = {
-  TabItem: css({
+  tabItem: css({
     float: 'left',
     height: '100%',
 
@@ -17,14 +17,14 @@ const styles = {
       textAlign: 'center',
     },
   }),
-  TabItemActive: css({
+  tabItemActive: css({
     '& button': {
       color: '#40474d',
       fontWeight: 'bolder',
       borderBottom: '3px solid #9ea7ad',
     },
   }),
-  TabButton: css({
+  tabButton: css({
     padding: 8,
     height: '100%',
     boxSizing: 'border-box',
@@ -33,8 +33,8 @@ const styles = {
 };
 
 const TabItem = ({ name, onClick, isActive }) => (
-  <li css={[styles.TabItem, isActive && styles.TabItemActive]}>
-    <button type="button" onClick={onClick} css={styles.TabButton}>
+  <li css={[styles.tabItem, isActive && styles.tabItemActive]}>
+    <button type="button" onClick={onClick} css={styles.tabButton}>
       {name}
     </button>
   </li>

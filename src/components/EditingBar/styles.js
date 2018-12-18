@@ -1,25 +1,25 @@
 import { css } from '@emotion/core';
 
-export const EditingBarWrapper = css({
+export const editingBarWrapper = css({
   width: '100%',
   height: 46,
   backgroundColor: '#0077d9',
   boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
 });
 
-export const EditingBar = css({
+export const editingBar = css({
   padding: '8px 0',
   height: 30,
 });
 
-export const EditingBarIconWrapper = css({
+export const editingBarIconWrapper = css({
   height: 30,
   paddingLeft: 16,
   float: 'left',
   position: 'relative',
 });
 
-export const EditingBarIcon = css({
+export const editingBarIcon = css({
   position: 'absolute',
   width: 12,
   height: 9,
@@ -28,7 +28,7 @@ export const EditingBarIcon = css({
   transform: 'translate3d(0, -50%, 0)',
   fill: '#ffffff',
 });
-export const EditingBarSelectCount = css({
+export const editingBarSelectCount = css({
   height: 20,
   padding: '5px 0',
   fontSize: 15,
@@ -37,17 +37,17 @@ export const EditingBarSelectCount = css({
   lineHeight: '20px',
 });
 
-export const EditingBarButtonWrapper = css({
+export const editingBarButtonWrapper = css({
   float: 'right',
 });
 
-export const EditingBarAllSelect = css({
+export const editingBarAllSelect = css({
   marginRight: 16,
   fontSize: 15,
   letterSpacing: '-0.3px',
   color: '#ffffff',
 });
-export const EditingBarCompleteButton = css({
+export const editingBarCompleteButton = css({
   width: 52,
   height: 30,
   padding: '7px 0',

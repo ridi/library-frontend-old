@@ -1,12 +1,12 @@
 import { css } from '@emotion/core';
 
-export const MenuGroup = css({
+export const menuGroup = css({
   width: '100%',
   backgroundColor: '#ffffff',
   borderBottom: '1px solid #e6e8eb',
 });
 
-export const MenuGroupTitle = css({
+export const menuGroupTitle = css({
   width: '100%',
   height: 16,
 
@@ -16,16 +16,16 @@ export const MenuGroupTitle = css({
   padding: '16px 14px 8px 14px',
 });
 
-export const MenuGroupList = css({
+export const menuGroupList = css({
   width: '100%',
 });
 
-export const MenuGroupItemWrapper = css({
+export const menuGroupItemWrapper = css({
   width: '100%',
   height: 40,
 });
 
-export const MenuGroupItem = css({
+export const menuGroupItem = css({
   width: '100%',
   height: '100%',
 
@@ -35,13 +35,13 @@ export const MenuGroupItem = css({
   textAlign: 'left',
 });
 
-export const MenuGroupItemTitle = css({
+export const menuGroupItemTitle = css({
   fontSize: 15,
   letterSpacing: -0.3,
   color: '#40474d',
 });
 
-export const MenuGroupItemIcon = css({
+export const menuGroupItemIcon = css({
   position: 'absolute',
   width: 20,
   height: 20,

@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 
-export const FilterModal = css({
+export const filterModal = css({
   width: 200,
   position: 'absolute',
   right: 8,
@@ -15,7 +15,7 @@ export const FilterModal = css({
   pointerEvents: 'none',
 });
 
-export const SortModal = css({
+export const sortModal = css({
   width: 200,
   position: 'absolute',
   right: 8,
@@ -30,7 +30,7 @@ export const SortModal = css({
   pointerEvents: 'none',
 });
 
-export const ModalActive = css({
+export const modalActive = css({
   opacity: 1,
   transform: 'translate3d(0, 0, 0)',
   pointerEvents: 'initial',

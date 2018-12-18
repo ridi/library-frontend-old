@@ -28,11 +28,11 @@ import { URLMap } from '../../constants/urls';
 import { toFlatten } from '../../utils/array';
 
 const styles = {
-  HiddenButtonActionLeft: css({
+  hiddenButtonActionLeft: css({
     color: '#e64938',
     float: 'left',
   }),
-  HiddenButtonActionRight: css({
+  hiddenButtonActionRight: css({
     float: 'right',
   }),
 };
@@ -135,11 +135,16 @@ class Hidden extends React.Component {
       <BottomActionBar>
         <BottomActionButton
           name="선택 숨김 해제"
-          css={styles.HiddenButtonActionRight}
+          css={styles.hiddenButtonActionRight}
           onClick={this.handleOnClickUnhide}
           disable={disable}
         />
-        <BottomActionButton name="영구삭제" css={styles.HiddenButtonActionLeft} onClick={this.handleOnClickDelete} disable={disable} />
+        <BottomActionButton
+          name="선택 영구 삭제"
+          css={styles.hiddenButtonActionLeft}
+          onClick={this.handleOnClickDelete}
+          disable={disable}
+        />
       </BottomActionBar>
     );
   }

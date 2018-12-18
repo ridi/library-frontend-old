@@ -3,7 +3,7 @@ import { jsx, css } from '@emotion/core';
 import Responsive from '../../pages/base/Responsive';
 
 const styles = {
-  BottomActionBar: css({
+  bottomActionBar: css({
     position: 'fixed',
     bottom: 0,
     left: 0,
@@ -17,7 +17,7 @@ const styles = {
 };
 
 const BottomActionBar = ({ children }) => (
-  <div css={styles.BottomActionBar}>
+  <div css={styles.bottomActionBar}>
     <Responsive>{children}</Responsive>
   </div>
 );

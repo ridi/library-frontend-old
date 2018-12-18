@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 
 const styles = {
-  BottomActionButton: css({
+  bottomActionButton: css({
     fontSize: 15,
     lineHeight: 1.2,
     letterCpacing: 0,
@@ -11,7 +11,7 @@ const styles = {
 
     height: 50,
   }),
-  BottomActionButtonDisable: css({
+  bottomActionButtonDisable: css({
     opacity: 0.4,
   }),
 };
@@ -19,7 +19,7 @@ const styles = {
 const BottomActionButton = ({ name, onClick, disable, className = null }) => (
   <button
     type="button"
-    css={[styles.BottomActionButton, disable && styles.BottomActionButtonDisable]}
+    css={[styles.bottomActionButton, disable && styles.bottomActionButtonDisable]}
     className={className}
     onClick={onClick}
     disabled={disable}

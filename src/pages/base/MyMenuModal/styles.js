@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 
-export const MyMenuModal = isActive =>
+export const myMenuModal = isActive =>
   css([
     {
       display: 'block',
@@ -23,25 +23,25 @@ export const MyMenuModal = isActive =>
     },
   ]);
 
-export const MenuList = css({
+export const menuList = css({
   borderTop: `1px solid #e6e8eb`,
   '&:last-of-type': {
     borderBottom: `1px solid #e6e8eb`,
   },
 });
 
-export const MenuItem = css({
+export const menuItem = css({
   minWidth: 200,
   margin: '8px 0',
 });
 
-export const UserId = css({
+export const userId = css({
   padding: '11px 14px 10px 14px',
   fontSize: 15,
   color: '#40474d',
 });
 
-export const MenuButton = css({
+export const menuButton = css({
   position: 'relative',
   minWidth: 200,
   boxSizng: 'border-box',
@@ -51,7 +51,7 @@ export const MenuButton = css({
   textAlign: 'left',
 });
 
-export const MenuIcon = css({
+export const menuIcon = css({
   position: 'absolute',
   width: 18,
   height: 18,
