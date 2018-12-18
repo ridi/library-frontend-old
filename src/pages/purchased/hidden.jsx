@@ -51,7 +51,7 @@ class Hidden extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedBooks();
