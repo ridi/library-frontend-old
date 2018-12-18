@@ -21,7 +21,7 @@ import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../commo
 import { showToast } from '../../toast/actions';
 import { delay } from 'redux-saga';
 
-function* persistPageOptionsFromQuries() {
+function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
@@ -29,7 +29,7 @@ function* persistPageOptionsFromQuries() {
 }
 
 function* loadHiddenUnitItems() {
-  yield call(persistPageOptionsFromQuries);
+  yield call(persistPageOptionsFromQueries);
 
   const unitId = yield select(getUnitId);
   const { page } = yield select(getOptions);

@@ -25,7 +25,7 @@ import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 
-function* persistPageOptionsFromQuries() {
+function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
@@ -36,7 +36,7 @@ function* persistPageOptionsFromQuries() {
 }
 
 function* loadItems() {
-  yield call(persistPageOptionsFromQuries);
+  yield call(persistPageOptionsFromQueries);
 
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);

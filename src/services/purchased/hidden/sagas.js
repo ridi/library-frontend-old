@@ -21,7 +21,7 @@ import { getRevision, requestUnhide, requestCheckQueueStatus } from '../../commo
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 
-function* persistPageOptionsFromQuries() {
+function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
   yield put(setPage(page));
@@ -30,7 +30,7 @@ function* persistPageOptionsFromQuries() {
 }
 
 function* loadItems() {
-  yield call(persistPageOptionsFromQuries);
+  yield call(persistPageOptionsFromQueries);
 
   const { page } = yield select(getOptions);
 

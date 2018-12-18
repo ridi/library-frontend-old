@@ -26,7 +26,7 @@ import { loadBookData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
 
-function* persistPageOptionsFromQuries() {
+function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
@@ -38,7 +38,7 @@ function* persistPageOptionsFromQuries() {
 }
 
 function* loadMainItems() {
-  yield call(persistPageOptionsFromQuries);
+  yield call(persistPageOptionsFromQueries);
 
   const { page, order, filter: category } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
