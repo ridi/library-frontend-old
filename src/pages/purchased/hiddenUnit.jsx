@@ -89,7 +89,7 @@ class HiddenUnit extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedBooks();
@@ -99,7 +99,7 @@ class HiddenUnit extends React.Component {
   };
 
   handleOnClickUnhide = () => {
-    const { unhideSelectedBooks: dispatchUnHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchUnHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchUnHideSelectedBooks();
     dispatchClearSelectedBooks();
@@ -107,7 +107,7 @@ class HiddenUnit extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    const { deleteSelectedBooks: dispatchDeleteSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedBooks();
@@ -115,7 +115,7 @@ class HiddenUnit extends React.Component {
   };
 
   renderToolBar() {
-    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const selectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = selectedCount === items.length;
 
@@ -132,7 +132,7 @@ class HiddenUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     return (
       <BookList>
@@ -230,11 +230,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks: selectAllBooks,
-  clearSelectedBooks: clearSelectedBooks,
-  toggleSelectBook: toggleSelectBook,
-  unhideSelectedBooks: unhideSelectedBooks,
-  deleteSelectedBooks: deleteSelectedBooks,
+  dispatchSelectAllBooks: selectAllBooks,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchUnhideSelectedBooks: unhideSelectedBooks,
+  dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 
 export default connect(

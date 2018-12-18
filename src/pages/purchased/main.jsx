@@ -99,7 +99,7 @@ class Main extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedBooks();
@@ -144,7 +144,7 @@ class Main extends React.Component {
   };
 
   handleOnClickHide = () => {
-    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchHideSelectedBooks();
     dispatchClearSelectedBooks();
@@ -152,7 +152,7 @@ class Main extends React.Component {
   };
 
   handleOnClickDownload = () => {
-    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
@@ -161,7 +161,7 @@ class Main extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const { items, selectedBooks, selectAllBooks: dispatchSelectAllBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
       const selectedCount = Object.keys(selectedBooks).length;
@@ -217,7 +217,7 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     return (
       <BookList>
@@ -309,11 +309,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllBooks,
-  clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
-  downloadSelectedBooks,
+  dispatchSelectAllBooks: selectAllBooks,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchHideSelectedBooks: hideSelectedBooks,
+  dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(

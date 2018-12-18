@@ -96,7 +96,7 @@ class Search extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedBooks();
@@ -123,7 +123,7 @@ class Search extends React.Component {
   };
 
   handleOnClickHide = () => {
-    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchHideSelectedBooks();
     dispatchClearSelectedBooks();
@@ -131,7 +131,7 @@ class Search extends React.Component {
   };
 
   handleOnClickDownload = () => {
-    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
@@ -143,8 +143,8 @@ class Search extends React.Component {
       pageInfo: { keyword },
       items,
       selectedBooks,
-      selectAllSearchBooks: dispatchSelectAllBooks,
-      clearSelectedBooks: dispatchClearSelectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
     } = this.props;
 
     if (isEditing) {
@@ -184,7 +184,7 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
     return (
       <BookList>
         {items.map(item => (
@@ -265,11 +265,11 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = {
-  changeSearchKeyword,
-  clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
-  downloadSelectedBooks,
+  dispatchChangeSearchKeyword: changeSearchKeyword,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchHideSelectedBooks: hideSelectedBooks,
+  dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(
