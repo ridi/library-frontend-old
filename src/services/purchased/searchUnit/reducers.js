@@ -54,7 +54,7 @@ const searchUnitReducer = (state = initialState, action) => {
       };
     case TOGGLE_SELECT_SEARCH_UNIT_BOOK:
       const { selectedBooks } = state;
-      if (state.selectedBooks[action.payload.bookId]) {
+      if (selectedBooks[action.payload.bookId]) {
         delete selectedBooks[action.payload.bookId];
       } else {
         selectedBooks[action.payload.bookId] = 1;

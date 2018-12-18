@@ -25,8 +25,6 @@ function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
   yield put(setPage(page));
-
-  yield all([put(setPage(page))]);
 }
 
 function* loadItems() {
