@@ -89,7 +89,7 @@ export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
 
 export function* requestUnhide(bookIds, revision) {
   const api = yield put(getAPI());
-  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/show/`, {
+  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/unhide/`, {
     b_ids: bookIds,
     revision,
   });
