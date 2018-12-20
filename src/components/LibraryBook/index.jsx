@@ -7,9 +7,8 @@ import { isExpired } from '../../utils/datetime';
 
 import { portraitBookCSS, bookCss } from './styles';
 import { UnitCount, RidiSelectBand, ExpireDate, ExpiredCover } from './components';
-import { URLMap } from '../../constants/urls';
 
-const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
+const LibraryBook = ({ item, book, isEditing, checked, href, as, onChangeCheckbox }) => {
   const _isExpired = isExpired(item.expire_date) && ServiceType.isExpirable(item.service_type);
   const hasItems = item.unit_count > 1;
   const isRidiSelect = ServiceType.isRidiselect(item.service_type);
@@ -25,7 +24,7 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
       <Book css={portraitBookCSS} className="RSGBook-preset-portrait" dto={book}>
         {({ Thumbnail, Metadata }) => (
           <>
-            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
+            <Link href={href} as={as}>
               <a>
                 <Thumbnail.wrapper thumbnailSize={90} link="unused">
                   <Thumbnail.coverImage />
@@ -37,7 +36,7 @@ const LibraryBook = ({ item, book, isEditing, checked, onChangeCheckbox }) => {
                 </Thumbnail.wrapper>
               </a>
             </Link>
-            <Link href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }} as={URLMap.mainUnit.as(item.unit_id)}>
+            <Link href={href} as={as}>
               <a>
                 <Metadata.wrapper>
                   <Metadata.title link="unused" />

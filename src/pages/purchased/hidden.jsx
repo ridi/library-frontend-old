@@ -106,6 +106,8 @@ class Hidden extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
+            href={{ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }}
+            as={URLMap.hiddenUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}

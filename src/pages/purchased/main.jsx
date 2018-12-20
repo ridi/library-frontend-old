@@ -228,6 +228,8 @@ class Main extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
+            href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }}
+            as={URLMap.mainUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
