@@ -1,18 +1,18 @@
 import { initialState } from './state';
 import {
-  SET_PURCHASED_HIDDEN_ITEMS,
-  SET_PURCHASED_HIDDEN_TOTAL_COUNT,
-  SET_PURCHASED_HIDDEN_PAGE,
+  SET_HIDDEN_ITEMS,
+  SET_HIDDEN_TOTAL_COUNT,
+  SET_HIDDEN_PAGE,
   CLEAR_SELECTED_HIDDEN_BOOKS,
   TOGGLE_SELECT_HIDDEN_BOOK,
-  SET_SELECT_HIDDEN_BOOKS,
+  SELECT_HIDDEN_BOOKS,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
 
 const purchasedHiddenReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_PURCHASED_HIDDEN_ITEMS:
+    case SET_HIDDEN_ITEMS:
       return {
         ...state,
         items: {
@@ -24,12 +24,12 @@ const purchasedHiddenReducer = (state = initialState, action) => {
           [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
-    case SET_PURCHASED_HIDDEN_TOTAL_COUNT:
+    case SET_HIDDEN_TOTAL_COUNT:
       return {
         ...state,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case SET_PURCHASED_HIDDEN_PAGE:
+    case SET_HIDDEN_PAGE:
       return {
         ...state,
         page: action.payload.page,
@@ -41,7 +41,7 @@ const purchasedHiddenReducer = (state = initialState, action) => {
       };
     case TOGGLE_SELECT_HIDDEN_BOOK:
       const { selectedBooks } = state;
-      if (state.selectedBooks[action.payload.bookId]) {
+      if (selectedBooks[action.payload.bookId]) {
         delete selectedBooks[action.payload.bookId];
       } else {
         selectedBooks[action.payload.bookId] = 1;
@@ -51,7 +51,7 @@ const purchasedHiddenReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SET_SELECT_HIDDEN_BOOKS:
+    case SELECT_HIDDEN_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {

@@ -1,20 +1,19 @@
 import { initialState } from './state';
 
 import {
-  CLEAR_SELECTED_MAIN_UNIT_BOOKS,
-  SET_MAIN_UNIT_ID,
-  SET_MAIN_UNIT_ITEMS,
-  SET_MAIN_UNIT_ORDER,
-  SET_MAIN_UNIT_PAGE,
-  SET_MAIN_UNIT_TOTAL_COUNT,
-  SELECT_MAIN_UNIT_BOOKS,
-  TOGGLE_SELECT_MAIN_UNIT_BOOK,
+  CLEAR_SELECTED_HIDDEN_UNIT_BOOKS,
+  SET_HIDDEN_UNIT_ID,
+  SET_HIDDEN_UNIT_ITEMS,
+  SET_HIDDEN_UNIT_PAGE,
+  SET_HIDDEN_UNIT_TOTAL_COUNT,
+  SELECT_HIDDEN_UNIT_BOOKS,
+  TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
-const purchasedMainUnitReducer = (state = initialState, action) => {
+const hiddenUnitReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_MAIN_UNIT_ITEMS:
+    case SET_HIDDEN_UNIT_ITEMS:
       return {
         ...state,
         items: {
@@ -26,33 +25,28 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
           [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
       };
-    case SET_MAIN_UNIT_TOTAL_COUNT:
+    case SET_HIDDEN_UNIT_TOTAL_COUNT:
       return {
         ...state,
         unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
-    case SET_MAIN_UNIT_ID:
+    case SET_HIDDEN_UNIT_ID:
       return {
         ...state,
         unitId: action.payload.unitId,
       };
-    case SET_MAIN_UNIT_PAGE:
+    case SET_HIDDEN_UNIT_PAGE:
       return {
         ...state,
         page: action.payload.page,
       };
-    case SET_MAIN_UNIT_ORDER:
-      return {
-        ...state,
-        order: action.payload.order,
-      };
-    case CLEAR_SELECTED_MAIN_UNIT_BOOKS:
+    case CLEAR_SELECTED_HIDDEN_UNIT_BOOKS:
       return {
         ...state,
         selectedBooks: {},
       };
-    case TOGGLE_SELECT_MAIN_UNIT_BOOK:
+    case TOGGLE_SELECT_HIDDEN_UNIT_BOOK:
       const { selectedBooks } = state;
       if (selectedBooks[action.payload.bookId]) {
         delete selectedBooks[action.payload.bookId];
@@ -64,7 +58,7 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
         ...state,
         selectedBooks,
       };
-    case SELECT_MAIN_UNIT_BOOKS:
+    case SELECT_HIDDEN_UNIT_BOOKS:
       return {
         ...state,
         selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
@@ -77,4 +71,4 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
   }
 };
 
-export default purchasedMainUnitReducer;
+export default hiddenUnitReducer;

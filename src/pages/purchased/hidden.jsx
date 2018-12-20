@@ -14,14 +14,14 @@ import { BottomActionBar, BottomActionButton } from '../../components/BottomActi
 
 import { getBooks } from '../../services/book/selectors';
 import {
-  loadPurchasedHiddenItems,
-  selectAllHiddenBooks,
-  clearSelectedHiddenBooks,
-  toggleSelectHiddenBook,
-  showSelectedBooks,
+  loadItems,
+  selectAllBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  unhideSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedHiddenBooks } from '../../services/purchased/hidden/selectors';
+import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
@@ -39,7 +39,7 @@ const styles = {
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadPurchasedHiddenItems());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -51,38 +51,33 @@ class Hidden extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
-      dispatchClearSelectedHiddenBooks();
+      dispatchClearSelectedBooks();
     }
 
     this.setState({ isEditing: !isEditing });
   };
 
+  handleOnClickUnhide = () => {
+    const { dispatchUnhideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+
+    dispatchUnhideSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
   handleOnClickDelete = () => {
-    const { deleteSelectedBooks: dispatchDeleteSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
+    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchDeleteSelectedBooks();
-    dispatchClearSelectedHiddenBooks();
+    dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
-  handleOnClickShow = () => {
-    const { showSelectedBooks: dispatchShowSelectedBooks, clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks } = this.props;
-
-    dispatchShowSelectedBooks();
-    dispatchClearSelectedHiddenBooks();
-    this.setState({ isEditing: false });
-  };
-
-  renderEditingBar() {
-    const {
-      items,
-      selectedBooks,
-      selectAllHiddenBooks: dispatchSelectAllHiddenBooks,
-      clearSelectedHiddenBooks: dispatchClearSelectedHiddenBooks,
-    } = this.props;
+  renderToolBar() {
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
 
     const selectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = selectedCount === items.length;
@@ -91,8 +86,8 @@ class Hidden extends React.Component {
       <EditingBar
         totalSelectedCount={selectedCount}
         isSelectedAllBooks={isSelectedAllBooks}
-        onClickSelectAllBooks={dispatchSelectAllHiddenBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedHiddenBooks}
+        onClickSelectAllBooks={dispatchSelectAllBooks}
+        onClickUnselectAllBooks={dispatchClearSelectedBooks}
         onClickSuccessButton={this.toggleEditingMode}
       />
     );
@@ -100,7 +95,7 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectHiddenBook: dispatchToggleSelectHiddenBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     return (
       <BookList>
@@ -111,7 +106,7 @@ class Hidden extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectHiddenBook(item.b_id)}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
       </BookList>
@@ -139,12 +134,17 @@ class Hidden extends React.Component {
     return (
       <BottomActionBar>
         <BottomActionButton
+          name="선택 숨김 해제"
+          css={styles.hiddenButtonActionRight}
+          onClick={this.handleOnClickUnhide}
+          disable={disable}
+        />
+        <BottomActionButton
           name="선택 영구 삭제"
           css={styles.hiddenButtonActionLeft}
           onClick={this.handleOnClickDelete}
           disable={disable}
         />
-        <BottomActionButton name="선택 숨김 해제" css={styles.hiddenButtonActionRight} onClick={this.handleOnClickShow} disable={disable} />
       </BottomActionBar>
     );
   }
@@ -158,7 +158,7 @@ class Hidden extends React.Component {
           <title>리디북스 - 숨김목록</title>
         </Head>
         {isEditing ? (
-          this.renderEditingBar()
+          this.renderToolBar()
         ) : (
           <LNBHiddenTitleBar
             title="숨긴 도서 목록"
@@ -174,7 +174,7 @@ class Hidden extends React.Component {
             {this.renderPaginator()}
           </Responsive>
         </main>
-        {isEditing ? this.renderBottomActionBar() : null}
+        {this.renderBottomActionBar()}
       </>
     );
   }
@@ -185,7 +185,8 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const itemTotalCount = getItemTotalCount(state);
-  const selectedBooks = getSelectedHiddenBooks(state);
+  const selectedBooks = getSelectedBooks(state);
+
   return {
     pageInfo,
     items,
@@ -196,11 +197,11 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllHiddenBooks,
-  clearSelectedHiddenBooks,
-  toggleSelectHiddenBook,
-  showSelectedBooks,
-  deleteSelectedBooks,
+  dispatchSelectAllBooks: selectAllBooks,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchUnhideSelectedBooks: unhideSelectedBooks,
+  dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 
 export default connect(

@@ -2,53 +2,62 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
 import {
-  LOAD_PURCHASED_HIDDEN_ITEMS,
+  LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
-  SHOW_SELECTED_BOOKS,
-  DELETE_SELECTED_BOOKS,
-  setPurchasedHiddenItems,
-  setPurchasedHiddenPage,
-  setPurchasedHiddenTotalCount,
-  setSelectHiddenBooks,
+  UNHIDE_SELECTED_HIDDEN_BOOKS,
+  DELETE_SELECTED_HIDDEN_BOOKS,
+  setItems,
+  setPage,
+  setTotalCount,
+  selectBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData } from '../../book/sagas';
-import { fetchPurchasedHiddenItems, fetchPurchasedHiddenItemsTotalCount } from './requests';
+import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
-import { getHiddenItems, getItemsByPage, getSelectedHiddenBooks } from './selectors';
+import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
 
-import { getRevision, requestShow, requestCheckQueueStatus } from '../../common/requests';
+import { getRevision, requestUnhide, requestCheckQueueStatus } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 
-function* loadPurchasedHiddenItems() {
+function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
-  yield put(setPurchasedHiddenPage(page));
-
-  const [itemResponse, countResponse] = yield all([call(fetchPurchasedHiddenItems, page), call(fetchPurchasedHiddenItemsTotalCount)]);
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([put(setPurchasedHiddenItems(itemResponse.items)), put(setPurchasedHiddenTotalCount(countResponse.item_total_count))]);
+  yield put(setPage(page));
 }
 
-function* showSelectedBooks() {
-  const items = yield select(getHiddenItems);
-  const selectedBooks = yield select(getSelectedHiddenBooks);
+function* loadItems() {
+  yield call(persistPageOptionsFromQueries);
+
+  const { page } = yield select(getOptions);
+
+  const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
+
+  // Request BookData
+  const bookIds = toFlatten(itemResponse.items, 'b_id');
+  yield call(loadBookData, bookIds);
+
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+}
+
+function* unhideSelectedBooks() {
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestShow, bookIds, revision);
+  const queueIds = yield call(requestUnhide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   // TODO: Message 수정
   yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadPurchasedHiddenItems);
+  yield call(loadItems);
 }
 
 function* deleteSelectedBooks() {
-  const items = yield select(getHiddenItems);
-  const selectedBooks = yield select(getSelectedHiddenBooks);
+  const items = yield select(getItems);
+  const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
@@ -57,20 +66,20 @@ function* deleteSelectedBooks() {
 
   yield call(delay, 3000); // Temporary Sleep
 
-  yield call(loadPurchasedHiddenItems);
+  yield call(loadItems);
 }
 
-function* selectAllHiddenBooks() {
+function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectHiddenBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchasedHiddenSaga() {
   yield all([
-    takeEvery(LOAD_PURCHASED_HIDDEN_ITEMS, loadPurchasedHiddenItems),
-    takeEvery(SHOW_SELECTED_BOOKS, showSelectedBooks),
-    takeEvery(DELETE_SELECTED_BOOKS, deleteSelectedBooks),
-    takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllHiddenBooks),
+    takeEvery(LOAD_HIDDEN_ITEMS, loadItems),
+    takeEvery(UNHIDE_SELECTED_HIDDEN_BOOKS, unhideSelectedBooks),
+    takeEvery(DELETE_SELECTED_HIDDEN_BOOKS, deleteSelectedBooks),
+    takeEvery(SELECT_ALL_HIDDEN_BOOKS, selectAllBooks),
   ]);
 }

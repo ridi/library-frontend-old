@@ -8,20 +8,24 @@ import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
-export function* fetchHiddenItems(page) {
+export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
   const options = snakelize({
+    orderType,
+    orderBy,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/hidden/?${stringify(options)}`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/search/${unitId}?${stringify(options)}`);
 
   return response.data;
 }
 
-export function* fetchHiddenItemsTotalCount() {
+export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
+  const options = snakelize({ orderType, orderBy });
+
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/hidden/count/`);
+  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/search/${unitId}/count?${stringify(options)}`);
   return response.data;
 }

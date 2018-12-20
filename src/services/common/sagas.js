@@ -68,7 +68,7 @@ export function* download(bookIds, url) {
 }
 
 const _reduceSelectedBookIds = (items, selectedBookIds) => {
-  const reduced = selectedBookIds.reduce(
+  return selectedBookIds.reduce(
     (previous, bookId) => {
       const item = items[bookId];
       if (item.unit_count === 1) {
@@ -80,8 +80,6 @@ const _reduceSelectedBookIds = (items, selectedBookIds) => {
     },
     { bookIds: [], unitIds: [] },
   );
-
-  return reduced;
 };
 
 const _flattenBookIds = bookIdsInUnitData =>

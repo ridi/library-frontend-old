@@ -1,9 +1,6 @@
-import { MainOrderOptions } from '../../../constants/orderOptions';
-
 export const initialState = {
   itemIdsForPage: {},
   items: {},
-  order: MainOrderOptions.DEFAULT,
 
   page: 1,
   unitTotalCount: 0,

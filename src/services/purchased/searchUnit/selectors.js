@@ -4,7 +4,7 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const getState = state => state.purchasedMainUnit;
+const getState = state => state.purchasedSearchUnit;
 
 export const getItemsByPage = createSelector(
   getState,

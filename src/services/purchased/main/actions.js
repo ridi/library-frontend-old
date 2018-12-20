@@ -1,73 +1,76 @@
-export const LOAD_PURCHASE_ITEMS = 'LOAD_PURCHASE_ITEMS';
+export const LOAD_MAIN_ITEMS = 'LOAD_MAIN_ITEMS';
 
-export const SET_PURCHASE_ITEMS = 'SET_PURCHASE_ITEMS';
-export const SET_PURCHASE_TOTAL_COUNT = 'SET_PURCHASE_TOTAL_COUNT';
-export const SET_PURCHASE_PAGE = 'SET_PURCHASE_PAGE';
-export const SET_PURCHASE_ORDER = 'SET_PURCHASE_ORDER';
-export const SET_PURCHASE_FILTER = 'SET_PURCHASE_FILTER';
-export const SET_PURCHASE_FILTER_OPTIONS = 'SET_PURCHASE_FILTER_OPTIONS';
+export const SET_MAIN_ITEMS = 'SET_MAIN_ITEMS';
+export const SET_MAIN_TOTAL_COUNT = 'SET_MAIN_TOTAL_COUNT';
+export const SET_MAIN_PAGE = 'SET_MAIN_PAGE';
+export const SET_MAIN_ORDER = 'SET_MAIN_ORDER';
+export const SET_MAIN_FILTER = 'SET_MAIN_FILTER';
+export const SET_MAIN_FILTER_OPTIONS = 'SET_MAIN_FILTER_OPTIONS';
 
+export const SELECT_MAIN_BOOKS = 'SELECT_MAIN_BOOKS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
-export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
-export const SET_SELECT_MAIN_BOOKS = 'SET_SELECT_MAIN_BOOKS';
+export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 
-export const HIDE_SELECTED_BOOKS = 'HIDE_SELECTED_BOOKS';
-export const DOWNLOAD_SELECTED_BOOKS = 'DOWNLOAD_SELECTED_BOOKS';
+export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
+export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
-export const loadPurchaseItems = () => ({
-  type: LOAD_PURCHASE_ITEMS,
+export const loadItems = () => ({
+  type: LOAD_MAIN_ITEMS,
 });
 
-export const setPurchaseItems = items => ({
-  type: SET_PURCHASE_ITEMS,
+export const setItems = items => ({
+  type: SET_MAIN_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setPurchaseTotalCount = (unitTotalCount, itemTotalCount) => ({
-  type: SET_PURCHASE_TOTAL_COUNT,
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
+  type: SET_MAIN_TOTAL_COUNT,
   payload: {
     unitTotalCount,
     itemTotalCount,
   },
 });
 
-export const setPurchasePage = page => ({
-  type: SET_PURCHASE_PAGE,
+export const setPage = page => ({
+  type: SET_MAIN_PAGE,
   payload: {
     page,
   },
 });
 
-export const setPurchaseOrder = order => ({
-  type: SET_PURCHASE_ORDER,
+export const setOrder = order => ({
+  type: SET_MAIN_ORDER,
   payload: {
     order,
   },
 });
 
-export const setPurchaseFilter = filter => ({
-  type: SET_PURCHASE_FILTER,
+export const setFilter = filter => ({
+  type: SET_MAIN_FILTER,
   payload: {
     filter,
   },
 });
 
-export const setPurchaseFilterOptions = options => ({
-  type: SET_PURCHASE_FILTER_OPTIONS,
+export const setFilterOptions = options => ({
+  type: SET_MAIN_FILTER_OPTIONS,
   payload: {
     options,
   },
 });
 
-export const selectAllMainBooks = () => ({
-  type: SELECT_ALL_MAIN_BOOKS,
+export const selectBooks = bookIds => ({
+  type: SELECT_MAIN_BOOKS,
+  payload: {
+    bookIds,
+  },
 });
 
-export const clearSelectedBooks = () => ({
-  type: CLEAR_SELECTED_MAIN_BOOKS,
+export const selectAllBooks = () => ({
+  type: SELECT_ALL_MAIN_BOOKS,
 });
 
 export const toggleSelectBook = bookId => ({
@@ -77,17 +80,14 @@ export const toggleSelectBook = bookId => ({
   },
 });
 
-export const setSelectBooks = bookIds => ({
-  type: SET_SELECT_MAIN_BOOKS,
-  payload: {
-    bookIds,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_MAIN_BOOKS,
 });
 
 export const hideSelectedBooks = () => ({
-  type: HIDE_SELECTED_BOOKS,
+  type: HIDE_SELECTED_MAIN_BOOKS,
 });
 
 export const downloadSelectedBooks = () => ({
-  type: DOWNLOAD_SELECTED_BOOKS,
+  type: DOWNLOAD_SELECTED_MAIN_BOOKS,
 });

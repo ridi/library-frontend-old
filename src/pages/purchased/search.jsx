@@ -5,11 +5,12 @@ import { connect } from 'react-redux';
 import Router from 'next/router';
 
 import {
-  loadSearchPage,
+  loadItems,
   changeSearchKeyword,
-  clearSelectedSearchBooks,
-  toggleSelectSearchBook,
-  hideSelectedSearchBooks,
+  clearSelectedBooks,
+  toggleSelectBook,
+  hideSelectedBooks,
+  downloadSelectedBooks,
 } from '../../services/purchased/search/actions';
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -27,7 +28,7 @@ import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getSearchItemsByPage, getSelectedSearchBooks } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
@@ -81,7 +82,7 @@ const styles = {
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadSearchPage());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -95,10 +96,10 @@ class Search extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedSearchBooks: disaptchClearSelectedSearchBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
-      disaptchClearSelectedSearchBooks();
+      dispatchClearSelectedBooks();
     }
 
     this.setState({ isEditing: !isEditing });
@@ -122,23 +123,17 @@ class Search extends React.Component {
   };
 
   handleOnClickHide = () => {
-    const {
-      hideSelectedSearchBooks: dispatchHideSelectedSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
-    } = this.props;
+    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchHideSelectedSearchBooks();
-    dispatchClearSelectedSearchBooks();
+    dispatchHideSelectedBooks();
+    dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
   handleOnClickDownload = () => {
-    const {
-      downloadSelectedSearchBooks: dispatchDownloadSelectedSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
-    } = this.props;
-    dispatchDownloadSelectedSearchBooks();
-    dispatchClearSelectedSearchBooks();
+    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
@@ -148,18 +143,19 @@ class Search extends React.Component {
       pageInfo: { keyword },
       items,
       selectedBooks,
-      selectAllSearchBooks: dispatchSelectAllSearchBooks,
-      clearSelectedSearchBooks: dispatchClearSelectedSearchBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
     } = this.props;
 
     if (isEditing) {
-      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
+      const selectedCount = Object.keys(selectedBooks).length;
+      const isSelectedAllBooks = selectedCount === items.length;
       return (
         <EditingBar
-          totalSelectedCount={Object.keys(selectedBooks).length}
+          totalSelectedCount={selectedCount}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllSearchBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedSearchBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
+          onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
       );
@@ -188,7 +184,7 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectSearchBook: dispatchToggleSelectSearchBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
     return (
       <BookList>
         {items.map(item => (
@@ -198,7 +194,7 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectSearchBook(item.b_id)}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
       </BookList>
@@ -257,9 +253,10 @@ class Search extends React.Component {
 
 const mapStateToProps = state => {
   const pageInfo = getSearchPageInfo(state);
-  const items = getSearchItemsByPage(state);
+  const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
-  const selectedBooks = getSelectedSearchBooks(state);
+  const selectedBooks = getSelectedBooks(state);
+
   return {
     pageInfo,
     items,
@@ -268,10 +265,11 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = {
-  changeSearchKeyword,
-  clearSelectedSearchBooks,
-  toggleSelectSearchBook,
-  hideSelectedSearchBooks,
+  dispatchChangeSearchKeyword: changeSearchKeyword,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchHideSelectedBooks: hideSelectedBooks,
+  dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(

@@ -7,3 +7,5 @@ build/
 out/
 
 /secrets.json
+
+*.pyc

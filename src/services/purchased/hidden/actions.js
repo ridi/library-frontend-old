@@ -1,68 +1,68 @@
-export const LOAD_PURCHASED_HIDDEN_ITEMS = 'LOAD_PURCHASED_HIDDEN_ITEMS';
+export const LOAD_HIDDEN_ITEMS = 'LOAD_HIDDEN_ITEMS';
 
-export const SET_PURCHASED_HIDDEN_ITEMS = 'SET_PURCHASED_HIDDEN_ITEMS';
-export const SET_PURCHASED_HIDDEN_TOTAL_COUNT = 'SET_PURCHASED_HIDDEN_TOTAL_COUNT';
-export const SET_PURCHASED_HIDDEN_PAGE = 'SET_PURCHASED_HIDDEN_PAGE';
+export const SET_HIDDEN_ITEMS = 'SET_HIDDEN_ITEMS';
+export const SET_HIDDEN_TOTAL_COUNT = 'SET_HIDDEN_TOTAL_COUNT';
+export const SET_HIDDEN_PAGE = 'SET_HIDDEN_PAGE';
 
-export const SHOW_SELECTED_BOOKS = 'SHOW_SELECTED_BOOKS';
-export const DELETE_SELECTED_BOOKS = 'DELETE_SELECTED_BOOKS';
+export const UNHIDE_SELECTED_HIDDEN_BOOKS = 'UNHIDE_SELECTED_HIDDEN_BOOKS';
+export const DELETE_SELECTED_HIDDEN_BOOKS = 'DELETE_SELECTED_HIDDEN_BOOKS';
 
+export const SELECT_HIDDEN_BOOKS = 'SELECT_HIDDEN_BOOKS';
 export const SELECT_ALL_HIDDEN_BOOKS = 'SELECT_ALL_HIDDEN_BOOKS';
-export const CLEAR_SELECTED_HIDDEN_BOOKS = 'CLEAR_SELECTED_HIDDEN_BOOKS';
 export const TOGGLE_SELECT_HIDDEN_BOOK = 'TOGGLE_SELECT_HIDDEN_BOOK';
-export const SET_SELECT_HIDDEN_BOOKS = 'SET_SELECT_HIDDEN_BOOKS';
+export const CLEAR_SELECTED_HIDDEN_BOOKS = 'CLEAR_SELECTED_HIDDEN_BOOKS';
 
-export const loadPurchasedHiddenItems = () => ({
-  type: LOAD_PURCHASED_HIDDEN_ITEMS,
+export const loadItems = () => ({
+  type: LOAD_HIDDEN_ITEMS,
 });
 
-export const setPurchasedHiddenItems = items => ({
-  type: SET_PURCHASED_HIDDEN_ITEMS,
+export const setItems = items => ({
+  type: SET_HIDDEN_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setPurchasedHiddenTotalCount = itemTotalCount => ({
-  type: SET_PURCHASED_HIDDEN_TOTAL_COUNT,
+export const setTotalCount = itemTotalCount => ({
+  type: SET_HIDDEN_TOTAL_COUNT,
   payload: {
     itemTotalCount,
   },
 });
 
-export const setPurchasedHiddenPage = page => ({
-  type: SET_PURCHASED_HIDDEN_PAGE,
+export const setPage = page => ({
+  type: SET_HIDDEN_PAGE,
   payload: {
     page,
   },
 });
 
-export const selectAllHiddenBooks = () => ({
+export const selectBooks = bookIds => ({
+  type: SELECT_HIDDEN_BOOKS,
+  payload: {
+    bookIds,
+  },
+});
+
+export const selectAllBooks = () => ({
   type: SELECT_ALL_HIDDEN_BOOKS,
 });
 
-export const clearSelectedHiddenBooks = () => ({
-  type: CLEAR_SELECTED_HIDDEN_BOOKS,
-});
-
-export const toggleSelectHiddenBook = bookId => ({
+export const toggleSelectBook = bookId => ({
   type: TOGGLE_SELECT_HIDDEN_BOOK,
   payload: {
     bookId,
   },
 });
 
-export const setSelectHiddenBooks = bookIds => ({
-  type: SET_SELECT_HIDDEN_BOOKS,
-  payload: {
-    bookIds,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_HIDDEN_BOOKS,
 });
 
-export const showSelectedBooks = () => ({
-  type: SHOW_SELECTED_BOOKS,
+export const unhideSelectedBooks = () => ({
+  type: UNHIDE_SELECTED_HIDDEN_BOOKS,
 });
 
 export const deleteSelectedBooks = () => ({
-  type: DELETE_SELECTED_BOOKS,
+  type: DELETE_SELECTED_HIDDEN_BOOKS,
 });

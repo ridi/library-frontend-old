@@ -2,26 +2,26 @@ import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 
-const getPurchasedSearchState = state => state.purchasedSearch;
+const getState = state => state.purchasedSearch;
 
-export const getSearchItems = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => purchasedSearchState.items,
+export const getItems = createSelector(
+  getState,
+  state => state.items,
 );
 
-export const getSearchItemsByPage = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => {
-    const { page, itemIdsForPage, items } = purchasedSearchState;
+export const getItemsByPage = createSelector(
+  getState,
+  state => {
+    const { page, itemIdsForPage, items } = state;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
 );
 
 export const getSearchPageInfo = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => {
-    const { keyword, page, unitTotalCount } = purchasedSearchState;
+  getState,
+  state => {
+    const { keyword, page, unitTotalCount } = state;
 
     return {
       currentPage: page,
@@ -32,21 +32,21 @@ export const getSearchPageInfo = createSelector(
 );
 
 export const getPage = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => purchasedSearchState.page,
+  getState,
+  state => state.page,
 );
 
 export const getKeyword = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => purchasedSearchState.keyword,
+  getState,
+  state => state.keyword,
 );
 
-export const getSearchOptions = createSelector(
+export const getOptions = createSelector(
   [getPage, getKeyword],
   (page, keyword) => ({ page, keyword }),
 );
 
-export const getSelectedSearchBooks = createSelector(
-  getPurchasedSearchState,
-  purchasedSearchState => purchasedSearchState.selectedBooks,
+export const getSelectedBooks = createSelector(
+  getState,
+  state => state.selectedBooks,
 );

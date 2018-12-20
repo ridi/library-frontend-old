@@ -1,76 +1,85 @@
-export const LOAD_PURCHASED_UNIT_ITEMS = 'LOAD_PURCHASED_UNIT_ITEMS';
+export const LOAD_MAIN_UNIT_ITEMS = 'LOAD_MAIN_UNIT_ITEMS';
 
-export const SET_PURCHASED_UNIT_ITEMS = 'SET_PURCHASED_UNIT_ITEMS';
-export const SET_PURCHASED_UNIT_TOTAL_COUNT = 'SET_PURCHASED_UNIT_TOTAL_COUNT';
-export const SET_PURCHASED_UNIT_ID = 'SET_PURCHASED_UNIT_ID';
-export const SET_PURCHASED_UNIT_PAGE = 'SET_PURCHASED_UNIT_PAGE';
-export const SET_PURCHASED_UNIT_ORDER = 'SET_PURCHASED_UNIT_ORDER';
-export const SET_PURCHASED_UNIT_FILTER = 'SET_PURCHASED_UNIT_FILTER';
-export const SET_PURCHASED_UNIT_FILTER_OPTIONS = 'SET_PURCHASED_UNIT_FILTER_OPTIONS';
+export const SET_MAIN_UNIT_ITEMS = 'SET_MAIN_UNIT_ITEMS';
+export const SET_MAIN_UNIT_TOTAL_COUNT = 'SET_MAIN_UNIT_TOTAL_COUNT';
+export const SET_MAIN_UNIT_ID = 'SET_MAIN_UNIT_ID';
+export const SET_MAIN_UNIT_PAGE = 'SET_MAIN_UNIT_PAGE';
+export const SET_MAIN_UNIT_ORDER = 'SET_MAIN_UNIT_ORDER';
 
-export const CHANGE_PURCHASED_UNIT_OPTION = 'CHANGE_PURCHASED_UNIT_OPTION';
+export const SELECT_MAIN_UNIT_BOOKS = 'SELECT_MAIN_UNIT_BOOKS';
+export const SELECT_ALL_MAIN_UNIT_BOOKS = 'SELECT_ALL_MAIN_UNIT_BOOKS ';
+export const TOGGLE_SELECT_MAIN_UNIT_BOOK = 'TOGGLE_SELECT_MAIN_UNIT_BOOK';
+export const CLEAR_SELECTED_MAIN_UNIT_BOOKS = 'CLEAR_SELECTED_MAIN_UNIT_BOOKS';
 
-export const loadPurchasedUnitItems = () => ({
-  type: LOAD_PURCHASED_UNIT_ITEMS,
+export const HIDE_SELECTED_MAIN_UNIT_BOOKS = 'HIDE_SELECTED_MAIN_UNIT_BOOKS';
+export const DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS = 'DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS';
+
+export const loadItems = () => ({
+  type: LOAD_MAIN_UNIT_ITEMS,
 });
 
-export const setPurchasedUnitItems = items => ({
-  type: SET_PURCHASED_UNIT_ITEMS,
+export const setItems = items => ({
+  type: SET_MAIN_UNIT_ITEMS,
   payload: {
     items,
   },
 });
 
-export const setPurchasedUnitTotalCount = (unitTotalCount, itemTotalCount) => ({
-  type: SET_PURCHASED_UNIT_TOTAL_COUNT,
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
+  type: SET_MAIN_UNIT_TOTAL_COUNT,
   payload: {
     unitTotalCount,
     itemTotalCount,
   },
 });
 
-export const setPurchasedUnitId = unitId => ({
-  type: SET_PURCHASED_UNIT_ID,
+export const setUnitId = unitId => ({
+  type: SET_MAIN_UNIT_ID,
   payload: {
     unitId,
   },
 });
 
-export const setPurchasedUnitPage = page => ({
-  type: SET_PURCHASED_UNIT_PAGE,
+export const setPage = page => ({
+  type: SET_MAIN_UNIT_PAGE,
   payload: {
     page,
   },
 });
 
-export const setPurchasedUnitOrder = order => ({
-  type: SET_PURCHASED_UNIT_ORDER,
+export const setOrder = order => ({
+  type: SET_MAIN_UNIT_ORDER,
   payload: {
     order,
   },
 });
 
-export const setPurchasedUnitFilter = filter => ({
-  type: SET_PURCHASED_UNIT_FILTER,
+export const selectBooks = bookIds => ({
+  type: SELECT_MAIN_UNIT_BOOKS,
   payload: {
-    filter,
+    bookIds,
   },
 });
 
-export const setPurchasedUnitFilterOptions = options => ({
-  type: SET_PURCHASED_UNIT_FILTER_OPTIONS,
+export const selectAllBooks = () => ({
+  type: SELECT_ALL_MAIN_UNIT_BOOKS,
+});
+
+export const toggleSelectBook = bookId => ({
+  type: TOGGLE_SELECT_MAIN_UNIT_BOOK,
   payload: {
-    options,
+    bookId,
   },
 });
 
-const changePurchasedUnitOption = (key, value) => ({
-  type: CHANGE_PURCHASED_UNIT_OPTION,
-  payload: {
-    key,
-    value,
-  },
+export const clearSelectedBooks = () => ({
+  type: CLEAR_SELECTED_MAIN_UNIT_BOOKS,
 });
 
-export const changePurchasedUnitOrder = order => changePurchasedUnitOption('order', order);
-export const changePurchasedUnitFilter = filter => changePurchasedUnitOption('filter', filter);
+export const hideSelectedBooks = () => ({
+  type: HIDE_SELECTED_MAIN_UNIT_BOOKS,
+});
+
+export const downloadSelectedBooks = () => ({
+  type: DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
+});

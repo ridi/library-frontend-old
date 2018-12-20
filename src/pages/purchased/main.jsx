@@ -18,16 +18,16 @@ import FilterModal from '../base/MainModal/FilterModal';
 import SortModal from '../base/MainModal/SortModal';
 
 import {
-  loadPurchaseItems,
-  selectAllMainBooks,
   clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
   downloadSelectedBooks,
+  hideSelectedBooks,
+  loadItems,
+  selectAllBooks,
+  toggleSelectBook,
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getItemsByPage, getPageInfo, getFilterOptions, getSelectedBooks } from '../../services/purchased/main/selectors';
+import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -81,9 +81,9 @@ const styles = {
   }),
 };
 
-class Index extends React.Component {
+class Main extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(loadPurchaseItems());
+    await store.dispatch(loadItems());
   }
 
   constructor(props) {
@@ -99,7 +99,7 @@ class Index extends React.Component {
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    const { clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchClearSelectedBooks } = this.props;
 
     if (isEditing === true) {
       dispatchClearSelectedBooks();
@@ -120,18 +120,6 @@ class Index extends React.Component {
 
   handleOnClickOutOfModal = () => {
     this.setState({ showMoreModal: false, showFilterModal: false });
-  };
-
-  handleChangeFilter = filter => {
-    const { changePurchaseFilter: dispatchChangePurchaseFilter } = this.props;
-    this.setState({ showFilterModal: false });
-    dispatchChangePurchaseFilter(filter);
-  };
-
-  handleChangeOrder = order => {
-    const { changePurchaseOrder: dispatchChangePurchaseOrder } = this.props;
-    this.setState({ showMoreModal: false });
-    dispatchChangePurchaseOrder(order);
   };
 
   handleOnSubmitSearchBar = value => {
@@ -156,7 +144,7 @@ class Index extends React.Component {
   };
 
   handleOnClickHide = () => {
-    const { hideSelectedBooks: dispatchHideSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchHideSelectedBooks();
     dispatchClearSelectedBooks();
@@ -164,7 +152,7 @@ class Index extends React.Component {
   };
 
   handleOnClickDownload = () => {
-    const { downloadSelectedBooks: dispatchDownloadSelectedBooks, clearSelectedBooks: dispatchClearSelectedBooks } = this.props;
+    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
@@ -173,20 +161,16 @@ class Index extends React.Component {
 
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
-    const {
-      items,
-      selectedBooks,
-      selectAllMainBooks: dispatchSelectAllMainBooks,
-      clearSelectedBooks: dispatchClearSelectedBooks,
-    } = this.props;
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
 
     if (isEditing) {
-      const isSelectedAllBooks = Object.keys(selectedBooks).length === items.length;
+      const selectedCount = Object.keys(selectedBooks).length;
+      const isSelectedAllBooks = selectedCount === items.length;
       return (
         <EditingBar
-          totalSelectedCount={Object.keys(selectedBooks).length}
+          totalSelectedCount={selectedCount}
           isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllMainBooks}
+          onClickSelectAllBooks={dispatchSelectAllBooks}
           onClickUnselectAllBooks={dispatchClearSelectedBooks}
           onClickSuccessButton={this.toggleEditingMode}
         />
@@ -233,7 +217,7 @@ class Index extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, toggleSelectBook: dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     return (
       <BookList>
@@ -263,11 +247,7 @@ class Index extends React.Component {
         pageCount={PAGE_COUNT}
         href={URLMap.main.href}
         as={URLMap.main.as}
-        query={{
-          orderType,
-          orderBy,
-          filter,
-        }}
+        query={{ orderType, orderBy, filter }}
       />
     );
   }
@@ -329,14 +309,14 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  selectAllMainBooks,
-  clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
-  downloadSelectedBooks,
+  dispatchSelectAllBooks: selectAllBooks,
+  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchHideSelectedBooks: hideSelectedBooks,
+  dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Index);
+)(Main);

@@ -1,25 +1,26 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
-  DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
-  HIDE_SELECTED_MAIN_UNIT_BOOKS,
-  LOAD_MAIN_UNIT_ITEMS,
-  SELECT_ALL_MAIN_UNIT_BOOKS,
+  DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
+  HIDE_SELECTED_SEARCH_UNIT_BOOKS,
+  LOAD_SEARCH_UNIT_ITEMS,
+  SELECT_ALL_SEARCH_UNIT_BOOKS,
   setItems,
   setOrder,
   setPage,
   setTotalCount,
   selectBooks,
 } from './actions';
-import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
+import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
+import { getOptions, getUnitId } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
+import { getItemsByPage, getSelectedBooks } from './selectors';
 import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';
@@ -42,8 +43,8 @@ function* loadItems() {
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
   const [itemResponse, countResponse] = yield all([
-    call(fetchMainUnitItems, unitId, orderType, orderBy, page),
-    call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
+    call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
+    call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
   // Request BookData
@@ -86,11 +87,11 @@ function* selectAllBooks() {
   yield put(selectBooks(bookIds));
 }
 
-export default function* purchaseMainUnitRootSaga() {
+export default function* purchaseSearchUnitRootSaga() {
   yield all([
-    takeEvery(LOAD_MAIN_UNIT_ITEMS, loadItems),
-    takeEvery(HIDE_SELECTED_MAIN_UNIT_BOOKS, hideSelectedBooks),
-    takeEvery(DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS, downloadSelectedBooks),
-    takeEvery(SELECT_ALL_MAIN_UNIT_BOOKS, selectAllBooks),
+    takeEvery(LOAD_SEARCH_UNIT_ITEMS, loadItems),
+    takeEvery(HIDE_SELECTED_SEARCH_UNIT_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS, downloadSelectedBooks),
+    takeEvery(SELECT_ALL_SEARCH_UNIT_BOOKS, selectAllBooks),
   ]);
 }
