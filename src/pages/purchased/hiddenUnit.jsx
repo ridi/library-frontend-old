@@ -22,7 +22,7 @@ import {
   toggleSelectBook,
   unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hiddenUnit/selectors';
+import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks, getUnit } from '../../services/purchased/hiddenUnit/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
@@ -184,11 +184,11 @@ class HiddenUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { itemTotalCount } = this.props;
+    const { unit, itemTotalCount } = this.props;
     return (
       <>
         <Head>
-          <title>리디북스 - 숨김목록</title>
+          <title>{unit.title} - 내 서재</title>
         </Head>
         {isEditing ? (
           this.renderToolBar()
@@ -216,6 +216,7 @@ class HiddenUnit extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
+  const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const itemTotalCount = getItemTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
@@ -223,6 +224,7 @@ const mapStateToProps = state => {
   return {
     pageInfo,
     items,
+    unit,
     books,
     itemTotalCount,
     selectedBooks,

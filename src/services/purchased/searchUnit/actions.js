@@ -1,6 +1,7 @@
 export const LOAD_SEARCH_UNIT_ITEMS = 'LOAD_SEARCH_UNIT_ITEMS';
 
 export const SET_SEARCH_UNIT_ITEMS = 'SET_SEARCH_UNIT_ITEMS';
+export const SET_SEARCH_UNIT = 'SET_SEARCH_UNIT';
 export const SET_SEARCH_UNIT_TOTAL_COUNT = 'SET_SEARCH_UNIT_TOTAL_COUNT';
 export const SET_SEARCH_UNIT_ID = 'SET_SEARCH_UNIT_ID';
 export const SET_SEARCH_UNIT_PAGE = 'SET_SEARCH_UNIT_PAGE';
@@ -22,6 +23,13 @@ export const setItems = items => ({
   type: SET_SEARCH_UNIT_ITEMS,
   payload: {
     items,
+  },
+});
+
+export const setUnit = unit => ({
+  type: SET_SEARCH_UNIT,
+  payload: {
+    unit,
   },
 });
 

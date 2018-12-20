@@ -157,7 +157,7 @@ class Hidden extends React.Component {
     return (
       <>
         <Head>
-          <title>리디북스 - 숨김목록</title>
+          <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
         {isEditing ? (
           this.renderToolBar()

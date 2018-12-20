@@ -10,6 +10,7 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
+  setUnit,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
@@ -51,7 +52,11 @@ function* loadItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+  yield all([
+    put(setItems(itemResponse.items)),
+    put(setUnit(itemResponse.unit)),
+    put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+  ]);
 }
 
 function* hideSelectedBooks() {

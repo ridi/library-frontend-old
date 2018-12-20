@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -21,7 +23,7 @@ import IconButton from '../../components/IconButton';
 import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/searchUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getUnit } from '../../services/purchased/searchUnit/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -232,8 +234,12 @@ class searchUnit extends React.Component {
   }
 
   render() {
+    const { unit } = this.props;
     return (
       <>
+        <Head>
+          <title>{unit.title} - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>
@@ -253,12 +259,14 @@ class searchUnit extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
+  const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
 
   return {
     pageInfo,
     items,
+    unit,
     books,
     selectedBooks,
   };

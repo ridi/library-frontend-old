@@ -1,6 +1,9 @@
+import { SET_SEARCH_UNIT } from '../searchUnit/actions';
+
 export const LOAD_MAIN_UNIT_ITEMS = 'LOAD_MAIN_UNIT_ITEMS';
 
 export const SET_MAIN_UNIT_ITEMS = 'SET_MAIN_UNIT_ITEMS';
+export const SET_MAIN_UNIT = 'SET_MAIN_UNIT';
 export const SET_MAIN_UNIT_TOTAL_COUNT = 'SET_MAIN_UNIT_TOTAL_COUNT';
 export const SET_MAIN_UNIT_ID = 'SET_MAIN_UNIT_ID';
 export const SET_MAIN_UNIT_PAGE = 'SET_MAIN_UNIT_PAGE';
@@ -22,6 +25,13 @@ export const setItems = items => ({
   type: SET_MAIN_UNIT_ITEMS,
   payload: {
     items,
+  },
+});
+
+export const setUnit = unit => ({
+  type: SET_MAIN_UNIT,
+  payload: {
+    unit,
   },
 });
 

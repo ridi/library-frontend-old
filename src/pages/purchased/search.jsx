@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { css, jsx } from '@emotion/core';
@@ -237,8 +239,15 @@ class Search extends React.Component {
   }
 
   render() {
+    const {
+      pageInfo: { keyword },
+    } = this.props;
+
     return (
       <>
+        <Head>
+          <title>'{keyword}' 검색 결과 - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>

@@ -2,6 +2,7 @@ import { initialState } from './state';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
+  SET_SEARCH_UNIT,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
   SET_SEARCH_UNIT_ORDER,
@@ -25,6 +26,11 @@ const searchUnitReducer = (state = initialState, action) => {
           ...state.itemIdsForPage,
           [state.page]: toFlatten(action.payload.items, 'b_id'),
         },
+      };
+    case SET_SEARCH_UNIT:
+      return {
+        ...state,
+        unit: action.payload.unit,
       };
     case SET_SEARCH_UNIT_TOTAL_COUNT:
       return {

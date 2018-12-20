@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -278,6 +280,9 @@ class Main extends React.Component {
   render() {
     return (
       <>
+        <Head>
+          <title>모든 책 - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>
