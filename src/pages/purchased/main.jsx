@@ -81,6 +81,11 @@ const styles = {
   mainButtonActionRight: css({
     float: 'right',
   }),
+  BookListIsEmpty: css({
+    margin: 20,
+    paddingTop: 30,
+    paddingBottom: 30,
+  }),
 };
 
 class Main extends React.Component {
@@ -220,6 +225,10 @@ class Main extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+
+    if (items.length === 0) {
+      return <div css={styles.BookListIsEmpty}>구매/대여하신 책이 없습니다.</div>;
+    }
 
     return (
       <BookList>

@@ -73,6 +73,11 @@ const styles = {
   MainButtonActionRight: css({
     float: 'right',
   }),
+  BookListIsEmpty: css({
+    margin: 20,
+    paddingTop: 30,
+    paddingBottom: 30,
+  }),
 };
 
 class HiddenUnit extends React.Component {
@@ -134,6 +139,10 @@ class HiddenUnit extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+
+    if (items.length === 0) {
+      return <div css={styles.BookListIsEmpty}>숨김 도서가 없습니다.</div>;
+    }
 
     return (
       <BookList>

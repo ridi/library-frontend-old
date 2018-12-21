@@ -80,7 +80,7 @@ const styles = {
   ButtonActionRight: css({
     float: 'right',
   }),
-  SearchResultIsEmpty: css({
+  BookListIsEmpty: css({
     margin: 20,
     paddingTop: 30,
     paddingBottom: 30,
@@ -200,7 +200,7 @@ class Search extends React.Component {
     } = this.props;
 
     if (items.length === 0) {
-      return <div css={styles.SearchResultIsEmpty}>'{keyword}'에 대한 검색 결과가 없습니다.</div>;
+      return <div css={styles.BookListIsEmpty}>'{keyword}'에 대한 검색 결과가 없습니다.</div>;
     }
 
     return (
