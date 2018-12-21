@@ -136,15 +136,15 @@ class Hidden extends React.Component {
     return (
       <BottomActionBar>
         <BottomActionButton
-          name="선택 숨김 해제"
-          css={styles.hiddenButtonActionRight}
-          onClick={this.handleOnClickUnhide}
-          disable={disable}
-        />
-        <BottomActionButton
           name="선택 영구 삭제"
           css={styles.hiddenButtonActionLeft}
           onClick={this.handleOnClickDelete}
+          disable={disable}
+        />
+        <BottomActionButton
+          name="선택 숨김 해제"
+          css={styles.hiddenButtonActionRight}
+          onClick={this.handleOnClickUnhide}
           disable={disable}
         />
       </BottomActionBar>

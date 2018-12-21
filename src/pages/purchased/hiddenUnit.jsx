@@ -67,6 +67,7 @@ const styles = {
     },
   }),
   MainButtonActionLeft: css({
+    color: '#e64938',
     float: 'left',
   }),
   MainButtonActionRight: css({
@@ -176,8 +177,8 @@ class HiddenUnit extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickUnhide} disable={disable} />
-        <BottomActionButton name="영구삭제" css={styles.MainButtonActionRight} onClick={this.handleOnClickDelete} disable={disable} />
+        <BottomActionButton name="선택 영구 삭제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickDelete} disable={disable} />
+        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionRight} onClick={this.handleOnClickUnhide} disable={disable} />
       </BottomActionBar>
     );
   }
