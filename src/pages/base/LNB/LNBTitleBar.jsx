@@ -71,7 +71,7 @@ const styles = {
   }),
 };
 
-const LNBHiddenTitleBar = ({ title, hiddenTotalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
+const LNBTitleBar = ({ title, totalCount: totalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
   <nav css={styles.LNBHiddenTitleBarWrapper}>
     <Responsive css={styles.LNBHiddenTitleBar}>
       <Link href={href} as={as}>
@@ -82,7 +82,7 @@ const LNBHiddenTitleBar = ({ title, hiddenTotalCount, href, as, a11y = '뒤로�
       </Link>
       <div css={styles.LNBHiddenTitleBarTitleWrapper}>
         <span css={styles.LNBHiddenTitleBarTitle}>{title}</span>
-        <span css={styles.LNBHiddenTitleBarHiddenCount}>{hiddenTotalCount}</span>
+        <span css={styles.LNBHiddenTitleBarHiddenCount}>{totalCount}</span>
       </div>
       <div css={styles.LNBHiddenTitleBarToolsWrapper}>
         <IconButton icon="check_3" a11y="편집" css={styles.LNBHiddenTitleBarTool} onClick={onClickEditingMode} />
@@ -91,4 +91,4 @@ const LNBHiddenTitleBar = ({ title, hiddenTotalCount, href, as, a11y = '뒤로�
   </nav>
 );
 
-export default LNBHiddenTitleBar;
+export default LNBTitleBar;

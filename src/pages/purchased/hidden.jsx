@@ -4,7 +4,7 @@ import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 
-import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
+import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
@@ -21,7 +21,7 @@ import {
   unhideSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hidden/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount } from '../../services/purchased/hidden/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
@@ -153,7 +153,8 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { itemTotalCount } = this.props;
+    const { totalCount } = this.props;
+
     return (
       <>
         <Head>
@@ -162,9 +163,9 @@ class Hidden extends React.Component {
         {isEditing ? (
           this.renderToolBar()
         ) : (
-          <LNBHiddenTitleBar
+          <LNBTitleBar
             title="숨긴 도서 목록"
-            hiddenTotalCount={itemTotalCount}
+            totalCount={totalCount.itemTotalCount}
             onClickEditingMode={this.toggleEditingMode}
             href={URLMap.main.href}
             as={URLMap.main.as}
@@ -186,14 +187,14 @@ const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
-  const itemTotalCount = getItemTotalCount(state);
+  const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
   return {
     pageInfo,
     items,
     books,
-    itemTotalCount,
+    totalCount,
     selectedBooks,
   };
 };

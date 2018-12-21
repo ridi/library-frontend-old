@@ -14,6 +14,7 @@ import { getBooks } from '../../services/book/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
+import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import { URLMap } from '../../constants/urls';
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -23,7 +24,7 @@ import IconButton from '../../components/IconButton';
 import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getUnit } from '../../services/purchased/mainUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/mainUnit/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -231,14 +232,26 @@ class MainUnit extends React.Component {
   }
 
   render() {
-    const { unit } = this.props;
+    const { isEditing } = this.state;
+    const { unit, totalCount } = this.props;
+
     return (
       <>
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {isEditing ? (
+          this.renderToolBar()
+        ) : (
+          <LNBTitleBar
+            title={unit.title}
+            totalCount={totalCount.itemTotalCount}
+            onClickEditingMode={this.toggleEditingMode}
+            href={URLMap.main.href}
+            as={URLMap.main.as}
+          />
+        )}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -258,6 +271,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
   return {
@@ -265,6 +279,7 @@ const mapStateToProps = state => {
     items,
     unit,
     books,
+    totalCount,
     selectedBooks,
   };
 };
