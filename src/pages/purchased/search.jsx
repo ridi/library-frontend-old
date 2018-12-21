@@ -80,6 +80,11 @@ const styles = {
   ButtonActionRight: css({
     float: 'right',
   }),
+  SearchResultIsEmpty: css({
+    margin: 20,
+    paddingTop: 30,
+    paddingBottom: 30,
+  }),
 };
 
 class Search extends React.Component {
@@ -186,7 +191,18 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const {
+      items,
+      books,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      pageInfo: { keyword },
+    } = this.props;
+
+    if (items.length === 0) {
+      return <div css={styles.SearchResultIsEmpty}>'{keyword}'에 대한 검색 결과가 없습니다.</div>;
+    }
+
     return (
       <BookList>
         {items.map(item => (
