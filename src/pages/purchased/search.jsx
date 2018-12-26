@@ -5,6 +5,7 @@ import React from 'react';
 import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
+import EmptyBookList from '../../components/EmptyBookList';
 
 import {
   loadItems,
@@ -79,11 +80,6 @@ const styles = {
   }),
   ButtonActionRight: css({
     float: 'right',
-  }),
-  BookListIsEmpty: css({
-    margin: 20,
-    paddingTop: 30,
-    paddingBottom: 30,
   }),
 };
 
@@ -200,7 +196,7 @@ class Search extends React.Component {
     } = this.props;
 
     if (items.length === 0) {
-      return <div css={styles.BookListIsEmpty}>'{keyword}'에 대한 검색 결과가 없습니다.</div>;
+      return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
     return (

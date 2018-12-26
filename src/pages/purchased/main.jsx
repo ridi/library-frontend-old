@@ -7,6 +7,7 @@ import { css, jsx } from '@emotion/core';
 import Router from 'next/router';
 
 import BookList from '../../components/BookList';
+import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
@@ -80,11 +81,6 @@ const styles = {
   }),
   mainButtonActionRight: css({
     float: 'right',
-  }),
-  BookListIsEmpty: css({
-    margin: 20,
-    paddingTop: 30,
-    paddingBottom: 30,
   }),
 };
 
@@ -227,7 +223,7 @@ class Main extends React.Component {
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      return <div css={styles.BookListIsEmpty}>구매/대여하신 책이 없습니다.</div>;
+      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (

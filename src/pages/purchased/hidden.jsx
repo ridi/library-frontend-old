@@ -3,6 +3,7 @@ import React from 'react';
 import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
+import EmptyBookList from '../../components/EmptyBookList';
 
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
@@ -34,11 +35,6 @@ const styles = {
   }),
   hiddenButtonActionRight: css({
     float: 'right',
-  }),
-  BookListIsEmpty: css({
-    margin: 20,
-    paddingTop: 30,
-    paddingBottom: 30,
   }),
 };
 
@@ -103,7 +99,7 @@ class Hidden extends React.Component {
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      return <div css={styles.BookListIsEmpty}>숨김 도서가 없습니다.</div>;
+      return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
     return (
