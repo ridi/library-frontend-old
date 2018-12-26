@@ -1,4 +1,3 @@
-import { SET_SEARCH_UNIT } from '../searchUnit/actions';
 import { initialState } from './state';
 
 import {

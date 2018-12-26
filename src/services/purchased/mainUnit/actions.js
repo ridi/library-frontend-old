@@ -1,5 +1,3 @@
-import { SET_SEARCH_UNIT } from '../searchUnit/actions';
-
 export const LOAD_MAIN_UNIT_ITEMS = 'LOAD_MAIN_UNIT_ITEMS';
 
 export const SET_MAIN_UNIT_ITEMS = 'SET_MAIN_UNIT_ITEMS';

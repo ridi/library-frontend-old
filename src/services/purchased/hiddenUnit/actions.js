@@ -1,5 +1,3 @@
-import { SET_SEARCH_UNIT } from '../searchUnit/actions';
-
 export const LOAD_HIDDEN_UNIT_ITEMS = 'LOAD_HIDDEN_UNIT_ITEMS';
 
 export const SET_HIDDEN_UNIT_ITEMS = 'SET_HIDDEN_UNIT_ITEMS';
