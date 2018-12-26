@@ -18,27 +18,27 @@ const MyMenuModal = ({ userId, isActive }) => (
     </div>
     <ul css={styles.menuList}>
       <li css={styles.menuItem}>
-        <a css={styles.menuButton} type="button" target="_blank" href={config.READING_NOTE_URL}>
+        <a css={styles.menuButton} target="_blank" href={config.READING_NOTE_URL}>
           <Note css={styles.menuIcon} />
           독서노트
         </a>
       </li>
       <li css={styles.menuItem}>
-        <a css={styles.menuButton} type="button" target="_blank" href={config.REVIEW_URL}>
+        <a css={styles.menuButton} target="_blank" href={config.REVIEW_URL}>
           <Review css={styles.menuIcon} />내 리뷰 관리
         </a>
       </li>
     </ul>
     <ul css={styles.menuList}>
       <li css={styles.menuItem}>
-        <a css={styles.menuButton} type="button">
+        <a css={styles.menuButton}>
           <Download css={styles.menuIcon} />
           구매 목록 엑셀 다운로드
         </a>
       </li>
     </ul>
     <div css={styles.menuItem}>
-      <a css={styles.menuButton} type="button" href={config.LOGOUT_URL}>
+      <a css={styles.menuButton} href={config.LOGOUT_URL}>
         <Logout css={styles.menuIcon} />
         로그아웃
       </a>
