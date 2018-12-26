@@ -37,10 +37,11 @@ export const familyServiceItem = css({
   position: 'relative',
   display: 'inline-block',
   fontSize: 0,
+  padding: '0 3px 0 0',
+});
+
+export const familyServiceItemSeparator = {
   padding: '0 2px',
-  '&:first-child': {
-    padding: '0 3px 0 0',
-  },
   '&::before': {
     content: `''`,
     display: 'block',
@@ -52,10 +53,7 @@ export const familyServiceItem = css({
     top: '50%',
     transform: 'translate3d(0, -50%, 0)',
   },
-  '&:first-child::before': {
-    display: 'none',
-  },
-});
+};
 
 export const familyServiceLink = css({
   display: 'inline-block',

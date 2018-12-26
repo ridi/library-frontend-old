@@ -56,7 +56,7 @@ class GNB extends React.Component {
                     <span css={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
-                <li css={styles.familyServiceItem}>
+                <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
                   <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
                     <Icon css={styles.ridiSelectIcon} name="logo_ridiselect_1" />
                     <span css={Hidden}>RIDI Select</span>
