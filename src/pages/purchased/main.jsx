@@ -9,7 +9,6 @@ import Router from 'next/router';
 import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook';
-import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 import ModalBackground from '../../components/ModalBackground';
@@ -35,7 +34,6 @@ import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from 
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
-import { PAGE_COUNT } from '../../constants/page';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 

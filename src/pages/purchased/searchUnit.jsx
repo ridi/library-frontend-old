@@ -8,14 +8,12 @@ import { css, jsx } from '@emotion/core';
 import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
-import Paginator from '../../components/Paginator';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
 import { loadItems, setUnitId } from '../../services/purchased/searchUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
 
 import { toFlatten } from '../../utils/array';
-import { PAGE_COUNT } from '../../constants/page';
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import { URLMap } from '../../constants/urls';

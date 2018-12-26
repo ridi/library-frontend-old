@@ -19,7 +19,6 @@ import {
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import SearchBar from '../../components/SearchBar';
-import Paginator from '../../components/Paginator';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import IconButton from '../../components/IconButton';
@@ -30,7 +29,6 @@ import Responsive from '../base/Responsive';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
-import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';

@@ -11,7 +11,6 @@ import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
-import Paginator from '../../components/Paginator';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import { getBooks } from '../../services/book/selectors';
@@ -24,7 +23,6 @@ import {
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount } from '../../services/purchased/hidden/selectors';
-import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
