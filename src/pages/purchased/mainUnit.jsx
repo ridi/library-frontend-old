@@ -9,7 +9,6 @@ import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
-import { loadItems, setUnitId } from '../../services/purchased/mainUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
 
@@ -26,6 +25,8 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/mainUnit/selectors';
 import {
+  loadItems,
+  setUnitId,
   clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
@@ -84,6 +85,7 @@ class MainUnit extends React.Component {
     await store.dispatch(setUnitId(query.unitId));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 
