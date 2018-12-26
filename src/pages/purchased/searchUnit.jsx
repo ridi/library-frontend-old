@@ -1,9 +1,12 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
 import { css, jsx } from '@emotion/core';
 
 import BookList from '../../components/BookList';
+import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
 import { loadItems, setUnitId } from '../../services/purchased/searchUnit/actions';
@@ -12,6 +15,7 @@ import { getBooks } from '../../services/book/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { PAGE_COUNT } from '../../constants/page';
+import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import { URLMap } from '../../constants/urls';
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
@@ -21,7 +25,7 @@ import IconButton from '../../components/IconButton';
 import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/searchUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/searchUnit/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -177,6 +181,10 @@ class searchUnit extends React.Component {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
+    if (items.length === 0) {
+      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
+    }
+
     return (
       <BookList>
         {items.map(item => (
@@ -232,10 +240,26 @@ class searchUnit extends React.Component {
   }
 
   render() {
+    const { isEditing } = this.state;
+    const { unit, totalCount } = this.props;
+
     return (
       <>
+        <Head>
+          <title>{unit.title} - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {isEditing ? (
+          this.renderToolBar()
+        ) : (
+          <LNBTitleBar
+            title={unit.title}
+            totalCount={totalCount.itemTotalCount}
+            onClickEditingMode={this.toggleEditingMode}
+            href={URLMap.main.href}
+            as={URLMap.main.as}
+          />
+        )}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -253,13 +277,17 @@ class searchUnit extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
+  const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+  const totalCount = getTotalCount(state);
 
   return {
     pageInfo,
     items,
+    unit,
     books,
+    totalCount,
     selectedBooks,
   };
 };

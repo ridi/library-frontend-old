@@ -3,8 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 import { css, jsx } from '@emotion/core';
+import EmptyBookList from '../../components/EmptyBookList';
 
-import LNBHiddenTitleBar from '../base/LNB/LNBHiddenTitleBar';
+import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
@@ -22,7 +23,7 @@ import {
   toggleSelectBook,
   unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
-import { getItemsByPage, getPageInfo, getItemTotalCount, getSelectedBooks } from '../../services/purchased/hiddenUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getUnit, getTotalCount } from '../../services/purchased/hiddenUnit/selectors';
 import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
@@ -67,6 +68,7 @@ const styles = {
     },
   }),
   MainButtonActionLeft: css({
+    color: '#e64938',
     float: 'left',
   }),
   MainButtonActionRight: css({
@@ -134,6 +136,10 @@ class HiddenUnit extends React.Component {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
+    if (items.length === 0) {
+      return <EmptyBookList message="숨김 도서가 없습니다." />;
+    }
+
     return (
       <BookList>
         {items.map(item => (
@@ -176,26 +182,26 @@ class HiddenUnit extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
     return (
       <BottomActionBar>
-        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickUnhide} disable={disable} />
-        <BottomActionButton name="영구삭제" css={styles.MainButtonActionRight} onClick={this.handleOnClickDelete} disable={disable} />
+        <BottomActionButton name="선택 영구 삭제" css={styles.MainButtonActionLeft} onClick={this.handleOnClickDelete} disable={disable} />
+        <BottomActionButton name="선택 숨김 해제" css={styles.MainButtonActionRight} onClick={this.handleOnClickUnhide} disable={disable} />
       </BottomActionBar>
     );
   }
 
   render() {
     const { isEditing } = this.state;
-    const { itemTotalCount } = this.props;
+    const { unit, totalCount } = this.props;
     return (
       <>
         <Head>
-          <title>리디북스 - 숨김목록</title>
+          <title>{unit.title} - 내 서재</title>
         </Head>
         {isEditing ? (
           this.renderToolBar()
         ) : (
-          <LNBHiddenTitleBar
-            title="숨긴 도서 목록"
-            hiddenTotalCount={itemTotalCount}
+          <LNBTitleBar
+            title={unit.title}
+            totalCount={totalCount.itemTotalCount}
             onClickEditingMode={this.toggleEditingMode}
             href={URLMap.main.href}
             as={URLMap.main.as}
@@ -216,15 +222,17 @@ class HiddenUnit extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
+  const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
-  const itemTotalCount = getItemTotalCount(state);
+  const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
   return {
     pageInfo,
     items,
+    unit,
     books,
-    itemTotalCount,
+    totalCount,
     selectedBooks,
   };
 };

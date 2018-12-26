@@ -1,8 +1,11 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
+import EmptyBookList from '../../components/EmptyBookList';
 
 import {
   loadItems,
@@ -184,7 +187,18 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const {
+      items,
+      books,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      pageInfo: { keyword },
+    } = this.props;
+
+    if (items.length === 0) {
+      return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+    }
+
     return (
       <BookList>
         {items.map(item => (
@@ -194,6 +208,8 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
+            href={{ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }}
+            as={URLMap.searchUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
@@ -235,8 +251,15 @@ class Search extends React.Component {
   }
 
   render() {
+    const {
+      pageInfo: { keyword },
+    } = this.props;
+
     return (
       <>
+        <Head>
+          <title>'{keyword}' 검색 결과 - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>

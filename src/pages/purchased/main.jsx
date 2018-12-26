@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -5,6 +7,7 @@ import { css, jsx } from '@emotion/core';
 import Router from 'next/router';
 
 import BookList from '../../components/BookList';
+import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook';
 import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
@@ -219,6 +222,10 @@ class Main extends React.Component {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
+    if (items.length === 0) {
+      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
+    }
+
     return (
       <BookList>
         {items.map(item => (
@@ -228,6 +235,8 @@ class Main extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
+            href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }}
+            as={URLMap.mainUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
@@ -276,6 +285,9 @@ class Main extends React.Component {
   render() {
     return (
       <>
+        <Head>
+          <title>모든 책 - 내 서재</title>
+        </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main>

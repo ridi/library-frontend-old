@@ -12,7 +12,8 @@ module.exports = {
     return config;
   },
 
-  assetPrefix: process.env.STATIC_URL,
+  assetPrefix: secrets.static_url,
+
   serverRuntimeConfig: {
     ENVIRONMENT: secrets.environment,
     RIDI_OAUTH2_JWT_SECRET: secrets.ridi_oauth2_jwt_secret,
@@ -21,15 +22,21 @@ module.exports = {
     RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
     SENTRY_DSN: secrets.sentry_dsn,
   },
+
   publicRuntimeConfig: {
-    ACCOUNT_BASE_URL: process.env.ACCOUNT_BASE_URL,
-    STORE_API_BASE_URL: process.env.STORE_API_BASE_URL,
-    LIBRARY_API_BASE_URL: process.env.LIBRARY_API_BASE_URL,
-    PLATFORM_API_BASE_URL: process.env.PLATFORM_API_BASE_URL,
-    STATIC_URL: process.env.STATIC_URL,
+    STATIC_URL: secrets.static_url,
+    ACCOUNT_BASE_URL: secrets.account_base_url,
+    STORE_API_BASE_URL: secrets.store_api_base_url,
+    LIBRARY_API_BASE_URL: secrets.library_api_base_url,
+    PLATFORM_API_BASE_URL: secrets.platform_api_base_url,
+
+    LOGOUT_URL: secrets.ridi_logout_url,
+    REVIEW_URL: secrets.ridi_review_url,
+    READING_NOTE_URL: secrets.ridi_reading_note_url,
 
     RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
     RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
+
     SENTRY_DSN: secrets.sentry_dsn,
   },
 };

@@ -15,6 +15,11 @@ export const getItemsByPage = createSelector(
   },
 );
 
+export const getUnit = createSelector(
+  getState,
+  state => state.unit,
+);
+
 export const getPageInfo = createSelector(
   getState,
   state => {
@@ -60,4 +65,11 @@ export const getOptions = createSelector(
 export const getSelectedBooks = createSelector(
   getState,
   state => state.selectedBooks,
+);
+
+export const getTotalCount = createSelector(
+  getState,
+  state => {
+    return { unitTotalCount: state.unitTotalCount, itemTotalCount: state.itemTotalCount };
+  },
 );
