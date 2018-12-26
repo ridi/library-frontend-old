@@ -71,7 +71,7 @@ const styles = {
   }),
 };
 
-const LNBTitleBar = ({ title, totalCount: totalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
+const LNBTitleBar = ({ title, totalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
   <nav css={styles.LNBHiddenTitleBarWrapper}>
     <Responsive css={styles.LNBHiddenTitleBar}>
       <Link href={href} as={as}>

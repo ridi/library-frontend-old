@@ -81,6 +81,7 @@ class HiddenUnit extends React.Component {
     await store.dispatch(setUnitId(query.unitId));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 
