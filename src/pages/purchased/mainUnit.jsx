@@ -9,6 +9,7 @@ import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import Paginator from '../../components/Paginator';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 import { loadItems, setUnitId } from '../../services/purchased/mainUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
@@ -204,10 +205,9 @@ class MainUnit extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.mainUnit.href}
         as={URLMap.mainUnit.as(unitId)}
         query={{ orderType, orderBy }}

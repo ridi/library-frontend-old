@@ -6,6 +6,7 @@ import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 import EmptyBookList from '../../components/EmptyBookList';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import {
   loadItems,
@@ -223,10 +224,9 @@ class Search extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.search.href}
         as={URLMap.search.as}
         query={{ keyword }}

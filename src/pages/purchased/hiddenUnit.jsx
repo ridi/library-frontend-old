@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Head from 'next/head';
 import { css, jsx } from '@emotion/core';
 import EmptyBookList from '../../components/EmptyBookList';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
@@ -162,10 +163,9 @@ class HiddenUnit extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.hiddenUnit.href}
         as={URLMap.hiddenUnit.as(unitId)}
       />

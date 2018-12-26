@@ -13,6 +13,7 @@ import Paginator from '../../components/Paginator';
 import IconButton from '../../components/IconButton';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 import ModalBackground from '../../components/ModalBackground';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 import Responsive from '../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import EditingBar from '../../components/EditingBar';
@@ -250,10 +251,9 @@ class Main extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.main.href}
         as={URLMap.main.as}
         query={{ orderType, orderBy, filter }}
