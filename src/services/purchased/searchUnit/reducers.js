@@ -35,7 +35,6 @@ const searchUnitReducer = (state = initialState, action) => {
     case SET_SEARCH_UNIT_TOTAL_COUNT:
       return {
         ...state,
-        unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
     case SET_SEARCH_UNIT_ID:

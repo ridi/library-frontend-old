@@ -34,7 +34,6 @@ const hiddenUnitReducer = (state = initialState, action) => {
     case SET_HIDDEN_UNIT_TOTAL_COUNT:
       return {
         ...state,
-        unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
     case SET_HIDDEN_UNIT_ID:

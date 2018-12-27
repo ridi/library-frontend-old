@@ -4,7 +4,6 @@ export const initialState = {
   unit: {},
 
   page: 1,
-  unitTotalCount: 0,
   itemTotalCount: 0,
 
   selectedBooks: {},
