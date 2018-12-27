@@ -8,13 +8,11 @@ import { css, jsx } from '@emotion/core';
 import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
-import Paginator from '../../components/Paginator';
-import { loadItems, setUnitId } from '../../services/purchased/mainUnit/actions';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import { getBooks } from '../../services/book/selectors';
 
 import { toFlatten } from '../../utils/array';
-import { PAGE_COUNT } from '../../constants/page';
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import { URLMap } from '../../constants/urls';
@@ -27,6 +25,8 @@ import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/mainUnit/selectors';
 import {
+  loadItems,
+  setUnitId,
   clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
@@ -85,6 +85,7 @@ class MainUnit extends React.Component {
     await store.dispatch(setUnitId(query.unitId));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 
@@ -204,10 +205,9 @@ class MainUnit extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.mainUnit.href}
         as={URLMap.mainUnit.as(unitId)}
         query={{ orderType, orderBy }}

@@ -11,7 +11,7 @@ export const footer = css({
   background: 'white',
 });
 
-export const ContentsWrapper = css({
+export const contentsWrapper = css({
   ...maxWidthWrapper,
 });
 

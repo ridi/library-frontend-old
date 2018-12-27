@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import Head from 'next/head';
 import { css, jsx } from '@emotion/core';
 import EmptyBookList from '../../components/EmptyBookList';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook/index';
-import Paginator from '../../components/Paginator';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import { getBooks } from '../../services/book/selectors';
@@ -24,7 +24,6 @@ import {
   unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getUnit, getTotalCount } from '../../services/purchased/hiddenUnit/selectors';
-import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
@@ -162,10 +161,9 @@ class HiddenUnit extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.hiddenUnit.href}
         as={URLMap.hiddenUnit.as(unitId)}
       />
