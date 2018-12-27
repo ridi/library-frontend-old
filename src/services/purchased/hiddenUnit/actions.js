@@ -32,10 +32,9 @@ export const setUnit = unit => ({
   },
 });
 
-export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
+export const setTotalCount = itemTotalCount => ({
   type: SET_HIDDEN_UNIT_TOTAL_COUNT,
   payload: {
-    unitTotalCount,
     itemTotalCount,
   },
 });

@@ -35,7 +35,6 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
     case SET_MAIN_UNIT_TOTAL_COUNT:
       return {
         ...state,
-        unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
     case SET_MAIN_UNIT_ID:

@@ -7,14 +7,13 @@ import { jsx } from '@emotion/core';
 import Router from 'next/router';
 
 import * as styles from './styles';
-
 import CategoryFilter from '../../../svgs/CategoryFilter.svg';
 import Edit from '../../../svgs/Edit.svg';
 import ThreeDots from '../../../svgs/ThreeDots.svg';
 import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
-import Paginator from '../../../components/Paginator';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import IconButton from '../../../components/IconButton';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import ModalBackground from '../../../components/ModalBackground';
@@ -39,7 +38,6 @@ import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from 
 
 import { toFlatten } from '../../../utils/array';
 import { makeURI } from '../../../utils/uri';
-import { PAGE_COUNT } from '../../../constants/page';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 
@@ -213,10 +211,9 @@ class Main extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.main.href}
         as={URLMap.main.as}
         query={{ orderType, orderBy, filter }}

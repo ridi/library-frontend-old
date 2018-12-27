@@ -6,6 +6,7 @@ import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 import EmptyBookList from '../../components/EmptyBookList';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import {
   loadItems,
@@ -18,7 +19,6 @@ import {
 
 import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
 import SearchBar from '../../components/SearchBar';
-import Paginator from '../../components/Paginator';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
 import IconButton from '../../components/IconButton';
@@ -29,7 +29,6 @@ import Responsive from '../base/Responsive';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
-import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
@@ -223,10 +222,9 @@ class Search extends React.Component {
     } = this.props;
 
     return (
-      <Paginator
+      <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        pageCount={PAGE_COUNT}
         href={URLMap.search.href}
         as={URLMap.search.as}
         query={{ keyword }}

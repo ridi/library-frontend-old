@@ -22,12 +22,12 @@ export const getUnit = createSelector(
 export const getPageInfo = createSelector(
   getState,
   state => {
-    const { unitId, page, unitTotalCount } = state;
+    const { unitId, page, itemTotalCount } = state;
 
     return {
       unitId,
       currentPage: page,
-      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
+      totalPages: calcPage(itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     };
   },
 );
@@ -58,7 +58,6 @@ export const getSelectedBooks = createSelector(
 export const getTotalCount = createSelector(
   getState,
   state => ({
-    unitTotalCount: state.unitTotalCount,
     itemTotalCount: state.itemTotalCount,
   }),
 );

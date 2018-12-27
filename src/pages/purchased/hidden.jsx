@@ -4,13 +4,13 @@ import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 import EmptyBookList from '../../components/EmptyBookList';
+import ResponsivePaginator from '../../components/ResponsivePaginator';
 
 import LNBTitleBar from '../base/LNB/LNBTitleBar';
 import Responsive from '../base/Responsive';
 import EditingBar from '../../components/EditingBar';
 import BookList from '../../components/BookList';
 import LibraryBook from '../../components/LibraryBook';
-import Paginator from '../../components/Paginator';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
 
 import { getBooks } from '../../services/book/selectors';
@@ -23,7 +23,6 @@ import {
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount } from '../../services/purchased/hidden/selectors';
-import { PAGE_COUNT } from '../../constants/page';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
@@ -125,9 +124,7 @@ class Hidden extends React.Component {
       pageInfo: { currentPage, totalPages },
     } = this.props;
 
-    return (
-      <Paginator currentPage={currentPage} totalPages={totalPages} pageCount={PAGE_COUNT} href={URLMap.hidden.href} as={URLMap.hidden.as} />
-    );
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} href={URLMap.hidden.href} as={URLMap.hidden.as} />;
   }
 
   renderBottomActionBar() {
