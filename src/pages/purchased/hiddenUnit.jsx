@@ -201,8 +201,8 @@ class HiddenUnit extends React.Component {
             title={unit.title}
             totalCount={totalCount.itemTotalCount}
             onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.main.href}
-            as={URLMap.main.as}
+            href={URLMap.hidden.href}
+            as={URLMap.hidden.as}
           />
         )}
         <main>
