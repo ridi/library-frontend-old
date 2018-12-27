@@ -41,8 +41,8 @@ class GNB extends React.Component {
     const { isModalActive } = this.state;
     return (
       <>
-        <header css={styles.GNB}>
-          <Responsive css={styles.flexWrapper}>
+        <Responsive css={styles.GNB}>
+          <header css={styles.flexWrapper}>
             <div>
               <h1 css={styles.title}>
                 <a css={styles.titleLink} href="/">
@@ -71,8 +71,8 @@ class GNB extends React.Component {
               </button>
             </div>
             <MyMenuModal userId={userId} isActive={isModalActive} />
-          </Responsive>
-        </header>
+          </header>
+        </Responsive>
         <ModalBackground isActive={isModalActive} onClickModalBackground={this.onModalBackgroundClick} />
       </>
     );

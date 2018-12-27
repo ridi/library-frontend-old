@@ -140,11 +140,11 @@ class Main extends React.Component {
     }
 
     return (
-      <Responsive css={styles.mainToolBar}>
-        <div css={[styles.mainToolBarSearchBarWrapper, hideTools && styles.mainToolBarSearchBarWrapperActive]}>
-          <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
-        </div>
-        {hideTools ? null : (
+      <Responsive className={hideTools ? 'hideTools' : ''} css={styles.mainToolBar}>
+        <div css={styles.flexWrapper}>
+          <div css={styles.mainToolBarSearchBarWrapper}>
+            <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
+          </div>
           <div css={styles.mainToolBarToolsWrapper}>
             <IconButton a11y="필터" css={styles.mainToolBarIconButton} onClick={this.toggleFilterModal}>
               <CategoryFilter css={styles.categoryFilterIcon} />
@@ -156,7 +156,7 @@ class Main extends React.Component {
               <ThreeDots css={styles.threeDotsIcon} />
             </IconButton>
           </div>
-        )}
+        </div>
       </Responsive>
     );
   }

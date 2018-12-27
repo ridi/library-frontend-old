@@ -1,62 +1,9 @@
 /** @jsx jsx */
 import React from 'react';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
-
-import IconButton from './IconButton';
-
-const styles = {
-  searchBarForm: css({
-    position: 'relative',
-    width: '100%',
-    height: 30,
-    paddingLeft: 28,
-    paddingRight: 16,
-    borderRadius: 3,
-    backgroundColor: '#ffffff',
-    border: '1px solid #d1d5d9',
-    boxSizing: 'border-box',
-  }),
-  searchBarIcon: css({
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: 12,
-    height: 12,
-    padding: 9,
-    '.RSGIcon': {
-      width: 12,
-      height: 12,
-    },
-  }),
-  searchBarInput: css({
-    width: '100%',
-    height: '100%',
-    fontSize: 13,
-    letterSpacing: -0.7,
-    color: '#40474d',
-  }),
-  searchBarClearButton: css({
-    display: 'none',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 30,
-    height: 30,
-    padding: 8,
-    '.RSGIcon': {
-      width: 14,
-      height: 14,
-    },
-  }),
-
-  searchBarFormActive: css({
-    paddingRight: 38,
-  }),
-  searchBarClearButtonActive: css({
-    display: 'block',
-  }),
-};
+import IconButton from '../IconButton';
+import * as styles from './styles';
 
 export default class SearchBar extends React.Component {
   constructor(props) {

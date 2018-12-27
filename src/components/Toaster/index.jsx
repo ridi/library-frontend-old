@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 
-import { getToast } from '../services/toast/selectors';
-import { closeToast, closeWithDelay, cancelClose } from '../services/toast/actions';
+import { getToast } from '../../services/toast/selectors';
+import { closeToast, closeWithDelay, cancelClose } from '../../services/toast/actions';
 
 class Toaster extends React.Component {
   constructor(props) {

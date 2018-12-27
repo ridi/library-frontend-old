@@ -1,18 +1,22 @@
 export const mainToolBar = {
+  backgroundColor: '#f3f4f5',
+  borderBottom: '1px solid #d1d5d9',
+  boxShadow: '0 2px 10px 0 rgba(0, 0, 0, .04)',
+};
+
+export const flexWrapper = {
   display: 'flex',
   height: 44,
   alignItems: 'center',
-  backgroundColor: '#f3f4f5',
-  borderBottom: '1px solid #d1d5d9',
 };
 
 export const mainToolBarSearchBarWrapper = {
   flex: 1,
   maxWidth: 600,
-};
-
-export const mainToolBarSearchBarWrapperActive = {
-  maxWidth: 1000,
+  transition: 'max-width .3s',
+  '.hideTools & ': {
+    maxWidth: 1000,
+  },
 };
 
 const buttonSize = 24;
@@ -20,6 +24,15 @@ const buttonSize = 24;
 export const mainToolBarToolsWrapper = {
   height: buttonSize,
   paddingLeft: 2,
+  maxWidth: 600,
+  opacity: 1,
+  transition: 'max-width .3s, opacity .3s',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  '.hideTools & ': {
+    maxWidth: 0,
+    opacity: 0,
+  },
 };
 
 export const mainToolBarIconButton = {

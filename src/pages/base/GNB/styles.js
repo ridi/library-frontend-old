@@ -5,7 +5,7 @@ export const GNB = css([
   screenSize.isMobile({
     padding: '2px 0',
   }),
-  { background: 'white', borderBottom: '1px solid #f2f4f5' },
+  { background: 'white' },
 ]);
 
 export const flexWrapper = css({
