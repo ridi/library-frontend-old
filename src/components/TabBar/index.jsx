@@ -7,5 +7,9 @@ const styles = {
   },
 };
 
-const TabBar = ({ children }) => <ul css={styles.tabBar}>{children}</ul>;
+const TabBar = ({ children }) => (
+  <nav css={styles.tabBar}>
+    <ul>{children}</ul>
+  </nav>
+);
 export default TabBar;

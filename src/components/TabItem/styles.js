@@ -6,6 +6,23 @@ export const tabItem = {
   background: 'white',
 };
 
+export const tabButton = {
+  padding: '0 8px',
+  height: 40,
+  lineHeight: '40px',
+  color: '#808991',
+  fontSize: 16,
+  textAlign: 'center',
+};
+
+export const tabButtonToggle = isActive =>
+  isActive
+    ? {
+        color: '#40474d',
+        fontWeight: 700,
+      }
+    : {};
+
 export const activeBar = {
   position: 'absolute',
   left: 0,
@@ -14,20 +31,11 @@ export const activeBar = {
   height: 3,
   background: 'white',
   transition: 'background .3s',
-  '.active & ': {
-    background: '#9ea7ad',
-  },
 };
 
-export const tabButton = {
-  padding: '0 8px',
-  height: 40,
-  lineHeight: '40px',
-  color: '#808991',
-  fontSize: 16,
-  textAlign: 'center',
-  '.active & ': {
-    color: '#40474d',
-    fontWeight: 700,
-  },
-};
+export const activeBarToggle = isActive =>
+  isActive
+    ? {
+        background: '#9ea7ad',
+      }
+    : {};

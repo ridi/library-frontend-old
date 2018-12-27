@@ -30,20 +30,18 @@ const TabMenus = [
 ];
 
 const LNBTabBar = ({ activeMenu }) => (
-  <nav css={styles.LNBTabBarWrapper}>
-    <Responsive>
-      <TabBar>
-        {TabMenus.map(menu => (
-          <TabItem
-            key={shortid.generate()}
-            name={menu.name}
-            isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
-            onClick={() => Router.push(menu.pathname)}
-          />
-        ))}
-      </TabBar>
-    </Responsive>
-  </nav>
+  <Responsive css={styles.LNBTabBarWrapper}>
+    <TabBar>
+      {TabMenus.map(menu => (
+        <TabItem
+          key={shortid.generate()}
+          name={menu.name}
+          isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
+          onClick={() => Router.push(menu.pathname)}
+        />
+      ))}
+    </TabBar>
+  </Responsive>
 );
 
 export default LNBTabBar;
