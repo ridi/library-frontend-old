@@ -5,4 +5,4 @@ export const Width = {
   W1280: 1280,
 };
 
-export const PC_MAX_WIDTH = 1000;
+export const MAX_WIDTH = 1000;
