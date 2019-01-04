@@ -3,7 +3,7 @@ import { maxWidthWrapper } from '../../../styles';
 import { Responsive } from '../../../styles/responsive';
 
 export const GNB = css([
-  Responsive.Movile({
+  Responsive.Mobile({
     padding: '2px 0',
   }),
   { background: 'white', borderBottom: '1px solid #f2f4f5' },
