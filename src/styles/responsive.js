@@ -2,7 +2,7 @@ import { Width } from './constants';
 
 export const Responsive = {
   W360: styles => ({
-    [`@media all and (min-width: ${Width.W360}px) and (max-width: ${Width.W600 - 1}px)`]: {
+    [`@media all and (max-width: ${Width.W600 - 1}px)`]: {
       ...styles,
     },
   }),
@@ -21,6 +21,7 @@ export const Responsive = {
       ...styles,
     },
   }),
+
   Mobile: styles => ({
     [`@media (max-width: ${Width.W834 - 1}px)`]: {
       ...styles,
