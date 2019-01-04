@@ -1,4 +1,4 @@
-export const ResponsiveWidth = {
+export const Width = {
   W360: 360,
   W600: 600,
   W834: 834,
