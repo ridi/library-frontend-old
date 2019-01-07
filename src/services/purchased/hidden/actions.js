@@ -12,7 +12,7 @@ export const SELECT_ALL_HIDDEN_BOOKS = 'SELECT_ALL_HIDDEN_BOOKS';
 export const TOGGLE_SELECT_HIDDEN_BOOK = 'TOGGLE_SELECT_HIDDEN_BOOK';
 export const CLEAR_SELECTED_HIDDEN_BOOKS = 'CLEAR_SELECTED_HIDDEN_BOOKS';
 
-export const SET_HIDDEN_FETCHING_BOOKS = 'SET_HIDDEN_FETCHING_BOOKS';
+export const SET_HIDDEN_IS_FETCHING_BOOKS = 'SET_HIDDEN_IS_FETCHING_BOOKS';
 
 export const loadItems = () => ({
   type: LOAD_HIDDEN_ITEMS,
@@ -69,9 +69,9 @@ export const deleteSelectedBooks = () => ({
   type: DELETE_SELECTED_HIDDEN_BOOKS,
 });
 
-export const setHiddenFetchingBooks = fetchingBooks => ({
-  type: SET_HIDDEN_FETCHING_BOOKS,
+export const setHiddenIsFetchingBooks = isFetchingBooks => ({
+  type: SET_HIDDEN_IS_FETCHING_BOOKS,
   payload: {
-    fetchingBooks,
+    isFetchingBooks,
   },
 });

@@ -8,7 +8,7 @@ import {
   CLEAR_SELECTED_SEARCH_BOOKS,
   TOGGLE_SELECT_SEARCH_BOOK,
   SELECT_SEARCH_BOOKS,
-  SET_SEARCH_FETCHING_BOOKS,
+  SET_SEARCH_IS_FETCHING_BOOKS,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -67,10 +67,10 @@ const purchasedSearchReducer = (state = initialState, action) => {
           return previous;
         }, {}),
       };
-    case SET_SEARCH_FETCHING_BOOKS:
+    case SET_SEARCH_IS_FETCHING_BOOKS:
       return {
         ...state,
-        fetchingBooks: action.payload.fetchingBooks,
+        isFetchingBooks: action.payload.isFetchingBooks,
       };
     default:
       return state;

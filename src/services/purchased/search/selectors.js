@@ -51,7 +51,7 @@ export const getSelectedBooks = createSelector(
   state => state.selectedBooks,
 );
 
-export const getFetchingBooks = createSelector(
+export const getIsFetchingBooks = createSelector(
   getState,
-  state => state.fetchingBooks,
+  state => state.isFetchingBooks,
 );

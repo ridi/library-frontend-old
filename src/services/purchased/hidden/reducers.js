@@ -6,7 +6,7 @@ import {
   CLEAR_SELECTED_HIDDEN_BOOKS,
   TOGGLE_SELECT_HIDDEN_BOOK,
   SELECT_HIDDEN_BOOKS,
-  SET_HIDDEN_FETCHING_BOOKS,
+  SET_HIDDEN_IS_FETCHING_BOOKS,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
@@ -60,10 +60,10 @@ const purchasedHiddenReducer = (state = initialState, action) => {
           return previous;
         }, {}),
       };
-    case SET_HIDDEN_FETCHING_BOOKS:
+    case SET_HIDDEN_IS_FETCHING_BOOKS:
       return {
         ...state,
-        fetchingBooks: action.payload.fetchingBooks,
+        isFetchingBooks: action.payload.isFetchingBooks,
       };
     default:
       return state;

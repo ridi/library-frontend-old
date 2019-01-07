@@ -31,7 +31,7 @@ import Responsive from '../base/Responsive';
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getFetchingBooks } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
@@ -188,7 +188,7 @@ class Search extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const {
-      fetchingBooks,
+      isFetchingBooks,
       items,
       books,
       selectedBooks,
@@ -197,7 +197,7 @@ class Search extends React.Component {
     } = this.props;
 
     if (items.length === 0) {
-      if (fetchingBooks) {
+      if (isFetchingBooks) {
         return <SkeletonBookList />;
       }
       return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
@@ -255,7 +255,7 @@ class Search extends React.Component {
 
   render() {
     const {
-      fetchingBooks,
+      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
 
@@ -266,7 +266,7 @@ class Search extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main css={fetchingBooks && styles.searchFetchingBooks}>
+        <main css={isFetchingBooks && styles.searchFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -283,14 +283,14 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
-  const fetchingBooks = getFetchingBooks(state);
+  const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
     pageInfo,
     items,
     books,
     selectedBooks,
-    fetchingBooks,
+    isFetchingBooks,
   };
 };
 const mapDispatchToProps = {

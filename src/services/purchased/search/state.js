@@ -9,5 +9,5 @@ export const initialState = {
   itemTotalCount: 0,
   selectedBooks: {},
 
-  fetchingBooks: false,
+  isFetchingBooks: false,
 };

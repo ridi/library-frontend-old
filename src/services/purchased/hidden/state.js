@@ -7,5 +7,5 @@ export const initialState = {
 
   selectedBooks: {},
 
-  fetchingBooks: false,
+  isFetchingBooks: false,
 };

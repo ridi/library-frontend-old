@@ -30,7 +30,13 @@ import {
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks, getFetchingBooks } from '../../services/purchased/main/selectors';
+import {
+  getFilterOptions,
+  getItemsByPage,
+  getPageInfo,
+  getSelectedBooks,
+  getIsFetchingBooks,
+} from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -223,10 +229,10 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { fetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      if (fetchingBooks) {
+      if (isFetchingBooks) {
         return <SkeletonBookList />;
       }
 
@@ -289,7 +295,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const { fetchingBooks } = this.props;
+    const { isFetchingBooks } = this.props;
 
     return (
       <>
@@ -298,7 +304,7 @@ class Main extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main css={fetchingBooks && styles.mainFetchingBooks}>
+        <main css={isFetchingBooks && styles.mainFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -318,7 +324,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
-  const fetchingBooks = getFetchingBooks(state);
+  const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
     pageInfo,
@@ -326,7 +332,7 @@ const mapStateToProps = state => {
     items,
     books,
     selectedBooks,
-    fetchingBooks,
+    isFetchingBooks,
   };
 };
 
