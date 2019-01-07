@@ -2,6 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
+import { snakelize } from '../../../utils/snakelize';
 import Responsive from '../Responsive';
 import IconButton from '../../../components/IconButton';
 
@@ -74,7 +75,7 @@ const styles = {
 const LNBTitleBar = ({ title, totalCount: totalCount, href, as, query, a11y = '뒤로가기', onClickEditingMode }) => (
   <nav css={styles.LNBHiddenTitleBarWrapper}>
     <Responsive css={styles.LNBHiddenTitleBar}>
-      <Link href={{ pathname: href, query }} as={{ pathname: as, query }}>
+      <Link href={{ pathname: href, query: snakelize(query) }} as={{ pathname: as, query: snakelize(query) }}>
         <a css={styles.LNBHiddenTitleBarBackIconWrapper}>
           <Icon name="arrow_3_left" css={styles.LNBHiddenTitleBarBackIcon} />
           <span className="a11y">{a11y}</span>
