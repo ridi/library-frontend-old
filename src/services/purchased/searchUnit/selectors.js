@@ -23,10 +23,10 @@ export const getUnit = createSelector(
 export const getPageInfo = createSelector(
   getState,
   state => {
-    const { unitId, page, itemTotalCount, order } = state;
+    const { unitId, page, itemTotalCount, order, keyword } = state;
 
     const { orderType, orderBy } = MainOrderOptions.parse(order);
-
+    console.log(keyword);
     return {
       unitId,
       currentPage: page,
@@ -34,6 +34,7 @@ export const getPageInfo = createSelector(
       order,
       orderType,
       orderBy,
+      keyword,
     };
   },
 );
@@ -53,12 +54,18 @@ export const getOrder = createSelector(
   state => state.order,
 );
 
+export const getKeyword = createSelector(
+  getState,
+  state => state.keyword,
+);
+
 export const getOptions = createSelector(
-  [getUnitId, getPage, getOrder],
-  (unitId, page, order) => ({
+  [getUnitId, getPage, getOrder, getKeyword],
+  (unitId, page, order, keyword) => ({
     unitId,
     page,
     order,
+    keyword,
   }),
 );
 
