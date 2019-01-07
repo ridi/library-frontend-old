@@ -24,9 +24,8 @@ export const getPageInfo = createSelector(
   getState,
   state => {
     const { unitId, page, itemTotalCount, order, keyword } = state;
-
     const { orderType, orderBy } = MainOrderOptions.parse(order);
-    console.log(keyword);
+
     return {
       unitId,
       currentPage: page,
