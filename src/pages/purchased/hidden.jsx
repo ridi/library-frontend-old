@@ -29,6 +29,9 @@ import { toFlatten } from '../../utils/array';
 import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
+  hiddenLoading: css({
+    backgroundColor: 'white',
+  }),
   hiddenButtonActionLeft: css({
     color: '#e64938',
     float: 'left',
@@ -159,7 +162,7 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { totalCount } = this.props;
+    const { isLoading, totalCount } = this.props;
 
     return (
       <>
@@ -177,7 +180,7 @@ class Hidden extends React.Component {
             as={URLMap.main.as}
           />
         )}
-        <main>
+        <main css={isLoading && styles.hiddenLoading}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}

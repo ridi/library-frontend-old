@@ -39,6 +39,9 @@ import { URLMap } from '../../constants/urls';
 import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
+  mainLoading: css({
+    backgroundColor: 'white',
+  }),
   mainToolBarWrapper: css({
     height: 46,
     backgroundColor: '#f3f4f5',
@@ -286,6 +289,8 @@ class Main extends React.Component {
   }
 
   render() {
+    const { isLoading } = this.props;
+
     return (
       <>
         <Head>
@@ -293,7 +298,7 @@ class Main extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main>
+        <main css={isLoading && styles.mainLoading}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}

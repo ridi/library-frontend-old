@@ -35,8 +35,8 @@ import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsLoading } fro
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
-  main: css({
-    position: 'relative',
+  searchLoading: css({
+    backgroundColor: 'white',
   }),
   searchToolBarWrapper: css({
     height: 46,
@@ -255,6 +255,7 @@ class Search extends React.Component {
 
   render() {
     const {
+      isLoading,
       pageInfo: { keyword },
     } = this.props;
 
@@ -265,7 +266,7 @@ class Search extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main>
+        <main css={isLoading && styles.searchLoading}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
