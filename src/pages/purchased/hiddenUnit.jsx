@@ -164,7 +164,7 @@ class HiddenUnit extends React.Component {
       <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        href={URLMap.hiddenUnit.href}
+        href={{ pathname: URLMap.hiddenUnit.href, query: { unitId } }}
         as={URLMap.hiddenUnit.as(unitId)}
       />
     );

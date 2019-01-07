@@ -4,7 +4,7 @@ export const URLMap = {
     as: '/purchased',
   },
   mainUnit: {
-    href: 'purchased/mainUnit',
+    href: '/purchased/mainUnit',
     as: unitId => `/purchased/${unitId}`,
   },
   search: {
@@ -12,7 +12,7 @@ export const URLMap = {
     as: '/purchased/search',
   },
   searchUnit: {
-    href: 'purchased/searchUnit',
+    href: '/purchased/searchUnit',
     as: unitId => `/purchased/search/${unitId}`,
   },
   hidden: {
@@ -20,7 +20,7 @@ export const URLMap = {
     as: '/purchased/hidden',
   },
   hiddenUnit: {
-    href: 'purchased/hiddenUnit',
+    href: '/purchased/hiddenUnit',
     as: unitId => `/purchased/hidden/${unitId}`,
   },
 };

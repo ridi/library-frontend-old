@@ -208,7 +208,7 @@ class MainUnit extends React.Component {
       <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        href={URLMap.mainUnit.href}
+        href={{ pathname: URLMap.mainUnit.href, query: { unitId } }}
         as={URLMap.mainUnit.as(unitId)}
         query={{ orderType, orderBy }}
       />

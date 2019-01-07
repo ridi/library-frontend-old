@@ -77,15 +77,27 @@ export default class Paginator extends React.Component {
       page,
     });
 
+    const _href = {
+      pathname: href,
+      query: _query,
+    };
+    if (typeof href === 'object') {
+      _href.pathname = href.pathname;
+      _href.query = { ...href.query, ..._query };
+    }
+
+    const _as = {
+      pathname: as,
+      query: _query,
+    };
+    if (typeof as === 'object') {
+      _as.pathname = as.pathname;
+      _as.query = { ...as.query, ..._query };
+    }
+
     return {
-      href: {
-        pathname: href,
-        query: _query,
-      },
-      as: {
-        pathname: as,
-        query: _query,
-      },
+      href: _href,
+      as: _as,
     };
   }
 
