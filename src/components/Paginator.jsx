@@ -5,7 +5,7 @@ import { Icon } from '@ridi/rsg';
 import { css, jsx } from '@emotion/core';
 
 import { calcPageBlock, makePageRange } from '../utils/pagination';
-import { snakelize } from '../utils/snakelize';
+import { makeLinkProps } from '../utils/uri';
 
 const paginatorCss = css`
   height: 30px;
@@ -72,33 +72,7 @@ const paginatorDeviderDotsCss = css`
 export default class Paginator extends React.Component {
   getLinkProps(page) {
     const { href, as, query = {} } = this.props;
-    const _query = snakelize({
-      ...query,
-      page,
-    });
-
-    const _href = {
-      pathname: href,
-      query: _query,
-    };
-    if (typeof href === 'object') {
-      _href.pathname = href.pathname;
-      _href.query = { ...href.query, ..._query };
-    }
-
-    const _as = {
-      pathname: as,
-      query: _query,
-    };
-    if (typeof as === 'object') {
-      _as.pathname = as.pathname;
-      _as.query = { ...as.query, ..._query };
-    }
-
-    return {
-      href: _href,
-      as: _as,
-    };
+    return makeLinkProps(href, as, { ...query, page });
   }
 
   renderGoFirst() {

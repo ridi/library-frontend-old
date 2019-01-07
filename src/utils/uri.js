@@ -25,3 +25,34 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
 
 export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
   `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
+
+export const makeLinkProps = (href, as, query) => {
+  const _query = snakelize(query);
+
+  const _href = {
+    pathname: href,
+    query: _query,
+  };
+  if (typeof href === 'object') {
+    _href.pathname = href.pathname;
+    if (typeof as.query === 'object') {
+      _href.query = { ...snakelize(_href.query), ..._query };
+    }
+  }
+
+  const _as = {
+    pathname: as,
+    query: _query,
+  };
+  if (typeof as === 'object') {
+    _as.pathname = as.pathname;
+    if (typeof as.query === 'object') {
+      _as.query = { ...snakelize(as.query), ..._query };
+    }
+  }
+
+  return {
+    href: _href,
+    as: _as,
+  };
+};
