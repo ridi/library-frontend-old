@@ -6,45 +6,70 @@ export const bookListStyle = css({
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'row',
-  justifyContent: 'center',
+  justifyContent: 'left',
+
+  margin: '0 auto',
+  boxSizing: 'border-box',
 
   ...Responsive.W360({
-    padding: '0 8px',
+    width: 326,
   }),
   ...Responsive.W600({
-    padding: '0 20px',
+    width: 530,
   }),
   ...Responsive.W834({
-    padding: '0 67px',
+    width: 670,
   }),
   ...Responsive.W1280({
-    padding: '0 130px',
+    width: 960,
   }),
 });
 
 export const bookWrapperStyle = css({
+  marginTop: 32,
+
   ...Responsive.W360({
-    width: '33%',
+    width: 114,
     height: 'inherit',
-    padding: '0 8px',
+    paddingRight: 16,
     boxSizing: 'border-box',
+
+    '&:nth-child(3n)': {
+      paddingRight: 0,
+      width: 98,
+    },
   }),
   ...Responsive.W600({
     width: 140,
     height: 170,
-    padding: '0 15px',
+    paddingRight: 30,
     boxSizing: 'border-box',
+
+    '&:nth-child(4n)': {
+      paddingRight: 0,
+      width: 110,
+    },
   }),
   ...Responsive.W834({
     width: 140,
     height: 170,
-    padding: '0 15px',
+    paddingRight: 30,
     boxSizing: 'border-box',
+
+    '&:nth-child(5n)': {
+      paddingRight: 0,
+      width: 110,
+    },
   }),
   ...Responsive.W1280({
     width: 170,
     height: 170,
-    padding: '0 30px',
+    paddingRight: 60,
     boxSizing: 'border-box',
+
+    '&:nth-child(6n)': {
+      paddingRight: 0,
+      width: 110,
+    },
   }),
 });
