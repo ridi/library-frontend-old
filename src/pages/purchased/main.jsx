@@ -30,12 +30,13 @@ import {
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks } from '../../services/purchased/main/selectors';
+import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks, getIsLoading } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
+import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
   mainToolBarWrapper: css({
@@ -219,9 +220,13 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { isLoading, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
+      if (isLoading) {
+        return <SkeletonBookList />;
+      }
+
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
@@ -308,6 +313,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+  const isLoading = getIsLoading(state);
 
   return {
     pageInfo,
@@ -315,6 +321,7 @@ const mapStateToProps = state => {
     items,
     books,
     selectedBooks,
+    isLoading,
   };
 };
 

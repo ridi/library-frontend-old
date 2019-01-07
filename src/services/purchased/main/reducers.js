@@ -10,6 +10,7 @@ import {
   SET_MAIN_TOTAL_COUNT,
   SELECT_MAIN_BOOKS,
   TOGGLE_SELECT_MAIN_BOOK,
+  SET_IS_LOADING,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
@@ -84,6 +85,11 @@ const mainReducer = (state = initialState, action) => {
           previous[bookId] = 1;
           return previous;
         }, {}),
+      };
+    case SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload.isLoading,
       };
     default:
       return state;

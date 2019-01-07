@@ -12,6 +12,7 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
+  setIsLoading,
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
@@ -43,6 +44,7 @@ function* loadMainItems() {
   const { page, order, filter: category } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsLoading(true));
   const [itemResponse, countResponse, categories] = yield all([
     call(fetchMainItems, orderType, orderBy, category, page),
     call(fetchMainItemsTotalCount, orderType, orderBy, category),
@@ -58,6 +60,7 @@ function* loadMainItems() {
     put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
     put(setFilterOptions(categories)),
   ]);
+  yield put(setIsLoading(false));
 }
 
 function* hideSelectedBooks() {

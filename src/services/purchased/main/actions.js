@@ -15,6 +15,8 @@ export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
+export const SET_IS_LOADING = 'SET_IS_LOADING';
+
 export const loadItems = () => ({
   type: LOAD_MAIN_ITEMS,
 });
@@ -90,4 +92,11 @@ export const hideSelectedBooks = () => ({
 
 export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_MAIN_BOOKS,
+});
+
+export const setIsLoading = isLoading => ({
+  type: SET_IS_LOADING,
+  payload: {
+    isLoading,
+  },
 });

@@ -76,3 +76,8 @@ export const getSelectedBooks = createSelector(
   getState,
   state => state.selectedBooks,
 );
+
+export const getIsLoading = createSelector(
+  getState,
+  state => state.isLoading,
+);
