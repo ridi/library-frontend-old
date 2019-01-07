@@ -3,35 +3,17 @@ import BookList from '../BookList';
 import SkeletonBook from './SkeletonBook';
 import BookWrapper from '../BookWrapper';
 
+const SkeletonBookCount = 24;
+
 const SkeletonBookList = () => (
   <BookList>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
-    <BookWrapper>
-      <SkeletonBook />
-    </BookWrapper>
+    {Array(SkeletonBookCount)
+      .fill(1)
+      .map(() => (
+        <BookWrapper>
+          <SkeletonBook />
+        </BookWrapper>
+      ))}
   </BookList>
 );
 
