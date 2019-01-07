@@ -16,6 +16,7 @@ import {
   setTotalCount,
   setItems,
   setSelectBooks,
+  setSearchIsLoading,
 } from './actions';
 import { showToast } from '../../toast/actions';
 import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './selectors';
@@ -37,11 +38,14 @@ function* loadPage() {
   yield call(persistPageOptionsFromQueries);
 
   const { page, keyword } = yield select(getOptions);
+
+  yield put(setSearchIsLoading(true));
   const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+  yield put(setSearchIsLoading(false));
 }
 
 function changeSearchKeyword(action) {

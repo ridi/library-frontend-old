@@ -8,6 +8,7 @@ import {
   CLEAR_SELECTED_SEARCH_BOOKS,
   TOGGLE_SELECT_SEARCH_BOOK,
   SELECT_SEARCH_BOOKS,
+  SET_SEARCH_IS_LOADING,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -65,6 +66,11 @@ const purchasedSearchReducer = (state = initialState, action) => {
           previous[bookId] = 1;
           return previous;
         }, {}),
+      };
+    case SET_SEARCH_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload.isLoading,
       };
     default:
       return state;

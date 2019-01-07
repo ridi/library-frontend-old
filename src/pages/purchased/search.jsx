@@ -24,13 +24,14 @@ import LibraryBook from '../../components/LibraryBook';
 import IconButton from '../../components/IconButton';
 import EditingBar from '../../components/EditingBar';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
+import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 import Responsive from '../base/Responsive';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsLoading } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
@@ -187,6 +188,7 @@ class Search extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const {
+      isLoading,
       items,
       books,
       selectedBooks,
@@ -195,6 +197,9 @@ class Search extends React.Component {
     } = this.props;
 
     if (items.length === 0) {
+      if (isLoading) {
+        return <SkeletonBookList />;
+      }
       return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
@@ -277,12 +282,14 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+  const isLoading = getIsLoading(state);
 
   return {
     pageInfo,
     items,
     books,
     selectedBooks,
+    isLoading,
   };
 };
 const mapDispatchToProps = {
