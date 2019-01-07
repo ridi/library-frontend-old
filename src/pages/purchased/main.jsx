@@ -30,7 +30,7 @@ import {
 } from '../../services/purchased/main/actions';
 
 import { getBooks } from '../../services/book/selectors';
-import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks, getIsLoading } from '../../services/purchased/main/selectors';
+import { getFilterOptions, getItemsByPage, getPageInfo, getSelectedBooks, getFetchingBooks } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
 import { makeURI } from '../../utils/uri';
@@ -39,7 +39,7 @@ import { URLMap } from '../../constants/urls';
 import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
-  mainLoading: css({
+  mainFetchingBooks: css({
     backgroundColor: 'white',
   }),
   mainToolBarWrapper: css({
@@ -223,10 +223,10 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isLoading, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { fetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      if (isLoading) {
+      if (fetchingBooks) {
         return <SkeletonBookList />;
       }
 
@@ -289,7 +289,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const { isLoading } = this.props;
+    const { fetchingBooks } = this.props;
 
     return (
       <>
@@ -298,7 +298,7 @@ class Main extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main css={isLoading && styles.mainLoading}>
+        <main css={fetchingBooks && styles.mainFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -318,7 +318,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
-  const isLoading = getIsLoading(state);
+  const fetchingBooks = getFetchingBooks(state);
 
   return {
     pageInfo,
@@ -326,7 +326,7 @@ const mapStateToProps = state => {
     items,
     books,
     selectedBooks,
-    isLoading,
+    fetchingBooks,
   };
 };
 

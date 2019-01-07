@@ -7,5 +7,5 @@ export const initialState = {
 
   selectedBooks: {},
 
-  isLoading: false,
+  fetchingBooks: false,
 };

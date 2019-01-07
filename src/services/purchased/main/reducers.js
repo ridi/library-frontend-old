@@ -10,7 +10,7 @@ import {
   SET_MAIN_TOTAL_COUNT,
   SELECT_MAIN_BOOKS,
   TOGGLE_SELECT_MAIN_BOOK,
-  SET_IS_LOADING,
+  SET_FETCHING_BOOKS,
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
@@ -86,10 +86,10 @@ const mainReducer = (state = initialState, action) => {
           return previous;
         }, {}),
       };
-    case SET_IS_LOADING:
+    case SET_FETCHING_BOOKS:
       return {
         ...state,
-        isLoading: action.payload.isLoading,
+        fetchingBooks: action.payload.fetchingBooks,
       };
     default:
       return state;

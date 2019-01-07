@@ -22,14 +22,14 @@ import {
   unhideSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getIsLoading } from '../../services/purchased/hidden/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getFetchingBooks } from '../../services/purchased/hidden/selectors';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
 import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
-  hiddenLoading: css({
+  hiddenFetchingBooks: css({
     backgroundColor: 'white',
   }),
   hiddenButtonActionLeft: css({
@@ -99,10 +99,10 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isLoading, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { fetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      if (isLoading) {
+      if (fetchingBooks) {
         return <SkeletonBookList />;
       }
       return <EmptyBookList message="숨김 도서가 없습니다." />;
@@ -162,7 +162,7 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isLoading, totalCount } = this.props;
+    const { fetchingBooks, totalCount } = this.props;
 
     return (
       <>
@@ -180,7 +180,7 @@ class Hidden extends React.Component {
             as={URLMap.main.as}
           />
         )}
-        <main css={isLoading && styles.hiddenLoading}>
+        <main css={fetchingBooks && styles.hiddenFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -198,7 +198,7 @@ const mapStateToProps = state => {
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
-  const isLoading = getIsLoading(state);
+  const fetchingBooks = getFetchingBooks(state);
 
   return {
     pageInfo,
@@ -206,7 +206,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
-    isLoading,
+    fetchingBooks,
   };
 };
 

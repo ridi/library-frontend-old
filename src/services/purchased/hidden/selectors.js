@@ -51,7 +51,7 @@ export const getTotalCount = createSelector(
   state => ({ unitTotalCount: state.unitTotalCount, itemTotalCount: state.itemTotalCount }),
 );
 
-export const getIsLoading = createSelector(
+export const getFetchingBooks = createSelector(
   getState,
-  state => state.isLoading,
+  state => state.fetchingBooks,
 );

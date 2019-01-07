@@ -15,7 +15,7 @@ export const CLEAR_SELECTED_SEARCH_BOOKS = 'CLEAR_SELECTED_SEARCH_BOOKS';
 export const HIDE_SELECTED_SEARCH_BOOKS = 'HIDE_SELECTED_SEARCH_BOOKS';
 export const DOWNLOAD_SELECTED_SEARCH_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_BOOKS';
 
-export const SET_SEARCH_IS_LOADING = 'SET_SEARCH_IS_LOADING';
+export const SET_SEARCH_FETCHING_BOOKS = 'SET_SEARCH_FETCHING_BOOKS';
 
 export const loadItems = () => ({
   type: LOAD_SEARCH_ITEMS,
@@ -87,9 +87,9 @@ export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_SEARCH_BOOKS,
 });
 
-export const setSearchIsLoading = isLoading => ({
-  type: SET_SEARCH_IS_LOADING,
+export const setSearchFetchingBooks = fetchingBooks => ({
+  type: SET_SEARCH_FETCHING_BOOKS,
   payload: {
-    isLoading,
+    fetchingBooks,
   },
 });
