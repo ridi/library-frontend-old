@@ -202,16 +202,16 @@ class searchUnit extends React.Component {
 
   renderPaginator() {
     const {
-      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId },
+      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId, keyword },
     } = this.props;
 
     return (
       <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        href={URLMap.searchUnit.href}
-        as={URLMap.searchUnit.as(unitId)}
-        query={{ orderType, orderBy }}
+        href={{ pathname: URLMap.searchUnit.href, query: { unitId } }}
+        as={{ pathname: URLMap.searchUnit.as(unitId) }}
+        query={{ orderType, orderBy, keyword }}
       />
     );
   }
@@ -239,7 +239,11 @@ class searchUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit, totalCount } = this.props;
+    const {
+      unit,
+      totalCount,
+      pageInfo: { keyword },
+    } = this.props;
 
     return (
       <>
@@ -254,8 +258,9 @@ class searchUnit extends React.Component {
             title={unit.title}
             totalCount={totalCount.itemTotalCount}
             onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.main.href}
-            as={URLMap.main.as}
+            href={URLMap.search.href}
+            as={URLMap.search.as}
+            query={{ keyword }}
           />
         )}
         <main>

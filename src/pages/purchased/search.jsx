@@ -29,7 +29,7 @@ import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 import Responsive from '../base/Responsive';
 
 import { toFlatten } from '../../utils/array';
-import { makeURI } from '../../utils/uri';
+import { makeLinkProps, makeURI } from '../../utils/uri';
 import { URLMap } from '../../constants/urls';
 import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
@@ -212,8 +212,9 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            href={{ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }}
-            as={URLMap.searchUnit.as(item.unit_id)}
+            {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
+              keyword,
+            })}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}

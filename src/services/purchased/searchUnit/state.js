@@ -5,6 +5,7 @@ export const initialState = {
   items: {},
   unit: {},
   order: MainOrderOptions.DEFAULT,
+  keyword: '',
 
   page: 1,
   itemTotalCount: 0,

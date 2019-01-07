@@ -5,6 +5,7 @@ import {
   SET_SEARCH_UNIT,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
+  SET_SEARCH_UNIT_KEYWORD,
   SET_SEARCH_UNIT_ORDER,
   SET_SEARCH_UNIT_PAGE,
   SET_SEARCH_UNIT_TOTAL_COUNT,
@@ -51,6 +52,11 @@ const searchUnitReducer = (state = initialState, action) => {
       return {
         ...state,
         order: action.payload.order,
+      };
+    case SET_SEARCH_UNIT_KEYWORD:
+      return {
+        ...state,
+        keyword: action.payload.keyword,
       };
     case CLEAR_SELECTED_SEARCH_UNIT_BOOKS:
       return {

@@ -11,6 +11,7 @@ import {
   setTotalCount,
   selectBooks,
   setUnit,
+  setKeyword,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
@@ -33,7 +34,7 @@ function* persistPageOptionsFromQueries() {
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
 
-  yield all([put(setPage(page)), put(setOrder(order))]);
+  yield all([put(setPage(page)), put(setOrder(order)), put(setKeyword(query.keyword))]);
 }
 
 function* loadItems() {
