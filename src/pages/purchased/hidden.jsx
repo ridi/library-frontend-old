@@ -22,10 +22,11 @@ import {
   unhideSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount } from '../../services/purchased/hidden/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getIsLoading } from '../../services/purchased/hidden/selectors';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
+import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 const styles = {
   hiddenButtonActionLeft: css({
@@ -95,9 +96,12 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { isLoading, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
+      if (isLoading) {
+        return <SkeletonBookList />;
+      }
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
@@ -191,6 +195,7 @@ const mapStateToProps = state => {
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
+  const isLoading = getIsLoading(state);
 
   return {
     pageInfo,
@@ -198,6 +203,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+    isLoading,
   };
 };
 
