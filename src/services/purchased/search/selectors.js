@@ -50,3 +50,8 @@ export const getSelectedBooks = createSelector(
   getState,
   state => state.selectedBooks,
 );
+
+export const getIsFetchingBooks = createSelector(
+  getState,
+  state => state.isFetchingBooks,
+);
