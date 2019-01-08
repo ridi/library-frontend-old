@@ -14,11 +14,10 @@ import {
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
-import { getOrDefault } from '../../../utils/dict';
 
 const mainReducer = (state = initialState, action) => {
   const key = getKey(state);
-  const dataState = getOrDefault(state.data, key, initialDataState);
+  const dataState = state.data[key] || initialDataState;
 
   switch (action.type) {
     case SET_MAIN_ITEMS:
