@@ -82,7 +82,7 @@ const styles = {
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
 
