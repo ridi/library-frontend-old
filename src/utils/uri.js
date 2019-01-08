@@ -27,7 +27,7 @@ export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
   `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
 
 export const makeLinkProps = (href, as, query) => {
-  const _query = snakelize(query);
+  const _query = typeof query === 'object' ? snakelize(query) : query;
 
   const _href = {
     pathname: href,
