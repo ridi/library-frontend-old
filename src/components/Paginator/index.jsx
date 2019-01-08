@@ -37,9 +37,9 @@ export default class Paginator extends React.Component {
 
     return (
       <>
-        <div css={styles.pageItems}>
+        <div css={styles.buttonWrapper}>
           <Link {...this.getLinkProps(1)}>
-            <a css={styles.pageButton}>처음</a>
+            <a css={[styles.pageButton, styles.textButton]}>처음</a>
           </Link>
         </div>
         <span css={styles.paginatorDots}>
@@ -61,9 +61,9 @@ export default class Paginator extends React.Component {
         <span css={styles.paginatorDots}>
           <Icon name="dotdotdot" css={styles.dots} />
         </span>
-        <div css={styles.pageItems}>
+        <div css={styles.buttonWrapper}>
           <Link {...this.getLinkProps(totalPages)}>
-            <a css={styles.pageButton}>마지막</a>
+            <a css={[styles.pageButton, styles.textButton]}>마지막</a>
           </Link>
         </div>
       </>

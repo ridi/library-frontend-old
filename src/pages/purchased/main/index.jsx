@@ -7,20 +7,16 @@ import { jsx } from '@emotion/core';
 import Router from 'next/router';
 
 import * as styles from './styles';
-import CategoryFilter from '../../../svgs/CategoryFilter.svg';
-import Edit from '../../../svgs/Edit.svg';
-import ThreeDots from '../../../svgs/ThreeDots.svg';
 import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import IconButton from '../../../components/IconButton';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import ModalBackground from '../../../components/ModalBackground';
 import Responsive from '../../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import EditingBar from '../../../components/EditingBar';
-import SearchBar from '../../../components/SearchBar';
+import ToolBar from '../../../components/ToolBar';
 import FilterModal from '../../base/MainModal/FilterModal';
 import SortModal from '../../base/MainModal/SortModal';
 
@@ -122,40 +118,30 @@ class Main extends React.Component {
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-
-    if (isEditing) {
-      const selectedCount = Object.keys(selectedBooks).length;
-      const isSelectedAllBooks = selectedCount === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={selectedCount}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <Responsive className={hideTools ? 'hideTools' : ''} css={styles.mainToolBar}>
-        <div css={styles.flexWrapper}>
-          <div css={styles.mainToolBarSearchBarWrapper}>
-            <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
-          </div>
-          <div css={styles.mainToolBarToolsWrapper}>
-            <IconButton a11y="필터" css={styles.mainToolBarIconButton} onClick={this.toggleFilterModal}>
-              <CategoryFilter css={styles.categoryFilterIcon} />
-            </IconButton>
-            <IconButton a11y="편집" css={styles.mainToolBarIconButton} onClick={this.toggleEditingMode}>
-              <Edit css={styles.editIcon} />
-            </IconButton>
-            <IconButton a11y="정렬" css={styles.mainToolBarIconButton} onClick={this.toggleMoreModal}>
-              <ThreeDots css={styles.threeDotsIcon} />
-            </IconButton>
-          </div>
-        </div>
-      </Responsive>
+      <div css={styles.mainToolBar}>
+        <ToolBar
+          hideTools={hideTools}
+          handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
+          handleOnFocusSearchBar={this.handleOnFocusSearchBar}
+          handleOnBlurSearchBar={this.handleOnBlurSearchBar}
+          toggleFilterModal={this.toggleFilterModal}
+          toggleEditingMode={this.toggleEditingMode}
+          toggleMoreModal={this.toggleMoreModal}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
+      </div>
     );
   }
 
@@ -253,10 +239,10 @@ class Main extends React.Component {
         <main>
           <Responsive>
             {this.renderBooks()}
-            {this.renderPaginator()}
             {this.renderModal()}
           </Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
         {this.renderModalBackground()}
       </>

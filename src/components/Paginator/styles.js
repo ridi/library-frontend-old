@@ -24,11 +24,11 @@ export const horizontalWrapper = {
 
 export const pageItems = {
   ...wrapperStyle,
+  margin: '0 3px',
 };
 
 export const buttonWrapper = {
   ...wrapperStyle,
-  margin: '0 3px',
 };
 
 export const pageItem = {
@@ -46,6 +46,12 @@ export const pageButton = {
   textAlign: 'center',
   fontSize: 13,
   color: '#808991',
+};
+
+export const textButton = {
+  width: 44,
+  fontSize: 12,
+  fontWeight: '700',
 };
 
 export const pageButtonActive = {
@@ -66,7 +72,7 @@ export const paginatorDots = {
   width: 8,
   height: buttonHeight + 2,
   lineHeight: `${buttonHeight - 2}px`,
-  padding: '0 0 0 3px',
+  padding: '0 3px',
 };
 
 export const dots = {

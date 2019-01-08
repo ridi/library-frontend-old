@@ -1,12 +1,23 @@
 export const editingBarWrapper = {
   backgroundColor: '#0077d9',
   boxShadow: '0 2px 10px 0 rgba(0, 0, 0, .04)',
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  width: '100%',
+  opacity: 0,
+  transition: 'opacity .3s',
+};
+
+export const editingBarActive = {
+  opacity: 1,
 };
 
 export const editingBar = {
   height: 46,
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
 };
 
 export const editingBarIconWrapper = {
@@ -26,8 +37,6 @@ export const editingBarSelectCount = {
   fontSize: 15,
   color: 'white',
 };
-
-export const editingBarButtonWrapper = {};
 
 export const editingBarAllSelect = {
   fontSize: 15,

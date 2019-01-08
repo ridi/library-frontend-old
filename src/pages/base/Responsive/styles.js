@@ -7,5 +7,4 @@ export const responsive = css({
   margin: '0 auto',
   padding: '0 16px',
   boxSizing: 'border-box',
-  overflow: 'hidden',
 });
