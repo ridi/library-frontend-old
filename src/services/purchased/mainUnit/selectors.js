@@ -3,14 +3,14 @@ import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
-import { itemState } from './state';
+import { initialDataState } from './state';
 import { concat } from '../../../utils/array';
 
 const getState = state => state.purchasedMainUnit;
 const getDataState = state => {
   const mainUnitState = state.purchasedMainUnit;
   const key = concat([mainUnitState.unitId, mainUnitState.order]);
-  return mainUnitState.data[key] || itemState;
+  return mainUnitState.data[key] || initialDataState;
 };
 
 export const getItemsByPage = createSelector(

@@ -4,13 +4,13 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { concat } from '../../../utils/array';
-import { itemState } from './state';
+import { initialDataState } from './state';
 
 const getState = state => state.purchasedMain;
 const getDataState = state => {
   const mainState = state.purchasedMain;
   const key = concat([mainState.filter.selected, mainState.order]);
-  return mainState.data[key] || itemState;
+  return mainState.data[key] || initialDataState;
 };
 
 export const getItems = createSelector(

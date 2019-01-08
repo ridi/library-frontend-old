@@ -8,7 +8,7 @@ export const initialState = {
   selectedBooks: {},
 };
 
-export const itemState = {
+export const initialDataState = {
   itemIdsForPage: {},
   items: {},
 

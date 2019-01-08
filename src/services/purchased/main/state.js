@@ -18,7 +18,7 @@ export const initialState = {
   isFetchingBooks: false,
 };
 
-export const itemState = {
+export const initialDataState = {
   itemIdsForPage: {},
   items: {},
 

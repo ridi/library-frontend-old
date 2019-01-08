@@ -1,4 +1,4 @@
-import { initialState, itemState } from './state';
+import { initialState, initialDataState } from './state';
 
 import {
   CLEAR_SELECTED_MAIN_BOOKS,
@@ -17,7 +17,7 @@ import { toDict, toFlatten, concat } from '../../../utils/array';
 
 const mainReducer = (state = initialState, action) => {
   const key = concat([state.filter.selected, state.order]);
-  const dataState = state.data[key] || itemState;
+  const dataState = state.data[key] || initialDataState;
 
   switch (action.type) {
     case SET_MAIN_ITEMS:
