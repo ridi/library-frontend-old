@@ -72,13 +72,15 @@ const styles = {
   }),
 };
 
-const LNBTitleBar = ({ title, totalCount, href, as, query = {}, a11y = '뒤로가기', onClickEditingMode }) => (
+const LNBTitleBar = ({ title, totalCount, href, as, query, a11y = '뒤로가기', onClickEditingMode }) => (
   <nav css={styles.LNBHiddenTitleBarWrapper}>
     <Responsive css={styles.LNBHiddenTitleBar}>
       <Link {...makeLinkProps(href, as, query)}>
-        <a css={styles.LNBHiddenTitleBarBackIconWrapper}>
-          <Icon name="arrow_3_left" css={styles.LNBHiddenTitleBarBackIcon} />
-          <span className="a11y">{a11y}</span>
+        <a>
+          <div css={styles.LNBHiddenTitleBarBackIconWrapper}>
+            <Icon name="arrow_3_left" css={styles.LNBHiddenTitleBarBackIcon} />
+            <span className="a11y">{a11y}</span>
+          </div>
         </a>
       </Link>
       <div css={styles.LNBHiddenTitleBarTitleWrapper}>
