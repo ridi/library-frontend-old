@@ -1,5 +1,4 @@
 import { put } from 'redux-saga/effects';
-import { stringify } from 'qs';
 
 import config from '../../../config';
 import { snakelize } from '../../../utils/snakelize';
@@ -7,6 +6,7 @@ import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import { makeURI } from '../../../utils/uri';
 
 export function* fetchHiddenItems(page) {
   const options = snakelize({
@@ -15,13 +15,12 @@ export function* fetchHiddenItems(page) {
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/hidden/?${stringify(options)}`);
-
+  const response = yield api.get(makeURI('/items/hidden', options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
 
 export function* fetchHiddenItemsTotalCount() {
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/hidden/count/`);
+  const response = yield api.get(makeURI('/items/hidden/count', {}, config.LIBRARY_API_BASE_URL));
   return response.data;
 }

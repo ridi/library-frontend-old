@@ -1,5 +1,4 @@
 import { put } from 'redux-saga/effects';
-import { stringify } from 'qs';
 
 import config from '../../../config';
 import { snakelize } from '../../../utils/snakelize';
@@ -7,6 +6,7 @@ import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import { makeURI } from '../../../utils/uri';
 
 export function* fetchMainItems(orderType, orderBy, filter, page) {
   const options = snakelize({
@@ -18,8 +18,7 @@ export function* fetchMainItems(orderType, orderBy, filter, page) {
   });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main?${stringify(options)}`);
-
+  const response = yield api.get(makeURI('/items/main', options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
 
@@ -27,7 +26,7 @@ export function* fetchMainItemsTotalCount(orderType, orderBy, filter) {
   const options = snakelize({ orderType, orderBy, category: filter });
 
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/main/count?${stringify(options)}`);
+  const response = yield api.get(makeURI('/items/main/count', options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
 
@@ -52,7 +51,6 @@ const _reformatCategories = categories =>
 
 export function* fetchPurchaseCategories() {
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.LIBRARY_API_BASE_URL}/items/categories`);
-
+  const response = yield api.get(makeURI('/items/categories', {}, config.LIBRARY_API_BASE_URL));
   return _reformatCategories(response.data.categories);
 }

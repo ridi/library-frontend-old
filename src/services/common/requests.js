@@ -88,21 +88,23 @@ export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
 }
 
 export function* requestUnhide(bookIds, revision) {
-  const api = yield put(getAPI());
-  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/unhide/`, {
+  const options = {
     b_ids: bookIds,
     revision,
-  });
+  };
 
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/commands/items/u/unhide/', options, config.LIBRARY_API_BASE_URL));
   return toFlatten(response.data.items, 'id');
 }
 
 export function* requestHide(bookIds, revision) {
-  const api = yield put(getAPI());
-  const response = yield api.put(`${config.LIBRARY_API_BASE_URL}/commands/items/u/hide/`, {
+  const options = {
     b_ids: bookIds,
     revision,
-  });
+  };
 
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/commands/items/u/hide/', options, config.LIBRARY_API_BASE_URL));
   return toFlatten(response.data.items, 'id');
 }
