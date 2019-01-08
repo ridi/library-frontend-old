@@ -12,11 +12,11 @@ import {
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
 } from './actions';
-import { toDict, toFlatten, concat } from '../../../utils/array';
+import { toDict, toFlatten } from '../../../utils/array';
+import { getDataState } from '../../../utils/state';
 
 const searchUnitReducer = (state = initialState, action) => {
-  const key = concat([state.unitId, state.order]);
-  const dataState = state.data[key] || initialDataState;
+  const { key, dataState } = getDataState(state, [state.unitId, state.order], initialDataState);
 
   switch (action.type) {
     case SET_SEARCH_UNIT_ITEMS:

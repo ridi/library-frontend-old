@@ -1,14 +1,14 @@
 import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
+import { getDataState as getDataStateUtil } from '../../../utils/state';
 import { initialDataState } from './state';
-import { concat } from '../../../utils/array';
 
 const getState = state => state.purchasedSearch;
 const getDataState = state => {
   const searchState = state.purchasedSearch;
-  const key = concat([searchState.keyword]);
-  return searchState.data[key] || initialDataState;
+  const { dataState } = getDataStateUtil(searchState, [searchState.keyword], initialDataState);
+  return dataState;
 };
 
 export const getItems = createSelector(

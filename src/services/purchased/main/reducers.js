@@ -13,11 +13,11 @@ import {
   SET_IS_FETCHING_BOOKS,
 } from './actions';
 
-import { toDict, toFlatten, concat } from '../../../utils/array';
+import { toDict, toFlatten } from '../../../utils/array';
+import { getDataState } from '../../../utils/state';
 
 const mainReducer = (state = initialState, action) => {
-  const key = concat([state.filter.selected, state.order]);
-  const dataState = state.data[key] || initialDataState;
+  const { key, dataState } = getDataState(state, [state.filter.selected, state.order], initialDataState);
 
   switch (action.type) {
     case SET_MAIN_ITEMS:

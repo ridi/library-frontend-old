@@ -2,15 +2,15 @@ import { createSelector } from 'reselect';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
+import { getDataState as getDataStateUtil } from '../../../utils/state';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { initialDataState } from './state';
-import { concat } from '../../../utils/array';
 
 const getState = state => state.purchasedMainUnit;
 const getDataState = state => {
   const mainUnitState = state.purchasedMainUnit;
-  const key = concat([mainUnitState.unitId, mainUnitState.order]);
-  return mainUnitState.data[key] || initialDataState;
+  const { dataState } = getDataStateUtil(mainUnitState, [mainUnitState.unitId, mainUnitState.order], initialDataState);
+  return dataState;
 };
 
 export const getItemsByPage = createSelector(

@@ -11,11 +11,11 @@ import {
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
   SET_MAIN_UNIT,
 } from './actions';
-import { toDict, toFlatten, concat } from '../../../utils/array';
+import { toDict, toFlatten } from '../../../utils/array';
+import { getDataState } from '../../../utils/state';
 
 const purchasedMainUnitReducer = (state = initialState, action) => {
-  const key = concat([state.unitId, state.order]);
-  const dataState = state.data[key] || initialDataState;
+  const { key, dataState } = getDataState(state, [state.unitId, state.order], initialDataState);
 
   switch (action.type) {
     case SET_MAIN_UNIT_ITEMS:

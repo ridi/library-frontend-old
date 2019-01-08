@@ -10,11 +10,11 @@ import {
   SELECT_SEARCH_BOOKS,
   SET_SEARCH_IS_FETCHING_BOOKS,
 } from './actions';
-import { toDict, toFlatten, concat } from '../../../utils/array';
+import { toDict, toFlatten } from '../../../utils/array';
+import { getDataState } from '../../../utils/state';
 
 const purchasedSearchReducer = (state = initialState, action) => {
-  const key = concat([state.keyword]);
-  const dataState = state.data[key] || initialDataState;
+  const { key, dataState } = getDataState(state, [state.keyword], initialDataState);
 
   switch (action.type) {
     case SET_SEARCH_ITEMS:
