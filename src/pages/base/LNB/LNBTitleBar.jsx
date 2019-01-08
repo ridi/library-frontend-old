@@ -72,7 +72,7 @@ const styles = {
   }),
 };
 
-const LNBTitleBar = ({ title, totalCount: totalCount, href, as, query, a11y = '뒤로가기', onClickEditingMode }) => (
+const LNBTitleBar = ({ title, totalCount, href, as, query = {}, a11y = '뒤로가기', onClickEditingMode }) => (
   <nav css={styles.LNBHiddenTitleBarWrapper}>
     <Responsive css={styles.LNBHiddenTitleBar}>
       <Link href={{ pathname: href, query: snakelize(query) }} as={{ pathname: as, query: snakelize(query) }}>
