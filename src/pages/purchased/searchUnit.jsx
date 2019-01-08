@@ -246,6 +246,10 @@ class searchUnit extends React.Component {
       pageInfo: { keyword },
     } = this.props;
 
+    if (!unit) {
+      return null;
+    }
+
     return (
       <>
         <Head>
