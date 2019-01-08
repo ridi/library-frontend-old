@@ -29,11 +29,11 @@ export default class Paginator extends React.Component {
   }
 
   renderGoFirst() {
-    // const { currentPage, pageCount } = this.props;
+    const { currentPage, pageCount } = this.props;
 
-    // // if (currentPage <= pageCount) {
-    // //   return null;
-    // // }
+    if (currentPage <= pageCount) {
+      return null;
+    }
 
     return (
       <>
