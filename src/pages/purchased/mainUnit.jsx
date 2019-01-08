@@ -82,7 +82,7 @@ const styles = {
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
 
@@ -239,6 +239,11 @@ class MainUnit extends React.Component {
   render() {
     const { isEditing } = this.state;
     const { unit, totalCount } = this.props;
+
+    // TODO Unit 없을때 Spinner 혹은 Skeleton 노출
+    if (!unit) {
+      return null;
+    }
 
     return (
       <>

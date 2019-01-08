@@ -1,4 +1,4 @@
-import { initialState } from './state';
+import { initialState, initialDataState, getKey } from './state';
 
 import {
   CLEAR_SELECTED_MAIN_BOOKS,
@@ -14,32 +14,55 @@ import {
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
+import { getOrDefault } from '../../../utils/dict';
 
 const mainReducer = (state = initialState, action) => {
+  const key = getKey(state);
+  const dataState = getOrDefault(state.data, key, initialDataState);
+
   switch (action.type) {
     case SET_MAIN_ITEMS:
       return {
         ...state,
-        items: {
-          ...state.items,
-          ...toDict(action.payload.items, 'b_id'),
-        },
-        itemIdsForPage: {
-          ...state.itemIdsForPage,
-          [state.page]: toFlatten(action.payload.items, 'b_id'),
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            items: {
+              ...dataState.items,
+              ...toDict(action.payload.items, 'b_id'),
+            },
+            itemIdsForPage: {
+              ...dataState.itemIdsForPage,
+              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
+            },
+          },
         },
       };
     case SET_MAIN_TOTAL_COUNT:
       return {
         ...state,
-        unitTotalCount: action.payload.unitTotalCount,
-        itemTotalCount: action.payload.itemTotalCount,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            unitTotalCount: action.payload.unitTotalCount,
+            itemTotalCount: action.payload.itemTotalCount,
+          },
+        },
       };
     case SET_MAIN_PAGE:
       return {
         ...state,
-        page: action.payload.page,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            page: action.payload.page,
+          },
+        },
       };
+
     case SET_MAIN_ORDER:
       return {
         ...state,

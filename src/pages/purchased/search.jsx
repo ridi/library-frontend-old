@@ -212,10 +212,10 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
             {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
               keyword,
             })}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
           />
         ))}
       </BookList>

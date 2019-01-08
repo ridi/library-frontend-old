@@ -14,43 +14,6 @@ const OrderType = {
   RELEASE_DATE: 'release_date',
 };
 
-// const seriesOrder = [
-//   {
-//     title: '1권부터',
-//     order_type: OrderType.UNIT_ORDER,
-//     order_by: OrderBy.ASC,
-//   },
-//   {
-//     title: '마지막 권부터',
-//     order_type: OrderType.UNIT_ORDER,
-//     order_by: OrderBy.DESC,
-//   },
-//   {
-//     title: '최근 구매순',
-//     order_type: OrderType.PURCHASE_DATE,
-//     order_by: OrderBy.DESC,
-//   },
-//   {
-//     title: '대여 만료 임박순',
-//     order_type: OrderType.EXPIRE_DATE,
-//     order_by: OrderBy.ASC,
-//   },
-// ];
-
-// const collectionOrder = [
-//   ...seriesOrder,
-//   {
-//     title: '제목순',
-//     order_type: OrderType.BOOK_TITLE,
-//     order_by: OrderBy.ASC,
-//   },
-//   {
-//     title: '저자순',
-//     order_type: OrderType.BOOK_AUTHOR,
-//     order_by: OrderBy.ASC,
-//   },
-// ];
-
 class BaseOrderOptions {
   static parse(index) {
     const _option = this.toList()[index];
@@ -115,7 +78,67 @@ export class MainOrderOptions extends BaseOrderOptions {
   }
 }
 
-// export const seriesOrderOptions = seriesOrder.map(generateAndAttachValue);
-// export const collectionOrderOptions = collectionOrder.map(
-//   generateAndAttachValue,
-// );
+export class SeriesOrderOptions extends BaseOrderOptions {
+  static toList() {
+    return [this.UNIT_ORDER_ASC, this.UNIT_ORDER_DESC, this.PURCHASE_DATE, this.EXPIRE_DATE];
+  }
+
+  static get DEFAULT() {
+    return this.UNIT_ORDER_ASC;
+  }
+
+  static get UNIT_ORDER_ASC() {
+    return {
+      title: '1권부터',
+      order_type: OrderType.UNIT_ORDER,
+      order_by: OrderBy.ASC,
+    };
+  }
+
+  static get UNIT_ORDER_DESC() {
+    return {
+      title: '마지막 권부터',
+      order_type: OrderType.UNIT_ORDER,
+      order_by: OrderBy.DESC,
+    };
+  }
+
+  static get PURCHASE_DATE() {
+    return {
+      title: '최근 구매순',
+      order_type: OrderType.PURCHASE_DATE,
+      order_by: OrderBy.DESC,
+    };
+  }
+
+  static get EXPIRE_DATE() {
+    return {
+      title: '대여 만료 임박순',
+      order_type: OrderType.EXPIRE_DATE,
+      order_by: OrderBy.ASC,
+    };
+  }
+}
+
+export class CollectionOrderOptions extends SeriesOrderOptions {
+  static toList() {
+    const _list = super.toList();
+    return [..._list, this.BOOK_TITLE, this.BOOK_AUTHOR];
+  }
+
+  static get BOOK_TITLE() {
+    return {
+      title: '제목순',
+      order_type: OrderType.BOOK_TITLE,
+      order_by: OrderBy.ASC,
+    };
+  }
+
+  static get BOOK_AUTHOR() {
+    return {
+      title: '저자순',
+      order_type: OrderType.BOOK_AUTHOR,
+      order_by: OrderBy.ASC,
+    };
+  }
+}

@@ -34,7 +34,7 @@ export const bookWrapperStyle = css({
     paddingRight: 16,
     boxSizing: 'border-box',
 
-    '&:nth-child(3n)': {
+    '&:nth-of-type(3n)': {
       paddingRight: 0,
       width: 98,
     },
@@ -45,7 +45,7 @@ export const bookWrapperStyle = css({
     paddingRight: 30,
     boxSizing: 'border-box',
 
-    '&:nth-child(4n)': {
+    '&:nth-of-type(4n)': {
       paddingRight: 0,
       width: 110,
     },
@@ -56,7 +56,7 @@ export const bookWrapperStyle = css({
     paddingRight: 30,
     boxSizing: 'border-box',
 
-    '&:nth-child(5n)': {
+    '&:nth-of-type(5n)': {
       paddingRight: 0,
       width: 110,
     },
@@ -67,7 +67,7 @@ export const bookWrapperStyle = css({
     paddingRight: 60,
     boxSizing: 'border-box',
 
-    '&:nth-child(6n)': {
+    '&:nth-of-type(6n)': {
       paddingRight: 0,
       width: 110,
     },

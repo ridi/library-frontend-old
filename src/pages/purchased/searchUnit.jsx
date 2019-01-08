@@ -81,9 +81,10 @@ const styles = {
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 
@@ -244,6 +245,10 @@ class searchUnit extends React.Component {
       totalCount,
       pageInfo: { keyword },
     } = this.props;
+
+    if (!unit) {
+      return null;
+    }
 
     return (
       <>
