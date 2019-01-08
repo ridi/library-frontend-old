@@ -1,4 +1,4 @@
-import { initialState, initialDataState } from './state';
+import { initialState, initialDataState, getKey } from './state';
 
 import {
   CLEAR_SELECTED_MAIN_BOOKS,
@@ -14,10 +14,11 @@ import {
 } from './actions';
 
 import { toDict, toFlatten } from '../../../utils/array';
-import { getDataState } from '../../../utils/state';
+import { getOrDefault } from '../../../utils/dict';
 
 const mainReducer = (state = initialState, action) => {
-  const { key, dataState } = getDataState(state, [state.filter.selected, state.order], initialDataState);
+  const key = getKey(state);
+  const dataState = getOrDefault(state.data, key, initialDataState);
 
   switch (action.type) {
     case SET_MAIN_ITEMS:

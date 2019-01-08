@@ -1,4 +1,4 @@
-import { initialState, initialDataState } from './state';
+import { initialState, initialDataState, getKey } from './state';
 
 import {
   CLEAR_SELECTED_MAIN_UNIT_BOOKS,
@@ -12,10 +12,10 @@ import {
   SET_MAIN_UNIT,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
-import { getDataState } from '../../../utils/state';
 
 const purchasedMainUnitReducer = (state = initialState, action) => {
-  const { key, dataState } = getDataState(state, [state.unitId, state.order], initialDataState);
+  const key = getKey(state);
+  const dataState = state.data[key] || initialDataState;
 
   switch (action.type) {
     case SET_MAIN_UNIT_ITEMS:

@@ -1,3 +1,5 @@
+import { concat } from '../../../utils/array';
+
 export const initialState = {
   // 공용
   filter: {
@@ -26,3 +28,5 @@ export const initialDataState = {
   unitTotalCount: 0,
   itemTotalCount: 0,
 };
+
+export const getKey = state => concat([state.filter.selected, state.order]);

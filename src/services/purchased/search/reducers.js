@@ -1,4 +1,4 @@
-import { initialState, initialDataState } from './state';
+import { initialState, initialDataState, getKey } from './state';
 
 import {
   SET_SEARCH_ITEMS,
@@ -11,10 +11,10 @@ import {
   SET_SEARCH_IS_FETCHING_BOOKS,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
-import { getDataState } from '../../../utils/state';
 
 const purchasedSearchReducer = (state = initialState, action) => {
-  const { key, dataState } = getDataState(state, [state.keyword], initialDataState);
+  const key = getKey(state);
+  const dataState = state.data[key] || initialDataState;
 
   switch (action.type) {
     case SET_SEARCH_ITEMS:
