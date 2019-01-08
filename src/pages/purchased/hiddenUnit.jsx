@@ -77,7 +77,7 @@ const styles = {
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
-    await store.dispatch(setUnitId(query.unitId));
+    await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
 
@@ -165,7 +165,7 @@ class HiddenUnit extends React.Component {
       <ResponsivePaginator
         currentPage={currentPage}
         totalPages={totalPages}
-        href={URLMap.hiddenUnit.href}
+        href={{ pathname: URLMap.hiddenUnit.href, query: { unitId } }}
         as={URLMap.hiddenUnit.as(unitId)}
       />
     );
@@ -202,8 +202,8 @@ class HiddenUnit extends React.Component {
             title={unit.title}
             totalCount={totalCount.itemTotalCount}
             onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.main.href}
-            as={URLMap.main.as}
+            href={URLMap.hidden.href}
+            as={URLMap.hidden.as}
           />
         )}
         <main>

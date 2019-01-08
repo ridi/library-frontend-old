@@ -22,12 +22,23 @@ import {
   unhideSelectedBooks,
   deleteSelectedBooks,
 } from '../../services/purchased/hidden/actions';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount } from '../../services/purchased/hidden/selectors';
+import {
+  getItemsByPage,
+  getPageInfo,
+  getSelectedBooks,
+  getTotalCount,
+  getIsFetchingBooks,
+} from '../../services/purchased/hidden/selectors';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
+import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
+import { makeLinkProps } from '../../utils/uri';
 
 const styles = {
+  hiddenFetchingBooks: css({
+    backgroundColor: 'white',
+  }),
   hiddenButtonActionLeft: css({
     color: '#e64938',
     float: 'left',
@@ -95,9 +106,12 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
+      if (isFetchingBooks) {
+        return <SkeletonBookList />;
+      }
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
@@ -110,9 +124,8 @@ class Hidden extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            href={{ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }}
-            as={URLMap.hiddenUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            {...makeLinkProps({ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }, URLMap.hiddenUnit.as(item.unit_id))}
           />
         ))}
       </BookList>
@@ -155,7 +168,7 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { totalCount } = this.props;
+    const { isFetchingBooks, totalCount } = this.props;
 
     return (
       <>
@@ -173,7 +186,7 @@ class Hidden extends React.Component {
             as={URLMap.main.as}
           />
         )}
-        <main>
+        <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -191,6 +204,7 @@ const mapStateToProps = state => {
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
+  const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
     pageInfo,
@@ -198,6 +212,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+    isFetchingBooks,
   };
 };
 

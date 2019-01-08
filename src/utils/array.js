@@ -7,3 +7,5 @@ export const toDict = (arr, key) =>
 export const toFlatten = (arr, key) => arr.map(value => value[key]);
 
 export const makeRange = (start, end) => Array.from({ length: end - start }, (_, k) => k + start);
+
+export const concat = (arr, glue = '_') => arr.join(glue);

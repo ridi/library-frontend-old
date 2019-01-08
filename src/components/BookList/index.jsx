@@ -1,13 +1,6 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
-
-const bookListStyle = css`
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -24px;
-  margin-bottom: 30px;
-`;
+import { jsx } from '@emotion/core';
+import { bookListStyle } from '../../styles/bookLayout';
 
 const BookList = ({ children }) => <div css={bookListStyle}>{children}</div>;
-
 export default BookList;

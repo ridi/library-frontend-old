@@ -2,9 +2,8 @@
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
+import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
-
-import { snakelize } from '../../utils/snakelize';
 
 export const MenuItem = ({ title, showIcon, icon, onClick }) => (
   <li css={styles.menuGroupItemWrapper}>
@@ -17,7 +16,7 @@ export const MenuItem = ({ title, showIcon, icon, onClick }) => (
 
 export const MenuLinkItem = ({ title, showIcon, icon, href, as, query = {} }) => (
   <li css={styles.menuGroupItemWrapper}>
-    <Link href={{ pathname: href, query: snakelize(query) }} as={{ pathname: as, query: snakelize(query) }}>
+    <Link {...makeLinkProps(href, as, query)}>
       <a css={styles.menuGroupItem}>
         {showIcon ? <Icon name={icon} css={styles.menuGroupItemIcon} /> : null}
         <span css={styles.menuGroupItemTitle}>{title}</span>

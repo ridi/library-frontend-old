@@ -3,13 +3,19 @@ import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
+import { initialDataState, getKey } from './state';
 
 const getState = state => state.purchasedSearchUnit;
+const getDataState = state => {
+  const searchUnitState = state.purchasedSearchUnit;
+  const key = getKey(searchUnitState);
+  return searchUnitState.data[key] || initialDataState;
+};
 
 export const getItemsByPage = createSelector(
-  getState,
-  state => {
-    const { page, itemIdsForPage, items } = state;
+  getDataState,
+  dataState => {
+    const { page, itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
@@ -17,14 +23,14 @@ export const getItemsByPage = createSelector(
 
 export const getUnit = createSelector(
   getState,
-  state => state.unit,
+  state => state.units[state.unitId],
 );
 
 export const getPageInfo = createSelector(
-  getState,
-  state => {
-    const { unitId, page, itemTotalCount, order } = state;
-
+  [getState, getDataState],
+  (state, dataState) => {
+    const { unitId, order, keyword } = state;
+    const { page, itemTotalCount } = dataState;
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
     return {
@@ -34,6 +40,7 @@ export const getPageInfo = createSelector(
       order,
       orderType,
       orderBy,
+      keyword,
     };
   },
 );
@@ -44,8 +51,8 @@ export const getUnitId = createSelector(
 );
 
 export const getPage = createSelector(
-  getState,
-  state => state.page,
+  getDataState,
+  dataState => dataState.page,
 );
 
 export const getOrder = createSelector(
@@ -53,12 +60,18 @@ export const getOrder = createSelector(
   state => state.order,
 );
 
+export const getKeyword = createSelector(
+  getState,
+  state => state.keyword,
+);
+
 export const getOptions = createSelector(
-  [getUnitId, getPage, getOrder],
-  (unitId, page, order) => ({
+  [getUnitId, getPage, getOrder, getKeyword],
+  (unitId, page, order, keyword) => ({
     unitId,
     page,
     order,
+    keyword,
   }),
 );
 
@@ -68,8 +81,6 @@ export const getSelectedBooks = createSelector(
 );
 
 export const getTotalCount = createSelector(
-  getState,
-  state => {
-    return { itemTotalCount: state.itemTotalCount };
-  },
+  getDataState,
+  dataState => ({ itemTotalCount: dataState.itemTotalCount }),
 );

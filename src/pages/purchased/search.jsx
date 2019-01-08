@@ -24,18 +24,19 @@ import LibraryBook from '../../components/LibraryBook';
 import IconButton from '../../components/IconButton';
 import EditingBar from '../../components/EditingBar';
 import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
+import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
 
 import Responsive from '../base/Responsive';
 
 import { toFlatten } from '../../utils/array';
-import { makeURI } from '../../utils/uri';
+import { makeLinkProps, makeURI } from '../../utils/uri';
 import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../services/purchased/search/selectors';
 import { getBooks } from '../../services/book/selectors';
 
 const styles = {
-  main: css({
-    position: 'relative',
+  searchFetchingBooks: css({
+    backgroundColor: 'white',
   }),
   searchToolBarWrapper: css({
     height: 46,
@@ -187,6 +188,7 @@ class Search extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const {
+      isFetchingBooks,
       items,
       books,
       selectedBooks,
@@ -195,6 +197,9 @@ class Search extends React.Component {
     } = this.props;
 
     if (items.length === 0) {
+      if (isFetchingBooks) {
+        return <SkeletonBookList />;
+      }
       return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
@@ -207,9 +212,10 @@ class Search extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            href={{ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }}
-            as={URLMap.searchUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
+              keyword,
+            })}
           />
         ))}
       </BookList>
@@ -250,6 +256,7 @@ class Search extends React.Component {
 
   render() {
     const {
+      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
 
@@ -260,7 +267,7 @@ class Search extends React.Component {
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
-        <main>
+        <main css={isFetchingBooks && styles.searchFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
             {this.renderPaginator()}
@@ -277,12 +284,14 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
+  const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
     pageInfo,
     items,
     books,
     selectedBooks,
+    isFetchingBooks,
   };
 };
 const mapDispatchToProps = {

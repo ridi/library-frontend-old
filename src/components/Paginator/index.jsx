@@ -6,26 +6,12 @@ import { jsx } from '@emotion/core';
 
 import * as styles from './styles';
 import { calcPageBlock, makePageRange } from '../../utils/pagination';
-import { snakelize } from '../../utils/snakelize';
+import { makeLinkProps } from '../../utils/uri';
 
 export default class Paginator extends React.Component {
   getLinkProps(page) {
     const { href, as, query = {} } = this.props;
-    const _query = snakelize({
-      ...query,
-      page,
-    });
-
-    return {
-      href: {
-        pathname: href,
-        query: _query,
-      },
-      as: {
-        pathname: as,
-        query: _query,
-      },
-    };
+    return makeLinkProps(href, as, { ...query, page });
   }
 
   renderGoFirst() {

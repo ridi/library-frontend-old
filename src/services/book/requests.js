@@ -4,6 +4,7 @@ import { getAPI } from '../../api/actions';
 import config from '../../config';
 
 import { makeTTL } from '../../utils/ttl';
+import { makeURI } from '../../utils/uri';
 
 const _reduceBooks = books => {
   const reducedBooks = books.map(book => ({
@@ -33,7 +34,6 @@ const _attatchTTL = books => {
 
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
-  const response = yield api.get(`${config.PLATFORM_API_BASE_URL}/books?b_ids=${bookIds.join(',')}`);
-
+  const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
   return _attatchTTL(_reduceBooks(response.data));
 }

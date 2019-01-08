@@ -2,18 +2,21 @@
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 import { Icon } from '@ridi/rsg';
+import { makeLinkProps } from '../../../utils/uri';
 import Responsive from '../Responsive';
 import IconButton from '../../../components/IconButton';
 import Edit from '../../../svgs/Edit.svg';
 import * as styles from './styles';
 
-const LNBTitleBar = ({ title, totalCount, href, as, a11y = '뒤로가기', onClickEditingMode }) => (
+const LNBTitleBar = ({ title, totalCount, href, as, query, a11y = '뒤로가기', onClickEditingMode }) => (
   <Responsive css={styles.LNBHiddenTitleBarWrapper}>
     <nav css={styles.LNBHiddenTitleBar}>
-      <Link href={href} as={as}>
-        <a css={styles.LNBHiddenTitleBarBackIconWrapper}>
-          <Icon name="arrow_13_left" css={styles.LNBHiddenTitleBarBackIcon} />
-          <span className="a11y">{a11y}</span>
+      <Link {...makeLinkProps(href, as, query)}>
+        <a>
+          <div css={styles.LNBHiddenTitleBarBackIconWrapper}>
+            <Icon name="arrow_13_left" css={styles.LNBHiddenTitleBarBackIcon} />
+            <span className="a11y">{a11y}</span>
+          </div>
         </a>
       </Link>
       <div css={styles.LNBHiddenTitleBarTitleWrapper}>

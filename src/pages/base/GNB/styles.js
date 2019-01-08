@@ -1,8 +1,9 @@
 import { css } from '@emotion/core';
-import { screenSize, maxWidthWrapper } from '../../../styles';
+import { maxWidthWrapper } from '../../../styles';
+import { Responsive } from '../../../styles/responsive';
 
 export const GNB = css([
-  screenSize.isMobile({
+  Responsive.Mobile({
     padding: '2px 0',
   }),
   { background: 'white' },

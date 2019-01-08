@@ -60,3 +60,13 @@ export const menuIcon = css({
   transform: 'translate3d(0, -50%, 0)',
   fill: '#9ea7ad',
 });
+
+export const excelDownloading = css({
+  position: 'absolute',
+  width: 18,
+  height: 18,
+  left: 100,
+  top: '50%',
+  transform: 'translate3d(0, -50%, 0)',
+  fill: '#9ea7ad',
+});

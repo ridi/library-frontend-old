@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Icon } from '@ridi/rsg';
 import { jsx } from '@emotion/core';
+import { startExcelDownload } from '../../../services/excelDownload/actions';
+import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
 import MyMenuModal from '../MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
@@ -31,13 +33,8 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
-  renderModalBackground() {
-    const { showFilterModal, showMoreModal } = this.state;
-    return <ModalBackground isActive={showFilterModal || showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
-  }
-
   render() {
-    const { userId } = this.props;
+    const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
     return (
       <>
@@ -70,7 +67,12 @@ class GNB extends React.Component {
                 <span css={Hidden}>마이메뉴</span>
               </button>
             </div>
-            <MyMenuModal userId={userId} isActive={isModalActive} />
+            <MyMenuModal
+              userId={userId}
+              isActive={isModalActive}
+              isExcelDownloading={isExcelDownloading}
+              dispatchStartExcelDownload={dispatchStartExcelDownload}
+            />
           </header>
         </Responsive>
         <ModalBackground isActive={isModalActive} onClickModalBackground={this.onModalBackgroundClick} />
@@ -80,10 +82,19 @@ class GNB extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const isExcelDownloading = getIsExcelDownloading(state);
   const { id: userId } = state.account.userInfo;
   return {
     userId,
+    isExcelDownloading,
   };
 };
 
-export default connect(mapStateToProps)(GNB);
+const mapDispatchToProps = {
+  dispatchStartExcelDownload: startExcelDownload,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GNB);

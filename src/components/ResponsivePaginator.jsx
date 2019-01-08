@@ -2,25 +2,25 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';
-import { screenSize } from '../styles';
+import { Responsive } from '../styles/responsive';
 import Paginator from './Paginator';
 
 const styles = {
   mobile: Object.assign(
     {},
-    screenSize.isMobile({
+    Responsive.Mobile({
       display: 'block',
     }),
-    screenSize.isPc({
+    Responsive.Pc({
       display: 'none',
     }),
   ),
   pc: Object.assign(
     {},
-    screenSize.isMobile({
+    Responsive.Mobile({
       display: 'none',
     }),
-    screenSize.isPc({
+    Responsive.Pc({
       display: 'block',
     }),
   ),

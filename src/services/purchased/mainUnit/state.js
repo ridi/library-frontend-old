@@ -1,13 +1,21 @@
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import { concat } from '../../../utils/array';
 
 export const initialState = {
-  itemIdsForPage: {},
-  items: {},
-  unit: {},
-  order: MainOrderOptions.DEFAULT,
+  unitId: null,
+  order: 0,
 
-  page: 1,
-  itemTotalCount: 0,
+  data: {},
+  units: {},
 
   selectedBooks: {},
 };
+
+export const initialDataState = {
+  itemIdsForPage: {},
+  items: {},
+
+  page: 1,
+  itemTotalCount: 0,
+};
+
+export const getKey = state => concat([state.unitId, state.order]);

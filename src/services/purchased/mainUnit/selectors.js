@@ -3,13 +3,19 @@ import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
 import { MainOrderOptions } from '../../../constants/orderOptions';
+import { initialDataState, getKey } from './state';
 
 const getState = state => state.purchasedMainUnit;
+const getDataState = state => {
+  const mainUnitState = state.purchasedMainUnit;
+  const key = getKey(mainUnitState);
+  return mainUnitState.data[key] || initialDataState;
+};
 
 export const getItemsByPage = createSelector(
-  getState,
-  state => {
-    const { page, itemIdsForPage, items } = state;
+  getDataState,
+  dataState => {
+    const { page, itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
@@ -17,14 +23,16 @@ export const getItemsByPage = createSelector(
 
 export const getUnit = createSelector(
   getState,
-  state => state.unit,
+  state => state.units[state.unitId],
 );
 
 export const getPageInfo = createSelector(
-  getState,
-  state => {
-    const { unitId, page, itemTotalCount, order } = state;
+  [getState, getDataState],
+  (state, dataState) => {
+    const { unitId, order } = state;
+    const { page, itemTotalCount } = dataState;
 
+    // TODO: Series 혹은 Collection 정렬 옵션 사용하기
     const { orderType, orderBy } = MainOrderOptions.parse(order);
 
     return {
@@ -44,8 +52,8 @@ export const getUnitId = createSelector(
 );
 
 export const getPage = createSelector(
-  getState,
-  state => state.page,
+  getDataState,
+  dataState => dataState.page,
 );
 
 export const getOrder = createSelector(
@@ -68,8 +76,6 @@ export const getSelectedBooks = createSelector(
 );
 
 export const getTotalCount = createSelector(
-  getState,
-  state => {
-    return { itemTotalCount: state.itemTotalCount };
-  },
+  getDataState,
+  dataState => ({ itemTotalCount: dataState.itemTotalCount }),
 );
