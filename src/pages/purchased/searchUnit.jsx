@@ -84,6 +84,7 @@ class searchUnit extends React.Component {
     await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 

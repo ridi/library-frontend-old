@@ -39,7 +39,7 @@ import {
 } from '../../services/purchased/main/selectors';
 
 import { toFlatten } from '../../utils/array';
-import { makeURI } from '../../utils/uri';
+import { makeURI, makeLinkProps } from '../../utils/uri';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
@@ -248,9 +248,8 @@ class Main extends React.Component {
             book={books[item.b_id]}
             isEditing={isEditing}
             checked={!!selectedBooks[item.b_id]}
-            href={{ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }}
-            as={URLMap.mainUnit.as(item.unit_id)}
             onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
           />
         ))}
       </BookList>

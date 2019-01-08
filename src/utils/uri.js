@@ -26,7 +26,7 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
 export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
   `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
 
-export const makeLinkProps = (href, as, query) => {
+export const makeLinkProps = (href, as, query = {}) => {
   const _query = snakelize(query);
 
   const _href = {
