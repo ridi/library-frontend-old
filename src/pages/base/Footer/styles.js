@@ -3,11 +3,15 @@ import { maxWidthWrapper } from '../../../styles';
 export const FOOTER_HEIGHT = 254;
 
 export const footer = {
+  width: '100%',
   height: FOOTER_HEIGHT,
   boxSizing: 'border-box',
   padding: '40px 0 0 0',
   textAlign: 'center',
   background: 'white',
+  position: 'absolute',
+  left: 0,
+  bottom: 0,
 };
 
 export const contentsWrapper = {
