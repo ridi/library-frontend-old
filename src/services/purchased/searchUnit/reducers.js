@@ -1,4 +1,4 @@
-import { initialState } from './state';
+import { initialState, initialDataState } from './state';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
@@ -12,31 +12,49 @@ import {
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
 } from './actions';
-import { toDict, toFlatten } from '../../../utils/array';
+import { toDict, toFlatten, concat } from '../../../utils/array';
 
 const searchUnitReducer = (state = initialState, action) => {
+  const key = concat([state.unitId, state.order]);
+  const dataState = state.data[key] || initialDataState;
+
   switch (action.type) {
     case SET_SEARCH_UNIT_ITEMS:
       return {
         ...state,
-        items: {
-          ...state.items,
-          ...toDict(action.payload.items, 'b_id'),
-        },
-        itemIdsForPage: {
-          ...state.itemIdsForPage,
-          [state.page]: toFlatten(action.payload.items, 'b_id'),
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            items: {
+              ...dataState.items,
+              ...toDict(action.payload.items, 'b_id'),
+            },
+            itemIdsForPage: {
+              ...dataState.itemIdsForPage,
+              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
+            },
+          },
         },
       };
     case SET_SEARCH_UNIT:
       return {
         ...state,
-        unit: action.payload.unit,
+        units: {
+          ...state.units,
+          [state.unitId]: action.payload.unit,
+        },
       };
     case SET_SEARCH_UNIT_TOTAL_COUNT:
       return {
         ...state,
-        itemTotalCount: action.payload.itemTotalCount,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            itemTotalCount: action.payload.itemTotalCount,
+          },
+        },
       };
     case SET_SEARCH_UNIT_ID:
       return {
@@ -46,7 +64,13 @@ const searchUnitReducer = (state = initialState, action) => {
     case SET_SEARCH_UNIT_PAGE:
       return {
         ...state,
-        page: action.payload.page,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            page: action.payload.page,
+          },
+        },
       };
     case SET_SEARCH_UNIT_ORDER:
       return {
