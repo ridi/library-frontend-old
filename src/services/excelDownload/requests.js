@@ -19,6 +19,6 @@ export function* fetchCheckExcelDownload(queueId) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI(`items/excel/${queueId}`, options, config.LIBRARY_API_BASE_URL));
+  const response = yield api.get(makeURI(`/items/excel/${queueId}`, options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
