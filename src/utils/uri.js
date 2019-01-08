@@ -35,8 +35,8 @@ export const makeLinkProps = (href, as, query) => {
   };
   if (typeof href === 'object') {
     _href.pathname = href.pathname;
-    if (typeof as.query === 'object') {
-      _href.query = { ...snakelize(_href.query), ..._query };
+    if (typeof href.query === 'object') {
+      _href.query = { ...snakelize(href.query), ..._query };
     }
   }
 
