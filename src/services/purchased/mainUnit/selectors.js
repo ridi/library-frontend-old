@@ -14,8 +14,8 @@ const getDataState = state => {
 };
 
 export const getItemsByPage = createSelector(
-  [getState, getDataState],
-  (_, dataState) => {
+  getDataState,
+  dataState => {
     const { page, itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);

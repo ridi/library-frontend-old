@@ -14,13 +14,13 @@ const getDataState = state => {
 };
 
 export const getItems = createSelector(
-  [getState, getDataState],
-  (_, dataState) => dataState.items,
+  getDataState,
+  dataState => dataState.items,
 );
 
 export const getItemsByPage = createSelector(
-  [getState, getDataState],
-  (_, dataState) => {
+  getDataState,
+  dataState => {
     const { page, itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
@@ -50,8 +50,8 @@ export const getPageInfo = createSelector(
 );
 
 export const getPage = createSelector(
-  [getState, getDataState],
-  (_, dataState) => dataState.page,
+  getDataState,
+  dataState => dataState.page,
 );
 
 export const getOrder = createSelector(
