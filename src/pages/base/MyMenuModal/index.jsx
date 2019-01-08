@@ -10,16 +10,16 @@ import Review from '../../../svgs/Review.svg';
 import Spinner from '../../../svgs/Spinner.svg';
 
 const ExcelDownLoadButton = dispatchStartExcelDownload => (
-  <a css={styles.menuButton} onClick={() => dispatchStartExcelDownload()}>
+  <button css={styles.menuButton} onClick={() => dispatchStartExcelDownload()}>
     <Download css={styles.menuIcon} />
     구매 목록 엑셀 다운로드
-  </a>
+  </button>
 );
 
 const ExcelDownLoadingButton = () => (
-  <a css={styles.menuButton}>
+  <span css={styles.menuButton}>
     <Spinner css={styles.excelDownloading} />
-  </a>
+  </span>
 );
 
 const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelDownload }) => (
