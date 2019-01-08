@@ -39,7 +39,7 @@ export const familyServiceItem = css({
   display: 'inline-block',
   fontSize: 0,
   padding: '0 2px',
-  '&:first-child': {
+  '&:first-of-type': {
     padding: '0 3px 0 0',
   },
   '&::before': {
@@ -53,7 +53,7 @@ export const familyServiceItem = css({
     top: '50%',
     transform: 'translate3d(0, -50%, 0)',
   },
-  '&:first-child::before': {
+  '&:first-of-type::before': {
     display: 'none',
   },
 });

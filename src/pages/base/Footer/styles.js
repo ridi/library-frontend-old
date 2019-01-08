@@ -31,7 +31,7 @@ export const headlineItem = css({
     borderRadius: 3,
     background: '#b8bfc4',
   },
-  '&:first-child::before': {
+  '&:first-of-type::before': {
     display: 'none',
   },
 });
@@ -83,7 +83,7 @@ export const termsItem = css({
     height: 10,
     background: '#e6e8eb',
   },
-  '&:first-child::before': {
+  '&:first-of-type::before': {
     display: 'none',
   },
 });
