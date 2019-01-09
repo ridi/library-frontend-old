@@ -175,7 +175,9 @@ class MainUnit extends React.Component {
         title={unit.title}
         totalCount={totalCount.itemTotalCount}
         onClickEditingMode={this.toggleEditingMode}
-        {...makeLinkProps(URLMap.main.href, URLMap.main.as, { page, orderType, orderBy, filter })}
+        href={URLMap.main.href}
+        as={URLMap.main.as}
+        query={{ page, orderType, orderBy, filter }}
       />
     );
   }

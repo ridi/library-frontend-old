@@ -24,9 +24,11 @@ import {
   unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getUnit, getTotalCount } from '../../services/purchased/hiddenUnit/selectors';
+import { getPageInfo as getHiddenPageInfo } from '../../services/purchased/hidden/selectors';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
+import { makeLinkProps } from '../../utils/uri';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -80,6 +82,7 @@ class HiddenUnit extends React.Component {
     await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
+
   constructor(props) {
     super(props);
 
@@ -127,6 +130,25 @@ class HiddenUnit extends React.Component {
         onClickSelectAllBooks={dispatchSelectAllBooks}
         onClickUnselectAllBooks={dispatchClearSelectedBooks}
         onClickSuccessButton={this.toggleEditingMode}
+      />
+    );
+  }
+
+  renderTitleBar() {
+    const {
+      unit,
+      totalCount,
+      hiddenPageInfo: { currentPage: page },
+    } = this.props;
+
+    return (
+      <LNBTitleBar
+        title={unit.title}
+        totalCount={totalCount.itemTotalCount}
+        onClickEditingMode={this.toggleEditingMode}
+        href={URLMap.hidden.href}
+        as={URLMap.hidden.as}
+        query={{ page }}
       />
     );
   }
@@ -188,23 +210,13 @@ class HiddenUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit, totalCount } = this.props;
+    const { unit } = this.props;
     return (
       <>
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
-        {isEditing ? (
-          this.renderToolBar()
-        ) : (
-          <LNBTitleBar
-            title={unit.title}
-            totalCount={totalCount.itemTotalCount}
-            onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.hidden.href}
-            as={URLMap.hidden.as}
-          />
-        )}
+        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -225,6 +237,7 @@ const mapStateToProps = state => {
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
+  const hiddenPageInfo = getHiddenPageInfo(state);
   return {
     pageInfo,
     items,
@@ -232,6 +245,8 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+
+    hiddenPageInfo,
   };
 };
 
