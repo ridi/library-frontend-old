@@ -88,7 +88,7 @@ export default class SearchBar extends React.Component {
           onFocus={() => this.setActivation(true)}
         />
         <IconButton
-          icon="check_4"
+          icon="close_2"
           a11y="검색어 제거"
           css={[styles.searchBarClearButton, keyword && styles.searchBarClearButtonActive]}
           onClick={this.handleOnClickCancel}

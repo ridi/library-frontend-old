@@ -34,14 +34,30 @@ export const searchBarInput = {
 export const searchBarClearButton = {
   display: 'none',
   position: 'absolute',
-  top: 0,
+  top: '50%',
   right: 0,
   width: 30,
   height: 30,
-  padding: 8,
-  '.RSGIcon': {
+  transform: 'translate3d(0, -50%, 0)',
+  '&::after, .RSGIcon': {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate3d(-50%, -50%, 0)',
+  },
+  '&::after': {
+    content: `''`,
+    borderRadius: '50%',
+    display: 'block',
     width: 14,
     height: 14,
+    background: '#9ea7ad',
+  },
+  '.RSGIcon': {
+    width: 6,
+    height: 6,
+    fill: 'white',
+    zIndex: 100,
   },
 };
 

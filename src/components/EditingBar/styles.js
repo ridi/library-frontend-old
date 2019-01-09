@@ -42,6 +42,7 @@ export const editingBarAllSelect = {
   fontSize: 15,
   color: 'white',
   padding: 8,
+  marginRight: 8,
 };
 
 export const editingBarCompleteButton = {

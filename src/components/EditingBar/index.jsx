@@ -31,7 +31,7 @@ class EditingBar extends React.Component {
             <Icon name="check_1" css={styles.editingBarIcon} />
             <p css={styles.editingBarSelectCount}>{totalSelectedCount}권 선택</p>
           </div>
-          <div css={styles.editingBarButtonWrapper}>
+          <div>
             {!isSelectedAllBooks || totalSelectedCount === 0 ? (
               <button type="button" css={styles.editingBarAllSelect} onClick={onClickSelectAllBooks}>
                 전체 선택
