@@ -33,7 +33,7 @@ import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/searchUnit/selectors';
-import { getPageInfo as getSearchPageInfo } from '../../services/purchased/search/selectors';
+import { getSearchPageInfo } from '../../services/purchased/search/selectors';
 
 const styles = {
   MainToolBarWrapper: css({
