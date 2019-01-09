@@ -1,13 +1,12 @@
 /** @jsx jsx */
+import { connect } from 'react-redux';
 import { jsx, css } from '@emotion/core';
-import Router from 'next/router';
-import shortid from 'shortid';
 
-import TabBar from '../../../components/TabBar';
-import TabItem from '../../../components/TabItem';
+import TabBar, { TabLinkItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
 
 import { URLMap } from '../../../constants/urls';
+import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 
 export const TabMenuTypes = {
   ALL_BOOKS: 'ALL BOOKS',
@@ -21,29 +20,30 @@ const styles = {
   }),
 };
 
-const TabMenus = [
-  {
-    type: TabMenuTypes.ALL_BOOKS,
-    name: '모든 책',
-    pathname: URLMap.main.as,
-  },
-];
-
-const LNBTabBar = ({ activeMenu }) => (
+const LNBTabBar = ({ activeMenu, mainPageInfo }) => (
   <nav css={styles.LNBTabBarWrapper}>
     <Responsive>
       <TabBar>
-        {TabMenus.map(menu => (
-          <TabItem
-            key={shortid.generate()}
-            name={menu.name}
-            isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
-            onClick={() => Router.push(menu.pathname)}
-          />
-        ))}
+        <TabLinkItem
+          name="모든 책"
+          isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
+          href={URLMap.main.href}
+          as={URLMap.main.as}
+          query={{
+            page: mainPageInfo.currentPage,
+            orderType: mainPageInfo.orderType,
+            orderBy: mainPageInfo.orderBy,
+            filter: mainPageInfo.filter,
+          }}
+        />
       </TabBar>
     </Responsive>
   </nav>
 );
 
-export default LNBTabBar;
+const mapStateToProps = state => {
+  const mainPageInfo = getMainPageInfo(state);
+  return { mainPageInfo };
+};
+
+export default connect(mapStateToProps)(LNBTabBar);

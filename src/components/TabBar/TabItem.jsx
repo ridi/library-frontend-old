@@ -1,5 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
+import Link from 'next/link';
+import { makeLinkProps } from '../../utils/uri';
 
 const styles = {
   tabItem: css({
@@ -32,7 +34,7 @@ const styles = {
   }),
 };
 
-const TabItem = ({ name, onClick, isActive }) => (
+export const TabItem = ({ name, onClick, isActive }) => (
   <li css={[styles.tabItem, isActive && styles.tabItemActive]}>
     <button type="button" onClick={onClick} css={styles.tabButton}>
       {name}
@@ -40,4 +42,12 @@ const TabItem = ({ name, onClick, isActive }) => (
   </li>
 );
 
-export default TabItem;
+export const TabLinkItem = ({ name, href, as, query, isActive }) => (
+  <li css={[styles.tabItem, isActive && styles.tabItemActive]}>
+    <Link {...makeLinkProps(href, as, query)}>
+      <a>
+        <div css={styles.tabButton}>{name}</div>
+      </a>
+    </Link>
+  </li>
+);
