@@ -12,41 +12,39 @@ const styles = {
     '&:first-of-type': {
       marginLeft: 0,
     },
-    '& button': {
-      color: '#808991',
-      fontSize: 16,
-      letterSpacing: -0.3,
-      textAlign: 'center',
-    },
-  }),
-  tabItemActive: css({
-    '& button': {
-      color: '#40474d',
-      fontWeight: 'bolder',
-      borderBottom: '3px solid #9ea7ad',
-    },
   }),
   tabButton: css({
     padding: 8,
     height: '100%',
     boxSizing: 'border-box',
     border: 0,
+
+    color: '#808991',
+    fontSize: 16,
+    letterSpacing: -0.3,
+    textAlign: 'center',
+  }),
+
+  tabButtonActive: css({
+    color: '#40474d',
+    fontWeight: 'bolder',
+    borderBottom: '3px solid #9ea7ad',
   }),
 };
 
 export const TabItem = ({ name, onClick, isActive }) => (
-  <li css={[styles.tabItem, isActive && styles.tabItemActive]}>
-    <button type="button" onClick={onClick} css={styles.tabButton}>
+  <li css={styles.tabItem}>
+    <button type="button" onClick={onClick} css={[styles.tabButton, isActive && styles.tabButtonActive]}>
       {name}
     </button>
   </li>
 );
 
 export const TabLinkItem = ({ name, href, as, query, isActive }) => (
-  <li css={[styles.tabItem, isActive && styles.tabItemActive]}>
+  <li css={styles.tabItem}>
     <Link {...makeLinkProps(href, as, query)}>
       <a>
-        <div css={styles.tabButton}>{name}</div>
+        <div css={[styles.tabButton, isActive && styles.tabButtonActive]}>{name}</div>
       </a>
     </Link>
   </li>
