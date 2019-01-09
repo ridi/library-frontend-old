@@ -29,6 +29,8 @@ import {
   getTotalCount,
   getIsFetchingBooks,
 } from '../../services/purchased/hidden/selectors';
+import { getPageInfo as getMainPageInfo } from '../../services/purchased/main/selectors';
+
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
@@ -104,6 +106,23 @@ class Hidden extends React.Component {
     );
   }
 
+  renderTitleBar() {
+    const {
+      totalCount,
+      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
+    } = this.props;
+    return (
+      <LNBTitleBar
+        title="숨긴 도서 목록"
+        totalCount={totalCount.itemTotalCount}
+        onClickEditingMode={this.toggleEditingMode}
+        href={URLMap.main.href}
+        as={URLMap.main.as}
+        query={{ page, orderType, orderBy, filter }}
+      />
+    );
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
@@ -168,24 +187,14 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, totalCount } = this.props;
+    const { isFetchingBooks } = this.props;
 
     return (
       <>
         <Head>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
-        {isEditing ? (
-          this.renderToolBar()
-        ) : (
-          <LNBTitleBar
-            title="숨긴 도서 목록"
-            totalCount={totalCount.itemTotalCount}
-            onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.main.href}
-            as={URLMap.main.as}
-          />
-        )}
+        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
@@ -206,6 +215,8 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const mainPageInfo = getMainPageInfo(state);
+
   return {
     pageInfo,
     items,
@@ -213,6 +224,8 @@ const mapStateToProps = state => {
     totalCount,
     selectedBooks,
     isFetchingBooks,
+
+    mainPageInfo,
   };
 };
 

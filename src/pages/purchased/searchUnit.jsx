@@ -9,7 +9,15 @@ import BookList from '../../components/BookList';
 import EmptyBookList from '../../components/EmptyBookList';
 import LibraryBook from '../../components/LibraryBook/index';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
-import { loadItems, setUnitId } from '../../services/purchased/searchUnit/actions';
+import {
+  loadItems,
+  setUnitId,
+  clearSelectedBooks,
+  downloadSelectedBooks,
+  hideSelectedBooks,
+  selectAllBooks,
+  toggleSelectBook,
+} from '../../services/purchased/searchUnit/actions';
 
 import { getBooks } from '../../services/book/selectors';
 
@@ -25,13 +33,7 @@ import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../services/purchased/searchUnit/selectors';
-import {
-  clearSelectedBooks,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  selectAllBooks,
-  toggleSelectBook,
-} from '../../services/purchased/searchUnit/actions';
+import { getSearchPageInfo } from '../../services/purchased/search/selectors';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -163,6 +165,26 @@ class searchUnit extends React.Component {
     );
   }
 
+  renderTitleBar() {
+    const {
+      unit,
+      totalCount,
+      pageInfo: { keyword },
+      searchPageInfo: { currentPage: page },
+    } = this.props;
+
+    return (
+      <LNBTitleBar
+        title={unit.title}
+        totalCount={totalCount.itemTotalCount}
+        onClickEditingMode={this.toggleEditingMode}
+        href={URLMap.search.href}
+        as={URLMap.search.as}
+        query={{ keyword, page }}
+      />
+    );
+  }
+
   renderModal() {
     const { showMoreModal } = this.state;
     const {
@@ -240,11 +262,7 @@ class searchUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const {
-      unit,
-      totalCount,
-      pageInfo: { keyword },
-    } = this.props;
+    const { unit } = this.props;
 
     if (!unit) {
       return null;
@@ -256,18 +274,7 @@ class searchUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {isEditing ? (
-          this.renderToolBar()
-        ) : (
-          <LNBTitleBar
-            title={unit.title}
-            totalCount={totalCount.itemTotalCount}
-            onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.search.href}
-            as={URLMap.search.as}
-            query={{ keyword }}
-          />
-        )}
+        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -290,6 +297,7 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const totalCount = getTotalCount(state);
 
+  const searchPageInfo = getSearchPageInfo(state);
   return {
     pageInfo,
     items,
@@ -297,6 +305,8 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+
+    searchPageInfo,
   };
 };
 
