@@ -7,9 +7,7 @@ import Paginator from './Paginator';
 
 const styles = {
   mobile: Object.assign(
-    {
-      border: '1px solid #d1d5d9',
-    },
+    {},
     Responsive.Mobile({
       display: 'block',
     }),
