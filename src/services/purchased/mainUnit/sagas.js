@@ -16,7 +16,7 @@ import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 
 import { toFlatten } from '../../../utils/array';
@@ -46,6 +46,8 @@ function* loadItems() {
     call(fetchMainUnitItems, unitId, orderType, orderBy, page),
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
+
+  yield call(saveUnitData, [itemResponse.unit]);
 
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');

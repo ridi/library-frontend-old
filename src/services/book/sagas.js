@@ -84,7 +84,7 @@ export function* extractUnitData(items) {
     type_int: item.unit_type_int,
   }));
 
-  yield call(saveUnitData(units));
+  yield call(saveUnitData, units);
 }
 
 export default function* bookRootSaga() {

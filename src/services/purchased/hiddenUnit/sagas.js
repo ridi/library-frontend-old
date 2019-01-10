@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import {
   DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
@@ -13,14 +14,13 @@ import {
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
-import { delay } from 'redux-saga';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -36,6 +36,8 @@ function* loadHiddenUnitItems() {
   const { page } = yield select(getOptions);
 
   const [itemResponse, countResponse] = yield all([call(fetchHiddenUnitItems, unitId, page), call(fetchHiddenUnitItemsTotalCount, unitId)]);
+
+  yield call(saveUnitData, [itemResponse.unit]);
 
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
