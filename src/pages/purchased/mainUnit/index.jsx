@@ -10,7 +10,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
-import { getBooks } from '../../../services/book/selectors';
+import { getBooks, getUnit } from '../../../services/book/selectors';
 
 import { toFlatten } from '../../../utils/array';
 import LNBTitleBar from '../../base/LNB/LNBTitleBar';
@@ -23,7 +23,7 @@ import IconButton from '../../../components/IconButton';
 import SortModal from '../../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import ModalBackground from '../../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../../services/purchased/mainUnit/selectors';
+import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnitId } from '../../../services/purchased/mainUnit/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
   loadItems,
@@ -288,8 +288,11 @@ class MainUnit extends React.Component {
 
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
+
+  const unitId = getUnitId(state);
+  const unit = getUnit(state, unitId);
+
   const items = getItemsByPage(state);
-  const unit = getUnit(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);

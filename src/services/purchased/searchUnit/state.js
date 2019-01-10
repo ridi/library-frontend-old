@@ -5,9 +5,7 @@ export const initialState = {
   keyword: null,
   data: {},
 
-  units: {},
   order: 0,
-
   selectedBooks: {},
 };
 

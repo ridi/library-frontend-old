@@ -2,7 +2,6 @@ import { initialState, initialDataState, getKey } from './state';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
-  SET_SEARCH_UNIT,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
   SET_SEARCH_UNIT_KEYWORD,
@@ -35,14 +34,6 @@ const searchUnitReducer = (state = initialState, action) => {
               [dataState.page]: toFlatten(action.payload.items, 'b_id'),
             },
           },
-        },
-      };
-    case SET_SEARCH_UNIT:
-      return {
-        ...state,
-        units: {
-          ...state.units,
-          [state.unitId]: action.payload.unit,
         },
       };
     case SET_SEARCH_UNIT_TOTAL_COUNT:

@@ -9,7 +9,6 @@ import {
   SET_MAIN_UNIT_TOTAL_COUNT,
   SELECT_MAIN_UNIT_BOOKS,
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
-  SET_MAIN_UNIT,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -62,14 +61,6 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
       return {
         ...state,
         unitId: action.payload.unitId,
-      };
-    case SET_MAIN_UNIT:
-      return {
-        ...state,
-        units: {
-          ...state.units,
-          [state.unitId]: action.payload.unit,
-        },
       };
     case SET_MAIN_UNIT_ORDER:
       return {

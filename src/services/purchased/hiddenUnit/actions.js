@@ -1,7 +1,6 @@
 export const LOAD_HIDDEN_UNIT_ITEMS = 'LOAD_HIDDEN_UNIT_ITEMS';
 
 export const SET_HIDDEN_UNIT_ITEMS = 'SET_HIDDEN_UNIT_ITEMS';
-export const SET_HIDDEN_UNIT = 'SET_HIDDEN_UNIT';
 export const SET_HIDDEN_UNIT_TOTAL_COUNT = 'SET_HIDDEN_UNIT_TOTAL_COUNT';
 export const SET_HIDDEN_UNIT_ID = 'SET_HIDDEN_UNIT_ID';
 export const SET_HIDDEN_UNIT_PAGE = 'SET_HIDDEN_UNIT_PAGE';
@@ -22,13 +21,6 @@ export const setItems = items => ({
   type: SET_HIDDEN_UNIT_ITEMS,
   payload: {
     items,
-  },
-});
-
-export const setUnit = unit => ({
-  type: SET_HIDDEN_UNIT,
-  payload: {
-    unit,
   },
 });
 
