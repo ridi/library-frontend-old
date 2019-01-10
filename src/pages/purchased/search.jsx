@@ -263,16 +263,14 @@ class Search extends React.Component {
     return (
       <>
         <Head>
-          <title>'{keyword}' 검색 결과 - 내 서재</title>
+          <title>{`'${keyword}'`} 검색 결과 - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderToolBar()}
         <main css={isFetchingBooks && styles.searchFetchingBooks}>
-          <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
-          </Responsive>
+          <Responsive>{this.renderBooks()}</Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );

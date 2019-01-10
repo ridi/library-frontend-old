@@ -1,3 +1,5 @@
+import { FOOTER_HEIGHT } from '../../pages/base/Footer/styles';
+
 const buttonHeight = 30;
 const wrapperStyle = {
   display: 'inline-block',
@@ -9,9 +11,16 @@ const wrapperStyle = {
   boxShadow: '0 1px 1px 0 rgba(206, 210, 214, 0.3)',
 };
 
+export const PAGINATOR_HEIGHT = 51;
+
 export const paginator = {
-  borderTop: '1px solid #d1d5d9',
-  padding: '9px 0',
+  position: 'absolute',
+  boxSizing: 'border-box',
+  left: 0,
+  bottom: FOOTER_HEIGHT,
+  width: '100%',
+  height: PAGINATOR_HEIGHT,
+  padding: '9px 0 0 0',
   textAlign: 'center',
   whiteSpace: 'nowrap',
 };

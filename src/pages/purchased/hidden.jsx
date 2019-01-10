@@ -196,11 +196,9 @@ class Hidden extends React.Component {
         </Head>
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
-          <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
-          </Responsive>
+          <Responsive>{this.renderBooks()}</Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );

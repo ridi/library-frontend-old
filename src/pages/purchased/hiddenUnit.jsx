@@ -28,7 +28,6 @@ import { getPageInfo as getHiddenPageInfo } from '../../services/purchased/hidde
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
-import { makeLinkProps } from '../../utils/uri';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -218,11 +217,9 @@ class HiddenUnit extends React.Component {
         </Head>
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
-          <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
-          </Responsive>
+          <Responsive>{this.renderBooks()}</Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );

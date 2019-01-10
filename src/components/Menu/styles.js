@@ -8,14 +8,13 @@ export const menuGroupTitle = {
   width: '100%',
   height: 16,
   fontSize: 13,
-  letterSpacing: -0.1,
   color: '#808991',
   padding: '16px 14px 2px 14px',
 };
 
 export const menuGroupList = {
   width: '100%',
-  padding: '0 4px',
+  padding: '4px 0',
 };
 
 export const menuGroupItemWrapper = {
