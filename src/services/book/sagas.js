@@ -5,7 +5,7 @@ import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage, setUn
 import { fetchBookData } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
-import { getCriterion } from '../../utils/ttl';
+import { getCriterion, attatchTTL } from '../../utils/ttl';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -31,9 +31,9 @@ export function* loadBookData(bookIds) {
   // Step 3. Fetch book data
   // Step 4. Set book data
   const criterion = getCriterion();
-  const existbooks = yield select(state => state.books.books);
+  const existBooks = yield select(state => state.books.books);
   const filteredBookIds = bookIds.reduce((previous, bookId) => {
-    const book = existbooks.find(bookId);
+    const book = existBooks.find(bookId);
 
     if (!book) {
       // 없거나
@@ -62,7 +62,24 @@ export function* extractUnitData(items) {
     type: item.unit_type,
     type_int: item.unit_type_int,
   }));
-  yield put(setUnitData(units));
+
+  const criterion = getCriterion();
+  const existUnits = yield select(state => state.books.units);
+  const filteredUnits = units.reduce((previous, unit) => {
+    const _unit = existUnits.find(unit.id);
+
+    if (!_unit) {
+      return [...previous, unit];
+    }
+
+    if (_unit.value.ttl <= criterion) {
+      return [...previous, unit];
+    }
+
+    return previous;
+  }, []);
+
+  yield put(setUnitData(attatchTTL(filteredUnits)));
   yield fork(persistBookDataToStorage);
 }
 
