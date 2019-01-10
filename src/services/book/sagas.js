@@ -1,24 +1,27 @@
 import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
-import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage } from './actions';
+import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage, setUnitData } from './actions';
 
 import { fetchBookData } from './requests';
 
-import Storage from '../../utils/storage';
+import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
   // Step 2. Save to storage.
   const books = yield select(state => state.books.books);
-  Storage.save(books.toJSON());
+  const units = yield select(state => state.books.units);
+  Storage.save(StorageKey.BOOKS, books.toJSON());
+  Storage.save(StorageKey.units, units.toJSON());
 }
 
 function* loadBookDataFromStorage() {
   // Step 1. Load book data from storage
   // Step 2. Set book data
-  const books = Storage.load();
-  yield put(setBookDataFromStorage(books));
+  const books = Storage.load(StorageKey.BOOKS);
+  const units = Storage.load(StorageKey.UNITS);
+  yield put(setBookDataFromStorage(books, units));
   yield fork(persistBookDataToStorage);
 }
 
