@@ -15,5 +15,5 @@ export const getBooks = (state, bookIds) =>
 export const getUnit = (state, unitId) =>
   createSelector(
     getBookState,
-    bookState => bookState.units[unitId],
+    bookState => bookState.units.get(unitId),
   )(state);

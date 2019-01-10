@@ -30,11 +30,8 @@ class LRUCache extends _LRUCache {
       return;
     }
 
-    entries.forEach(entry => {
-      if (!entry) {
-        return;
-      }
-
+    const _entries = entries.filter(value => value !== null && value !== undefined);
+    _entries.forEach(entry => {
       if (!this.oldest) {
         const _entry = makeEntry(entry.key, entry.value);
         this.oldest = _entry;
