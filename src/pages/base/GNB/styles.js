@@ -6,7 +6,7 @@ export const GNB = css([
   Responsive.Mobile({
     padding: '2px 0',
   }),
-  { background: 'white', borderBottom: '1px solid #f2f4f5' },
+  { background: 'white' },
 ]);
 
 export const flexWrapper = css({
@@ -38,10 +38,11 @@ export const familyServiceItem = css({
   position: 'relative',
   display: 'inline-block',
   fontSize: 0,
+  padding: '0 3px 0 0',
+});
+
+export const familyServiceItemSeparator = {
   padding: '0 2px',
-  '&:first-of-type': {
-    padding: '0 3px 0 0',
-  },
   '&::before': {
     content: `''`,
     display: 'block',
@@ -53,10 +54,7 @@ export const familyServiceItem = css({
     top: '50%',
     transform: 'translate3d(0, -50%, 0)',
   },
-  '&:first-of-type::before': {
-    display: 'none',
-  },
-});
+};
 
 export const familyServiceLink = css({
   display: 'inline-block',

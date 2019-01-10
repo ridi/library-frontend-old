@@ -13,7 +13,7 @@ const Footer = () => (
             뷰어 다운로드
           </a>
         </li>
-        <li css={styles.headlineItem}>
+        <li css={[styles.headlineItem, styles.headlineItemSeparator]}>
           <a css={styles.headlineLink} href="/guide">
             고객센터
           </a>
@@ -37,12 +37,12 @@ const Footer = () => (
             이용약관
           </a>
         </li>
-        <li css={styles.termsItem}>
+        <li css={[styles.termsItem, styles.tersItemSeparator]}>
           <a css={styles.termLink} href="https://ridibooks.com/legal/privacy" target="_blank" rel="noopener noreferrer">
             <strong>개인 정보 처리 방침</strong>
           </a>
         </li>
-        <li css={styles.termsItem}>
+        <li css={[styles.termsItem, styles.tersItemSeparator]}>
           <a css={styles.termLink} href="https://ridibooks.com/legal/youth" target="_blank" rel="noopener noreferrer">
             청소년 보호 정책
           </a>

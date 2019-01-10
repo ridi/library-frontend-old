@@ -38,8 +38,8 @@ class GNB extends React.Component {
     const { isModalActive } = this.state;
     return (
       <>
-        <header css={styles.GNB}>
-          <Responsive css={styles.flexWrapper}>
+        <Responsive css={styles.GNB}>
+          <header css={styles.flexWrapper}>
             <div>
               <h1 css={styles.title}>
                 <a css={styles.titleLink} href="/">
@@ -53,7 +53,7 @@ class GNB extends React.Component {
                     <span css={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
-                <li css={styles.familyServiceItem}>
+                <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
                   <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
                     <Icon css={styles.ridiSelectIcon} name="logo_ridiselect_1" />
                     <span css={Hidden}>RIDI Select</span>
@@ -73,8 +73,8 @@ class GNB extends React.Component {
               isExcelDownloading={isExcelDownloading}
               dispatchStartExcelDownload={dispatchStartExcelDownload}
             />
-          </Responsive>
-        </header>
+          </header>
+        </Responsive>
         <ModalBackground isActive={isModalActive} onClickModalBackground={this.onModalBackgroundClick} />
       </>
     );

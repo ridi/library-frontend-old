@@ -3,22 +3,22 @@ import Head from 'next/head';
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import Router from 'next/router';
 
-import BookList from '../../components/BookList';
-import EmptyBookList from '../../components/EmptyBookList';
-import LibraryBook from '../../components/LibraryBook';
-import IconButton from '../../components/IconButton';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
-import ModalBackground from '../../components/ModalBackground';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
-import Responsive from '../base/Responsive';
-import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
-import EditingBar from '../../components/EditingBar';
-import SearchBar from '../../components/SearchBar';
-import FilterModal from '../base/MainModal/FilterModal';
-import SortModal from '../base/MainModal/SortModal';
+import * as styles from './styles';
+import BookList from '../../../components/BookList';
+import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
+import ModalBackground from '../../../components/ModalBackground';
+import Responsive from '../../base/Responsive';
+import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import EditingBar from '../../../components/EditingBar';
+import ToolBar from '../../../components/ToolBar';
+import FilterModal from '../../base/MainModal/FilterModal';
+import SortModal from '../../base/MainModal/SortModal';
 
 import {
   clearSelectedBooks,
@@ -27,71 +27,22 @@ import {
   loadItems,
   selectAllBooks,
   toggleSelectBook,
-} from '../../services/purchased/main/actions';
+} from '../../../services/purchased/main/actions';
 
-import { getBooks } from '../../services/book/selectors';
+import { getBooks } from '../../../services/book/selectors';
 import {
   getFilterOptions,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getIsFetchingBooks,
-} from '../../services/purchased/main/selectors';
+} from '../../../services/purchased/main/selectors';
 
-import { toFlatten } from '../../utils/array';
-import { makeURI, makeLinkProps } from '../../utils/uri';
-import { MainOrderOptions } from '../../constants/orderOptions';
-import { URLMap } from '../../constants/urls';
-import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
-
-const styles = {
-  mainFetchingBooks: css({
-    backgroundColor: 'white',
-  }),
-  mainToolBarWrapper: css({
-    height: 46,
-    backgroundColor: '#f3f4f5',
-    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
-    boxSizing: 'border-box',
-    borderBottom: '1px solid #d1d5d9',
-  }),
-  mainToolBar: css({
-    display: 'flex',
-  }),
-  mainToolBarSearchBarWrapper: css({
-    padding: '8px 0',
-    height: 30,
-    flex: 1,
-    maxWidth: 600,
-  }),
-  mainToolBarSearchBarWrapperActive: css({
-    maxWidth: 'initial',
-  }),
-  mainToolBarToolsWrapper: css({
-    height: 30,
-    padding: '8px 0 8px 16px',
-    marginLeft: 'auto',
-  }),
-  mainToolBarIcon: css({
-    margin: '3px 0',
-    width: 24,
-    height: 24,
-    marginRight: 16,
-    '&:last-of-type': {
-      marginRight: 0,
-    },
-    '.RSGIcon': {
-      width: 24,
-      height: 24,
-    },
-  }),
-  mainButtonActionLeft: css({
-    float: 'left',
-  }),
-  mainButtonActionRight: css({
-    float: 'right',
-  }),
-};
+import { toFlatten } from '../../../utils/array';
+import { makeURI, makeLinkProps } from '../../../utils/uri';
+import { MainOrderOptions } from '../../../constants/orderOptions';
+import { URLMap } from '../../../constants/urls';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -174,35 +125,29 @@ class Main extends React.Component {
   renderToolBar() {
     const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-
-    if (isEditing) {
-      const selectedCount = Object.keys(selectedBooks).length;
-      const isSelectedAllBooks = selectedCount === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={selectedCount}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.mainToolBarWrapper}>
-        <Responsive css={styles.mainToolBar}>
-          <div css={[styles.mainToolBarSearchBarWrapper, hideTools && styles.mainToolBarSearchBarWrapperActive]}>
-            <SearchBar onSubmit={this.handleOnSubmitSearchBar} onFocus={this.handleOnFocusSearchBar} onBlur={this.handleOnBlurSearchBar} />
-          </div>
-          {hideTools ? null : (
-            <div css={styles.mainToolBarToolsWrapper}>
-              <IconButton icon="setting" a11y="필터" css={styles.mainToolBarIcon} onClick={this.toggleFilterModal} />
-              <IconButton icon="check_3" a11y="편집" css={styles.mainToolBarIcon} onClick={this.toggleEditingMode} />
-              <IconButton icon="check_1" a11y="정렬" css={styles.mainToolBarIcon} onClick={this.toggleMoreModal} />
-            </div>
-          )}
-        </Responsive>
+      <div css={styles.mainToolBar}>
+        <ToolBar
+          hideTools={hideTools}
+          handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
+          handleOnFocusSearchBar={this.handleOnFocusSearchBar}
+          handleOnBlurSearchBar={this.handleOnBlurSearchBar}
+          toggleFilterModal={this.toggleFilterModal}
+          toggleEditingMode={this.toggleEditingMode}
+          toggleMoreModal={this.toggleMoreModal}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
       </div>
     );
   }
@@ -306,10 +251,10 @@ class Main extends React.Component {
         <main css={isFetchingBooks && styles.mainFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
-            {this.renderPaginator()}
             {this.renderModal()}
           </Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
         {this.renderModalBackground()}
       </>

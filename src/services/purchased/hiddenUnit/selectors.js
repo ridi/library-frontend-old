@@ -57,7 +57,7 @@ export const getSelectedBooks = createSelector(
 
 export const getTotalCount = createSelector(
   getState,
-  state => {
-    return { itemTotalCount: state.itemTotalCount };
-  },
+  state => ({
+    itemTotalCount: state.itemTotalCount,
+  }),
 );

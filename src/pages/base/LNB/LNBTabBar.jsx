@@ -1,9 +1,8 @@
 /** @jsx jsx */
 import React from 'react';
-import { connect } from 'react-redux';
 import { jsx, css } from '@emotion/core';
 
-import { TabBar, TabLinkItem } from '../../../components/TabBar';
+import TabBar, { TabLinkItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
 
 import { URLMap } from '../../../constants/urls';
@@ -32,15 +31,13 @@ const TabMenus = [
 ];
 
 const LNBTabBar = ({ activeMenu }) => (
-  <nav css={styles.LNBTabBarWrapper}>
-    <Responsive>
-      <TabBar>
-        {TabMenus.map(menu => (
-          <TabLinkItem name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
-        ))}
-      </TabBar>
-    </Responsive>
-  </nav>
+  <Responsive css={styles.LNBTabBarWrapper}>
+    <TabBar>
+      {TabMenus.map(menu => (
+        <TabLinkItem name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
+      ))}
+    </TabBar>
+  </Responsive>
 );
 
 export default LNBTabBar;

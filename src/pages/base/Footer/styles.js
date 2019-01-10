@@ -1,24 +1,30 @@
-import { css } from '@emotion/core';
 import { maxWidthWrapper } from '../../../styles';
 
 export const FOOTER_HEIGHT = 254;
 
-export const footer = css({
+export const footer = {
+  width: '100%',
   height: FOOTER_HEIGHT,
   boxSizing: 'border-box',
   padding: '40px 0 0 0',
   textAlign: 'center',
   background: 'white',
-});
+  position: 'absolute',
+  left: 0,
+  bottom: 0,
+};
 
-export const contentsWrapper = css({
+export const contentsWrapper = {
   ...maxWidthWrapper,
-});
+};
 
-export const headlineItem = css({
+export const headlineItem = {
   position: 'relative',
   display: 'inline-block',
   padding: '0 7px 0 8px',
+};
+
+export const headlineItemSeparator = {
   '&::before': {
     content: `''`,
     display: 'block',
@@ -31,48 +37,48 @@ export const headlineItem = css({
     borderRadius: 3,
     background: '#b8bfc4',
   },
-  '&:first-of-type::before': {
-    display: 'none',
-  },
-});
+};
 
-export const headlineLink = css({
+export const headlineLink = {
   fontSize: 15,
   fontWeight: 900,
   color: '#40474d',
-});
+};
 
-export const ridibooksLogoIcon = css({
+export const ridibooksLogoIcon = {
   width: 16,
   height: 16,
   fill: '#1f8ce6',
   margin: '1px 6px 0 0',
   verticalAlign: 'top',
-});
+};
 
-export const bizInfoList = css({
+export const bizInfoList = {
   marginTop: 16,
-});
+};
 
-export const infoItem = css({
+export const infoItem = {
   fontSize: 11,
   lineHeight: '17px',
   color: '#9ea7ad',
   '.CompanyInfoList & ': {
     display: 'inline-block',
   },
-});
+};
 
-export const termsList = css({
+export const termsList = {
   marginTop: 20,
   fontSize: 0,
-});
+};
 
-export const termsItem = css({
+export const termsItem = {
   position: 'relative',
   display: 'inline-block',
   padding: '0 4px 0 5px',
   fontSize: 0,
+};
+
+export const tersItemSeparator = {
   '&::before': {
     content: `''`,
     position: 'absolute',
@@ -83,23 +89,20 @@ export const termsItem = css({
     height: 10,
     background: '#e6e8eb',
   },
-  '&:first-of-type::before': {
-    display: 'none',
-  },
-});
+};
 
-export const termLink = css({
+export const termLink = {
   display: 'block',
   fontSize: 11,
   height: 12,
   lineHeight: '12px',
   color: '#808991',
-});
+};
 
-export const copyright = css({
+export const copyright = {
   marginTop: 20,
   color: '#9ea7ad',
   fontSize: 14,
   height: 17,
   lineHeight: '17px',
-});
+};

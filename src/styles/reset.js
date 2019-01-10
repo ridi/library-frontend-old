@@ -48,7 +48,7 @@ export const resetLayout = {
   margin: 0,
 };
 
-export const reset = css({
+export const reset = {
   a: css([
     inheritFont,
     cursorPointer,
@@ -60,19 +60,7 @@ export const reset = css({
   ]),
   article: css([resetLayout]),
   aside: css([resetLayout]),
-  body: css([
-    resetLayout,
-    cursorDefault,
-    {
-      background: '#f3f4f5',
-    },
-    {
-      '&.focus-free *': {
-        outline: 'none',
-        WebkitTapHighlightColor: 'transparent',
-      },
-    },
-  ]),
+  body: css([resetLayout, cursorDefault]),
   button: css([cursorPointer, inheritFont, resetAppearance, resetLayout]),
   canvas: css([resetLayout]),
   dd: css([resetLayout]),
@@ -135,4 +123,4 @@ export const reset = css({
     border: 0,
     clip: 'rect(0, 0, 0, 0)',
   }),
-});
+};
