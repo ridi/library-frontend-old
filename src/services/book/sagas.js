@@ -13,7 +13,7 @@ function* persistBookDataToStorage() {
   const books = yield select(state => state.books.books);
   const units = yield select(state => state.books.units);
   Storage.save(StorageKey.BOOKS, books.toJSON());
-  Storage.save(StorageKey.units, units.toJSON());
+  Storage.save(StorageKey.UNITS, units.toJSON());
 }
 
 function* loadBookDataFromStorage() {
