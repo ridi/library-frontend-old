@@ -8,12 +8,14 @@ const beforeCreatingStore = (initialState, context) => {
   const newInitialState = {
     ...initialState,
     books: {
+      units: new LRUCache(200),
       books: new LRUCache(500),
     },
   };
 
   if (initialState.books) {
     newInitialState.books.books.assign(initialState.books.books);
+    newInitialState.books.units.assign(initialState.books.units);
   }
 
   if (context.isServer) {
