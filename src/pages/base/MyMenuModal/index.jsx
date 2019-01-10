@@ -10,7 +10,7 @@ import Review from '../../../svgs/Review.svg';
 import Spinner from '../../../svgs/Spinner.svg';
 
 const ExcelDownLoadButton = dispatchStartExcelDownload => (
-  <button css={styles.menuButton} onClick={() => dispatchStartExcelDownload()}>
+  <button type="button" css={styles.menuButton} onClick={() => dispatchStartExcelDownload()}>
     <Download css={styles.menuIcon} />
     구매 목록 엑셀 다운로드
   </button>
@@ -25,7 +25,7 @@ const ExcelDownLoadingButton = () => (
 const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelDownload }) => (
   <section css={styles.myMenuModal(isActive)}>
     <h2 css={Hidden}>마이메뉴</h2>
-    <div css={styles.menuItem}>
+    <div css={styles.menuList}>
       <p css={styles.userId}>
         <strong>{userId}</strong> 님
       </p>
@@ -46,7 +46,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ul css={styles.menuList}>
       <li css={styles.menuItem}>{isExcelDownloading ? ExcelDownLoadingButton() : ExcelDownLoadButton(dispatchStartExcelDownload)}</li>
     </ul>
-    <div css={styles.menuItem}>
+    <div css={styles.menuList}>
       <a css={styles.menuButton} href={config.LOGOUT_URL}>
         <Logout css={styles.menuIcon} />
         로그아웃

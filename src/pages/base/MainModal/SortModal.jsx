@@ -18,7 +18,7 @@ const SortModal = props => {
             key={shortid.generate()}
             title={option.title}
             showIcon={index === order}
-            icon="check_1"
+            icon="check_6"
             href={URLMap.main.href}
             as={URLMap.main.as}
             query={{
