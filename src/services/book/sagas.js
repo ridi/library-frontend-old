@@ -55,6 +55,17 @@ export function* loadBookData(bookIds) {
   }
 }
 
+export function* extractUnitData(items) {
+  const units = items.map(item => ({
+    id: item.unit_id,
+    title: item.unit_title,
+    type: item.unit_type,
+    type_int: item.unit_type_int,
+  }));
+  yield put(setUnitData(units));
+  yield fork(persistBookDataToStorage);
+}
+
 export default function* bookRootSaga() {
   yield all([takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage)]);
 }
