@@ -8,7 +8,7 @@ const beforeCreatingStore = (initialState, context) => {
   const newInitialState = {
     ...initialState,
     books: {
-      units: new LRUCache(200),
+      units: new LRUCache(500),
       books: new LRUCache(500),
     },
   };
