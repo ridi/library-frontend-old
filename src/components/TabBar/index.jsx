@@ -13,3 +13,4 @@ const TabBar = ({ children }) => (
   </nav>
 );
 export default TabBar;
+export { TabItem, TabLinkItem } from './TabItem';

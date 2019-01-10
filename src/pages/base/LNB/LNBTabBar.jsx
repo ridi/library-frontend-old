@@ -1,10 +1,8 @@
 /** @jsx jsx */
+import React from 'react';
 import { jsx, css } from '@emotion/core';
-import Router from 'next/router';
-import shortid from 'shortid';
 
-import TabBar from '../../../components/TabBar';
-import TabItem from '../../../components/TabItem';
+import TabBar, { TabLinkItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
 
 import { URLMap } from '../../../constants/urls';
@@ -25,7 +23,10 @@ const TabMenus = [
   {
     type: TabMenuTypes.ALL_BOOKS,
     name: '모든 책',
-    pathname: URLMap.main.as,
+    linkInfo: {
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+    },
   },
 ];
 
@@ -33,12 +34,7 @@ const LNBTabBar = ({ activeMenu }) => (
   <Responsive css={styles.LNBTabBarWrapper}>
     <TabBar>
       {TabMenus.map(menu => (
-        <TabItem
-          key={shortid.generate()}
-          name={menu.name}
-          isActive={activeMenu === TabMenuTypes.ALL_BOOKS}
-          onClick={() => Router.push(menu.pathname)}
-        />
+        <TabLinkItem name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
       ))}
     </TabBar>
   </Responsive>

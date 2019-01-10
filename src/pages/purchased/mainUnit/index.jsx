@@ -24,6 +24,7 @@ import SortModal from '../../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import ModalBackground from '../../../components/ModalBackground';
 import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnit } from '../../../services/purchased/mainUnit/selectors';
+import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
   loadItems,
   setUnitId,
@@ -161,6 +162,25 @@ class MainUnit extends React.Component {
     );
   }
 
+  renderTitleBar() {
+    const {
+      unit,
+      totalCount,
+      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
+    } = this.props;
+
+    return (
+      <LNBTitleBar
+        title={unit.title}
+        totalCount={totalCount.itemTotalCount}
+        onClickEditingMode={this.toggleEditingMode}
+        href={URLMap.main.href}
+        as={URLMap.main.as}
+        query={{ page, orderType, orderBy, filter }}
+      />
+    );
+  }
+
   renderModal() {
     const { showMoreModal } = this.state;
     const {
@@ -238,7 +258,7 @@ class MainUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit, totalCount } = this.props;
+    const { unit } = this.props;
 
     // TODO Unit 없을때 Spinner 혹은 Skeleton 노출
     if (!unit) {
@@ -251,17 +271,7 @@ class MainUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {isEditing ? (
-          this.renderToolBar()
-        ) : (
-          <LNBTitleBar
-            title={unit.title}
-            totalCount={totalCount.itemTotalCount}
-            onClickEditingMode={this.toggleEditingMode}
-            href={URLMap.main.href}
-            as={URLMap.main.as}
-          />
-        )}
+        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
             {this.renderBooks()}
@@ -284,6 +294,8 @@ const mapStateToProps = state => {
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
 
+  const mainPageInfo = getMainPageInfo(state);
+
   return {
     pageInfo,
     items,
@@ -291,6 +303,8 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+
+    mainPageInfo,
   };
 };
 
