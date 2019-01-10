@@ -55,14 +55,7 @@ export function* loadBookData(bookIds) {
   }
 }
 
-export function* extractUnitData(items) {
-  const units = items.map(item => ({
-    id: item.unit_id,
-    title: item.unit_title,
-    type: item.unit_type,
-    type_int: item.unit_type_int,
-  }));
-
+export function* saveUnitData(units) {
   const criterion = getCriterion();
   const existUnits = yield select(state => state.books.units);
   const filteredUnits = units.reduce((previous, unit) => {
@@ -81,6 +74,17 @@ export function* extractUnitData(items) {
 
   yield put(setUnitData(attatchTTL(filteredUnits)));
   yield fork(persistBookDataToStorage);
+}
+
+export function* extractUnitData(items) {
+  const units = items.map(item => ({
+    id: item.unit_id,
+    title: item.unit_title,
+    type: item.unit_type,
+    type_int: item.unit_type_int,
+  }));
+
+  yield call(saveUnitData(units));
 }
 
 export default function* bookRootSaga() {
