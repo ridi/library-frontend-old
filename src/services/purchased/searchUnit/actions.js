@@ -15,6 +15,8 @@ export const SET_SELECT_SEARCH_UNIT_BOOKS = 'SET_SELECT_SEARCH_UNIT_BOOKS';
 export const HIDE_SELECTED_SEARCH_UNIT_BOOKS = 'HIDE_SELECTED_SEARCH_UNIT_BOOKS';
 export const DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS';
 
+export const SET_IS_FETCHING_SEARCH_BOOK = 'SET_IS_FETCHING_SEARCH_BOOK';
+
 export const loadItems = () => ({
   type: LOAD_SEARCH_UNIT_ITEMS,
 });
@@ -89,4 +91,11 @@ export const hideSelectedBooks = () => ({
 
 export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
+});
+
+export const setIsFetchingSearchBook = isFetchingBook => ({
+  type: SET_IS_FETCHING_SEARCH_BOOK,
+  payload: {
+    isFetchingBook,
+  },
 });

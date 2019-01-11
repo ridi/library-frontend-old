@@ -7,6 +7,8 @@ export const initialState = {
 
   order: 0,
   selectedBooks: {},
+
+  isFetchingBook: false,
 };
 
 export const initialDataState = {

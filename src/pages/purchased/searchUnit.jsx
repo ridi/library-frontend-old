@@ -32,8 +32,16 @@ import IconButton from '../../components/IconButton';
 import SortModal from '../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import ModalBackground from '../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnitId } from '../../services/purchased/searchUnit/selectors';
+import {
+  getItemsByPage,
+  getPageInfo,
+  getSelectedBooks,
+  getTotalCount,
+  getUnitId,
+  getIsFetchingBook,
+} from '../../services/purchased/searchUnit/selectors';
 import { getSearchPageInfo } from '../../services/purchased/search/selectors';
+import SkeletonUnitSection from '../../components/Skeleton/SkeletonUnitSection';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -262,7 +270,7 @@ class searchUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit } = this.props;
+    const { unit, isFetchingBook } = this.props;
 
     return (
       <>
@@ -273,9 +281,15 @@ class searchUnit extends React.Component {
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
-            {this.renderModal()}
+            {isFetchingBook ? (
+              <SkeletonUnitSection />
+            ) : (
+              <>
+                {this.renderBooks()}
+                {this.renderPaginator()}
+                {this.renderModal()}
+              </>
+            )}
           </Responsive>
         </main>
         {this.renderBottomActionBar()}
@@ -296,6 +310,8 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const totalCount = getTotalCount(state);
 
+  const isFetchingBook = getIsFetchingBook(state);
+
   const searchPageInfo = getSearchPageInfo(state);
   return {
     pageInfo,
@@ -304,6 +320,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+    isFetchingBook,
 
     searchPageInfo,
   };

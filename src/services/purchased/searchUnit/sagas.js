@@ -11,6 +11,7 @@ import {
   setTotalCount,
   selectBooks,
   setKeyword,
+  setIsFetchingSearchBook,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
@@ -42,6 +43,7 @@ function* loadItems() {
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsFetchingSearchBook(true));
   const [itemResponse, countResponse] = yield all([
     call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
     call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
@@ -52,8 +54,9 @@ function* loadItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+
+  yield put(setIsFetchingSearchBook(false));
 }
 
 function* hideSelectedBooks() {

@@ -79,3 +79,8 @@ export const getTotalCount = createSelector(
   getDataState,
   dataState => ({ itemTotalCount: dataState.itemTotalCount }),
 );
+
+export const getIsFetchingBook = createSelector(
+  getState,
+  state => state.isFetchingBook,
+);

@@ -10,6 +10,7 @@ import {
   SET_SEARCH_UNIT_TOTAL_COUNT,
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
+  SET_IS_FETCHING_SEARCH_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -97,6 +98,11 @@ const searchUnitReducer = (state = initialState, action) => {
           previous[bookId] = 1;
           return previous;
         }, {}),
+      };
+    case SET_IS_FETCHING_SEARCH_BOOK:
+      return {
+        ...state,
+        isFetchingBook: action.payload.isFetchingBook,
       };
     default:
       return state;
