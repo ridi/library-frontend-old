@@ -6,4 +6,5 @@ export const initialState = {
   itemTotalCount: 0,
 
   selectedBooks: {},
+  isFetchingBook: false,
 };

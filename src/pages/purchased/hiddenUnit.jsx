@@ -23,11 +23,19 @@ import {
   toggleSelectBook,
   unhideSelectedBooks,
 } from '../../services/purchased/hiddenUnit/actions';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnitId } from '../../services/purchased/hiddenUnit/selectors';
+import {
+  getItemsByPage,
+  getPageInfo,
+  getSelectedBooks,
+  getTotalCount,
+  getUnitId,
+  getIsFetchingBook,
+} from '../../services/purchased/hiddenUnit/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../services/purchased/hidden/selectors';
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
+import SkeletonUnitSection from '../../components/Skeleton/SkeletonUnitSection';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -209,7 +217,7 @@ class HiddenUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit } = this.props;
+    const { unit, isFetchingBook } = this.props;
     return (
       <>
         <Head>
@@ -218,8 +226,14 @@ class HiddenUnit extends React.Component {
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
+            {isFetchingBook ? (
+              <SkeletonUnitSection />
+            ) : (
+              <>
+                {this.renderBooks()}
+                {this.renderPaginator()}
+              </>
+            )}
           </Responsive>
         </main>
         {this.renderBottomActionBar()}
@@ -238,6 +252,7 @@ const mapStateToProps = state => {
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
+  const isFetchingBook = getIsFetchingBook(state);
 
   const hiddenPageInfo = getHiddenPageInfo(state);
   return {
@@ -247,6 +262,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+    isFetchingBook,
 
     hiddenPageInfo,
   };

@@ -56,3 +56,8 @@ export const getTotalCount = createSelector(
     itemTotalCount: state.itemTotalCount,
   }),
 );
+
+export const getIsFetchingBook = createSelector(
+  getState,
+  state => state.isFetchingBook,
+);

@@ -10,6 +10,7 @@ import {
   setTotalCount,
   selectBooks,
   UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
+  setIsFetchingHiddenBook,
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
 
@@ -34,6 +35,7 @@ function* loadHiddenUnitItems() {
   const unitId = yield select(getUnitId);
   const { page } = yield select(getOptions);
 
+  yield put(setIsFetchingHiddenBook(true));
   const [itemResponse, countResponse] = yield all([call(fetchHiddenUnitItems, unitId, page), call(fetchHiddenUnitItemsTotalCount, unitId)]);
 
   yield call(saveUnitData, [itemResponse.unit]);
@@ -41,8 +43,9 @@ function* loadHiddenUnitItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+
+  yield put(setIsFetchingHiddenBook(false));
 }
 
 function* unhideSelectedHiddenUnitBooks() {

@@ -13,6 +13,8 @@ export const CLEAR_SELECTED_HIDDEN_UNIT_BOOKS = 'CLEAR_SELECTED_HIDDEN_UNIT_BOOK
 export const UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS = 'UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS';
 export const DELETE_SELECTED_HIDDEN_UNIT_BOOKS = 'DELETE_SELECTED_HIDDEN_UNIT_BOOKS';
 
+export const SET_IS_FETCHING_HIDDEN_BOOK = 'SET_IS_FETCHING_HIDDEN_BOOK';
+
 export const loadItems = () => ({
   type: LOAD_HIDDEN_UNIT_ITEMS,
 });
@@ -73,4 +75,11 @@ export const unhideSelectedBooks = () => ({
 
 export const deleteSelectedBooks = () => ({
   type: DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
+});
+
+export const setIsFetchingHiddenBook = isFetchingBook => ({
+  type: SET_IS_FETCHING_HIDDEN_BOOK,
+  payload: {
+    isFetchingBook,
+  },
 });
