@@ -23,7 +23,7 @@ import { toFlatten } from '../../../utils/array';
 import { getQuery } from '../../router/selectors';
 import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './selectors';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
 
@@ -51,10 +51,11 @@ function* loadMainItems() {
     call(fetchPurchaseCategories),
   ]);
 
+  yield call(extractUnitData, itemResponse.items);
+
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-
   yield all([
     put(setItems(itemResponse.items)),
     put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),

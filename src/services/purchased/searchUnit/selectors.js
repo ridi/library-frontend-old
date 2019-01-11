@@ -21,11 +21,6 @@ export const getItemsByPage = createSelector(
   },
 );
 
-export const getUnit = createSelector(
-  getState,
-  state => state.units[state.unitId],
-);
-
 export const getPageInfo = createSelector(
   [getState, getDataState],
   (state, dataState) => {
@@ -83,4 +78,9 @@ export const getSelectedBooks = createSelector(
 export const getTotalCount = createSelector(
   getDataState,
   dataState => ({ itemTotalCount: dataState.itemTotalCount }),
+);
+
+export const getIsFetchingBook = createSelector(
+  getState,
+  state => state.isFetchingBook,
 );

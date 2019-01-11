@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import {
   DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
@@ -9,18 +10,17 @@ import {
   setTotalCount,
   selectBooks,
   UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
-  setUnit,
+  setIsFetchingHiddenBook,
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
-import { delay } from 'redux-saga';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -35,13 +35,17 @@ function* loadHiddenUnitItems() {
   const unitId = yield select(getUnitId);
   const { page } = yield select(getOptions);
 
+  yield put(setIsFetchingHiddenBook(true));
   const [itemResponse, countResponse] = yield all([call(fetchHiddenUnitItems, unitId, page), call(fetchHiddenUnitItemsTotalCount, unitId)]);
+
+  yield call(saveUnitData, [itemResponse.unit]);
 
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
 
-  yield all([put(setItems(itemResponse.items)), put(setUnit(itemResponse.unit)), put(setTotalCount(countResponse.item_total_count))]);
+  yield put(setIsFetchingHiddenBook(false));
 }
 
 function* unhideSelectedHiddenUnitBooks() {

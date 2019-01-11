@@ -24,7 +24,7 @@ import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './select
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
 import { download, getBookIdsByUnitIds } from '../../common/sagas';
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, extractUnitData } from '../../book/sagas';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -41,6 +41,8 @@ function* loadPage() {
 
   yield put(setSearchIsFetchingBooks(true));
   const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
+
+  yield call(extractUnitData, itemResponse.items);
 
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);

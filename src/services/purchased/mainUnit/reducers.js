@@ -9,7 +9,7 @@ import {
   SET_MAIN_UNIT_TOTAL_COUNT,
   SELECT_MAIN_UNIT_BOOKS,
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
-  SET_MAIN_UNIT,
+  SET_IS_FETCHING_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -63,14 +63,6 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
         ...state,
         unitId: action.payload.unitId,
       };
-    case SET_MAIN_UNIT:
-      return {
-        ...state,
-        units: {
-          ...state.units,
-          [state.unitId]: action.payload.unit,
-        },
-      };
     case SET_MAIN_UNIT_ORDER:
       return {
         ...state,
@@ -100,6 +92,11 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
           previous[bookId] = 1;
           return previous;
         }, {}),
+      };
+    case SET_IS_FETCHING_BOOK:
+      return {
+        ...state,
+        isFetchingBook: action.payload.isFetchingBook,
       };
     default:
       return state;

@@ -10,13 +10,13 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
-  setUnit,
+  setIsFetchingBook,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 
 import { toFlatten } from '../../../utils/array';
@@ -42,16 +42,20 @@ function* loadItems() {
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsFetchingBook(true));
   const [itemResponse, countResponse] = yield all([
     call(fetchMainUnitItems, unitId, orderType, orderBy, page),
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
+  yield call(saveUnitData, [itemResponse.unit]);
+
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([put(setItems(itemResponse.items)), put(setUnit(itemResponse.unit)), put(setTotalCount(countResponse.item_total_count))]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+  yield put(setIsFetchingBook(false));
 }
 
 function* hideSelectedBooks() {

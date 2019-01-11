@@ -20,3 +20,11 @@ export const getCriterion = (offsetMins = _DEFAULT_OFFSET_MINS) => {
   now.setMinutes(now.getMinutes() - offsetMins);
   return parseInt(now.getTime() / 1000, 10);
 };
+
+export const attatchTTL = items => {
+  const ttl = makeTTL();
+  return items.map(item => {
+    item.ttl = ttl;
+    return item;
+  });
+};
