@@ -286,12 +286,12 @@ class searchUnit extends React.Component {
             ) : (
               <>
                 {this.renderBooks()}
-                {this.renderPaginator()}
                 {this.renderModal()}
               </>
             )}
           </Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
         {this.renderModalBackground()}
       </>

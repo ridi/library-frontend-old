@@ -1,52 +1,44 @@
-import { css } from '@emotion/core';
-
-export const menuGroup = css({
+export const menuGroup = {
   width: '100%',
   backgroundColor: '#ffffff',
   borderBottom: '1px solid #e6e8eb',
-});
+};
 
-export const menuGroupTitle = css({
+export const menuGroupTitle = {
   width: '100%',
   height: 16,
-
   fontSize: 13,
-  letterSpacing: -0.1,
   color: '#808991',
-  padding: '16px 14px 8px 14px',
-});
+  padding: '16px 14px 2px 14px',
+};
 
-export const menuGroupList = css({
+export const menuGroupList = {
   width: '100%',
-});
+  padding: '4px 0',
+};
 
-export const menuGroupItemWrapper = css({
+export const menuGroupItemWrapper = {
   width: '100%',
-  height: 40,
-});
+};
 
-export const menuGroupItem = css({
-  width: '100%',
-  height: '100%',
-
+export const menuGroupItem = {
+  display: 'block',
   position: 'relative',
-  padding: '11px 11px 10px 42px',
+  padding: '10px 11px 10px 42px',
+};
 
-  textAlign: 'left',
-});
-
-export const menuGroupItemTitle = css({
+export const menuGroupItemTitle = {
   fontSize: 15,
   letterSpacing: -0.3,
   color: '#40474d',
-});
+};
 
-export const menuGroupItemIcon = css({
+export const menuGroupItemIcon = {
   position: 'absolute',
-  width: 20,
-  height: 20,
+  width: 15,
+  height: 15,
   left: 14,
   top: '50%',
   transform: 'translate3d(0, -50%, 0)',
-  fill: '#9ea7ad',
-});
+  fill: '#339cf2',
+};

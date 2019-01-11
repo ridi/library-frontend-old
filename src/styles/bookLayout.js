@@ -7,7 +7,7 @@ export const bookListStyle = css({
   flexWrap: 'wrap',
   flexDirection: 'row',
   justifyContent: 'left',
-
+  paddingBottom: 26,
   margin: '0 auto',
   boxSizing: 'border-box',
 

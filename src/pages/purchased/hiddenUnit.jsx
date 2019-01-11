@@ -225,17 +225,9 @@ class HiddenUnit extends React.Component {
         </Head>
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
-          <Responsive>
-            {isFetchingBook ? (
-              <SkeletonUnitSection />
-            ) : (
-              <>
-                {this.renderBooks()}
-                {this.renderPaginator()}
-              </>
-            )}
-          </Responsive>
+          <Responsive>{isFetchingBook ? <SkeletonUnitSection /> : this.renderBooks()}</Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
