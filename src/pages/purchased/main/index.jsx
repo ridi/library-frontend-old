@@ -12,7 +12,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import ModalBackground from '../../../components/ModalBackground';
+import { ModalBackground } from '../../../components/Modal';
 import Responsive from '../../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import EditingBar from '../../../components/EditingBar';

@@ -61,3 +61,33 @@ export const icon = {
   transform: 'translate3d(0, -50%, 0)',
   fill: '#9ea7ad',
 };
+
+export const modalBackground = isActive => {
+  const active = isActive ? { pointerEvents: 'initial', zIndex: 9000 } : {};
+
+  return {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: -9999,
+    ...active,
+  };
+};
+
+export const transparentCloseButtonContainer = {
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+};
+
+export const transparentCloseButton = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent',
+};

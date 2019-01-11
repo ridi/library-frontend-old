@@ -22,7 +22,7 @@ import EditingBar from '../../../components/EditingBar';
 import IconButton from '../../../components/IconButton';
 import SortModal from '../../base/Modal/SortModal';
 import { MainOrderOptions } from '../../../constants/orderOptions';
-import ModalBackground from '../../../components/ModalBackground';
+import { ModalBackground } from '../../../components/Modal';
 import {
   getItemsByPage,
   getPageInfo,
