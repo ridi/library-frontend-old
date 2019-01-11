@@ -2,12 +2,11 @@ import { concat } from '../../../utils/array';
 
 export const initialState = {
   unitId: null,
-  order: 0,
-
   data: {},
-  units: {},
 
+  order: 0,
   selectedBooks: {},
+  isFetchingBook: false,
 };
 
 export const initialDataState = {

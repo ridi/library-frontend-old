@@ -13,7 +13,7 @@ import {
   setHiddenIsFetchingBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, extractUnitData } from '../../book/sagas';
 import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
 import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
@@ -36,10 +36,11 @@ function* loadItems() {
   yield put(setHiddenIsFetchingBooks(true));
   const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
 
+  yield call(extractUnitData, itemResponse.items);
+
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
   yield put(setHiddenIsFetchingBooks(false));
 }

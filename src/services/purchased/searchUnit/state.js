@@ -5,10 +5,10 @@ export const initialState = {
   keyword: null,
   data: {},
 
-  units: {},
   order: 0,
-
   selectedBooks: {},
+
+  isFetchingBook: false,
 };
 
 export const initialDataState = {

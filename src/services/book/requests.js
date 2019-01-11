@@ -3,7 +3,7 @@ import { getAPI } from '../../api/actions';
 
 import config from '../../config';
 
-import { makeTTL } from '../../utils/ttl';
+import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
 
 const _reduceBooks = books => {
@@ -24,16 +24,8 @@ const _reduceBooks = books => {
   return reducedBooks;
 };
 
-const _attatchTTL = books => {
-  const ttl = makeTTL();
-  return books.map(book => {
-    book.ttl = ttl;
-    return book;
-  });
-};
-
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
-  return _attatchTTL(_reduceBooks(response.data));
+  return attatchTTL(_reduceBooks(response.data));
 }

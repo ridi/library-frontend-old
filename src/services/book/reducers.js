@@ -1,6 +1,6 @@
-import { SET_BOOK_DATA, SET_BOOK_DATA_FROM_STORAGE } from './actions';
+import { SET_BOOK_DATA, SET_BOOK_DATA_FROM_STORAGE, SET_UNIT_DATA } from './actions';
 
-const makeEntries = books => books.map(book => ({ key: book.id, value: book }));
+const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
 const compareWithTTL = (oldValue, newValue) => oldValue.ttl < newValue.ttl;
 
 const bookReducer = (state = {}, action) => {
@@ -8,8 +8,12 @@ const bookReducer = (state = {}, action) => {
     case SET_BOOK_DATA:
       state.books.merge(makeEntries(action.payload.books), compareWithTTL);
       return state;
+    case SET_UNIT_DATA:
+      state.units.merge(makeEntries(action.payload.units), compareWithTTL);
+      return state;
     case SET_BOOK_DATA_FROM_STORAGE:
       state.books.assign(action.payload.books, compareWithTTL, true);
+      state.units.assign(action.payload.units, compareWithTTL, true);
       return state;
     default:
       return state;

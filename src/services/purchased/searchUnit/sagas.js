@@ -10,19 +10,18 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
-  setUnit,
   setKeyword,
+  setIsFetchingSearchBook,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getItemsByPage, getSelectedBooks } from './selectors';
 import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';
@@ -44,16 +43,20 @@ function* loadItems() {
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsFetchingSearchBook(true));
   const [itemResponse, countResponse] = yield all([
     call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
     call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
+  yield call(saveUnitData, [itemResponse.unit]);
+
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
 
-  yield all([put(setItems(itemResponse.items)), put(setUnit(itemResponse.unit)), put(setTotalCount(countResponse.item_total_count))]);
+  yield put(setIsFetchingSearchBook(false));
 }
 
 function* hideSelectedBooks() {

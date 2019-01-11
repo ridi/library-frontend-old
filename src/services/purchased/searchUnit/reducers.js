@@ -2,7 +2,6 @@ import { initialState, initialDataState, getKey } from './state';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
-  SET_SEARCH_UNIT,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
   SET_SEARCH_UNIT_KEYWORD,
@@ -11,6 +10,7 @@ import {
   SET_SEARCH_UNIT_TOTAL_COUNT,
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
+  SET_IS_FETCHING_SEARCH_BOOK,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -35,14 +35,6 @@ const searchUnitReducer = (state = initialState, action) => {
               [dataState.page]: toFlatten(action.payload.items, 'b_id'),
             },
           },
-        },
-      };
-    case SET_SEARCH_UNIT:
-      return {
-        ...state,
-        units: {
-          ...state.units,
-          [state.unitId]: action.payload.unit,
         },
       };
     case SET_SEARCH_UNIT_TOTAL_COUNT:
@@ -106,6 +98,11 @@ const searchUnitReducer = (state = initialState, action) => {
           previous[bookId] = 1;
           return previous;
         }, {}),
+      };
+    case SET_IS_FETCHING_SEARCH_BOOK:
+      return {
+        ...state,
+        isFetchingBook: action.payload.isFetchingBook,
       };
     default:
       return state;
