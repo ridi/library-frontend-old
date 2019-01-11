@@ -1,62 +1,57 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import config from '../../../config';
-import * as styles from './styles';
-import { Hidden } from '../../../styles';
 import Download from '../../../svgs/Download.svg';
 import Logout from '../../../svgs/Logout.svg';
 import Note from '../../../svgs/Note.svg';
 import Review from '../../../svgs/Review.svg';
-import Spinner from '../../../svgs/Spinner.svg';
+import { Modal, ModalItemGroup, ModalButtonItem, ModalAnchorItem } from '../../../components/Modal';
 
-const ExcelDownLoadButton = dispatchStartExcelDownload => (
-  <button type="button" css={styles.menuButton} onClick={() => dispatchStartExcelDownload()}>
-    <Download css={styles.menuIcon} />
-    구매 목록 엑셀 다운로드
-  </button>
-);
-
-const ExcelDownLoadingButton = () => (
-  <span css={styles.menuButton}>
-    <Spinner css={styles.excelDownloading} />
-  </span>
-);
+const userIdStyle = {
+  padding: '11px 14px 10px 14px',
+  fontSize: 15,
+  color: '#40474d',
+};
 
 const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelDownload }) => (
-  <section css={styles.myMenuModal(isActive)}>
-    <h2 css={Hidden}>마이메뉴</h2>
-    <div css={styles.menuList}>
-      <p css={styles.userId}>
+  <Modal
+    isActive={isActive}
+    a11y="마이메뉴"
+    style={{
+      top: 47,
+    }}
+  >
+    <ModalItemGroup>
+      <p css={userIdStyle}>
         <strong>{userId}</strong> 님
       </p>
-    </div>
-    <div css={styles.menuList}>
+    </ModalItemGroup>
+    <ModalItemGroup>
       <ul>
         <li>
-          <a css={styles.menuButton} target="_blank" rel="noopener noreferrer" href={config.READING_NOTE_URL}>
-            <Note css={styles.menuIcon} />
-            독서노트
-          </a>
+          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.READING_NOTE_URL} isOuterLink />
         </li>
         <li>
-          <a css={styles.menuButton} target="_blank" rel="noopener noreferrer" href={config.REVIEW_URL}>
-            <Review css={styles.menuIcon} />내 리뷰 관리
-          </a>
+          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.REVIEW_URL} isOuterLink />
         </li>
       </ul>
-    </div>
-    <div css={styles.menuList}>
+    </ModalItemGroup>
+    <ModalItemGroup>
       <ul>
-        <li>{isExcelDownloading ? ExcelDownLoadingButton() : ExcelDownLoadButton(dispatchStartExcelDownload)}</li>
+        <li>
+          <ModalButtonItem
+            title="구매 목록 엑셀 다운로드"
+            IconComponent={Download}
+            onClick={() => dispatchStartExcelDownload()}
+            showSpinner={isExcelDownloading}
+          />
+        </li>
       </ul>
-    </div>
-    <div css={styles.menuList}>
-      <a css={styles.menuButton} href={config.LOGOUT_URL}>
-        <Logout css={styles.menuIcon} />
-        로그아웃
-      </a>
-    </div>
-  </section>
+    </ModalItemGroup>
+    <ModalItemGroup>
+      <ModalAnchorItem title="로그아웃" IconComponent={Logout} href={config.LOGOUT_URL} />
+    </ModalItemGroup>
+  </Modal>
 );
 
 export default MyMenuModal;
