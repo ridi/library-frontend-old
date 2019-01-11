@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import React from 'react';
 import { jsx, css } from '@emotion/core';
 
 import TabBar, { TabLinkItem } from '../../../components/TabBar';

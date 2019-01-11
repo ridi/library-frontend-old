@@ -20,7 +20,7 @@ import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EditingBar from '../../../components/EditingBar';
 import IconButton from '../../../components/IconButton';
-import SortModal from '../../base/MainModal/SortModal';
+import SortModal from '../../base/Modal/SortModal';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import ModalBackground from '../../../components/ModalBackground';
 import {

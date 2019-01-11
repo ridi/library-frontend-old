@@ -17,8 +17,8 @@ import Responsive from '../../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import EditingBar from '../../../components/EditingBar';
 import ToolBar from '../../../components/ToolBar';
-import FilterModal from '../../base/MainModal/FilterModal';
-import SortModal from '../../base/MainModal/SortModal';
+import FilterModal from '../../base/Modal/FilterModal';
+import SortModal from '../../base/Modal/SortModal';
 
 import {
   clearSelectedBooks,
