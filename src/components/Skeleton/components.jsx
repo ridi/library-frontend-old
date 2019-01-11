@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import classname from 'classnames';
 import { Responsive } from '../../styles/responsive';
 
 const styles = {
@@ -40,6 +39,7 @@ const styles = {
 
   textRow: css({
     height: 20,
+    width: 320,
 
     ...Responsive.W834({
       width: 400,
@@ -51,7 +51,7 @@ const styles = {
   }),
 
   boldTextRow: css({
-    width: 320,
+    width: 300,
     height: 24,
 
     ...Responsive.W834({
@@ -64,10 +64,10 @@ const styles = {
   }),
 };
 
-export const SkeletonBook = () => <div css={classname([styles.skeleton, styles.book])} />;
+export const SkeletonBook = () => <div css={[styles.skeleton, styles.book]} />;
 
-export const SkeletonUnitBook = () => <div css={classname([styles.skeleton, styles.unitBook])} />;
+export const SkeletonUnitBook = () => <div css={[styles.skeleton, styles.unitBook]} />;
 
-export const SkeletonThinTextRow = () => <div css={classname([styles.skeleton, styles.thinTextRow])} />;
-export const SkeletonTextRow = () => <div css={classname([styles.skeleton, styles.textRow])} />;
-export const SkeletonBoldTextRow = () => <div css={classname([styles.skeleton, styles.boldTextRow])} />;
+export const SkeletonThinTextRow = ({ style }) => <div css={[styles.skeleton, styles.thinTextRow, style]} />;
+export const SkeletonTextRow = ({ style }) => <div css={[styles.skeleton, styles.textRow, style]} />;
+export const SkeletonBoldTextRow = ({ style }) => <div css={[styles.skeleton, styles.boldTextRow, style]} />;
