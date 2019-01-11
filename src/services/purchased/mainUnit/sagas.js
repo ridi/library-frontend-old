@@ -10,6 +10,7 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
+  setIsFetchingBook,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
 
@@ -41,6 +42,7 @@ function* loadItems() {
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsFetchingBook(true));
   const [itemResponse, countResponse] = yield all([
     call(fetchMainUnitItems, unitId, orderType, orderBy, page),
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
@@ -53,6 +55,7 @@ function* loadItems() {
   yield call(loadBookData, bookIds);
 
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+  yield put(setIsFetchingBook(false));
 }
 
 function* hideSelectedBooks() {

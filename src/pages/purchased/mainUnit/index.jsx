@@ -23,7 +23,14 @@ import IconButton from '../../../components/IconButton';
 import SortModal from '../../base/MainModal/SortModal';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import ModalBackground from '../../../components/ModalBackground';
-import { getItemsByPage, getPageInfo, getSelectedBooks, getTotalCount, getUnitId } from '../../../services/purchased/mainUnit/selectors';
+import {
+  getItemsByPage,
+  getPageInfo,
+  getSelectedBooks,
+  getTotalCount,
+  getUnitId,
+  getIsFetchingBook,
+} from '../../../services/purchased/mainUnit/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
   loadItems,
@@ -34,6 +41,7 @@ import {
   selectAllBooks,
   toggleSelectBook,
 } from '../../../services/purchased/mainUnit/actions';
+import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -258,7 +266,7 @@ class MainUnit extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { unit } = this.props;
+    const { unit, isFetchingBook } = this.props;
 
     return (
       <>
@@ -269,9 +277,15 @@ class MainUnit extends React.Component {
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
           <Responsive>
-            {this.renderBooks()}
-            {this.renderPaginator()}
-            {this.renderModal()}
+            {isFetchingBook ? (
+              <SkeletonUnitSection />
+            ) : (
+              <>
+                {this.renderBooks()}
+                {this.renderPaginator()}
+                {this.renderModal()}
+              </>
+            )}
           </Responsive>
         </main>
         {this.renderBottomActionBar()}
@@ -291,6 +305,7 @@ const mapStateToProps = state => {
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
+  const isFetchingBook = getIsFetchingBook(state);
 
   const mainPageInfo = getMainPageInfo(state);
 
@@ -301,6 +316,7 @@ const mapStateToProps = state => {
     books,
     totalCount,
     selectedBooks,
+    isFetchingBook,
 
     mainPageInfo,
   };
