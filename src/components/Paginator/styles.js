@@ -9,6 +9,7 @@ const wrapperStyle = {
   overflow: 'hidden',
   borderRadius: '3px',
   boxShadow: '0 1px 1px 0 rgba(206, 210, 214, 0.3)',
+  verticalAlign: 'top',
 };
 
 export const PAGINATOR_HEIGHT = 51;
@@ -23,12 +24,6 @@ export const paginator = {
   padding: '9px 0 0 0',
   textAlign: 'center',
   whiteSpace: 'nowrap',
-};
-
-export const horizontalWrapper = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
 };
 
 export const pageItems = {
