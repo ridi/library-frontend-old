@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 const next = require('next');
 const routes = require('./routes');
 const nextConfig = require('../next.config');
@@ -15,13 +16,16 @@ const handle = routes.getRequestHandler(app);
 
 // next가 로드된 후 불러와야함
 const middleware = require('./middleware');
+const csrfProtection = csrf({ cookie: true });
 
 app
   .prepare()
   .then(() => {
     const server = express();
+    server.use(cookieParser());
+
     // For health check
-    server.get('/health', (req, res) => {
+    server.get('/health', (err, req, res) => {
       res.send('I am healthy');
     });
 
@@ -33,7 +37,9 @@ app
 
     const port = process.env.PORT || 8080;
     const listener = server.listen(port, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       console.log(`> Ready on ${port}`);
     });
 
