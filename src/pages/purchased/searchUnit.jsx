@@ -264,10 +264,6 @@ class searchUnit extends React.Component {
     const { isEditing } = this.state;
     const { unit } = this.props;
 
-    if (!unit) {
-      return null;
-    }
-
     return (
       <>
         <Head>

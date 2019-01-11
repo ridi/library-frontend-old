@@ -1,6 +1,6 @@
 import React from 'react';
 import BookList from '../BookList';
-import SkeletonBook from './SkeletonBook';
+import { SkeletonBook } from './components';
 import BookWrapper from '../BookWrapper';
 
 const SkeletonBookCount = 24;

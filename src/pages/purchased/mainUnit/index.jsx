@@ -260,11 +260,6 @@ class MainUnit extends React.Component {
     const { isEditing } = this.state;
     const { unit } = this.props;
 
-    // TODO Unit 없을때 Spinner 혹은 Skeleton 노출
-    if (!unit) {
-      return null;
-    }
-
     return (
       <>
         <Head>
