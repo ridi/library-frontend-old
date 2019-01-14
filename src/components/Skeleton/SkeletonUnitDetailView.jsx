@@ -8,6 +8,7 @@ const styles = {
   section: css({
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
 
     marginTop: 28,
 
