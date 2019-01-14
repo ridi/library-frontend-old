@@ -4,9 +4,10 @@ import config from '../../config';
 import { getAPI } from '../../api/actions';
 
 import { makeURI } from '../../utils/uri';
-import { toFlatten } from '../../utils/array';
+import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
 import { snakelize } from '../../utils/snakelize';
 import { delay } from '../../utils/delay';
+import { DELETE_API_CHUNK_COUNT } from './constants';
 
 export function* getRevision() {
   const api = yield put(getAPI());
@@ -38,12 +39,10 @@ export function* requestCheckQueueStatus(queueIds) {
 
     retryCount += 1;
     yield delay(retryDuration);
-    const _isFinished = yield _request(syncingQueueIds);
-    return _isFinished;
+    return yield _request(syncingQueueIds);
   }
 
-  const isFinish = yield _request(queueIds);
-  return isFinish;
+  return yield _request(queueIds);
 }
 
 export function* triggerDownload(bookIds) {
@@ -94,7 +93,7 @@ export function* requestUnhide(bookIds, revision) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/commands/items/u/unhide/', options, config.LIBRARY_API_BASE_URL));
+  const response = yield api.put(makeURI('/commands/items/u/unhide/', {}, config.LIBRARY_API_BASE_URL), options);
   return toFlatten(response.data.items, 'id');
 }
 
@@ -105,6 +104,28 @@ export function* requestHide(bookIds, revision) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/commands/items/u/hide/', options, config.LIBRARY_API_BASE_URL));
+  const response = yield api.put(makeURI('/commands/items/u/hide/', {}, config.LIBRARY_API_BASE_URL), options);
   return toFlatten(response.data.items, 'id');
+}
+
+export function* requestDelete(bookIds, revision) {
+  function* internalRequestDelete(bookIds) {
+    const options = {
+      b_ids: bookIds,
+      revision,
+    };
+
+    const api = yield put(getAPI(true));
+    const response = yield api.post(makeURI('/remove'), options);
+    return toFlatten(response.data, 'id');
+  }
+  const chunked = splitArrayByChunk(bookIds, DELETE_API_CHUNK_COUNT);
+  const queueIds = [];
+
+  for (const _bookIds of chunked) {
+    const _queueIds = yield internalRequestDelete(_bookIds);
+    queueIds.push(..._queueIds);
+  }
+
+  return makeUnique(queueIds);
 }

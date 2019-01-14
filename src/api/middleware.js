@@ -23,8 +23,7 @@ const authorizationInterceptor = {
           if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
             const _location = Window.get(LOCATION);
             const currentURI = _location.href;
-            const loginURI = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, currentURI);
-            _location.href = loginURI;
+            _location.href = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, currentURI);
             return null;
           }
 
@@ -42,15 +41,33 @@ const createApi = context => {
 
   if (isServer) {
     const { token } = req;
-    const api = new API({
+    return new API({
       headers: {
         Cookie: `ridi-at=${token};`,
       },
     });
-    return api;
   }
 
-  const api = new API({ withCredentials: true });
+  const api = new API({
+    withCredentials: true,
+  });
+
+  api.addInterceptor(authorizationInterceptor);
+  api.registerInterceptor();
+
+  return api;
+};
+
+const createApiIncludeCsrfToken = () => {
+  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  const api = new API({
+    withCredentials: true,
+    headers: {
+      'CSRF-Token': token,
+    },
+  });
+
   api.addInterceptor(authorizationInterceptor);
   api.registerInterceptor();
 
@@ -59,8 +76,17 @@ const createApi = context => {
 
 const createApiMiddleware = context => {
   const api = createApi(context);
+  let apiIncludeCsrf = null;
+
   return () => next => action => {
     if (action.type === GET_API) {
+      if (action.payload.includeCsrfToken) {
+        if (apiIncludeCsrf === null) {
+          apiIncludeCsrf = createApiIncludeCsrfToken();
+        }
+        return apiIncludeCsrf;
+      }
+
       return api;
     }
 

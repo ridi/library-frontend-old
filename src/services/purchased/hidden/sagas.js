@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 
 import {
   LOAD_HIDDEN_ITEMS,
@@ -18,7 +17,7 @@ import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
 import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
 
-import { getRevision, requestUnhide, requestCheckQueueStatus } from '../../common/requests';
+import { getRevision, requestUnhide, requestCheckQueueStatus, requestDelete } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 
@@ -64,11 +63,11 @@ function* deleteSelectedBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  // TODO: CSRF Token 어떻게 할지 결정되어야 한다.
-  console.log('삭제 되었따고 치고');
+  const queueIds = yield call(requestDelete, bookIds, revision);
 
-  yield call(delay, 3000); // Temporary Sleep
-
+  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  // TODO: Message 수정
+  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
   yield call(loadItems);
 }
 
