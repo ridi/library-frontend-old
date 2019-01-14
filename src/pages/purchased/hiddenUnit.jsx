@@ -35,7 +35,7 @@ import { getPageInfo as getHiddenPageInfo } from '../../services/purchased/hidde
 import { URLMap } from '../../constants/urls';
 
 import { toFlatten } from '../../utils/array';
-import SkeletonUnitSection from '../../components/Skeleton/SkeletonUnitSection';
+import SkeletonUnitDetailView from '../../components/Skeleton/SkeletonUnitDetailView';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -225,7 +225,7 @@ class HiddenUnit extends React.Component {
         </Head>
         {isEditing ? this.renderToolBar() : this.renderTitleBar()}
         <main>
-          <Responsive>{isFetchingBook ? <SkeletonUnitSection /> : this.renderBooks()}</Responsive>
+          <Responsive>{isFetchingBook ? <SkeletonUnitDetailView /> : this.renderBooks()}</Responsive>
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}

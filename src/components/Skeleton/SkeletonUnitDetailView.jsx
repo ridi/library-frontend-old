@@ -52,7 +52,7 @@ const styles = {
   }),
 };
 
-const SkeletonUnitSection = () => (
+const SkeletonUnitDetailView = () => (
   <section css={styles.section}>
     <div css={[styles.flexWrapper, styles.book]}>
       <SkeletonUnitBook />
@@ -66,4 +66,4 @@ const SkeletonUnitSection = () => (
   </section>
 );
 
-export default SkeletonUnitSection;
+export default SkeletonUnitDetailView;

@@ -41,7 +41,7 @@ import {
   selectAllBooks,
   toggleSelectBook,
 } from '../../../services/purchased/mainUnit/actions';
-import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -278,7 +278,7 @@ class MainUnit extends React.Component {
         <main>
           <Responsive>
             {isFetchingBook ? (
-              <SkeletonUnitSection />
+              <SkeletonUnitDetailView />
             ) : (
               <>
                 {this.renderBooks()}
