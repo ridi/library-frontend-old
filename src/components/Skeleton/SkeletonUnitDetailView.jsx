@@ -68,6 +68,7 @@ const styles = {
     }),
   }),
   authorList: css({
+    marginTop: 8,
     width: 277,
     height: 20,
 
