@@ -42,6 +42,7 @@ import {
   toggleSelectBook,
 } from '../../../services/purchased/mainUnit/actions';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 
 const styles = {
   MainToolBarWrapper: css({
@@ -203,6 +204,12 @@ class MainUnit extends React.Component {
     return <ModalBackground isActive={showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
   }
 
+  renderDetailView() {
+    const { unit, items, books } = this.props;
+    const primaryBook = books[items[0].b_id];
+    return <UnitDetailView unit={unit} book={primaryBook} />;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
@@ -281,6 +288,7 @@ class MainUnit extends React.Component {
               <SkeletonUnitDetailView />
             ) : (
               <>
+                {this.renderDetailView()}
                 {this.renderBooks()}
                 {this.renderModal()}
               </>

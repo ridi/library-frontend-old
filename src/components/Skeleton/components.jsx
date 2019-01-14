@@ -15,6 +15,11 @@ const styles = {
       width: 98,
       height: 151,
     }),
+
+    ...Responsive.W1280({
+      width: 180,
+      height: 260,
+    }),
   }),
 
   unitBook: css({
