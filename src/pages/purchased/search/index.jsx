@@ -5,8 +5,8 @@ import React from 'react';
 import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import Router from 'next/router';
-import EmptyBookList from '../../components/EmptyBookList';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
+import EmptyBookList from '../../../components/EmptyBookList';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
 import {
   loadItems,
@@ -15,24 +15,24 @@ import {
   toggleSelectBook,
   hideSelectedBooks,
   downloadSelectedBooks,
-} from '../../services/purchased/search/actions';
+} from '../../../services/purchased/search/actions';
 
-import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
-import SearchBar from '../../components/SearchBar';
-import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook';
-import IconButton from '../../components/IconButton';
-import EditingBar from '../../components/EditingBar';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
-import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
+import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import SearchBar from '../../../components/SearchBar';
+import BookList from '../../../components/BookList';
+import LibraryBook from '../../../components/LibraryBook';
+import IconButton from '../../../components/IconButton';
+import EditingBar from '../../../components/EditingBar';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 
-import Responsive from '../base/Responsive';
+import Responsive from '../../base/Responsive';
 
-import { toFlatten } from '../../utils/array';
-import { makeLinkProps, makeURI } from '../../utils/uri';
-import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../services/purchased/search/selectors';
-import { getBooks } from '../../services/book/selectors';
+import { toFlatten } from '../../../utils/array';
+import { makeLinkProps, makeURI } from '../../../utils/uri';
+import { URLMap } from '../../../constants/urls';
+import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../../services/purchased/search/selectors';
+import { getBooks } from '../../../services/book/selectors';
 
 const styles = {
   searchFetchingBooks: css({

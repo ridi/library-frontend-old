@@ -3,17 +3,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
 import { css, jsx } from '@emotion/core';
-import EmptyBookList from '../../components/EmptyBookList';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
+import EmptyBookList from '../../../components/EmptyBookList';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
-import LNBTitleBar from '../base/LNB/LNBTitleBar';
-import Responsive from '../base/Responsive';
-import EditingBar from '../../components/EditingBar';
-import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook/index';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
+import LNBTitleBar from '../../base/LNB/LNBTitleBar';
+import Responsive from '../../base/Responsive';
+import EditingBar from '../../../components/EditingBar';
+import BookList from '../../../components/BookList';
+import LibraryBook from '../../../components/LibraryBook/index';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 
-import { getBooks, getUnit } from '../../services/book/selectors';
+import { getBooks, getUnit } from '../../../services/book/selectors';
 import {
   clearSelectedBooks,
   deleteSelectedBooks,
@@ -22,7 +22,7 @@ import {
   setUnitId,
   toggleSelectBook,
   unhideSelectedBooks,
-} from '../../services/purchased/hiddenUnit/actions';
+} from '../../../services/purchased/hiddenUnit/actions';
 import {
   getItemsByPage,
   getPageInfo,
@@ -30,12 +30,12 @@ import {
   getTotalCount,
   getUnitId,
   getIsFetchingBook,
-} from '../../services/purchased/hiddenUnit/selectors';
-import { getPageInfo as getHiddenPageInfo } from '../../services/purchased/hidden/selectors';
-import { URLMap } from '../../constants/urls';
+} from '../../../services/purchased/hiddenUnit/selectors';
+import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
+import { URLMap } from '../../../constants/urls';
 
-import { toFlatten } from '../../utils/array';
-import SkeletonUnitSection from '../../components/Skeleton/SkeletonUnitSection';
+import { toFlatten } from '../../../utils/array';
+import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
 
 const styles = {
   MainToolBarWrapper: css({
