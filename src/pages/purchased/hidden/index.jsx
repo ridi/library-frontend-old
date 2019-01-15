@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React from 'react';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 import EmptyBookList from '../../../components/EmptyBookList';
@@ -36,19 +36,7 @@ import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { makeLinkProps } from '../../../utils/uri';
-
-const styles = {
-  hiddenFetchingBooks: css({
-    backgroundColor: 'white',
-  }),
-  hiddenButtonActionLeft: css({
-    color: '#e64938',
-    float: 'left',
-  }),
-  hiddenButtonActionRight: css({
-    float: 'right',
-  }),
-};
+import * as styles from './styles';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {

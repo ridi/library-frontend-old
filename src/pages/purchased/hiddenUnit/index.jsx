@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
@@ -36,53 +36,7 @@ import { URLMap } from '../../../constants/urls';
 
 import { toFlatten } from '../../../utils/array';
 import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
-
-const styles = {
-  MainToolBarWrapper: css({
-    height: 46,
-    backgroundColor: '#f3f4f5',
-    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
-    boxSizing: 'border-box',
-    borderBottom: '1px solid #d1d5d9',
-  }),
-  MainToolBar: css({
-    display: 'flex',
-  }),
-  MainToolBarSearchBarWrapper: css({
-    padding: '8px 0',
-    height: 30,
-    flex: 1,
-    maxWidth: 600,
-  }),
-  MainToolBarSearchBarWrapperActive: css({
-    maxWidth: 'initial',
-  }),
-  MainToolBarToolsWrapper: css({
-    height: 30,
-    padding: '8px 0 8px 16px',
-    marginLeft: 'auto',
-  }),
-  MainToolBarIcon: css({
-    margin: '3px 0',
-    width: 24,
-    height: 24,
-    marginRight: 16,
-    '&:last-of-type': {
-      marginRight: 0,
-    },
-    '.RSGIcon': {
-      width: 24,
-      height: 24,
-    },
-  }),
-  MainButtonActionLeft: css({
-    color: '#e64938',
-    float: 'left',
-  }),
-  MainButtonActionRight: css({
-    float: 'right',
-  }),
-};
+import * as styles from './styles';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
