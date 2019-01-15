@@ -135,8 +135,11 @@ class Main extends React.Component {
           handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
           handleOnFocusSearchBar={this.handleOnFocusSearchBar}
           handleOnBlurSearchBar={this.handleOnBlurSearchBar}
+          filter
           toggleFilterModal={this.toggleFilterModal}
+          edit
           toggleEditingMode={this.toggleEditingMode}
+          more
           toggleMoreModal={this.toggleMoreModal}
         />
         {isEditing && (

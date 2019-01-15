@@ -14,25 +14,35 @@ const ToolBar = ({
   handleOnSubmitSearchBar,
   handleOnFocusSearchBar,
   handleOnBlurSearchBar,
+  keyword = '',
+  filter,
   toggleFilterModal,
+  edit,
   toggleEditingMode,
+  more,
   toggleMoreModal,
 }) => (
   <Responsive className={hideTools ? 'hideTools' : ''} css={styles.toolBar}>
     <div css={styles.flexWrapper}>
       <div css={styles.toolBarSearchBarWrapper}>
-        <SearchBar onSubmit={handleOnSubmitSearchBar} onFocus={handleOnFocusSearchBar} onBlur={handleOnBlurSearchBar} />
+        <SearchBar keyword={keyword} onSubmit={handleOnSubmitSearchBar} onFocus={handleOnFocusSearchBar} onBlur={handleOnBlurSearchBar} />
       </div>
       <div css={styles.toolBarToolsWrapper}>
-        <IconButton a11y="필터" css={styles.toolBarIconButton} onClick={toggleFilterModal}>
-          <CategoryFilter css={styles.categoryFilterIcon} />
-        </IconButton>
-        <IconButton a11y="편집" css={styles.toolBarIconButton} onClick={toggleEditingMode}>
-          <Edit css={styles.editIcon} />
-        </IconButton>
-        <IconButton a11y="정렬" css={styles.toolBarIconButton} onClick={toggleMoreModal}>
-          <ThreeDots css={styles.threeDotsIcon} />
-        </IconButton>
+        {filter && (
+          <IconButton a11y="필터" css={styles.toolBarIconButton} onClick={toggleFilterModal}>
+            <CategoryFilter css={styles.categoryFilterIcon} />
+          </IconButton>
+        )}
+        {edit && (
+          <IconButton a11y="편집" css={styles.toolBarIconButton} onClick={toggleEditingMode}>
+            <Edit css={styles.editIcon} />
+          </IconButton>
+        )}
+        {more && (
+          <IconButton a11y="정렬" css={styles.toolBarIconButton} onClick={toggleMoreModal}>
+            <ThreeDots css={styles.threeDotsIcon} />
+          </IconButton>
+        )}
       </div>
     </div>
   </Responsive>

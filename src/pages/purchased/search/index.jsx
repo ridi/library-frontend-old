@@ -1,37 +1,32 @@
 /** @jsx jsx */
-import Head from 'next/head';
-import React from 'react';
 import { jsx } from '@emotion/core';
-import { connect } from 'react-redux';
+import Head from 'next/head';
 import Router from 'next/router';
+import React from 'react';
+import { connect } from 'react-redux';
+import BookList from '../../../components/BookList';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
+import EditingBar from '../../../components/EditingBar';
 import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import ToolBar from '../../../components/ToolBar';
+import { URLMap } from '../../../constants/urls';
+import { getBooks } from '../../../services/book/selectors';
 import {
-  loadItems,
   changeSearchKeyword,
   clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
   downloadSelectedBooks,
+  hideSelectedBooks,
+  loadItems,
+  toggleSelectBook,
 } from '../../../services/purchased/search/actions';
-
-import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import SearchBar from '../../../components/SearchBar';
-import BookList from '../../../components/BookList';
-import LibraryBook from '../../../components/LibraryBook';
-import IconButton from '../../../components/IconButton';
-import EditingBar from '../../../components/EditingBar';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
-
-import Responsive from '../../base/Responsive';
-
+import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../../services/purchased/search/selectors';
-import { getBooks } from '../../../services/book/selectors';
+import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import Responsive from '../../base/Responsive';
 import * as styles from './styles';
 
 class Search extends React.Component {
@@ -92,7 +87,7 @@ class Search extends React.Component {
   };
 
   renderToolBar() {
-    const { isEditing, hideTools } = this.state;
+    const { hideTools, isEditing } = this.state;
     const {
       pageInfo: { keyword },
       items,
@@ -100,38 +95,29 @@ class Search extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
-
-    if (isEditing) {
-      const selectedCount = Object.keys(selectedBooks).length;
-      const isSelectedAllBooks = selectedCount === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={selectedCount}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.searchToolBarWrapper}>
-        <Responsive css={styles.searchToolBar}>
-          <div css={[styles.searchToolBarSearchBarWrapper, hideTools && styles.searchToolBarSearchBarWrapperActive]}>
-            <SearchBar
-              keyword={keyword}
-              onSubmit={this.handleOnSubmitSearchBar}
-              onFocus={this.handleOnFocusSearchBar}
-              onBlur={this.handleOnBlurSearchBar}
-            />
-          </div>
-          {hideTools ? null : (
-            <div css={styles.searchToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" css={styles.searchToolBarIcon} onClick={this.toggleEditingMode} />
-            </div>
-          )}
-        </Responsive>
+      <div css={styles.toolBar}>
+        <ToolBar
+          hideTools={hideTools}
+          keyword={keyword}
+          handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
+          handleOnFocusSearchBar={this.handleOnFocusSearchBar}
+          handleOnBlurSearchBar={this.handleOnBlurSearchBar}
+          edit
+          toggleEditingMode={this.toggleEditingMode}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
       </div>
     );
   }
