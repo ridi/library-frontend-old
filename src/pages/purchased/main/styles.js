@@ -1,4 +1,4 @@
-export const mainToolBar = {
+export const toolBar = {
   position: 'relative',
 };
 

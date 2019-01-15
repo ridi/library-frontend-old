@@ -129,7 +129,7 @@ class Main extends React.Component {
     const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.mainToolBar}>
+      <div css={styles.toolBar}>
         <ToolBar
           hideTools={hideTools}
           handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
