@@ -1,4 +1,5 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
