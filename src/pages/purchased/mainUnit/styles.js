@@ -10,6 +10,10 @@ export const MainToolBar = {
   display: 'flex',
 };
 
+export const toolBar = {
+  position: 'relative',
+};
+
 export const MainToolBarSearchBarWrapper = {
   padding: '8px 0',
   height: 30,
