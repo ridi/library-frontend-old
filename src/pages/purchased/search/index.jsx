@@ -11,7 +11,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
-import ToolBar from '../../../components/ToolBar';
+import SearchBar from '../../../components/SearchBar';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -86,7 +86,7 @@ class Search extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
+  renderLNB() {
     const { hideTools, isEditing } = this.state;
     const {
       pageInfo: { keyword },
@@ -99,8 +99,8 @@ class Search extends React.Component {
     const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.toolBar}>
-        <ToolBar
+      <div css={styles.LNBWrapper}>
+        <SearchBar
           hideTools={hideTools}
           keyword={keyword}
           handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
@@ -203,7 +203,7 @@ class Search extends React.Component {
           <title>{`'${keyword}'`} 검색 결과 - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.searchFetchingBooks}>
           <Responsive>{this.renderBooks()}</Responsive>
         </main>

@@ -34,10 +34,10 @@ import {
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import LNBTitleBar from '../../base/LNB/LNBTitleBar';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import TitleBar from '../../../components/TitleBar';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -91,7 +91,7 @@ class searchUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
+  renderLNB() {
     const { isEditing } = this.state;
     const {
       unit,
@@ -108,8 +108,8 @@ class searchUnit extends React.Component {
     const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.toolBar}>
-        <LNBTitleBar
+      <div css={styles.LNBWrapper}>
+        <TitleBar
           title={unit.title}
           totalCount={totalCount.itemTotalCount}
           onClickEditingMode={this.toggleEditingMode}
@@ -214,7 +214,7 @@ class searchUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {this.renderLNB()}
         <main>
           <Responsive>
             {isFetchingBook ? (

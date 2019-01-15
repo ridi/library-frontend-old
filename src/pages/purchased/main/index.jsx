@@ -16,7 +16,7 @@ import { ModalBackground } from '../../../components/Modal';
 import Responsive from '../../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import EditingBar from '../../../components/EditingBar';
-import ToolBar from '../../../components/ToolBar';
+import SearchBar from '../../../components/SearchBar';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
 
@@ -122,15 +122,15 @@ class Main extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
+  renderLNB() {
     const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const selectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <div css={styles.toolBar}>
-        <ToolBar
+      <div css={styles.LNBWrapper}>
+        <SearchBar
           hideTools={hideTools}
           handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
           handleOnFocusSearchBar={this.handleOnFocusSearchBar}
@@ -250,7 +250,7 @@ class Main extends React.Component {
           <title>모든 책 - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.mainFetchingBooks}>
           <Responsive>
             {this.renderBooks()}

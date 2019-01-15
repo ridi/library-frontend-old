@@ -2,7 +2,7 @@ export const searchFetchingBooks = {
   backgroundColor: 'white',
 };
 
-export const toolBar = {
+export const LNBWrapper = {
   position: 'relative',
 };
 

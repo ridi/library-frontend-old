@@ -1,4 +1,4 @@
-export const toolBar = {
+export const LNBWrapper = {
   position: 'relative',
 };
 

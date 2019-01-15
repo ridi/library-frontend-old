@@ -34,10 +34,10 @@ import {
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import LNBTitleBar from '../../base/LNB/LNBTitleBar';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import TitleBar from '../../../components/TitleBar';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -90,37 +90,40 @@ class MainUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-    return (
-      <EditingBar
-        totalSelectedCount={selectedCount}
-        isSelectedAllBooks={isSelectedAllBooks}
-        onClickSelectAllBooks={dispatchSelectAllBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
-        onClickSuccessButton={this.toggleEditingMode}
-      />
-    );
-  }
-
-  renderTitleBar() {
+  renderLNB() {
+    const { isEditing } = this.state;
     const {
+      items,
+      selectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
       unit,
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
     } = this.props;
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <LNBTitleBar
-        title={unit.title}
-        totalCount={totalCount.itemTotalCount}
-        onClickEditingMode={this.toggleEditingMode}
-        href={URLMap.main.href}
-        as={URLMap.main.as}
-        query={{ page, orderType, orderBy, filter }}
-      />
+      <div css={styles.LNBWrapper}>
+        <TitleBar
+          title={unit.title}
+          totalCount={totalCount.itemTotalCount}
+          toggleEditingMode={this.toggleEditingMode}
+          href={URLMap.main.href}
+          as={URLMap.main.as}
+          query={{ page, orderType, orderBy, filter }}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
+      </div>
     );
   }
 
@@ -200,7 +203,6 @@ class MainUnit extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
     const { unit, isFetchingBook } = this.props;
 
     return (
@@ -209,10 +211,7 @@ class MainUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        <div css={styles.toolBar}>
-          {this.renderTitleBar()}
-          {isEditing && this.renderToolBar()}
-        </div>
+        {this.renderLNB()}
         <main>
           <Responsive>
             {isFetchingBook ? (

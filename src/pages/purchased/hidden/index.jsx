@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
-import LNBTitleBar from '../../base/LNB/LNBTitleBar';
 import Responsive from '../../base/Responsive';
 import EditingBar from '../../../components/EditingBar';
 import BookList from '../../../components/BookList';
@@ -37,6 +36,7 @@ import { toFlatten } from '../../../utils/array';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { makeLinkProps } from '../../../utils/uri';
 import * as styles from './styles';
+import TitleBar from '../../../components/TitleBar';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -77,37 +77,40 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+  renderLNB() {
+    const { isEditing } = this.state;
+    const {
+      items,
+      selectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
+      totalCount,
+      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
+    } = this.props;
 
     const selectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = selectedCount === items.length;
 
     return (
-      <EditingBar
-        totalSelectedCount={selectedCount}
-        isSelectedAllBooks={isSelectedAllBooks}
-        onClickSelectAllBooks={dispatchSelectAllBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
-        onClickSuccessButton={this.toggleEditingMode}
-      />
-    );
-  }
-
-  renderTitleBar() {
-    const {
-      totalCount,
-      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
-    } = this.props;
-    return (
-      <LNBTitleBar
-        title="숨긴 도서 목록"
-        totalCount={totalCount.itemTotalCount}
-        onClickEditingMode={this.toggleEditingMode}
-        href={URLMap.main.href}
-        as={URLMap.main.as}
-        query={{ page, orderType, orderBy, filter }}
-      />
+      <div css={styles.LNBWrapper}>
+        <TitleBar
+          title="숨긴 도서 목록"
+          totalCount={totalCount.itemTotalCount}
+          onClickEditingMode={this.toggleEditingMode}
+          href={URLMap.main.href}
+          as={URLMap.main.as}
+          query={{ page, orderType, orderBy, filter }}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
+      </div>
     );
   }
 
@@ -174,7 +177,6 @@ class Hidden extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
     const { isFetchingBooks } = this.props;
 
     return (
@@ -182,7 +184,7 @@ class Hidden extends React.Component {
         <Head>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
-        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
           <Responsive>{this.renderBooks()}</Responsive>
         </main>

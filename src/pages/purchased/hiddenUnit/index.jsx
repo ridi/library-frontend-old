@@ -6,7 +6,6 @@ import { jsx } from '@emotion/core';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
-import LNBTitleBar from '../../base/LNB/LNBTitleBar';
 import Responsive from '../../base/Responsive';
 import EditingBar from '../../../components/EditingBar';
 import BookList from '../../../components/BookList';
@@ -37,6 +36,7 @@ import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
 import * as styles from './styles';
+import TitleBar from '../../../components/TitleBar';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -79,38 +79,39 @@ class HiddenUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-
-    return (
-      <EditingBar
-        totalSelectedCount={selectedCount}
-        isSelectedAllBooks={isSelectedAllBooks}
-        onClickSelectAllBooks={dispatchSelectAllBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
-        onClickSuccessButton={this.toggleEditingMode}
-      />
-    );
-  }
-
-  renderTitleBar() {
+  renderLNB() {
+    const { isEditing } = this.state;
     const {
+      items,
+      selectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
       unit,
       totalCount,
       hiddenPageInfo: { currentPage: page },
     } = this.props;
-
+    const selectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = selectedCount === items.length;
     return (
-      <LNBTitleBar
-        title={unit.title}
-        totalCount={totalCount.itemTotalCount}
-        onClickEditingMode={this.toggleEditingMode}
-        href={URLMap.hidden.href}
-        as={URLMap.hidden.as}
-        query={{ page }}
-      />
+      <div css={styles.LNBWrapper}>
+        <TitleBar
+          title={unit.title}
+          totalCount={totalCount.itemTotalCount}
+          onClickEditingMode={this.toggleEditingMode}
+          href={URLMap.hidden.href}
+          as={URLMap.hidden.as}
+          query={{ page }}
+        />
+        {isEditing && (
+          <EditingBar
+            totalSelectedCount={selectedCount}
+            isSelectedAllBooks={isSelectedAllBooks}
+            onClickSelectAllBooks={dispatchSelectAllBooks}
+            onClickUnselectAllBooks={dispatchClearSelectedBooks}
+            onClickSuccessButton={this.toggleEditingMode}
+          />
+        )}
+      </div>
     );
   }
 
@@ -170,14 +171,13 @@ class HiddenUnit extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
     const { unit, isFetchingBook } = this.props;
     return (
       <>
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
-        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
+        {this.renderLNB()}
         <main>
           <Responsive>{isFetchingBook ? <SkeletonUnitSection /> : this.renderBooks()}</Responsive>
         </main>

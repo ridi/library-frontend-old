@@ -1,3 +1,7 @@
+export const LNBWrapper = {
+  position: 'relative',
+};
+
 export const MainButtonActionLeft = {
   color: '#e64938',
   float: 'left',
