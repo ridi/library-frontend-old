@@ -3,17 +3,17 @@ import React from 'react';
 import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import { connect } from 'react-redux';
-import EmptyBookList from '../../components/EmptyBookList';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
+import EmptyBookList from '../../../components/EmptyBookList';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 
-import LNBTitleBar from '../base/LNB/LNBTitleBar';
-import Responsive from '../base/Responsive';
-import EditingBar from '../../components/EditingBar';
-import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
+import LNBTitleBar from '../../base/LNB/LNBTitleBar';
+import Responsive from '../../base/Responsive';
+import EditingBar from '../../../components/EditingBar';
+import BookList from '../../../components/BookList';
+import LibraryBook from '../../../components/LibraryBook';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 
-import { getBooks } from '../../services/book/selectors';
+import { getBooks } from '../../../services/book/selectors';
 import {
   loadItems,
   selectAllBooks,
@@ -21,21 +21,21 @@ import {
   toggleSelectBook,
   unhideSelectedBooks,
   deleteSelectedBooks,
-} from '../../services/purchased/hidden/actions';
+} from '../../../services/purchased/hidden/actions';
 import {
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
   getIsFetchingBooks,
-} from '../../services/purchased/hidden/selectors';
-import { getPageInfo as getMainPageInfo } from '../../services/purchased/main/selectors';
+} from '../../../services/purchased/hidden/selectors';
+import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 
-import { URLMap } from '../../constants/urls';
+import { URLMap } from '../../../constants/urls';
 
-import { toFlatten } from '../../utils/array';
-import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
-import { makeLinkProps } from '../../utils/uri';
+import { toFlatten } from '../../../utils/array';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { makeLinkProps } from '../../../utils/uri';
 
 const styles = {
   hiddenFetchingBooks: css({

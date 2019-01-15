@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
+import shortid from 'shortid';
 
 import TabBar, { TabLinkItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
@@ -33,7 +34,7 @@ const LNBTabBar = ({ activeMenu }) => (
   <Responsive css={styles.LNBTabBarWrapper}>
     <TabBar>
       {TabMenus.map(menu => (
-        <TabLinkItem name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
+        <TabLinkItem key={shortid.generate()} name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
       ))}
     </TabBar>
   </Responsive>
