@@ -7,7 +7,6 @@ import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { MainOrderOptions } from '../../../constants/orderOptions';
