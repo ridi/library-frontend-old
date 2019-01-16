@@ -37,12 +37,8 @@ function* loadHiddenUnitItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([
-    put(setItems(itemResponse.items)),
-    put(setTotalCount(countResponse.item_total_count)),
-    put(setPage(nextPage)),
-    put(setIsFetchingHiddenBook(false)),
-  ]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count)), put(setPage(nextPage))]);
+  yield put(setIsFetchingHiddenBook(false));
 }
 
 function* unhideSelectedHiddenUnitBooks() {

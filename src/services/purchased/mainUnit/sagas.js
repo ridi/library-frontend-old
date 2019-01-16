@@ -54,12 +54,8 @@ function* loadItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([
-    put(setItems(itemResponse.items)),
-    put(setTotalCount(countResponse.item_total_count)),
-    put(setPage(nextPage)),
-    put(setIsFetchingBook(false)),
-  ]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count)), put(setPage(nextPage))]);
+  yield put(setIsFetchingBook(false));
 }
 
 function* hideSelectedBooks() {
