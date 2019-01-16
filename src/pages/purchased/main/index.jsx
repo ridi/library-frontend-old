@@ -12,7 +12,6 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import { ModalBackground } from '../../../components/Modal';
 import Responsive from '../../base/Responsive';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
 import EditingBar from '../../../components/EditingBar';
@@ -164,15 +163,22 @@ class Main extends React.Component {
 
     return (
       <>
-        <FilterModal filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} isActive={showFilterModal} />
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} query={{ filter }} isActive={showMoreModal} />
+        <FilterModal
+          filter={filter}
+          filterOptions={filterOptions}
+          query={{ orderType, orderBy }}
+          isActive={showFilterModal}
+          onClickModalBackground={this.handleOnClickOutOfModal}
+        />
+        <SortModal
+          order={order}
+          orderOptions={MainOrderOptions.toList()}
+          query={{ filter }}
+          isActive={showMoreModal}
+          onClickModalBackground={this.handleOnClickOutOfModal}
+        />
       </>
     );
-  }
-
-  renderModalBackground() {
-    const { showFilterModal, showMoreModal } = this.state;
-    return <ModalBackground isActive={showFilterModal || showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
   }
 
   renderBooks() {
@@ -259,7 +265,6 @@ class Main extends React.Component {
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}
-        {this.renderModalBackground()}
       </>
     );
   }

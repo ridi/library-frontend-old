@@ -5,10 +5,10 @@ import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal'
 import { URLMap } from '../../../constants/urls';
 
 const FilterModal = props => {
-  const { isActive, filter, filterOptions, query } = props;
+  const { isActive, filter, filterOptions, query, onClickModalBackground } = props;
 
   return (
-    <Modal isActive={isActive} a11y="카테고리 필터">
+    <Modal isActive={isActive} a11y="카테고리 필터" onClickModalBackground={onClickModalBackground}>
       <ModalItemGroup groupTitle="모든 책 카테고리">
         <ul>
           {filterOptions.map(option => (

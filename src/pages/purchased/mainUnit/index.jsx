@@ -8,7 +8,6 @@ import { BottomActionBar, BottomActionButton } from '../../../components/BottomA
 import EditingBar from '../../../components/EditingBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
-import { ModalBackground } from '../../../components/Modal';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
 import { MainOrderOptions } from '../../../constants/orderOptions';
@@ -133,12 +132,14 @@ class MainUnit extends React.Component {
       pageInfo: { order },
     } = this.props;
 
-    return <SortModal order={order} orderOptions={MainOrderOptions.toList()} isActive={showMoreModal} />;
-  }
-
-  renderModalBackground() {
-    const { showMoreModal } = this.state;
-    return <ModalBackground isActive={showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
+    return (
+      <SortModal
+        order={order}
+        orderOptions={MainOrderOptions.toList()}
+        isActive={showMoreModal}
+        onClickModalBackground={this.handleOnClickOutOfModal}
+      />
+    );
   }
 
   renderBooks() {
@@ -226,7 +227,6 @@ class MainUnit extends React.Component {
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}
-        {this.renderModalBackground()}
       </>
     );
   }
