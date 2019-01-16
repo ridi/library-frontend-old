@@ -9,6 +9,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
@@ -109,6 +110,12 @@ class HiddenUnit extends React.Component {
     return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
+  renderDetailView() {
+    const { unit, items, books } = this.props;
+    const primaryBook = books[items[0].b_id];
+    return <UnitDetailView unit={unit} book={primaryBook} />;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
@@ -130,21 +137,6 @@ class HiddenUnit extends React.Component {
           />
         ))}
       </BookList>
-    );
-  }
-
-  renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages, unitId },
-    } = this.props;
-
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.hiddenUnit.href, query: { unitId } }}
-        as={URLMap.hiddenUnit.as(unitId)}
-      />
     );
   }
 
@@ -173,9 +165,17 @@ class HiddenUnit extends React.Component {
         </Head>
         {this.renderLNB()}
         <main>
-          <Responsive>{isFetchingBook ? <SkeletonUnitDetailView /> : this.renderBooks()}</Responsive>
+          <Responsive>
+            {isFetchingBook ? (
+              <SkeletonUnitDetailView />
+            ) : (
+              <>
+                {this.renderDetailView()}
+                {this.renderBooks()}
+              </>
+            )}
+          </Responsive>
         </main>
-        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
