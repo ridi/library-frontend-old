@@ -7,8 +7,8 @@ import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
@@ -24,7 +24,7 @@ import {
 } from '../../../services/purchased/searchUnit/actions';
 import {
   getIsFetchingBook,
-  getItemsByPage,
+  getItems,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
@@ -139,6 +139,12 @@ class searchUnit extends React.Component {
     );
   }
 
+  renderDetailView() {
+    const { unit, items, books } = this.props;
+    const primaryBook = books[items[0].b_id];
+    return <UnitDetailView unit={unit} book={primaryBook} />;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
@@ -160,22 +166,6 @@ class searchUnit extends React.Component {
           />
         ))}
       </BookList>
-    );
-  }
-
-  renderPaginator() {
-    const {
-      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId, keyword },
-    } = this.props;
-
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.searchUnit.href, query: { unitId } }}
-        as={{ pathname: URLMap.searchUnit.as(unitId) }}
-        query={{ orderType, orderBy, keyword }}
-      />
     );
   }
 
@@ -216,13 +206,13 @@ class searchUnit extends React.Component {
               <SkeletonUnitDetailView />
             ) : (
               <>
+                {this.renderDetailView()}
                 {this.renderBooks()}
                 {this.renderModal()}
               </>
             )}
           </Responsive>
         </main>
-        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
@@ -235,7 +225,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItemsByPage(state);
+  const items = getItems(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const selectedBooks = getSelectedBooks(state);
   const totalCount = getTotalCount(state);
