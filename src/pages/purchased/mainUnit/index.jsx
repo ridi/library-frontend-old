@@ -1,94 +1,42 @@
-import Head from 'next/head';
-
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
+import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import { css, jsx } from '@emotion/core';
-
 import BookList from '../../../components/BookList';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-
-import { getBooks, getUnit } from '../../../services/book/selectors';
-
-import { toFlatten } from '../../../utils/array';
-import LNBTitleBar from '../../base/LNB/LNBTitleBar';
-import Responsive from '../../base/Responsive';
-import { URLMap } from '../../../constants/urls';
-import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import EditingBar from '../../../components/EditingBar';
-import IconButton from '../../../components/IconButton';
-import SortModal from '../../base/Modal/SortModal';
+import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 import { MainOrderOptions } from '../../../constants/orderOptions';
-import { ModalBackground } from '../../../components/Modal';
+import { URLMap } from '../../../constants/urls';
+import { getBooks, getUnit } from '../../../services/book/selectors';
+import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
+  clearSelectedBooks,
+  downloadSelectedBooks,
+  hideSelectedBooks,
+  loadItems,
+  selectAllBooks,
+  setUnitId,
+  toggleSelectBook,
+} from '../../../services/purchased/mainUnit/actions';
+import {
+  getIsFetchingBook,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
   getUnitId,
-  getIsFetchingBook,
 } from '../../../services/purchased/mainUnit/selectors';
-import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
-import {
-  loadItems,
-  setUnitId,
-  clearSelectedBooks,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  selectAllBooks,
-  toggleSelectBook,
-} from '../../../services/purchased/mainUnit/actions';
-import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
-import UnitDetailView from '../../../components/UnitDetailView';
-
-const styles = {
-  MainToolBarWrapper: css({
-    height: 46,
-    backgroundColor: '#f3f4f5',
-    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
-    boxSizing: 'border-box',
-    borderBottom: '1px solid #d1d5d9',
-  }),
-  MainToolBar: css({
-    display: 'flex',
-  }),
-  MainToolBarSearchBarWrapper: css({
-    padding: '8px 0',
-    height: 30,
-    flex: 1,
-    maxWidth: 600,
-  }),
-  MainToolBarSearchBarWrapperActive: css({
-    maxWidth: 'initial',
-  }),
-  MainToolBarToolsWrapper: css({
-    height: 30,
-    padding: '8px 0 8px 16px',
-    marginLeft: 'auto',
-  }),
-  MainToolBarIcon: css({
-    margin: '3px 0',
-    width: 24,
-    height: 24,
-    marginRight: 16,
-    '&:last-of-type': {
-      marginRight: 0,
-    },
-    '.RSGIcon': {
-      width: 24,
-      height: 24,
-    },
-  }),
-  MainButtonActionLeft: css({
-    float: 'left',
-  }),
-  MainButtonActionRight: css({
-    float: 'right',
-  }),
-};
+import { toFlatten } from '../../../utils/array';
+import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import SortModal from '../../base/Modal/SortModal';
+import Responsive from '../../base/Responsive';
+import * as styles from './styles';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -141,53 +89,37 @@ class MainUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
+  renderLNB() {
     const { isEditing } = this.state;
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-
-    if (isEditing) {
-      const selectedCount = Object.keys(selectedBooks).length;
-      const isSelectedAllBooks = selectedCount === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={selectedCount}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
-
-    return (
-      <div css={styles.MainToolBarWrapper}>
-        <Responsive css={styles.MainToolBar}>
-          <div css={styles.MainToolBarToolsWrapper}>
-            <IconButton icon="check_3" a11y="편집" css={styles.MainToolBarIcon} onClick={this.toggleEditingMode} />
-            <IconButton icon="check_1" a11y="정렬" css={styles.MainToolBarIcon} onClick={this.toggleMoreModal} />
-          </div>
-        </Responsive>
-      </div>
-    );
-  }
-
-  renderTitleBar() {
     const {
+      items,
+      selectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
       unit,
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
     } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    return (
-      <LNBTitleBar
-        title={unit.title}
-        totalCount={totalCount.itemTotalCount}
-        onClickEditingMode={this.toggleEditingMode}
-        href={URLMap.main.href}
-        as={URLMap.main.as}
-        query={{ page, orderType, orderBy, filter }}
-      />
-    );
+    const titleBarProps = {
+      title: unit.title,
+      totalCount: totalCount.itemTotalCount,
+      toggleEditingMode: this.toggleEditingMode,
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+      query: { page, orderType, orderBy, filter },
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderModal() {
@@ -196,12 +128,14 @@ class MainUnit extends React.Component {
       pageInfo: { order },
     } = this.props;
 
-    return <SortModal order={order} orderOptions={MainOrderOptions.toList()} isActive={showMoreModal} />;
-  }
-
-  renderModalBackground() {
-    const { showMoreModal } = this.state;
-    return <ModalBackground isActive={showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
+    return (
+      <SortModal
+        order={order}
+        orderOptions={MainOrderOptions.toList()}
+        isActive={showMoreModal}
+        onClickModalBackground={this.handleOnClickOutOfModal}
+      />
+    );
   }
 
   renderDetailView() {
@@ -272,7 +206,6 @@ class MainUnit extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
     const { unit, isFetchingBook } = this.props;
 
     return (
@@ -281,7 +214,7 @@ class MainUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
+        {this.renderLNB()}
         <main>
           <Responsive>
             {isFetchingBook ? (
@@ -297,7 +230,6 @@ class MainUnit extends React.Component {
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}
-        {this.renderModalBackground()}
       </>
     );
   }

@@ -1,4 +1,27 @@
-export const searchBarForm = {
+export const searchBoxWrapper = {
+  flex: 1,
+  maxWidth: 600,
+  transition: 'max-width .3s',
+  '.hideTools & ': {
+    maxWidth: 1000,
+  },
+};
+
+export const toolsWrapper = {
+  height: 24,
+  paddingLeft: 2,
+  maxWidth: 600,
+  opacity: 1,
+  transition: 'max-width .3s, opacity .3s',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  '.hideTools & ': {
+    maxWidth: 0,
+    opacity: 0,
+  },
+};
+
+export const searchBox = {
   position: 'relative',
   width: '100%',
   height: 30,
@@ -10,7 +33,11 @@ export const searchBarForm = {
   boxSizing: 'border-box',
 };
 
-export const searchBarIcon = {
+export const searchBoxActive = {
+  paddingRight: 38,
+};
+
+export const searchBoxIcon = {
   position: 'absolute',
   left: 0,
   top: 0,
@@ -23,7 +50,7 @@ export const searchBarIcon = {
   },
 };
 
-export const searchBarInput = {
+export const searchBoxInput = {
   width: '100%',
   height: '100%',
   fontSize: 13,
@@ -31,7 +58,7 @@ export const searchBarInput = {
   color: '#40474d',
 };
 
-export const searchBarClearButton = {
+export const searchBoxClearButton = {
   display: 'none',
   position: 'absolute',
   top: '50%',
@@ -61,10 +88,6 @@ export const searchBarClearButton = {
   },
 };
 
-export const searchBarFormActive = {
-  paddingRight: 38,
-};
-
-export const searchBarClearButtonActive = {
+export const searchBoxClearButtonActive = {
   display: 'block',
 };

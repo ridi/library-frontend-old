@@ -7,10 +7,10 @@ import { URLMap } from '../../../constants/urls';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 const SortModal = props => {
-  const { order, orderOptions, isActive, query } = props;
+  const { order, orderOptions, isActive, query, onClickModalBackground } = props;
 
   return (
-    <Modal isActive={isActive} a11y="옵션">
+    <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
           {orderOptions.map((option, index) => (

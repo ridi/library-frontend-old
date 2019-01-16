@@ -1,7 +1,6 @@
 import { css } from '@emotion/core';
 import { MAX_WIDTH } from './constants';
 
-export * from './modal';
 export * from './reset';
 
 export const Hidden = css({

@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import BookList from '../BookList';
 import { SkeletonBook } from './components';
 import BookWrapper from '../BookWrapper';
@@ -10,7 +11,7 @@ const SkeletonBookList = () => (
     {Array(SkeletonBookCount)
       .fill(1)
       .map(() => (
-        <BookWrapper>
+        <BookWrapper key={shortid.generate()}>
           <SkeletonBook />
         </BookWrapper>
       ))}

@@ -1,3 +1,7 @@
+export const tabBar = {
+  width: '100%',
+};
+
 export const tabItem = {
   display: 'inline-block',
   position: 'relative',
@@ -7,6 +11,7 @@ export const tabItem = {
 };
 
 export const tabButton = {
+  display: 'block',
   padding: '0 8px',
   height: 40,
   lineHeight: '40px',
@@ -24,6 +29,7 @@ export const tabButtonToggle = isActive =>
     : {};
 
 export const activeBar = {
+  display: 'block',
   position: 'absolute',
   left: 0,
   bottom: 0,

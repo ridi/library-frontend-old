@@ -1,87 +1,32 @@
-import Head from 'next/head';
-
 /** @jsx jsx */
-import React from 'react';
-import { css, jsx } from '@emotion/core';
-import { connect } from 'react-redux';
+import { jsx } from '@emotion/core';
+import Head from 'next/head';
 import Router from 'next/router';
-import EmptyBookList from '../../components/EmptyBookList';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
-
+import React from 'react';
+import { connect } from 'react-redux';
+import BookList from '../../../components/BookList';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
+import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { URLMap } from '../../../constants/urls';
+import { getBooks } from '../../../services/book/selectors';
 import {
-  loadItems,
   changeSearchKeyword,
   clearSelectedBooks,
-  toggleSelectBook,
-  hideSelectedBooks,
   downloadSelectedBooks,
-} from '../../services/purchased/search/actions';
-
-import LNBTabBar, { TabMenuTypes } from '../base/LNB/LNBTabBar';
-import SearchBar from '../../components/SearchBar';
-import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook';
-import IconButton from '../../components/IconButton';
-import EditingBar from '../../components/EditingBar';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
-import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
-
-import Responsive from '../base/Responsive';
-
-import { toFlatten } from '../../utils/array';
-import { makeLinkProps, makeURI } from '../../utils/uri';
-import { URLMap } from '../../constants/urls';
-import { getSearchPageInfo, getItemsByPage, getSelectedBooks, getIsFetchingBooks } from '../../services/purchased/search/selectors';
-import { getBooks } from '../../services/book/selectors';
-
-const styles = {
-  searchFetchingBooks: css({
-    backgroundColor: 'white',
-  }),
-  searchToolBarWrapper: css({
-    height: 46,
-    backgroundColor: '#f3f4f5',
-    boxShadow: '0 2px 10px 0 rgba(0, 0, 0, 0.04)',
-    boxSizing: 'border-box',
-    borderBottom: '1px solid #d1d5d9',
-  }),
-  searchToolBar: css({
-    display: 'flex',
-  }),
-  searchToolBarSearchBarWrapper: css({
-    padding: '8px 0',
-    height: 30,
-    flex: 1,
-    maxWidth: 600,
-  }),
-  searchToolBarSearchBarWrapperActive: css({
-    maxWidth: 'initial',
-  }),
-  searchToolBarToolsWrapper: css({
-    height: 30,
-    padding: '8px 2px 8px 18px',
-    marginLeft: 'auto',
-  }),
-  searchToolBarIcon: css({
-    margin: '3px 0',
-    width: 24,
-    height: 24,
-    marginRight: 16,
-    '&:last-of-type': {
-      marginRight: 0,
-    },
-    '.RSGIcon': {
-      width: 24,
-      height: 24,
-    },
-  }),
-  ButtonActionLeft: css({
-    float: 'left',
-  }),
-  ButtonActionRight: css({
-    float: 'right',
-  }),
-};
+  hideSelectedBooks,
+  loadItems,
+  toggleSelectBook,
+} from '../../../services/purchased/search/actions';
+import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
+import { toFlatten } from '../../../utils/array';
+import { makeLinkProps, makeURI } from '../../../utils/uri';
+import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import SearchAndEditingBar from '../../base/LNB/SearchAndEditingBar';
+import Responsive from '../../base/Responsive';
+import * as styles from './styles';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -140,8 +85,8 @@ class Search extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
-    const { isEditing, hideTools } = this.state;
+  renderLNB() {
+    const { hideTools, isEditing } = this.state;
     const {
       pageInfo: { keyword },
       items,
@@ -149,40 +94,28 @@ class Search extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    if (isEditing) {
-      const selectedCount = Object.keys(selectedBooks).length;
-      const isSelectedAllBooks = selectedCount === items.length;
-      return (
-        <EditingBar
-          totalSelectedCount={selectedCount}
-          isSelectedAllBooks={isSelectedAllBooks}
-          onClickSelectAllBooks={dispatchSelectAllBooks}
-          onClickUnselectAllBooks={dispatchClearSelectedBooks}
-          onClickSuccessButton={this.toggleEditingMode}
-        />
-      );
-    }
+    const searchBarProps = {
+      hideTools,
+      keyword,
+      handleOnSubmitSearchBar: this.handleOnSubmitSearchBar,
+      handleOnFocusSearchBar: this.handleOnFocusSearchBar,
+      handleOnBlurSearchBar: this.handleOnBlurSearchBar,
+      edit: true,
+      toggleEditingMode: this.toggleEditingMode,
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
 
-    return (
-      <div css={styles.searchToolBarWrapper}>
-        <Responsive css={styles.searchToolBar}>
-          <div css={[styles.searchToolBarSearchBarWrapper, hideTools && styles.searchToolBarSearchBarWrapperActive]}>
-            <SearchBar
-              keyword={keyword}
-              onSubmit={this.handleOnSubmitSearchBar}
-              onFocus={this.handleOnFocusSearchBar}
-              onBlur={this.handleOnBlurSearchBar}
-            />
-          </div>
-          {hideTools ? null : (
-            <div css={styles.searchToolBarToolsWrapper}>
-              <IconButton icon="check_3" a11y="편집" css={styles.searchToolBarIcon} onClick={this.toggleEditingMode} />
-            </div>
-          )}
-        </Responsive>
-      </div>
-    );
+    return <SearchAndEditingBar searchBarProps={searchBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderBooks() {
@@ -266,7 +199,7 @@ class Search extends React.Component {
           <title>{`'${keyword}'`} 검색 결과 - 내 서재</title>
         </Head>
         <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.searchFetchingBooks}>
           <Responsive>{this.renderBooks()}</Responsive>
         </main>
