@@ -8,7 +8,7 @@ import { BottomActionBar, BottomActionButton } from '../../../components/BottomA
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
@@ -213,7 +213,7 @@ class searchUnit extends React.Component {
         <main>
           <Responsive>
             {isFetchingBook ? (
-              <SkeletonUnitSection />
+              <SkeletonUnitDetailView />
             ) : (
               <>
                 {this.renderBooks()}

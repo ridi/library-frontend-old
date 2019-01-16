@@ -8,7 +8,8 @@ import { BottomActionBar, BottomActionButton } from '../../../components/BottomA
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
@@ -137,6 +138,12 @@ class MainUnit extends React.Component {
     );
   }
 
+  renderDetailView() {
+    const { unit, items, books } = this.props;
+    const primaryBook = books[items[0].b_id];
+    return <UnitDetailView unit={unit} book={primaryBook} />;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
@@ -211,9 +218,10 @@ class MainUnit extends React.Component {
         <main>
           <Responsive>
             {isFetchingBook ? (
-              <SkeletonUnitSection />
+              <SkeletonUnitDetailView />
             ) : (
               <>
+                {this.renderDetailView()}
                 {this.renderBooks()}
                 {this.renderModal()}
               </>

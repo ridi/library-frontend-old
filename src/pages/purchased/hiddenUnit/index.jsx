@@ -8,7 +8,7 @@ import { BottomActionBar, BottomActionButton } from '../../../components/BottomA
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
@@ -173,7 +173,7 @@ class HiddenUnit extends React.Component {
         </Head>
         {this.renderLNB()}
         <main>
-          <Responsive>{isFetchingBook ? <SkeletonUnitSection /> : this.renderBooks()}</Responsive>
+          <Responsive>{isFetchingBook ? <SkeletonUnitDetailView /> : this.renderBooks()}</Responsive>
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}
