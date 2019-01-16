@@ -25,7 +25,7 @@ import {
 } from '../../../services/purchased/mainUnit/actions';
 import {
   getIsFetchingBook,
-  getItemsByPage,
+  getItems,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
@@ -168,22 +168,6 @@ class MainUnit extends React.Component {
     );
   }
 
-  renderPaginator() {
-    const {
-      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId },
-    } = this.props;
-
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.mainUnit.href, query: { unitId } }}
-        as={URLMap.mainUnit.as(unitId)}
-        query={{ orderType, orderBy }}
-      />
-    );
-  }
-
   renderBottomActionBar() {
     const { isEditing } = this.state;
     const { selectedBooks } = this.props;
@@ -228,7 +212,6 @@ class MainUnit extends React.Component {
             )}
           </Responsive>
         </main>
-        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
@@ -241,7 +224,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItemsByPage(state);
+  const items = getItems(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);

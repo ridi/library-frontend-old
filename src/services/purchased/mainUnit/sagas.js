@@ -27,12 +27,11 @@ import { showToast } from '../../toast/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
 
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
 
-  yield all([put(setPage(page)), put(setOrder(order))]);
+  yield put(setOrder(order));
 }
 
 function* loadItems() {
@@ -41,10 +40,11 @@ function* loadItems() {
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const nextPage = page + 1;
 
   yield put(setIsFetchingBook(true));
   const [itemResponse, countResponse] = yield all([
-    call(fetchMainUnitItems, unitId, orderType, orderBy, page),
+    call(fetchMainUnitItems, unitId, orderType, orderBy, nextPage),
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
@@ -54,8 +54,12 @@ function* loadItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
 
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
-  yield put(setIsFetchingBook(false));
+  yield all([
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.item_total_count)),
+    put(setPage(nextPage)),
+    put(setIsFetchingBook(false)),
+  ]);
 }
 
 function* hideSelectedBooks() {
