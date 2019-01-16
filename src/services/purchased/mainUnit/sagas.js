@@ -20,7 +20,7 @@ import { loadBookData, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
+import { getOptions, getUnitId, getItems, getSelectedBooks } from './selectors';
 import { download } from '../../common/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
 import { showToast } from '../../toast/actions';
@@ -90,7 +90,7 @@ function* downloadSelectedBooks() {
 }
 
 function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+  const items = yield select(getItems);
   const bookIds = toFlatten(items, 'b_id');
   yield put(selectBooks(bookIds));
 }
