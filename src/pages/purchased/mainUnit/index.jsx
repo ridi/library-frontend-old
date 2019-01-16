@@ -198,7 +198,6 @@ class MainUnit extends React.Component {
 
   render() {
     const { unit, items, isFetchingBook } = this.props;
-    const isFirstLoading = items.length === 0 && isFetchingBook;
 
     return (
       <>
@@ -209,7 +208,7 @@ class MainUnit extends React.Component {
         {this.renderLNB()}
         <main>
           <Responsive>
-            {isFirstLoading ? (
+            {items.length === 0 && isFetchingBook ? (
               <SkeletonUnitDetailView />
             ) : (
               <>

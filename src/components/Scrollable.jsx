@@ -12,16 +12,12 @@ export default class Scrollable extends React.Component {
   handleScroll = () => {
     const { hasMore, isLoading, fetch, bottomOffset = 300 } = this.props;
 
-    if (!hasMore) {
-      return;
-    }
-
-    if (isLoading) {
+    if (!hasMore || isLoading) {
       return;
     }
 
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - bottomOffset) {
-      fetch();
+      window.requestAnimationFrame(fetch);
     }
   };
 

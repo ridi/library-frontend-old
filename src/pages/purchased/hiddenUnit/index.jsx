@@ -33,6 +33,7 @@ import { toFlatten } from '../../../utils/array';
 import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import Scrollable from '../../../components/Scrollable';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -117,25 +118,32 @@ class HiddenUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, dispatchLoadItems, totalCount, isFetchingBook } = this.props;
 
     if (items.length === 0) {
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          />
-        ))}
-      </BookList>
+      <Scrollable
+        showLoader
+        isLoading={isFetchingBook}
+        hasMore={totalCount.itemTotalCount > items.length}
+        fetch={() => dispatchLoadItems()}
+      >
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          ))}
+        </BookList>
+      </Scrollable>
     );
   }
 
@@ -156,7 +164,7 @@ class HiddenUnit extends React.Component {
   }
 
   render() {
-    const { unit, isFetchingBook } = this.props;
+    const { unit, items, isFetchingBook } = this.props;
     return (
       <>
         <Head>
@@ -165,7 +173,7 @@ class HiddenUnit extends React.Component {
         {this.renderLNB()}
         <main>
           <Responsive>
-            {isFetchingBook ? (
+            {items.length === 0 && isFetchingBook ? (
               <SkeletonUnitDetailView />
             ) : (
               <>
@@ -208,6 +216,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
