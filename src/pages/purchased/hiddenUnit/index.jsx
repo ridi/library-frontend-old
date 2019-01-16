@@ -7,7 +7,6 @@ import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
@@ -24,7 +23,7 @@ import {
 } from '../../../services/purchased/hiddenUnit/actions';
 import {
   getIsFetchingBook,
-  getItemsByPage,
+  getItems,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
@@ -188,7 +187,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItemsByPage(state);
+  const items = getItems(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);

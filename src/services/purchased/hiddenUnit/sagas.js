@@ -15,37 +15,34 @@ import {
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
 
 import { loadBookData, saveUnitData } from '../../book/sagas';
-import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
+import { getOptions, getUnitId, getItems, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
-
-  yield all([put(setPage(page))]);
-}
-
 function* loadHiddenUnitItems() {
-  yield call(persistPageOptionsFromQueries);
-
   const unitId = yield select(getUnitId);
   const { page } = yield select(getOptions);
+  const nextPage = page + 1;
 
   yield put(setIsFetchingHiddenBook(true));
-  const [itemResponse, countResponse] = yield all([call(fetchHiddenUnitItems, unitId, page), call(fetchHiddenUnitItemsTotalCount, unitId)]);
+  const [itemResponse, countResponse] = yield all([
+    call(fetchHiddenUnitItems, unitId, nextPage),
+    call(fetchHiddenUnitItemsTotalCount, unitId),
+  ]);
 
   yield call(saveUnitData, [itemResponse.unit]);
 
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
-
-  yield put(setIsFetchingHiddenBook(false));
+  yield all([
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.item_total_count)),
+    put(setPage(nextPage)),
+    put(setIsFetchingHiddenBook(false)),
+  ]);
 }
 
 function* unhideSelectedHiddenUnitBooks() {
@@ -75,7 +72,7 @@ function* deleteSelectedHiddenUnitBooks() {
 }
 
 function* selectAllHiddenUnitBooks() {
-  const items = yield select(getItemsByPage);
+  const items = yield select(getItems);
   const bookIds = toFlatten(items, 'b_id');
   yield put(selectBooks(bookIds));
 }
