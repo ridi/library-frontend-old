@@ -36,6 +36,7 @@ import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import Scrollable from '../../../components/Scrollable';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -145,25 +146,32 @@ class MainUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, dispatchLoadItems, totalCount, isFetchingBook } = this.props;
 
     if (items.length === 0) {
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          />
-        ))}
-      </BookList>
+      <Scrollable
+        showLoader
+        isLoading={isFetchingBook}
+        hasMore={totalCount.itemTotalCount > items.length}
+        fetch={() => dispatchLoadItems()}
+      >
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          ))}
+        </BookList>
+      </Scrollable>
     );
   }
 
@@ -189,7 +197,8 @@ class MainUnit extends React.Component {
   }
 
   render() {
-    const { unit, isFetchingBook } = this.props;
+    const { unit, items, isFetchingBook } = this.props;
+    const isFirstLoading = items.length === 0 && isFetchingBook;
 
     return (
       <>
@@ -200,7 +209,7 @@ class MainUnit extends React.Component {
         {this.renderLNB()}
         <main>
           <Responsive>
-            {isFetchingBook ? (
+            {isFirstLoading ? (
               <SkeletonUnitDetailView />
             ) : (
               <>
@@ -245,6 +254,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
