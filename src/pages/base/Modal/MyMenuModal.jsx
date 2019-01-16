@@ -13,13 +13,14 @@ const userIdStyle = {
   color: '#40474d',
 };
 
-const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelDownload }) => (
+const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelDownload, onClickModalBackground }) => (
   <Modal
     isActive={isActive}
     a11y="마이메뉴"
     style={{
       top: 47,
     }}
+    onClickModalBackground={onClickModalBackground}
   >
     <ModalItemGroup>
       <p css={userIdStyle}>

@@ -1,11 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-
-const styles = {
-  tabBar: {
-    width: '100%',
-  },
-};
+import * as styles from './styles';
 
 const TabBar = ({ children }) => (
   <nav css={styles.tabBar}>

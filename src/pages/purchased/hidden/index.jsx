@@ -1,54 +1,37 @@
 /** @jsx jsx */
-import React from 'react';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import Head from 'next/head';
+import React from 'react';
 import { connect } from 'react-redux';
-import EmptyBookList from '../../components/EmptyBookList';
-import ResponsivePaginator from '../../components/ResponsivePaginator';
-
-import LNBTitleBar from '../base/LNB/LNBTitleBar';
-import Responsive from '../base/Responsive';
-import EditingBar from '../../components/EditingBar';
-import BookList from '../../components/BookList';
-import LibraryBook from '../../components/LibraryBook';
-import { BottomActionBar, BottomActionButton } from '../../components/BottomActionBar';
-
-import { getBooks } from '../../services/book/selectors';
+import BookList from '../../../components/BookList';
+import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
+import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { URLMap } from '../../../constants/urls';
+import { getBooks } from '../../../services/book/selectors';
 import {
+  clearSelectedBooks,
+  deleteSelectedBooks,
   loadItems,
   selectAllBooks,
-  clearSelectedBooks,
   toggleSelectBook,
   unhideSelectedBooks,
-  deleteSelectedBooks,
-} from '../../services/purchased/hidden/actions';
+} from '../../../services/purchased/hidden/actions';
 import {
+  getIsFetchingBooks,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
-  getIsFetchingBooks,
-} from '../../services/purchased/hidden/selectors';
-import { getPageInfo as getMainPageInfo } from '../../services/purchased/main/selectors';
-
-import { URLMap } from '../../constants/urls';
-
-import { toFlatten } from '../../utils/array';
-import SkeletonBookList from '../../components/Skeleton/SkeletonBookList';
-import { makeLinkProps } from '../../utils/uri';
-
-const styles = {
-  hiddenFetchingBooks: css({
-    backgroundColor: 'white',
-  }),
-  hiddenButtonActionLeft: css({
-    color: '#e64938',
-    float: 'left',
-  }),
-  hiddenButtonActionRight: css({
-    float: 'right',
-  }),
-};
+} from '../../../services/purchased/hidden/selectors';
+import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import { toFlatten } from '../../../utils/array';
+import { makeLinkProps } from '../../../utils/uri';
+import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import Responsive from '../../base/Responsive';
+import * as styles from './styles';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -89,38 +72,36 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-
-    return (
-      <EditingBar
-        totalSelectedCount={selectedCount}
-        isSelectedAllBooks={isSelectedAllBooks}
-        onClickSelectAllBooks={dispatchSelectAllBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
-        onClickSuccessButton={this.toggleEditingMode}
-      />
-    );
-  }
-
-  renderTitleBar() {
+  renderLNB() {
+    const { isEditing } = this.state;
     const {
+      items,
+      selectedBooks,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
     } = this.props;
-    return (
-      <LNBTitleBar
-        title="숨긴 도서 목록"
-        totalCount={totalCount.itemTotalCount}
-        onClickEditingMode={this.toggleEditingMode}
-        href={URLMap.main.href}
-        as={URLMap.main.as}
-        query={{ page, orderType, orderBy, filter }}
-      />
-    );
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const titleBarProps = {
+      title: '숨긴 도서 목록',
+      totalCount: totalCount.itemTotalCount,
+      toggleEditingMode: this.toggleEditingMode,
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+      query: { page, orderType, orderBy, filter },
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+
+    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderBooks() {
@@ -186,7 +167,6 @@ class Hidden extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
     const { isFetchingBooks } = this.props;
 
     return (
@@ -194,7 +174,7 @@ class Hidden extends React.Component {
         <Head>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
-        {isEditing ? this.renderToolBar() : this.renderTitleBar()}
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
           <Responsive>{this.renderBooks()}</Responsive>
         </main>

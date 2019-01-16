@@ -10,7 +10,6 @@ import * as styles from './styles';
 import { Hidden } from '../../../styles';
 import MyMenu from '../../../svgs/MyMenu.svg';
 import Responsive from '../Responsive';
-import { ModalBackground } from '../../../components/Modal';
 
 const RIDIBOOKS_URL = 'https://ridibooks.com';
 const RIDISELECT_URL = 'https://select.ridibooks.com';
@@ -71,10 +70,10 @@ class GNB extends React.Component {
               isActive={isModalActive}
               isExcelDownloading={isExcelDownloading}
               dispatchStartExcelDownload={dispatchStartExcelDownload}
+              onClickModalBackground={this.onModalBackgroundClick}
             />
           </header>
         </Responsive>
-        <ModalBackground isActive={isModalActive} onClickModalBackground={this.onModalBackgroundClick} />
       </>
     );
   }
