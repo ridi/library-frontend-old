@@ -5,13 +5,9 @@ import { calcPage } from '../../../utils/pagination';
 
 const getState = state => state.purchasedHiddenUnit;
 
-export const getItemsByPage = createSelector(
+export const getItems = createSelector(
   getState,
-  state => {
-    const { page, itemIdsForPage, items } = state;
-    const itemIds = itemIdsForPage[page] || [];
-    return itemIds.map(itemId => items[itemId]);
-  },
+  state => state.items,
 );
 
 export const getPageInfo = createSelector(

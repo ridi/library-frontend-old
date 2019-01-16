@@ -7,8 +7,8 @@ import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
+import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
@@ -23,7 +23,7 @@ import {
 } from '../../../services/purchased/hiddenUnit/actions';
 import {
   getIsFetchingBook,
-  getItemsByPage,
+  getItems,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
@@ -33,6 +33,7 @@ import { toFlatten } from '../../../utils/array';
 import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import Scrollable from '../../../components/Scrollable';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -109,42 +110,40 @@ class HiddenUnit extends React.Component {
     return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
+  renderDetailView() {
+    const { unit, items, books } = this.props;
+    const primaryBook = books[items[0].b_id];
+    return <UnitDetailView unit={unit} book={primaryBook} />;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, dispatchLoadItems, totalCount, isFetchingBook } = this.props;
 
     if (items.length === 0) {
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          />
-        ))}
-      </BookList>
-    );
-  }
-
-  renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages, unitId },
-    } = this.props;
-
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.hiddenUnit.href, query: { unitId } }}
-        as={URLMap.hiddenUnit.as(unitId)}
-      />
+      <Scrollable
+        showLoader
+        isLoading={isFetchingBook}
+        hasMore={totalCount.itemTotalCount > items.length}
+        fetch={() => dispatchLoadItems()}
+      >
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          ))}
+        </BookList>
+      </Scrollable>
     );
   }
 
@@ -165,7 +164,7 @@ class HiddenUnit extends React.Component {
   }
 
   render() {
-    const { unit, isFetchingBook } = this.props;
+    const { unit, items, isFetchingBook } = this.props;
     return (
       <>
         <Head>
@@ -173,9 +172,17 @@ class HiddenUnit extends React.Component {
         </Head>
         {this.renderLNB()}
         <main>
-          <Responsive>{isFetchingBook ? <SkeletonUnitDetailView /> : this.renderBooks()}</Responsive>
+          <Responsive>
+            {items.length === 0 && isFetchingBook ? (
+              <SkeletonUnitDetailView />
+            ) : (
+              <>
+                {this.renderDetailView()}
+                {this.renderBooks()}
+              </>
+            )}
+          </Responsive>
         </main>
-        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
@@ -188,7 +195,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItemsByPage(state);
+  const items = getItems(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
@@ -209,6 +216,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,

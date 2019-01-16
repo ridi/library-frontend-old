@@ -12,13 +12,9 @@ const getDataState = state => {
   return mainUnitState.data[key] || initialDataState;
 };
 
-export const getItemsByPage = createSelector(
+export const getItems = createSelector(
   getDataState,
-  dataState => {
-    const { page, itemIdsForPage, items } = dataState;
-    const itemIds = itemIdsForPage[page] || [];
-    return itemIds.map(itemId => items[itemId]);
-  },
+  dataState => dataState.items,
 );
 
 export const getPageInfo = createSelector(
