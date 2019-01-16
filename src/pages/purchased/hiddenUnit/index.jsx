@@ -1,18 +1,17 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
+import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import Head from 'next/head';
-import { jsx } from '@emotion/core';
-import EmptyBookList from '../../../components/EmptyBookList';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-
-import Responsive from '../../base/Responsive';
-import EditingBar from '../../../components/EditingBar';
 import BookList from '../../../components/BookList';
-import LibraryBook from '../../../components/LibraryBook/index';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-
+import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook/index';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit } from '../../../services/book/selectors';
+import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
 import {
   clearSelectedBooks,
   deleteSelectedBooks,
@@ -23,20 +22,17 @@ import {
   unhideSelectedBooks,
 } from '../../../services/purchased/hiddenUnit/actions';
 import {
+  getIsFetchingBook,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
   getUnitId,
-  getIsFetchingBook,
 } from '../../../services/purchased/hiddenUnit/selectors';
-import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
-import { URLMap } from '../../../constants/urls';
-
 import { toFlatten } from '../../../utils/array';
-import SkeletonUnitSection from '../../../components/Skeleton/SkeletonUnitSection';
+import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import Responsive from '../../base/Responsive';
 import * as styles from './styles';
-import TitleBar from '../../../components/TitleBar';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -90,29 +86,27 @@ class HiddenUnit extends React.Component {
       totalCount,
       hiddenPageInfo: { currentPage: page },
     } = this.props;
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-    return (
-      <div css={styles.LNBWrapper}>
-        <TitleBar
-          title={unit.title}
-          totalCount={totalCount.itemTotalCount}
-          onClickEditingMode={this.toggleEditingMode}
-          href={URLMap.hidden.href}
-          as={URLMap.hidden.as}
-          query={{ page }}
-        />
-        {isEditing && (
-          <EditingBar
-            totalSelectedCount={selectedCount}
-            isSelectedAllBooks={isSelectedAllBooks}
-            onClickSelectAllBooks={dispatchSelectAllBooks}
-            onClickUnselectAllBooks={dispatchClearSelectedBooks}
-            onClickSuccessButton={this.toggleEditingMode}
-          />
-        )}
-      </div>
-    );
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
+
+    const titleBarProps = {
+      title: unit.title,
+      totalCount: totalCount.itemTotalCount,
+      toggleEditingMode: this.toggleEditingMode,
+      href: URLMap.hidden.href,
+      as: URLMap.hidden.as,
+      query: { page },
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+
+    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderBooks() {

@@ -6,12 +6,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import EditingBar from '../../../components/EditingBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
-import SearchBar from '../../../components/SearchBar';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -26,6 +24,7 @@ import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import SearchAndEditingBar from '../../base/LNB/SearchAndEditingBar';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
 
@@ -95,31 +94,28 @@ class Search extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    return (
-      <div css={styles.LNBWrapper}>
-        <SearchBar
-          hideTools={hideTools}
-          keyword={keyword}
-          handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
-          handleOnFocusSearchBar={this.handleOnFocusSearchBar}
-          handleOnBlurSearchBar={this.handleOnBlurSearchBar}
-          edit
-          toggleEditingMode={this.toggleEditingMode}
-        />
-        {isEditing && (
-          <EditingBar
-            totalSelectedCount={selectedCount}
-            isSelectedAllBooks={isSelectedAllBooks}
-            onClickSelectAllBooks={dispatchSelectAllBooks}
-            onClickUnselectAllBooks={dispatchClearSelectedBooks}
-            onClickSuccessButton={this.toggleEditingMode}
-          />
-        )}
-      </div>
-    );
+    const searchBarProps = {
+      hideTools,
+      keyword,
+      handleOnSubmitSearchBar: this.handleOnSubmitSearchBar,
+      handleOnFocusSearchBar: this.handleOnFocusSearchBar,
+      handleOnBlurSearchBar: this.handleOnBlurSearchBar,
+      edit: true,
+      toggleEditingMode: this.toggleEditingMode,
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+
+    return <SearchAndEditingBar searchBarProps={searchBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderBooks() {

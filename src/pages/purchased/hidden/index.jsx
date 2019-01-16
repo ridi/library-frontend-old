@@ -1,42 +1,37 @@
 /** @jsx jsx */
-import React from 'react';
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
+import React from 'react';
 import { connect } from 'react-redux';
-import EmptyBookList from '../../../components/EmptyBookList';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-
-import Responsive from '../../base/Responsive';
-import EditingBar from '../../../components/EditingBar';
 import BookList from '../../../components/BookList';
-import LibraryBook from '../../../components/LibraryBook';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-
+import EmptyBookList from '../../../components/EmptyBookList';
+import LibraryBook from '../../../components/LibraryBook';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
+  clearSelectedBooks,
+  deleteSelectedBooks,
   loadItems,
   selectAllBooks,
-  clearSelectedBooks,
   toggleSelectBook,
   unhideSelectedBooks,
-  deleteSelectedBooks,
 } from '../../../services/purchased/hidden/actions';
 import {
+  getIsFetchingBooks,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
-  getIsFetchingBooks,
 } from '../../../services/purchased/hidden/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
-
-import { URLMap } from '../../../constants/urls';
-
 import { toFlatten } from '../../../utils/array';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { makeLinkProps } from '../../../utils/uri';
+import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import Responsive from '../../base/Responsive';
 import * as styles from './styles';
-import TitleBar from '../../../components/TitleBar';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -87,31 +82,26 @@ class Hidden extends React.Component {
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
     } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const titleBarProps = {
+      title: '숨긴 도서 목록',
+      totalCount: totalCount.itemTotalCount,
+      toggleEditingMode: this.toggleEditingMode,
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+      query: { page, orderType, orderBy, filter },
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
 
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-
-    return (
-      <div css={styles.LNBWrapper}>
-        <TitleBar
-          title="숨긴 도서 목록"
-          totalCount={totalCount.itemTotalCount}
-          onClickEditingMode={this.toggleEditingMode}
-          href={URLMap.main.href}
-          as={URLMap.main.as}
-          query={{ page, orderType, orderBy, filter }}
-        />
-        {isEditing && (
-          <EditingBar
-            totalSelectedCount={selectedCount}
-            isSelectedAllBooks={isSelectedAllBooks}
-            onClickSelectAllBooks={dispatchSelectAllBooks}
-            onClickUnselectAllBooks={dispatchClearSelectedBooks}
-            onClickSuccessButton={this.toggleEditingMode}
-          />
-        )}
-      </div>
-    );
+    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderBooks() {

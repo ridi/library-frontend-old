@@ -5,7 +5,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import BookList from '../../../components/BookList';
 import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import EditingBar from '../../../components/EditingBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
@@ -33,10 +32,10 @@ import {
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
+import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
-import TitleBar from '../../../components/TitleBar';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -102,31 +101,26 @@ class searchUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
-
-    return (
-      <div css={styles.LNBWrapper}>
-        <TitleBar
-          title={unit.title}
-          totalCount={totalCount.itemTotalCount}
-          onClickEditingMode={this.toggleEditingMode}
-          href={URLMap.search.href}
-          as={URLMap.search.as}
-          query={{ keyword, page }}
-        />
-        {isEditing && (
-          <EditingBar
-            totalSelectedCount={selectedCount}
-            isSelectedAllBooks={isSelectedAllBooks}
-            onClickSelectAllBooks={dispatchSelectAllBooks}
-            onClickUnselectAllBooks={dispatchClearSelectedBooks}
-            onClickSuccessButton={this.toggleEditingMode}
-          />
-        )}
-      </div>
-    );
+    const titleBarProps = {
+      title: unit.title,
+      totalCount: totalCount.itemTotalCount,
+      toggleEditingMode: this.toggleEditingMode,
+      href: URLMap.search.href,
+      as: URLMap.search.as,
+      query: { keyword, page },
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderModal() {
