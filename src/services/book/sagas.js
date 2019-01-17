@@ -1,8 +1,8 @@
 import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
-import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage, setUnitData } from './actions';
+import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage, setBookDescriptions, setUnitData } from './actions';
 
-import { fetchBookData } from './requests';
+import { fetchBookData, fetchBookDescriptions } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion, attatchTTL } from '../../utils/ttl';
@@ -25,14 +25,13 @@ function* loadBookDataFromStorage() {
   yield fork(persistBookDataToStorage);
 }
 
-export function* loadBookData(bookIds) {
+function filterBookIds(bookIds, existBooks) {
   // Step 1. Get exist book data
   // Step 2. Filter expired or not cached book data via payload.bookIds
   // Step 3. Fetch book data
   // Step 4. Set book data
   const criterion = getCriterion();
-  const existBooks = yield select(state => state.books.books);
-  const filteredBookIds = bookIds.reduce((previous, bookId) => {
+  return bookIds.reduce((previous, bookId) => {
     const book = existBooks.find(bookId);
 
     if (!book) {
@@ -47,12 +46,26 @@ export function* loadBookData(bookIds) {
 
     return previous;
   }, []);
+}
+
+export function* loadBookData(bookIds) {
+  const existBooks = yield select(state => state.books.books);
+  const filteredBookIds = filterBookIds(bookIds, existBooks);
 
   if (filteredBookIds.length > 0) {
     const books = yield call(fetchBookData, filteredBookIds);
     yield put(setBookData(books));
     yield fork(persistBookDataToStorage);
   }
+}
+
+export function* loadBookDescriptions(bookIds) {
+  const existBookDescriptions = yield select(state => state.books.bookDescriptions);
+  const filteredBookIds = filterBookIds(bookIds, existBookDescriptions);
+
+  const bookDescriptions = yield call(fetchBookDescriptions, filteredBookIds);
+  yield put(setBookDescriptions(bookDescriptions));
+  // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
 }
 
 export function* saveUnitData(units) {

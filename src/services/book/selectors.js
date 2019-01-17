@@ -12,6 +12,16 @@ export const getBooks = (state, bookIds) =>
       }, {}),
   )(state);
 
+export const getBookDescriptions = (state, bookIds) =>
+  createSelector(
+    getBookState,
+    bookState =>
+      bookIds.reduce((previous, bookId) => {
+        previous[bookId] = bookState.bookDescriptions.get(bookId);
+        return previous;
+      }, {}),
+  )(state);
+
 export const getUnit = (state, unitId) =>
   createSelector(
     getBookState,

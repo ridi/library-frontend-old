@@ -6,8 +6,8 @@ import config from '../../config';
 import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
 
-const _reduceBooks = books => {
-  const reducedBooks = books.map(book => ({
+const _reduceBooks = books =>
+  books.map(book => ({
     id: book.id,
     title: book.title,
     file: book.file,
@@ -21,11 +21,20 @@ const _reduceBooks = books => {
     categories: book.categories,
   }));
 
-  return reducedBooks;
-};
+const _reduceBookDescriptions = bookDescriptions =>
+  bookDescriptions.map(bookDescription => ({
+    id: bookDescription.b_id,
+    intro: bookDescription.descriptions.intro.replace('\r\n', '\n').replace('\n', ''),
+  }));
 
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
   return attatchTTL(_reduceBooks(response.data));
+}
+
+export function* fetchBookDescriptions(bookIds) {
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
+  return attatchTTL(_reduceBookDescriptions(response.data));
 }
