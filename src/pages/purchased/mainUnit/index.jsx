@@ -8,6 +8,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
@@ -24,18 +25,17 @@ import {
 } from '../../../services/purchased/mainUnit/actions';
 import {
   getIsFetchingBook,
-  getItems,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
   getUnitId,
+  getItemsByPage,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import BottomActionBar from '../../base/BottomActionBar';
 import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import Scrollable from '../../../components/Scrollable';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -150,32 +150,25 @@ class MainUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, dispatchLoadItems, totalCount, isFetchingBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <Scrollable
-        showLoader
-        isLoading={isFetchingBook}
-        hasMore={totalCount.itemTotalCount > items.length}
-        fetch={() => dispatchLoadItems()}
-      >
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          ))}
-        </BookList>
-      </Scrollable>
+      <BookList>
+        {items.map(item => (
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+          />
+        ))}
+      </BookList>
     );
   }
 
@@ -200,13 +193,29 @@ class MainUnit extends React.Component {
     );
   }
 
+  renderPaginator() {
+    const {
+      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId },
+    } = this.props;
+
+    return (
+      <ResponsivePaginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        href={{ pathname: URLMap.mainUnit.href, query: { unitId } }}
+        as={URLMap.mainUnit.as(unitId)}
+        query={{ orderType, orderBy }}
+      />
+    );
+  }
+
   render() {
     const { unit, items, isFetchingBook } = this.props;
 
     return (
       <>
         <Head>
-          <title>{unit.title} - 내 서재</title>
+          <title>{unit.title} 내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderLNB()}
@@ -223,6 +232,7 @@ class MainUnit extends React.Component {
             )}
           </Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
@@ -235,7 +245,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItems(state);
+  const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
 
@@ -260,7 +270,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,

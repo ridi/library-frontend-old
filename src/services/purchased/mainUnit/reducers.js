@@ -11,6 +11,7 @@ import {
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
   SET_IS_FETCHING_BOOK,
 } from './actions';
+import { toDict, toFlatten } from '../../../utils/array';
 
 const purchasedMainUnitReducer = (state = initialState, action) => {
   const key = getKey(state);
@@ -24,7 +25,14 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
           ...state.data,
           [key]: {
             ...dataState,
-            items: [...dataState.items, ...action.payload.items],
+            items: {
+              ...dataState.items,
+              ...toDict(action.payload.items, 'b_id'),
+            },
+            itemIdsForPage: {
+              ...dataState.itemIdsForPage,
+              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
+            },
           },
         },
       };

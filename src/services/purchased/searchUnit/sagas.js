@@ -19,7 +19,7 @@ import { MainOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId, getItems, getSelectedBooks } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { download } from '../../common/sagas';
@@ -29,10 +29,11 @@ import { showToast } from '../../toast/actions';
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
 
+  const page = parseInt(query.page, 10) || 1;
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
 
-  yield all([put(setOrder(order)), put(setKeyword(query.keyword))]);
+  yield all([put(setPage(page)), put(setOrder(order)), put(setKeyword(query.keyword))]);
 }
 
 function* loadItems() {
@@ -41,11 +42,10 @@ function* loadItems() {
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const nextPage = page + 1;
 
   yield put(setIsFetchingSearchBook(true));
   const [itemResponse, countResponse] = yield all([
-    call(fetchSearchUnitItems, unitId, orderType, orderBy, nextPage),
+    call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
     call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
@@ -55,8 +55,8 @@ function* loadItems() {
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
   yield call(loadBookDescriptions, bookIds);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
 
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count)), put(setPage(nextPage))]);
   yield put(setIsFetchingSearchBook(false));
 }
 
@@ -88,7 +88,7 @@ function* downloadSelectedBooks() {
 }
 
 function* selectAllBooks() {
-  const items = yield select(getItems);
+  const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
   yield put(selectBooks(bookIds));
 }

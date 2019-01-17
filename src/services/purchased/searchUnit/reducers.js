@@ -12,6 +12,7 @@ import {
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
   SET_IS_FETCHING_SEARCH_BOOK,
 } from './actions';
+import { toDict, toFlatten } from '../../../utils/array';
 
 const searchUnitReducer = (state = initialState, action) => {
   const key = getKey(state);
@@ -25,7 +26,14 @@ const searchUnitReducer = (state = initialState, action) => {
           ...state.data,
           [key]: {
             ...dataState,
-            items: [...dataState.items, ...action.payload.items],
+            items: {
+              ...dataState.items,
+              ...toDict(action.payload.items, 'b_id'),
+            },
+            itemIdsForPage: {
+              ...dataState.itemIdsForPage,
+              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
+            },
           },
         },
       };

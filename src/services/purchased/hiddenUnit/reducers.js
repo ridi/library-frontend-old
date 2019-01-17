@@ -10,13 +10,21 @@ import {
   TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
   SET_IS_FETCHING_HIDDEN_BOOK,
 } from './actions';
+import { toDict, toFlatten } from '../../../utils/array';
 
 const hiddenUnitReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_HIDDEN_UNIT_ITEMS:
       return {
         ...state,
-        items: [...state.items, ...action.payload.items],
+        items: {
+          ...state.items,
+          ...toDict(action.payload.items, 'b_id'),
+        },
+        itemIdsForPage: {
+          ...state.itemIdsForPage,
+          [state.page]: toFlatten(action.payload.items, 'b_id'),
+        },
       };
     case SET_HIDDEN_UNIT_TOTAL_COUNT:
       return {

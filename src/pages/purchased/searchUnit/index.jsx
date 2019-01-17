@@ -8,6 +8,7 @@ import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
@@ -23,7 +24,7 @@ import {
 } from '../../../services/purchased/searchUnit/actions';
 import {
   getIsFetchingBook,
-  getItems,
+  getItemsByPage,
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
@@ -34,7 +35,6 @@ import BottomActionBar from '../../base/BottomActionBar';
 import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import Scrollable from '../../../components/Scrollable';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -151,32 +151,25 @@ class searchUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, dispatchLoadItems, totalCount, isFetchingBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <Scrollable
-        showLoader
-        isLoading={isFetchingBook}
-        hasMore={totalCount.itemTotalCount > items.length}
-        fetch={() => dispatchLoadItems()}
-      >
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          ))}
-        </BookList>
-      </Scrollable>
+      <BookList>
+        {items.map(item => (
+          <LibraryBook
+            key={item.b_id}
+            item={item}
+            book={books[item.b_id]}
+            isEditing={isEditing}
+            checked={!!selectedBooks[item.b_id]}
+            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+          />
+        ))}
+      </BookList>
     );
   }
 
@@ -197,6 +190,22 @@ class searchUnit extends React.Component {
             onClick: this.handleOnClickDownload,
           },
         ]}
+      />
+    );
+  }
+
+  renderPaginator() {
+    const {
+      pageInfo: { orderType, orderBy, currentPage, totalPages, unitId, keyword },
+    } = this.props;
+
+    return (
+      <ResponsivePaginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        href={{ pathname: URLMap.searchUnit.href, query: { unitId } }}
+        as={{ pathname: URLMap.searchUnit.as(unitId) }}
+        query={{ orderType, orderBy, keyword }}
       />
     );
   }
@@ -224,6 +233,7 @@ class searchUnit extends React.Component {
             )}
           </Responsive>
         </main>
+        {this.renderPaginator()}
         {this.renderBottomActionBar()}
       </>
     );
@@ -236,7 +246,7 @@ const mapStateToProps = state => {
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
 
-  const items = getItems(state);
+  const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
 
@@ -261,7 +271,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
