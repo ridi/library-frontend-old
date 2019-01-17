@@ -7,6 +7,7 @@ import { UnitType } from '../constants/unitType';
 import { BookFileType } from '../services/book/constants';
 import { Responsive } from '../styles/responsive';
 import { formatFileSize } from '../utils/file';
+import { numberWithUnit } from '../utils/number';
 
 const styles = {
   detailView: css({
@@ -192,7 +193,7 @@ class UnitDetailView extends React.Component {
     }
 
     if (book.file.character_count) {
-      infos.push(`약 ${book.file.character_count}자`);
+      infos.push(`약 ${numberWithUnit(book.file.character_count)}자`);
     }
 
     if (book.file.size) {
