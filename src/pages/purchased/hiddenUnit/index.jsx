@@ -112,6 +112,10 @@ class HiddenUnit extends React.Component {
   renderDetailView() {
     const { unit, items, books, bookDescriptions } = this.props;
     const primaryItem = items[0];
+    if (!primaryItem) {
+      return null;
+    }
+
     const primaryBookId = primaryItem.b_id;
     const primaryBook = books[primaryBookId];
     const primaryBookDescription = bookDescriptions[primaryBookId];
