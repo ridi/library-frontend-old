@@ -11,7 +11,7 @@ import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
-import { getBooks, getUnit } from '../../../services/book/selectors';
+import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import {
   clearSelectedBooks,
@@ -139,9 +139,14 @@ class searchUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, items, books } = this.props;
-    const primaryBook = books[items[0].b_id];
-    return <UnitDetailView unit={unit} book={primaryBook} />;
+    const { unit, items, books, bookDescriptions } = this.props;
+    const primaryItem = items[0];
+    const primaryBookId = primaryItem.b_id;
+    const primaryBook = books[primaryBookId];
+    const primaryBookDescription = bookDescriptions[primaryBookId];
+    const downloadable = new Date(primaryItem.expire_date) > new Date();
+
+    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={downloadable} />;
   }
 
   renderBooks() {
@@ -243,6 +248,8 @@ const mapStateToProps = state => {
 
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
+
   const selectedBooks = getSelectedBooks(state);
   const totalCount = getTotalCount(state);
 
@@ -254,6 +261,7 @@ const mapStateToProps = state => {
     items,
     unit,
     books,
+    bookDescriptions,
     totalCount,
     selectedBooks,
     isFetchingBook,

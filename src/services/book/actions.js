@@ -1,4 +1,5 @@
 export const SET_BOOK_DATA = 'SET_BOOK_DATA';
+export const SET_BOOK_DESCRIPTIONS = 'SET_BOOK_DESCRIPTIONS';
 export const SET_UNIT_DATA = 'SET_UNIT_DATA';
 
 export const SET_BOOK_DATA_FROM_STORAGE = 'SET_BOOK_DATA_FROM_STORAGE';
@@ -8,6 +9,13 @@ export const setBookData = books => ({
   type: SET_BOOK_DATA,
   payload: {
     books,
+  },
+});
+
+export const setBookDescriptions = bookDescriptions => ({
+  type: SET_BOOK_DESCRIPTIONS,
+  payload: {
+    bookDescriptions,
   },
 });
 
