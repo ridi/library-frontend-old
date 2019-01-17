@@ -213,10 +213,16 @@ class UnitDetailView extends React.Component {
 
   renderDescription() {
     const { bookDescription } = this.props;
+    if (!bookDescription) {
+      return null;
+    }
+
     return (
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
-        <div css={styles.bookDescriptionBody}>{bookDescription ? bookDescription.intro : null}</div>
+        <div css={styles.bookDescriptionBody}>
+          <p dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }} />
+        </div>
       </div>
     );
   }
