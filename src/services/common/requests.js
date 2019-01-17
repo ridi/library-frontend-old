@@ -32,7 +32,7 @@ export function* requestCheckQueueStatus(queueIds) {
       return true;
     }
 
-    if (syncingQueueIds.length === 0 || retryCount < retryMaxCount) {
+    if (syncingQueueIds.length === 0 || retryCount >= retryMaxCount) {
       return false;
     }
 
