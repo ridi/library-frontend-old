@@ -1,6 +1,8 @@
 export const initialState = {
-  items: [],
-  page: 0,
+  items: {},
+  itemIdsForPage: {},
+
+  page: 1,
   itemTotalCount: 0,
 
   selectedBooks: {},
