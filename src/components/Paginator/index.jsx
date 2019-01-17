@@ -113,9 +113,10 @@ export default class Paginator extends React.Component {
 
   render() {
     const { totalPages, style } = this.props;
-    if (totalPages === 0) {
+    if (totalPages <= 1) {
       return null;
     }
+
     return (
       <div css={[styles.paginator, style]}>
         {this.renderGoFirst()}
