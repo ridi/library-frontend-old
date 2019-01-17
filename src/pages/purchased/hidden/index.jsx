@@ -4,7 +4,6 @@ import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
 import BookList from '../../../components/BookList';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
@@ -29,7 +28,8 @@ import {
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
-import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import BottomActionBar from '../../base/BottomActionBar';
+import { TitleAndEditingBar } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
 
@@ -143,26 +143,21 @@ class Hidden extends React.Component {
   renderBottomActionBar() {
     const { isEditing } = this.state;
     const { selectedBooks } = this.props;
-    if (!isEditing) {
-      return null;
-    }
-
-    const disable = Object.keys(selectedBooks).length === 0;
     return (
-      <BottomActionBar>
-        <BottomActionButton
-          name="선택 영구 삭제"
-          css={styles.hiddenButtonActionLeft}
-          onClick={this.handleOnClickDelete}
-          disable={disable}
-        />
-        <BottomActionButton
-          name="선택 숨김 해제"
-          css={styles.hiddenButtonActionRight}
-          onClick={this.handleOnClickUnhide}
-          disable={disable}
-        />
-      </BottomActionBar>
+      <BottomActionBar
+        isEditing={isEditing}
+        selectedBooks={selectedBooks}
+        buttonsProps={[
+          {
+            name: '선택 영구 삭제',
+            onClick: this.handleOnClickDelete,
+          },
+          {
+            name: '선택 숨김 해제',
+            onClick: this.handleOnClickUnhide,
+          },
+        ]}
+      />
     );
   }
 

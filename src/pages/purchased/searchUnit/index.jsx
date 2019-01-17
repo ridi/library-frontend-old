@@ -4,7 +4,6 @@ import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
 import BookList from '../../../components/BookList';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
@@ -31,11 +30,10 @@ import {
   getUnitId,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
+import BottomActionBar from '../../base/BottomActionBar';
+import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 import Scrollable from '../../../components/Scrollable';
 
 class searchUnit extends React.Component {
@@ -180,21 +178,21 @@ class searchUnit extends React.Component {
   renderBottomActionBar() {
     const { isEditing } = this.state;
     const { selectedBooks } = this.props;
-    if (!isEditing) {
-      return null;
-    }
-
-    const disable = Object.keys(selectedBooks).length === 0;
     return (
-      <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" css={styles.MainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
-        <BottomActionButton
-          name="선택 다운로드"
-          css={styles.MainButtonActionRight}
-          onClick={this.handleOnClickDownload}
-          disable={disable}
-        />
-      </BottomActionBar>
+      <BottomActionBar
+        isEditing={isEditing}
+        selectedBooks={selectedBooks}
+        buttonsProps={[
+          {
+            name: '선택 숨기기',
+            onClick: this.handleOnClickHide,
+          },
+          {
+            name: '선택 다운로드',
+            onClick: this.handleOnClickDownload,
+          },
+        ]}
+      />
     );
   }
 
@@ -206,7 +204,7 @@ class searchUnit extends React.Component {
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
-        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderLNB()}
         <main>
           <Responsive>

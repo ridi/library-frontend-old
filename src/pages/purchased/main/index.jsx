@@ -5,7 +5,6 @@ import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 import BookList from '../../../components/BookList';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
@@ -30,8 +29,8 @@ import {
 } from '../../../services/purchased/main/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
-import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import SearchAndEditingBar from '../../base/LNB/SearchAndEditingBar';
+import BottomActionBar from '../../base/BottomActionBar';
+import { SearchAndEditingBar, TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
@@ -220,33 +219,32 @@ class Main extends React.Component {
   renderBottomActionBar() {
     const { isEditing } = this.state;
     const { selectedBooks } = this.props;
-    if (!isEditing) {
-      return null;
-    }
-
-    const disable = Object.keys(selectedBooks).length === 0;
     return (
-      <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" css={styles.mainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
-        <BottomActionButton
-          name="선택 다운로드"
-          css={styles.mainButtonActionRight}
-          onClick={this.handleOnClickDownload}
-          disable={disable}
-        />
-      </BottomActionBar>
+      <BottomActionBar
+        isEditing={isEditing}
+        selectedBooks={selectedBooks}
+        buttonsProps={[
+          {
+            name: '선택 숨기기',
+            onClick: this.handleOnClickHide,
+          },
+          {
+            name: '선택 다운로드',
+            onClick: this.handleOnClickDownload,
+          },
+        ]}
+      />
     );
   }
 
   render() {
     const { isFetchingBooks } = this.props;
-
     return (
       <>
         <Head>
           <title>모든 책 - 내 서재</title>
         </Head>
-        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderLNB()}
         <main css={isFetchingBooks && styles.mainFetchingBooks}>
           <Responsive>

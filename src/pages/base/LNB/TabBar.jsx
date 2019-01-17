@@ -2,7 +2,7 @@
 import { jsx, css } from '@emotion/core';
 import shortid from 'shortid';
 
-import TabBar, { TabLinkItem } from '../../../components/TabBar';
+import { TabBar as LNBTabBar, TabLinkItem } from '../../../components/TabBar';
 import Responsive from '../Responsive';
 
 import { URLMap } from '../../../constants/urls';
@@ -30,14 +30,12 @@ const TabMenus = [
   },
 ];
 
-const LNBTabBar = ({ activeMenu }) => (
+export const TabBar = ({ activeMenu }) => (
   <Responsive css={styles.LNBTabBarWrapper}>
-    <TabBar>
+    <LNBTabBar>
       {TabMenus.map(menu => (
         <TabLinkItem key={shortid.generate()} name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
       ))}
-    </TabBar>
+    </LNBTabBar>
   </Responsive>
 );
-
-export default LNBTabBar;
