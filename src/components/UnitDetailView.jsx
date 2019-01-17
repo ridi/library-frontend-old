@@ -8,8 +8,6 @@ import { BookFileType } from '../services/book/constants';
 import { Responsive } from '../styles/responsive';
 import { formatFileSize } from '../utils/file';
 import { numberWithUnit } from '../utils/number';
-import Expander from './expander';
-import { TextTruncate } from './TextTruncate';
 
 const styles = {
   detailView: css({
@@ -216,25 +214,10 @@ class UnitDetailView extends React.Component {
 
   renderDescription() {
     const { bookDescription } = this.props;
-    if (!bookDescription) {
-      return null;
-    }
-
     return (
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
-        <TextTruncate
-          lines={9}
-          text={bookDescription.intro}
-          lineHeight={25}
-          renderExpander={({ expand, isExpanded, isTruncated }) =>
-            !isTruncated || isExpanded ? null : (
-              <div className="BookDetail_ContentTruncWrapper">
-                <Expander onClick={expand} text="계속 읽기" isExpanded={false} />
-              </div>
-            )
-          }
-        />
+        <div css={styles.bookDescriptionBody}>{bookDescription ? bookDescription.intro : null}</div>
       </div>
     );
   }
