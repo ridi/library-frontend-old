@@ -258,7 +258,7 @@ class UnitDetailView extends React.Component {
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>
             <div css={styles.authorList}>{this.compileAuthors()}</div>
-            {UnitType.isBook(unit.type) ? this.renderFileInfo() : null}
+            {this.renderFileInfo()}
             {UnitType.isBook(unit.type) ? this.renderDownloadBottuon() : null}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>
