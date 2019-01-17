@@ -126,7 +126,6 @@ const styles = {
   }),
   drmFreeDownloadButton: css({
     width: '100%',
-    marginTop: 10,
     marginBottom: 10,
     height: 50,
     borderRadius: 4,
@@ -229,7 +228,11 @@ class UnitDetailView extends React.Component {
       return null;
     }
 
-    return <button css={styles.downloadButton}>다운로드</button>;
+    return (
+      <button type="button" css={styles.downloadButton}>
+        다운로드
+      </button>
+    );
   }
 
   renderDrmFreeDownloadButton() {
@@ -238,7 +241,11 @@ class UnitDetailView extends React.Component {
       return null;
     }
 
-    return <button css={styles.drmFreeDownloadButton}>EPUB 파일 다운로드</button>;
+    return (
+      <button type="button" css={styles.drmFreeDownloadButton}>
+        EPUB 파일 다운로드
+      </button>
+    );
   }
 
   render() {
