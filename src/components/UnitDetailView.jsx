@@ -8,6 +8,8 @@ import { BookFileType } from '../services/book/constants';
 import { Responsive } from '../styles/responsive';
 import { formatFileSize } from '../utils/file';
 import { numberWithUnit } from '../utils/number';
+import Expander from './expander';
+import { TextTruncate } from './TextTruncate';
 
 const styles = {
   detailView: css({
@@ -214,10 +216,25 @@ class UnitDetailView extends React.Component {
 
   renderDescription() {
     const { bookDescription } = this.props;
+    if (!bookDescription) {
+      return null;
+    }
+
     return (
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
-        <div css={styles.bookDescriptionBody}>{bookDescription ? bookDescription.intro : null}</div>
+        <TextTruncate
+          lines={9}
+          text={bookDescription.intro}
+          lineHeight={25}
+          renderExpander={({ expand, isExpanded, isTruncated }) =>
+            !isTruncated || isExpanded ? null : (
+              <div className="BookDetail_ContentTruncWrapper">
+                <Expander onClick={expand} text="계속 읽기" isExpanded={false} />
+              </div>
+            )
+          }
+        />
       </div>
     );
   }
@@ -238,7 +255,7 @@ class UnitDetailView extends React.Component {
       return null;
     }
 
-    return <a css={styles.drmFreeDownloadButton}>EPUB 파일 다운로드</a>;
+    return <button css={styles.drmFreeDownloadButton}>EPUB 파일 다운로드</button>;
   }
 
   render() {
