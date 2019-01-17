@@ -24,8 +24,8 @@ import { getQuery } from '../../router/selectors';
 import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './selectors';
 
 import { loadBookData, extractUnitData } from '../../book/sagas';
-import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
-import { download, getBookIdsByUnitIds } from '../../common/sagas';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
+import { downloadBooks, getBookIdsByUnitIds } from '../../common/sagas';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -89,12 +89,7 @@ function* downloadSelectedBooks() {
   const { orderType, orderBy } = MainOrderOptions.parse(order);
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks), orderType, orderBy);
 
-  const triggerResponse = yield call(triggerDownload, bookIds);
-  if (triggerResponse.result) {
-    yield call(download, triggerResponse.b_ids, triggerResponse.url);
-  } else {
-    yield put(showToast(triggerResponse.message));
-  }
+  yield call(downloadBooks, bookIds);
 }
 
 function* selectAllBooks() {

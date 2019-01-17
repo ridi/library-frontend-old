@@ -22,8 +22,8 @@ import { showToast } from '../../toast/actions';
 import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './selectors';
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
-import { download, getBookIdsByUnitIds } from '../../common/sagas';
+import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/requests';
+import { downloadBooks, getBookIdsByUnitIds } from '../../common/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
 
 function* persistPageOptionsFromQueries() {
@@ -79,12 +79,7 @@ function* downloadSelectedBooks() {
 
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
 
-  const triggerResponse = yield call(triggerDownload, bookIds);
-  if (triggerResponse.result) {
-    yield call(download, triggerResponse.b_ids, triggerResponse.url);
-  } else {
-    yield put(showToast(triggerResponse.message));
-  }
+  yield call(downloadBooks, bookIds);
 }
 
 function* selectAllBooks() {

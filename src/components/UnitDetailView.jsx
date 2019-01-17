@@ -1,11 +1,14 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/core';
+import connect from 'react-redux/es/connect/connect';
 import config from '../config';
 
 import AuthorRole from '../constants/authorRole';
 import { UnitType } from '../constants/unitType';
 import { BookFileType } from '../services/book/constants';
+import { downloadBooks } from '../services/common/actions';
+
 import { Responsive } from '../styles/responsive';
 import { formatFileSize } from '../utils/file';
 import { numberWithUnit } from '../utils/number';
@@ -229,14 +232,20 @@ class UnitDetailView extends React.Component {
   }
 
   renderDownloadBottuon() {
-    const { downloadable } = this.props;
+    const { book, downloadable, dispatchDownloadBooks } = this.props;
 
     if (!downloadable) {
       return null;
     }
 
     return (
-      <button type="button" css={styles.downloadButton}>
+      <button
+        type="button"
+        css={styles.downloadButton}
+        onClick={() => {
+          dispatchDownloadBooks([book.id]);
+        }}
+      >
         다운로드
       </button>
     );
@@ -271,7 +280,7 @@ class UnitDetailView extends React.Component {
         <section css={styles.detailView}>
           <div css={[styles.wrapper, styles.thumbnailWrapper]}>
             <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
-            <div css={styles.ridibooksLink}>리디북스에서 보기 ></div>
+            <div css={styles.ridibooksLink}>리디북스에서 보기 &gt;</div>
           </div>
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>
@@ -288,4 +297,13 @@ class UnitDetailView extends React.Component {
   }
 }
 
-export default UnitDetailView;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {
+  dispatchDownloadBooks: downloadBooks,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UnitDetailView);
