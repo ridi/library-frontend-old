@@ -12,9 +12,10 @@ export const initialState = {
 };
 
 export const initialDataState = {
-  items: [],
+  items: {},
+  itemIdsForPage: {},
 
-  page: 0,
+  page: 1,
   itemTotalCount: 0,
 };
 

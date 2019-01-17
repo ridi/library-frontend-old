@@ -34,7 +34,6 @@ import { toFlatten } from '../../../utils/array';
 import TitleAndEditingBar from '../../base/LNB/TitleAndEditingBar';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
-import Scrollable from '../../../components/Scrollable';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
