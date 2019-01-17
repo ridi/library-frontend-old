@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/core';
+import config from '../config';
 
 import AuthorRole from '../constants/authorRole';
 import { UnitType } from '../constants/unitType';
@@ -248,7 +249,11 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <button type="button" css={styles.drmFreeDownloadButton}>
+      <button
+        type="button"
+        css={styles.drmFreeDownloadButton}
+        onClick={() => (window.location.href = `${config.STORE_API_BASE_URL}/api/user-books/${book.id}/raw-download`)}
+      >
         EPUB 파일 다운로드
       </button>
     );
