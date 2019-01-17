@@ -1,4 +1,4 @@
-import { call, put, fork, cancel } from 'redux-saga/effects';
+import { call, put, fork, cancel, all, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { stringify } from 'qs';
 
@@ -7,8 +7,9 @@ import { getDeviceInfo } from '../../utils/device';
 import Window, { LOCATION } from '../../utils/window';
 
 import { showToast } from '../toast/actions';
+import { DOWNLOAD_BOOKS } from './actions';
 
-import { requestGetBookIdsByUnitIds, requestGetBookIdsByUnitIdsForHidden } from './requests';
+import { requestGetBookIdsByUnitIds, requestGetBookIdsByUnitIdsForHidden, triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   yield call(delay, 300);
@@ -67,8 +68,18 @@ export function* download(bookIds, url) {
   yield cancel(installTimer);
 }
 
-const _reduceSelectedBookIds = (items, selectedBookIds) => {
-  return selectedBookIds.reduce(
+export function* downloadBooks(bookIds) {
+  const triggerResponse = yield call(triggerDownload, bookIds);
+
+  if (triggerResponse.result) {
+    yield call(download, triggerResponse.b_ids, triggerResponse.url);
+  } else {
+    yield put(showToast(triggerResponse.message));
+  }
+}
+
+const _reduceSelectedBookIds = (items, selectedBookIds) =>
+  selectedBookIds.reduce(
     (previous, bookId) => {
       const item = items[bookId];
       if (item.unit_count === 1) {
@@ -80,7 +91,6 @@ const _reduceSelectedBookIds = (items, selectedBookIds) => {
     },
     { bookIds: [], unitIds: [] },
   );
-};
 
 const _flattenBookIds = bookIdsInUnitData =>
   Object.keys(bookIdsInUnitData).reduce((previous, key) => {
@@ -102,4 +112,8 @@ export function* getBookIdsByUnitIdsForHidden(items, selectedBookIds) {
   const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
 
   return [...bookIds, ...bookIdsInUnit];
+}
+
+export default function* commonRootSaga() {
+  yield all([takeEvery(DOWNLOAD_BOOKS, downloadBooks)]);
 }

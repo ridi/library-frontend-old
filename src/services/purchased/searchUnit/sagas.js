@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { downloadBooks } from '../../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
@@ -22,8 +23,7 @@ import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { download } from '../../common/sagas';
-import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 
 function* persistPageOptionsFromQueries() {
@@ -79,12 +79,7 @@ function* downloadSelectedBooks() {
 
   const bookIds = Object.keys(selectedBooks);
 
-  const triggerResponse = yield call(triggerDownload, bookIds);
-  if (triggerResponse.result) {
-    yield call(download, triggerResponse.b_ids, triggerResponse.url);
-  } else {
-    yield put(showToast(triggerResponse.message));
-  }
+  yield call(downloadBooks, bookIds);
 }
 
 function* selectAllBooks() {

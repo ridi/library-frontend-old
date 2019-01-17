@@ -1,10 +1,14 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/core';
+import connect from 'react-redux/es/connect/connect';
+import config from '../config';
 
 import AuthorRole from '../constants/authorRole';
 import { UnitType } from '../constants/unitType';
 import { BookFileType } from '../services/book/constants';
+import { downloadBooks } from '../services/common/actions';
+
 import { Responsive } from '../styles/responsive';
 import { formatFileSize } from '../utils/file';
 import { numberWithUnit } from '../utils/number';
@@ -126,7 +130,6 @@ const styles = {
   }),
   drmFreeDownloadButton: css({
     width: '100%',
-    marginTop: 10,
     marginBottom: 10,
     height: 50,
     borderRadius: 4,
@@ -214,22 +217,38 @@ class UnitDetailView extends React.Component {
 
   renderDescription() {
     const { bookDescription } = this.props;
+    if (!bookDescription) {
+      return null;
+    }
+
     return (
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
-        <div css={styles.bookDescriptionBody}>{bookDescription ? bookDescription.intro : null}</div>
+        <div css={styles.bookDescriptionBody}>
+          <p dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }} />
+        </div>
       </div>
     );
   }
 
   renderDownloadBottuon() {
-    const { downloadable } = this.props;
+    const { book, downloadable, dispatchDownloadBooks } = this.props;
 
     if (!downloadable) {
       return null;
     }
 
-    return <button css={styles.downloadButton}>다운로드</button>;
+    return (
+      <button
+        type="button"
+        css={styles.downloadButton}
+        onClick={() => {
+          dispatchDownloadBooks([book.id]);
+        }}
+      >
+        다운로드
+      </button>
+    );
   }
 
   renderDrmFreeDownloadButton() {
@@ -238,7 +257,15 @@ class UnitDetailView extends React.Component {
       return null;
     }
 
-    return <button css={styles.drmFreeDownloadButton}>EPUB 파일 다운로드</button>;
+    return (
+      <button
+        type="button"
+        css={styles.drmFreeDownloadButton}
+        onClick={() => (window.location.href = `${config.STORE_API_BASE_URL}/api/user-books/${book.id}/raw-download`)}
+      >
+        EPUB 파일 다운로드
+      </button>
+    );
   }
 
   render() {
@@ -253,7 +280,7 @@ class UnitDetailView extends React.Component {
         <section css={styles.detailView}>
           <div css={[styles.wrapper, styles.thumbnailWrapper]}>
             <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
-            <div css={styles.ridibooksLink}>리디북스에서 보기 ></div>
+            <div css={styles.ridibooksLink}>리디북스에서 보기 &gt;</div>
           </div>
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>
@@ -270,4 +297,13 @@ class UnitDetailView extends React.Component {
   }
 }
 
-export default UnitDetailView;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {
+  dispatchDownloadBooks: downloadBooks,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UnitDetailView);

@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 
 import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
+import commonRootSaga from '../services/common/sagas';
 import excelDownloadRootSaga from '../services/excelDownload/sagas';
 
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
@@ -25,5 +26,6 @@ export default function* rootSaga() {
     purchasedHiddenSaga(),
     purchaseHiddenUnitRootSaga(),
     toastRootSaga(),
+    commonRootSaga(),
   ]);
 }
