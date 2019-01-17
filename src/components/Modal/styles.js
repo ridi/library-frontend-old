@@ -10,6 +10,7 @@ export const modal = isActive => {
     display: 'block',
     position: 'absolute',
     width: 200,
+    maxHeight: 235,
     right: 8,
     top: -6,
     zIndex: 9999,
@@ -20,7 +21,8 @@ export const modal = isActive => {
     transform: 'translate3d(0, 20px, 0)',
     transition: 'opacity .3s, transform .3s',
     pointerEvents: 'none',
-    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     ...active,
   };
 };
@@ -35,7 +37,8 @@ export const itemGroup = {
 
 export const groupTitle = {
   width: '100%',
-  height: 16,
+  boxSizing: 'border-box',
+  lineHeight: '16px',
   fontSize: 13,
   color: '#808991',
   padding: '16px 14px 2px 14px',
