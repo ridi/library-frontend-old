@@ -3,7 +3,10 @@ import React from 'react';
 import { jsx, css } from '@emotion/core';
 
 import AuthorRole from '../constants/authorRole';
+import { UnitType } from '../constants/unitType';
+import { BookFileType } from '../services/book/constants';
 import { Responsive } from '../styles/responsive';
+import { formatFileSize } from '../utils/file';
 
 const styles = {
   detailView: css({
@@ -83,6 +86,79 @@ const styles = {
       marginTop: 16,
     }),
   }),
+  bookDescription: css({
+    marginTop: 8,
+    fontSize: 15,
+    letterSpacing: -0.3,
+    color: '#40474d',
+    clear: 'both',
+
+    ...Responsive.Pc({
+      marginTop: 16,
+    }),
+  }),
+  bookDescriptionTitle: css({
+    fontWeight: 'bold',
+    letterSpacing: -0.28,
+    lineHeight: 'normal',
+  }),
+  bookDescriptionBody: css({
+    marginTop: 9,
+    lineHeight: 1.5,
+  }),
+  downloadButton: css({
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    height: 50,
+    borderRadius: 4,
+    boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
+    backgroundColor: '#1f8ce6',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    letterSpacing: -0.7,
+
+    ...Responsive.Pc({
+      width: 250,
+    }),
+  }),
+  drmFreeDownloadButton: css({
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    height: 50,
+    borderRadius: 4,
+    boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
+    backgroundColor: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#808991',
+    letterSpacing: -0.7,
+
+    ...Responsive.Pc({
+      width: 250,
+    }),
+  }),
+  fileInfo: css({
+    marginTop: 24,
+    marginBottom: 10,
+    fontSize: 15,
+    letterSpacing: -0.3,
+    color: '#808991',
+  }),
+  fileInfoText: css({
+    float: 'left',
+  }),
+  fileInfoDelimiter: css({
+    width: 1,
+    height: 9,
+    marginTop: 5,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: '#d1d5d9',
+    float: 'left',
+  }),
 };
 
 class UnitDetailView extends React.Component {
@@ -105,6 +181,65 @@ class UnitDetailView extends React.Component {
       .join(' | ');
   }
 
+  renderFileInfo() {
+    const { book } = this.props;
+
+    // info의 text 에 | 와 \ 사용되면 안된다. 두개의 문자는 예약어이다.
+    const infos = [];
+
+    if (book.file.format !== BookFileType.BOM) {
+      infos.push(`${BookFileType.convertToString(book.file.format)}`);
+    }
+
+    if (book.file.character_count) {
+      infos.push(`약 ${book.file.character_count}자`);
+    }
+
+    if (book.file.size) {
+      infos.push(`${formatFileSize(book.file.size)}`);
+    }
+
+    const delimiter = '|';
+    const infosWithDelimiter = infos.join(`\\${delimiter}\\`).split('\\');
+
+    return (
+      <div css={styles.fileInfo}>
+        {infosWithDelimiter.map(info =>
+          info === delimiter ? <div css={styles.fileInfoDelimiter} /> : <div css={styles.fileInfoText}> {info} </div>,
+        )}
+      </div>
+    );
+  }
+
+  renderDescription() {
+    const { bookDescription } = this.props;
+    return (
+      <div css={styles.bookDescription}>
+        <div css={styles.bookDescriptionTitle}>책 소개</div>
+        <div css={styles.bookDescriptionBody}>{bookDescription ? bookDescription.intro : null}</div>
+      </div>
+    );
+  }
+
+  renderDownloadBottuon() {
+    const { downloadable } = this.props;
+
+    if (!downloadable) {
+      return null;
+    }
+
+    return <button css={styles.downloadButton}>다운로드</button>;
+  }
+
+  renderDrmFreeDownloadButton() {
+    const { book } = this.props;
+    if (!book.file.is_drm_free) {
+      return null;
+    }
+
+    return <a css={styles.drmFreeDownloadButton}>EPUB 파일 다운로드</a>;
+  }
+
   render() {
     // 필요 데이터
     // Unit 데이터 (타이틀)
@@ -113,16 +248,23 @@ class UnitDetailView extends React.Component {
     const { unit, book } = this.props;
 
     return (
-      <section css={styles.detailView}>
-        <div css={[styles.wrapper, styles.thumbnailWrapper]}>
-          <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
-          <div css={styles.ridibooksLink}>리디북스로 가기</div>
-        </div>
-        <div css={[styles.wrapper, styles.infoWrapper]}>
-          <div css={styles.unitTitle}>{unit.title}</div>
-          <div css={styles.authorList}>{this.compileAuthors()}</div>
-        </div>
-      </section>
+      <>
+        <section css={styles.detailView}>
+          <div css={[styles.wrapper, styles.thumbnailWrapper]}>
+            <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
+            <div css={styles.ridibooksLink}>리디북스에서 보기 ></div>
+          </div>
+          <div css={[styles.wrapper, styles.infoWrapper]}>
+            <div css={styles.unitTitle}>{unit.title}</div>
+            <div css={styles.authorList}>{this.compileAuthors()}</div>
+            {UnitType.isBook(unit.type) ? this.renderFileInfo() : null}
+            {UnitType.isBook(unit.type) ? this.renderDownloadBottuon() : null}
+            {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
+          </div>
+        </section>
+
+        {UnitType.isBook(unit.type) ? this.renderDescription() : null}
+      </>
     );
   }
 }

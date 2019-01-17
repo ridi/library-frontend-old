@@ -17,7 +17,7 @@ import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData, saveUnitData } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItems, getSelectedBooks } from './selectors';
 
@@ -54,6 +54,8 @@ function* loadItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
+  yield call(loadBookDescriptions, bookIds);
+
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count)), put(setPage(nextPage))]);
   yield put(setIsFetchingSearchBook(false));
 }

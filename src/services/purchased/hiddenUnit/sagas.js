@@ -14,7 +14,7 @@ import {
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
 
-import { loadBookData, saveUnitData } from '../../book/sagas';
+import { loadBookData, saveUnitData, loadBookDescriptions } from '../../book/sagas';
 import { getOptions, getUnitId, getItems, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
@@ -37,7 +37,9 @@ function* loadHiddenUnitItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
+  yield call(loadBookDescriptions, bookIds);
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count)), put(setPage(nextPage))]);
+
   yield put(setIsFetchingHiddenBook(false));
 }
 

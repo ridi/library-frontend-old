@@ -9,7 +9,7 @@ import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
-import { getBooks, getUnit } from '../../../services/book/selectors';
+import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
 import {
   clearSelectedBooks,
@@ -110,9 +110,13 @@ class HiddenUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, items, books } = this.props;
-    const primaryBook = books[items[0].b_id];
-    return <UnitDetailView unit={unit} book={primaryBook} />;
+    const { unit, items, books, bookDescriptions } = this.props;
+    const primaryItem = items[0];
+    const primaryBookId = primaryItem.b_id;
+    const primaryBook = books[primaryBookId];
+    const primaryBookDescription = bookDescriptions[primaryBookId];
+
+    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={false} />;
   }
 
   renderBooks() {
@@ -201,6 +205,8 @@ const mapStateToProps = state => {
 
   const items = getItems(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
+
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBook = getIsFetchingBook(state);
@@ -211,6 +217,7 @@ const mapStateToProps = state => {
     items,
     unit,
     books,
+    bookDescriptions,
     totalCount,
     selectedBooks,
     isFetchingBook,
