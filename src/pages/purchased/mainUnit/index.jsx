@@ -9,6 +9,7 @@ import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SeriesToolBar from '../../../components/SeriesToolBar';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
@@ -32,10 +33,11 @@ import {
   getItemsByPage,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import BottomActionBar from '../../base/BottomActionBar';
-import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
+import Editable from '../../../components/Editable';
+import TitleBar from '../../../components/TitleBar';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -88,29 +90,13 @@ class MainUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderLNB() {
+  makeEditingBarProps() {
     const { isEditing } = this.state;
-    const {
-      items,
-      selectedBooks,
-      dispatchSelectAllBooks,
-      dispatchClearSelectedBooks,
-      unit,
-      totalCount,
-      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
-    } = this.props;
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    const titleBarProps = {
-      title: unit.title,
-      totalCount: totalCount.itemTotalCount,
-      toggleEditingMode: this.toggleEditingMode,
-      href: URLMap.main.href,
-      as: URLMap.main.as,
-      query: { page, orderType, orderBy, filter },
-    };
-    const editingBarProps = {
+    return {
       isEditing,
       totalSelectedCount,
       isSelectedAllBooks,
@@ -118,7 +104,43 @@ class MainUnit extends React.Component {
       onClickUnselectAllBooks: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
-    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
+  }
+
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+    return {
+      buttonsProps: [
+        {
+          name: '선택 숨기기',
+          onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '선택 다운로드',
+          onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ],
+    };
+  }
+
+  renderTitleBar() {
+    const {
+      unit,
+      totalCount,
+      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
+    } = this.props;
+
+    const titleBarProps = {
+      title: unit.title,
+      showCount: !UnitType.isBook(unit.type),
+      totalCount: totalCount.itemTotalCount,
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+      query: { page, orderType, orderBy, filter },
+    };
+    return <TitleBar {...titleBarProps} />;
   }
 
   renderModal() {
@@ -161,39 +183,25 @@ class MainUnit extends React.Component {
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          />
-        ))}
-      </BookList>
-    );
-  }
-
-  renderBottomActionBar() {
-    const { isEditing } = this.state;
-    const { selectedBooks } = this.props;
-    return (
-      <BottomActionBar
+      <Editable
         isEditing={isEditing}
-        selectedBooks={selectedBooks}
-        buttonsProps={[
-          {
-            name: '선택 숨기기',
-            onClick: this.handleOnClickHide,
-          },
-          {
-            name: '선택 다운로드',
-            onClick: this.handleOnClickDownload,
-          },
-        ]}
-      />
+        nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
+        editingBarProps={this.makeEditingBarProps()}
+        actionBarProps={this.makeActionBarProps()}
+      >
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          ))}
+        </BookList>
+      </Editable>
     );
   }
 
@@ -222,7 +230,7 @@ class MainUnit extends React.Component {
           <title>{unit.title} 내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderLNB()}
+        {this.renderTitleBar()}
         <main>
           <Responsive>
             {items.length === 0 && isFetchingBook ? (
@@ -237,7 +245,6 @@ class MainUnit extends React.Component {
           </Responsive>
         </main>
         {this.renderPaginator()}
-        {this.renderBottomActionBar()}
       </>
     );
   }
