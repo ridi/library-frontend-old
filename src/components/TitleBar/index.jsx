@@ -4,10 +4,10 @@ import LNBBar from '../LNBBar';
 import Title from './Title';
 import Tool from '../Tool';
 
-const TitleBar = ({ title, totalCount, href, as, query, a11y = '뒤로가기', toggleEditingMode }) => (
+const TitleBar = ({ title, totalCount, href, as, query, edit, toggleEditingMode }) => (
   <LNBBar
-    renderFlexLeft={() => <Title title={title} totalCount={totalCount} href={href} as={as} query={query} a11y={a11y} />}
-    renderFlexRight={() => <Tool edit toggleEditingMode={toggleEditingMode} />}
+    renderFlexLeft={() => <Title title={title} totalCount={totalCount} href={href} as={as} query={query} />}
+    renderFlexRight={() => <Tool edit={edit} toggleEditingMode={toggleEditingMode} />}
   />
 );
 
