@@ -9,3 +9,7 @@ export const mainButtonActionRight = {
 export const mainFetchingBooks = {
   backgroundColor: 'white',
 };
+
+export const book = {
+  width: 80,
+};

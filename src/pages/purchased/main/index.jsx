@@ -4,9 +4,10 @@ import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
+import { PortraitBook } from '../../../components/Book';
 import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook';
+// import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { MainOrderOptions } from '../../../constants/orderOptions';
@@ -28,7 +29,7 @@ import {
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
 import { toFlatten } from '../../../utils/array';
-import { makeLinkProps, makeURI } from '../../../utils/uri';
+import { makeURI } from '../../../utils/uri';
 import BottomActionBar from '../../base/BottomActionBar';
 import { SearchAndEditingBar, TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
@@ -182,19 +183,30 @@ class Main extends React.Component {
 
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
-
+    console.log(items, books);
     return (
       <BookList>
         {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
-          />
+          <div css={styles.book}>
+            <PortraitBook
+              key={item.b_id}
+              bookId={item.b_id}
+              isAdult={books[item.b_id].property.is_adult_only}
+              isRidiselect={item.is_ridiselect}
+              isSelectMode={isEditing}
+              isSelected={!!selectedBooks[item.b_id]}
+              onSelectedChange={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          </div>
+          // <LibraryBook
+          //   key={item.b_id}
+          //   item={item}
+          //   book={books[item.b_id]}
+          //   isEditing={isEditing}
+          //   checked={!!selectedBooks[item.b_id]}
+          //   onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+          //   {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
+          // />
         ))}
       </BookList>
     );
