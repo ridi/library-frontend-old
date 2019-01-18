@@ -15,11 +15,9 @@ class EditingBar extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        isActivate: true,
-      });
-    }, 0);
+    window.requestAnimationFrame(() => {
+      this.setState({ isActivate: true });
+    });
   }
 
   render() {
