@@ -49,6 +49,10 @@ function filterBookIds(bookIds, existBooks) {
 }
 
 export function* loadBookData(bookIds) {
+  if (bookIds.length === 0) {
+    return;
+  }
+
   const existBooks = yield select(state => state.books.books);
   const filteredBookIds = filterBookIds(bookIds, existBooks);
 
@@ -60,6 +64,10 @@ export function* loadBookData(bookIds) {
 }
 
 export function* loadBookDescriptions(bookIds) {
+  if (bookIds.length === 0) {
+    return;
+  }
+
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
   const filteredBookIds = filterBookIds(bookIds, existBookDescriptions);
 
