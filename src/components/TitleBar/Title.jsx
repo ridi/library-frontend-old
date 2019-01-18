@@ -5,7 +5,7 @@ import { Icon } from '@ridi/rsg';
 import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
 
-const Title = ({ title, totalCount, href, as, query, a11y = '뒤로가기' }) => (
+const Title = ({ title, showCount, totalCount, href, as, query, a11y = '뒤로가기' }) => (
   <div css={styles.title}>
     <Link {...makeLinkProps(href, as, query)}>
       <a>
@@ -17,7 +17,7 @@ const Title = ({ title, totalCount, href, as, query, a11y = '뒤로가기' }) =>
     </Link>
     <div css={styles.titleTextWrapper}>
       <span css={styles.titleText}>{title}</span>
-      <span css={styles.count}>{totalCount}</span>
+      {showCount ? <span css={styles.count}>{totalCount}</span> : null}
     </div>
   </div>
 );

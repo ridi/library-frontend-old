@@ -6,7 +6,7 @@ import * as styles from './styles';
 
 export const TitleAndEditingBar = ({ titleBarProps, editingBarProps }) => (
   <div css={styles.LNBWrapper}>
-    <TitleBar {...titleBarProps} />
+    <TitleBar edit {...titleBarProps} />
     {editingBarProps.isEditing && <EditingBar {...editingBarProps} />}
   </div>
 );
