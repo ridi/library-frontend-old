@@ -31,12 +31,10 @@ import {
   getUnitId,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import BottomActionBar from '../../../components/BottomActionBar';
-import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import { UnitType } from '../../../constants/unitType';
-import { titleBar } from '../../../components/TitleBar/styles';
 import TitleBar from '../../../components/TitleBar';
 import Editable from '../../../components/Editable';
 import SeriesToolBar from '../../../components/SeriesToolBar';
