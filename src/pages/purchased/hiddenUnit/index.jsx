@@ -78,6 +78,41 @@ class HiddenUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
+  makeEditingBarProps() {
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
+
+    return {
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+  }
+
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+
+    return {
+      buttonsProps: [
+        {
+          name: '선택 영구 삭제',
+          type: ButtonType.DANGER,
+          onClick: this.handleOnClickDelete,
+          disable,
+        },
+        {
+          name: '선택 숨김 해제',
+          onClick: this.handleOnClickUnhide,
+          disable,
+        },
+      ],
+    };
+  }
+
   renderTitleBar() {
     const {
       unit,
@@ -155,42 +190,6 @@ class HiddenUnit extends React.Component {
         as={URLMap.hiddenUnit.as(unitId)}
       />
     );
-  }
-
-  makeEditingBarProps() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
-
-    const editingBarProps = {
-      totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
-    return editingBarProps;
-  }
-
-  makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
-
-    return {
-      buttonsProps: [
-        {
-          name: '선택 영구 삭제',
-          type: ButtonType.DANGER,
-          onClick: this.handleOnClickDelete,
-          disable,
-        },
-        {
-          name: '선택 숨김 해제',
-          onClick: this.handleOnClickUnhide,
-          disable,
-        },
-      ],
-    };
   }
 
   render() {
