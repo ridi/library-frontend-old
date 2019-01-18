@@ -28,7 +28,7 @@ import {
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
-import BottomActionBar from '../../base/BottomActionBar';
+import BottomActionBar from '../../../components/BottomActionBar';
 import { TitleAndEditingBar } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
@@ -86,11 +86,13 @@ class Hidden extends React.Component {
     const isSelectedAllBooks = totalSelectedCount === items.length;
     const titleBarProps = {
       title: '숨긴 도서 목록',
+      showCount: true,
       totalCount: totalCount.itemTotalCount,
-      toggleEditingMode: this.toggleEditingMode,
       href: URLMap.main.href,
       as: URLMap.main.as,
       query: { page, orderType, orderBy, filter },
+
+      toggleEditingMode: this.toggleEditingMode,
     };
     const editingBarProps = {
       isEditing,
