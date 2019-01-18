@@ -1,2 +1,2 @@
-export { default as BottomActionBar } from './BottomActionBar';
-export { default as BottomActionButton } from './BottomActionButton';
+export * from './ActionBar';
+export * from './ActionButton';

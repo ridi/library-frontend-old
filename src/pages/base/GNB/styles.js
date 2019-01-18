@@ -90,6 +90,9 @@ export const myMenuIcon = isActive =>
       transformOrigin: 'center center',
       transform: 'rotate(0)',
       transition: 'transform .3s',
+      ':hover': {
+        transform: 'rotate(180deg)',
+      },
     },
     isActive && {
       transform: 'rotate(180deg)',

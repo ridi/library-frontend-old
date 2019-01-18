@@ -1,25 +1,17 @@
-import Head from 'next/head';
-
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
+import Head from 'next/head';
+import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
-import Router from 'next/router';
-
-import * as styles from './styles';
 import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
 import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import { BottomActionBar, BottomActionButton } from '../../../components/BottomActionBar';
-import ModalBackground from '../../../components/ModalBackground';
-import Responsive from '../../base/Responsive';
-import LNBTabBar, { TabMenuTypes } from '../../base/LNB/LNBTabBar';
-import EditingBar from '../../../components/EditingBar';
-import ToolBar from '../../../components/ToolBar';
-import FilterModal from '../../base/MainModal/FilterModal';
-import SortModal from '../../base/MainModal/SortModal';
-
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { MainOrderOptions } from '../../../constants/orderOptions';
+import { URLMap } from '../../../constants/urls';
+import { getBooks } from '../../../services/book/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -28,21 +20,21 @@ import {
   selectAllBooks,
   toggleSelectBook,
 } from '../../../services/purchased/main/actions';
-
-import { getBooks } from '../../../services/book/selectors';
 import {
   getFilterOptions,
+  getIsFetchingBooks,
   getItemsByPage,
   getPageInfo,
   getSelectedBooks,
-  getIsFetchingBooks,
 } from '../../../services/purchased/main/selectors';
-
 import { toFlatten } from '../../../utils/array';
-import { makeURI, makeLinkProps } from '../../../utils/uri';
-import { MainOrderOptions } from '../../../constants/orderOptions';
-import { URLMap } from '../../../constants/urls';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import { makeLinkProps, makeURI } from '../../../utils/uri';
+import BottomActionBar from '../../base/BottomActionBar';
+import { SearchAndEditingBar, TabBar, TabMenuTypes } from '../../base/LNB';
+import FilterModal from '../../base/Modal/FilterModal';
+import SortModal from '../../base/Modal/SortModal';
+import Responsive from '../../base/Responsive';
+import * as styles from './styles';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -122,34 +114,34 @@ class Main extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderToolBar() {
+  renderLNB() {
     const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const selectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = selectedCount === items.length;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    return (
-      <div css={styles.mainToolBar}>
-        <ToolBar
-          hideTools={hideTools}
-          handleOnSubmitSearchBar={this.handleOnSubmitSearchBar}
-          handleOnFocusSearchBar={this.handleOnFocusSearchBar}
-          handleOnBlurSearchBar={this.handleOnBlurSearchBar}
-          toggleFilterModal={this.toggleFilterModal}
-          toggleEditingMode={this.toggleEditingMode}
-          toggleMoreModal={this.toggleMoreModal}
-        />
-        {isEditing && (
-          <EditingBar
-            totalSelectedCount={selectedCount}
-            isSelectedAllBooks={isSelectedAllBooks}
-            onClickSelectAllBooks={dispatchSelectAllBooks}
-            onClickUnselectAllBooks={dispatchClearSelectedBooks}
-            onClickSuccessButton={this.toggleEditingMode}
-          />
-        )}
-      </div>
-    );
+    const searchBarProps = {
+      hideTools,
+      handleOnSubmitSearchBar: this.handleOnSubmitSearchBar,
+      handleOnFocusSearchBar: this.handleOnFocusSearchBar,
+      handleOnBlurSearchBar: this.handleOnBlurSearchBar,
+      filter: true,
+      toggleFilterModal: this.toggleFilterModal,
+      edit: true,
+      toggleEditingMode: this.toggleEditingMode,
+      more: true,
+      toggleMoreModal: this.toggleMoreModal,
+    };
+    const editingBarProps = {
+      isEditing,
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+
+    return <SearchAndEditingBar searchBarProps={searchBarProps} editingBarProps={editingBarProps} />;
   }
 
   renderModal() {
@@ -161,15 +153,22 @@ class Main extends React.Component {
 
     return (
       <>
-        <FilterModal filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} isActive={showFilterModal} />
-        <SortModal order={order} orderOptions={MainOrderOptions.toList()} query={{ filter }} isActive={showMoreModal} />
+        <FilterModal
+          filter={filter}
+          filterOptions={filterOptions}
+          query={{ orderType, orderBy }}
+          isActive={showFilterModal}
+          onClickModalBackground={this.handleOnClickOutOfModal}
+        />
+        <SortModal
+          order={order}
+          orderOptions={MainOrderOptions.toList()}
+          query={{ filter }}
+          isActive={showMoreModal}
+          onClickModalBackground={this.handleOnClickOutOfModal}
+        />
       </>
     );
-  }
-
-  renderModalBackground() {
-    const { showFilterModal, showMoreModal } = this.state;
-    return <ModalBackground isActive={showFilterModal || showMoreModal} onClickModalBackground={this.handleOnClickOutOfModal} />;
   }
 
   renderBooks() {
@@ -220,34 +219,33 @@ class Main extends React.Component {
   renderBottomActionBar() {
     const { isEditing } = this.state;
     const { selectedBooks } = this.props;
-    if (!isEditing) {
-      return null;
-    }
-
-    const disable = Object.keys(selectedBooks).length === 0;
     return (
-      <BottomActionBar>
-        <BottomActionButton name="선택 숨기기" css={styles.mainButtonActionLeft} onClick={this.handleOnClickHide} disable={disable} />
-        <BottomActionButton
-          name="선택 다운로드"
-          css={styles.mainButtonActionRight}
-          onClick={this.handleOnClickDownload}
-          disable={disable}
-        />
-      </BottomActionBar>
+      <BottomActionBar
+        isEditing={isEditing}
+        selectedBooks={selectedBooks}
+        buttonsProps={[
+          {
+            name: '선택 숨기기',
+            onClick: this.handleOnClickHide,
+          },
+          {
+            name: '선택 다운로드',
+            onClick: this.handleOnClickDownload,
+          },
+        ]}
+      />
     );
   }
 
   render() {
     const { isFetchingBooks } = this.props;
-
     return (
       <>
         <Head>
           <title>모든 책 - 내 서재</title>
         </Head>
-        <LNBTabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderToolBar()}
+        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+        {this.renderLNB()}
         <main css={isFetchingBooks && styles.mainFetchingBooks}>
           <Responsive>
             {this.renderBooks()}
@@ -256,7 +254,6 @@ class Main extends React.Component {
         </main>
         {this.renderPaginator()}
         {this.renderBottomActionBar()}
-        {this.renderModalBackground()}
       </>
     );
   }

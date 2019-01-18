@@ -1,10 +1,10 @@
 export const initialState = {
-  itemIdsForPage: {},
   items: {},
-  unit: {},
+  itemIdsForPage: {},
 
   page: 1,
   itemTotalCount: 0,
 
   selectedBooks: {},
+  isFetchingBook: false,
 };

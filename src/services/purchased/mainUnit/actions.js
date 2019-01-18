@@ -1,7 +1,6 @@
 export const LOAD_MAIN_UNIT_ITEMS = 'LOAD_MAIN_UNIT_ITEMS';
 
 export const SET_MAIN_UNIT_ITEMS = 'SET_MAIN_UNIT_ITEMS';
-export const SET_MAIN_UNIT = 'SET_MAIN_UNIT';
 export const SET_MAIN_UNIT_TOTAL_COUNT = 'SET_MAIN_UNIT_TOTAL_COUNT';
 export const SET_MAIN_UNIT_ID = 'SET_MAIN_UNIT_ID';
 export const SET_MAIN_UNIT_PAGE = 'SET_MAIN_UNIT_PAGE';
@@ -15,6 +14,8 @@ export const CLEAR_SELECTED_MAIN_UNIT_BOOKS = 'CLEAR_SELECTED_MAIN_UNIT_BOOKS';
 export const HIDE_SELECTED_MAIN_UNIT_BOOKS = 'HIDE_SELECTED_MAIN_UNIT_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS = 'DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS';
 
+export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
+
 export const loadItems = () => ({
   type: LOAD_MAIN_UNIT_ITEMS,
 });
@@ -23,13 +24,6 @@ export const setItems = items => ({
   type: SET_MAIN_UNIT_ITEMS,
   payload: {
     items,
-  },
-});
-
-export const setUnit = unit => ({
-  type: SET_MAIN_UNIT,
-  payload: {
-    unit,
   },
 });
 
@@ -89,4 +83,11 @@ export const hideSelectedBooks = () => ({
 
 export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
+});
+
+export const setIsFetchingBook = isFetchingBook => ({
+  type: SET_IS_FETCHING_BOOK,
+  payload: {
+    isFetchingBook,
+  },
 });

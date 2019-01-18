@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { downloadBooks } from '../../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
@@ -10,27 +11,25 @@ import {
   setPage,
   setTotalCount,
   selectBooks,
-  setUnit,
   setKeyword,
+  setIsFetchingSearchBook,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getItemsByPage, getSelectedBooks } from './selectors';
-import { download } from '../../common/sagas';
-import { getRevision, requestCheckQueueStatus, requestHide, triggerDownload } from '../../common/requests';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
 
+  const page = parseInt(query.page, 10) || 1;
   const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
   const order = MainOrderOptions.toIndex(orderType, orderBy);
 
@@ -44,16 +43,21 @@ function* loadItems() {
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
+  yield put(setIsFetchingSearchBook(true));
   const [itemResponse, countResponse] = yield all([
     call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
     call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
+  yield call(saveUnitData, [itemResponse.unit]);
+
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
+  yield call(loadBookDescriptions, bookIds);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
 
-  yield all([put(setItems(itemResponse.items)), put(setUnit(itemResponse.unit)), put(setTotalCount(countResponse.item_total_count))]);
+  yield put(setIsFetchingSearchBook(false));
 }
 
 function* hideSelectedBooks() {
@@ -75,12 +79,7 @@ function* downloadSelectedBooks() {
 
   const bookIds = Object.keys(selectedBooks);
 
-  const triggerResponse = yield call(triggerDownload, bookIds);
-  if (triggerResponse.result) {
-    yield call(download, triggerResponse.b_ids, triggerResponse.url);
-  } else {
-    yield put(showToast(triggerResponse.message));
-  }
+  yield call(downloadBooks, bookIds);
 }
 
 function* selectAllBooks() {

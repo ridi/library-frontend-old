@@ -1,4 +1,4 @@
-import { put } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 
 import config from '../../config';
 import { getAPI } from '../../api/actions';
@@ -33,7 +33,7 @@ export function* requestCheckQueueStatus(queueIds) {
       return true;
     }
 
-    if (syncingQueueIds.length === 0 || retryCount < retryMaxCount) {
+    if (syncingQueueIds.length === 0 || retryCount >= retryMaxCount) {
       return false;
     }
 

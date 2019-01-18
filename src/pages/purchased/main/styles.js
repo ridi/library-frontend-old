@@ -1,7 +1,3 @@
-export const mainToolBar = {
-  position: 'relative',
-};
-
 export const mainButtonActionLeft = {
   float: 'left',
 };

@@ -22,9 +22,9 @@ import { showToast } from '../../toast/actions';
 import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './selectors';
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getRevision, triggerDownload, requestHide, requestCheckQueueStatus } from '../../common/requests';
-import { download, getBookIdsByUnitIds } from '../../common/sagas';
-import { loadBookData } from '../../book/sagas';
+import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/requests';
+import { downloadBooks, getBookIdsByUnitIds } from '../../common/sagas';
+import { loadBookData, extractUnitData } from '../../book/sagas';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -41,6 +41,8 @@ function* loadPage() {
 
   yield put(setSearchIsFetchingBooks(true));
   const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
+
+  yield call(extractUnitData, itemResponse.items);
 
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
@@ -77,12 +79,7 @@ function* downloadSelectedBooks() {
 
   const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
 
-  const triggerResponse = yield call(triggerDownload, bookIds);
-  if (triggerResponse.result) {
-    yield call(download, triggerResponse.b_ids, triggerResponse.url);
-  } else {
-    yield put(showToast(triggerResponse.message));
-  }
+  yield call(downloadBooks, bookIds);
 }
 
 function* selectAllBooks() {

@@ -5,15 +5,15 @@ export const initialState = {
   keyword: null,
   data: {},
 
-  units: {},
   order: 0,
-
   selectedBooks: {},
+
+  isFetchingBook: false,
 };
 
 export const initialDataState = {
-  itemIdsForPage: {},
   items: {},
+  itemIdsForPage: {},
 
   page: 1,
   itemTotalCount: 0,
