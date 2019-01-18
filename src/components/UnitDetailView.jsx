@@ -280,7 +280,14 @@ class UnitDetailView extends React.Component {
         <section css={styles.detailView}>
           <div css={[styles.wrapper, styles.thumbnailWrapper]}>
             <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
-            <div css={styles.ridibooksLink}>리디북스에서 보기 &gt;</div>
+            <a
+              css={styles.ridibooksLink}
+              href={`${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              리디북스에서 보기 &gt;
+            </a>
           </div>
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>
