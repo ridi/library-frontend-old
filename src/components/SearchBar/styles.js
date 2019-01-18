@@ -1,3 +1,7 @@
+export const searchBar = {
+  backgroundColor: '#f3f4f5',
+};
+
 export const searchBoxWrapper = {
   flex: 1,
   maxWidth: 600,
