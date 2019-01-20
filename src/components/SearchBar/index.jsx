@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import LNBBar from '../LNBBar';
+import FlexBar from '../FlexBar';
 import SearchBox from './SearchBox';
 import Tool from '../Tool';
 import * as styles from './styles';
@@ -18,7 +18,7 @@ const SearchBar = ({
   more,
   toggleMoreModal,
 }) => (
-  <LNBBar
+  <FlexBar
     hideTools={hideTools}
     renderFlexLeft={() => (
       <div css={styles.searchBoxWrapper}>

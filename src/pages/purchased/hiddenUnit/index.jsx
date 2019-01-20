@@ -9,6 +9,7 @@ import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SeriesToolBar from '../../../components/SeriesToolBar';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
@@ -30,9 +31,11 @@ import {
   getUnitId,
 } from '../../../services/purchased/hiddenUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import BottomActionBar from '../../base/BottomActionBar';
-import { TitleAndEditingBar } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import Editable from '../../../components/Editable';
+import TitleBar from '../../../components/TitleBar';
+import { ButtonType } from '../../../components/ActionBar/constants';
+import { UnitType } from '../../../constants/unitType';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -75,38 +78,58 @@ class HiddenUnit extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderLNB() {
-    const { isEditing } = this.state;
-    const {
-      items,
-      selectedBooks,
-      dispatchSelectAllBooks,
-      dispatchClearSelectedBooks,
-      unit,
-      totalCount,
-      hiddenPageInfo: { currentPage: page },
-    } = this.props;
+  makeEditingBarProps() {
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
-    const titleBarProps = {
-      title: unit.title,
-      totalCount: totalCount.itemTotalCount,
-      toggleEditingMode: this.toggleEditingMode,
-      href: URLMap.hidden.href,
-      as: URLMap.hidden.as,
-      query: { page },
-    };
-    const editingBarProps = {
-      isEditing,
+    return {
       totalSelectedCount,
       isSelectedAllBooks,
       onClickSelectAllBooks: dispatchSelectAllBooks,
       onClickUnselectAllBooks: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
+  }
 
-    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+
+    return {
+      buttonsProps: [
+        {
+          name: '선택 영구 삭제',
+          type: ButtonType.DANGER,
+          onClick: this.handleOnClickDelete,
+          disable,
+        },
+        {
+          name: '선택 숨김 해제',
+          onClick: this.handleOnClickUnhide,
+          disable,
+        },
+      ],
+    };
+  }
+
+  renderTitleBar() {
+    const {
+      unit,
+      totalCount,
+      hiddenPageInfo: { currentPage: page },
+    } = this.props;
+
+    const titleBarProps = {
+      title: unit.title,
+      showCount: !UnitType.isBook(unit.type),
+      totalCount: totalCount.itemTotalCount,
+      href: URLMap.hidden.href,
+      as: URLMap.hidden.as,
+      query: { page },
+    };
+
+    return <TitleBar {...titleBarProps} />;
   }
 
   renderDetailView() {
@@ -132,18 +155,25 @@ class HiddenUnit extends React.Component {
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          />
-        ))}
-      </BookList>
+      <Editable
+        isEditing={isEditing}
+        nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
+        editingBarProps={this.makeEditingBarProps()}
+        actionBarProps={this.makeActionBarProps()}
+      >
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+            />
+          ))}
+        </BookList>
+      </Editable>
     );
   }
 
@@ -162,27 +192,6 @@ class HiddenUnit extends React.Component {
     );
   }
 
-  renderBottomActionBar() {
-    const { isEditing } = this.state;
-    const { selectedBooks } = this.props;
-    return (
-      <BottomActionBar
-        isEditing={isEditing}
-        selectedBooks={selectedBooks}
-        buttonsProps={[
-          {
-            name: '선택 영구 삭제',
-            onClick: this.handleOnClickDelete,
-          },
-          {
-            name: '선택 숨김 해제',
-            onClick: this.handleOnClickUnhide,
-          },
-        ]}
-      />
-    );
-  }
-
   render() {
     const { unit, items, isFetchingBook } = this.props;
     return (
@@ -190,7 +199,7 @@ class HiddenUnit extends React.Component {
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
-        {this.renderLNB()}
+        {this.renderTitleBar()}
         <main>
           <Responsive>
             {items.length === 0 && isFetchingBook ? (
@@ -202,9 +211,8 @@ class HiddenUnit extends React.Component {
               </>
             )}
           </Responsive>
+          {this.renderPaginator()}
         </main>
-        {this.renderPaginator()}
-        {this.renderBottomActionBar()}
       </>
     );
   }

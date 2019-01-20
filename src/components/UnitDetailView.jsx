@@ -261,7 +261,9 @@ class UnitDetailView extends React.Component {
       <button
         type="button"
         css={styles.drmFreeDownloadButton}
-        onClick={() => (window.location.href = `${config.STORE_API_BASE_URL}/api/user-books/${book.id}/raw-download`)}
+        onClick={() => {
+          window.location.href = `${config.STORE_API_BASE_URL}/api/user-books/${book.id}/raw-download`;
+        }}
       >
         EPUB 파일 다운로드
       </button>
