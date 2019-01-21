@@ -68,7 +68,8 @@ export function* download(bookIds, url) {
   yield cancel(installTimer);
 }
 
-export function* downloadBooks(bookIds) {
+export function* downloadBooks(action) {
+  const { bookIds } = action.payload;
   const triggerResponse = yield call(triggerDownload, bookIds);
 
   if (triggerResponse.result) {
