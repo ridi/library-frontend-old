@@ -1,3 +1,5 @@
+import { Icon } from '@ridi/rsg';
+
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css } from '@emotion/core';
@@ -110,6 +112,30 @@ const styles = {
   bookDescriptionBody: css({
     marginTop: 9,
     lineHeight: 1.5,
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    WebkitBoxOrient: 'vertical',
+  }),
+  bookDescriptionFolded: css({
+    // TODO: 변수화 해야 한다.
+    maxHeight: 9 * 23,
+    WebkitLineClamp: 9,
+  }),
+  bookDescriptionExpended: css({
+    // TODO: 변수화 해야 한다.
+    maxHeight: 'unset',
+    WebkitLineClamp: 'unset',
+  }),
+  bookDescriptionExpend: css({
+    textAlign: 'right',
+    marginTop: 11.5,
+  }),
+  bookDescriptionExpendButton: css({
+    fontSize: 15,
+    textAlign: 'right',
+    color: '#808991',
+    fill: '#9ea7ad',
   }),
   downloadButton: css({
     width: '100%',
@@ -166,6 +192,14 @@ const styles = {
 };
 
 class UnitDetailView extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isExpanded: false,
+    };
+  }
+
   compileAuthors() {
     const {
       book: { authors },
@@ -215,7 +249,29 @@ class UnitDetailView extends React.Component {
     );
   }
 
+  expand() {
+    this.setState({ isExpanded: true });
+  }
+
+  renderExpenderButton() {
+    const { isExpanded } = this.state;
+
+    if (isExpanded) {
+      return null;
+    }
+
+    return (
+      <div css={styles.bookDescriptionExpend}>
+        <button type="button" onClick={() => this.expand()} css={styles.bookDescriptionExpendButton}>
+          계속 읽기
+          <Icon name="arrow_5_down" />
+        </button>
+      </div>
+    );
+  }
+
   renderDescription() {
+    const { isExpanded } = this.state;
     const { bookDescription } = this.props;
     if (!bookDescription) {
       return null;
@@ -224,9 +280,10 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
-        <div css={styles.bookDescriptionBody}>
+        <div css={[styles.bookDescriptionBody, isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded]}>
           <p dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }} />
         </div>
+        {this.renderExpenderButton()}
       </div>
     );
   }
