@@ -7,7 +7,7 @@ import { URLMap } from '../../../constants/urls';
 const makeModalLinkItem = (option, filter, query, isChild) => (
   <li key={shortid.generate()}>
     <ModalLinkItem
-      title={isChild ? `- ${option.title}` : option.title}
+      title={isChild ? `ㄴ ${option.title}` : option.title}
       count={option.count}
       showIcon={option.value === filter}
       icon="check_6"
