@@ -65,6 +65,13 @@ export const icon = {
   fill: '#9ea7ad',
 };
 
+export const count = {
+  marginLeft: 4,
+  fontSize: 13,
+  letterSpacing: -0.3,
+  color: '#808991',
+};
+
 export const modalBackground = isActive => {
   const active = isActive ? { pointerEvents: 'initial', zIndex: 9000 } : {};
 

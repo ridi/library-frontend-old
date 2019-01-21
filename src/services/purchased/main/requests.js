@@ -30,27 +30,30 @@ export function* fetchMainItemsTotalCount(orderType, orderBy, filter) {
   return response.data;
 }
 
-const _createFilterOption = (title, value, hasChildren) => ({
+const _createFilterOption = (title, value, count = 0, hasChildren = false) => ({
   title,
   value,
+  count,
   hasChildren,
 });
 
 const _reformatCategories = categories =>
-  categories.reduce(
-    (previous, value) => {
-      const hasChildren = value.children && value.children.length > 0;
-      const filterOption = _createFilterOption(value.name, value.id, hasChildren);
-      filterOption.children = hasChildren ? _reformatCategories(value.children) : null;
+  categories.reduce((previous, value) => {
+    const hasChildren = value.children && value.children.length > 0;
+    const filterOption = _createFilterOption(value.name, value.id, value.count, hasChildren);
+    filterOption.children = hasChildren ? _reformatCategories(value.children) : null;
 
-      previous.push(filterOption);
-      return previous;
-    },
-    [_createFilterOption('전체 카테고리', null)],
-  );
+    previous.push(filterOption);
+    return previous;
+  }, []);
+
+const _countAllCategory = categories => categories.reduce((previous, value) => previous + value.count, 0);
 
 export function* fetchPurchaseCategories() {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/items/categories', {}, config.LIBRARY_API_BASE_URL));
-  return _reformatCategories(response.data.categories);
+  return [
+    _createFilterOption('전체 카테고리', null, _countAllCategory(response.data.categories)),
+    ..._reformatCategories(response.data.categories),
+  ];
 }
