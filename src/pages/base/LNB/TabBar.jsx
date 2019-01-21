@@ -9,6 +9,7 @@ import { URLMap } from '../../../constants/urls';
 
 export const TabMenuTypes = {
   ALL_BOOKS: 'ALL BOOKS',
+  FAVORITE: 'FAVORITE',
 };
 
 const styles = {
@@ -23,6 +24,14 @@ const TabMenus = [
   {
     type: TabMenuTypes.ALL_BOOKS,
     name: '모든 책',
+    linkInfo: {
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+    },
+  },
+  {
+    type: TabMenuTypes.FAVORITE,
+    name: '선호작품',
     linkInfo: {
       href: URLMap.main.href,
       as: URLMap.main.as,
