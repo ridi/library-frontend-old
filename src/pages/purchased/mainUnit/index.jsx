@@ -227,7 +227,7 @@ class MainUnit extends React.Component {
     return (
       <>
         <Head>
-          <title>{unit.title} 내 서재</title>
+          <title>{unit.title} - 내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
