@@ -245,7 +245,7 @@ class searchUnit extends React.Component {
         <main>
           <Responsive>
             {this.renderDetailView()}
-            {this.renderBooks()}
+            {UnitType.isBook(unit.type) ? null : this.renderBooks()}
             {this.renderModal()}
           </Responsive>
         </main>

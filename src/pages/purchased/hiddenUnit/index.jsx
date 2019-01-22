@@ -212,7 +212,7 @@ class HiddenUnit extends React.Component {
         <main>
           <Responsive>
             {this.renderDetailView()}
-            {this.renderBooks()}
+            {UnitType.isBook(unit.type) ? null : this.renderBooks()}
           </Responsive>
         </main>
       </>
