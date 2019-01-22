@@ -1,5 +1,3 @@
-import { FOOTER_HEIGHT } from '../../pages/base/Footer/styles';
-
 const buttonHeight = 30;
 const wrapperStyle = {
   display: 'inline-block',
