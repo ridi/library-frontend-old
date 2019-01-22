@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 
 import {
   DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
@@ -19,9 +18,10 @@ import { loadBookData, saveUnitData, loadBookDescriptions } from '../../book/sag
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getRevision, requestCheckQueueStatus, requestUnhide } from '../../common/requests';
+import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
+
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -81,11 +81,11 @@ function* deleteSelectedHiddenUnitBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = Object.keys(selectedBooks);
-  // TODO: CSRF Token 어떻게 할지 결정되어야 한다.
-  console.log('삭제 되었따고 치고');
+  const queueIds = yield call(requestDelete, bookIds, revision);
 
-  yield call(delay, 3000); // Temporary Sleep
-
+  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  // TODO: Message 수정
+  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
   yield call(loadHiddenUnitItems);
 }
 
