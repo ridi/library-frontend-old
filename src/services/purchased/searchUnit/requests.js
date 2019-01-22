@@ -7,6 +7,7 @@ import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { makeURI } from '../../../utils/uri';
+import { MainOrderOptions } from '../../../constants/orderOptions';
 
 export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
   const options = snakelize({
@@ -27,4 +28,17 @@ export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/search/${unitId}/count`, options, config.LIBRARY_API_BASE_URL));
   return response.data;
+}
+
+export function* getSearchUnitPrimaryItem(unitId) {
+  const options = {
+    orderType: MainOrderOptions.DEFAULT.order_type,
+    orderBy: MainOrderOptions.DEFAULT.order_by,
+    offset: 0,
+    limit: 1,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI(`/items/main/${unitId}`, options, config.LIBRARY_API_BASE_URL));
+  return response.data.items[0];
 }

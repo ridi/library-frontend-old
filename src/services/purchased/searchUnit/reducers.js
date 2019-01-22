@@ -11,6 +11,7 @@ import {
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
   SET_IS_FETCHING_SEARCH_BOOK,
+  SET_SEARCH_UNIT_PRIMARY_ITEM,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -61,6 +62,17 @@ const searchUnitReducer = (state = initialState, action) => {
           [key]: {
             ...dataState,
             page: action.payload.page,
+          },
+        },
+      };
+    case SET_SEARCH_UNIT_PRIMARY_ITEM:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            primaryItem: action.payload.primaryItem,
           },
         },
       };
