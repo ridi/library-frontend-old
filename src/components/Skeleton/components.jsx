@@ -4,7 +4,7 @@ import { Responsive } from '../../styles/responsive';
 
 const styles = {
   skeleton: css({
-    backgroundImage: 'linear-gradient(147deg, #f8f9fb, #f1f1f3 55%, #f8f9fb)',
+    backgroundImage: 'linear-gradient(147deg, #e6e8eb, #edeff2 55%, #e6e8eb)',
   }),
 
   book: css({
