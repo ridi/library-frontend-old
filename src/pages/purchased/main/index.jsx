@@ -197,13 +197,9 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      if (isFetchingBooks) {
-        return <SkeletonBookList />;
-      }
-
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
@@ -242,7 +238,9 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isFetchingBooks } = this.props;
+    const { items, isFetchingBooks } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
     return (
       <>
         <Head>
@@ -255,13 +253,21 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main css={isFetchingBooks && styles.mainFetchingBooks}>
-            <Responsive>
-              {this.renderBooks()}
-              {this.renderModal()}
-            </Responsive>
+          <main css={showSkeleton && styles.mainFetchingBooks}>
+            {showSkeleton ? (
+              <Responsive>
+                <SkeletonBookList />
+              </Responsive>
+            ) : (
+              <>
+                <Responsive>
+                  {this.renderBooks()}
+                  {this.renderModal()}
+                </Responsive>
+                {this.renderPaginator()}
+              </>
+            )}
           </main>
-          {this.renderPaginator()}
         </Editable>
       </>
     );
