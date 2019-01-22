@@ -20,6 +20,9 @@ module.exports = {
 
     RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
     RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
+
+    RIDI_INTERNAL_AUTH_LIBRARY_WEB_TO_STORE: secrets.ridi_internal_auth_library_web_to_store,
+
     SENTRY_DSN: secrets.sentry_dsn,
   },
 

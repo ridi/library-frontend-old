@@ -1,6 +1,6 @@
 const nextRoutes = require('next-routes');
 
-const routes = nextRoutes();
+const clientRoutes = nextRoutes();
 
 const APP_ROUTES = [
   { page: 'purchased/main', pattern: '/' },
@@ -12,5 +12,5 @@ const APP_ROUTES = [
   { page: 'purchased/mainUnit', pattern: '/purchased/:unit_id' },
 ];
 
-APP_ROUTES.forEach(route => routes.add(route));
-module.exports = routes;
+APP_ROUTES.forEach(route => clientRoutes.add(route));
+module.exports = clientRoutes;
