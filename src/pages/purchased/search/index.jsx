@@ -146,29 +146,38 @@ class Search extends React.Component {
       books,
       selectedBooks,
       dispatchToggleSelectBook,
+      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
       return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
-              keyword,
-            })}
-          />
-        ))}
-      </BookList>
+      <>
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
+                keyword,
+              })}
+            />
+          ))}
+        </BookList>
+        {this.renderPaginator()}
+      </>
     );
   }
 
@@ -210,16 +219,7 @@ class Search extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main css={showSkeleton && styles.searchFetchingBooks}>
-            <Responsive>
-              {showSkeleton ? (
-                <SkeletonBookList />
-              ) : (
-                <>
-                  {this.renderBooks()}
-                  {this.renderPaginator()}
-                </>
-              )}
-            </Responsive>
+            <Responsive>{this.renderBooks()}</Responsive>
           </main>
         </Editable>
       </>

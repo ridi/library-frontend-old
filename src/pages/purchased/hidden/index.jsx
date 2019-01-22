@@ -128,26 +128,34 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            {...makeLinkProps({ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }, URLMap.hiddenUnit.as(item.unit_id))}
-          />
-        ))}
-      </BookList>
+      <>
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              {...makeLinkProps({ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }, URLMap.hiddenUnit.as(item.unit_id))}
+            />
+          ))}
+        </BookList>
+        {this.renderPaginator()}
+      </>
     );
   }
 
@@ -176,16 +184,7 @@ class Hidden extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main css={showSkeleton && styles.hiddenFetchingBooks}>
-            <Responsive>
-              {showSkeleton ? (
-                <SkeletonBookList />
-              ) : (
-                <>
-                  {this.renderBooks()}
-                  {this.renderPaginator()}
-                </>
-              )}
-            </Responsive>
+            <Responsive>{this.renderBooks()}</Responsive>
           </main>
         </Editable>
       </>
