@@ -10,7 +10,6 @@ import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDet
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
-import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
@@ -34,7 +33,6 @@ import {
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
-import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
@@ -52,8 +50,6 @@ class searchUnit extends React.Component {
 
     this.state = {
       isEditing: false,
-      showMoreModal: false,
-      hideTools: false,
     };
   }
 
@@ -65,16 +61,7 @@ class searchUnit extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing, showMoreModal: false });
-  };
-
-  toggleMoreModal = () => {
-    const { showMoreModal } = this.state;
-    this.setState({ showMoreModal: !showMoreModal });
-  };
-
-  handleOnClickOutOfModal = () => {
-    this.setState({ showMoreModal: false });
+    this.setState({ isEditing: !isEditing });
   };
 
   handleOnClickHide = () => {
@@ -145,22 +132,6 @@ class searchUnit extends React.Component {
       query: { keyword, page },
     };
     return <TitleBar {...titleBarProps} />;
-  }
-
-  renderModal() {
-    const { showMoreModal } = this.state;
-    const {
-      pageInfo: { order },
-    } = this.props;
-
-    return (
-      <SortModal
-        order={order}
-        orderOptions={MainOrderOptions.toList()}
-        isActive={showMoreModal}
-        onClickModalBackground={this.handleOnClickOutOfModal}
-      />
-    );
   }
 
   renderDetailView() {
@@ -246,7 +217,6 @@ class searchUnit extends React.Component {
           <Responsive>
             {this.renderDetailView()}
             {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-            {this.renderModal()}
           </Responsive>
         </main>
       </>
