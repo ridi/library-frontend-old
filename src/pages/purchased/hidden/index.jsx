@@ -29,7 +29,6 @@ import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import TitleBar from '../../../components/TitleBar';
 import Editable from '../../../components/Editable';
@@ -169,8 +168,6 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { items, isFetchingBooks } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
 
     return (
       <>
@@ -183,7 +180,7 @@ class Hidden extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main css={showSkeleton && styles.hiddenFetchingBooks}>
+          <main>
             <Responsive>{this.renderBooks()}</Responsive>
           </main>
         </Editable>

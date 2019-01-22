@@ -27,7 +27,6 @@ import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -200,11 +199,8 @@ class Search extends React.Component {
   render() {
     const { isEditing } = this.state;
     const {
-      items,
-      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
 
     return (
       <>
@@ -218,7 +214,7 @@ class Search extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main css={showSkeleton && styles.searchFetchingBooks}>
+          <main>
             <Responsive>{this.renderBooks()}</Responsive>
           </main>
         </Editable>

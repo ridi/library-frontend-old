@@ -33,7 +33,6 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
 
@@ -246,8 +245,6 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { items, isFetchingBooks } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
 
     return (
       <>
@@ -261,7 +258,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main css={showSkeleton && styles.mainFetchingBooks}>
+          <main>
             <Responsive>
               {this.renderBooks()}
               {this.renderModal()}
