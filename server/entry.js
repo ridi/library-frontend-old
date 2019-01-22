@@ -29,7 +29,7 @@ app
     server.use(express.json());
 
     // For health check
-    server.get('/health', (err, req, res) => {
+    server.get('/health', (req, res) => {
       res.send('I am healthy');
     });
 
