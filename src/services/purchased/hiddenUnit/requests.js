@@ -34,6 +34,5 @@ export function* getHiddenUnitPrimaryItem(unitId) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/hidden/${unitId}`, options, config.LIBRARY_API_BASE_URL));
-
   return attatchTTL(response.data.items)[0];
 }
