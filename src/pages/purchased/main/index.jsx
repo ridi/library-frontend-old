@@ -254,19 +254,17 @@ class Main extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main css={showSkeleton && styles.mainFetchingBooks}>
-            {showSkeleton ? (
-              <Responsive>
+            <Responsive>
+              {showSkeleton ? (
                 <SkeletonBookList />
-              </Responsive>
-            ) : (
-              <>
-                <Responsive>
+              ) : (
+                <>
                   {this.renderBooks()}
-                  {this.renderModal()}
-                </Responsive>
-                {this.renderPaginator()}
-              </>
-            )}
+                  {this.renderPaginator()}
+                </>
+              )}
+              {this.renderModal()}
+            </Responsive>
           </main>
         </Editable>
       </>

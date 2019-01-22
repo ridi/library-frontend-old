@@ -210,16 +210,16 @@ class Search extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main css={showSkeleton && styles.searchFetchingBooks}>
-            {showSkeleton ? (
-              <Responsive>
+            <Responsive>
+              {showSkeleton ? (
                 <SkeletonBookList />
-              </Responsive>
-            ) : (
-              <>
-                <Responsive>{this.renderBooks()}</Responsive>
-                {this.renderPaginator()}
-              </>
-            )}
+              ) : (
+                <>
+                  {this.renderBooks()}
+                  {this.renderPaginator()}
+                </>
+              )}
+            </Responsive>
           </main>
         </Editable>
       </>
