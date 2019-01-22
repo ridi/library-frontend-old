@@ -25,7 +25,6 @@ app
   .then(() => {
     const server = express();
     server.use(cookieParser());
-    server.use(middleware.jwtAuth);
     server.use(express.json());
 
     // For health check
@@ -34,7 +33,7 @@ app
     });
 
     // TODO: endpoint 가 늘어나면 route handling 기능  추가 해야 한다.
-    server.post('/remove', csrfProtection, (req, res) => serverRoutes.removeView(req, res));
+    server.post('/remove', middleware.jwtAuth, csrfProtection, (req, res) => serverRoutes.removeView(req, res));
 
     const ssrRouter = express.Router();
     ssrRouter.use(cookieParser());
