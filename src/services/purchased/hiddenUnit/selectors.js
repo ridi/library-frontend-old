@@ -2,22 +2,34 @@ import { createSelector } from 'reselect';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
+import { getKey, initialDataState } from './state';
 
 const getState = state => state.purchasedHiddenUnit;
+const getDataState = state => {
+  const hiddenUnitState = state.purchasedHiddenUnit;
+  const key = getKey(hiddenUnitState);
+  return hiddenUnitState.data[key] || initialDataState;
+};
 
 export const getItemsByPage = createSelector(
-  getState,
-  state => {
-    const { page, itemIdsForPage, items } = state;
+  getDataState,
+  dataState => {
+    const { page, itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
 );
 
+export const getPrimaryItem = createSelector(
+  getDataState,
+  dataState => dataState.primaryItem,
+);
+
 export const getPageInfo = createSelector(
-  getState,
-  state => {
-    const { unitId, page, itemTotalCount } = state;
+  [getState, getDataState],
+  (state, dataState) => {
+    const { unitId } = state;
+    const { page, itemTotalCount } = dataState;
 
     return {
       unitId,
@@ -33,8 +45,8 @@ export const getUnitId = createSelector(
 );
 
 export const getPage = createSelector(
-  getState,
-  state => state.page,
+  getDataState,
+  dataState => dataState.page,
 );
 
 export const getOptions = createSelector(
@@ -51,9 +63,9 @@ export const getSelectedBooks = createSelector(
 );
 
 export const getTotalCount = createSelector(
-  getState,
-  state => ({
-    itemTotalCount: state.itemTotalCount,
+  getDataState,
+  dataState => ({
+    itemTotalCount: dataState.itemTotalCount,
   }),
 );
 

@@ -33,7 +33,6 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
 
@@ -197,30 +196,34 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
-      if (isFetchingBooks) {
-        return <SkeletonBookList />;
-      }
-
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
-          />
-        ))}
-      </BookList>
+      <>
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
+            />
+          ))}
+        </BookList>
+        {this.renderPaginator()}
+      </>
     );
   }
 
@@ -242,7 +245,7 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isFetchingBooks } = this.props;
+
     return (
       <>
         <Head>
@@ -255,13 +258,12 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main css={isFetchingBooks && styles.mainFetchingBooks}>
+          <main>
             <Responsive>
               {this.renderBooks()}
               {this.renderModal()}
             </Responsive>
           </main>
-          {this.renderPaginator()}
         </Editable>
       </>
     );

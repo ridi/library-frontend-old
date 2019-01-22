@@ -21,6 +21,11 @@ export const getItemsByPage = createSelector(
   },
 );
 
+export const getPrimaryItem = createSelector(
+  getDataState,
+  dataState => dataState.primaryItem,
+);
+
 export const getPageInfo = createSelector(
   [getState, getDataState],
   (state, dataState) => {

@@ -10,23 +10,35 @@ import {
   selectBooks,
   UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
   setIsFetchingHiddenBook,
+  setHiddenUnitPrimaryItem,
 } from './actions';
-import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount } from './requests';
+import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount, getHiddenUnitPrimaryItem } from './requests';
 
 import { loadBookData, saveUnitData, loadBookDescriptions } from '../../book/sagas';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
-
+import { isExpiredTTL } from '../../../utils/ttl';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
   yield all([put(setPage(page))]);
+}
+
+function* loadPrimaryItem(unitId) {
+  const _primaryItem = yield select(getPrimaryItem);
+  if (_primaryItem && !isExpiredTTL(_primaryItem)) {
+    return _primaryItem;
+  }
+
+  const primaryItem = yield call(getHiddenUnitPrimaryItem, unitId);
+  yield put(setHiddenUnitPrimaryItem(primaryItem));
+  return primaryItem;
 }
 
 function* loadHiddenUnitItems() {
@@ -38,10 +50,12 @@ function* loadHiddenUnitItems() {
   yield put(setIsFetchingHiddenBook(true));
   const [itemResponse, countResponse] = yield all([call(fetchHiddenUnitItems, unitId, page), call(fetchHiddenUnitItemsTotalCount, unitId)]);
 
+  // PrimaryItem과 Unit 저장
+  const primaryItem = yield call(loadPrimaryItem, unitId);
   yield call(saveUnitData, [itemResponse.unit]);
 
-  // Request BookData
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
+  // 책 데이터 로딩
+  const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
   yield call(loadBookData, bookIds);
   yield call(loadBookDescriptions, bookIds);
   yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);

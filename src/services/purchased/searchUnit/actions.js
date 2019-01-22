@@ -17,6 +17,8 @@ export const DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_UNI
 
 export const SET_IS_FETCHING_SEARCH_BOOK = 'SET_IS_FETCHING_SEARCH_BOOK';
 
+export const SET_SEARCH_UNIT_PRIMARY_ITEM = 'SET_SEARCH_UNIT_PRIMARY_ITEM';
+
 export const loadItems = () => ({
   type: LOAD_SEARCH_UNIT_ITEMS,
 });
@@ -97,5 +99,12 @@ export const setIsFetchingSearchBook = isFetchingBook => ({
   type: SET_IS_FETCHING_SEARCH_BOOK,
   payload: {
     isFetchingBook,
+  },
+});
+
+export const setSearchUnitPrimaryItem = primaryItem => ({
+  type: SET_SEARCH_UNIT_PRIMARY_ITEM,
+  payload: {
+    primaryItem,
   },
 });

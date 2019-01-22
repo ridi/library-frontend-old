@@ -5,7 +5,3 @@ export const mainButtonActionLeft = {
 export const mainButtonActionRight = {
   float: 'right',
 };
-
-export const mainFetchingBooks = {
-  backgroundColor: 'white',
-};

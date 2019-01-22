@@ -9,7 +9,7 @@ import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
@@ -29,10 +29,10 @@ import {
   getSelectedBooks,
   getTotalCount,
   getUnitId,
+  getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
-import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
@@ -50,8 +50,6 @@ class searchUnit extends React.Component {
 
     this.state = {
       isEditing: false,
-      showMoreModal: false,
-      hideTools: false,
     };
   }
 
@@ -63,16 +61,7 @@ class searchUnit extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing, showMoreModal: false });
-  };
-
-  toggleMoreModal = () => {
-    const { showMoreModal } = this.state;
-    this.setState({ showMoreModal: !showMoreModal });
-  };
-
-  handleOnClickOutOfModal = () => {
-    this.setState({ showMoreModal: false });
+    this.setState({ isEditing: !isEditing });
   };
 
   handleOnClickHide = () => {
@@ -145,40 +134,30 @@ class searchUnit extends React.Component {
     return <TitleBar {...titleBarProps} />;
   }
 
-  renderModal() {
-    const { showMoreModal } = this.state;
-    const {
-      pageInfo: { order },
-    } = this.props;
-
-    return (
-      <SortModal
-        order={order}
-        orderOptions={MainOrderOptions.toList()}
-        isActive={showMoreModal}
-        onClickModalBackground={this.handleOnClickOutOfModal}
-      />
-    );
-  }
-
   renderDetailView() {
-    const { unit, items, books, bookDescriptions } = this.props;
-    const primaryItem = items[0];
+    const { unit, primaryItem, books, bookDescriptions } = this.props;
     if (!primaryItem) {
-      return null;
+      return <SkeletonUnitDetailView />;
     }
 
-    const primaryBookId = primaryItem.b_id;
-    const primaryBook = books[primaryBookId];
-    const primaryBookDescription = bookDescriptions[primaryBookId];
-    const downloadable = new Date(primaryItem.expire_date) > new Date();
+    const primaryBook = books[primaryItem.b_id];
+    const primaryBookDescription = bookDescriptions[primaryItem.b_id];
+    if (!primaryBook || !primaryBookDescription) {
+      return <SkeletonUnitDetailView />;
+    }
 
+    const downloadable = new Date(primaryItem.expire_date) > new Date();
     return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={downloadable} />;
   }
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
+    const showSkeleton = isFetchingBook && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
@@ -203,6 +182,7 @@ class searchUnit extends React.Component {
             />
           ))}
         </BookList>
+        {this.renderPaginator()}
       </Editable>
     );
   }
@@ -224,7 +204,7 @@ class searchUnit extends React.Component {
   }
 
   render() {
-    const { unit, items, isFetchingBook } = this.props;
+    const { unit } = this.props;
 
     return (
       <>
@@ -235,18 +215,10 @@ class searchUnit extends React.Component {
         {this.renderTitleBar()}
         <main>
           <Responsive>
-            {items.length === 0 && isFetchingBook ? (
-              <SkeletonUnitDetailView />
-            ) : (
-              <>
-                {this.renderDetailView()}
-                {this.renderBooks()}
-                {this.renderModal()}
-              </>
-            )}
+            {this.renderDetailView()}
+            {UnitType.isBook(unit.type) ? null : this.renderBooks()}
           </Responsive>
         </main>
-        {this.renderPaginator()}
       </>
     );
   }
@@ -257,8 +229,13 @@ const mapStateToProps = state => {
 
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
-
+  const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
+
+  const bookIds = toFlatten(items, 'b_id');
+  if (primaryItem) {
+    bookIds.push(primaryItem.b_id);
+  }
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
 
@@ -272,6 +249,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     unit,
+    primaryItem,
     books,
     bookDescriptions,
     totalCount,
