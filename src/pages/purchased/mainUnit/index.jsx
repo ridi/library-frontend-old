@@ -9,7 +9,6 @@ import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import { MainOrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
@@ -34,7 +33,6 @@ import {
 import { toFlatten } from '../../../utils/array';
 import BottomActionBar from '../../base/BottomActionBar';
 import { TabBar, TabMenuTypes, TitleAndEditingBar } from '../../base/LNB';
-import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 
 class MainUnit extends React.Component {
@@ -119,22 +117,6 @@ class MainUnit extends React.Component {
       onClickSuccessButton: this.toggleEditingMode,
     };
     return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
-  }
-
-  renderModal() {
-    const { showMoreModal } = this.state;
-    const {
-      pageInfo: { order },
-    } = this.props;
-
-    return (
-      <SortModal
-        order={order}
-        orderOptions={MainOrderOptions.toList()}
-        isActive={showMoreModal}
-        onClickModalBackground={this.handleOnClickOutOfModal}
-      />
-    );
   }
 
   renderDetailView() {
@@ -231,7 +213,6 @@ class MainUnit extends React.Component {
               <>
                 {this.renderDetailView()}
                 {!UnitType.isBook(unit.type) ? this.renderBooks() : null}
-                {this.renderModal()}
               </>
             )}
           </Responsive>

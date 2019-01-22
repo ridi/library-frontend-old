@@ -4,10 +4,9 @@ import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-import { PortraitBook } from '../../../components/Book';
+import { LibraryBook } from '../../../components/Book';
 import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
-// import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { MainOrderOptions } from '../../../constants/orderOptions';
@@ -28,6 +27,7 @@ import {
   getPageInfo,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
+import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
 import { makeURI } from '../../../utils/uri';
 import BottomActionBar from '../../base/BottomActionBar';
@@ -115,6 +115,12 @@ class Main extends React.Component {
     this.setState({ isEditing: false });
   };
 
+  handleOnClickViewType = viewType => {
+    const { dispatchSetViewType } = this.props;
+    dispatchSetViewType(viewType);
+    this.handleOnClickOutOfModal();
+  };
+
   renderLNB() {
     const { isEditing, hideTools } = this.state;
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
@@ -150,6 +156,7 @@ class Main extends React.Component {
     const {
       pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
+      viewType,
     } = this.props;
 
     return (
@@ -167,6 +174,8 @@ class Main extends React.Component {
           query={{ filter }}
           isActive={showMoreModal}
           onClickModalBackground={this.handleOnClickOutOfModal}
+          viewType={viewType}
+          onClickViewType={this.handleOnClickViewType}
         />
       </>
     );
@@ -174,7 +183,7 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook, viewType } = this.props;
 
     if (items.length === 0) {
       if (isFetchingBooks) {
@@ -183,31 +192,17 @@ class Main extends React.Component {
 
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
-    console.log(items, books);
+
     return (
       <BookList>
-        {items.map(item => (
-          <div css={styles.book}>
-            <PortraitBook
-              key={item.b_id}
-              bookId={item.b_id}
-              isAdult={books[item.b_id].property.is_adult_only}
-              isRidiselect={item.is_ridiselect}
-              isSelectMode={isEditing}
-              isSelected={!!selectedBooks[item.b_id]}
-              onSelectedChange={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          </div>
-          // <LibraryBook
-          //   key={item.b_id}
-          //   item={item}
-          //   book={books[item.b_id]}
-          //   isEditing={isEditing}
-          //   checked={!!selectedBooks[item.b_id]}
-          //   onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-          //   {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
-          // />
-        ))}
+        {items.map(libraryBookData => {
+          const bookId = libraryBookData.b_id;
+          const platformBookData = books[bookId];
+          const isSelectMode = isEditing;
+          const isSelected = !!selectedBooks[bookId];
+          const onSelectedChange = () => dispatchToggleSelectBook(bookId);
+          return <LibraryBook {...{ libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }} />;
+        })}
       </BookList>
     );
   }
@@ -286,6 +281,7 @@ const mapStateToProps = state => {
     books,
     selectedBooks,
     isFetchingBooks,
+    viewType: state.viewType,
   };
 };
 
@@ -295,6 +291,7 @@ const mapDispatchToProps = {
   dispatchToggleSelectBook: toggleSelectBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchSetViewType: setViewType,
 };
 
 export default connect(
