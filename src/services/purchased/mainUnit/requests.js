@@ -40,5 +40,5 @@ export function* getMainUnitPrimaryItem(unitId) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/main/${unitId}`, options, config.LIBRARY_API_BASE_URL));
-  return response.data.items[0];
+  return attatchTTL(response.data.items)[0];
 }

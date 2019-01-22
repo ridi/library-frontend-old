@@ -21,7 +21,7 @@ import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
-
+import { isExpiredTTL } from '../../../utils/ttl';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -32,7 +32,7 @@ function* persistPageOptionsFromQueries() {
 
 function* loadPrimaryItem(unitId) {
   const _primaryItem = yield select(getPrimaryItem);
-  if (_primaryItem) {
+  if (_primaryItem && !isExpiredTTL(_primaryItem)) {
     return _primaryItem;
   }
 

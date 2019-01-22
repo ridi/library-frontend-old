@@ -8,6 +8,7 @@ import { getAPI } from '../../../api/actions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { makeURI } from '../../../utils/uri';
 import { MainOrderOptions } from '../../../constants/orderOptions';
+import { attatchTTL } from '../../../utils/ttl';
 
 export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
   const options = snakelize({
@@ -40,5 +41,5 @@ export function* getSearchUnitPrimaryItem(unitId) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/main/${unitId}`, options, config.LIBRARY_API_BASE_URL));
-  return response.data.items[0];
+  return attatchTTL(response.data.items)[0];
 }
