@@ -32,6 +32,10 @@ import BottomActionBar from '../../../components/BottomActionBar';
 import { TitleAndEditingBar } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
+import { ButtonType } from '../../../components/ActionBar/constants';
+import TitleBar from '../../../components/TitleBar';
+import { UnitType } from '../../../constants/unitType';
+import Editable from '../../../components/Editable';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -72,18 +76,47 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderLNB() {
-    const { isEditing } = this.state;
+  makeEditingBarProps() {
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
+
+    return {
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+  }
+
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+
+    return {
+      buttonsProps: [
+        {
+          name: '선택 영구 삭제',
+          type: ButtonType.DANGER,
+          onClick: this.handleOnClickDelete,
+          disable,
+        },
+        {
+          name: '선택 숨김 해제',
+          onClick: this.handleOnClickUnhide,
+          disable,
+        },
+      ],
+    };
+  }
+
+  renderTitleBar() {
     const {
-      items,
-      selectedBooks,
-      dispatchSelectAllBooks,
-      dispatchClearSelectedBooks,
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
     } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+
     const titleBarProps = {
       title: '숨긴 도서 목록',
       showCount: true,
@@ -91,29 +124,16 @@ class Hidden extends React.Component {
       href: URLMap.main.href,
       as: URLMap.main.as,
       query: { page, orderType, orderBy, filter },
-
-      toggleEditingMode: this.toggleEditingMode,
-    };
-    const editingBarProps = {
-      isEditing,
-      totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
     };
 
-    return <TitleAndEditingBar titleBarProps={titleBarProps} editingBarProps={editingBarProps} />;
+    return <TitleBar {...titleBarProps} />;
   }
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
 
     if (items.length === 0) {
-      if (isFetchingBooks) {
-        return <SkeletonBookList />;
-      }
       return <EmptyBookList message="숨김 도서가 없습니다." />;
     }
 
@@ -142,41 +162,35 @@ class Hidden extends React.Component {
     return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} href={URLMap.hidden.href} as={URLMap.hidden.as} />;
   }
 
-  renderBottomActionBar() {
-    const { isEditing } = this.state;
-    const { selectedBooks } = this.props;
-    return (
-      <BottomActionBar
-        isEditing={isEditing}
-        selectedBooks={selectedBooks}
-        buttonsProps={[
-          {
-            name: '선택 영구 삭제',
-            onClick: this.handleOnClickDelete,
-          },
-          {
-            name: '선택 숨김 해제',
-            onClick: this.handleOnClickUnhide,
-          },
-        ]}
-      />
-    );
-  }
-
   render() {
-    const { isFetchingBooks } = this.props;
+    const { isEditing } = this.state;
+    const { items, isFetchingBooks } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
 
     return (
       <>
         <Head>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
-        {this.renderLNB()}
-        <main css={isFetchingBooks && styles.hiddenFetchingBooks}>
-          <Responsive>{this.renderBooks()}</Responsive>
-        </main>
-        {this.renderPaginator()}
-        {this.renderBottomActionBar()}
+        <Editable
+          isEditing={isEditing}
+          nonEditBar={this.renderTitleBar()}
+          editingBarProps={this.makeEditingBarProps()}
+          actionBarProps={this.makeActionBarProps()}
+        >
+          <main css={showSkeleton && styles.hiddenFetchingBooks}>
+            {showSkeleton ? (
+              <Responsive>
+                <SkeletonBookList />
+              </Responsive>
+            ) : (
+              <>
+                <Responsive>{this.renderBooks()}</Responsive>
+                {this.renderPaginator()}
+              </>
+            )}
+          </main>
+        </Editable>
       </>
     );
   }
