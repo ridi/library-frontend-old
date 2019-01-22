@@ -28,13 +28,10 @@ import {
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
-import BottomActionBar from '../../../components/BottomActionBar';
-import { TitleAndEditingBar } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import * as styles from './styles';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import TitleBar from '../../../components/TitleBar';
-import { UnitType } from '../../../constants/unitType';
 import Editable from '../../../components/Editable';
 
 class Hidden extends React.Component {
