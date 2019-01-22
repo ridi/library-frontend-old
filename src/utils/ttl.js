@@ -28,3 +28,8 @@ export const attatchTTL = items => {
     return item;
   });
 };
+
+export const isExpiredTTL = (item, criterion) => {
+  const _criterion = criterion || getCriterion();
+  return item.ttl <= _criterion;
+};
