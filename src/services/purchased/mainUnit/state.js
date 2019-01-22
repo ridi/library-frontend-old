@@ -10,6 +10,7 @@ export const initialState = {
 };
 
 export const initialDataState = {
+  primaryItem: null,
   items: {},
   itemIdsForPage: {},
 

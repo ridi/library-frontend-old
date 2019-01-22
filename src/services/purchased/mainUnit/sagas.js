@@ -12,8 +12,9 @@ import {
   setTotalCount,
   selectBooks,
   setIsFetchingBook,
+  setPrimaryItem,
 } from './actions';
-import { fetchMainUnitItems, fetchMainUnitItemsTotalCount } from './requests';
+import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
 
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
@@ -21,7 +22,7 @@ import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sag
 import { getQuery } from '../../router/selectors';
 
 import { toFlatten } from '../../../utils/array';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 
@@ -33,6 +34,17 @@ function* persistPageOptionsFromQueries() {
   const order = MainOrderOptions.toIndex(orderType, orderBy);
 
   yield all([put(setPage(page)), put(setOrder(order))]);
+}
+
+function* loadPrimaryItem(unitId) {
+  const _primaryItem = yield select(getPrimaryItem);
+  if (_primaryItem) {
+    return _primaryItem;
+  }
+
+  const primaryItem = yield call(getMainUnitPrimaryItem, unitId);
+  yield put(setPrimaryItem(primaryItem));
+  return primaryItem;
 }
 
 function* loadItems() {
@@ -48,10 +60,12 @@ function* loadItems() {
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
   ]);
 
+  // PrimaryItem과 Unit 저장
+  const primaryItem = yield call(loadPrimaryItem, unitId);
   yield call(saveUnitData, [itemResponse.unit]);
 
-  // Request BookData
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
+  // 책 데이터 로딩
+  const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
   yield call(loadBookData, bookIds);
   yield call(loadBookDescriptions, bookIds);
 
