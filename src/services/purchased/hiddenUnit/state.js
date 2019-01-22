@@ -1,4 +1,5 @@
 export const initialState = {
+  primaryItem: null,
   items: {},
   itemIdsForPage: {},
 

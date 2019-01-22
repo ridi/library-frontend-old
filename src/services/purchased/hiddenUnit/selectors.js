@@ -14,6 +14,11 @@ export const getItemsByPage = createSelector(
   },
 );
 
+export const getPrimaryItem = createSelector(
+  getState,
+  state => state.primaryItem,
+);
+
 export const getPageInfo = createSelector(
   getState,
   state => {

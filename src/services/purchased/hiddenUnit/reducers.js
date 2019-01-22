@@ -9,6 +9,7 @@ import {
   SELECT_HIDDEN_UNIT_BOOKS,
   TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
   SET_IS_FETCHING_HIDDEN_BOOK,
+  SET_HIDDEN_UNIT_PRIMARY_ITEM,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -40,6 +41,12 @@ const hiddenUnitReducer = (state = initialState, action) => {
       return {
         ...state,
         page: action.payload.page,
+      };
+
+    case SET_HIDDEN_UNIT_PRIMARY_ITEM:
+      return {
+        ...state,
+        primaryItem: action.payload.primaryItem,
       };
     case CLEAR_SELECTED_HIDDEN_UNIT_BOOKS:
       return {
