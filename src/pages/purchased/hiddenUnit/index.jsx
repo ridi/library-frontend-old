@@ -29,6 +29,7 @@ import {
   getSelectedBooks,
   getTotalCount,
   getUnitId,
+  getPrimaryItem,
 } from '../../../services/purchased/hiddenUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
@@ -36,6 +37,7 @@ import Editable from '../../../components/Editable';
 import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
+import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -133,22 +135,28 @@ class HiddenUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, items, books, bookDescriptions } = this.props;
-    const primaryItem = items[0];
+    const { unit, primaryItem, books, bookDescriptions } = this.props;
     if (!primaryItem) {
-      return null;
+      return <SkeletonUnitDetailView />;
     }
 
-    const primaryBookId = primaryItem.b_id;
-    const primaryBook = books[primaryBookId];
-    const primaryBookDescription = bookDescriptions[primaryBookId];
+    const primaryBook = books[primaryItem.b_id];
+    const primaryBookDescription = bookDescriptions[primaryItem.b_id];
+    if (!primaryBook || !primaryBookDescription) {
+      return <SkeletonUnitDetailView />;
+    }
 
-    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={false} />;
+    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} />;
   }
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
+    const showSkeleton = isFetchingBook && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
       return <EmptyBookList message="숨김 도서가 없습니다." />;
@@ -173,6 +181,7 @@ class HiddenUnit extends React.Component {
             />
           ))}
         </BookList>
+        {this.renderPaginator()}
       </Editable>
     );
   }
@@ -193,7 +202,7 @@ class HiddenUnit extends React.Component {
   }
 
   render() {
-    const { unit, items, isFetchingBook } = this.props;
+    const { unit } = this.props;
     return (
       <>
         <Head>
@@ -202,16 +211,9 @@ class HiddenUnit extends React.Component {
         {this.renderTitleBar()}
         <main>
           <Responsive>
-            {items.length === 0 && isFetchingBook ? (
-              <SkeletonUnitDetailView />
-            ) : (
-              <>
-                {this.renderDetailView()}
-                {this.renderBooks()}
-              </>
-            )}
+            {this.renderDetailView()}
+            {this.renderBooks()}
           </Responsive>
-          {this.renderPaginator()}
         </main>
       </>
     );
@@ -223,8 +225,14 @@ const mapStateToProps = state => {
 
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
-
+  const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
+
+  const bookIds = toFlatten(items, 'b_id');
+  if (primaryItem) {
+    bookIds.push(primaryItem.b_id);
+  }
+
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
 
@@ -237,6 +245,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     unit,
+    primaryItem,
     books,
     bookDescriptions,
     totalCount,
