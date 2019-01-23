@@ -25,7 +25,7 @@ export const bookListStyle = css({
   }),
 });
 
-export const bookWrapperStyle = css({
+export const portraitBookWrapperStyle = css({
   marginTop: 32,
 
   ...Responsive.W360({
@@ -71,5 +71,13 @@ export const bookWrapperStyle = css({
       paddingRight: 0,
       width: 110,
     },
+  }),
+});
+
+export const landscapeBookWrapperStyle = css({
+  width: '50%',
+
+  ...Responsive.Mobile({
+    width: '100%',
   }),
 });

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { bookWrapperStyle } from '../styles/bookLayout';
+import { portraitBookWrapperStyle, landscapeBookWrapperStyle } from '../styles/bookLayout';
 
-const BookWrapper = ({ children }) => <div css={bookWrapperStyle}>{children}</div>;
-export default BookWrapper;
+export const PortraitBookWrapper = ({ children }) => <div css={portraitBookWrapperStyle}>{children}</div>;
+export const LandscapeBookWrapper = ({ children }) => <div css={landscapeBookWrapperStyle}>{children}</div>;
