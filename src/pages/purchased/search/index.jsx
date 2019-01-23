@@ -217,7 +217,7 @@ class Search extends React.Component {
       pageInfo: { keyword },
     } = this.props;
 
-    let title = `{'${keyword}'} 검색 결과 - 내 서재`;
+    let title = `'${keyword}' 검색 결과 - 내 서재`;
     if (!keyword) {
       title = '검색 - 내 서재';
     }
