@@ -78,9 +78,17 @@ export class MainOrderOptions extends BaseOrderOptions {
   }
 }
 
-export class SeriesOrderOptions extends BaseOrderOptions {
+export class UnitOrderOptions extends BaseOrderOptions {
   static toList() {
+    return this.toCollectionList();
+  }
+
+  static toSeriesList() {
     return [this.UNIT_ORDER_ASC, this.UNIT_ORDER_DESC, this.PURCHASE_DATE, this.EXPIRE_DATE];
+  }
+
+  static toCollectionList() {
+    return [...this.toSeriesList(), this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
   static get DEFAULT() {
@@ -117,13 +125,6 @@ export class SeriesOrderOptions extends BaseOrderOptions {
       order_type: OrderType.EXPIRE_DATE,
       order_by: OrderBy.ASC,
     };
-  }
-}
-
-export class CollectionOrderOptions extends SeriesOrderOptions {
-  static toList() {
-    const _list = super.toList();
-    return [..._list, this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
   static get BOOK_TITLE() {
