@@ -154,10 +154,6 @@ class Search extends React.Component {
       return <SkeletonBookList />;
     }
 
-    if (items.length === 0) {
-      return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
-    }
-
     return (
       <>
         <BookList>
@@ -196,6 +192,20 @@ class Search extends React.Component {
     );
   }
 
+  renderMain() {
+    const {
+      items,
+      isFetchingBooks,
+      pageInfo: { keyword },
+    } = this.props;
+
+    if (!isFetchingBooks && items.length === 0) {
+      return <EmptyBookList icon="search" message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+    }
+
+    return <Responsive>{this.renderBooks()}</Responsive>;
+  }
+
   render() {
     const { isEditing } = this.state;
     const {
@@ -214,9 +224,7 @@ class Search extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            <Responsive>{this.renderBooks()}</Responsive>
-          </main>
+          <main>{this.renderMain()}</main>
         </Editable>
       </>
     );

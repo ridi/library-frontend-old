@@ -160,7 +160,7 @@ class searchUnit extends React.Component {
     }
 
     if (items.length === 0) {
-      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
@@ -203,6 +203,21 @@ class searchUnit extends React.Component {
     );
   }
 
+  renderMain() {
+    const { unit, items, isFetchingBook } = this.props;
+
+    if (!isFetchingBook && items.length === 0) {
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+    }
+
+    return (
+      <Responsive>
+        {this.renderDetailView()}
+        {UnitType.isBook(unit.type) ? null : this.renderBooks()}
+      </Responsive>
+    );
+  }
+
   render() {
     const { unit } = this.props;
 
@@ -213,12 +228,7 @@ class searchUnit extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
-        <main>
-          <Responsive>
-            {this.renderDetailView()}
-            {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-          </Responsive>
-        </main>
+        <main>{this.renderMain()}</main>
       </>
     );
   }

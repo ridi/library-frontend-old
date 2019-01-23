@@ -203,10 +203,6 @@ class Main extends React.Component {
       return <SkeletonBookList />;
     }
 
-    if (items.length === 0) {
-      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
-    }
-
     return (
       <>
         <BookList>
@@ -224,6 +220,21 @@ class Main extends React.Component {
         </BookList>
         {this.renderPaginator()}
       </>
+    );
+  }
+
+  renderMain() {
+    const { items, isFetchingBooks } = this.props;
+
+    if (!isFetchingBooks && items.length === 0) {
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+    }
+
+    return (
+      <Responsive>
+        {this.renderBooks()}
+        {this.renderModal()}
+      </Responsive>
     );
   }
 
@@ -258,12 +269,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            <Responsive>
-              {this.renderBooks()}
-              {this.renderModal()}
-            </Responsive>
-          </main>
+          <main>{this.renderMain()}</main>
         </Editable>
       </>
     );
