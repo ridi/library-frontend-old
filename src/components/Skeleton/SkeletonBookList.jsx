@@ -1,19 +1,19 @@
 import React from 'react';
 import shortid from 'shortid';
 import BookList from '../BookList';
-import { SkeletonBook } from './components';
-import BookWrapper from '../BookWrapper';
+import { SkeletonPortraitBook, SkeletonLandscapeBook } from './components';
+import { PortraitBookWrapper, LandscapeBookWrapper } from '../BookWrapper';
 
-const SkeletonBookCount = 24;
+const SkeletonBookCount = 48;
 
 const SkeletonBookList = () => (
   <BookList>
     {Array(SkeletonBookCount)
       .fill()
       .map(() => (
-        <BookWrapper key={shortid.generate()}>
-          <SkeletonBook />
-        </BookWrapper>
+        <PortraitBookWrapper key={shortid.generate()}>
+          <SkeletonPortraitBook />
+        </PortraitBookWrapper>
       ))}
   </BookList>
 );
