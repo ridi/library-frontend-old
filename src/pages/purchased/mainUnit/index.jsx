@@ -38,6 +38,7 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import Editable from '../../../components/Editable';
 import TitleBar from '../../../components/TitleBar';
+import { UnitOrderOptions } from '../../../constants/orderOptions';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -151,17 +152,26 @@ class MainUnit extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
+    const {
+      unit,
+      items,
+      books,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      isFetchingBook,
+      pageInfo: { order },
+    } = this.props;
     const showSkeleton = isFetchingBook && items.length === 0;
 
     if (showSkeleton) {
       return <SkeletonBookList />;
     }
 
+    const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
     return (
       <Editable
         isEditing={isEditing}
-        nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
+        nonEditBar={<SeriesToolBar orderTitle={orderOptions[order].title} toggleEditingMode={this.toggleEditingMode} />}
         editingBarProps={this.makeEditingBarProps()}
         actionBarProps={this.makeActionBarProps()}
       >
