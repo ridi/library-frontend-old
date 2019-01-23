@@ -221,15 +221,26 @@ class Main extends React.Component {
       return <SkeletonBookList />;
     }
 
-    if (libraryBookDTO.length === 0) {
-      return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
-    }
-
     return (
       <>
         <LibraryBook {...{ libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType }} />
         {this.renderPaginator()}
       </>
+    );
+  }
+
+  renderMain() {
+    const { items, isFetchingBooks, viewType } = this.props;
+
+    if (!isFetchingBooks && items.length === 0) {
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+    }
+
+    return (
+      <Responsive hasPadding={viewType === ViewType.PORTRAIT}>
+        {this.renderBooks()}
+        {this.renderModal()}
+      </Responsive>
     );
   }
 
@@ -251,7 +262,6 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { viewType } = this.props;
 
     return (
       <>
@@ -265,12 +275,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            <Responsive hasPadding={viewType === ViewType.PORTRAIT}>
-              {this.renderBooks()}
-              {this.renderModal()}
-            </Responsive>
-          </main>
+          <main>{this.renderMain()}</main>
         </Editable>
       </>
     );

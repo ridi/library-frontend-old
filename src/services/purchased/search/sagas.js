@@ -39,6 +39,10 @@ function* loadPage() {
 
   const { page, keyword } = yield select(getOptions);
 
+  if (!keyword) {
+    return;
+  }
+
   yield put(setSearchIsFetchingBooks(true));
   const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 

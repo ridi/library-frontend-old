@@ -159,7 +159,7 @@ class HiddenUnit extends React.Component {
     }
 
     if (items.length === 0) {
-      return <EmptyBookList message="숨김 도서가 없습니다." />;
+      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
     }
 
     return (
@@ -201,6 +201,21 @@ class HiddenUnit extends React.Component {
     );
   }
 
+  renderMain() {
+    const { unit, items, isFetchingBook } = this.props;
+
+    if (!isFetchingBook && items.length === 0) {
+      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
+    }
+
+    return (
+      <Responsive>
+        {this.renderDetailView()}
+        {UnitType.isBook(unit.type) ? null : this.renderBooks()}
+      </Responsive>
+    );
+  }
+
   render() {
     const { unit } = this.props;
     return (
@@ -209,12 +224,7 @@ class HiddenUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         {this.renderTitleBar()}
-        <main>
-          <Responsive>
-            {this.renderDetailView()}
-            {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-          </Responsive>
-        </main>
+        <main>{this.renderMain()}</main>
       </>
     );
   }
