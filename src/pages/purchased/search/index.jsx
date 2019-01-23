@@ -200,7 +200,12 @@ class Search extends React.Component {
     } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList icon="search" message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+      let message = `'${keyword}'에 대한 검색 결과가 없습니다.`;
+      if (!keyword) {
+        message = '검색어를 입력해 주세요.';
+      }
+
+      return <EmptyBookList icon="search" message={message} />;
     }
 
     return <Responsive>{this.renderBooks()}</Responsive>;
@@ -212,10 +217,15 @@ class Search extends React.Component {
       pageInfo: { keyword },
     } = this.props;
 
+    let title = `{'${keyword}'} 검색 결과 - 내 서재`;
+    if (!keyword) {
+      title = '검색 - 내 서재';
+    }
+
     return (
       <>
         <Head>
-          <title>{`'${keyword}'`} 검색 결과 - 내 서재</title>
+          <title>{title}</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         <Editable
