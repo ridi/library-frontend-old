@@ -10,6 +10,7 @@ import {
   SELECT_MAIN_UNIT_BOOKS,
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
   SET_IS_FETCHING_BOOK,
+  SET_PRIMARY_ITEM,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -55,6 +56,17 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
           [key]: {
             ...dataState,
             page: action.payload.page,
+          },
+        },
+      };
+    case SET_PRIMARY_ITEM:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            primaryItem: action.payload.primaryItem,
           },
         },
       };

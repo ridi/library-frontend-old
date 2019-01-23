@@ -1,3 +1,7 @@
+export const titleBar = {
+  backgroundColor: 'white',
+};
+
 export const title = {
   display: 'flex',
   alignItems: 'center',

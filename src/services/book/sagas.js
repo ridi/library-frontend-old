@@ -49,27 +49,25 @@ function filterBookIds(bookIds, existBooks) {
 }
 
 export function* loadBookData(bookIds) {
-  if (bookIds.length === 0) {
-    return;
-  }
-
   const existBooks = yield select(state => state.books.books);
   const filteredBookIds = filterBookIds(bookIds, existBooks);
 
-  if (filteredBookIds.length > 0) {
-    const books = yield call(fetchBookData, filteredBookIds);
-    yield put(setBookData(books));
-    yield fork(persistBookDataToStorage);
-  }
-}
-
-export function* loadBookDescriptions(bookIds) {
-  if (bookIds.length === 0) {
+  if (filteredBookIds.length === 0) {
     return;
   }
 
+  const books = yield call(fetchBookData, filteredBookIds);
+  yield put(setBookData(books));
+  yield fork(persistBookDataToStorage);
+}
+
+export function* loadBookDescriptions(bookIds) {
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
   const filteredBookIds = filterBookIds(bookIds, existBookDescriptions);
+
+  if (filteredBookIds.length === 0) {
+    return;
+  }
 
   const bookDescriptions = yield call(fetchBookDescriptions, filteredBookIds);
   yield put(setBookDescriptions(bookDescriptions));

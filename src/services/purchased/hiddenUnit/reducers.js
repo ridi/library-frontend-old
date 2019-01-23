@@ -1,4 +1,4 @@
-import { initialState } from './state';
+import { initialState, getKey, initialDataState } from './state';
 
 import {
   CLEAR_SELECTED_HIDDEN_UNIT_BOOKS,
@@ -9,37 +9,71 @@ import {
   SELECT_HIDDEN_UNIT_BOOKS,
   TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
   SET_IS_FETCHING_HIDDEN_BOOK,
+  SET_HIDDEN_UNIT_PRIMARY_ITEM,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
 const hiddenUnitReducer = (state = initialState, action) => {
+  const key = getKey(state);
+  const dataState = state.data[key] || initialDataState;
+
   switch (action.type) {
     case SET_HIDDEN_UNIT_ITEMS:
       return {
         ...state,
-        items: {
-          ...state.items,
-          ...toDict(action.payload.items, 'b_id'),
-        },
-        itemIdsForPage: {
-          ...state.itemIdsForPage,
-          [state.page]: toFlatten(action.payload.items, 'b_id'),
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            items: {
+              ...dataState.items,
+              ...toDict(action.payload.items, 'b_id'),
+            },
+            itemIdsForPage: {
+              ...dataState.itemIdsForPage,
+              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
+            },
+          },
         },
       };
     case SET_HIDDEN_UNIT_TOTAL_COUNT:
       return {
         ...state,
-        itemTotalCount: action.payload.itemTotalCount,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            itemTotalCount: action.payload.itemTotalCount,
+          },
+        },
+      };
+    case SET_HIDDEN_UNIT_PAGE:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            page: action.payload.page,
+          },
+        },
+      };
+
+    case SET_HIDDEN_UNIT_PRIMARY_ITEM:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            primaryItem: action.payload.primaryItem,
+          },
+        },
       };
     case SET_HIDDEN_UNIT_ID:
       return {
         ...state,
         unitId: action.payload.unitId,
-      };
-    case SET_HIDDEN_UNIT_PAGE:
-      return {
-        ...state,
-        page: action.payload.page,
       };
     case CLEAR_SELECTED_HIDDEN_UNIT_BOOKS:
       return {

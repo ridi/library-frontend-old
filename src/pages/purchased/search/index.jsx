@@ -13,6 +13,7 @@ import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
   changeSearchKeyword,
+  selectAllBooks,
   clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
@@ -22,10 +23,10 @@ import {
 import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
-import BottomActionBar from '../../base/BottomActionBar';
-import { SearchAndEditingBar, TabBar, TabMenuTypes } from '../../base/LNB';
+import SearchBar from '../../../components/SearchBar';
+import Editable from '../../../components/Editable';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -84,17 +85,45 @@ class Search extends React.Component {
     this.setState({ isEditing: false });
   };
 
-  renderLNB() {
-    const { hideTools, isEditing } = this.state;
-    const {
-      pageInfo: { keyword },
-      items,
-      selectedBooks,
-      dispatchSelectAllBooks,
-      dispatchClearSelectedBooks,
-    } = this.props;
+  makeEditingBarProps() {
+    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = totalSelectedCount === items.length;
+
+    return {
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+  }
+
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+
+    return {
+      buttonsProps: [
+        {
+          name: '선택 숨기기',
+          onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '선택 다운로드',
+          onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ],
+    };
+  }
+
+  renderSearchBar() {
+    const { hideTools } = this.state;
+    const {
+      pageInfo: { keyword },
+    } = this.props;
 
     const searchBarProps = {
       hideTools,
@@ -105,52 +134,49 @@ class Search extends React.Component {
       edit: true,
       toggleEditingMode: this.toggleEditingMode,
     };
-    const editingBarProps = {
-      isEditing,
-      totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
 
-    return <SearchAndEditingBar searchBarProps={searchBarProps} editingBarProps={editingBarProps} />;
+    return <SearchBar {...searchBarProps} />;
   }
 
   renderBooks() {
     const { isEditing } = this.state;
     const {
-      isFetchingBooks,
       items,
       books,
       selectedBooks,
       dispatchToggleSelectBook,
+      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
-      if (isFetchingBooks) {
-        return <SkeletonBookList />;
-      }
       return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
     return (
-      <BookList>
-        {items.map(item => (
-          <LibraryBook
-            key={item.b_id}
-            item={item}
-            book={books[item.b_id]}
-            isEditing={isEditing}
-            checked={!!selectedBooks[item.b_id]}
-            onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
-              keyword,
-            })}
-          />
-        ))}
-      </BookList>
+      <>
+        <BookList>
+          {items.map(item => (
+            <LibraryBook
+              key={item.b_id}
+              item={item}
+              book={books[item.b_id]}
+              isEditing={isEditing}
+              checked={!!selectedBooks[item.b_id]}
+              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
+                keyword,
+              })}
+            />
+          ))}
+        </BookList>
+        {this.renderPaginator()}
+      </>
     );
   }
 
@@ -170,30 +196,9 @@ class Search extends React.Component {
     );
   }
 
-  renderBottomActionBar() {
-    const { isEditing } = this.state;
-    const { selectedBooks } = this.props;
-    return (
-      <BottomActionBar
-        isEditing={isEditing}
-        selectedBooks={selectedBooks}
-        buttonsProps={[
-          {
-            name: '선택 숨기기',
-            onClick: this.handleOnClickHide,
-          },
-          {
-            name: '선택 다운로드',
-            onClick: this.handleOnClickDownload,
-          },
-        ]}
-      />
-    );
-  }
-
   render() {
+    const { isEditing } = this.state;
     const {
-      isFetchingBooks,
       pageInfo: { keyword },
     } = this.props;
 
@@ -203,12 +208,16 @@ class Search extends React.Component {
           <title>{`'${keyword}'`} 검색 결과 - 내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderLNB()}
-        <main css={isFetchingBooks && styles.searchFetchingBooks}>
-          <Responsive>{this.renderBooks()}</Responsive>
-        </main>
-        {this.renderPaginator()}
-        {this.renderBottomActionBar()}
+        <Editable
+          isEditing={isEditing}
+          nonEditBar={this.renderSearchBar()}
+          editingBarProps={this.makeEditingBarProps()}
+          actionBarProps={this.makeActionBarProps()}
+        >
+          <main>
+            <Responsive>{this.renderBooks()}</Responsive>
+          </main>
+        </Editable>
       </>
     );
   }
@@ -229,8 +238,10 @@ const mapStateToProps = state => {
     isFetchingBooks,
   };
 };
+
 const mapDispatchToProps = {
   dispatchChangeSearchKeyword: changeSearchKeyword,
+  dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
   dispatchHideSelectedBooks: hideSelectedBooks,

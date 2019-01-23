@@ -1,8 +1,8 @@
 const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 const next = require('next');
-const routes = require('./routes');
 const nextConfig = require('../next.config');
 
 const isLocal = process.env.NODE_ENV === 'local';
@@ -11,29 +11,42 @@ const app = next({
   dir: path.resolve(__dirname, '../src'),
   conf: nextConfig,
 });
-const handle = routes.getRequestHandler(app);
 
 // next가 로드된 후 불러와야함
 const middleware = require('./middleware');
+const clientRoutes = require('./routes/clientRoutes');
+const serverRoutes = require('./routes/serverRoutes');
+
+const csrfProtection = csrf({ cookie: true });
+const handle = clientRoutes.getRequestHandler(app);
 
 app
   .prepare()
   .then(() => {
     const server = express();
+    server.use(cookieParser());
+    server.use(express.json());
+
     // For health check
     server.get('/health', (req, res) => {
       res.send('I am healthy');
     });
 
+    // TODO: endpoint 가 늘어나면 route handling 기능  추가 해야 한다.
+    server.post('/remove', middleware.jwtAuth, csrfProtection, (req, res) => serverRoutes.removeView(req, res));
+
     const ssrRouter = express.Router();
     ssrRouter.use(cookieParser());
     ssrRouter.use(middleware.jwtAuth);
+    ssrRouter.use(csrfProtection);
     ssrRouter.get('*', (req, res) => handle(req, res));
     server.use('/', ssrRouter);
 
     const port = process.env.PORT || 8080;
     const listener = server.listen(port, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       console.log(`> Ready on ${port}`);
     });
 

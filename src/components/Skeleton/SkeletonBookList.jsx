@@ -9,7 +9,7 @@ const SkeletonBookCount = 24;
 const SkeletonBookList = () => (
   <BookList>
     {Array(SkeletonBookCount)
-      .fill(1)
+      .fill()
       .map(() => (
         <BookWrapper key={shortid.generate()}>
           <SkeletonBook />

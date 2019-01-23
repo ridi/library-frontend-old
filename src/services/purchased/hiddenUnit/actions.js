@@ -15,6 +15,8 @@ export const DELETE_SELECTED_HIDDEN_UNIT_BOOKS = 'DELETE_SELECTED_HIDDEN_UNIT_BO
 
 export const SET_IS_FETCHING_HIDDEN_BOOK = 'SET_IS_FETCHING_HIDDEN_BOOK';
 
+export const SET_HIDDEN_UNIT_PRIMARY_ITEM = 'SET_HIDDEN_UNIT_PRIMARY_ITEM';
+
 export const loadItems = () => ({
   type: LOAD_HIDDEN_UNIT_ITEMS,
 });
@@ -81,5 +83,12 @@ export const setIsFetchingHiddenBook = isFetchingBook => ({
   type: SET_IS_FETCHING_HIDDEN_BOOK,
   payload: {
     isFetchingBook,
+  },
+});
+
+export const setHiddenUnitPrimaryItem = primaryItem => ({
+  type: SET_HIDDEN_UNIT_PRIMARY_ITEM,
+  payload: {
+    primaryItem,
   },
 });

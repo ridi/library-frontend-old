@@ -30,12 +30,12 @@ import {
 import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
 import { makeURI } from '../../../utils/uri';
-import BottomActionBar from '../../base/BottomActionBar';
-import { SearchAndEditingBar, TabBar, TabMenuTypes } from '../../base/LNB';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import * as styles from './styles';
+import SearchBar from '../../../components/SearchBar';
+import Editable from '../../../components/Editable';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -121,11 +121,42 @@ class Main extends React.Component {
     this.handleOnClickOutOfModal();
   };
 
-  renderLNB() {
-    const { isEditing, hideTools } = this.state;
+  makeEditingBarProps() {
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
     const isSelectedAllBooks = totalSelectedCount === items.length;
+
+    return {
+      totalSelectedCount,
+      isSelectedAllBooks,
+      onClickSelectAllBooks: dispatchSelectAllBooks,
+      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      onClickSuccessButton: this.toggleEditingMode,
+    };
+  }
+
+  makeActionBarProps() {
+    const { selectedBooks } = this.props;
+    const disable = Object.keys(selectedBooks).length === 0;
+
+    return {
+      buttonsProps: [
+        {
+          name: '선택 숨기기',
+          onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '선택 다운로드',
+          onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ],
+    };
+  }
+
+  renderSearchBar() {
+    const { hideTools } = this.state;
 
     const searchBarProps = {
       hideTools,
@@ -139,16 +170,8 @@ class Main extends React.Component {
       more: true,
       toggleMoreModal: this.toggleMoreModal,
     };
-    const editingBarProps = {
-      isEditing,
-      totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
 
-    return <SearchAndEditingBar searchBarProps={searchBarProps} editingBarProps={editingBarProps} />;
+    return <SearchBar {...searchBarProps} />;
   }
 
   renderModal() {
@@ -183,27 +206,31 @@ class Main extends React.Component {
 
   renderBooks() {
     const { isEditing } = this.state;
-    const { isFetchingBooks, items, books, selectedBooks, dispatchToggleSelectBook, viewType } = this.props;
+    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks, viewType } = this.props;
+    const showSkeleton = isFetchingBooks && items.length === 0;
+
+    if (showSkeleton) {
+      return <SkeletonBookList />;
+    }
 
     if (items.length === 0) {
-      if (isFetchingBooks) {
-        return <SkeletonBookList />;
-      }
-
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <BookList>
-        {items.map(libraryBookData => {
-          const bookId = libraryBookData.b_id;
-          const platformBookData = books[bookId];
-          const isSelectMode = isEditing;
-          const isSelected = !!selectedBooks[bookId];
-          const onSelectedChange = () => dispatchToggleSelectBook(bookId);
-          return <LibraryBook {...{ libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }} />;
-        })}
-      </BookList>
+      <>
+        <BookList>
+          {items.map(libraryBookData => {
+            const bookId = libraryBookData.b_id;
+            const platformBookData = books[bookId];
+            const isSelectMode = isEditing;
+            const isSelected = !!selectedBooks[bookId];
+            const onSelectedChange = () => dispatchToggleSelectBook(bookId);
+            return <LibraryBook {...{ libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }} />;
+          })}
+        </BookList>
+        {this.renderPaginator()}
+      </>
     );
   }
 
@@ -223,44 +250,28 @@ class Main extends React.Component {
     );
   }
 
-  renderBottomActionBar() {
-    const { isEditing } = this.state;
-    const { selectedBooks } = this.props;
-    return (
-      <BottomActionBar
-        isEditing={isEditing}
-        selectedBooks={selectedBooks}
-        buttonsProps={[
-          {
-            name: '선택 숨기기',
-            onClick: this.handleOnClickHide,
-          },
-          {
-            name: '선택 다운로드',
-            onClick: this.handleOnClickDownload,
-          },
-        ]}
-      />
-    );
-  }
-
   render() {
-    const { isFetchingBooks } = this.props;
+    const { isEditing } = this.state;
+
     return (
       <>
         <Head>
           <title>모든 책 - 내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        {this.renderLNB()}
-        <main css={isFetchingBooks && styles.mainFetchingBooks}>
-          <Responsive>
-            {this.renderBooks()}
-            {this.renderModal()}
-          </Responsive>
-        </main>
-        {this.renderPaginator()}
-        {this.renderBottomActionBar()}
+        <Editable
+          isEditing={isEditing}
+          nonEditBar={this.renderSearchBar()}
+          editingBarProps={this.makeEditingBarProps()}
+          actionBarProps={this.makeActionBarProps()}
+        >
+          <main>
+            <Responsive>
+              {this.renderBooks()}
+              {this.renderModal()}
+            </Responsive>
+          </main>
+        </Editable>
       </>
     );
   }
