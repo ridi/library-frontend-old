@@ -83,12 +83,12 @@ export class UnitOrderOptions extends BaseOrderOptions {
     return [this.UNIT_ORDER_ASC, this.UNIT_ORDER_DESC, this.PURCHASE_DATE, this.EXPIRE_DATE];
   }
 
-  static toCollectionList() {
+  static toShelfList() {
     return [...this.toSeriesList(), this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
   static toList() {
-    return this.toCollectionList();
+    return this.toShelfList();
   }
 
   static get DEFAULT() {

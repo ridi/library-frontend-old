@@ -14,4 +14,12 @@ export class UnitType {
   static isBook(unitType) {
     return unitType === this.BOOK;
   }
+
+  static isSeries(unitType) {
+    return unitType === this.SERIES;
+  }
+
+  static isShelf(unitType) {
+    return unitType === this.SHELF;
+  }
 }
