@@ -175,7 +175,7 @@ class Main extends React.Component {
     } = this.props;
 
     return (
-      <Responsive>
+      <>
         <FilterModal
           filter={filter}
           filterOptions={filterOptions}
@@ -190,7 +190,7 @@ class Main extends React.Component {
           isActive={showMoreModal}
           onClickModalBackground={this.handleOnClickOutOfModal}
         />
-      </Responsive>
+      </>
     );
   }
 
@@ -200,19 +200,11 @@ class Main extends React.Component {
     const showSkeleton = isFetchingBooks && items.length === 0;
 
     if (showSkeleton) {
-      return (
-        <Responsive>
-          <SkeletonBookList />
-        </Responsive>
-      );
-    }
-
-    if (items.length === 0) {
-      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+      return <SkeletonBookList />;
     }
 
     return (
-      <Responsive>
+      <>
         <BookList>
           {items.map(item => (
             <LibraryBook
@@ -227,6 +219,21 @@ class Main extends React.Component {
           ))}
         </BookList>
         {this.renderPaginator()}
+      </>
+    );
+  }
+
+  renderMain() {
+    const { items, isFetchingBooks } = this.props;
+
+    if (!isFetchingBooks && items.length === 0) {
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+    }
+
+    return (
+      <Responsive>
+        {this.renderBooks()}
+        {this.renderModal()}
       </Responsive>
     );
   }
@@ -262,10 +269,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            {this.renderBooks()}
-            {this.renderModal()}
-          </main>
+          <main>{this.renderMain()}</main>
         </Editable>
       </>
     );
