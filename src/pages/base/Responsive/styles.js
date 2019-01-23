@@ -1,10 +1,8 @@
-import { css } from '@emotion/core';
-
-export const responsive = css({
+export const responsive = hasPadding => ({
   position: 'relative',
   width: '100%',
   maxWidth: 1000,
   margin: '0 auto',
-  padding: '0 16px',
+  padding: hasPadding ? '0 16px' : '0',
   boxSizing: 'border-box',
 });

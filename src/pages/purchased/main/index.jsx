@@ -5,7 +5,6 @@ import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 import { LibraryBook } from '../../../components/Book';
-import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
@@ -36,6 +35,7 @@ import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
+import ViewType from '../../../constants/viewType';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -205,30 +205,29 @@ class Main extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks, viewType } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
+    const { isEditing: isSelectMode } = this.state;
+    const {
+      items: libraryBookDTO,
+      books: platformBookDTO,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      isFetchingBooks,
+      viewType,
+    } = this.props;
+    const onSelectedChange = dispatchToggleSelectBook;
+    const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
       return <SkeletonBookList />;
     }
 
-    if (items.length === 0) {
+    if (libraryBookDTO.length === 0) {
       return <EmptyBookList message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
       <>
-        <BookList>
-          {items.map(libraryBookData => {
-            const bookId = libraryBookData.b_id;
-            const platformBookData = books[bookId];
-            const isSelectMode = isEditing;
-            const isSelected = !!selectedBooks[bookId];
-            const onSelectedChange = () => dispatchToggleSelectBook(bookId);
-            return <LibraryBook {...{ libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }} />;
-          })}
-        </BookList>
+        <LibraryBook {...{ libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType }} />
         {this.renderPaginator()}
       </>
     );
@@ -252,6 +251,7 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
+    const { viewType } = this.props;
 
     return (
       <>
@@ -266,7 +266,7 @@ class Main extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main>
-            <Responsive>
+            <Responsive hasPadding={viewType === ViewType.PORTRAIT}>
               {this.renderBooks()}
               {this.renderModal()}
             </Responsive>

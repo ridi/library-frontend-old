@@ -806,8 +806,8 @@
     react-router-dom "^4.3.1"
 
 "@ridi/web-ui@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.1.0.tgz#e923118a376789cfe5a223dba6bc32152449d9c4"
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.1.1.tgz#697846e3c109bc6f6e2b6ac2c4a2288039e26ce7"
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"
@@ -2017,7 +2017,6 @@ crypto-browserify@^3.11.0:
 csrf@~3.0.3:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/csrf/-/csrf-3.0.6.tgz#b61120ddceeafc91e76ed5313bb5c0b2667b710a"
-  integrity sha1-thEg3c7q/JHnbtUxO7XAsmZ7cQo=
   dependencies:
     rndm "1.2.0"
     tsscmp "1.0.5"
@@ -2075,7 +2074,6 @@ csstype@^2.5.7:
 csurf@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/csurf/-/csurf-1.9.0.tgz#49d2c6925ffcec7b7de559597c153fa533364133"
-  integrity sha1-SdLGkl/87Ht95VlZfBU/pTM2QTM=
   dependencies:
     cookie "0.3.1"
     cookie-signature "1.0.6"
@@ -3145,7 +3143,6 @@ http-errors@1.6.3, http-errors@~1.6.2, http-errors@~1.6.3:
 http-errors@~1.5.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.5.1.tgz#788c0d2c1de2c81b9e6e8c01843b6b97eb920750"
-  integrity sha1-eIwNLB3iyBuebowBhDtrl+uSB1A=
   dependencies:
     inherits "2.0.3"
     setprototypeof "1.0.2"
@@ -4691,7 +4688,6 @@ querystring@0.2.0, querystring@^0.2.0:
 random-bytes@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/random-bytes/-/random-bytes-1.0.0.tgz#4f68a1dc0ae58bd3fb95848c30324db75d64360b"
-  integrity sha1-T2ih3Arli9P7lYSMMDJNt11kNgs=
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
@@ -5037,7 +5033,6 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
 rndm@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
-  integrity sha1-8z/pz7Urv9UgqhgyO8ZdsRCht2w=
 
 run-async@^2.2.0:
   version "2.3.0"
@@ -5187,7 +5182,6 @@ setimmediate@^1.0.4:
 setprototypeof@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.0.2.tgz#81a552141ec104b88e89ce383103ad5c66564d08"
-  integrity sha1-gaVSFB7BBLiOic44MQOtXGZWTQg=
 
 setprototypeof@1.0.3:
   version "1.0.3"
@@ -5686,7 +5680,6 @@ tslib@^1.9.0, tslib@^1.9.3:
 tsscmp@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/tsscmp/-/tsscmp-1.0.5.tgz#7dc4a33af71581ab4337da91d85ca5427ebd9a97"
-  integrity sha1-fcSjOvcVgatDN9qR2FylQn69mpc=
 
 tty-browserify@0.0.0:
   version "0.0.0"
@@ -5732,7 +5725,6 @@ uglifyjs-webpack-plugin@^1.2.4:
 uid-safe@2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/uid-safe/-/uid-safe-2.1.4.tgz#3ad6f38368c6d4c8c75ec17623fb79aa1d071d81"
-  integrity sha1-Otbzg2jG1MjHXsF2I/t5qh0HHYE=
   dependencies:
     random-bytes "~1.0.0"
 
