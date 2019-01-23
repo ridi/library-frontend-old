@@ -43,10 +43,8 @@ const libraryBookProps = ({ libraryBookData, platformBookData, isSelectMode, isS
     selected: isSelected,
     unitBook: libraryBookData.unit_type === 'series',
     unitBookCount,
-    bookCount,
     onSelectedChange,
     thumbnailLink,
-    viewType,
   };
   const landscapeBookProps = {
     title,
