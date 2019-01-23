@@ -151,15 +151,19 @@ class Search extends React.Component {
     const showSkeleton = isFetchingBooks && items.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return (
+        <Responsive>
+          <SkeletonBookList />
+        </Responsive>
+      );
     }
 
     if (items.length === 0) {
-      return <EmptyBookList message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+      return <EmptyBookList icon="search" message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
 
     return (
-      <>
+      <Responsive>
         <BookList>
           {items.map(item => (
             <LibraryBook
@@ -176,7 +180,7 @@ class Search extends React.Component {
           ))}
         </BookList>
         {this.renderPaginator()}
-      </>
+      </Responsive>
     );
   }
 
@@ -214,9 +218,7 @@ class Search extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            <Responsive>{this.renderBooks()}</Responsive>
-          </main>
+          <main>{this.renderBooks()}</main>
         </Editable>
       </>
     );

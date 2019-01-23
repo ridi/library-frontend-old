@@ -131,15 +131,19 @@ class Hidden extends React.Component {
     const showSkeleton = isFetchingBooks && items.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return (
+        <Responsive>
+          <SkeletonBookList />
+        </Responsive>
+      );
     }
 
     if (items.length === 0) {
-      return <EmptyBookList message="숨김 도서가 없습니다." />;
+      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
     }
 
     return (
-      <>
+      <Responsive>
         <BookList>
           {items.map(item => (
             <LibraryBook
@@ -154,7 +158,7 @@ class Hidden extends React.Component {
           ))}
         </BookList>
         {this.renderPaginator()}
-      </>
+      </Responsive>
     );
   }
 
@@ -180,9 +184,7 @@ class Hidden extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>
-            <Responsive>{this.renderBooks()}</Responsive>
-          </main>
+          <main>{this.renderBooks()}</main>
         </Editable>
       </>
     );
