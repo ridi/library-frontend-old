@@ -9,8 +9,10 @@ import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
+import BookMetaData from '../../utils/bookMetaData';
 
 const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }) => {
+  const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
   const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
@@ -30,8 +32,6 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   );
   const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={Book.BookCountUnit.Single} />;
   const title = libraryBookData.unit_title ? libraryBookData.unit_title : platformBookData.title.main;
-  const { author, story_writer: storyWriter } = platformBookData.authors;
-  const authors = author || storyWriter;
 
   const defaultBookProps = {
     thumbnailUrl: `https://misc.ridibooks.com/cover/${libraryBookData.b_id}/xxlarge?dpi=xxhdpi`,
@@ -51,7 +51,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   };
   const landscapeBookProps = {
     title,
-    author: authors ? authors.map(authorData => authorData.name).join(', ') : '',
+    author: bookMetaData.authorSimple,
     thumbnailWidth: 60,
   };
 
@@ -102,11 +102,11 @@ export class LibraryBook extends React.Component {
             viewType,
           });
           return viewType === ViewType.PORTRAIT ? (
-            <div className="book" css={styles.portrait}>
+            <div key={bookId} className="book" css={styles.portrait}>
               <Book.PortraitBook {...libraryBookProps} />
             </div>
           ) : (
-            <div className="book" css={styles.landscape}>
+            <div key={bookId} className="book" css={styles.landscape}>
               <Book.LandscapeBook {...libraryBookProps} />
               {/* {libraryBookProps.thumbnailLink} */}
             </div>
