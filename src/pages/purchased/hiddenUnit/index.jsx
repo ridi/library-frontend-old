@@ -44,7 +44,6 @@ class HiddenUnit extends React.Component {
 
     dispatchUnhideSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   handleOnClickDelete = () => {
@@ -52,7 +51,6 @@ class HiddenUnit extends React.Component {
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   makeActionBarProps() {
@@ -60,7 +58,7 @@ class HiddenUnit extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
 
     return {
-      buttonsProps: [
+      buttonProps: [
         {
           name: '선택 영구 삭제',
           type: ButtonType.DANGER,

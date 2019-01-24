@@ -42,6 +42,22 @@ export default class SeriesView extends React.Component {
     };
   }
 
+  wrapActionBarProps() {
+    const { actionBarProps } = this.props;
+
+    const _wrapOnClick = onClick => () => {
+      onClick();
+      this.setState({ isEditing: false });
+    };
+
+    return {
+      buttonProps: actionBarProps.buttonProps.map(buttonProp => ({
+        ...buttonProp,
+        onClick: _wrapOnClick(buttonProp.onClick),
+      })),
+    };
+  }
+
   renderSeriesToolBar() {
     const { currentOrder, orderOptions } = this.props;
     let orderTitle = null;
@@ -117,14 +133,13 @@ export default class SeriesView extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { actionBarProps } = this.props;
 
     return (
       <Editable
         isEditing={isEditing}
         nonEditBar={this.renderSeriesToolBar()}
         editingBarProps={this.makeEditingBarProps()}
-        actionBarProps={actionBarProps}
+        actionBarProps={this.wrapActionBarProps()}
       >
         <Responsive hasPadding={false}>
           {this.renderBooks()}

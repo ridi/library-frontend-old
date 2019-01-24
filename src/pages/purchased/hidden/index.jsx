@@ -90,7 +90,7 @@ class Hidden extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
 
     return {
-      buttonsProps: [
+      buttonProps: [
         {
           name: '선택 영구 삭제',
           type: ButtonType.DANGER,

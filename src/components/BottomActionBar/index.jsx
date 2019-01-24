@@ -3,9 +3,9 @@ import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 import { ActionBar, ActionButton } from '../ActionBar';
 
-const BottomActionBar = ({ buttonsProps }) => (
+const BottomActionBar = ({ buttonProps }) => (
   <ActionBar>
-    {buttonsProps.map(button => (
+    {buttonProps.map(button => (
       <ActionButton key={shortid.generate()} name={button.name} type={button.type} onClick={button.onClick} disable={button.disable} />
     ))}
   </ActionBar>
