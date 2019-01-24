@@ -5,4 +5,6 @@ export const seriesToolBar = {
 
   width: '100%',
   height: 46,
+
+  backgroundColor: '#f3f4f5',
 };
