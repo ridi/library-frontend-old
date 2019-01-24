@@ -1,8 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
+import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
+import shortid from 'shortid';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { downloadBooks } from '../../services/common/actions';
@@ -36,7 +38,13 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.fileInfo}>
         {infosWithDelimiter.map(info =>
-          info === delimiter ? <div css={styles.fileInfoDelimiter} /> : <div css={styles.fileInfoText}> {info} </div>,
+          info === delimiter ? (
+            <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
+          ) : (
+            <div key={shortid.generate()} css={styles.fileInfoText}>
+              {` ${info} `}
+            </div>
+          ),
         )}
       </div>
     );
@@ -75,8 +83,8 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <div css={styles.bookDescription}>
-        <div css={styles.bookDescriptionTitle}>책 소개</div>
+      <div css={styles.description}>
+        <div css={styles.descriptionTitle}>책 소개</div>
         <div css={[styles.bookDescriptionBody, isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded]}>
           <p
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
@@ -129,37 +137,31 @@ class UnitDetailView extends React.Component {
 
   renderLink() {
     const { book, primaryItem } = this.props;
-
-    if (primaryItem.is_ridiselect) {
-      return (
-        <a css={styles.ridibooksLink} href={`${config.SELECT_BASE_URL}/book/${book.id}`} target="_blank" rel="noopener noreferrer">
-          리디셀렉트에서 보기 &gt;
-        </a>
-      );
-    }
-
+    const href = primaryItem.is_ridiselect
+      ? `${config.SELECT_BASE_URL}/book/${book.id}`
+      : `${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`;
+    const serviceName = primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
     return (
-      <a css={styles.ridibooksLink} href={`${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`} target="_blank" rel="noopener noreferrer">
-        리디북스에서 보기 &gt;
+      <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
+        {serviceName}에서 보기
+        <Icon css={styles.outerLinkIcon} name="arrow_5_right" />
       </a>
     );
   }
 
   render() {
-    // 필요 데이터
-    // Unit 데이터 (타이틀)
-    // Unit의 대표 bookId
-    // 대표 북의 데이터 (썸네일, 작가 등)
     const { unit, book } = this.props;
     const bookMetadata = new BookMetaData(book);
     return (
       <>
-        <section css={styles.detailView}>
-          <div css={[styles.wrapper, styles.thumbnailWrapper]}>
-            <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
+        <section css={styles.header}>
+          <div css={styles.thumbnailWrapper}>
+            <div css={styles.thumbnail}>
+              <Book.ThumbnailImage thumbnailUrl={book.thumbnail.large} />
+            </div>
             {this.renderLink()}
           </div>
-          <div css={[styles.wrapper, styles.infoWrapper]}>
+          <div css={styles.infoWrapper}>
             <div css={styles.unitTitle}>{unit.title}</div>
             <div css={styles.authorList}>{bookMetadata.author}</div>
             {UnitType.isBook(unit.type) ? this.renderFileInfo(bookMetadata.fileInfosWithDelimiter) : null}

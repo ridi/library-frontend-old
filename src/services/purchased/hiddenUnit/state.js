@@ -1,12 +1,12 @@
 export const initialState = {
   unitId: null,
   data: {},
+  primaryItems: {},
   selectedBooks: {},
   isFetchingBook: false,
 };
 
 export const initialDataState = {
-  primaryItem: null,
   items: {},
   itemIdsForPage: {},
 

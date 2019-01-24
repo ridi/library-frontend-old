@@ -45,7 +45,6 @@ function* loadPrimaryItem(unitId) {
   }
 
   const primaryItem = yield call(getSearchUnitPrimaryItem, unitId);
-  yield put(setSearchUnitPrimaryItem(primaryItem));
   return primaryItem;
 }
 
@@ -70,7 +69,11 @@ function* loadItems() {
   const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
   yield call(loadBookData, bookIds);
   yield call(loadBookDescriptions, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+  yield all([
+    put(setSearchUnitPrimaryItem(primaryItem)),
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.item_total_count)),
+  ]);
 
   yield put(setIsFetchingSearchBook(false));
 }

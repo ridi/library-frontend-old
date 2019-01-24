@@ -110,6 +110,7 @@ class HiddenUnit extends React.Component {
 
   renderSeriesView() {
     const {
+      primaryItem,
       pageInfo: { currentPage, totalPages, unitId },
       isFetchingBook,
       items,
@@ -119,6 +120,10 @@ class HiddenUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
+
+    if (!primaryItem) {
+      return null;
+    }
 
     return (
       <SeriesView

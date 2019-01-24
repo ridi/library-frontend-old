@@ -44,7 +44,6 @@ function* loadPrimaryItem(unitId) {
   }
 
   const primaryItem = yield call(getMainUnitPrimaryItem, unitId);
-  yield put(setPrimaryItem(primaryItem));
   return primaryItem;
 }
 
@@ -70,7 +69,7 @@ function* loadItems() {
   yield call(loadBookData, bookIds);
   yield call(loadBookDescriptions, bookIds);
 
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+  yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
   yield put(setIsFetchingBook(false));
 }
 

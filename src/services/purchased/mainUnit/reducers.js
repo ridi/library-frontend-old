@@ -62,12 +62,9 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
     case SET_PRIMARY_ITEM:
       return {
         ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            primaryItem: action.payload.primaryItem,
-          },
+        primaryItems: {
+          ...state.primaryItems,
+          [state.unitId]: action.payload.primaryItem,
         },
       };
     case SET_MAIN_UNIT_ID:
