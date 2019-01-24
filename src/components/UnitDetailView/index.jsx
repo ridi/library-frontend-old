@@ -4,16 +4,16 @@ import { Icon } from '@ridi/rsg';
 import React from 'react';
 import { jsx, css } from '@emotion/core';
 import connect from 'react-redux/es/connect/connect';
-import config from '../config';
+import config from '../../config';
 
-import AuthorRole from '../constants/authorRole';
-import { UnitType } from '../constants/unitType';
-import { BookFileType } from '../services/book/constants';
-import { downloadBooks } from '../services/common/actions';
+import AuthorRole from '../../constants/authorRole';
+import { UnitType } from '../../constants/unitType';
+import { BookFileType } from '../../services/book/constants';
+import { downloadBooks } from '../../services/common/actions';
 
-import { Responsive } from '../styles/responsive';
-import { formatFileSize } from '../utils/file';
-import { numberWithUnit } from '../utils/number';
+import { Responsive } from '../../styles/responsive';
+import { formatFileSize } from '../../utils/file';
+import { numberWithUnit } from '../../utils/number';
 
 const styles = {
   detailView: css({
