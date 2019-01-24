@@ -38,6 +38,7 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import Editable from '../../../components/Editable';
 import TitleBar from '../../../components/TitleBar';
+import UnitSortModal from '../../base/Modal/UnitSortModal';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
 
 class MainUnit extends React.Component {
@@ -51,6 +52,7 @@ class MainUnit extends React.Component {
 
     this.state = {
       isEditing: false,
+      showSortModal: false,
     };
   }
 
@@ -62,7 +64,16 @@ class MainUnit extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing });
+    this.setState({ isEditing: !isEditing, showSortModal: false });
+  };
+
+  toggleSortModal = () => {
+    const { showSortModal } = this.state;
+    this.setState({ showSortModal: !showSortModal });
+  };
+
+  handleOnClickOutOfModal = () => {
+    this.setState({ showSortModal: false });
   };
 
   handleOnClickHide = () => {
@@ -150,8 +161,23 @@ class MainUnit extends React.Component {
     return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={downloadable} />;
   }
 
+  renderSeriesToolBar() {
+    const {
+      unit,
+      pageInfo: { order },
+    } = this.props;
+    const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
+    return (
+      <SeriesToolBar
+        orderTitle={orderOptions[order].title}
+        toggleSortModal={this.toggleSortModal}
+        toggleEditingMode={this.toggleEditingMode}
+      />
+    );
+  }
+
   renderBooks() {
-    const { isEditing } = this.state;
+    const { isEditing, showSortModal } = this.state;
     const {
       unit,
       items,
@@ -167,26 +193,40 @@ class MainUnit extends React.Component {
       return <SkeletonBookList />;
     }
 
+    if (items.length === 0) {
+      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+    }
+
     const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
     return (
       <Editable
         isEditing={isEditing}
-        nonEditBar={<SeriesToolBar orderTitle={orderOptions[order].title} toggleEditingMode={this.toggleEditingMode} />}
+        nonEditBar={this.renderSeriesToolBar()}
         editingBarProps={this.makeEditingBarProps()}
         actionBarProps={this.makeActionBarProps()}
       >
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          ))}
-        </BookList>
+        <Responsive>
+          <BookList>
+            {items.map(item => (
+              <LibraryBook
+                key={item.b_id}
+                item={item}
+                book={books[item.b_id]}
+                isEditing={isEditing}
+                checked={!!selectedBooks[item.b_id]}
+                onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              />
+            ))}
+          </BookList>
+          <UnitSortModal
+            order={order}
+            orderOptions={orderOptions}
+            isActive={showSortModal}
+            onClickModalBackground={this.handleOnClickOutOfModal}
+            href={{ pathname: URLMap.mainUnit.href, query: { unitId: unit.id } }}
+            as={URLMap.mainUnit.as(unit.id)}
+          />
+        </Responsive>
         {this.renderPaginator()}
       </Editable>
     );
@@ -209,17 +249,13 @@ class MainUnit extends React.Component {
   }
 
   renderMain() {
-    const { unit, items, isFetchingBook } = this.props;
-
-    if (!isFetchingBook && items.length === 0) {
-      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
-    }
+    const { unit } = this.props;
 
     return (
-      <Responsive>
-        {this.renderDetailView()}
+      <>
+        <Responsive>{this.renderDetailView()}</Responsive>
         {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-      </Responsive>
+      </>
     );
   }
 
@@ -233,7 +269,10 @@ class MainUnit extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
-        <main>{this.renderMain()}</main>
+        <main>
+          <Responsive>{this.renderDetailView()}</Responsive>
+          {UnitType.isBook(unit.type) ? null : this.renderBooks()}
+        </main>
       </>
     );
   }
