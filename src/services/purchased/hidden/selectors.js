@@ -21,10 +21,10 @@ export const getItemsByPage = createSelector(
 export const getPageInfo = createSelector(
   getState,
   state => {
-    const { page, itemTotalCount } = state;
+    const { page, unitTotalCount } = state;
     return {
       currentPage: page,
-      totalPages: calcPage(itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
+      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     };
   },
 );
