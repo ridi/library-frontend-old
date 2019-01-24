@@ -58,7 +58,7 @@ class searchUnit extends React.Component {
     const { selectedBooks } = this.props;
     const disable = Object.keys(selectedBooks).length === 0;
     return {
-      buttonsProps: [
+      buttonProps: [
         {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,

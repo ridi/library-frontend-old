@@ -140,7 +140,7 @@ class Main extends React.Component {
     const disable = Object.keys(selectedBooks).length === 0;
 
     return {
-      buttonsProps: [
+      buttonProps: [
         {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
