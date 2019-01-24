@@ -7,7 +7,7 @@ import { SkeletonLandscapeBook, SkeletonPortraitBook } from './components';
 
 const SkeletonBookCount = 48;
 
-const SkeletonBookList = (viewType = ViewType.PORTRAIT) => (
+const SkeletonBookList = ({ viewType = ViewType.PORTRAIT }) => (
   <BookList viewType={viewType}>
     {Array(SkeletonBookCount)
       .fill()
