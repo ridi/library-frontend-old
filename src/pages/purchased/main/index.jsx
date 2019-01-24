@@ -4,9 +4,8 @@ import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookList from '../../../components/BookList';
+import { LibraryBook } from '../../../components/Book';
 import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { MainOrderOptions } from '../../../constants/orderOptions';
@@ -27,6 +26,7 @@ import {
   getPageInfo,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
+import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
@@ -35,6 +35,7 @@ import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
+import ViewType from '../../../constants/viewType';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -114,6 +115,12 @@ class Main extends React.Component {
     this.setState({ isEditing: false });
   };
 
+  handleOnClickViewType = viewType => {
+    const { dispatchSetViewType } = this.props;
+    dispatchSetViewType(viewType);
+    this.handleOnClickOutOfModal();
+  };
+
   makeEditingBarProps() {
     const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
@@ -172,6 +179,7 @@ class Main extends React.Component {
     const {
       pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
+      viewType,
     } = this.props;
 
     return (
@@ -189,49 +197,63 @@ class Main extends React.Component {
           query={{ filter }}
           isActive={showMoreModal}
           onClickModalBackground={this.handleOnClickOutOfModal}
+          viewType={viewType}
+          onClickViewType={this.handleOnClickViewType}
         />
       </>
     );
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
+    const { isEditing: isSelectMode } = this.state;
+    const {
+      items: libraryBookDTO,
+      books: platformBookDTO,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      isFetchingBooks,
+      viewType,
+    } = this.props;
+    const onSelectedChange = dispatchToggleSelectBook;
+    const linkPropsBuilder = () => unitId =>
+      makeLinkProps(
+        {
+          pathname: URLMap.mainUnit.href,
+          query: { unitId },
+        },
+        URLMap.mainUnit.as(unitId),
+      );
+    const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
-    if (showSkeleton) {
-      return <SkeletonBookList />;
-    }
-
-    return (
+    return showSkeleton ? (
+      <SkeletonBookList />
+    ) : (
       <>
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-              {...makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId: item.unit_id } }, URLMap.mainUnit.as(item.unit_id))}
-            />
-          ))}
-        </BookList>
+        <LibraryBook
+          {...{
+            libraryBookDTO,
+            platformBookDTO,
+            selectedBooks,
+            isSelectMode,
+            onSelectedChange,
+            viewType,
+            linkPropsBuilder: linkPropsBuilder(),
+          }}
+        />
         {this.renderPaginator()}
       </>
     );
   }
 
   renderMain() {
-    const { items, isFetchingBooks } = this.props;
+    const { items, isFetchingBooks, viewType } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
       return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <Responsive>
+      <Responsive hasPadding={viewType === ViewType.PORTRAIT}>
         {this.renderBooks()}
         {this.renderModal()}
       </Responsive>
@@ -291,6 +313,7 @@ const mapStateToProps = state => {
     books,
     selectedBooks,
     isFetchingBooks,
+    viewType: state.viewType,
   };
 };
 
@@ -300,6 +323,7 @@ const mapDispatchToProps = {
   dispatchToggleSelectBook: toggleSelectBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchSetViewType: setViewType,
 };
 
 export default connect(
