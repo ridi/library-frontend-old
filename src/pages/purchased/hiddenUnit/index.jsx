@@ -40,9 +40,9 @@ class HiddenUnit extends React.Component {
   }
 
   handleOnClickUnhide = () => {
-    const { dispatchUnHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    const { dispatchUnhideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchUnHideSelectedBooks();
+    dispatchUnhideSelectedBooks();
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };

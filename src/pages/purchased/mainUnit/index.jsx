@@ -40,6 +40,14 @@ class MainUnit extends React.Component {
     await store.dispatch(loadItems());
   }
 
+  handleOnClickHide = () => {
+    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+
+    dispatchHideSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
   handleOnClickDownload = () => {
     const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
