@@ -126,7 +126,7 @@ export default class SeriesView extends React.Component {
         editingBarProps={this.makeEditingBarProps()}
         actionBarProps={actionBarProps}
       >
-        <Responsive>
+        <Responsive hasPadding={false}>
           {this.renderBooks()}
           {this.renderModal()}
         </Responsive>

@@ -24,19 +24,16 @@ const styles = {
     justifyContent: 'left',
 
     marginTop: 30,
-    ...Responsive.W1280({
-      marginLeft: 12,
-    }),
   }),
 
   landscapeBook: css({
-    width: 66,
+    width: 60,
     height: 88,
   }),
 
   landscapeMetaWrapper: css({
     marginTop: 8,
-    marginLeft: 16,
+    marginLeft: 14,
     flex: 1,
   }),
   landscapeBookTitle: css({
@@ -44,10 +41,10 @@ const styles = {
     height: 20,
 
     ...Responsive.W600({
-      width: '100%',
+      width: 441,
     }),
     ...Responsive.W1280({
-      width: '100%',
+      width: 378,
     }),
   }),
   landscapeBookAuthor: css({
