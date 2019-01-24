@@ -7,7 +7,7 @@ import EmptyBookList from './EmptyBookList';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import UnitSortModal from '../pages/base/Modal/UnitSortModal';
-import LibraryBooks from './LibraryBooks';
+import { LibraryBooks } from './LibraryBooks';
 
 export default class SeriesView extends React.Component {
   constructor(props) {
