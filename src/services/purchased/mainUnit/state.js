@@ -2,6 +2,7 @@ import { concat } from '../../../utils/array';
 
 export const initialState = {
   unitId: null,
+  primaryItems: {},
   data: {},
 
   order: 0,
@@ -10,7 +11,6 @@ export const initialState = {
 };
 
 export const initialDataState = {
-  primaryItem: null,
   items: {},
   itemIdsForPage: {},
 
