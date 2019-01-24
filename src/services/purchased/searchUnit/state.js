@@ -4,6 +4,7 @@ export const initialState = {
   unitId: null,
   keyword: null,
   data: {},
+  primaryItems: {},
 
   order: 0,
   selectedBooks: {},
@@ -12,7 +13,6 @@ export const initialState = {
 };
 
 export const initialDataState = {
-  primaryItem: null,
   items: {},
   itemIdsForPage: {},
 

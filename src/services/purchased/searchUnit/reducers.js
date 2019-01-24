@@ -68,12 +68,9 @@ const searchUnitReducer = (state = initialState, action) => {
     case SET_SEARCH_UNIT_PRIMARY_ITEM:
       return {
         ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            primaryItem: action.payload.primaryItem,
-          },
+        primaryItems: {
+          ...state.primaryItems,
+          [state.unitId]: action.payload.primaryItem,
         },
       };
     case SET_SEARCH_UNIT_ORDER:
