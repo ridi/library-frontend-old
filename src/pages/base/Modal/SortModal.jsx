@@ -2,15 +2,40 @@
 import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 
-import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal';
+import { Modal, ModalItemGroup, ModalButtonItem, ModalLinkItem } from '../../../components/Modal';
 import { URLMap } from '../../../constants/urls';
+import ViewType from '../../../constants/viewType';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 
 const SortModal = props => {
-  const { order, orderOptions, isActive, query, onClickModalBackground } = props;
+  const { order, orderOptions, isActive, query, onClickModalBackground, viewType, onClickViewType } = props;
 
   return (
     <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
+      <ModalItemGroup groupTitle="보기 방식">
+        <ul>
+          <li>
+            <ModalButtonItem
+              title="표지만 보기"
+              icon="check_6"
+              showIcon={viewType === ViewType.PORTRAIT}
+              onClick={() => {
+                onClickViewType(ViewType.PORTRAIT);
+              }}
+            />
+          </li>
+          <li>
+            <ModalButtonItem
+              title="목록 보기"
+              icon="check_6"
+              showIcon={viewType === ViewType.LANDSCAPE}
+              onClick={() => {
+                onClickViewType(ViewType.LANDSCAPE);
+              }}
+            />
+          </li>
+        </ul>
+      </ModalItemGroup>
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
           {orderOptions.map((option, index) => (

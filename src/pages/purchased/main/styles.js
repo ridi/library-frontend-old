@@ -5,3 +5,7 @@ export const mainButtonActionLeft = {
 export const mainButtonActionRight = {
   float: 'right',
 };
+
+export const book = {
+  width: 80,
+};

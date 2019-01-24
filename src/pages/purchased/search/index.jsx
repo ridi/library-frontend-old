@@ -4,9 +4,8 @@ import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookList from '../../../components/BookList';
+import { LibraryBook } from '../../../components/Book';
 import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { URLMap } from '../../../constants/urls';
@@ -139,38 +138,45 @@ class Search extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
+    const { isEditing: isSelectMode } = this.state;
     const {
-      items,
-      books,
+      items: libraryBookDTO,
+      books: platformBookDTO,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
+      viewType,
       pageInfo: { keyword },
     } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
+    const onSelectedChange = dispatchToggleSelectBook;
+    const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
       return <SkeletonBookList />;
     }
+    const linkPropsBuilder = _keyword => unitId =>
+      makeLinkProps(
+        {
+          pathname: URLMap.searchUnit.href,
+          query: { unitId },
+        },
+        URLMap.searchUnit.as(unitId),
+        { keyword: _keyword },
+      );
 
     return (
       <>
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-              {...makeLinkProps({ pathname: URLMap.searchUnit.href, query: { unitId: item.unit_id } }, URLMap.searchUnit.as(item.unit_id), {
-                keyword,
-              })}
-            />
-          ))}
-        </BookList>
+        <LibraryBook
+          {...{
+            libraryBookDTO,
+            platformBookDTO,
+            selectedBooks,
+            isSelectMode,
+            onSelectedChange,
+            viewType,
+            linkPropsBuilder: linkPropsBuilder(keyword),
+          }}
+        />
         {this.renderPaginator()}
       </>
     );
@@ -254,6 +260,7 @@ const mapStateToProps = state => {
     books,
     selectedBooks,
     isFetchingBooks,
+    viewType: state.viewType,
   };
 };
 
