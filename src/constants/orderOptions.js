@@ -18,13 +18,13 @@ class BaseOrderOptions {
   static parse(index) {
     const _option = this.toList()[index];
     return {
-      orderType: _option.order_type,
-      orderBy: _option.order_by,
+      orderType: _option.orderType,
+      orderBy: _option.orderBy,
     };
   }
 
   static toIndex(orderType, orderBy) {
-    return this.toList().findIndex(value => value.order_type === orderType && value.order_by === orderBy);
+    return this.toList().findIndex(value => value.orderType === orderType && value.orderBy === orderBy);
   }
 
   static toList() {
@@ -48,39 +48,47 @@ export class MainOrderOptions extends BaseOrderOptions {
   static get PURCHASE_DATE() {
     return {
       title: '최근 구매순',
-      order_type: OrderType.PURCHASE_DATE,
-      order_by: OrderBy.DESC,
+      orderType: OrderType.PURCHASE_DATE,
+      orderBy: OrderBy.DESC,
     };
   }
 
   static get EXPIRE_DATE() {
     return {
       title: '대여 만료 임박순',
-      order_type: OrderType.EXPIRE_DATE,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.EXPIRE_DATE,
+      orderBy: OrderBy.ASC,
     };
   }
 
   static get UNIT_TITLE() {
     return {
       title: '제목 가나다순',
-      order_type: OrderType.UNIT_TITLE,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.UNIT_TITLE,
+      orderBy: OrderBy.ASC,
     };
   }
 
   static get UNIT_AUTHOR() {
     return {
       title: '저자 가나다순',
-      order_type: OrderType.UNIT_AUTHOR,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.UNIT_AUTHOR,
+      orderBy: OrderBy.ASC,
     };
   }
 }
 
-export class SeriesOrderOptions extends BaseOrderOptions {
-  static toList() {
+export class UnitOrderOptions extends BaseOrderOptions {
+  static toSeriesList() {
     return [this.UNIT_ORDER_ASC, this.UNIT_ORDER_DESC, this.PURCHASE_DATE, this.EXPIRE_DATE];
+  }
+
+  static toShelfList() {
+    return [...this.toSeriesList(), this.BOOK_TITLE, this.BOOK_AUTHOR];
+  }
+
+  static toList() {
+    return this.toShelfList();
   }
 
   static get DEFAULT() {
@@ -90,55 +98,48 @@ export class SeriesOrderOptions extends BaseOrderOptions {
   static get UNIT_ORDER_ASC() {
     return {
       title: '1권부터',
-      order_type: OrderType.UNIT_ORDER,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.UNIT_ORDER,
+      orderBy: OrderBy.ASC,
     };
   }
 
   static get UNIT_ORDER_DESC() {
     return {
       title: '마지막 권부터',
-      order_type: OrderType.UNIT_ORDER,
-      order_by: OrderBy.DESC,
+      orderType: OrderType.UNIT_ORDER,
+      orderBy: OrderBy.DESC,
     };
   }
 
   static get PURCHASE_DATE() {
     return {
       title: '최근 구매순',
-      order_type: OrderType.PURCHASE_DATE,
-      order_by: OrderBy.DESC,
+      orderType: OrderType.PURCHASE_DATE,
+      orderBy: OrderBy.DESC,
     };
   }
 
   static get EXPIRE_DATE() {
     return {
       title: '대여 만료 임박순',
-      order_type: OrderType.EXPIRE_DATE,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.EXPIRE_DATE,
+      orderBy: OrderBy.ASC,
     };
-  }
-}
-
-export class CollectionOrderOptions extends SeriesOrderOptions {
-  static toList() {
-    const _list = super.toList();
-    return [..._list, this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
   static get BOOK_TITLE() {
     return {
       title: '제목순',
-      order_type: OrderType.BOOK_TITLE,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.BOOK_TITLE,
+      orderBy: OrderBy.ASC,
     };
   }
 
   static get BOOK_AUTHOR() {
     return {
       title: '저자순',
-      order_type: OrderType.BOOK_AUTHOR,
-      order_by: OrderBy.ASC,
+      orderType: OrderType.BOOK_AUTHOR,
+      orderBy: OrderBy.ASC,
     };
   }
 }

@@ -17,7 +17,7 @@ import {
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrimaryItem } from './requests';
 
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import { UnitOrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
@@ -32,8 +32,8 @@ function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
 
   const page = parseInt(query.page, 10) || 1;
-  const { order_type: orderType = MainOrderOptions.DEFAULT.order_type, order_by: orderBy = MainOrderOptions.DEFAULT.order_by } = query;
-  const order = MainOrderOptions.toIndex(orderType, orderBy);
+  const { order_type: orderType = UnitOrderOptions.DEFAULT.orderType, order_by: orderBy = UnitOrderOptions.DEFAULT.orderBy } = query;
+  const order = UnitOrderOptions.toIndex(orderType, orderBy);
 
   yield all([put(setPage(page)), put(setOrder(order)), put(setKeyword(query.keyword))]);
 }
@@ -54,7 +54,7 @@ function* loadItems() {
 
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
-  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { orderType, orderBy } = UnitOrderOptions.parse(order);
 
   yield put(setIsFetchingSearchBook(true));
   const [itemResponse, countResponse] = yield all([
