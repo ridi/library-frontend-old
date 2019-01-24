@@ -119,6 +119,8 @@ class Hidden extends React.Component {
       href: URLMap.main.href,
       as: URLMap.main.as,
       query: { page, orderType, orderBy, filter },
+      edit: true,
+      toggleEditingMode: this.toggleEditingMode,
     };
 
     return <TitleBar {...titleBarProps} />;
@@ -146,7 +148,7 @@ class Hidden extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBookList />
+      <SkeletonBookList viewType={viewType} />
     ) : (
       <>
         <LibraryBook

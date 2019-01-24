@@ -25,9 +25,10 @@ export const setItems = items => ({
   },
 });
 
-export const setTotalCount = itemTotalCount => ({
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
   type: SET_HIDDEN_TOTAL_COUNT,
   payload: {
+    unitTotalCount,
     itemTotalCount,
   },
 });

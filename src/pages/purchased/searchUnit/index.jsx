@@ -38,6 +38,9 @@ import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
 import Editable from '../../../components/Editable';
 import SeriesToolBar from '../../../components/SeriesToolBar';
+import UnitSortModal from '../../base/Modal/UnitSortModal';
+import { UnitOrderOptions } from '../../../constants/orderOptions';
+import ViewType from '../../../constants/viewType';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -50,6 +53,7 @@ class searchUnit extends React.Component {
 
     this.state = {
       isEditing: false,
+      showSortModal: false,
     };
   }
 
@@ -61,7 +65,16 @@ class searchUnit extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing });
+    this.setState({ isEditing: !isEditing, showSortModal: false });
+  };
+
+  toggleSortModal = () => {
+    const { showSortModal } = this.state;
+    this.setState({ showSortModal: !showSortModal });
+  };
+
+  handleOnClickOutOfModal = () => {
+    this.setState({ showSortModal: false });
   };
 
   handleOnClickHide = () => {
@@ -147,41 +160,83 @@ class searchUnit extends React.Component {
     }
 
     const downloadable = new Date(primaryItem.expire_date) > new Date();
-    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={downloadable} />;
+    return (
+      <UnitDetailView
+        unit={unit}
+        primaryItem={primaryItem}
+        book={primaryBook}
+        bookDescription={primaryBookDescription}
+        downloadable={downloadable}
+      />
+    );
+  }
+
+  renderSeriesToolBar() {
+    const {
+      unit,
+      pageInfo: { order },
+    } = this.props;
+    const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
+    return (
+      <SeriesToolBar
+        orderTitle={orderOptions[order].title}
+        toggleSortModal={this.toggleSortModal}
+        toggleEditingMode={this.toggleEditingMode}
+      />
+    );
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
+    const { isEditing, showSortModal } = this.state;
+    const {
+      unit,
+      items,
+      books,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      isFetchingBook,
+      pageInfo: { order },
+    } = this.props;
     const showSkeleton = isFetchingBook && items.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
     }
 
     if (items.length === 0) {
       return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
     }
 
+    const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
     return (
       <Editable
         isEditing={isEditing}
-        nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
+        nonEditBar={this.renderSeriesToolBar()}
         editingBarProps={this.makeEditingBarProps()}
         actionBarProps={this.makeActionBarProps()}
       >
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          ))}
-        </BookList>
+        <Responsive>
+          <BookList>
+            {items.map(item => (
+              <LibraryBook
+                key={item.b_id}
+                item={item}
+                book={books[item.b_id]}
+                isEditing={isEditing}
+                checked={!!selectedBooks[item.b_id]}
+                onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
+              />
+            ))}
+          </BookList>
+          <UnitSortModal
+            order={order}
+            orderOptions={orderOptions}
+            isActive={showSortModal}
+            onClickModalBackground={this.handleOnClickOutOfModal}
+            href={{ pathname: URLMap.mainUnit.href, query: { unitId: unit.id } }}
+            as={URLMap.mainUnit.as(unit.id)}
+          />
+        </Responsive>
         {this.renderPaginator()}
       </Editable>
     );
@@ -211,10 +266,10 @@ class searchUnit extends React.Component {
     }
 
     return (
-      <Responsive>
-        {this.renderDetailView()}
+      <>
+        <Responsive>{this.renderDetailView()}</Responsive>
         {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-      </Responsive>
+      </>
     );
   }
 

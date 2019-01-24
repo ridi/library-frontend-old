@@ -38,6 +38,7 @@ import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import ViewType from '../../../constants/viewType';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -146,7 +147,7 @@ class HiddenUnit extends React.Component {
       return <SkeletonUnitDetailView />;
     }
 
-    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} />;
+    return <UnitDetailView unit={unit} primaryItem={primaryItem} book={primaryBook} bookDescription={primaryBookDescription} />;
   }
 
   renderBooks() {
@@ -155,7 +156,7 @@ class HiddenUnit extends React.Component {
     const showSkeleton = isFetchingBook && items.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
     }
 
     if (items.length === 0) {

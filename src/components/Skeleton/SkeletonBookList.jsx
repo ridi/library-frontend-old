@@ -3,18 +3,25 @@ import shortid from 'shortid';
 import BookList from '../BookList';
 import { SkeletonPortraitBook, SkeletonLandscapeBook } from './components';
 import { PortraitBookWrapper, LandscapeBookWrapper } from '../BookWrapper';
+import ViewType from '../../constants/viewType';
 
 const SkeletonBookCount = 48;
 
-const SkeletonBookList = () => (
-  <BookList>
+const SkeletonBookList = (viewType = ViewType.PORTRAIT) => (
+  <BookList viewType={viewType}>
     {Array(SkeletonBookCount)
       .fill()
-      .map(() => (
-        <PortraitBookWrapper key={shortid.generate()}>
-          <SkeletonPortraitBook />
-        </PortraitBookWrapper>
-      ))}
+      .map(() =>
+        viewType === ViewType.PORTRAIT ? (
+          <PortraitBookWrapper key={shortid.generate()}>
+            <SkeletonPortraitBook />
+          </PortraitBookWrapper>
+        ) : (
+          <LandscapeBookWrapper key={shortid.generate()}>
+            <SkeletonLandscapeBook />
+          </LandscapeBookWrapper>
+        ),
+      )}
   </BookList>
 );
 
