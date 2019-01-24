@@ -68,8 +68,7 @@ export function* download(bookIds, url) {
   yield cancel(installTimer);
 }
 
-export function* downloadBooks(action) {
-  const { bookIds } = action.payload;
+export function* downloadBooks(bookIds) {
   const triggerResponse = yield call(triggerDownload, bookIds);
 
   if (triggerResponse.result) {
@@ -77,6 +76,10 @@ export function* downloadBooks(action) {
   } else {
     yield put(showToast(triggerResponse.message));
   }
+}
+
+export function* downloadBookActionAdaptor(action) {
+  yield call(downloadBooks, action.payload.bookIds);
 }
 
 const _reduceSelectedBookIds = (items, selectedBookIds) =>
@@ -116,5 +119,5 @@ export function* getBookIdsByUnitIdsForHidden(items, selectedBookIds) {
 }
 
 export default function* commonRootSaga() {
-  yield all([takeEvery(DOWNLOAD_BOOKS, downloadBooks)]);
+  yield all([takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor)]);
 }
