@@ -44,7 +44,6 @@ class HiddenUnit extends React.Component {
 
     dispatchUnhideSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   handleOnClickDelete = () => {
@@ -52,7 +51,6 @@ class HiddenUnit extends React.Component {
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   makeActionBarProps() {

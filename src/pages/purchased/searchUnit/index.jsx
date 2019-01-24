@@ -45,7 +45,6 @@ class searchUnit extends React.Component {
 
     dispatchHideSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   handleOnClickDownload = () => {
@@ -53,7 +52,6 @@ class searchUnit extends React.Component {
 
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
   };
 
   makeActionBarProps() {
