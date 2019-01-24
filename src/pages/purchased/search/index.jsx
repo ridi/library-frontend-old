@@ -214,7 +214,7 @@ class Search extends React.Component {
       return <EmptyBookList icon="search" message={message} />;
     }
 
-    return <Responsive>{this.renderBooks()}</Responsive>;
+    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
   }
 
   render() {

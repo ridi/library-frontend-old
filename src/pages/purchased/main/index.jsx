@@ -246,14 +246,14 @@ class Main extends React.Component {
   }
 
   renderMain() {
-    const { items, isFetchingBooks, viewType } = this.props;
+    const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
       return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
     }
 
     return (
-      <Responsive hasPadding={viewType === ViewType.PORTRAIT}>
+      <Responsive hasPadding={false}>
         {this.renderBooks()}
         {this.renderModal()}
       </Responsive>

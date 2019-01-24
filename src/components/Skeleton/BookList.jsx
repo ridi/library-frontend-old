@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { portraitBookListStyle, landscapeBookListStyle } from '../../styles/bookLayout';
+import { bookListStyle, portraitBookListStyle, landscapeBookListStyle } from '../../styles/bookLayout';
 import ViewType from '../../constants/viewType';
 
 const BookList = ({ viewType = ViewType.PORTRAIT, children }) => (
-  <div css={viewType === ViewType.PORTRAIT ? portraitBookListStyle : landscapeBookListStyle}>{children}</div>
+  <div css={[bookListStyle, viewType === ViewType.PORTRAIT ? portraitBookListStyle : landscapeBookListStyle]}>{children}</div>
 );
 export default BookList;

@@ -182,7 +182,7 @@ class Hidden extends React.Component {
       return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
     }
 
-    return <Responsive>{this.renderBooks()}</Responsive>;
+    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
   }
 
   render() {
