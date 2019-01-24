@@ -9,13 +9,26 @@ import { downloadBooks } from '../../services/common/actions';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 
+const LINE_HEIGHT = 23;
+const LINE = 8;
+
 class UnitDetailView extends React.Component {
   constructor(props) {
     super(props);
+    this.wrapper = null;
 
     this.state = {
       isExpanded: false,
+      isTruncated: false,
     };
+  }
+
+  componentDidMount() {
+    if (this.wrapper) {
+      if (this.wrapper.offsetHeight > LINE * LINE_HEIGHT) {
+        this.setState({ isTruncated: true });
+      }
+    }
   }
 
   renderFileInfo = infosWithDelimiter => {
@@ -34,9 +47,13 @@ class UnitDetailView extends React.Component {
   }
 
   renderExpanderButton() {
-    const { isExpanded } = this.state;
+    const { isExpanded, isTruncated } = this.state;
 
     if (isExpanded) {
+      return null;
+    }
+
+    if (!isTruncated) {
       return null;
     }
 
@@ -61,7 +78,10 @@ class UnitDetailView extends React.Component {
       <div css={styles.bookDescription}>
         <div css={styles.bookDescriptionTitle}>책 소개</div>
         <div css={[styles.bookDescriptionBody, isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded]}>
-          <p dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }} />
+          <p
+            dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
+            ref={wrapper => (this.wrapper = wrapper)}
+          />
         </div>
         {this.renderExpanderButton()}
       </div>
