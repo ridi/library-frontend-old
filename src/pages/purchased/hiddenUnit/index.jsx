@@ -147,7 +147,7 @@ class HiddenUnit extends React.Component {
       return <SkeletonUnitDetailView />;
     }
 
-    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} />;
+    return <UnitDetailView unit={unit} primaryItem={primaryItem} book={primaryBook} bookDescription={primaryBookDescription} />;
   }
 
   renderBooks() {

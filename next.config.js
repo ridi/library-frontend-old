@@ -30,6 +30,7 @@ module.exports = {
     STATIC_URL: secrets.static_url,
     ACCOUNT_BASE_URL: secrets.account_base_url,
     STORE_API_BASE_URL: secrets.store_api_base_url,
+    SELECT_BASE_URL: secrets.select_base_url,
     LIBRARY_API_BASE_URL: secrets.library_api_base_url,
     PLATFORM_API_BASE_URL: secrets.platform_api_base_url,
 
