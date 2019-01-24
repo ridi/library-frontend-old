@@ -40,7 +40,7 @@ function* loadItems() {
   // Request BookData
   const bookIds = toFlatten(itemResponse.items, 'b_id');
   yield call(loadBookData, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
   yield put(setHiddenIsFetchingBooks(false));
 }
 

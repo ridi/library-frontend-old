@@ -28,6 +28,7 @@ const purchasedHiddenReducer = (state = initialState, action) => {
     case SET_HIDDEN_TOTAL_COUNT:
       return {
         ...state,
+        unitTotalCount: action.payload.unitTotalCount,
         itemTotalCount: action.payload.itemTotalCount,
       };
     case SET_HIDDEN_PAGE:
