@@ -4,13 +4,10 @@ import { Icon } from '@ridi/rsg';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import config from '../../config';
-import AuthorRole from '../../constants/authorRole';
 import { UnitType } from '../../constants/unitType';
-import { BookFileType } from '../../services/book/constants';
 import { downloadBooks } from '../../services/common/actions';
-import { formatFileSize } from '../../utils/file';
-import { numberWithUnit } from '../../utils/number';
 import * as styles from './styles';
+import BookMetaData from '../../utils/bookMetaData';
 
 class UnitDetailView extends React.Component {
   constructor(props) {
@@ -21,46 +18,8 @@ class UnitDetailView extends React.Component {
     };
   }
 
-  compileAuthors() {
-    const {
-      book: { authors },
-    } = this.props;
-    const roles = AuthorRole.getPriorities(authors);
-
-    return roles
-      .reduce((previous, role) => {
-        const author = authors[role];
-
-        if (author) {
-          const names = author.map(value => value.name).join(',');
-          previous.push(`${names} ${AuthorRole.convertToString(role)}`);
-        }
-        return previous;
-      }, [])
-      .join(' | ');
-  }
-
-  renderFileInfo() {
-    const { book } = this.props;
-
-    // info의 text 에 | 와 \ 사용되면 안된다. 두개의 문자는 예약어이다.
-    const infos = [];
-
-    if (book.file.format !== BookFileType.BOM) {
-      infos.push(`${BookFileType.convertToString(book.file.format)}`);
-    }
-
-    if (book.file.character_count) {
-      infos.push(`약 ${numberWithUnit(book.file.character_count)}자`);
-    }
-
-    if (book.file.size) {
-      infos.push(`${formatFileSize(book.file.size)}`);
-    }
-
+  renderFileInfo = infosWithDelimiter => {
     const delimiter = '|';
-    const infosWithDelimiter = infos.join(`\\${delimiter}\\`).split('\\');
-
     return (
       <div css={styles.fileInfo}>
         {infosWithDelimiter.map(info =>
@@ -68,7 +27,7 @@ class UnitDetailView extends React.Component {
         )}
       </div>
     );
-  }
+  };
 
   expand() {
     this.setState({ isExpanded: true });
@@ -172,7 +131,7 @@ class UnitDetailView extends React.Component {
     // Unit의 대표 bookId
     // 대표 북의 데이터 (썸네일, 작가 등)
     const { unit, book } = this.props;
-
+    const bookMetadata = new BookMetaData(book);
     return (
       <>
         <section css={styles.detailView}>
@@ -182,8 +141,8 @@ class UnitDetailView extends React.Component {
           </div>
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>
-            <div css={styles.authorList}>{this.compileAuthors()}</div>
-            {UnitType.isBook(unit.type) ? this.renderFileInfo() : null}
+            <div css={styles.authorList}>{bookMetadata.author}</div>
+            {UnitType.isBook(unit.type) ? this.renderFileInfo(bookMetadata.fileInfosWithDelimiter) : null}
             {UnitType.isBook(unit.type) ? this.renderDownloadBottuon() : null}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>
