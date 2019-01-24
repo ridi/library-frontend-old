@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import { LibraryBook } from '../../../components/Book';
+import { LibraryBooks } from '../../../components/LibraryBooks';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
@@ -151,7 +151,7 @@ class Hidden extends React.Component {
       <SkeletonBookList viewType={viewType} />
     ) : (
       <>
-        <LibraryBook
+        <LibraryBooks
           {...{
             libraryBookDTO,
             platformBookDTO,

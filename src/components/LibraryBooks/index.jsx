@@ -57,7 +57,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
 const renderLandscapeFullButton = libraryBookProps =>
   libraryBookProps ? <div css={styles.landscapeFullButton}>{libraryBookProps.thumbnailLink}</div> : null;
 
-export class LibraryBook extends React.Component {
+export class LibraryBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
