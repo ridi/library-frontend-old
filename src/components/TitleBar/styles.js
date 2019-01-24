@@ -6,6 +6,7 @@ export const title = {
   display: 'flex',
   alignItems: 'center',
   height: 46,
+  width: '100%',
 };
 
 export const backButton = {
@@ -22,6 +23,7 @@ export const titleTextWrapper = {
   height: 30,
   width: '100%',
   display: 'flex',
+  minWidth: 0,
   alignItems: 'center',
 };
 
@@ -29,6 +31,11 @@ export const titleText = {
   fontSize: 16,
   fontWeight: 700,
   color: '#40474d',
+
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  wordWrap: 'normal',
+  overflow: 'hidden',
 };
 
 export const count = {
