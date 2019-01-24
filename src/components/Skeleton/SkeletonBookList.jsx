@@ -8,7 +8,7 @@ import ViewType from '../../constants/viewType';
 const SkeletonBookCount = 48;
 
 const SkeletonBookList = (viewType = ViewType.PORTRAIT) => (
-  <BookList>
+  <BookList viewType={viewType}>
     {Array(SkeletonBookCount)
       .fill()
       .map(() =>

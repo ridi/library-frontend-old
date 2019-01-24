@@ -2,7 +2,7 @@ import { css } from '@emotion/core';
 import { Responsive } from './responsive';
 
 // https://app.asana.com/0/search/920785676324447/879981298827203
-export const bookListStyle = css({
+export const portraitBookListStyle = css({
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'row',
@@ -23,6 +23,17 @@ export const bookListStyle = css({
   ...Responsive.W1280({
     width: 960,
   }),
+});
+
+export const landscapeBookListStyle = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+  justifyContent: 'left',
+  paddingBottom: 26,
+  margin: '0 auto',
+  boxSizing: 'border-box',
+  width: '100%',
 });
 
 export const portraitBookWrapperStyle = css({
