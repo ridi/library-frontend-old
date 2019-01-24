@@ -3,10 +3,8 @@ import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 
 import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal';
-import { URLMap } from '../../../constants/urls';
-import { MainOrderOptions } from '../../../constants/orderOptions';
 
-const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackground }) => (
+const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, onClickModalBackground }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
     <ModalItemGroup groupTitle="정렬 순서">
       <ul>
@@ -16,21 +14,19 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
               title={option.title}
               showIcon={index === order}
               icon="check_6"
-              href={URLMap.main.href}
-              as={URLMap.main.as}
+              href={href}
+              as={as}
               query={{
                 ...query,
-                ...MainOrderOptions.parse(index),
+                orderType: option.orderType,
+                orderBy: option.orderBy,
               }}
             />
           </li>
         ))}
       </ul>
     </ModalItemGroup>
-    <ModalItemGroup groupTitle="숨김 메뉴">
-      <ModalLinkItem title="숨김 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
-    </ModalItemGroup>
   </Modal>
 );
 
-export default SortModal;
+export default UnitSortModal;
