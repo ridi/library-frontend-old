@@ -48,13 +48,15 @@ export const portrait = {
   ...Responsive.W600({}),
   ...Responsive.W834({}),
   ...Responsive.W1280({
-    padding: '0 30px',
+    padding: '0 25px',
   }),
 };
+
 export const landscape = {
   width: '100%',
-  paddingTop: 20,
+  marginTop: 20,
   display: 'flex',
+  position: 'relative',
   '.LandscapeBook': {
     width: '100%',
     borderBottom: '1px solid #d1d5d9',
@@ -65,4 +67,21 @@ export const landscape = {
   ...Responsive.W1280({
     width: '50%',
   }),
+};
+
+export const landscapeFullButton = {
+  display: 'block',
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  width: '100%',
+  height: '100%',
+  'a, button': {
+    display: 'block',
+    width: '100%',
+    height: '100%',
+    fontSize: 0,
+    lineHeight: 0,
+    color: 'transparent',
+  },
 };
