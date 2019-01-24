@@ -15,9 +15,11 @@ const SeriesToolBar = ({ orderTitle, toggleSortModal, toggleEditingMode }) => (
   <FlexBar
     renderFlexLeft={() => (
       <div>
-        <button css={styles.orderButton} type="button" onClick={toggleSortModal}>
-          {orderTitle}
-        </button>
+        {orderTitle ? (
+          <button css={styles.orderButton} type="button" onClick={toggleSortModal}>
+            {orderTitle}
+          </button>
+        ) : null}
       </div>
     )}
     renderFlexRight={() => <Tool edit toggleEditingMode={toggleEditingMode} />}

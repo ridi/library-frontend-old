@@ -44,7 +44,10 @@ export default class SeriesView extends React.Component {
 
   renderSeriesToolBar() {
     const { currentOrder, orderOptions } = this.props;
-    const orderTitle = orderOptions[currentOrder].title;
+    let orderTitle = null;
+    if (orderOptions && orderOptions[currentOrder]) {
+      orderTitle = orderOptions[currentOrder].title;
+    }
     return <SeriesToolBar orderTitle={orderTitle} toggleSortModal={this.toggleSortModal} toggleEditingMode={this.toggleEditingMode} />;
   }
 
