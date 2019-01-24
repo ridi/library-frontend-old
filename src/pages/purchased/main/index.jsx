@@ -28,7 +28,7 @@ import {
 } from '../../../services/purchased/main/selectors';
 import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
-import { makeURI } from '../../../utils/uri';
+import { makeLinkProps, makeURI } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
@@ -215,15 +215,31 @@ class Main extends React.Component {
       viewType,
     } = this.props;
     const onSelectedChange = dispatchToggleSelectBook;
+    const linkPropsBuilder = () => unitId =>
+      makeLinkProps(
+        {
+          pathname: URLMap.mainUnit.href,
+          query: { unitId },
+        },
+        URLMap.mainUnit.as(unitId),
+      );
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
-    if (showSkeleton) {
-      return <SkeletonBookList />;
-    }
-
-    return (
+    return showSkeleton ? (
+      <SkeletonBookList />
+    ) : (
       <>
-        <LibraryBook {...{ libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType }} />
+        <LibraryBook
+          {...{
+            libraryBookDTO,
+            platformBookDTO,
+            selectedBooks,
+            isSelectMode,
+            onSelectedChange,
+            viewType,
+            linkPropsBuilder: linkPropsBuilder(),
+          }}
+        />
         {this.renderPaginator()}
       </>
     );

@@ -3,9 +3,8 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookList from '../../../components/BookList';
+import { LibraryBook } from '../../../components/Book';
 import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { URLMap } from '../../../constants/urls';
@@ -126,29 +125,41 @@ class Hidden extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBooks } = this.props;
-    const showSkeleton = isFetchingBooks && items.length === 0;
+    const { isEditing: isSelectMode } = this.state;
+    const {
+      items: libraryBookDTO,
+      books: platformBookDTO,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      isFetchingBooks,
+      viewType,
+    } = this.props;
+    const onSelectedChange = dispatchToggleSelectBook;
+    const linkPropsBuilder = () => unitId =>
+      makeLinkProps(
+        {
+          pathname: URLMap.hiddenUnit.href,
+          query: { unitId },
+        },
+        URLMap.hiddenUnit.as(unitId),
+      );
+    const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
-    if (showSkeleton) {
-      return <SkeletonBookList />;
-    }
-
-    return (
+    return showSkeleton ? (
+      <SkeletonBookList />
+    ) : (
       <>
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-              {...makeLinkProps({ pathname: URLMap.hiddenUnit.href, query: { unitId: item.unit_id } }, URLMap.hiddenUnit.as(item.unit_id))}
-            />
-          ))}
-        </BookList>
+        <LibraryBook
+          {...{
+            libraryBookDTO,
+            platformBookDTO,
+            selectedBooks,
+            isSelectMode,
+            onSelectedChange,
+            viewType,
+            linkPropsBuilder: linkPropsBuilder(),
+          }}
+        />
         {this.renderPaginator()}
       </>
     );
@@ -210,8 +221,8 @@ const mapStateToProps = state => {
     totalCount,
     selectedBooks,
     isFetchingBooks,
-
     mainPageInfo,
+    viewType: state.viewType,
   };
 };
 

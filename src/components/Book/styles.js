@@ -15,9 +15,8 @@ export const books = (viewType, additionalPadding) => ({
   paddingLeft: viewType === ViewType.LANDSCAPE ? responsiveDefaultPadding : additionalPadding,
 
   ...Responsive.W360({
-    justifyContent: 'space-around',
     paddingRight: viewType === ViewType.LANDSCAPE && 0,
-    paddingLeft: 0,
+    paddingLeft: viewType === ViewType.LANDSCAPE && 0,
   }),
   ...Responsive.W600({
     // width: 530,
@@ -42,7 +41,7 @@ export const portrait = {
     minWidth: 80,
     maxWidth: 100,
     height: 150,
-    padding: '0 5px',
+    padding: '0 8px',
     display: 'flex',
     alignItems: 'flex-end',
   }),

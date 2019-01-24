@@ -5,13 +5,11 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import { merge } from 'lodash';
 import Link from 'next/link';
-import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
-import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 
-const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType }) => {
+const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkPropsBuilder }) => {
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
@@ -19,17 +17,15 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isUnitBook = libraryBookData.unit_type === 'series';
   const bookCount = libraryBookData.unit_count;
   const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
-  const linkProps = makeLinkProps(
-    { pathname: URLMap.mainUnit.href, query: { unitId: libraryBookData.unit_id } },
-    URLMap.mainUnit.as(libraryBookData.unit_id),
-  );
-  const thumbnailLink = (
+  const linkProps = linkPropsBuilder ? linkPropsBuilder(libraryBookData.unit_id) : null;
+
+  const thumbnailLink = linkProps ? (
     <>
       <Link {...linkProps}>
         <a>링크</a>
       </Link>
     </>
-  );
+  ) : null;
   const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={Book.BookCountUnit.Single} />;
   const title = libraryBookData.unit_title ? libraryBookData.unit_title : platformBookData.title.main;
 
@@ -83,7 +79,7 @@ export class LibraryBook extends React.Component {
   };
 
   render() {
-    const { libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType } = this.props;
+    const { libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkPropsBuilder } = this.props;
     const { additionalPadding } = this.state;
 
     return (
@@ -100,6 +96,7 @@ export class LibraryBook extends React.Component {
             isSelected,
             onSelectedChange,
             viewType,
+            linkPropsBuilder,
           });
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className="book" css={styles.portrait}>
