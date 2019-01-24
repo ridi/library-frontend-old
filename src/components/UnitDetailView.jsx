@@ -327,6 +327,24 @@ class UnitDetailView extends React.Component {
     );
   }
 
+  renderLink() {
+    const { book, primaryItem } = this.props;
+
+    if (primaryItem.is_ridiselect) {
+      return (
+        <a css={styles.ridibooksLink} href={`${config.SELECT_BASE_URL}/book/${book.id}`} target="_blank" rel="noopener noreferrer">
+          리디셀렉트에서 보기 &gt;
+        </a>
+      );
+    }
+
+    return (
+      <a css={styles.ridibooksLink} href={`${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`} target="_blank" rel="noopener noreferrer">
+        리디북스에서 보기 &gt;
+      </a>
+    );
+  }
+
   render() {
     // 필요 데이터
     // Unit 데이터 (타이틀)
@@ -339,14 +357,7 @@ class UnitDetailView extends React.Component {
         <section css={styles.detailView}>
           <div css={[styles.wrapper, styles.thumbnailWrapper]}>
             <img css={styles.thumbnail} src={book.thumbnail.large} alt={`${unit.title} 커버이미지`} />
-            <a
-              css={styles.ridibooksLink}
-              href={`${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              리디북스에서 보기 &gt;
-            </a>
+            {this.renderLink()}
           </div>
           <div css={[styles.wrapper, styles.infoWrapper]}>
             <div css={styles.unitTitle}>{unit.title}</div>

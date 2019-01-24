@@ -146,7 +146,15 @@ class MainUnit extends React.Component {
     }
 
     const downloadable = new Date(primaryItem.expire_date) > new Date();
-    return <UnitDetailView unit={unit} book={primaryBook} bookDescription={primaryBookDescription} downloadable={downloadable} />;
+    return (
+      <UnitDetailView
+        unit={unit}
+        primaryItem={primaryItem}
+        book={primaryBook}
+        bookDescription={primaryBookDescription}
+        downloadable={downloadable}
+      />
+    );
   }
 
   renderBooks() {
