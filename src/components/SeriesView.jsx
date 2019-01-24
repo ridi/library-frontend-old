@@ -3,11 +3,11 @@ import Editable from './Editable';
 import Responsive from '../pages/base/Responsive';
 import SkeletonBookList from './Skeleton/SkeletonBookList';
 import ViewType from '../constants/viewType';
-import { LibraryBook } from './Book';
 import EmptyBookList from './EmptyBookList';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import UnitSortModal from '../pages/base/Modal/UnitSortModal';
+import LibraryBooks from './LibraryBooks';
 
 export default class SeriesView extends React.Component {
   constructor(props) {
@@ -73,7 +73,7 @@ export default class SeriesView extends React.Component {
     }
 
     return (
-      <LibraryBook
+      <LibraryBooks
         libraryBookDTO={items}
         platformBookDTO={books}
         selectedBooks={selectedBooks}
