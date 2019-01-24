@@ -121,6 +121,13 @@ export const bookDescriptionExpendButton = {
   color: '#808991',
   fill: '#9ea7ad',
 };
+
+export const bookDescriptionExpendIcon = {
+  width: 12,
+  height: 9,
+  marginLeft: 5,
+};
+
 export const downloadButton = {
   width: '100%',
   marginTop: 10,

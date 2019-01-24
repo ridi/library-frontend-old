@@ -44,7 +44,7 @@ class UnitDetailView extends React.Component {
       <div css={styles.bookDescriptionExpend}>
         <button type="button" onClick={() => this.expand()} css={styles.bookDescriptionExpendButton}>
           계속 읽기
-          <Icon name="arrow_5_down" />
+          <Icon css={styles.bookDescriptionExpendIcon} name="arrow_5_down" />
         </button>
       </div>
     );
