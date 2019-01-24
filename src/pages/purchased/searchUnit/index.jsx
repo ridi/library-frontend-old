@@ -3,13 +3,8 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookList from '../../../components/BookList';
-import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook/index';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
@@ -36,11 +31,7 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
-import Editable from '../../../components/Editable';
-import SeriesToolBar from '../../../components/SeriesToolBar';
-import UnitSortModal from '../../base/Modal/UnitSortModal';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
-import ViewType from '../../../constants/viewType';
 import SeriesView from '../../../components/SeriesView';
 
 class searchUnit extends React.Component {

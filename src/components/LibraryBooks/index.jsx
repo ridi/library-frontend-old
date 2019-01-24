@@ -22,7 +22,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const thumbnailLink = linkProps ? (
     <>
       <Link {...linkProps}>
-        <a>링크</a>
+        <a>더보기</a>
       </Link>
     </>
   ) : null;
@@ -30,7 +30,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const title = libraryBookData.unit_title ? libraryBookData.unit_title : platformBookData.title.main;
 
   const defaultBookProps = {
-    thumbnailUrl: `https://misc.ridibooks.com/cover/${libraryBookData.b_id}/large?dpi=xhdpi`,
+    thumbnailUrl: platformBookData.thumbnail.large,
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
@@ -54,7 +54,10 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);
 };
 
-export class LibraryBook extends React.Component {
+const renderLandscapeFullButton = libraryBookProps =>
+  libraryBookProps ? <div css={styles.landscapeFullButton}>{libraryBookProps.thumbnailLink}</div> : null;
+
+export class LibraryBooks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,7 +108,7 @@ export class LibraryBook extends React.Component {
           ) : (
             <div key={bookId} className="book" css={styles.landscape}>
               <Book.LandscapeBook {...libraryBookProps} />
-              {/* {libraryBookProps.thumbnailLink} */}
+              {!isSelectMode && renderLandscapeFullButton(libraryBookProps)}
             </div>
           );
         })}
