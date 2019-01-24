@@ -172,9 +172,8 @@ const mapStateToProps = state => {
   if (primaryItem) {
     bookIds.push(primaryItem.b_id);
   }
-
-  const books = getBooks(state, toFlatten(items, 'b_id'));
-  const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
+  const books = getBooks(state, bookIds);
+  const bookDescriptions = getBookDescriptions(state, bookIds);
 
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
