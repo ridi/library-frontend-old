@@ -136,6 +136,7 @@ export default class SeriesView extends React.Component {
 
     return (
       <Editable
+        allowFixed
         isEditing={isEditing}
         nonEditBar={this.renderSeriesToolBar()}
         editingBarProps={this.makeEditingBarProps()}
