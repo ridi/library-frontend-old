@@ -30,7 +30,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const title = libraryBookData.unit_title ? libraryBookData.unit_title : platformBookData.title.main;
 
   const defaultBookProps = {
-    thumbnailUrl: `https://misc.ridibooks.com/cover/${libraryBookData.b_id}/large?dpi=xxhdpi`,
+    thumbnailUrl: `https://misc.ridibooks.com/cover/${libraryBookData.b_id}/large`,
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
