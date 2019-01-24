@@ -5,6 +5,7 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import { merge } from 'lodash';
 import Link from 'next/link';
+import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
@@ -14,7 +15,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
   const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
-  const isUnitBook = libraryBookData.unit_type === 'series';
+  const isUnitBook = !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
   const linkProps = linkPropsBuilder ? linkPropsBuilder(libraryBookData.unit_id) : null;
@@ -37,7 +38,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
     ridiselect: isRidiselect,
     selectMode: isSelectMode,
     selected: isSelected,
-    unitBook: libraryBookData.unit_type === 'series',
+    unitBook: isUnitBook,
     unitBookCount,
     onSelectedChange: () => onSelectedChange(bookId),
     thumbnailLink,
