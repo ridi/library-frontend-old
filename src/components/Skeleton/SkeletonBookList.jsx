@@ -1,9 +1,9 @@
 import React from 'react';
 import shortid from 'shortid';
-import BookList from '../BookList';
-import { SkeletonPortraitBook, SkeletonLandscapeBook } from './components';
-import { PortraitBookWrapper, LandscapeBookWrapper } from '../BookWrapper';
 import ViewType from '../../constants/viewType';
+import { LandscapeBookWrapper, PortraitBookWrapper } from '../BookWrapper';
+import BookList from './BookList';
+import { SkeletonLandscapeBook, SkeletonPortraitBook } from './components';
 
 const SkeletonBookCount = 48;
 

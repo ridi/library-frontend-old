@@ -3,9 +3,8 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookList from '../../../components/BookList';
 import EmptyBookList from '../../../components/EmptyBookList';
-import LibraryBook from '../../../components/LibraryBook/index';
+import { LibraryBooks } from '../../../components/LibraryBooks';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
@@ -151,37 +150,36 @@ class HiddenUnit extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
-    const { items, books, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
-    const showSkeleton = isFetchingBook && items.length === 0;
+    const { isEditing: isSelectMode } = this.state;
+    const { items: libraryBookDTO, books: platformBookDTO, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
+    const showSkeleton = isFetchingBook && libraryBookDTO.length === 0;
+    const onSelectedChange = dispatchToggleSelectBook;
 
     if (showSkeleton) {
       return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
     }
 
-    if (items.length === 0) {
+    if (libraryBookDTO.length === 0) {
       return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
     }
 
     return (
       <Editable
-        isEditing={isEditing}
+        isEditing={isSelectMode}
         nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
         editingBarProps={this.makeEditingBarProps()}
         actionBarProps={this.makeActionBarProps()}
       >
-        <BookList>
-          {items.map(item => (
-            <LibraryBook
-              key={item.b_id}
-              item={item}
-              book={books[item.b_id]}
-              isEditing={isEditing}
-              checked={!!selectedBooks[item.b_id]}
-              onChangeCheckbox={() => dispatchToggleSelectBook(item.b_id)}
-            />
-          ))}
-        </BookList>
+        <LibraryBooks
+          {...{
+            libraryBookDTO,
+            platformBookDTO,
+            selectedBooks,
+            isSelectMode,
+            onSelectedChange,
+            viewType: ViewType.LANDSCAPE,
+          }}
+        />
         {this.renderPaginator()}
       </Editable>
     );
