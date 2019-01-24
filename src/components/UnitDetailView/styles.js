@@ -1,62 +1,75 @@
 import { Responsive } from '../../styles/responsive';
 
-export const detailView = {
+export const header = {
   display: 'flex',
-  flexDirection: 'column',
-
-  marginTop: 28,
-
+  padding: '50px 40px 30px 40px',
+  ...Responsive.W1280({
+    paddingLeft: 82,
+  }),
   ...Responsive.Pc({
-    marginTop: 50,
     flexDirection: 'row',
   }),
-
-  ...Responsive.W1280({
-    marginLeft: 100,
+  ...Responsive.Mobile({
+    paddingTop: 28,
+    flexDirection: 'column',
+    paddingLeft: 0,
+    paddingRight: 0,
   }),
 };
 
-export const wrapper = {
+export const headerContentsWrapper = {
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'column',
+};
+
+export const thumbnailWrapper = {
+  ...headerContentsWrapper,
   alignItems: 'center',
   justifyContent: 'center',
 };
 
-export const thumbnailWrapper = {};
 export const thumbnail = {
-  backgroundImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.0) 6%, rgba(0, 0, 0, 0.0) 94%, rgba(0, 0, 0, 0.2))',
-  border: '1px solid rgba(0, 0, 0, 0.1)',
   width: 130,
-
   ...Responsive.Pc({
     width: 180,
   }),
 };
-export const ridibooksLink = {
+
+export const outerTextLink = {
   fontSize: 15,
-  letterSpacing: -0.3,
   color: '#1f8ce6',
   marginTop: 16,
 };
 
+export const outerLinkIcon = {
+  width: 9,
+  height: 9,
+  fill: '#1f8ce6',
+  marginLeft: 3,
+};
+
 export const infoWrapper = {
-  marginTop: 24,
-
-  alignItems: 'start',
+  ...headerContentsWrapper,
   justifyContent: 'left',
-
+  paddingTop: 42,
   ...Responsive.Pc({
-    marginTop: 48,
-    marginLeft: 40,
+    alignItems: 'start',
+    paddingLeft: 40,
+  }),
+  ...Responsive.Mobile({
+    alignItems: 'center',
+  }),
+  ...Responsive.W360({
+    paddingTop: 24,
+    alignItems: 'start',
   }),
 };
+
 export const unitTitle = {
   fontSize: 20,
   fontWeight: 'bold',
   lineHeight: 1.54,
-  letterSpacing: -0.4,
   color: '#212529',
 
   ...Responsive.Pc({
@@ -67,28 +80,56 @@ export const unitTitle = {
     color: '#212529',
   }),
 };
-export const authorList = {
-  marginTop: 8,
-  fontSize: 15,
-  letterSpacing: -0.3,
-  color: '#40474d',
 
-  ...Responsive.Pc({
-    marginTop: 16,
+export const authorList = {
+  fontSize: 15,
+  color: '#40474d',
+  marginTop: 12,
+
+  ...Responsive.W360({
+    marginTop: 6,
   }),
 };
-export const bookDescription = {
-  marginTop: 8,
+
+export const fileInfo = {
+  marginTop: 20,
+  fontSize: 15,
+  color: '#808991',
+};
+
+export const fileInfoText = {
+  float: 'left',
+};
+
+export const fileInfoDelimiter = {
+  width: 1,
+  height: 9,
+  marginTop: 5,
+  marginLeft: 5,
+  marginRight: 5,
+  backgroundColor: '#d1d5d9',
+  float: 'left',
+};
+
+export const description = {
   fontSize: 15,
   letterSpacing: -0.3,
   color: '#40474d',
   clear: 'both',
+  padding: '8px 40px 40px 40px',
 
+  ...Responsive.W1280({
+    paddingLeft: 82,
+  }),
   ...Responsive.Pc({
-    marginTop: 16,
+    paddingTop: 16,
+  }),
+  ...Responsive.Mobile({
+    paddingLeft: 0,
+    paddingRight: 0,
   }),
 };
-export const bookDescriptionTitle = {
+export const descriptionTitle = {
   fontWeight: 'bold',
   letterSpacing: -0.28,
   lineHeight: 'normal',
@@ -128,55 +169,28 @@ export const bookDescriptionExpendIcon = {
   marginLeft: 5,
 };
 
-export const downloadButton = {
-  width: '100%',
-  marginTop: 10,
-  marginBottom: 10,
+const defaultButtonStyle = {
+  width: 250,
   height: 50,
   borderRadius: 4,
+  fontSize: 16,
+  fontWeight: 'bold',
+  ...Responsive.W360({
+    width: '100%',
+  }),
+};
+
+export const downloadButton = {
+  ...defaultButtonStyle,
+  marginTop: 24,
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
   backgroundColor: '#1f8ce6',
-  fontSize: 16,
-  fontWeight: 'bold',
   color: '#ffffff',
-  letterSpacing: -0.7,
-
-  ...Responsive.Pc({
-    width: 250,
-  }),
 };
 export const drmFreeDownloadButton = {
-  width: '100%',
-  marginBottom: 10,
-  height: 50,
-  borderRadius: 4,
+  ...defaultButtonStyle,
+  marginTop: 10,
   boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
   backgroundColor: '#ffffff',
-  fontSize: 16,
-  fontWeight: 'bold',
   color: '#808991',
-  letterSpacing: -0.7,
-
-  ...Responsive.Pc({
-    width: 250,
-  }),
-};
-export const fileInfo = {
-  marginTop: 24,
-  marginBottom: 10,
-  fontSize: 15,
-  letterSpacing: -0.3,
-  color: '#808991',
-};
-export const fileInfoText = {
-  float: 'left',
-};
-export const fileInfoDelimiter = {
-  width: 1,
-  height: 9,
-  marginTop: 5,
-  marginLeft: 5,
-  marginRight: 5,
-  backgroundColor: '#d1d5d9',
-  float: 'left',
 };
