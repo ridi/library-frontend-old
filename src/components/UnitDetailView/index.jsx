@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
-import { Book } from '@ridi/web-ui';
+import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import shortid from 'shortid';
