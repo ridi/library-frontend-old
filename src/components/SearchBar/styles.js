@@ -12,7 +12,7 @@ export const searchBoxWrapper = {
 };
 
 export const toolsWrapper = {
-  height: 24,
+  height: 26,
   paddingLeft: 2,
   maxWidth: 600,
   opacity: 1,
