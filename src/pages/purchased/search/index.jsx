@@ -152,7 +152,7 @@ class Search extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return <SkeletonBookList viewType={viewType} />;
     }
     const linkPropsBuilder = _keyword => unitId =>
       makeLinkProps(

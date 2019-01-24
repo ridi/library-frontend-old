@@ -226,7 +226,7 @@ class Main extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBookList />
+      <SkeletonBookList viewType={viewType} />
     ) : (
       <>
         <LibraryBook

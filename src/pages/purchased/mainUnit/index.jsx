@@ -40,6 +40,7 @@ import Editable from '../../../components/Editable';
 import TitleBar from '../../../components/TitleBar';
 import UnitSortModal from '../../base/Modal/UnitSortModal';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
+import ViewType from '../../../constants/viewType';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -190,7 +191,7 @@ class MainUnit extends React.Component {
     const showSkeleton = isFetchingBook && items.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList />;
+      return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
     }
 
     if (items.length === 0) {
