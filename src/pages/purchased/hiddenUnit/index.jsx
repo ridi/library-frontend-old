@@ -3,12 +3,8 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import EmptyBookList from '../../../components/EmptyBookList';
-import { LibraryBooks } from '../../../components/LibraryBooks';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SeriesToolBar from '../../../components/SeriesToolBar';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
@@ -32,37 +28,16 @@ import {
 } from '../../../services/purchased/hiddenUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
-import Editable from '../../../components/Editable';
 import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
-import ViewType from '../../../constants/viewType';
+import SeriesView from '../../../components/SeriesView';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(loadItems());
   }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isEditing: false,
-    };
-  }
-
-  toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    const { dispatchClearSelectedBooks } = this.props;
-
-    if (isEditing === true) {
-      dispatchClearSelectedBooks();
-    }
-
-    this.setState({ isEditing: !isEditing });
-  };
 
   handleOnClickUnhide = () => {
     const { dispatchUnHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
@@ -79,20 +54,6 @@ class HiddenUnit extends React.Component {
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
-
-  makeEditingBarProps() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
-
-    return {
-      totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
-  }
 
   makeActionBarProps() {
     const { selectedBooks } = this.props;
@@ -149,69 +110,36 @@ class HiddenUnit extends React.Component {
     return <UnitDetailView unit={unit} primaryItem={primaryItem} book={primaryBook} bookDescription={primaryBookDescription} />;
   }
 
-  renderBooks() {
-    const { isEditing: isSelectMode } = this.state;
-    const { items: libraryBookDTO, books: platformBookDTO, selectedBooks, dispatchToggleSelectBook, isFetchingBook } = this.props;
-    const showSkeleton = isFetchingBook && libraryBookDTO.length === 0;
-    const onSelectedChange = dispatchToggleSelectBook;
-
-    if (showSkeleton) {
-      return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
-    }
-
-    if (libraryBookDTO.length === 0) {
-      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
-    }
-
-    return (
-      <Editable
-        isEditing={isSelectMode}
-        nonEditBar={<SeriesToolBar toggleEditingMode={this.toggleEditingMode} />}
-        editingBarProps={this.makeEditingBarProps()}
-        actionBarProps={this.makeActionBarProps()}
-      >
-        <LibraryBooks
-          {...{
-            libraryBookDTO,
-            platformBookDTO,
-            selectedBooks,
-            isSelectMode,
-            onSelectedChange,
-            viewType: ViewType.LANDSCAPE,
-          }}
-        />
-        {this.renderPaginator()}
-      </Editable>
-    );
-  }
-
-  renderPaginator() {
+  renderSeriesView() {
     const {
       pageInfo: { currentPage, totalPages, unitId },
+      isFetchingBook,
+      items,
+      books,
+      selectedBooks,
+      dispatchToggleSelectBook,
+      dispatchSelectAllBooks,
+      dispatchClearSelectedBooks,
     } = this.props;
 
     return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.hiddenUnit.href, query: { unitId } }}
-        as={URLMap.hiddenUnit.as(unitId)}
+      <SeriesView
+        pageProps={{
+          currentPage,
+          totalPages,
+          href: { pathname: URLMap.hiddenUnit.href, query: { unitId } },
+          as: URLMap.hiddenUnit.as(unitId),
+        }}
+        actionBarProps={this.makeActionBarProps()}
+        emptyProps={{ icon: 'book_5', message: '숨김 도서가 없습니다.' }}
+        isFetching={isFetchingBook}
+        items={items}
+        books={books}
+        selectedBooks={selectedBooks}
+        onSelectedChange={dispatchToggleSelectBook}
+        onClickSelectAllBooks={dispatchSelectAllBooks}
+        onClickUnselectAllBooks={dispatchClearSelectedBooks}
       />
-    );
-  }
-
-  renderMain() {
-    const { unit, items, isFetchingBook } = this.props;
-
-    if (!isFetchingBook && items.length === 0) {
-      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
-    }
-
-    return (
-      <Responsive>
-        {this.renderDetailView()}
-        {UnitType.isBook(unit.type) ? null : this.renderBooks()}
-      </Responsive>
     );
   }
 
@@ -223,7 +151,10 @@ class HiddenUnit extends React.Component {
           <title>{unit.title} - 내 서재</title>
         </Head>
         {this.renderTitleBar()}
-        <main>{this.renderMain()}</main>
+        <main>
+          <Responsive>{this.renderDetailView()}</Responsive>
+          {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+        </main>
       </>
     );
   }
@@ -241,9 +172,8 @@ const mapStateToProps = state => {
   if (primaryItem) {
     bookIds.push(primaryItem.b_id);
   }
-
-  const books = getBooks(state, toFlatten(items, 'b_id'));
-  const bookDescriptions = getBookDescriptions(state, toFlatten(items, 'b_id'));
+  const books = getBooks(state, bookIds);
+  const bookDescriptions = getBookDescriptions(state, bookIds);
 
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
