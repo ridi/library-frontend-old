@@ -19,6 +19,7 @@ const SearchBar = ({
   toggleMoreModal,
 }) => (
   <FlexBar
+    css={styles.searchBar}
     hideTools={hideTools}
     renderFlexLeft={() => (
       <div css={styles.searchBoxWrapper}>
