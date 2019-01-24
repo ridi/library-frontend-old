@@ -118,6 +118,7 @@ class MainUnit extends React.Component {
   renderSeriesView() {
     const {
       unit,
+      primaryItem,
       pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId },
       isFetchingBook,
       items,
@@ -128,6 +129,10 @@ class MainUnit extends React.Component {
       dispatchClearSelectedBooks,
     } = this.props;
     const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
+
+    if (!primaryItem) {
+      return null;
+    }
 
     return (
       <SeriesView
