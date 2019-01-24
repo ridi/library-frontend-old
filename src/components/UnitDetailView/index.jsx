@@ -33,7 +33,7 @@ class UnitDetailView extends React.Component {
     this.setState({ isExpanded: true });
   }
 
-  renderExpenderButton() {
+  renderExpanderButton() {
     const { isExpanded } = this.state;
 
     if (isExpanded) {
@@ -63,7 +63,7 @@ class UnitDetailView extends React.Component {
         <div css={[styles.bookDescriptionBody, isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded]}>
           <p dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }} />
         </div>
-        {this.renderExpenderButton()}
+        {this.renderExpanderButton()}
       </div>
     );
   }
