@@ -1,6 +1,5 @@
 import { call, put, fork, cancel, all, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
-import { stringify } from 'qs';
 
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
@@ -59,7 +58,7 @@ function* _installApp(start, isIos, isAndroid) {
 }
 
 export function* download(bookIds, url) {
-  const appUri = `${url}&payload=${stringify({ b_ids: bookIds })}`;
+  const appUri = `${url}&payload=${encodeURIComponent(JSON.stringify({ b_ids: bookIds }))}`;
   const { isIos, isAndroid, isFirefox } = getDeviceInfo();
   const start = new Date();
 
