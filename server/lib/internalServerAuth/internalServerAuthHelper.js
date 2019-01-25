@@ -4,7 +4,7 @@ import { AuthList } from './constants';
 const config = require('../../config');
 
 const privateKeys = {};
-privateKeys[AuthList.STORE] = config.RIDI_INTERNAL_AUTH_LIBRARY_WEB_TO_STORE;
+privateKeys[AuthList.STORE] = config.RIDI_INTERNAL_AUTH_LIBRARY_WEB_TO_STORE.replace(/\\n/gi, '\n');
 
 export const makeInternalServerAuthReqToken = aud => {
   const token = jwt.sign(
