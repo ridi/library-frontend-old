@@ -208,7 +208,7 @@ class Search extends React.Component {
     if (!isFetchingBooks && items.length === 0) {
       let message = `'${keyword}'에 대한 검색 결과가 없습니다.`;
       if (!keyword) {
-        message = '검색어를 입력해 주세요.';
+        message = '검색어를 입력해주세요.';
       }
 
       return <EmptyBookList icon="search" message={message} />;
