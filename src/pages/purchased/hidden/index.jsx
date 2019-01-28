@@ -194,6 +194,7 @@ class Hidden extends React.Component {
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
         <Editable
+          allowFixed
           isEditing={isEditing}
           nonEditBar={this.renderTitleBar()}
           editingBarProps={this.makeEditingBarProps()}

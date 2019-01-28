@@ -235,6 +235,7 @@ class Search extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         <Editable
+          allowFixed
           isEditing={isEditing}
           nonEditBar={this.renderSearchBar()}
           editingBarProps={this.makeEditingBarProps()}
