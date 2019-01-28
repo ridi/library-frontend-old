@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxFactory": "jsx"
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

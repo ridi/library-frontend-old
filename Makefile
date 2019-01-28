@@ -33,3 +33,6 @@ docker-up: python-package-install settings
 
 docker-logs:
 	@docker ps -a -q -f name=library-web | awk '{print $1}' | xargs docker logs -f
+
+docker-web: python-package-install settings
+	@docker-compose up library-web
