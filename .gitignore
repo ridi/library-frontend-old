@@ -9,3 +9,4 @@ out/
 /secrets.json
 
 *.pyc
+docker-compose.override.yml
