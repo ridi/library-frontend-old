@@ -58,10 +58,10 @@ export default class AuthorRole {
 
   static convertToString(role) {
     const rolesMap = {
-      [this.AUTHOR]: '저자',
+      [this.AUTHOR]: '저',
       [this.STORY_WRITER]: '글',
       [this.ILLUSTRATOR]: '그림',
-      [this.TRANSLATOR]: '번역',
+      [this.TRANSLATOR]: '역',
       [this.PHOTO]: '사진',
       [this.BIBLIO_INTRO]: '해제',
       [this.COMMENTATOR]: '해설',
