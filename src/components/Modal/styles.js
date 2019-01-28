@@ -10,7 +10,7 @@ export const modal = isActive => {
     display: 'block',
     position: 'absolute',
     width: 200,
-    maxHeight: 235,
+    maxHeight: 292,
     right: 8,
     top: -6,
     zIndex: 9999,

@@ -3,11 +3,11 @@ import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal';
 import { URLMap } from '../../../constants/urls';
+import * as styles from './FilterModalStyles';
 
 const makeModalLinkItem = (option, filter, query, isChild) => (
   <li key={shortid.generate()}>
     <ModalLinkItem
-      title={isChild ? `ㄴ ${option.title}` : option.title}
       count={option.count}
       showIcon={option.value === filter}
       icon="check_6"
@@ -17,7 +17,16 @@ const makeModalLinkItem = (option, filter, query, isChild) => (
         ...query,
         filter: option.value,
       }}
-    />
+    >
+      {isChild ? (
+        <span css={styles.childPathWrapper}>
+          <span css={styles.childPathIcon} />
+          {option.title}
+        </span>
+      ) : (
+        option.title
+      )}
+    </ModalLinkItem>
   </li>
 );
 

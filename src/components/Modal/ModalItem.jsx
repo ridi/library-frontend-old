@@ -13,11 +13,12 @@ export const ModalButtonItem = ({ title, icon, IconComponent, onClick, style, sh
   </button>
 );
 
-export const ModalLinkItem = ({ title, count, icon, IconComponent, href, as, style, query = {}, showIcon = true }) => (
+export const ModalLinkItem = ({ title, children, count, icon, IconComponent, href, as, style, query = {}, showIcon = true }) => (
   <Link {...makeLinkProps(href, as, query)}>
     <a css={[modalStyles.item, style]}>
       {showIcon && icon && <Icon name={icon} css={modalStyles.icon} />}
       {showIcon && IconComponent && <IconComponent css={modalStyles.icon} />}
+      {children}
       {title}
       {count ? <span css={modalStyles.count}>{count}</span> : null}
     </a>
