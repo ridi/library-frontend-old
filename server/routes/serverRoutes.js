@@ -22,16 +22,8 @@ export function removeView(req, res) {
 
   api
     .delete(makeURI('/api/library/books', options, config.STORE_API_BASE_URL))
-    .then(() => {
-      // TODO: 현재 API 가 배포되지 않았다. 당분간 아래와 같이 처리 한다.
-      res.send([
-        {
-          id: 22,
-        },
-        {
-          id: 23,
-        },
-      ]);
+    .then(result => {
+      res.send(result.data.queue_ids.map(x => ({ id: x })));
     })
     .catch(err => {
       console.log(err);
