@@ -17,9 +17,9 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
   const isUnitBook = !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
+  const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
   const linkProps = linkPropsBuilder ? linkPropsBuilder(libraryBookData.unit_id) : null;
-
   const thumbnailLink = linkProps ? (
     <>
       <Link {...linkProps}>
@@ -27,8 +27,8 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
       </Link>
     </>
   ) : null;
-  const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={Book.BookCountUnit.Single} />;
-  const title = libraryBookData.unit_title ? libraryBookData.unit_title : platformBookData.title.main;
+  const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
+  const title = libraryBookData.unit_title || platformBookData.title.main;
 
   const defaultBookProps = {
     thumbnailUrl: platformBookData.thumbnail.large,
