@@ -19,7 +19,6 @@ export const modal = isActive => {
     boxShadow: '0 4px 10px 0 rgba(0, 0, 0, 0.28), 0 0 0 0.5px rgba(0, 0, 0, 0.05)',
     opacity: 0,
     transform: 'translate3d(0, 20px, 0)',
-    transition: 'opacity .3s, transform .3s',
     pointerEvents: 'none',
     overflowX: 'hidden',
     overflowY: 'auto',
