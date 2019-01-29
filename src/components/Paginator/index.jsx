@@ -112,18 +112,18 @@ export default class Paginator extends React.Component {
   }
 
   render() {
-    const { totalPages, style } = this.props;
+    const { totalPages, style, needGoFirst, needGoLast } = this.props;
     if (totalPages <= 1) {
       return null;
     }
 
     return (
       <div css={[styles.paginator, style]}>
-        {this.renderGoFirst()}
+        {needGoFirst && this.renderGoFirst()}
         {this.renderGoPrev()}
         {this.renderPageItems()}
         {this.renderGoNext()}
-        {this.renderGoLast()}
+        {needGoLast && this.renderGoLast()}
       </div>
     );
   }

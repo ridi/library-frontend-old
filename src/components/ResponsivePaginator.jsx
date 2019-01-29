@@ -35,6 +35,8 @@ const ResponsivePaginator = ({ currentPage, totalPages, href, as, query }) => (
       href={href}
       as={as}
       query={query}
+      needGoFirst
+      needGoLast
     />
     <Paginator
       style={styles.mobile}
