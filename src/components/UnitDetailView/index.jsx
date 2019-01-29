@@ -89,7 +89,9 @@ class UnitDetailView extends React.Component {
         >
           <p
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
-            ref={wrapper => (this.wrapper = wrapper)}
+            ref={wrapper => {
+              this.wrapper = wrapper;
+            }}
           />
         </div>
         {this.renderExpanderButton()}
