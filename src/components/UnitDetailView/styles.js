@@ -113,7 +113,6 @@ export const fileInfoDelimiter = {
 
 export const description = {
   fontSize: 15,
-  letterSpacing: -0.3,
   color: '#40474d',
   clear: 'both',
   padding: '8px 40px 40px 40px',
@@ -131,30 +130,28 @@ export const description = {
 };
 export const descriptionTitle = {
   fontWeight: 'bold',
-  letterSpacing: -0.28,
   lineHeight: 'normal',
 };
-export const bookDescriptionBody = {
+export const bookDescriptionBody = lineHeight => ({
   marginTop: 9,
-  lineHeight: 1.5,
+  lineHeight: `${lineHeight}px`,
   display: '-webkit-box',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitBoxOrient: 'vertical',
-};
-export const bookDescriptionFolded = {
-  // TODO: 변수화 해야 한다.
-  maxHeight: 9 * 23,
-  WebkitLineClamp: 9,
-};
+});
+export const bookDescriptionFolded = (line, lineHeight) => ({
+  maxHeight: line * lineHeight,
+  WebkitLineClamp: line,
+});
 export const bookDescriptionExpended = {
   // TODO: 변수화 해야 한다.
-  maxHeight: 'unset',
-  WebkitLineClamp: 'unset',
+  maxHeight: 'inherit',
+  WebkitLineClamp: 'inherit',
 };
 export const bookDescriptionExpend = {
   textAlign: 'right',
-  marginTop: 11.5,
+  marginTop: 10,
 };
 export const bookDescriptionExpendButton = {
   fontSize: 15,
@@ -185,12 +182,12 @@ export const downloadButton = {
   marginTop: 24,
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
   backgroundColor: '#1f8ce6',
-  color: '#ffffff',
+  color: 'white',
 };
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
   marginTop: 10,
   boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
-  backgroundColor: '#ffffff',
+  backgroundColor: 'white',
   color: '#808991',
 };
