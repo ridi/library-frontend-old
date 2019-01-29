@@ -41,6 +41,6 @@ export const titleText = {
 export const count = {
   paddingLeft: 6,
   fontSize: 15,
-  fontweight: 700,
+  fontWeight: 700,
   color: '#808991',
 };
