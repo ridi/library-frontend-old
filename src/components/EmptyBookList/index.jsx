@@ -18,6 +18,7 @@ const styles = {
     top: '50%',
     marginLeft: -150,
     marginTop: -108,
+    fontSize: 15,
     textAlign: 'center',
   }),
   icon: css({
