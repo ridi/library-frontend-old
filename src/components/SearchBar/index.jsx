@@ -1,5 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import Link from 'next/link';
+import { URLMap } from '../../constants/urls';
+import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
 import SearchBox from './SearchBox';
 import Tool from '../Tool';
@@ -17,6 +20,7 @@ const SearchBar = ({
   toggleEditingMode,
   more,
   toggleMoreModal,
+  cancelSearch,
 }) => (
   <FlexBar
     css={styles.searchBar}
@@ -36,6 +40,11 @@ const SearchBar = ({
           more={more}
           toggleMoreModal={toggleMoreModal}
         />
+        {cancelSearch && (
+          <Link {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
+            <a css={styles.cancelSearchButton}>취소</a>
+          </Link>
+        )}
       </div>
     )}
   />

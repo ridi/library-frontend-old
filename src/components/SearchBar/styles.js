@@ -14,12 +14,13 @@ export const searchBoxWrapper = {
 };
 
 export const toolsWrapper = {
-  height: 26,
+  display: 'flex',
+  alignItems: 'center',
   paddingLeft: 2,
   maxWidth: 600,
   opacity: 1,
   transition: 'max-width .3s, opacity .3s',
-  overflow: 'hidden',
+  overflowX: 'hidden',
   whiteSpace: 'nowrap',
   '.hideTools & ': {
     maxWidth: 0,
@@ -96,4 +97,20 @@ export const searchBoxClearButton = {
 
 export const searchBoxClearButtonActive = {
   display: 'block',
+};
+
+export const cancelSearchButton = {
+  display: 'block',
+  marginLeft: 18,
+  borderRadius: 4,
+  boxShadow: '1px 1px 1px 0 rgba(0, 0, 0, .05)',
+  backgroundColor: 'white',
+  border: '1px solid #d1d5d9',
+  width: 52,
+  height: 30,
+  lineHeight: '30px',
+  fontSize: 13,
+  fontWeight: 'bold',
+  textAlign: 'center',
+  color: '#808991',
 };
