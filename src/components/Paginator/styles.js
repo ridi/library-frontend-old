@@ -45,6 +45,7 @@ export const pageButton = {
   textAlign: 'center',
   fontSize: 13,
   color: '#808991',
+  background: '#FFF',
 };
 
 export const textButton = {
