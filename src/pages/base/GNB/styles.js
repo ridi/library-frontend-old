@@ -89,7 +89,6 @@ export const myMenuIcon = isActive =>
       fill: '#808991',
       transformOrigin: 'center center',
       transform: 'rotate(0)',
-      transition: 'transform .3s',
       ':hover': {
         transform: 'rotate(180deg)',
       },

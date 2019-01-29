@@ -12,7 +12,7 @@ import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 
 const LINE_HEIGHT = 23;
-const LINE = 8;
+const LINE = 3;
 
 class UnitDetailView extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class UnitDetailView extends React.Component {
 
   componentDidMount() {
     if (this.wrapper) {
-      if (this.wrapper.offsetHeight > LINE * LINE_HEIGHT) {
+      if (this.wrapper.offsetHeight > (LINE - 1) * LINE_HEIGHT) {
         this.setState({ isTruncated: true });
       }
     }
@@ -57,11 +57,7 @@ class UnitDetailView extends React.Component {
   renderExpanderButton() {
     const { isExpanded, isTruncated } = this.state;
 
-    if (isExpanded) {
-      return null;
-    }
-
-    if (!isTruncated) {
+    if (isExpanded || !isTruncated) {
       return null;
     }
 
@@ -85,10 +81,17 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.description}>
         <div css={styles.descriptionTitle}>책 소개</div>
-        <div css={[styles.bookDescriptionBody, isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded]}>
+        <div
+          css={[
+            styles.bookDescriptionBody(LINE_HEIGHT),
+            isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded(LINE, LINE_HEIGHT),
+          ]}
+        >
           <p
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
-            ref={wrapper => (this.wrapper = wrapper)}
+            ref={wrapper => {
+              this.wrapper = wrapper;
+            }}
           />
         </div>
         {this.renderExpanderButton()}
