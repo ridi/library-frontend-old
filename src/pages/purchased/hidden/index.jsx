@@ -178,8 +178,8 @@ class Hidden extends React.Component {
   renderMain() {
     const { items, isFetchingBooks } = this.props;
 
-    if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList icon="book_5" message="숨김 도서가 없습니다." />;
+    if (!isFetchingBooks && items.length > 0) {
+      return <EmptyBookList icon="book_5" message="숨긴 도서가 없습니다." />;
     }
 
     return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;

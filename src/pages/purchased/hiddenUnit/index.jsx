@@ -134,7 +134,7 @@ class HiddenUnit extends React.Component {
           as: URLMap.hiddenUnit.as(unitId),
         }}
         actionBarProps={this.makeActionBarProps()}
-        emptyProps={{ icon: 'book_5', message: '숨김 도서가 없습니다.' }}
+        emptyProps={{ icon: 'book_5', message: '숨긴 도서가 없습니다.' }}
         isFetching={isFetchingBook}
         items={items}
         books={books}
