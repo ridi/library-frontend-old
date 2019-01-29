@@ -42,9 +42,7 @@ const SearchBar = ({
         />
         {cancelSearch && (
           <Link {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
-            <button type="button" css={styles.cancelSearchButton}>
-              취소
-            </button>
+            <a css={styles.cancelSearchButton}>취소</a>
           </Link>
         )}
       </div>
