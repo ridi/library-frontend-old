@@ -32,6 +32,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const title = libraryBookData.unit_title || platformBookData.title.main;
 
   const defaultBookProps = {
+    thumbnailTitle: `${title} 표지`,
     thumbnailUrl: platformBookData.thumbnail.large,
     adultBadge: isAdultOnly,
     expired: isExpired,
