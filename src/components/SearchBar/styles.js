@@ -97,3 +97,19 @@ export const searchBoxClearButton = {
 export const searchBoxClearButtonActive = {
   display: 'block',
 };
+
+export const cancelSearchButton = {
+  marginLeft: 18,
+  borderRadius: 4,
+  boxShadow: '1px 1px 1px 0 rgba(0, 0, 0, 0.05)',
+  backgroundColor: '#ffffff',
+  border: '1px solid #d1d5d9',
+
+  width: 52,
+  height: 30,
+
+  fontSize: 13,
+  fontWeight: 'bold',
+  textAlign: 'center',
+  color: '#808991',
+};

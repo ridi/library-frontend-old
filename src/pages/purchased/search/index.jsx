@@ -132,6 +132,7 @@ class Search extends React.Component {
       handleOnBlurSearchBar: this.handleOnBlurSearchBar,
       edit: true,
       toggleEditingMode: this.toggleEditingMode,
+      cancelSearch: true,
     };
 
     return <SearchBar {...searchBarProps} />;
