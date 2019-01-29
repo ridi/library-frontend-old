@@ -15,6 +15,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
   const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
+  const expiredAt = libraryBookData.remain_time;
   const isUnitBook = !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
@@ -45,11 +46,13 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   };
   const portraitBookProps = {
     thumbnailWidth: '100%',
+    expiredAt: expiredAt.replace(/\s남음/g, ''),
   };
   const landscapeBookProps = {
     title,
     author: bookMetaData.authorSimple,
     thumbnailWidth: 60,
+    expiredAt,
   };
 
   return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);

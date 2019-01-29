@@ -108,7 +108,7 @@ export const cancelSearchButton = {
   border: '1px solid #d1d5d9',
   width: 50,
   height: 28,
-  lineHeight: '30px',
+  lineHeight: '28px',
   fontSize: 13,
   fontWeight: 'bold',
   textAlign: 'center',
