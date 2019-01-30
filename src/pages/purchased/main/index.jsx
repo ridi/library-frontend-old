@@ -29,6 +29,7 @@ import {
 import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps, makeURI } from '../../../utils/uri';
+import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import FilterModal from '../../base/Modal/FilterModal';
 import SortModal from '../../base/Modal/SortModal';
@@ -294,6 +295,7 @@ class Main extends React.Component {
         >
           <main>{this.renderMain()}</main>
         </Editable>
+        <Footer />
       </>
     );
   }
