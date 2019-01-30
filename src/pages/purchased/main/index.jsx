@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import Router from 'next/router';
 import React from 'react';
+import Link from 'next/link';
 import { connect } from 'react-redux';
 import { LibraryBooks } from '../../../components/LibraryBooks';
 import EmptyBookList from '../../../components/EmptyBookList';
@@ -36,7 +37,6 @@ import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
 import SearchBar from '../../../components/SearchBar';
 import Editable from '../../../components/Editable';
-import ViewType from '../../../constants/viewType';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -216,14 +216,22 @@ class Main extends React.Component {
       viewType,
     } = this.props;
     const onSelectedChange = dispatchToggleSelectBook;
-    const linkPropsBuilder = () => unitId =>
-      makeLinkProps(
+    const linkBuilder = () => libraryBookData => {
+      const linkProps = makeLinkProps(
         {
           pathname: URLMap.mainUnit.href,
-          query: { unitId },
+          query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.mainUnit.as(unitId),
+        URLMap.mainUnit.as(libraryBookData.unit_id),
       );
+
+      return (
+        <Link {...linkProps}>
+          <a>더보기</a>
+        </Link>
+      );
+    };
+
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
@@ -238,7 +246,7 @@ class Main extends React.Component {
             isSelectMode,
             onSelectedChange,
             viewType,
-            linkPropsBuilder: linkPropsBuilder(),
+            linkBuilder: linkBuilder(),
           }}
         />
         {this.renderPaginator()}

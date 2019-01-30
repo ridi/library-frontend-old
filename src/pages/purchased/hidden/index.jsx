@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
+import Link from 'next/link';
 import { connect } from 'react-redux';
 import { LibraryBooks } from '../../../components/LibraryBooks';
 import EmptyBookList from '../../../components/EmptyBookList';
@@ -137,14 +138,21 @@ class Hidden extends React.Component {
       viewType,
     } = this.props;
     const onSelectedChange = dispatchToggleSelectBook;
-    const linkPropsBuilder = () => unitId =>
-      makeLinkProps(
+    const linkBuilder = () => libraryBookData => {
+      const linkProps = makeLinkProps(
         {
           pathname: URLMap.hiddenUnit.href,
-          query: { unitId },
+          query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.hiddenUnit.as(unitId),
+        URLMap.hiddenUnit.as(libraryBookData.unit_id),
       );
+
+      return (
+        <Link {...linkProps}>
+          <a>더보기</a>
+        </Link>
+      );
+    };
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
@@ -159,7 +167,7 @@ class Hidden extends React.Component {
             isSelectMode,
             onSelectedChange,
             viewType,
-            linkPropsBuilder: linkPropsBuilder(),
+            linkBuilder: linkBuilder(),
           }}
         />
         {this.renderPaginator()}

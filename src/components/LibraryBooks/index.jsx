@@ -10,7 +10,7 @@ import ViewType from '../../constants/viewType';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 
-const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkPropsBuilder }) => {
+const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkBuilder }) => {
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
@@ -20,14 +20,9 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
-  const linkProps = linkPropsBuilder ? linkPropsBuilder(libraryBookData.unit_id) : null;
-  const thumbnailLink = linkProps ? (
-    <>
-      <Link {...linkProps}>
-        <a>더보기</a>
-      </Link>
-    </>
-  ) : null;
+
+  const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
+
   const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = libraryBookData.unit_title || platformBookData.title.main;
 
@@ -87,7 +82,7 @@ export class LibraryBooks extends React.Component {
   };
 
   render() {
-    const { libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkPropsBuilder } = this.props;
+    const { libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder } = this.props;
     const { additionalPadding } = this.state;
 
     return (
@@ -104,7 +99,7 @@ export class LibraryBooks extends React.Component {
             isSelected,
             onSelectedChange,
             viewType,
-            linkPropsBuilder,
+            linkBuilder,
           });
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className="book" css={styles.portrait}>
