@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
+import Link from 'next/link';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -155,15 +156,23 @@ class Search extends React.Component {
     if (showSkeleton) {
       return <SkeletonBookList viewType={viewType} />;
     }
-    const linkPropsBuilder = _keyword => unitId =>
-      makeLinkProps(
+
+    const linkBuilder = _keyword => libraryBookData => {
+      const linkProps = makeLinkProps(
         {
           pathname: URLMap.searchUnit.href,
-          query: { unitId },
+          query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.searchUnit.as(unitId),
+        URLMap.searchUnit.as(libraryBookData.unit_id),
         { keyword: _keyword },
       );
+
+      return (
+        <Link {...linkProps}>
+          <a>더보기</a>
+        </Link>
+      );
+    };
 
     return (
       <>
@@ -175,7 +184,7 @@ class Search extends React.Component {
             isSelectMode,
             onSelectedChange,
             viewType,
-            linkPropsBuilder: linkPropsBuilder(keyword),
+            linkBuilder: linkBuilder(keyword),
           }}
         />
         {this.renderPaginator()}

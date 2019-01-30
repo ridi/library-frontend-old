@@ -150,6 +150,7 @@ class searchUnit extends React.Component {
         isFetching={isFetchingBook}
         items={items}
         books={books}
+        linkWebviewer
         selectedBooks={selectedBooks}
         onSelectedChange={dispatchToggleSelectBook}
         onClickSelectAllBooks={dispatchSelectAllBooks}
