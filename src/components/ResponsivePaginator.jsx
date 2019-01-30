@@ -15,7 +15,6 @@ const styles = {
     }),
   ),
   pc: Object.assign(
-    { borderTop: '1px solid #d1d5d9' },
     Responsive.Mobile({
       display: 'none',
     }),
