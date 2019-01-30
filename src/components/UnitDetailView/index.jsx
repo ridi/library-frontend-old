@@ -7,7 +7,7 @@ import connect from 'react-redux/es/connect/connect';
 import shortid from 'shortid';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
-import { downloadBooks } from '../../services/common/actions';
+import { downloadBooks } from '../../services/bookDownload/actions';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 

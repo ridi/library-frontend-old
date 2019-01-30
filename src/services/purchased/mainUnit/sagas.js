@@ -1,5 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { downloadBooks } from '../../common/sagas';
+import { downloadBooks } from '../../bookDownload/sagas';
 
 import {
   DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,

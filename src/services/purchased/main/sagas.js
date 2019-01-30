@@ -25,7 +25,8 @@ import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './select
 
 import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { downloadBooks, getBookIdsByUnitIds } from '../../common/sagas';
+import { getBookIdsByUnitIds } from '../../common/sagas';
+import { downloadBooks } from '../../bookDownload/sagas';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

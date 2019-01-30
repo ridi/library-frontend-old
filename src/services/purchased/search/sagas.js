@@ -23,7 +23,8 @@ import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './select
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/requests';
-import { downloadBooks, getBookIdsByUnitIds } from '../../common/sagas';
+import { getBookIdsByUnitIds } from '../../common/sagas';
+import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
 
 function* persistPageOptionsFromQueries() {
