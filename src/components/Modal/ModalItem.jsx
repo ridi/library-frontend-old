@@ -5,19 +5,21 @@ import { Icon } from '@ridi/rsg';
 import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
-export const ModalButtonItem = ({ title, icon, IconComponent, onClick, style, showSpinner = false, showIcon = true }) => (
+export const ModalButtonItem = ({ title, isSelected, icon, IconComponent, onClick, style, showSpinner = false }) => (
   <button type="button" css={[modalStyles.item, style]} onClick={onClick}>
-    {showIcon && icon && <Icon name={icon} css={modalStyles.icon} />}
-    {showIcon && IconComponent && <IconComponent css={modalStyles.icon} />}
+    {icon && <Icon name={icon} css={modalStyles.icon} />}
+    {IconComponent && <IconComponent css={modalStyles.icon} />}
+    {isSelected && <Icon name="check_6" css={modalStyles.selectedIcon} />}
     {showSpinner ? '로딩중' : title}
   </button>
 );
 
-export const ModalLinkItem = ({ title, children, count, icon, IconComponent, href, as, style, query = {}, showIcon = true }) => (
+export const ModalLinkItem = ({ title, isSelected, children, count, icon, IconComponent, href, as, style, query = {} }) => (
   <Link {...makeLinkProps(href, as, query)}>
     <a css={[modalStyles.item, style]}>
-      {showIcon && icon && <Icon name={icon} css={modalStyles.icon} />}
-      {showIcon && IconComponent && <IconComponent css={modalStyles.icon} />}
+      {icon && <Icon name={icon} css={modalStyles.icon} />}
+      {IconComponent && <IconComponent css={modalStyles.icon} />}
+      {isSelected && <Icon name="check_6" css={modalStyles.selectedIcon} />}
       {children}
       {title}
       {count ? <span css={modalStyles.count}>{count}</span> : null}
@@ -25,7 +27,7 @@ export const ModalLinkItem = ({ title, children, count, icon, IconComponent, hre
   </Link>
 );
 
-export const ModalAnchorItem = ({ title, icon, IconComponent, href, style, isOuterLink = false, showIcon = true }) => {
+export const ModalAnchorItem = ({ title, isSelected, icon, IconComponent, href, style, isOuterLink = false }) => {
   const additionalProps = isOuterLink
     ? {
         target: '_blank',
@@ -34,8 +36,9 @@ export const ModalAnchorItem = ({ title, icon, IconComponent, href, style, isOut
     : {};
   return (
     <a css={[modalStyles.item, style]} href={href} {...additionalProps}>
-      {showIcon && icon && <Icon name={icon} css={modalStyles.icon} />}
-      {showIcon && IconComponent && <IconComponent css={modalStyles.icon} />}
+      {icon && <Icon name={icon} css={modalStyles.icon} />}
+      {IconComponent && <IconComponent css={modalStyles.icon} />}
+      {isSelected && <Icon name="check_6" css={modalStyles.selectedIcon} />}
       {title}
     </a>
   );

@@ -12,8 +12,7 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
           <li key={shortid.generate()}>
             <ModalLinkItem
               title={option.title}
-              showIcon={index === order}
-              icon="check_6"
+              isSelected={index === order}
               href={href}
               as={as}
               query={{

@@ -64,6 +64,11 @@ export const icon = {
   fill: '#9ea7ad',
 };
 
+export const selectedIcon = {
+  ...icon,
+  fill: '#339cf2',
+};
+
 export const count = {
   marginLeft: 4,
   fontSize: 13,

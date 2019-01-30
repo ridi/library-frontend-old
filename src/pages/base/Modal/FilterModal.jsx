@@ -9,8 +9,7 @@ const makeModalLinkItem = (option, filter, query, isChild) => (
   <li key={shortid.generate()}>
     <ModalLinkItem
       count={option.count}
-      showIcon={option.value === filter}
-      icon="check_6"
+      isSelected={option.value === filter}
       href={URLMap.main.href}
       as={URLMap.main.as}
       query={{

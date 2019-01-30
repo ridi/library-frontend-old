@@ -14,8 +14,7 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
         <li>
           <ModalButtonItem
             title="표지만 보기"
-            icon="check_6"
-            showIcon={viewType === ViewType.PORTRAIT}
+            isSelected={viewType === ViewType.PORTRAIT}
             onClick={() => {
               onClickViewType(ViewType.PORTRAIT);
             }}
@@ -24,8 +23,7 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
         <li>
           <ModalButtonItem
             title="목록 보기"
-            icon="check_6"
-            showIcon={viewType === ViewType.LANDSCAPE}
+            isSelected={viewType === ViewType.LANDSCAPE}
             onClick={() => {
               onClickViewType(ViewType.LANDSCAPE);
             }}
@@ -39,8 +37,7 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
           <li key={shortid.generate()}>
             <ModalLinkItem
               title={option.title}
-              showIcon={index === order}
-              icon="check_6"
+              isSelected={index === order}
               href={URLMap.main.href}
               as={URLMap.main.as}
               query={{
