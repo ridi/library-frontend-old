@@ -75,6 +75,7 @@ export default class SeriesView extends React.Component {
       selectedBooks,
       onSelectedChange,
       isFetching,
+      linkWebviewer,
       emptyProps: { icon = 'book_5', message = '구매/대여하신 책이 없습니다.' } = {},
     } = this.props;
 
@@ -88,6 +89,19 @@ export default class SeriesView extends React.Component {
       return <EmptyBookList icon={icon} message={message} />;
     }
 
+    const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
+      if (!_linkWebviewer || !platformBookData.support.web_viewer) {
+        return null;
+      }
+
+      // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
+      return (
+        <a href={`https://view.ridibooks.com/books/${platformBookData.id}`} target="_blank" rel="noopener noreferrer">
+          웹뷰어로 보기
+        </a>
+      );
+    };
+
     return (
       <LibraryBooks
         libraryBookDTO={items}
@@ -96,6 +110,7 @@ export default class SeriesView extends React.Component {
         isSelectMode={isEditing}
         viewType={ViewType.LANDSCAPE}
         onSelectedChange={onSelectedChange}
+        linkBuilder={linkBuilder(linkWebviewer)}
       />
     );
   }
