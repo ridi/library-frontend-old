@@ -2,6 +2,10 @@ import { maxWidthWrapper } from '../../../styles';
 
 export const FOOTER_HEIGHT = 254;
 
+export const footerMargin = {
+  height: FOOTER_HEIGHT,
+};
+
 export const footer = {
   width: '100%',
   height: FOOTER_HEIGHT,
