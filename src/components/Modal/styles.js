@@ -11,8 +11,8 @@ export const modal = isActive => {
     position: 'absolute',
     width: 200,
     maxHeight: 292,
-    right: 8,
-    top: -6,
+    right: -6,
+    top: 30,
     zIndex: 9999,
     background: 'rgba(255, 255, 255, .98)',
     borderRadius: 4,
@@ -104,4 +104,22 @@ export const transparentCloseButton = {
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent',
+};
+
+export const filterModalStyle = {
+  childPathWrapper: {
+    display: 'inline-block',
+    position: 'relative',
+    paddingLeft: 20,
+  },
+  childPathIcon: {
+    display: 'block',
+    position: 'absolute',
+    left: 4,
+    top: 4,
+    width: 7,
+    height: 7,
+    borderLeft: '1px solid #808991',
+    borderBottom: '1px solid #808991',
+  },
 };

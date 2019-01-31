@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import { connect } from 'react-redux';
 import shortid from 'shortid';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
+import { MainOrderOptions } from '../../constants/orderOptions';
+import { URLMap } from '../../constants/urls';
+import ViewType from '../../constants/viewType';
+import { setViewType } from '../../services/viewType/actions';
 
-import { Modal, ModalItemGroup, ModalButtonItem, ModalLinkItem } from '../../../components/Modal';
-import { URLMap } from '../../../constants/urls';
-import ViewType from '../../../constants/viewType';
-import { MainOrderOptions } from '../../../constants/orderOptions';
-
-const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackground, viewType, onClickViewType }) => (
+const MoreModal = ({ order, orderOptions, isActive, query, onClickModalBackground, viewType, dispatchSetViewType }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
     <ModalItemGroup groupTitle="보기 방식">
       <ul>
@@ -16,7 +17,8 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
             title="표지만 보기"
             isSelected={viewType === ViewType.PORTRAIT}
             onClick={() => {
-              onClickViewType(ViewType.PORTRAIT);
+              onClickModalBackground();
+              dispatchSetViewType(ViewType.PORTRAIT);
             }}
           />
         </li>
@@ -25,7 +27,8 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
             title="목록 보기"
             isSelected={viewType === ViewType.LANDSCAPE}
             onClick={() => {
-              onClickViewType(ViewType.LANDSCAPE);
+              onClickModalBackground();
+              dispatchSetViewType(ViewType.LANDSCAPE);
             }}
           />
         </li>
@@ -55,4 +58,15 @@ const SortModal = ({ order, orderOptions, isActive, query, onClickModalBackgroun
   </Modal>
 );
 
-export default SortModal;
+const mapStateToProps = state => ({
+  viewType: state.viewType,
+});
+
+const mapDispatchToProps = {
+  dispatchSetViewType: setViewType,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MoreModal);

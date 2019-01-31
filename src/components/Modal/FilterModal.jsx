@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import shortid from 'shortid';
-import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal';
-import { URLMap } from '../../../constants/urls';
-import * as styles from './FilterModalStyles';
+import { Modal, ModalItemGroup, ModalLinkItem } from '.';
+import { URLMap } from '../../constants/urls';
+import { filterModalStyle as styles } from './styles';
 
 const makeModalLinkItem = (option, filter, query, isChild) => (
   <li key={shortid.generate()}>

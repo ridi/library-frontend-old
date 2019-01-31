@@ -7,24 +7,48 @@ const defaultStyle = {
   transform: 'translate3d(-50%, -50%, 0)',
 };
 
-export const iconButton = {
-  width: buttonSize,
-  height: buttonSize,
+export const buttonWrapper = {
   position: 'relative',
-  marginLeft: 16,
+  marginLeft: 12,
 };
 
-export const categoryFilterIcon = Object.assign({}, defaultStyle, {
+export const iconButton = isActive => ({
+  position: 'relative',
+  padding: 2,
+  borderRadius: 3,
+  whiteSpace: 'nowrap',
+  background: isActive ? '#e6e8eb' : null,
+});
+
+export const iconWrapper = {
+  width: buttonSize,
+  height: buttonSize,
+  display: 'inline-block',
+  position: 'relative',
+};
+
+export const categoryFilterIcon = {
+  ...defaultStyle,
   width: 18,
   height: 12,
-});
+};
 
-export const editIcon = Object.assign({}, defaultStyle, {
+export const editIcon = {
+  ...defaultStyle,
   width: 20,
   height: 20,
-});
+};
 
-export const threeDotsIcon = Object.assign({}, defaultStyle, {
+export const threeDotsIcon = {
+  ...defaultStyle,
   width: 4,
   height: 16,
-});
+};
+
+export const onIcon = {
+  ...defaultStyle,
+  width: 24,
+  height: 16,
+  marginRignt: 2,
+  fill: '#008deb',
+};

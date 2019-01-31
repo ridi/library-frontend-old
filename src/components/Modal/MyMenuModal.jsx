@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import config from '../../../config';
-import Download from '../../../svgs/Download.svg';
-import Logout from '../../../svgs/Logout.svg';
-import Note from '../../../svgs/Note.svg';
-import Review from '../../../svgs/Review.svg';
-import { Modal, ModalItemGroup, ModalButtonItem, ModalAnchorItem } from '../../../components/Modal';
+import config from '../../config';
+import Download from '../../svgs/Download.svg';
+import Logout from '../../svgs/Logout.svg';
+import Note from '../../svgs/Note.svg';
+import Review from '../../svgs/Review.svg';
+import { Modal, ModalItemGroup, ModalButtonItem, ModalAnchorItem } from '.';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
