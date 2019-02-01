@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
-import Router from 'next/router';
 import React from 'react';
 import Link from 'next/link';
 import { connect } from 'react-redux';
-import { LibraryBooks } from '../../../components/LibraryBooks';
+import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
+import { LibraryBooks } from '../../../components/LibraryBooks';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SearchBar from '../../../components/SearchBar';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
@@ -27,16 +28,11 @@ import {
   getPageInfo,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
-import { setViewType } from '../../../services/viewType/actions';
 import { toFlatten } from '../../../utils/array';
-import { makeLinkProps, makeURI } from '../../../utils/uri';
+import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
-import FilterModal from '../../base/Modal/FilterModal';
-import SortModal from '../../base/Modal/SortModal';
 import Responsive from '../../base/Responsive';
-import SearchBar from '../../../components/SearchBar';
-import Editable from '../../../components/Editable';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -48,9 +44,6 @@ class Main extends React.Component {
 
     this.state = {
       isEditing: false,
-      showMoreModal: false,
-      showFilterModal: false,
-      hideTools: false,
     };
   }
 
@@ -62,42 +55,7 @@ class Main extends React.Component {
       dispatchClearSelectedBooks();
     }
 
-    this.setState({ isEditing: !isEditing, showFilterModal: false, showMoreModal: false });
-  };
-
-  toggleFilterModal = () => {
-    const { showFilterModal } = this.state;
-    this.setState({ showFilterModal: !showFilterModal, showMoreModal: false });
-  };
-
-  toggleMoreModal = () => {
-    const { showMoreModal } = this.state;
-    this.setState({ showMoreModal: !showMoreModal, showFilterModal: false });
-  };
-
-  handleOnClickOutOfModal = () => {
-    this.setState({ showMoreModal: false, showFilterModal: false });
-  };
-
-  handleOnSubmitSearchBar = value => {
-    const { href, as } = URLMap.search;
-    Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
-  };
-
-  handleOnFocusSearchBar = () => {
-    this.setState({
-      hideTools: true,
-      showFilterModal: false,
-      showMoreModal: false,
-    });
-  };
-
-  handleOnBlurSearchBar = () => {
-    this.setState({
-      hideTools: false,
-      showFilterModal: false,
-      showMoreModal: false,
-    });
+    this.setState({ isEditing: !isEditing });
   };
 
   handleOnClickHide = () => {
@@ -114,12 +72,6 @@ class Main extends React.Component {
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
-  };
-
-  handleOnClickViewType = viewType => {
-    const { dispatchSetViewType } = this.props;
-    dispatchSetViewType(viewType);
-    this.handleOnClickOutOfModal();
   };
 
   makeEditingBarProps() {
@@ -157,52 +109,23 @@ class Main extends React.Component {
   }
 
   renderSearchBar() {
-    const { hideTools } = this.state;
-
-    const searchBarProps = {
-      hideTools,
-      handleOnSubmitSearchBar: this.handleOnSubmitSearchBar,
-      handleOnFocusSearchBar: this.handleOnFocusSearchBar,
-      handleOnBlurSearchBar: this.handleOnBlurSearchBar,
-      filter: true,
-      toggleFilterModal: this.toggleFilterModal,
-      edit: true,
-      toggleEditingMode: this.toggleEditingMode,
-      more: true,
-      toggleMoreModal: this.toggleMoreModal,
-    };
-
-    return <SearchBar {...searchBarProps} />;
-  }
-
-  renderModal() {
-    const { showFilterModal, showMoreModal } = this.state;
     const {
       pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
-      viewType,
     } = this.props;
+    const orderOptions = MainOrderOptions.toList();
 
-    return (
-      <>
-        <FilterModal
-          filter={filter}
-          filterOptions={filterOptions}
-          query={{ orderType, orderBy }}
-          isActive={showFilterModal}
-          onClickModalBackground={this.handleOnClickOutOfModal}
-        />
-        <SortModal
-          order={order}
-          orderOptions={MainOrderOptions.toList()}
-          query={{ filter }}
-          isActive={showMoreModal}
-          onClickModalBackground={this.handleOnClickOutOfModal}
-          viewType={viewType}
-          onClickViewType={this.handleOnClickViewType}
-        />
-      </>
-    );
+    const searchBarProps = {
+      filter,
+      filterOptions,
+      order,
+      orderOptions,
+      orderBy,
+      orderType,
+      toggleEditingMode: this.toggleEditingMode,
+    };
+
+    return <SearchBar {...searchBarProps} />;
   }
 
   renderBooks() {
@@ -261,12 +184,7 @@ class Main extends React.Component {
       return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
     }
 
-    return (
-      <Responsive hasPadding={false}>
-        {this.renderBooks()}
-        {this.renderModal()}
-      </Responsive>
-    );
+    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
   }
 
   renderPaginator() {
@@ -334,7 +252,6 @@ const mapDispatchToProps = {
   dispatchToggleSelectBook: toggleSelectBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
-  dispatchSetViewType: setViewType,
 };
 
 export default connect(

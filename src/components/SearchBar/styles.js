@@ -20,9 +20,9 @@ export const toolsWrapper = {
   maxWidth: 600,
   opacity: 1,
   transition: 'max-width .3s, opacity .3s',
-  overflowX: 'hidden',
   whiteSpace: 'nowrap',
   '.hideTools & ': {
+    overflowX: 'hidden',
     maxWidth: 0,
     opacity: 0,
   },

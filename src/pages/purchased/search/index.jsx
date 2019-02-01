@@ -2,29 +2,28 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import Link from 'next/link';
-import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-import { LibraryBooks } from '../../../components/LibraryBooks';
+import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
+import { LibraryBooks } from '../../../components/LibraryBooks';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
+import SearchBar from '../../../components/SearchBar';
 import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
   changeSearchKeyword,
-  selectAllBooks,
   clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
   loadItems,
+  selectAllBooks,
   toggleSelectBook,
 } from '../../../services/purchased/search/actions';
 import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
 import { toFlatten } from '../../../utils/array';
-import { makeLinkProps, makeURI } from '../../../utils/uri';
-import SearchBar from '../../../components/SearchBar';
-import Editable from '../../../components/Editable';
+import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 
@@ -38,7 +37,6 @@ class Search extends React.Component {
 
     this.state = {
       isEditing: false,
-      hideTools: false,
     };
   }
 
@@ -51,23 +49,6 @@ class Search extends React.Component {
     }
 
     this.setState({ isEditing: !isEditing });
-  };
-
-  handleOnSubmitSearchBar = value => {
-    const { href, as } = URLMap.search;
-    Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
-  };
-
-  handleOnFocusSearchBar = () => {
-    this.setState({
-      hideTools: true,
-    });
-  };
-
-  handleOnBlurSearchBar = () => {
-    this.setState({
-      hideTools: false,
-    });
   };
 
   handleOnClickHide = () => {
@@ -120,20 +101,13 @@ class Search extends React.Component {
   }
 
   renderSearchBar() {
-    const { hideTools } = this.state;
     const {
       pageInfo: { keyword },
     } = this.props;
 
     const searchBarProps = {
-      hideTools,
       keyword,
-      handleOnSubmitSearchBar: this.handleOnSubmitSearchBar,
-      handleOnFocusSearchBar: this.handleOnFocusSearchBar,
-      handleOnBlurSearchBar: this.handleOnBlurSearchBar,
-      edit: true,
       toggleEditingMode: this.toggleEditingMode,
-      cancelSearch: true,
     };
 
     return <SearchBar {...searchBarProps} />;

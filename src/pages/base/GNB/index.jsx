@@ -5,7 +5,7 @@ import { Icon } from '@ridi/rsg';
 import { jsx } from '@emotion/core';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
-import MyMenuModal from '../Modal/MyMenuModal';
+import MyMenuModal from '../../../components/Modal/MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
 import MyMenu from '../../../svgs/MyMenu.svg';

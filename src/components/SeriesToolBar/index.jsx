@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
-import Tool from '../Tool';
+import { Editing } from '../Tool';
 import FlexBar from '../FlexBar';
 import * as styles from './styles';
 
@@ -18,7 +18,7 @@ const SeriesToolBar = ({ orderTitle, toggleSortModal, toggleEditingMode }) => (
         ) : null}
       </div>
     )}
-    renderFlexRight={() => <Tool edit toggleEditingMode={toggleEditingMode} />}
+    renderFlexRight={() => <Editing toggleEditingMode={toggleEditingMode} />}
   />
 );
 

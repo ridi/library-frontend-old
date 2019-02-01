@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 
-import { Modal, ModalItemGroup, ModalLinkItem } from '../../../components/Modal';
+import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 
 const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, onClickModalBackground }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
