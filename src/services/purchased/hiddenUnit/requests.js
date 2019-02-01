@@ -1,7 +1,6 @@
 import { put } from 'redux-saga/effects';
 
 import config from '../../../config';
-import { snakelize } from '../../../utils/snakelize';
 import { calcOffset } from '../../../utils/pagination';
 import { getAPI } from '../../../api/actions';
 
@@ -10,10 +9,10 @@ import { makeURI } from '../../../utils/uri';
 import { attatchTTL } from '../../../utils/ttl';
 
 export function* fetchHiddenUnitItems(unitId, page) {
-  const options = snakelize({
+  const options = {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
-  });
+  };
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/hidden/${unitId}`, options, config.LIBRARY_API_BASE_URL));
@@ -27,10 +26,10 @@ export function* fetchHiddenUnitItemsTotalCount(unitId) {
 }
 
 export function* getHiddenUnitPrimaryItem(unitId) {
-  const options = snakelize({
+  const options = {
     offset: 0,
     limit: 1,
-  });
+  };
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/hidden/${unitId}`, options, config.LIBRARY_API_BASE_URL));
