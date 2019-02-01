@@ -1,11 +1,12 @@
-const OrderBy = {
+export const OrderBy = {
   ASC: 'asc',
   DESC: 'desc',
 };
 
-const OrderType = {
+export const OrderType = {
   PURCHASE_DATE: 'purchase_date',
   EXPIRE_DATE: 'expire_date',
+  EXPIRED_BOOKS_ONLY: 'expired_books_only',
   UNIT_TITLE: 'unit_title',
   BOOK_TITLE: 'book_title',
   UNIT_AUTHOR: 'unit_author',
@@ -38,7 +39,7 @@ class BaseOrderOptions {
 
 export class MainOrderOptions extends BaseOrderOptions {
   static toList() {
-    return [this.PURCHASE_DATE, this.EXPIRE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR];
+    return [this.PURCHASE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
   }
 
   static get DEFAULT() {
@@ -76,11 +77,19 @@ export class MainOrderOptions extends BaseOrderOptions {
       orderBy: OrderBy.ASC,
     };
   }
+
+  static get EXPIRED_BOOKS_ONLY() {
+    return {
+      title: '만료 도서만 보기',
+      orderType: OrderType.EXPIRED_BOOKS_ONLY,
+      orderBy: OrderBy.DESC,
+    };
+  }
 }
 
 export class UnitOrderOptions extends BaseOrderOptions {
   static toSeriesList() {
-    return [this.UNIT_ORDER_ASC, this.UNIT_ORDER_DESC, this.PURCHASE_DATE, this.EXPIRE_DATE];
+    return [this.UNIT_ORDER_DESC, this.UNIT_ORDER_ASC, this.PURCHASE_DATE, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
   }
 
   static toShelfList() {
@@ -92,7 +101,15 @@ export class UnitOrderOptions extends BaseOrderOptions {
   }
 
   static get DEFAULT() {
-    return this.UNIT_ORDER_ASC;
+    return this.UNIT_ORDER_DESC;
+  }
+
+  static get UNIT_ORDER_DESC() {
+    return {
+      title: '최신순',
+      orderType: OrderType.UNIT_ORDER,
+      orderBy: OrderBy.DESC,
+    };
   }
 
   static get UNIT_ORDER_ASC() {
@@ -103,27 +120,11 @@ export class UnitOrderOptions extends BaseOrderOptions {
     };
   }
 
-  static get UNIT_ORDER_DESC() {
-    return {
-      title: '마지막 권부터',
-      orderType: OrderType.UNIT_ORDER,
-      orderBy: OrderBy.DESC,
-    };
-  }
-
   static get PURCHASE_DATE() {
     return {
       title: '최근 구매순',
       orderType: OrderType.PURCHASE_DATE,
       orderBy: OrderBy.DESC,
-    };
-  }
-
-  static get EXPIRE_DATE() {
-    return {
-      title: '대여 만료 임박순',
-      orderType: OrderType.EXPIRE_DATE,
-      orderBy: OrderBy.ASC,
     };
   }
 
@@ -140,6 +141,22 @@ export class UnitOrderOptions extends BaseOrderOptions {
       title: '저자순',
       orderType: OrderType.BOOK_AUTHOR,
       orderBy: OrderBy.ASC,
+    };
+  }
+
+  static get EXPIRE_DATE() {
+    return {
+      title: '대여 만료 임박순',
+      orderType: OrderType.EXPIRE_DATE,
+      orderBy: OrderBy.ASC,
+    };
+  }
+
+  static get EXPIRED_BOOKS_ONLY() {
+    return {
+      title: '만료 도서만 보기',
+      orderType: OrderType.EXPIRED_BOOKS_ONLY,
+      orderBy: OrderBy.DESC,
     };
   }
 }
