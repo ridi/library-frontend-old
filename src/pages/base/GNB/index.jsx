@@ -64,14 +64,14 @@ class GNB extends React.Component {
                 <MyMenu css={styles.myMenuIcon(isModalActive)} />
                 <span css={Hidden}>마이메뉴</span>
               </button>
+              <MyMenuModal
+                userId={userId}
+                isActive={isModalActive}
+                isExcelDownloading={isExcelDownloading}
+                dispatchStartExcelDownload={dispatchStartExcelDownload}
+                onClickModalBackground={this.onModalBackgroundClick}
+              />
             </div>
-            <MyMenuModal
-              userId={userId}
-              isActive={isModalActive}
-              isExcelDownloading={isExcelDownloading}
-              dispatchStartExcelDownload={dispatchStartExcelDownload}
-              onClickModalBackground={this.onModalBackgroundClick}
-            />
           </header>
         </Responsive>
       </>

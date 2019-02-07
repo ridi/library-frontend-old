@@ -74,6 +74,7 @@ export const ridiSelectIcon = css({
 });
 
 export const myMenuWrapper = css({
+  position: 'relative',
   padding: '7px 0',
 });
 
