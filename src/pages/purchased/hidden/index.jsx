@@ -121,6 +121,7 @@ class Hidden extends React.Component {
       as: URLMap.main.as,
       query: { page, orderType, orderBy, filter },
       edit: true,
+      showTools: true,
       toggleEditingMode: this.toggleEditingMode,
     };
 

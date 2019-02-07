@@ -57,7 +57,7 @@ class SearchBar extends React.Component {
           <div css={styles.toolsWrapper}>
             {filterOptions && <Filter filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} />}
             {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
-            {orderOptions && <More order={order} orderOptions={orderOptions} query={{ filter }} />}
+            {orderOptions && <More order={order} orderOptions={orderOptions} query={{ filter }} showViewType showOrder showHidden />}
             {keyword && (
               <Link {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
                 <a css={styles.cancelSearchButton}>취소</a>

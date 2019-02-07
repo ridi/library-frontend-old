@@ -88,6 +88,7 @@ class MainUnit extends React.Component {
       as: URLMap.main.as,
       query: { page, orderType, orderBy, filter },
     };
+
     return <TitleBar {...titleBarProps} />;
   }
 

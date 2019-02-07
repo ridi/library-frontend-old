@@ -16,7 +16,7 @@ export default class More extends React.Component {
 
   render() {
     const { isMoreModalShow } = this.state;
-    const { order, orderOptions, query } = this.props;
+    const { order, orderOptions, query, showViewType, showOrder, showHidden } = this.props;
 
     const onClickModalBackground = () => {
       this.setState({
@@ -48,6 +48,9 @@ export default class More extends React.Component {
             onClickModalBackground={() => {
               onClickModalBackground();
             }}
+            showViewType={showViewType}
+            showOrder={showOrder}
+            showHidden={showHidden}
           />
         )}
       </div>
