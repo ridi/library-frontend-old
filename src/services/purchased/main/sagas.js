@@ -25,7 +25,7 @@ import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './select
 
 import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { getBookIdsByUnitIds } from '../../common/sagas';
+import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 
 function* persistPageOptionsFromQueries() {
@@ -71,7 +71,7 @@ function* hideSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks), orderType, orderBy);
+  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
   const revision = yield call(getRevision);
   const queueIds = yield call(requestHide, bookIds, revision);
@@ -88,7 +88,7 @@ function* downloadSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks), orderType, orderBy);
+  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
   yield call(downloadBooks, bookIds);
 }

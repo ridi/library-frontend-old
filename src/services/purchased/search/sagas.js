@@ -23,7 +23,7 @@ import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './select
 
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
 import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/requests';
-import { getBookIdsByUnitIds } from '../../common/sagas';
+import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
 
@@ -69,7 +69,7 @@ function* hideSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
+  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestHide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
@@ -82,7 +82,7 @@ function* downloadSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
-  const bookIds = yield call(getBookIdsByUnitIds, items, Object.keys(selectedBooks));
+  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
 
   yield call(downloadBooks, bookIds);
 }
@@ -93,7 +93,7 @@ function* selectAllBooks() {
   yield put(setSelectBooks(bookIds));
 }
 
-export default function* purcahsedSearchRootSaga() {
+export default function* purchasedSearchRootSaga() {
   yield all([
     takeEvery(LOAD_SEARCH_ITEMS, loadPage),
     takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
