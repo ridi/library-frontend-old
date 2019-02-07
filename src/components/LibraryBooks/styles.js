@@ -42,17 +42,17 @@ export const portrait = {
   }),
   ...Responsive.Medium({
     width: 110,
-    height: 201,
+    height: 200,
     padding: '0 8px',
   }),
   ...MQ([Responsive.Large, Responsive.XLarge], {
     width: 110,
-    height: 201,
+    height: 200,
     padding: '0 15px',
   }),
   ...MQ([Responsive.XXLarge, Responsive.Full], {
     width: 140,
-    height: 255,
+    height: 254,
     padding: '0 15px',
   }),
 };
