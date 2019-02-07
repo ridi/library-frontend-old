@@ -2,6 +2,7 @@ import { put } from 'redux-saga/effects';
 
 import config from '../../config';
 import { getAPI } from '../../api/actions';
+import { OrderType } from '../../constants/orderOptions';
 
 import { makeURI } from '../../utils/uri';
 import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
@@ -51,10 +52,15 @@ export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
   }
 
   const query = {
-    orderType,
-    orderBy,
     unitIds,
   };
+
+  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+    query.expiredBooksOnly = true;
+  } else {
+    query.orderType = orderType;
+    query.orderBy = orderBy;
+  }
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/items/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));

@@ -94,18 +94,9 @@ class HiddenUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryItem, books, bookDescriptions } = this.props;
-    if (!primaryItem) {
-      return <SkeletonUnitDetailView />;
-    }
+    const { unit, primaryItem, items, books, bookDescriptions } = this.props;
 
-    const primaryBook = books[primaryItem.b_id];
-    const primaryBookDescription = bookDescriptions[primaryItem.b_id];
-    if (!primaryBook || !primaryBookDescription) {
-      return <SkeletonUnitDetailView />;
-    }
-
-    return <UnitDetailView unit={unit} primaryItem={primaryItem} book={primaryBook} bookDescription={primaryBookDescription} />;
+    return <UnitDetailView unit={unit} primaryItem={primaryItem} items={items} books={books} bookDescriptions={bookDescriptions} />;
   }
 
   renderSeriesView() {

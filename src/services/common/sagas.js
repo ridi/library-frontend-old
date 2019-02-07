@@ -22,10 +22,14 @@ const _flattenBookIds = bookIdsInUnitData =>
     return [...previous, ..._bookIds];
   }, []);
 
-export function* getBookIdsByUnitIds(items, selectedBookIds, orderType, orderBy) {
-  const { bookIds, unitIds } = _reduceSelectedBookIds(items, selectedBookIds);
+export function* getBookIdsByUnitIds(unitIds, orderType, orderBy) {
   const bookIdsInUnitData = yield call(requestGetBookIdsByUnitIds, orderType, orderBy, unitIds);
-  const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
+  return _flattenBookIds(bookIdsInUnitData);
+}
+
+export function* getBookIdsByItems(items, selectedBookIds, orderType, orderBy) {
+  const { bookIds, unitIds } = _reduceSelectedBookIds(items, selectedBookIds);
+  const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, orderType, orderBy);
 
   return [...bookIds, ...bookIdsInUnit];
 }

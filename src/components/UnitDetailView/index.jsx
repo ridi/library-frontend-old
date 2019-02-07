@@ -7,7 +7,8 @@ import connect from 'react-redux/es/connect/connect';
 import shortid from 'shortid';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
-import { downloadBooks } from '../../services/bookDownload/actions';
+import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
+import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 import BookMetaData from '../../utils/bookMetaData';
 
@@ -74,9 +75,6 @@ class UnitDetailView extends React.Component {
   renderDescription() {
     const { isExpanded } = this.state;
     const { bookDescription } = this.props;
-    if (!bookDescription) {
-      return null;
-    }
 
     return (
       <div css={styles.description}>
@@ -99,10 +97,11 @@ class UnitDetailView extends React.Component {
     );
   }
 
-  renderDownloadBottuon() {
-    const { book, downloadable, dispatchDownloadBooks } = this.props;
+  renderDownloadButton() {
+    const { unit, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
-    if (!downloadable) {
+    const bookExpired = new Date(primaryItem.expire_date) < new Date();
+    if (!downloadable || bookExpired) {
       return null;
     }
 
@@ -111,10 +110,10 @@ class UnitDetailView extends React.Component {
         type="button"
         css={styles.downloadButton}
         onClick={() => {
-          dispatchDownloadBooks([book.id]);
+          dispatchDownloadBooksByUnitIds([unit.id]);
         }}
       >
-        다운로드
+        {items.length > 1 ? '전체 다운로드' : '다운로드'}
       </button>
     );
   }
@@ -153,8 +152,14 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, book } = this.props;
+    const { unit, primaryItem, book, bookDescription } = this.props;
+
+    if (!primaryItem || !book || !bookDescription) {
+      return <SkeletonUnitDetailView />;
+    }
+
     const bookMetadata = new BookMetaData(book);
+
     return (
       <>
         <section css={styles.header}>
@@ -168,7 +173,7 @@ class UnitDetailView extends React.Component {
             <div css={styles.unitTitle}>{unit.title}</div>
             <div css={styles.authorList}>{bookMetadata.author}</div>
             {UnitType.isBook(unit.type) ? this.renderFileInfo(bookMetadata.fileInfosWithDelimiter) : null}
-            {UnitType.isBook(unit.type) ? this.renderDownloadBottuon() : null}
+            {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>
         </section>
@@ -183,9 +188,28 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
   dispatchDownloadBooks: downloadBooks,
+  dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
+};
+
+const mergeProps = (state, actions, props) => {
+  const book = props.primaryItem && props.books[props.primaryItem.b_id] ? props.books[props.primaryItem.b_id] : null;
+  const bookDescription =
+    props.primaryItem && props.bookDescriptions[props.primaryItem.b_id] ? props.bookDescriptions[props.primaryItem.b_id] : null;
+  const bookMetadata =
+    props.primaryItem && props.books[props.primaryItem.b_id] ? new BookMetaData(props.books[props.primaryItem.b_id]) : null;
+
+  return {
+    ...state,
+    ...actions,
+    ...props,
+    book,
+    bookDescription,
+    bookMetadata,
+  };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(UnitDetailView);
