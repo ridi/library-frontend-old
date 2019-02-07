@@ -92,26 +92,10 @@ class MainUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryItem, books, bookDescriptions } = this.props;
-    if (!primaryItem) {
-      return <SkeletonUnitDetailView />;
-    }
+    const { unit, primaryItem, items, books, bookDescriptions } = this.props;
 
-    const primaryBook = books[primaryItem.b_id];
-    const primaryBookDescription = bookDescriptions[primaryItem.b_id];
-    if (!primaryBook || !primaryBookDescription) {
-      return <SkeletonUnitDetailView />;
-    }
-
-    const downloadable = new Date(primaryItem.expire_date) > new Date();
     return (
-      <UnitDetailView
-        unit={unit}
-        primaryItem={primaryItem}
-        book={primaryBook}
-        bookDescription={primaryBookDescription}
-        downloadable={downloadable}
-      />
+      <UnitDetailView unit={unit} primaryItem={primaryItem} items={items} books={books} bookDescriptions={bookDescriptions} downloadable />
     );
   }
 
