@@ -19,6 +19,7 @@ export const footer = {
 };
 
 export const contentsWrapper = {
+  margin: '0 auto',
   ...maxWidthWrapper,
 };
 

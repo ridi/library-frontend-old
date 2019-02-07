@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
-import { MAX_WIDTH } from './constants';
+import { FULL_MAX_WIDTH, XLARGE_MAX_WIDTH, XXLARGE_MAX_WIDTH } from './constants';
+import { Responsive } from './responsive';
 
 export * from './reset';
 
@@ -12,6 +13,13 @@ export const Hidden = css({
 });
 
 export const maxWidthWrapper = {
-  maxWidth: MAX_WIDTH,
-  margin: '0 auto',
+  ...Responsive.XLarge({
+    maxWidth: XLARGE_MAX_WIDTH,
+  }),
+  ...Responsive.XXLarge({
+    maxWidth: XXLARGE_MAX_WIDTH,
+  }),
+  ...Responsive.Full({
+    maxWidth: FULL_MAX_WIDTH,
+  }),
 };

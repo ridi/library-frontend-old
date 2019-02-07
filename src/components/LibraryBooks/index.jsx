@@ -4,7 +4,6 @@ import React from 'react';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import { merge } from 'lodash';
-import Link from 'next/link';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import * as styles from './styles';

@@ -1,3 +1,5 @@
+import { maxWidthWrapper } from '../../styles';
+
 export const searchBar = {
   backgroundColor: '#f3f4f5',
   borderBottom: '1px solid #d1d5d9',
@@ -9,7 +11,7 @@ export const searchBoxWrapper = {
   maxWidth: 600,
   transition: 'max-width .3s',
   '.hideTools & ': {
-    maxWidth: 1000,
+    ...maxWidthWrapper,
   },
 };
 

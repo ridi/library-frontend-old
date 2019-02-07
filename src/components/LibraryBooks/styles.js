@@ -1,4 +1,4 @@
-import { Responsive } from '../../styles/responsive';
+import { Responsive, MQ } from '../../styles/responsive';
 import ViewType from '../../constants/viewType';
 
 const responsiveDefaultPadding = 16;
@@ -9,6 +9,7 @@ export const books = (viewType, additionalPadding) => ({
   flexDirection: 'row',
   justifyContent: 'left',
   paddingBottom: 26,
+  maxWidth: 1200,
   margin: '0 auto',
   boxSizing: 'border-box',
   paddingRight: viewType === ViewType.LANDSCAPE ? responsiveDefaultPadding : 0,
@@ -18,37 +19,42 @@ export const books = (viewType, additionalPadding) => ({
     paddingRight: viewType === ViewType.LANDSCAPE && 0,
     paddingLeft: viewType === ViewType.LANDSCAPE && 0,
   }),
-  ...Responsive.W600({
-    // width: 530,
-  }),
-  ...Responsive.W834({
-    // width: 670,
-  }),
-  ...Responsive.W1280({
-    width: 960,
-  }),
 });
 
 export const portrait = {
-  width: 110,
-  padding: '0 15px',
-  marginTop: 30,
+  display: 'flex',
+  alignItems: 'flex-end',
+
   '.PortraitBook': {
     width: '100%',
-  },
-  ...Responsive.W360({
-    width: '25vw',
-    minWidth: 80,
-    maxWidth: 100,
-    height: 150,
-    padding: '0 8px',
+    maxWidth: 'inherit',
     display: 'flex',
     alignItems: 'flex-end',
+  },
+  ...Responsive.XSmall({
+    width: 86,
+    height: 164,
+    padding: '0 8px',
   }),
-  ...Responsive.W600({}),
-  ...Responsive.W834({}),
-  ...Responsive.W1280({
-    padding: '0 25px',
+  ...Responsive.Small({
+    width: 100,
+    height: 184,
+    padding: '0 8px',
+  }),
+  ...Responsive.Medium({
+    width: 110,
+    height: 201,
+    padding: '0 8px',
+  }),
+  ...MQ([Responsive.Large, Responsive.XLarge], {
+    width: 110,
+    height: 201,
+    padding: '0 15px',
+  }),
+  ...MQ([Responsive.XXLarge, Responsive.Full], {
+    width: 140,
+    height: 255,
+    padding: '0 15px',
   }),
 };
 
