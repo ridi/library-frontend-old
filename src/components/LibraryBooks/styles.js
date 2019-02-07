@@ -14,8 +14,7 @@ export const books = (viewType, additionalPadding) => ({
   boxSizing: 'border-box',
   paddingRight: viewType === ViewType.LANDSCAPE ? responsiveDefaultPadding : 0,
   paddingLeft: viewType === ViewType.LANDSCAPE ? responsiveDefaultPadding : additionalPadding,
-
-  ...Responsive.W360({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     paddingRight: viewType === ViewType.LANDSCAPE && 0,
     paddingLeft: viewType === ViewType.LANDSCAPE && 0,
   }),
@@ -67,10 +66,7 @@ export const landscape = {
     width: '100%',
     borderBottom: '1px solid #d1d5d9',
   },
-  ...Responsive.W834({
-    width: '50%',
-  }),
-  ...Responsive.W1280({
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: '50%',
   }),
 };

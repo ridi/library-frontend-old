@@ -1,19 +1,19 @@
-import { Responsive } from '../../styles/responsive';
+import { MQ, Responsive } from '../../styles/responsive';
 
 export const header = {
   display: 'flex',
   padding: '50px 40px 30px 40px',
-  ...Responsive.W1280({
-    paddingLeft: 82,
-  }),
-  ...Responsive.Pc({
-    flexDirection: 'row',
-  }),
-  ...Responsive.Mobile({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     paddingTop: 28,
     flexDirection: 'column',
     paddingLeft: 0,
     paddingRight: 0,
+  }),
+  ...Responsive.Large({
+    flexDirection: 'row',
+  }),
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    paddingLeft: 82,
   }),
 };
 
@@ -31,7 +31,7 @@ export const thumbnailWrapper = {
 
 export const thumbnail = {
   width: 130,
-  ...Responsive.Pc({
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: 180,
   }),
 };
@@ -53,16 +53,16 @@ export const infoWrapper = {
   ...headerContentsWrapper,
   justifyContent: 'left',
   paddingTop: 42,
-  ...Responsive.Pc({
-    alignItems: 'start',
-    paddingLeft: 40,
-  }),
-  ...Responsive.Mobile({
-    alignItems: 'center',
-  }),
-  ...Responsive.W360({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     paddingTop: 24,
     alignItems: 'start',
+  }),
+  ...Responsive.Large({
+    alignItems: 'center',
+  }),
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    alignItems: 'start',
+    paddingLeft: 40,
   }),
 };
 
@@ -72,7 +72,7 @@ export const unitTitle = {
   lineHeight: 1.54,
   color: '#212529',
 
-  ...Responsive.Pc({
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     fontSize: 30,
     fontWeight: 'bold',
     lineHeight: 1.03,
@@ -85,8 +85,7 @@ export const authorList = {
   fontSize: 15,
   color: '#40474d',
   marginTop: 12,
-
-  ...Responsive.W360({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     marginTop: 6,
   }),
 };
@@ -116,16 +115,15 @@ export const description = {
   color: '#40474d',
   clear: 'both',
   padding: '8px 40px 40px 40px',
-
-  ...Responsive.W1280({
-    paddingLeft: 82,
-  }),
-  ...Responsive.Pc({
-    paddingTop: 16,
-  }),
-  ...Responsive.Mobile({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     paddingLeft: 0,
     paddingRight: 0,
+  }),
+  ...Responsive.Large({
+    paddingTop: 16,
+  }),
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    paddingLeft: 82,
   }),
 };
 export const descriptionTitle = {
@@ -172,7 +170,7 @@ const defaultButtonStyle = {
   borderRadius: 4,
   fontSize: 16,
   fontWeight: 'bold',
-  ...Responsive.W360({
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     width: '100%',
   }),
 };
