@@ -1911,7 +1911,7 @@ cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
 
-cookie@0.3.1:
+cookie@0.3.1, cookie@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
@@ -4154,6 +4154,13 @@ node-releases@^1.0.1:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.0.4.tgz#2d585de8c6c81d00017e063e7810a63889aa6756"
   dependencies:
     semver "^5.3.0"
+
+nookies@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/nookies/-/nookies-1.2.0.tgz#570c8be505b93fed391dc076814aa502f5bcce78"
+  integrity sha512-dcqrTLk0Ctl5oYGJS29eod6kzeaP2NG1NhjrzJWFlKd6fxKDPbouSwVYsynztVoWZP8aq9SOSZao1H+BCVkonQ==
+  dependencies:
+    cookie "^0.3.1"
 
 nopt@^4.0.1:
   version "4.0.1"
