@@ -1,12 +1,14 @@
 import { call, put, fork, cancel, all, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
+import { OrderBy, OrderType } from '../../constants/orderOptions';
 
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
 import Window, { LOCATION } from '../../utils/window';
+import { getBookIdsByUnitIds } from '../common/sagas';
 
 import { showToast } from '../toast/actions';
-import { DOWNLOAD_BOOKS } from './actions';
+import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS } from './actions';
 
 import { triggerDownload } from './requests';
 
@@ -77,10 +79,21 @@ export function* downloadBooks(bookIds) {
   }
 }
 
+export function* downloadBooksByUnitIds(unitIds) {
+  // 해당 유닛의 전체 데이터 받아야 하기 때문에 기본 값으로 unit 을 조회한다.
+  const bookIds = yield call(getBookIdsByUnitIds, unitIds, OrderType.PURCHASE_DATE, OrderBy.DESC);
+  yield call(downloadBooks, bookIds);
+}
+
 export function* downloadBookActionAdaptor(action) {
   yield call(downloadBooks, action.payload.bookIds);
 }
 
+export function* downloadBooksByUnitIdsActionAdaptor(action) {
+  yield call(downloadBooksByUnitIds, action.payload.unitIds);
+}
+
 export default function* commonRootSaga() {
   yield all([takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor)]);
+  yield all([takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor)]);
 }
