@@ -10,7 +10,7 @@ export const modal = isActive => {
     display: 'block',
     position: 'absolute',
     width: 200,
-    maxHeight: 292,
+    maxHeight: 410,
     right: -6,
     top: 30,
     zIndex: 9999,
@@ -40,7 +40,7 @@ export const groupTitle = {
   lineHeight: '16px',
   fontSize: 13,
   color: '#808991',
-  padding: '16px 14px 2px 14px',
+  padding: '10px 14px 2px 14px',
 };
 
 export const item = {
