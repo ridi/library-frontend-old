@@ -89,6 +89,7 @@ class searchUnit extends React.Component {
       as: URLMap.search.as,
       query: { keyword, page },
     };
+
     return <TitleBar {...titleBarProps} />;
   }
 
