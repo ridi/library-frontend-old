@@ -1,6 +1,37 @@
 import { Width } from './constants';
 
 export const Responsive = {
+  XSmall: styles => ({
+    [`@media all and (max-width: ${Width.W360 - 1}px)`]: {
+      ...styles,
+    },
+  }),
+  Small: styles => ({
+    [`@media (min-width: ${Width.W360}px) and (max-width: ${Width.W414 - 1}px)`]: {
+      ...styles,
+    },
+  }),
+  Medium: styles => ({
+    [`@media (min-width: ${Width.W414}px) and (max-width: ${Width.W600 - 1}px)`]: {
+      ...styles,
+    },
+  }),
+  Large: styles => ({
+    [`@media (min-width: ${Width.W600}px) and (max-width: ${Width.W834 - 1}px)`]: {
+      ...styles,
+    },
+  }),
+  XLarge: styles => ({
+    [`@media (min-width: ${Width.W834}px) and (max-width: ${Width.W1280 - 1}px)`]: {
+      ...styles,
+    },
+  }),
+  Full: styles => ({
+    [`@media all and (min-width: ${Width.W1280}px)`]: {
+      ...styles,
+    },
+  }),
+
   W360: styles => ({
     [`@media all and (max-width: ${Width.W600 - 1}px)`]: {
       ...styles,
