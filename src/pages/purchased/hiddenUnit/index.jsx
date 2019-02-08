@@ -4,7 +4,6 @@ import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
 import HorizontalRuler from '../../../components/HorizontalRuler';
-import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
