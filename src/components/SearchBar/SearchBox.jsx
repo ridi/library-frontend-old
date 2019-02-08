@@ -81,7 +81,7 @@ export default class SearchBox extends React.Component {
             this.input = ref;
           }}
           placeholder="모든 책 검색"
-          type="text"
+          type="search"
           css={styles.searchBoxInput}
           value={keyword}
           onChange={this.handleChange}
