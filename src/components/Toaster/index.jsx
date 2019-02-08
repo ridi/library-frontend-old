@@ -1,9 +1,15 @@
+/** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
 import Router from 'next/router';
+import { jsx } from '@emotion/core';
+import Link from 'next/link';
 
 import { getToast } from '../../services/toast/selectors';
 import { closeToast, closeWithDelay, cancelClose } from '../../services/toast/actions';
+
+import * as styles from './styles';
+import IconButton from '../IconButton';
 
 class Toaster extends React.Component {
   constructor(props) {
@@ -37,19 +43,39 @@ class Toaster extends React.Component {
     dispatchCloseWithDelay(duration);
   }
 
-  renderArrowIcon() {
+  renderToastLink() {
     const {
-      toast: { uri },
+      toast: { linkName, linkProps },
+      closeToast: dispatchCloseToast,
     } = this.props;
 
-    if (!uri) {
+    if (!linkProps) {
       return null;
     }
 
     return (
-      <button type="button" onClick={this.onClick}>
-        이동
-      </button>
+      <Link {...linkProps}>
+        <button
+          type="button"
+          onClick={() => {
+            dispatchCloseToast();
+          }}
+        >
+          {linkName}
+        </button>
+      </Link>
+    );
+  }
+
+  renderCloseButton() {
+    const { closeToast: dispatchCloseToast } = this.props;
+    return (
+      <IconButton
+        css={styles.toastCloseButton}
+        onClick={() => {
+          dispatchCloseToast();
+        }}
+      />
     );
   }
 
@@ -60,12 +86,16 @@ class Toaster extends React.Component {
     }
 
     return (
-      <>
-        <div onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
-          {toast.message}
-          {this.renderArrowIcon()}
+      <div css={styles.toastWrapper}>
+        <div css={styles.toast} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
+          <div css={styles.toastTypeMark} />
+          <div css={styles.toastContent}>
+            {toast.message}
+            {this.renderToastLink()}
+          </div>
+          {this.renderCloseButton()}
         </div>
-      </>
+      </div>
     );
   }
 }
