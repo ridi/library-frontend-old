@@ -1,17 +1,18 @@
 import { css } from '@emotion/core';
 import { maxWidthWrapper } from '../../../styles';
-import { Responsive } from '../../../styles/responsive';
+import { MQ, Responsive } from '../../../styles/responsive';
 
-export const GNB = css([
-  Responsive.Mobile({
+export const GNB = {
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
     padding: '2px 0',
   }),
-  { background: 'white' },
-]);
+  background: 'white',
+};
 
 export const flexWrapper = css({
   display: 'flex',
   justifyContent: 'space-between',
+  margin: '0 auto',
   ...maxWidthWrapper,
 });
 

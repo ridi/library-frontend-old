@@ -1,13 +1,16 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
-import React from 'react';
 import Link from 'next/link';
+import React from 'react';
 import { connect } from 'react-redux';
-import { LibraryBooks } from '../../../components/LibraryBooks';
+import { ButtonType } from '../../../components/ActionBar/constants';
+import { Books } from '../../../components/Books';
+import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
+import TitleBar from '../../../components/TitleBar';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -29,9 +32,6 @@ import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Responsive from '../../base/Responsive';
-import { ButtonType } from '../../../components/ActionBar/constants';
-import TitleBar from '../../../components/TitleBar';
-import Editable from '../../../components/Editable';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -157,10 +157,10 @@ class Hidden extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBookList viewType={viewType} />
+      <SkeletonBooks viewType={viewType} />
     ) : (
       <>
-        <LibraryBooks
+        <Books
           {...{
             libraryBookDTO,
             platformBookDTO,

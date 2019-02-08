@@ -1,27 +1,26 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';
-import { Responsive } from '../styles/responsive';
+import { MQ, Responsive } from '../styles/responsive';
 import Paginator from './Paginator';
 
 const styles = {
-  mobile: Object.assign(
-    {},
-    Responsive.Mobile({
+  mobile: {
+    ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
       display: 'block',
     }),
-    Responsive.Pc({
+    ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
       display: 'none',
     }),
-  ),
-  pc: Object.assign(
-    Responsive.Mobile({
+  },
+  pc: {
+    ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
       display: 'none',
     }),
-    Responsive.Pc({
+    ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
       display: 'block',
     }),
-  ),
+  },
 };
 
 const ResponsivePaginator = ({ currentPage, totalPages, href, as, query }) => (
