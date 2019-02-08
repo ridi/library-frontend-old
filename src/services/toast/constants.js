@@ -1,5 +1,5 @@
 export const Duration = {
-  SHORT: 300,
-  NORMAL: 500,
-  LONG: 1000,
+  SHORT: 500,
+  NORMAL: 1000,
+  LONG: 1500,
 };

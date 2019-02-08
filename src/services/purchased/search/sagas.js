@@ -3,7 +3,7 @@ import { all, call, select, put, takeEvery } from 'redux-saga/effects';
 
 import { getQuery } from '../../router/selectors';
 import { toFlatten } from '../../../utils/array';
-import { makeURI } from '../../../utils/uri';
+import { makeURI, makeLinkProps } from '../../../utils/uri';
 
 import {
   LOAD_SEARCH_ITEMS,
@@ -26,6 +26,8 @@ import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/
 import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
+import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -65,6 +67,7 @@ function changeSearchKeyword(action) {
 }
 
 function* hideSelectedBooks() {
+  yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
@@ -73,9 +76,20 @@ function* hideSelectedBooks() {
   const queueIds = yield call(requestHide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
-  // TODO: Message 수정
-  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadPage);
+  if (isFinish) {
+    yield call(loadPage);
+  }
+
+  yield all([
+    put(
+      showToast(
+        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+        '숨긴 도서 목록 보기',
+        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+      ),
+    ),
+    put(setFullScreenLoading(false)),
+  ]);
 }
 
 function* downloadSelectedBooks() {
