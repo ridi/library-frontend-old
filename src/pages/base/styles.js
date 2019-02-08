@@ -10,21 +10,26 @@ export const bodyStyle = {
     minHeight: '100vh',
     boxSizing: 'border-box',
     background: 'white',
-  },
-  'body::after': {
-    content: `''`,
-    display: 'block',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    zIndex: -1,
-    width: '100%',
-    height: '100%',
-    background: '#f3f4f5',
-  },
-  'body&.focus-free *': {
-    outline: 'none',
-    WebkitTapHighlightColor: 'transparent',
+
+    '&.focus-free *': {
+      outline: 'none',
+      WebkitTapHighlightColor: 'transparent',
+    },
+    '&.disable-scroll': {
+      overflow: 'hidde',
+    },
+
+    '&::after': {
+      content: `''`,
+      display: 'block',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      zIndex: -1,
+      width: '100%',
+      height: '100%',
+      background: '#f3f4f5',
+    },
   },
 };
 
