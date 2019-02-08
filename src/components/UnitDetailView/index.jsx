@@ -26,9 +26,9 @@ class UnitDetailView extends React.Component {
     };
   }
 
-  componentDidMount() {
+  checkTruncated() {
     if (this.wrapper) {
-      if (this.wrapper.offsetHeight > (LINE - 1) * LINE_HEIGHT) {
+      if (!this.state.isTruncated && this.wrapper.offsetHeight > (LINE - 1) * LINE_HEIGHT) {
         this.setState({ isTruncated: true });
       }
     }
@@ -89,6 +89,7 @@ class UnitDetailView extends React.Component {
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
             ref={wrapper => {
               this.wrapper = wrapper;
+              this.checkTruncated();
             }}
           />
         </div>
