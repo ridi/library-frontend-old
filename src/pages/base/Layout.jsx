@@ -11,7 +11,7 @@ import { closeDialog } from '../../services/dialog/actions';
 
 class Layout extends React.Component {
   render() {
-    const { children, fullScreenLoading, dialog, closeDialog: dispatchCloseDialog } = this.props;
+    const { children, showFullScreenLoading, dialog, closeDialog: dispatchCloseDialog } = this.props;
     return (
       <>
         <Global styles={globalStyles} />
@@ -19,14 +19,14 @@ class Layout extends React.Component {
         {children}
         <Toaster />
         {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
-        {fullScreenLoading ? <FullScreenLoading /> : null}
+        {showFullScreenLoading ? <FullScreenLoading /> : null}
       </>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  fullScreenLoading: state.fullScreenLoading,
+  showFullScreenLoading: state.fullScreenLoading,
   dialog: state.dialog.dialog,
 });
 
