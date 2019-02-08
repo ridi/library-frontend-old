@@ -27,6 +27,8 @@ import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/
 import { showToast } from '../../toast/actions';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { makeLinkProps } from '../../../utils/uri';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -88,8 +90,16 @@ function* hideSelectedBooks() {
     yield call(loadItems);
   }
 
-  // TODO 메시지 수정
-  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+  yield all([
+    put(
+      showToast(
+        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+        '숨긴 도서 목록 보기',
+        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+      ),
+    ),
+    put(setFullScreenLoading(false)),
+  ]);
 }
 
 function* downloadSelectedBooks() {

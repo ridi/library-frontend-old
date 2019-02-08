@@ -23,6 +23,8 @@ import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { makeLinkProps } from '../../../utils/uri';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -80,8 +82,16 @@ function* unhideSelectedHiddenUnitBooks() {
     yield call(loadHiddenUnitItems);
   }
 
-  // TODO 메시지 수정
-  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+  yield all([
+    put(
+      showToast(
+        isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
+        '내 서재 바로가기',
+        makeLinkProps(URLMap.main.href, URLMap.main.as),
+      ),
+    ),
+    put(setFullScreenLoading(false)),
+  ]);
 }
 
 function* deleteSelectedHiddenUnitBooks() {

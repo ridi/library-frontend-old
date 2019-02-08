@@ -21,6 +21,8 @@ import { getRevision, requestUnhide, requestCheckQueueStatus, requestDelete } fr
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { makeLinkProps } from '../../../utils/uri';
+import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -59,8 +61,16 @@ function* unhideSelectedBooks() {
     yield call(loadItems);
   }
 
-  // TODO 메시지 수정
-  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+  yield all([
+    put(
+      showToast(
+        isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
+        '내 서재 바로가기',
+        makeLinkProps(URLMap.main.href, URLMap.main.as),
+      ),
+    ),
+    put(setFullScreenLoading(false)),
+  ]);
 }
 
 function* deleteSelectedBooks() {
