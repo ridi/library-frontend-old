@@ -7,16 +7,18 @@ import Toaster from '../../components/Toaster';
 import FullScreenLoading from '../../components/FullScreenLoading';
 import Dialog from '../../components/Dialog';
 
+import { closeDialog } from '../../services/dialog/actions';
+
 class Layout extends React.Component {
   render() {
-    const { children, fullScreenLoading, dialog } = this.props;
+    const { children, fullScreenLoading, dialog, closeDialog: dispatchCloseDialog } = this.props;
     return (
       <>
         <Global styles={globalStyles} />
         <GNB />
         {children}
         <Toaster />
-        {dialog ? <Dialog {...dialog} /> : null}
+        {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
         {fullScreenLoading ? <FullScreenLoading /> : null}
       </>
     );
@@ -28,4 +30,11 @@ const mapStateToProps = state => ({
   dialog: state.dialog.dialog,
 });
 
-export default connect(mapStateToProps)(Layout);
+const mapDispatchToProps = {
+  closeDialog,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Layout);

@@ -1,4 +1,5 @@
 export const SET_DIALOG = 'SET_DIALOG';
+export const UNSET_DIALOG = 'UNSET_DIALOG';
 
 export const showDialog = (title, message) => ({
   type: SET_DIALOG,
@@ -8,4 +9,8 @@ export const showDialog = (title, message) => ({
       message,
     },
   },
+});
+
+export const closeDialog = () => ({
+  type: UNSET_DIALOG,
 });

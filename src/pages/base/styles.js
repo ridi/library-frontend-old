@@ -16,7 +16,7 @@ export const bodyStyle = {
       WebkitTapHighlightColor: 'transparent',
     },
     '&.disable-scroll': {
-      overflow: 'hidde',
+      overflow: 'hidden',
     },
 
     '&::after': {

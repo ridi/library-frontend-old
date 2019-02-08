@@ -86,19 +86,17 @@ export default class Dialog extends React.Component {
   }
 
   render() {
-    const {
-      dialog: { title, message },
-    } = this.props;
+    const { title, message, onClickCloseButton } = this.props;
     return (
       <div css={styles.dialogWrapper}>
         <div css={styles.dialog}>
           <div css={styles.dialogHeader}>
             <div css={styles.dialogTitle}>{title}</div>
-            <button type="button" css={styles.dialogCloseButton} />
+            <button type="button" css={styles.dialogCloseButton} onClick={onClickCloseButton} />
           </div>
           <div css={styles.dialogContent}>{message}</div>
           <div css={styles.dialogFooter}>
-            <button type="button" css={styles.dialogButton}>
+            <button type="button" css={styles.dialogButton} onClick={onClickCloseButton}>
               확인
             </button>
             <div css={styles.clear} />

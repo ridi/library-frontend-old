@@ -1,4 +1,4 @@
-import { SET_DIALOG } from './actions';
+import { SET_DIALOG, UNSET_DIALOG } from './actions';
 import { initialState } from './state';
 
 const dialogReducer = (state = initialState, action) => {
@@ -7,6 +7,11 @@ const dialogReducer = (state = initialState, action) => {
       return {
         ...state,
         dialog: action.payload.dialog,
+      };
+    case UNSET_DIALOG:
+      return {
+        ...state,
+        dialog: null,
       };
     default:
       return state;
