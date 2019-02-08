@@ -4,10 +4,12 @@ import { Icon } from '@ridi/rsg';
 
 const styles = {
   bookListIsEmpty: css({
+    position: 'relative',
     color: '#40474d',
     // textAlign: 'center',
     width: '100%',
     height: '100%',
+    minHeight: 280,
   }),
   in: css({
     width: 300,
@@ -17,7 +19,7 @@ const styles = {
     left: '50%',
     top: '50%',
     marginLeft: -150,
-    marginTop: -108,
+    marginTop: -40,
     fontSize: 15,
     textAlign: 'center',
   }),
