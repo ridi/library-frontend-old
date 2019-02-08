@@ -1,15 +1,16 @@
-import { Responsive, MQ } from '../../styles/responsive';
-import ViewType from '../../constants/viewType';
+import { Responsive, MQ } from './responsive';
+import ViewType from '../constants/viewType';
+import { FULL_MAX_WIDTH } from './constants';
 
 const responsiveDefaultPadding = 16;
 
-export const books = (viewType, additionalPadding) => ({
+export const booksWrapper = (viewType, additionalPadding) => ({
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'row',
   justifyContent: 'left',
   paddingBottom: 26,
-  maxWidth: 1200,
+  maxWidth: FULL_MAX_WIDTH,
   margin: '0 auto',
   boxSizing: 'border-box',
   paddingRight: viewType === ViewType.LANDSCAPE ? responsiveDefaultPadding : 0,
@@ -62,28 +63,12 @@ export const landscape = {
   marginTop: 20,
   display: 'flex',
   position: 'relative',
+  borderBottom: '1px solid #d1d5d9',
+
   '.LandscapeBook': {
     width: '100%',
-    borderBottom: '1px solid #d1d5d9',
   },
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: '50%',
   }),
-};
-
-export const landscapeFullButton = {
-  display: 'block',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  width: '100%',
-  height: '100%',
-  'a, button': {
-    display: 'block',
-    width: '100%',
-    height: '100%',
-    fontSize: 0,
-    lineHeight: 0,
-    color: 'transparent',
-  },
 };

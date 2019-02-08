@@ -4,12 +4,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
-import { LibraryBooks } from '../../../components/LibraryBooks';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -128,7 +128,7 @@ class Search extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
-      return <SkeletonBookList viewType={viewType} />;
+      return <SkeletonBooks viewType={viewType} />;
     }
 
     const linkBuilder = _keyword => libraryBookData => {
@@ -150,7 +150,7 @@ class Search extends React.Component {
 
     return (
       <>
-        <LibraryBooks
+        <Books
           {...{
             libraryBookDTO,
             platformBookDTO,

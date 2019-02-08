@@ -1,15 +1,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
-import React from 'react';
 import Link from 'next/link';
+import React from 'react';
 import { connect } from 'react-redux';
+import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
-import { LibraryBooks } from '../../../components/LibraryBooks';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
-import SkeletonBookList from '../../../components/Skeleton/SkeletonBookList';
+import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { MainOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
@@ -158,10 +158,10 @@ class Main extends React.Component {
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBookList viewType={viewType} />
+      <SkeletonBooks viewType={viewType} />
     ) : (
       <>
-        <LibraryBooks
+        <Books
           {...{
             libraryBookDTO,
             platformBookDTO,

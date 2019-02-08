@@ -1,13 +1,13 @@
 import React from 'react';
-import Editable from './Editable';
-import Responsive from '../pages/base/Responsive';
-import SkeletonBookList from './Skeleton/SkeletonBookList';
 import ViewType from '../constants/viewType';
+import Responsive from '../pages/base/Responsive';
+import { Books } from './Books';
+import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
+import UnitSortModal from './Modal/UnitSortModal';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
-import UnitSortModal from './Modal/UnitSortModal';
-import { LibraryBooks } from './LibraryBooks';
+import SkeletonBooks from './Skeleton/SkeletonBooks';
 
 export default class SeriesView extends React.Component {
   constructor(props) {
@@ -81,7 +81,7 @@ export default class SeriesView extends React.Component {
 
     // Data 가져오는 상태면서 캐싱된 items가 없으면 Skeleton 노출
     if (isFetching && items.length === 0) {
-      return <SkeletonBookList viewType={ViewType.LANDSCAPE} />;
+      return <SkeletonBooks viewType={ViewType.LANDSCAPE} />;
     }
 
     // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
@@ -103,7 +103,7 @@ export default class SeriesView extends React.Component {
     };
 
     return (
-      <LibraryBooks
+      <Books
         libraryBookDTO={items}
         platformBookDTO={books}
         selectedBooks={selectedBooks}
