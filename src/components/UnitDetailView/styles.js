@@ -10,7 +10,7 @@ export const header = {
     paddingRight: 0,
   }),
   ...Responsive.Large({
-    flexDirection: 'row',
+    flexDirection: 'column',
   }),
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     paddingLeft: 82,
@@ -143,7 +143,6 @@ export const bookDescriptionFolded = (line, lineHeight) => ({
   WebkitLineClamp: line,
 });
 export const bookDescriptionExpended = {
-  // TODO: 변수화 해야 한다.
   maxHeight: 'inherit',
   WebkitLineClamp: 'inherit',
 };
