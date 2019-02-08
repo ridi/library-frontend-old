@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import React from 'react';
-import { connect } from 'react-redux';
 import { jsx } from '@emotion/core';
 
 const styles = {
@@ -20,14 +19,30 @@ const styles = {
   spinner: {},
 };
 
-class FullScreenLoading extends React.Component {
+export default class FullScreenLoading extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.body = document.querySelector('body');
+  }
+
+  componentDidMount() {
+    this.disableScrolling();
+  }
+
+  componentWillUnmount() {
+    this.enableScrolling();
+  }
+
+  enableScrolling = () => {
+    this.body.style.overflow = '';
+  };
+
+  disableScrolling = () => {
+    this.body.style.overflow = 'hidden';
+  };
+
   render() {
-    const { isLoading } = this.props;
-
-    if (!isLoading) {
-      return null;
-    }
-
     return (
       <div css={styles.background}>
         <div css={styles.spinner}>Loading...</div>
@@ -35,9 +50,3 @@ class FullScreenLoading extends React.Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  isLoading: state.fullScreenLoading,
-});
-
-export default connect(mapStateToProps)(FullScreenLoading);
