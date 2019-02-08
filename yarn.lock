@@ -818,9 +818,9 @@
     react-lazyload "^2.3.0"
     react-router-dom "^4.3.1"
 
-"@ridi/web-ui@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.2.1.tgz#5638f9b0a31ee7d2a984819654607f7f6586369d"
+"@ridi/web-ui@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.2.2.tgz#acd70651660d10b1510226628f711e314261d798"
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"
@@ -4158,7 +4158,6 @@ node-releases@^1.0.1:
 nookies@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/nookies/-/nookies-1.2.0.tgz#570c8be505b93fed391dc076814aa502f5bcce78"
-  integrity sha512-dcqrTLk0Ctl5oYGJS29eod6kzeaP2NG1NhjrzJWFlKd6fxKDPbouSwVYsynztVoWZP8aq9SOSZao1H+BCVkonQ==
   dependencies:
     cookie "^0.3.1"
 
