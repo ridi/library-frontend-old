@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
-import Router from 'next/router';
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 
@@ -12,36 +11,18 @@ import * as styles from './styles';
 import IconButton from '../IconButton';
 
 class Toaster extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.onClick = this.onClick.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-  }
-
-  onClick() {
-    const {
-      toast: { uri },
-      closeToast: dispatchCloseToast,
-    } = this.props;
-
-    dispatchCloseToast();
-    Router.push(uri);
-  }
-
-  onMouseOver() {
+  onMouseOver = () => {
     const { cancelClose: dispatchCancelClose } = this.props;
     dispatchCancelClose();
-  }
+  };
 
-  onMouseOut() {
+  onMouseOut = () => {
     const {
       toast: { duration },
       closeWithDelay: dispatchCloseWithDelay,
     } = this.props;
     dispatchCloseWithDelay(duration);
-  }
+  };
 
   renderToastLink() {
     const {
