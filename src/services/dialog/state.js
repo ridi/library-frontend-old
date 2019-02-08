@@ -1,3 +1,1 @@
-export const initialState = {
-  dialog: null,
-};
+export const initialState = null;

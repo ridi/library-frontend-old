@@ -4,15 +4,9 @@ import { initialState } from './state';
 const dialogReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_DIALOG:
-      return {
-        ...state,
-        dialog: action.payload.dialog,
-      };
+      return action.payload.dialog;
     case UNSET_DIALOG:
-      return {
-        ...state,
-        dialog: null,
-      };
+      return null;
     default:
       return state;
   }
