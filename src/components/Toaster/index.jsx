@@ -56,6 +56,7 @@ class Toaster extends React.Component {
     return (
       <Link {...linkProps}>
         <button
+          css={styles.toastLink}
           type="button"
           onClick={() => {
             dispatchCloseToast();

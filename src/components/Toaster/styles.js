@@ -3,6 +3,7 @@ export const toastWrapper = {
   left: 0,
   right: 0,
   bottom: 50,
+  zindex: 9999,
 };
 
 export const toast = {
@@ -39,6 +40,8 @@ export const toastContent = {
   flex: 1,
 };
 export const toastLink = {
+  marginLeft: 6,
+
   fontSize: 13,
   fontWeight: 'bold',
   letterSpacing: -0.7,
