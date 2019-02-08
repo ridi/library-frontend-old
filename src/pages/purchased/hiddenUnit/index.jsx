@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
+import HorizontalRuler from '../../../components/HorizontalRuler';
 import SkeletonUnitDetailView from '../../../components/Skeleton/SkeletonUnitDetailView';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
@@ -144,6 +145,7 @@ class HiddenUnit extends React.Component {
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
+        <HorizontalRuler />
         {this.renderTitleBar()}
         <main>
           <Responsive>{this.renderDetailView()}</Responsive>
