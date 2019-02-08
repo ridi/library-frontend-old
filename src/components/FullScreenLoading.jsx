@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx } from '@emotion/core';
+import { disableScroll, enableScroll } from '../utils/scroll';
 
 const styles = {
   background: {
@@ -20,27 +21,13 @@ const styles = {
 };
 
 export default class FullScreenLoading extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.body = document.querySelector('body');
-  }
-
   componentDidMount() {
-    this.disableScrolling();
+    disableScroll();
   }
 
   componentWillUnmount() {
-    this.enableScrolling();
+    enableScroll();
   }
-
-  enableScrolling = () => {
-    this.body.style.overflow = '';
-  };
-
-  disableScrolling = () => {
-    this.body.style.overflow = 'hidden';
-  };
 
   render() {
     return (

@@ -14,6 +14,7 @@ import routerReducer from '../services/router/reducers';
 import toastReducer from '../services/toast/reducers';
 import viewTypeReducer from '../services/viewType/reducers';
 import fullScreenLoadingReducer from '../services/fullScreenLoading/reducers';
+import dialogReducer from '../services/dialog/reducers';
 
 export default combineReducers({
   account: accountReducer,
@@ -32,4 +33,5 @@ export default combineReducers({
   toast: toastReducer,
   viewType: viewTypeReducer,
   fullScreenLoading: fullScreenLoadingReducer,
+  dialog: dialogReducer,
 });
