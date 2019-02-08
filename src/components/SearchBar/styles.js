@@ -47,6 +47,7 @@ export const searchBoxActive = {
 };
 
 export const searchBoxIcon = {
+  fill: '#9ea7ad',
   position: 'absolute',
   left: 0,
   top: 0,
