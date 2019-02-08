@@ -27,6 +27,7 @@ import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
+import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -66,6 +67,7 @@ function* loadMainItems() {
 }
 
 function* hideSelectedBooks() {
+  yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
@@ -77,9 +79,12 @@ function* hideSelectedBooks() {
   const queueIds = yield call(requestHide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
-  // TODO: Message 수정
-  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadMainItems);
+  if (isFinish) {
+    yield call(loadMainItems);
+  }
+
+  // TODO 메시지 수정
+  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
 }
 
 function* downloadSelectedBooks() {

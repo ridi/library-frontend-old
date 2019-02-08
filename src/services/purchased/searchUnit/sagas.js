@@ -27,6 +27,7 @@ import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { isExpiredTTL } from '../../../utils/ttl';
+import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -79,6 +80,7 @@ function* loadItems() {
 }
 
 function* hideSelectedBooks() {
+  yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedBooks);
 
   const bookIds = Object.keys(selectedBooks);
@@ -87,9 +89,12 @@ function* hideSelectedBooks() {
   const queueIds = yield call(requestHide, bookIds, revision);
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
-  // TODO: Message 수정
-  yield put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.'));
-  yield call(loadItems);
+  if (isFinish) {
+    yield call(loadItems);
+  }
+
+  // TODO 메시지 수정
+  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
 }
 
 function* downloadSelectedBooks() {
