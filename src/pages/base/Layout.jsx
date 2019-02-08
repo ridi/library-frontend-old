@@ -5,24 +5,27 @@ import { globalStyles } from './styles';
 import GNB from './GNB';
 import Toaster from '../../components/Toaster';
 import FullScreenLoading from '../../components/FullScreenLoading';
+import Dialog from '../../components/Dialog';
 
 class Layout extends React.Component {
   render() {
-    const { children, isLoading } = this.props;
+    const { children, fullScreenLoading, dialog } = this.props;
     return (
       <>
         <Global styles={globalStyles} />
         <GNB />
         {children}
         <Toaster />
-        {isLoading ? <FullScreenLoading /> : null}
+        {dialog ? <Dialog {...dialog} /> : null}
+        {fullScreenLoading ? <FullScreenLoading /> : null}
       </>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  isLoading: state.fullScreenLoading,
+  fullScreenLoading: state.fullScreenLoading,
+  dialog: state.dialog.dialog,
 });
 
 export default connect(mapStateToProps)(Layout);

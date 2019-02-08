@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { jsx } from '@emotion/core';
+import { disableScroll, enableScroll } from '../utils/scroll';
 
 const styles = {
   dialogWrapper: {
@@ -75,16 +76,27 @@ const styles = {
   },
 };
 
-class Dialog extends React.Component {
+export default class Dialog extends React.Component {
+  componentDidMount() {
+    disableScroll();
+  }
+
+  componentWillUnmount() {
+    enableScroll();
+  }
+
   render() {
+    const {
+      dialog: { title, message },
+    } = this.props;
     return (
       <div css={styles.dialogWrapper}>
         <div css={styles.dialog}>
           <div css={styles.dialogHeader}>
-            <div css={styles.dialogTitle}>다운로드 오류</div>
+            <div css={styles.dialogTitle}>{title}</div>
             <button type="button" css={styles.dialogCloseButton} />
           </div>
-          <div css={styles.dialogContent}>다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
+          <div css={styles.dialogContent}>{message}</div>
           <div css={styles.dialogFooter}>
             <button type="button" css={styles.dialogButton}>
               확인
@@ -96,8 +108,3 @@ class Dialog extends React.Component {
     );
   }
 }
-
-const mapStateToProps = state => ({});
-const ConnectedDialog = connect(mapStateToProps)(Dialog);
-
-export default ConnectedDialog;
