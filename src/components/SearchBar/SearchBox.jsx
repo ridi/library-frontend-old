@@ -74,14 +74,16 @@ export default class SearchBox extends React.Component {
         }}
         css={[styles.searchBox, keyword && styles.searchBoxActive]}
         onSubmit={this.handleSubmit}
+        action="."
       >
         <Icon name="search" css={styles.searchBoxIcon} />
         <input
           ref={ref => {
             this.input = ref;
           }}
-          placeholder="모든 책 검색"
           type="search"
+          name="search"
+          placeholder="모든 책 검색"
           css={styles.searchBoxInput}
           value={keyword}
           onChange={this.handleChange}
