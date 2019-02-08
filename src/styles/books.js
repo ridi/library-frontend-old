@@ -63,10 +63,10 @@ export const landscape = {
   marginTop: 20,
   display: 'flex',
   position: 'relative',
-  borderBottom: '1px solid #d1d5d9',
 
   '.LandscapeBook': {
     width: '100%',
+    borderBottom: '1px solid #d1d5d9',
   },
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: '50%',
