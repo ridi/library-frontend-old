@@ -103,7 +103,7 @@ export const searchBoxClearButtonActive = {
 
 export const cancelSearchButton = {
   display: 'block',
-  marginLeft: 18,
+  marginLeft: 14,
   borderRadius: 4,
   boxShadow: '1px 1px 1px 0 rgba(0, 0, 0, .05)',
   backgroundColor: 'white',
