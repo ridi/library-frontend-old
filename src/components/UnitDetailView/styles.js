@@ -177,6 +177,7 @@ const defaultButtonStyle = {
 export const downloadButton = {
   ...defaultButtonStyle,
   marginTop: 24,
+  border: '1px solid #0077d9',
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
   backgroundColor: '#1f8ce6',
   color: 'white',
@@ -184,6 +185,7 @@ export const downloadButton = {
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
   marginTop: 10,
+  border: '2px solid #d1d5d9',
   boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
   backgroundColor: 'white',
   color: '#808991',
