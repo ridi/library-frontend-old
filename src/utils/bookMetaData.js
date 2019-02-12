@@ -18,7 +18,7 @@ export default class BookMetaData {
         const author = authors[role];
 
         if (author) {
-          const names = author.map(value => value.name).join(',');
+          const names = author.map(value => value.name).join(', ');
           previous.push(`${names} ${AuthorRole.convertToString(role)}`);
         }
         return previous;
