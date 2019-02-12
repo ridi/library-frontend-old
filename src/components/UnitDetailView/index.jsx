@@ -179,7 +179,7 @@ class UnitDetailView extends React.Component {
           </div>
         </section>
 
-        {UnitType.isBook(unit.type) ? this.renderDescription() : null}
+        {this.renderDescription()}
       </>
     );
   }
