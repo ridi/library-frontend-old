@@ -52,6 +52,9 @@ export const item = {
   fontSize: 15,
   color: '#40474d',
   textAlign: 'left',
+  ':hover': {
+    backgroundColor: '#f3f4f5',
+  },
 };
 
 export const icon = {
