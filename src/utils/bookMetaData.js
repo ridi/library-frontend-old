@@ -9,6 +9,7 @@ export default class BookMetaData {
   }
 
   get author() {
+    const LIMIT = 2;
     const { authors } = this.bookData;
     if (!authors) return null;
 
@@ -18,7 +19,10 @@ export default class BookMetaData {
         const author = authors[role];
 
         if (author) {
-          const names = author.map(value => value.name).join(', ');
+          const names =
+            author.length > LIMIT
+              ? `${author[0].name}, ${author[1].name} 외 ${author.length - LIMIT}명`
+              : author.map(value => value.name).join(', ');
           previous.push(`${names} ${AuthorRole.convertToString(role)}`);
         }
         return previous;
@@ -30,7 +34,7 @@ export default class BookMetaData {
     const { authors } = this.bookData;
     if (!authors) return null;
 
-    const LIMIT = 3;
+    const LIMIT = 2;
     const names = [];
     const roles = AuthorRole.getPriorities(authors);
     roles.forEach(role => {
@@ -39,7 +43,7 @@ export default class BookMetaData {
         author.map(value => names.push(value.name));
       }
     });
-    const extraCount = names.length > LIMIT ? ` 외 ${names.length - LIMIT}명` : '';
+    const extraCount = names.length >= LIMIT ? ` 외 ${names.length - LIMIT}명` : '';
     return `${names.slice(0, LIMIT).join(', ')}${extraCount}`;
   }
 
