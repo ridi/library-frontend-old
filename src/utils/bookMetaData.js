@@ -62,6 +62,10 @@ export default class BookMetaData {
       infos.push(`${formatFileSize(file.size)}`);
     }
 
+    if (file.is_drm_free) {
+      infos.push('DRM Free');
+    }
+
     const delimiter = '|';
 
     return infos.join(`\\${delimiter}\\`).split('\\');
