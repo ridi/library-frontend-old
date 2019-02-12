@@ -4,6 +4,7 @@ import Responsive from '../pages/base/Responsive';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
+import HorizontalRuler from './HorizontalRuler';
 import UnitSortModal from './Modal/UnitSortModal';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
@@ -150,19 +151,22 @@ export default class SeriesView extends React.Component {
     const { isEditing } = this.state;
 
     return (
-      <Editable
-        allowFixed
-        isEditing={isEditing}
-        nonEditBar={this.renderSeriesToolBar()}
-        editingBarProps={this.makeEditingBarProps()}
-        actionBarProps={this.wrapActionBarProps()}
-      >
-        <Responsive hasPadding={false}>
-          {this.renderBooks()}
-          {this.renderModal()}
-        </Responsive>
-        {this.renderPaginator()}
-      </Editable>
+      <>
+        <HorizontalRuler color="#d1d5d9" />
+        <Editable
+          allowFixed
+          isEditing={isEditing}
+          nonEditBar={this.renderSeriesToolBar()}
+          editingBarProps={this.makeEditingBarProps()}
+          actionBarProps={this.wrapActionBarProps()}
+        >
+          <Responsive hasPadding={false}>
+            {this.renderBooks()}
+            {this.renderModal()}
+          </Responsive>
+          {this.renderPaginator()}
+        </Editable>
+      </>
     );
   }
 }

@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-const style = {
+const style = backgroundColor => ({
   height: 1,
-  backgroundColor: '#f3f4f5',
-};
+  backgroundColor: backgroundColor || '#f3f4f5',
+});
 
-const HorizontalRuler = () => <div css={style} />;
+const HorizontalRuler = ({ color }) => <div css={style(color)} />;
 
 export default HorizontalRuler;
