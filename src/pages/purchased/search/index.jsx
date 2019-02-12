@@ -11,6 +11,7 @@ import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../../constants/urls';
+import ViewType from '../../../constants/viewType';
 import { getBooks } from '../../../services/book/selectors';
 import {
   changeSearchKeyword,
@@ -245,7 +246,7 @@ const mapStateToProps = state => {
     books,
     selectedBooks,
     isFetchingBooks,
-    viewType: state.viewType,
+    viewType: ViewType.LANDSCAPE,
   };
 };
 
