@@ -93,7 +93,19 @@ export const reset = {
     border: 0,
     msInterpolationMode: 'bicubic',
   }),
-  input: css([inheritFont, resetAppearance, resetLayout]),
+  input: css([
+    inheritFont,
+    resetAppearance,
+    resetLayout,
+    {
+      '&::-ms-clear': {
+        display: 'none',
+      },
+      '&::::-webkit-search-cancel-button': {
+        display: 'none',
+      },
+    },
+  ]),
   legend: css([resetLayout]),
   li: css([resetLayout]),
   nav: css([resetLayout]),
