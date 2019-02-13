@@ -43,7 +43,7 @@ export default class BookMetaData {
         author.map(value => names.push(value.name));
       }
     });
-    const extraCount = names.length >= LIMIT ? ` 외 ${names.length - LIMIT}명` : '';
+    const extraCount = names.length > LIMIT ? ` 외 ${names.length - LIMIT}명` : '';
     return `${names.slice(0, LIMIT).join(', ')}${extraCount}`;
   }
 
