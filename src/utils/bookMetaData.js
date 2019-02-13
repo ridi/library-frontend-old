@@ -59,7 +59,11 @@ export default class BookMetaData {
     }
 
     if (file.character_count) {
-      infos.push(`약 ${numberWithUnit(file.character_count)}자`);
+      const characterCount = numberWithUnit(file.character_count);
+      // null 일 수 있다.
+      if (characterCount) {
+        infos.push(`약 ${numberWithUnit(file.character_count)}자`);
+      }
     }
 
     if (file.size) {
