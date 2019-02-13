@@ -7,7 +7,7 @@ export const numberWithUnit = value => {
   let unit = '';
 
   if (value < 1000) {
-    // DO NOTHING
+    floorNums = value;
   } else if (value < 10000) {
     floorNums = Math.round(value / 100) / 10;
     unit = '천';
