@@ -3,7 +3,7 @@ export const toastWrapper = {
   left: 0,
   right: 0,
   bottom: 50,
-  zindex: 9999,
+  zIndex: 9999,
 };
 
 export const toast = {
