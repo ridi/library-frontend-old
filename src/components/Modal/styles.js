@@ -1,4 +1,9 @@
-export const modal = isActive => {
+export const Align = {
+  Left: 'left',
+  Right: 'right',
+};
+
+export const modal = (isActive, horizontalAlign = Align.Right) => {
   const active = isActive
     ? {
         opacity: 1,
@@ -11,7 +16,7 @@ export const modal = isActive => {
     position: 'absolute',
     width: 200,
     maxHeight: 430,
-    right: -6,
+    [horizontalAlign]: -6,
     top: 30,
     zIndex: 9999,
     background: 'rgba(255, 255, 255, .98)',

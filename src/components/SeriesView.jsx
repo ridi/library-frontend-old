@@ -5,7 +5,6 @@ import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
 import HorizontalRuler from './HorizontalRuler';
-import UnitSortModal from './Modal/UnitSortModal';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
@@ -15,18 +14,12 @@ export default class SeriesView extends React.Component {
     super(props);
     this.state = {
       isEditing: false,
-      showSortModal: false,
     };
   }
 
   toggleEditingMode = () => {
     const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing, showSortModal: false });
-  };
-
-  toggleSortModal = () => {
-    const { showSortModal } = this.state;
-    this.setState({ showSortModal: !showSortModal });
+    this.setState({ isEditing: !isEditing });
   };
 
   makeEditingBarProps() {
@@ -60,12 +53,28 @@ export default class SeriesView extends React.Component {
   }
 
   renderSeriesToolBar() {
-    const { currentOrder, orderOptions } = this.props;
+    const {
+      currentOrder,
+      orderOptions,
+      pageProps: { href, as },
+    } = this.props;
+
     let orderTitle = null;
+
     if (orderOptions && orderOptions[currentOrder]) {
       orderTitle = orderOptions[currentOrder].title;
     }
-    return <SeriesToolBar orderTitle={orderTitle} toggleSortModal={this.toggleSortModal} toggleEditingMode={this.toggleEditingMode} />;
+
+    return (
+      <SeriesToolBar
+        orderTitle={orderTitle}
+        toggleEditingMode={this.toggleEditingMode}
+        currentOrder={currentOrder}
+        orderOptions={orderOptions}
+        href={href}
+        as={as}
+      />
+    );
   }
 
   renderBooks() {
@@ -116,30 +125,6 @@ export default class SeriesView extends React.Component {
     );
   }
 
-  renderModal() {
-    const { showSortModal } = this.state;
-    const {
-      currentOrder,
-      orderOptions,
-      pageProps: { href, as },
-    } = this.props;
-
-    if (currentOrder === undefined || orderOptions === undefined) {
-      return null;
-    }
-
-    return (
-      <UnitSortModal
-        order={currentOrder}
-        orderOptions={orderOptions}
-        isActive={showSortModal}
-        onClickModalBackground={this.toggleSortModal}
-        href={href}
-        as={as}
-      />
-    );
-  }
-
   renderPaginator() {
     const {
       pageProps: { currentPage, totalPages, href, as, query },
@@ -160,10 +145,7 @@ export default class SeriesView extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.wrapActionBarProps()}
         >
-          <Responsive hasPadding={false}>
-            {this.renderBooks()}
-            {this.renderModal()}
-          </Responsive>
+          <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>
           {this.renderPaginator()}
         </Editable>
       </>
