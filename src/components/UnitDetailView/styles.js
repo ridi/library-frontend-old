@@ -31,6 +31,8 @@ export const thumbnailWrapper = {
 
 export const thumbnail = {
   width: 130,
+  boxShadow: '2px 4px 10px rgba(0, 0, 0, .15)',
+  lineHeight: 0,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: 180,
   }),

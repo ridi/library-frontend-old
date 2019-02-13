@@ -16,7 +16,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isRidiselect = libraryBookData.is_ridiselect;
   const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
   const expiredAt = libraryBookData.remain_time;
-  const isUnitBook = !UnitType.isBook(libraryBookData.unit_type);
+  const isUnitBook = libraryBookData.unit_type && !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
@@ -28,7 +28,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
 
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
-    thumbnailUrl: platformBookData.thumbnail.large,
+    thumbnailUrl: `${platformBookData.thumbnail.large}?dpi=xhdpi`,
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,

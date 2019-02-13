@@ -8,6 +8,10 @@ export const seriesToolBar = {
   backgroundColor: '#f3f4f5',
 };
 
+export const buttonWrapper = {
+  position: 'relative',
+};
+
 export const orderButton = {
   fontSize: 14,
   letterSpacing: -0.3,
