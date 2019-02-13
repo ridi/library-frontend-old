@@ -57,15 +57,20 @@ export default class Paginator extends React.Component {
   }
 
   renderGoPrev() {
-    const { currentPage } = this.props;
+    const { currentPage, pageCount } = this.props;
 
-    if (currentPage === 1) {
+    // 첫 페이지와 같은 블록이면 노출하지 않는다.
+    if (calcPageBlock(currentPage, pageCount) === calcPageBlock(1, pageCount)) {
       return null;
     }
 
+    // 이전 블록의 첫 페이지 계산
+    // 2개의 이전블록의 마지막 페이지 의 다음페이지로 계산한다.
+    const firstPrevBlockPage = (calcPageBlock(currentPage, pageCount) - 2) * pageCount + 1;
+
     return (
       <div css={styles.buttonWrapper}>
-        <Link {...this.getLinkProps(currentPage - 1)}>
+        <Link {...this.getLinkProps(firstPrevBlockPage)}>
           <a css={styles.pageButton}>
             <Icon name="arrow_8_left" css={styles.pageItemIcon} />
             <span className="a11y">이전 페이지</span>
@@ -76,15 +81,20 @@ export default class Paginator extends React.Component {
   }
 
   renderGoNext() {
-    const { currentPage, totalPages } = this.props;
+    const { currentPage, totalPages, pageCount } = this.props;
 
-    if (currentPage === totalPages) {
+    // 마지막 페이지와 같은 블록이면 노출하지 않는다.
+    if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
     }
 
+    // 다음 블록의 첫 페이지 계산
+    // 현재 블록의 마지막 페이지의 다음 페이지로 계산하다.
+    const firstNextBlockPage = calcPageBlock(currentPage, pageCount) * pageCount + 1;
+
     return (
       <div css={styles.buttonWrapper}>
-        <Link {...this.getLinkProps(currentPage + 1)}>
+        <Link {...this.getLinkProps(firstNextBlockPage)}>
           <a css={styles.pageButton}>
             <Icon name="arrow_8_right" css={styles.pageItemIcon} />
             <span className="a11y">다음 페이지</span>
