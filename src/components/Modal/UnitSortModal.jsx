@@ -4,8 +4,8 @@ import shortid from 'shortid';
 
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 
-const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, onClickModalBackground }) => (
-  <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
+const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, onClickModalBackground, horizontalAlign }) => (
+  <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground} horizontalAlign={horizontalAlign}>
     <ModalItemGroup groupTitle="정렬 순서">
       <ul>
         {orderOptions.map((option, index) => (
