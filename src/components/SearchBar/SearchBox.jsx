@@ -12,6 +12,7 @@ export default class SearchBox extends React.Component {
 
     this.state = {
       keyword: props.keyword || '',
+      isSearchBoxFocused: false,
     };
 
     this.input = null;
@@ -28,10 +29,12 @@ export default class SearchBox extends React.Component {
     document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
     if (!isActive) {
       onBlur && onBlur();
+      this.setState({ isSearchBoxFocused: false });
       return;
     }
 
     document.addEventListener('click', this.handleOnClickOutOfSearchBar, true);
+    this.setState({ isSearchBoxFocused: true });
     onFocus && onFocus();
   }
 
@@ -67,13 +70,13 @@ export default class SearchBox extends React.Component {
   }
 
   render() {
-    const { keyword } = this.state;
+    const { keyword, isSearchBoxFocused } = this.state;
     return (
       <form
         ref={ref => {
           this.searchBarForm = ref;
         }}
-        css={[styles.searchBox, keyword && styles.searchBoxActive]}
+        css={[styles.searchBox, isSearchBoxFocused && styles.searchBoxFocused, keyword && styles.searchBoxKeywordAdded]}
         onSubmit={this.handleSubmit}
         action="."
       >

@@ -42,7 +42,11 @@ export const searchBox = {
   boxSizing: 'border-box',
 };
 
-export const searchBoxActive = {
+export const searchBoxFocused = {
+  borderColor: '#339cf2',
+};
+
+export const searchBoxKeywordAdded = {
   paddingRight: 38,
 };
 
