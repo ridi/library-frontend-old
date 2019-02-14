@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Icon } from '@ridi/rsg';
-import { white } from 'ansi-colors';
 
 const styles = {
   errorWrapper: {
