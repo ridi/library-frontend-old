@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Icon } from '@ridi/rsg';
+import BookOutline from '../svgs/BookOutline.svg';
 
 const styles = {
   errorWrapper: {
@@ -39,7 +39,7 @@ const styles = {
 export const Error = ({ onClickRefreshButton }) => (
   <div>
     <div css={styles.errorWrapper}>
-      <Icon name="book_5" css={styles.icon} />
+      <BookOutline css={styles.icon} />
       <p css={styles.message}>
         도서의 정보 구성 중 오류가 발생했습니다.
         <br />
