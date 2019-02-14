@@ -9,7 +9,7 @@ import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
 import { snakelize } from '../../utils/snakelize';
 import { delay } from '../../utils/delay';
 import { DELETE_API_CHUNK_COUNT } from './constants';
-import { UnhideError, GetBookIdForUnhideError } from './errors';
+import { UnhideError, MakeBookIdsError } from './errors';
 
 export function* getRevision() {
   const api = yield put(getAPI());
@@ -64,8 +64,12 @@ export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
   }
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
-  return response.data.result;
+  try {
+    const response = yield api.get(makeURI('/items/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
+    return response.data.result;
+  } catch (err) {
+    throw new MakeBookIdsError();
+  }
 }
 
 export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
@@ -82,7 +86,7 @@ export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
     const response = yield api.get(makeURI('/items/hidden/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
     return response.data.result;
   } catch (err) {
-    throw new GetBookIdForUnhideError();
+    throw new MakeBookIdsError();
   }
 }
 

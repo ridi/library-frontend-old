@@ -24,7 +24,7 @@ import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { showDialog } from '../../dialog/actions';
-import { UnhideError, GetBookIdForUnhideError } from '../../common/errors';
+import { UnhideError, MakeBookIdsError } from '../../common/errors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -65,7 +65,7 @@ function* unhideSelectedBooks() {
     let message = '';
     if (err instanceof UnhideError) {
       message = '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
-    } else if (err instanceof GetBookIdForUnhideError) {
+    } else if (err instanceof MakeBookIdsError) {
       message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
     yield put(showDialog('도서 숨김 해제 오류', message));
