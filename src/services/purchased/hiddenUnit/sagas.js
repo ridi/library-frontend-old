@@ -76,7 +76,14 @@ function* unhideSelectedHiddenUnitBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = Object.keys(selectedBooks);
-  const queueIds = yield call(requestUnhide, bookIds, revision);
+
+  let queueIds;
+  try {
+    queueIds = yield call(requestUnhide, bookIds, revision);
+  } catch (err) {
+    yield put(showDialog('도서 숨김 해제 오류', '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
