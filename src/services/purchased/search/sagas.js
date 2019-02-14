@@ -28,6 +28,7 @@ import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { URLMap } from '../../../constants/urls';
+import { InvalidKeywordError } from './errors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -47,14 +48,20 @@ function* loadPage() {
   }
 
   yield put(setSearchIsFetchingBooks(true));
-  const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
+  try {
+    const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 
-  yield call(extractUnitData, itemResponse.items);
+    yield call(extractUnitData, itemResponse.items);
 
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
-  yield put(setSearchIsFetchingBooks(false));
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
+    yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+    yield put(setSearchIsFetchingBooks(false));
+  } catch (err) {
+    if (err instanceof InvalidKeywordError) {
+      yield put(setSearchIsFetchingBooks(false));
+    }
+  }
 }
 
 function changeSearchKeyword(action) {
