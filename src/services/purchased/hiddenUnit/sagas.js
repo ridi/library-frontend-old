@@ -106,6 +106,7 @@ function* deleteSelectedHiddenUnitBooks() {
     queueIds = yield call(requestDelete, bookIds, revision);
   } catch (err) {
     yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    return;
   }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
