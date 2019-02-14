@@ -8,7 +8,6 @@ import { makeURI } from '../../../utils/uri';
 import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-import { InvalidKeywordError } from './errors';
 
 export function* fetchSearchItems(keyword, page) {
   const options = {
@@ -23,7 +22,8 @@ export function* fetchSearchItems(keyword, page) {
     return response.data;
   } catch (err) {
     if (err.response.status === 400) {
-      throw new InvalidKeywordError();
+      // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+      return { items: [] };
     }
 
     throw new Error('Unknown');
@@ -41,7 +41,11 @@ export function* fetchSearchItemsTotalCount(keyword) {
     return response.data;
   } catch (err) {
     if (err.response.status === 400) {
-      throw new InvalidKeywordError();
+      // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+      return {
+        unit_total_count: 0,
+        item_total_count: 0,
+      };
     }
 
     throw new Error('Unknown');
