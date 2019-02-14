@@ -33,6 +33,7 @@ import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Responsive from '../../base/Responsive';
+import { Error } from '../../../components/Error';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -197,6 +198,7 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
+    const { isError } = this.props;
 
     return (
       <>
@@ -211,7 +213,7 @@ class Hidden extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{this.renderMain()}</main>
+          <main>{isError ? <Error /> : this.renderMain()}</main>
         </Editable>
       </>
     );
@@ -237,6 +239,7 @@ const mapStateToProps = state => {
     isFetchingBooks,
     mainPageInfo,
     viewType: state.ui.viewType,
+    isError: state.ui.isError,
   };
 };
 

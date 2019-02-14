@@ -32,6 +32,7 @@ import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
+import { Error } from '../../../components/Error';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -143,8 +144,18 @@ class searchUnit extends React.Component {
     );
   }
 
-  render() {
+  renderMain() {
     const { unit } = this.props;
+    return (
+      <>
+        <Responsive>{this.renderDetailView()}</Responsive>
+        {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+      </>
+    );
+  }
+
+  render() {
+    const { unit, isError } = this.props;
 
     return (
       <>
@@ -153,10 +164,7 @@ class searchUnit extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
-        <main>
-          <Responsive>{this.renderDetailView()}</Responsive>
-          {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
-        </main>
+        <main>{isError ? <Error /> : this.renderMain()}</main>
       </>
     );
   }
@@ -195,6 +203,7 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     searchPageInfo,
+    isError: state.ui.isError,
   };
 };
 

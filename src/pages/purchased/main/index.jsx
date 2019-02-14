@@ -33,6 +33,7 @@ import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import { Error } from '../../../components/Error';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -205,6 +206,7 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
+    const { isError } = this.props;
 
     return (
       <>
@@ -219,7 +221,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{this.renderMain()}</main>
+          <main>{isError ? <Error /> : this.renderMain()}</main>
         </Editable>
         <Footer />
       </>
@@ -243,6 +245,7 @@ const mapStateToProps = state => {
     selectedBooks,
     isFetchingBooks,
     viewType: state.ui.viewType,
+    isError: state.ui.isError,
   };
 };
 
