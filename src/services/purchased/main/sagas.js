@@ -27,12 +27,11 @@ import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { MakeBookIdsError } from '../../common/errors';
 import { showDialog } from '../../dialog/actions';
-import { setError } from '../../ui/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

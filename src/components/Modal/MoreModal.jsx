@@ -6,7 +6,7 @@ import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
-import { setViewType } from '../../services/viewType/actions';
+import { setViewType } from '../../services/ui/actions';
 
 const MoreModal = ({
   order,

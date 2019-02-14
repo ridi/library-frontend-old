@@ -26,7 +26,7 @@ import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/
 import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { URLMap } from '../../../constants/urls';
 
 function* persistPageOptionsFromQueries() {
@@ -38,6 +38,7 @@ function* persistPageOptionsFromQueries() {
 }
 
 function* loadPage() {
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const { page, keyword } = yield select(getOptions);
@@ -45,17 +46,20 @@ function* loadPage() {
   if (!keyword) {
     return;
   }
+  try {
+    yield put(setSearchIsFetchingBooks(true));
 
-  yield put(setSearchIsFetchingBooks(true));
+    const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
 
-  const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
+    yield call(extractUnitData, itemResponse.items);
 
-  yield call(extractUnitData, itemResponse.items);
-
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
-  yield put(setSearchIsFetchingBooks(false));
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
+    yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+    yield put(setSearchIsFetchingBooks(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setSearchIsFetchingBooks(false))]);
+  }
 }
 
 function changeSearchKeyword(action) {

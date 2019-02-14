@@ -26,10 +26,11 @@ import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { showDialog } from '../../dialog/actions';
+import { setError } from '../../ui/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -52,29 +53,34 @@ function* loadPrimaryItem(unitId) {
 }
 
 function* loadItems() {
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = UnitOrderOptions.parse(order);
 
-  yield put(setIsFetchingBook(true));
-  const [itemResponse, countResponse] = yield all([
-    call(fetchMainUnitItems, unitId, orderType, orderBy, page),
-    call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
-  ]);
+  try {
+    yield put(setIsFetchingBook(true));
+    const [itemResponse, countResponse] = yield all([
+      call(fetchMainUnitItems, unitId, orderType, orderBy, page),
+      call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
+    ]);
 
-  // PrimaryItem과 Unit 저장
-  const primaryItem = yield call(loadPrimaryItem, unitId);
-  yield call(saveUnitData, [itemResponse.unit]);
+    // PrimaryItem과 Unit 저장
+    const primaryItem = yield call(loadPrimaryItem, unitId);
+    yield call(saveUnitData, [itemResponse.unit]);
 
-  // 책 데이터 로딩
-  const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
-  yield call(loadBookData, bookIds);
-  yield call(loadBookDescriptions, bookIds);
+    // 책 데이터 로딩
+    const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
+    yield call(loadBookData, bookIds);
+    yield call(loadBookDescriptions, bookIds);
 
-  yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
-  yield put(setIsFetchingBook(false));
+    yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
+    yield put(setIsFetchingBook(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setIsFetchingBook(false))]);
+  }
 }
 
 function* hideSelectedBooks() {
