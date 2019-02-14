@@ -26,7 +26,7 @@ class Layout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  showFullScreenLoading: state.fullScreenLoading,
+  showFullScreenLoading: state.ui.fullScreenLoading,
   dialog: state.dialog,
 });
 

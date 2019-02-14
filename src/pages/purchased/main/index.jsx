@@ -242,7 +242,7 @@ const mapStateToProps = state => {
     books,
     selectedBooks,
     isFetchingBooks,
-    viewType: state.viewType,
+    viewType: state.ui.viewType,
   };
 };
 

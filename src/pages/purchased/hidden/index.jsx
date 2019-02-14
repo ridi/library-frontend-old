@@ -236,7 +236,7 @@ const mapStateToProps = state => {
     selectedBooks,
     isFetchingBooks,
     mainPageInfo,
-    viewType: state.viewType,
+    viewType: state.ui.viewType,
   };
 };
 

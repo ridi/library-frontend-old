@@ -76,7 +76,7 @@ const MoreModal = ({
 );
 
 const mapStateToProps = state => ({
-  viewType: state.viewType,
+  viewType: state.ui.viewType,
 });
 
 const mapDispatchToProps = {

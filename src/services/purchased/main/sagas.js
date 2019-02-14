@@ -30,8 +30,9 @@ import { downloadBooks } from '../../bookDownload/sagas';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
-import { HideError, MakeBookIdsError } from '../../common/errors';
+import { MakeBookIdsError } from '../../common/errors';
 import { showDialog } from '../../dialog/actions';
+import { setError } from '../../ui/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -45,29 +46,35 @@ function* persistPageOptionsFromQueries() {
 }
 
 function* loadMainItems() {
+  // Clear Error
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const { page, order, filter: category } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
-  yield put(setIsFetchingBooks(true));
-  const [itemResponse, countResponse, categories] = yield all([
-    call(fetchMainItems, orderType, orderBy, category, page),
-    call(fetchMainItemsTotalCount, orderType, orderBy, category),
-    call(fetchPurchaseCategories),
-  ]);
+  try {
+    yield put(setIsFetchingBooks(true));
+    const [itemResponse, countResponse, categories] = yield all([
+      call(fetchMainItems, orderType, orderBy, category, page),
+      call(fetchMainItemsTotalCount, orderType, orderBy, category),
+      call(fetchPurchaseCategories),
+    ]);
 
-  yield call(extractUnitData, itemResponse.items);
+    yield call(extractUnitData, itemResponse.items);
 
-  // Request BookData
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([
-    put(setItems(itemResponse.items)),
-    put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setFilterOptions(categories)),
-  ]);
-  yield put(setIsFetchingBooks(false));
+    // Request BookData
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
+    yield all([
+      put(setItems(itemResponse.items)),
+      put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+      put(setFilterOptions(categories)),
+    ]);
+    yield put(setIsFetchingBooks(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setIsFetchingBooks(false))]);
+  }
 }
 
 function* hideSelectedBooks() {
