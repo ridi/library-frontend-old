@@ -1,6 +1,7 @@
 import React from 'react';
 import ViewType from '../constants/viewType';
 import Responsive from '../pages/base/Responsive';
+import BookOutline from '../svgs/BookOutline.svg';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -86,7 +87,7 @@ export default class SeriesView extends React.Component {
       onSelectedChange,
       isFetching,
       linkWebviewer,
-      emptyProps: { icon = 'book_5', message = '구매/대여하신 책이 없습니다.' } = {},
+      emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
     } = this.props;
 
     // Data 가져오는 상태면서 캐싱된 items가 없으면 Skeleton 노출
@@ -96,7 +97,7 @@ export default class SeriesView extends React.Component {
 
     // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
     if (!isFetching && items.length === 0) {
-      return <EmptyBookList icon={icon} message={message} />;
+      return <EmptyBookList IconComponent={BookOutline} message={message} />;
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {

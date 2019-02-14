@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import React from 'react';
 import { jsx } from '@emotion/core';
-import { Icon } from '@ridi/rsg';
+import React from 'react';
+import Close from '../../svgs/Close.svg';
+import Search from '../../svgs/Search.svg';
 import IconButton from '../IconButton';
 import * as styles from './styles';
 
@@ -76,7 +77,7 @@ export default class SearchBox extends React.Component {
         onSubmit={this.handleSubmit}
         action="."
       >
-        <Icon name="search" css={styles.searchBoxIcon} />
+        <Search css={styles.searchBoxIcon} />
         <input
           ref={ref => {
             this.input = ref;
@@ -90,11 +91,12 @@ export default class SearchBox extends React.Component {
           onFocus={() => this.setActivation(true)}
         />
         <IconButton
-          icon="close_2"
           a11y="검색어 제거"
           css={[styles.searchBoxClearButton, keyword && styles.searchBoxClearButtonActive]}
           onClick={this.handleOnClickCancel}
-        />
+        >
+          <Close css={styles.searchBoxClearIcon} />
+        </IconButton>
       </form>
     );
   }

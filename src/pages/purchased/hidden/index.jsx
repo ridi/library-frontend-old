@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import BookOutline from '../../../svgs/BookOutline.svg';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -189,7 +190,7 @@ class Hidden extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList icon="book_5" message="숨긴 도서가 없습니다." />;
+      return <EmptyBookList IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
     }
 
     return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;

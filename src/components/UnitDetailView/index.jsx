@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Icon } from '@ridi/rsg';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
@@ -8,9 +7,11 @@ import shortid from 'shortid';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
+import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
+import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
+import BookMetaData from '../../utils/bookMetaData';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
-import BookMetaData from '../../utils/bookMetaData';
 
 const LINE_HEIGHT = 23;
 const LINE = 3;
@@ -66,7 +67,7 @@ class UnitDetailView extends React.Component {
       <div css={styles.bookDescriptionExpend}>
         <button type="button" onClick={() => this.expand()} css={styles.bookDescriptionExpendButton}>
           계속 읽기
-          <Icon css={styles.bookDescriptionExpendIcon} name="arrow_5_down" />
+          <NoneDashedArrowDown css={styles.bookDescriptionExpendIcon} />
         </button>
       </div>
     );
@@ -147,7 +148,7 @@ class UnitDetailView extends React.Component {
     return (
       <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
         {serviceName}에서 보기
-        <Icon css={styles.outerLinkIcon} name="arrow_5_right" />
+        <NoneDashedArrowRight css={styles.outerLinkIcon} />
       </a>
     );
   }

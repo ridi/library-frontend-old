@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx } from '@emotion/core';
-import { Icon } from '@ridi/rsg';
+import Check from '../../svgs/Check.svg';
 import Responsive from '../../pages/base/Responsive';
 
 import * as styles from './styles';
@@ -26,7 +26,7 @@ class EditingBar extends React.Component {
       <Responsive css={[styles.editingBarWrapper, this.state.isActivate && styles.editingBarActive]}>
         <div css={styles.editingBar}>
           <div css={styles.editingBarIconWrapper}>
-            <Icon name="check_1" css={styles.editingBarIcon} />
+            <Check css={styles.editingBarIcon} />
             <p css={styles.editingBarSelectCount}>{totalSelectedCount}권 선택</p>
           </div>
           <div>
