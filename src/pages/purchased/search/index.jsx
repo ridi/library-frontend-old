@@ -208,6 +208,7 @@ class Search extends React.Component {
     const {
       pageInfo: { keyword },
       isError,
+      dispatchLoadItems,
     } = this.props;
 
     let title = `'${keyword}' 검색 결과 - 내 서재`;
@@ -228,7 +229,7 @@ class Search extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <Error /> : this.renderMain()}</main>
+          <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
         </Editable>
       </>
     );
@@ -254,6 +255,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchChangeSearchKeyword: changeSearchKeyword,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,

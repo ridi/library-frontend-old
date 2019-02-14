@@ -206,7 +206,7 @@ class Main extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isError } = this.props;
+    const { isError, dispatchLoadItems } = this.props;
 
     return (
       <>
@@ -221,7 +221,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <Error /> : this.renderMain()}</main>
+          <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
         </Editable>
         <Footer />
       </>
@@ -250,6 +250,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,

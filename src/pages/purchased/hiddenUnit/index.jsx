@@ -149,7 +149,7 @@ class HiddenUnit extends React.Component {
   }
 
   render() {
-    const { unit, isError } = this.props;
+    const { unit, isError, dispatchLoadItems } = this.props;
     return (
       <>
         <Head>
@@ -157,7 +157,7 @@ class HiddenUnit extends React.Component {
         </Head>
         <HorizontalRuler />
         {this.renderTitleBar()}
-        <main>{isError ? <Error /> : this.renderMain()}</main>
+        <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
     );
   }
@@ -201,6 +201,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
