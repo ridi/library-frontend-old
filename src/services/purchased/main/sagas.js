@@ -115,9 +115,17 @@ function* downloadSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
-  yield call(downloadBooks, bookIds);
+  try {
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    yield call(downloadBooks, bookIds);
+  } catch (err) {
+    let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    }
+    yield put(showDialog('다운로드 오류', message));
+  }
 }
 
 function* selectAllBooks() {

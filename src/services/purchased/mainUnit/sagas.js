@@ -111,8 +111,12 @@ function* hideSelectedBooks() {
 function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
-  const bookIds = Object.keys(selectedBooks);
-  yield call(downloadBooks, bookIds);
+  try {
+    const bookIds = Object.keys(selectedBooks);
+    yield call(downloadBooks, bookIds);
+  } catch (err) {
+    yield put(showDialog('다운로드 오류', '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'));
+  }
 }
 
 function* selectAllBooks() {

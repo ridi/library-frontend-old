@@ -11,6 +11,7 @@ import { showToast } from '../toast/actions';
 import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS } from './actions';
 
 import { triggerDownload } from './requests';
+import { DownloadError } from './errors';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   yield call(delay, 300);
@@ -20,7 +21,7 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
     try {
       Location.href = appUri;
     } catch (e) {
-      // TODO: Handle error.
+      throw new DownloadError();
     }
   } else if (isAndroid) {
     const androidUri = isFirefox ? appUri : convertUriToAndroidIntentUri(appUri, 'com.initialcoms.ridi');
