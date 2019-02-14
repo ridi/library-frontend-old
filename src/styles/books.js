@@ -54,6 +54,7 @@ export const portrait = {
     maxWidth: 'inherit',
     display: 'flex',
     alignItems: 'flex-end',
+    marginBottom: 2,
   },
   ...Responsive.XSmall({
     width: 86,
