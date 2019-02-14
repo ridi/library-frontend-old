@@ -818,9 +818,9 @@
     react-lazyload "^2.3.0"
     react-router-dom "^4.3.1"
 
-"@ridi/web-ui@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.2.2.tgz#acd70651660d10b1510226628f711e314261d798"
+"@ridi/web-ui@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.3.0.tgz#bc3842e9accf19f792fe1eeddb63095657e3fe14"
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"
