@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Icon } from '@ridi/rsg';
+import LogoRidibooksApp from '../../../svgs/LogoRidibooksApp.svg';
 import * as styles from './styles';
 
 const Footer = () => (
@@ -11,7 +11,7 @@ const Footer = () => (
         <ul className="HeadlineList">
           <li css={styles.headlineItem}>
             <a css={styles.headlineLink} href="https://ridibooks.com/support/app/download" target="_blank" rel="noopener noreferrer">
-              <Icon css={styles.ridibooksLogoIcon} name="app_ridi_1" />
+              <LogoRidibooksApp css={styles.ridibooksLogoIcon} />
               뷰어 다운로드
             </a>
           </li>

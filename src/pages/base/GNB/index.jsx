@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Icon } from '@ridi/rsg';
 import { jsx } from '@emotion/core';
+import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
+import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
 import MyMenuModal from '../../../components/Modal/MyMenuModal';
@@ -47,13 +48,13 @@ class GNB extends React.Component {
               <ul css={styles.familyServiceList}>
                 <li css={styles.familyServiceItem}>
                   <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
-                    <Icon css={styles.ridibooksIcon} name="logo_ridibooks_1" />
+                    <LogoRidibooks css={styles.ridibooksIcon} />
                     <span css={Hidden}>RIDIBOOKS</span>
                   </a>
                 </li>
                 <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
                   <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
-                    <Icon css={styles.ridiSelectIcon} name="logo_ridiselect_1" />
+                    <LogoRidiselect css={styles.ridiSelectIcon} />
                     <span css={Hidden}>RIDI Select</span>
                   </a>
                 </li>

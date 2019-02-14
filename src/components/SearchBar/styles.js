@@ -76,26 +76,29 @@ export const searchBoxClearButton = {
   width: 30,
   height: 30,
   transform: 'translate3d(0, -50%, 0)',
-  '&::after, .RSGIcon': {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate3d(-50%, -50%, 0)',
-  },
   '&::after': {
     content: `''`,
     borderRadius: '50%',
     display: 'block',
     width: 14,
     height: 14,
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate3d(-50%, -50%, 0)',
     background: '#9ea7ad',
   },
-  '.RSGIcon': {
-    width: 6,
-    height: 6,
-    fill: 'white',
-    zIndex: 100,
-  },
+};
+
+export const searchBoxClearIcon = {
+  position: 'absolute',
+  left: '50%',
+  top: '50%',
+  transform: 'translate3d(-50%, -50%, 0)',
+  width: 6,
+  height: 6,
+  fill: 'white',
+  zIndex: 100,
 };
 
 export const searchBoxClearButtonActive = {
