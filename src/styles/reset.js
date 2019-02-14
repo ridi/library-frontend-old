@@ -101,7 +101,7 @@ export const reset = {
       '&::-ms-clear': {
         display: 'none',
       },
-      '&::::-webkit-search-cancel-button': {
+      '&::-webkit-search-cancel-button': {
         display: 'none',
       },
     },
