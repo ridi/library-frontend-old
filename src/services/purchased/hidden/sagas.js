@@ -23,6 +23,8 @@ import { showToast } from '../../toast/actions';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { cache } from 'emotion';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -80,7 +82,13 @@ function* deleteSelectedBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestDelete, bookIds, revision);
+
+  let queueIds;
+  try {
+    queueIds = yield call(requestDelete, bookIds, revision);
+  } catch (err) {
+    yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
