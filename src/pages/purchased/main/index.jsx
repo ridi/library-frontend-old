@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import BookOutline from '../../../svgs/BookOutline.svg';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
@@ -182,7 +183,7 @@ class Main extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList icon="book_5" message="구매/대여하신 책이 없습니다." />;
+      return <EmptyBookList IconComponent={BookOutline} message="구매/대여하신 책이 없습니다." />;
     }
 
     return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;

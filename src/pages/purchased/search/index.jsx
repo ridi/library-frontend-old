@@ -23,6 +23,7 @@ import {
   toggleSelectBook,
 } from '../../../services/purchased/search/actions';
 import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
+import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
@@ -197,7 +198,7 @@ class Search extends React.Component {
         message = '검색어를 입력해주세요.';
       }
 
-      return <EmptyBookList icon="search" message={message} />;
+      return <EmptyBookList IconComponent={SearchIcon} message={message} />;
     }
 
     return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
-import { Icon } from '@ridi/rsg';
+import ArrowLeft from '../../svgs/ArrowLeft.svg';
 import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
 
@@ -10,7 +10,7 @@ const Title = ({ title, showCount, totalCount, href, as, query, a11y = '뒤로�
     <Link {...makeLinkProps(href, as, query)}>
       <a>
         <span css={styles.backButton}>
-          <Icon name="arrow_13_left" css={styles.backIcon} />
+          <ArrowLeft css={styles.backIcon} />
           <span className="a11y">{a11y}</span>
         </span>
       </a>

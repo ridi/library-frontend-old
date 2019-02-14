@@ -1,10 +1,12 @@
 /** @jsx jsx */
 import React from 'react';
 import Link from 'next/link';
-import { Icon } from '@ridi/rsg';
 import { jsx } from '@emotion/core';
 
 import * as styles from './styles';
+import NoneDashedArrowLeft from '../../svgs/NoneDashedArrowLeft.svg';
+import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
+import ThreeDotsHorizontal from '../../svgs/ThreeDotsHorizontal.svg';
 import { calcPageBlock, makePageRange } from '../../utils/pagination';
 import { makeLinkProps } from '../../utils/uri';
 
@@ -29,7 +31,7 @@ export default class Paginator extends React.Component {
           </Link>
         </div>
         <span css={styles.paginatorDots}>
-          <Icon name="dotdotdot" css={styles.dots} />
+          <ThreeDotsHorizontal css={styles.dots} />
         </span>
       </>
     );
@@ -45,7 +47,7 @@ export default class Paginator extends React.Component {
     return (
       <>
         <span css={styles.paginatorDots}>
-          <Icon name="dotdotdot" css={styles.dots} />
+          <ThreeDotsHorizontal css={styles.dots} />
         </span>
         <div css={styles.buttonWrapper}>
           <Link {...this.getLinkProps(totalPages)}>
@@ -72,7 +74,7 @@ export default class Paginator extends React.Component {
       <div css={styles.buttonWrapper}>
         <Link {...this.getLinkProps(firstPrevBlockPage)}>
           <a css={styles.pageButton}>
-            <Icon name="arrow_8_left" css={styles.pageItemIcon} />
+            <NoneDashedArrowLeft css={styles.pageItemIcon} />
             <span className="a11y">이전 페이지</span>
           </a>
         </Link>
@@ -96,7 +98,7 @@ export default class Paginator extends React.Component {
       <div css={styles.buttonWrapper}>
         <Link {...this.getLinkProps(firstNextBlockPage)}>
           <a css={styles.pageButton}>
-            <Icon name="arrow_8_right" css={styles.pageItemIcon} />
+            <NoneDashedArrowRight css={styles.pageItemIcon} />
             <span className="a11y">다음 페이지</span>
           </a>
         </Link>

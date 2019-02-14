@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
-import ThreeDots from '../../svgs/ThreeDots.svg';
+import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
 import MoreModal from '../Modal/MoreModal';
 import * as styles from './styles';
@@ -36,7 +36,7 @@ export default class More extends React.Component {
           }}
         >
           <div css={styles.iconWrapper}>
-            <ThreeDots css={styles.threeDotsIcon} />
+            <ThreeDotsVertical css={styles.threeDotsIcon} />
           </div>
         </IconButton>
         {isMoreModalShow && (

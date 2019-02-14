@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
-import { Icon } from '@ridi/rsg';
-import { Editing } from '../Tool';
+import ArrowTriangleDown from '../../svgs/ArrowTriangleDown.svg';
 import FlexBar from '../FlexBar';
-import UnitSortModal from '../Modal/UnitSortModal';
 import { Align } from '../Modal/styles';
+import UnitSortModal from '../Modal/UnitSortModal';
+import { Editing } from '../Tool';
 import * as styles from './styles';
 
 class SeriesToolBar extends React.Component {
@@ -36,7 +36,7 @@ class SeriesToolBar extends React.Component {
                 }}
               >
                 {orderTitle}
-                <Icon name="arrow_1_down" css={styles.arrow} />
+                <ArrowTriangleDown css={styles.arrow} />
               </button>
               {currentOrder !== undefined && orderOptions !== undefined && (
                 <UnitSortModal
