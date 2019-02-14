@@ -24,7 +24,7 @@ import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { showDialog } from '../../dialog/actions';
-import { UnhideError, GetBookIdForUnhideError } from './errors';
+import { UnhideError, GetBookIdForUnhideError } from '../../common/errors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

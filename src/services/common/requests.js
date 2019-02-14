@@ -9,6 +9,7 @@ import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
 import { snakelize } from '../../utils/snakelize';
 import { delay } from '../../utils/delay';
 import { DELETE_API_CHUNK_COUNT } from './constants';
+import { UnhideError, GetBookIdForUnhideError } from './errors';
 
 export function* getRevision() {
   const api = yield put(getAPI());
@@ -77,8 +78,12 @@ export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/hidden/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
-  return response.data.result;
+  try {
+    const response = yield api.get(makeURI('/items/hidden/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
+    return response.data.result;
+  } catch (err) {
+    throw new GetBookIdForUnhideError();
+  }
 }
 
 export function* requestUnhide(bookIds, revision) {
@@ -88,8 +93,12 @@ export function* requestUnhide(bookIds, revision) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.put(makeURI('/commands/items/u/unhide/', {}, config.LIBRARY_API_BASE_URL), options);
-  return toFlatten(response.data.items, 'id');
+  try {
+    const response = yield api.put(makeURI('/commands/items/u/unhide/', {}, config.LIBRARY_API_BASE_URL), options);
+    return toFlatten(response.data.items, 'id');
+  } catch (err) {
+    throw new UnhideError();
+  }
 }
 
 export function* requestHide(bookIds, revision) {
