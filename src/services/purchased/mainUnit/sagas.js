@@ -29,6 +29,7 @@ import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -80,10 +81,15 @@ function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedBooks);
 
-  const bookIds = Object.keys(selectedBooks);
-
-  const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, bookIds, revision);
+  let queueIds;
+  try {
+    const bookIds = Object.keys(selectedBooks);
+    const revision = yield call(getRevision);
+    queueIds = yield call(requestHide, bookIds, revision);
+  } catch (err) {
+    yield put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {

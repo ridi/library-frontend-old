@@ -56,16 +56,13 @@ function* unhideSelectedBooks() {
 
   const revision = yield call(getRevision);
 
-  let bookIds;
   let queueIds;
   try {
-    bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
+    const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
     queueIds = yield call(requestUnhide, bookIds, revision);
   } catch (err) {
-    let message = '';
-    if (err instanceof UnhideError) {
-      message = '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
-    } else if (err instanceof MakeBookIdsError) {
+    let message = '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
       message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
     yield put(showDialog('도서 숨김 해제 오류', message));

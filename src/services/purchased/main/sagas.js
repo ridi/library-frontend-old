@@ -30,6 +30,8 @@ import { downloadBooks } from '../../bookDownload/sagas';
 import { setFullScreenLoading } from '../../fullScreenLoading/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { HideError, MakeBookIdsError } from '../../common/errors';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -75,10 +77,20 @@ function* hideSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
-  const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, bookIds, revision);
+  let queueIds;
+  try {
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    const revision = yield call(getRevision);
+    queueIds = yield call(requestHide, bookIds, revision);
+  } catch (err) {
+    let message = '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    }
+    yield put(showDialog('도서 숨기기 오류', message));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
