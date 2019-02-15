@@ -1,6 +1,6 @@
 import { Responsive, MQ } from './responsive';
 import ViewType from '../constants/viewType';
-import { FULL_MAX_WIDTH } from './constants';
+import { BookSize, FULL_MAX_WIDTH } from './constants';
 import config from '../config';
 
 const responsiveDefaultPadding = 16;
@@ -8,19 +8,19 @@ const responsiveDefaultPadding = 16;
 const separatorBG = {
   ...Responsive.XSmall({
     background: `url(${config.STATIC_URL}/static/separator/book_w86.png) center top repeat-y`,
-    backgroundSize: '100% 165px',
+    backgroundSize: `100% ${BookSize.XSmall.height}px`,
   }),
   ...Responsive.Small({
     background: `url(${config.STATIC_URL}/static/separator/book_w100.png) center top repeat-y`,
-    backgroundSize: '100% 185px',
+    backgroundSize: `100% ${BookSize.Small.height}px`,
   }),
   ...MQ([Responsive.Medium, Responsive.Large, Responsive.XLarge], {
     background: `url(${config.STATIC_URL}/static/separator/book_w110.png) center top repeat-y`,
-    backgroundSize: '100% 201px',
+    backgroundSize: `100% ${BookSize.Medium.height}px`,
   }),
   ...MQ([Responsive.XXLarge, Responsive.Full], {
     background: `url(${config.STATIC_URL}/static/separator/book_w140.png) center top repeat-y`,
-    backgroundSize: '100% 255px',
+    backgroundSize: `100% ${BookSize.Large.height}px`,
   }),
 };
 
@@ -54,32 +54,42 @@ export const portrait = {
     maxWidth: 'inherit',
     display: 'flex',
     alignItems: 'flex-end',
-    marginBottom: 2,
+    marginBottom: 1,
   },
   ...Responsive.XSmall({
-    width: 86,
-    height: 165,
+    width: BookSize.XSmall.width,
+    height: BookSize.XSmall.height,
     padding: '0 8px',
   }),
   ...Responsive.Small({
-    width: 100,
-    height: 185,
+    width: BookSize.Small.width,
+    height: BookSize.Small.height,
     padding: '0 8px',
   }),
   ...Responsive.Medium({
-    width: 110,
-    height: 201,
+    width: BookSize.Medium.width,
+    height: BookSize.Medium.height,
     padding: '0 8px',
   }),
-  ...MQ([Responsive.Large, Responsive.XLarge], {
-    width: 110,
-    height: 201,
-    padding: '0 15px',
+  ...Responsive.Large({
+    width: BookSize.Medium.width,
+    height: BookSize.Medium.height,
+    padding: '0 8px',
   }),
-  ...MQ([Responsive.XXLarge, Responsive.Full], {
-    width: 140,
-    height: 255,
-    padding: '0 15px',
+  ...Responsive.XLarge({
+    width: BookSize.Medium.width,
+    height: BookSize.Medium.height,
+    padding: '0 10px',
+  }),
+  ...Responsive.XXLarge({
+    width: BookSize.Large.width,
+    height: BookSize.Large.height,
+    padding: '0 12px',
+  }),
+  ...Responsive.Full({
+    width: BookSize.Large.width,
+    height: BookSize.Large.height,
+    padding: '0 10px',
   }),
 };
 
