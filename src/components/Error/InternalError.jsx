@@ -44,16 +44,20 @@ const styles = {
     border: '1px solid #d1d5d9',
     boxShadow: '0 1px 1px 0 rgba(209,213,217,.3)',
   },
+  icon: {
+    width: 94,
+    height: 79,
+  },
 };
 
-export const InternalError = () => (
+export const InternalError = ({ onClickHistoryBack }) => (
   <>
     <Head>
       <title>500 Internal Server Error - 리디</title>
     </Head>
     <section css={styles.pageError}>
       <div>
-        <InternalErrorIcon />
+        <InternalErrorIcon css={styles.icon} />
       </div>
       <h2 css={styles.errorTitle}>500</h2>
       <p css={styles.errorDescription}>
