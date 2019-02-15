@@ -5,6 +5,7 @@ import React from 'react';
 import Footer from './base/Footer';
 
 const fixedStyle = {
+  borderTop: '1px solid #d1d5d9',
   width: '100%',
   minHeight: 350,
   paddingTop: 46,
@@ -31,7 +32,7 @@ const messageStyle = {
 };
 
 const defaultButtonStyle = {
-  marginTop: 5,
+  marginTop: 8,
   width: 300,
   display: 'inline-block',
   lineHeight: '50px',
@@ -59,6 +60,9 @@ const signupButtonStyle = {
 
 class Login extends React.Component {
   render() {
+    const loginUrl = '';
+    const sighupUrl = '';
+
     return (
       <>
         <Head>
@@ -68,10 +72,14 @@ class Login extends React.Component {
           <main css={mainStyle}>
             <div css={messageStyle}>로그인을 진행해주세요.</div>
             <div>
-              <a css={loginButtonStyle}>로그인</a>
+              <a css={loginButtonStyle} href={loginUrl}>
+                로그인
+              </a>
             </div>
             <div>
-              <a css={signupButtonStyle}>회원가입</a>
+              <a css={signupButtonStyle} href={sighupUrl}>
+                회원가입
+              </a>
             </div>
           </main>
         </div>
