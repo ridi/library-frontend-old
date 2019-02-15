@@ -31,12 +31,12 @@ const _reduceBookDescriptions = bookDescriptions =>
 
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
+  const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
   return attatchTTL(_reduceBooks(response.data));
 }
 
 export function* fetchBookDescriptions(bookIds) {
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
+  const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
   return attatchTTL(_reduceBookDescriptions(response.data));
 }

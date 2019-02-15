@@ -11,6 +11,7 @@ import purchasedSearchRootSaga from '../services/purchased/search/sagas';
 import purchasedSearchUnitRootSaga from '../services/purchased/searchUnit/sagas';
 import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 import purchaseHiddenUnitRootSaga from '../services/purchased/hiddenUnit/sagas';
+import serialPreferenceRootSaga from '../services/serialPreference/sagas';
 
 import toastRootSaga from '../services/toast/sagas';
 
@@ -25,6 +26,7 @@ export default function* rootSaga() {
     purchasedSearchUnitRootSaga(),
     purchasedHiddenSaga(),
     purchaseHiddenUnitRootSaga(),
+    serialPreferenceRootSaga(),
     toastRootSaga(),
     bookDownloadRootSaga(),
   ]);

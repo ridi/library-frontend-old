@@ -5,6 +5,7 @@ const clientRoutes = nextRoutes();
 const APP_ROUTES = [
   { page: 'home', pattern: '/' },
   { page: 'login', pattern: '/login' },
+  { page: 'serialPreference', pattern: '/serial-preference' },
   { page: 'purchased/main', pattern: '/purchased' },
   { page: 'purchased/hidden', pattern: '/purchased/hidden' },
   { page: 'purchased/hiddenUnit', pattern: '/purchased/hidden/:unit_id' },

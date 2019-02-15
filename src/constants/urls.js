@@ -27,4 +27,8 @@ export const URLMap = {
     href: '/purchased/hiddenUnit',
     as: unitId => `/purchased/hidden/${unitId}`,
   },
+  serialPreference: {
+    href: '/serialPreference',
+    as: '/serial-preference',
+  },
 };
