@@ -29,6 +29,13 @@ const _reduceBookDescriptions = bookDescriptions =>
     intro: bookDescription.descriptions.intro.replace('\r\n', '\n').replace('\n', ''),
   }));
 
+const _reduceBookStarRatings = bookStarRatings =>
+  bookStarRatings.map(bookStarRating => ({
+    id: bookStarRating.book_id,
+    total_rating_score: bookStarRating.total_rating_score,
+    total_rating_count: bookStarRating.total_rating_count,
+  }));
+
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
@@ -39,4 +46,11 @@ export function* fetchBookDescriptions(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.PLATFORM_API_BASE_URL));
   return attatchTTL(_reduceBookDescriptions(response.data));
+}
+
+export function* fetchStarRatings(bookIds) {
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/api/ratings', { b_ids: bookIds.join(',') }, config.STORE_API_BASE_URL));
+
+  return attatchTTL(_reduceBookStarRatings(response.data.rating_summaries));
 }

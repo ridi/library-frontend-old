@@ -1,8 +1,15 @@
 import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
 
-import { LOAD_BOOK_DATA_FROM_STORAGE, setBookData, setBookDataFromStorage, setBookDescriptions, setUnitData } from './actions';
+import {
+  LOAD_BOOK_DATA_FROM_STORAGE,
+  setBookData,
+  setBookDataFromStorage,
+  setBookDescriptions,
+  setUnitData,
+  setBookStarRatings,
+} from './actions';
 
-import { fetchBookData, fetchBookDescriptions } from './requests';
+import { fetchBookData, fetchBookDescriptions, fetchStarRatings } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion, attatchTTL } from '../../utils/ttl';
@@ -62,6 +69,7 @@ export function* loadBookData(bookIds) {
 }
 
 export function* loadBookDescriptions(bookIds) {
+  // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
   const filteredBookIds = filterBookIds(bookIds, existBookDescriptions);
 
@@ -71,7 +79,18 @@ export function* loadBookDescriptions(bookIds) {
 
   const bookDescriptions = yield call(fetchBookDescriptions, filteredBookIds);
   yield put(setBookDescriptions(bookDescriptions));
-  // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
+}
+
+export function* loadBookStarRatings(bookIds) {
+  const existStartRatings = yield select(state => state.books.bookStarRatings);
+  const filteredBookIds = filterBookIds(bookIds, existStartRatings);
+
+  if (filteredBookIds.length === 0) {
+    return;
+  }
+
+  const starRatings = yield call(fetchStarRatings, filteredBookIds);
+  yield put(setBookStarRatings(starRatings));
 }
 
 export function* saveUnitData(units) {
