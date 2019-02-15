@@ -5,11 +5,12 @@ import { getAPI } from '../../api/actions';
 import { OrderType } from '../../constants/orderOptions';
 
 import { makeURI } from '../../utils/uri';
-import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
+import { makeUnique, splitArrayByChunk, toFlatten, toDict } from '../../utils/array';
 import { snakelize } from '../../utils/snakelize';
 import { delay } from '../../utils/delay';
 import { DELETE_API_CHUNK_COUNT } from './constants';
 import { UnhideError, MakeBookIdsError } from './errors';
+import { simplifyValues } from '../../utils/dict';
 
 export function* getRevision() {
   const api = yield put(getAPI());
@@ -136,4 +137,16 @@ export function* requestDelete(bookIds, revision) {
   }
 
   return makeUnique(queueIds);
+}
+
+export function* requestGetStarRating(bookIds) {
+  const query = {
+    b_ids: bookIds,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/api/rating', query, config.STORE_API_BASE_URL));
+
+  const ratingSummaries = response.data.rating_summaries;
+  return toDict(simplifyValues(ratingSummaries, ['book_id', 'total_rating_score', 'total_rating_count']), 'book_id');
 }
