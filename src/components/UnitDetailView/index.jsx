@@ -9,10 +9,11 @@ import { UnitType } from '../../constants/unitType';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
 import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
+import Star from '../../svgs/Star.svg';
 import BookMetaData from '../../utils/bookMetaData';
+import { thousandsSeperator } from '../../utils/number';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
-import { thousandsSeperator } from '../../utils/number';
 
 const LINE_HEIGHT = 23;
 const LINE = 3;
@@ -43,7 +44,8 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.fileInfo}>
         <div key={shortid.generate()} css={styles.fileInfoText}>
-          <span css={styles.starRatingText}>* {bookStarRating.total_rating_score}점 </span> (
+          <Star css={styles.starRateIcon} />
+          <strong css={styles.starRatingText}>{`${bookStarRating.total_rating_score}점 `}</strong>(
           {thousandsSeperator(bookStarRating.total_rating_count)}명)
         </div>
         <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
