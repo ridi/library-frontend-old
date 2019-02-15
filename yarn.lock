@@ -800,9 +800,9 @@
     eslint-plugin-jsx-a11y "^6.1.1"
     eslint-plugin-react "^7.11.0"
 
-"@ridi/web-ui@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.3.0.tgz#bc3842e9accf19f792fe1eeddb63095657e3fe14"
+"@ridi/web-ui@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.3.1.tgz#c37a436b4853062c56af6d30e1b6de2fda9ea6a9"
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"

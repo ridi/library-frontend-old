@@ -1,4 +1,8 @@
 export const URLMap = {
+  login: {
+    href: '/login',
+    as: '/login',
+  },
   main: {
     href: '/purchased/main',
     as: '/purchased',
@@ -22,5 +26,9 @@ export const URLMap = {
   hiddenUnit: {
     href: '/purchased/hiddenUnit',
     as: unitId => `/purchased/hidden/${unitId}`,
+  },
+  serialPreference: {
+    href: '/serialPreference',
+    as: '/serial-preference',
   },
 };

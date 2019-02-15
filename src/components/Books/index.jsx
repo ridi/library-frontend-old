@@ -8,7 +8,7 @@ import ViewType from '../../constants/viewType';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
 import BooksWrapper from '../BooksWrapper';
-import LandscapeFullButton from './LnadscapeFullButton';
+import LandscapeFullButton from './LandscapeFullButton';
 
 const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkBuilder }) => {
   const bookMetaData = new BookMetaData(platformBookData);

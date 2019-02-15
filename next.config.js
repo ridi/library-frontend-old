@@ -27,12 +27,14 @@ module.exports = {
   },
 
   publicRuntimeConfig: {
+    BASE_URL: secrets.base_url,
     STATIC_URL: secrets.static_url,
     ACCOUNT_BASE_URL: secrets.account_base_url,
     STORE_API_BASE_URL: secrets.store_api_base_url,
     SELECT_BASE_URL: secrets.select_base_url,
     LIBRARY_API_BASE_URL: secrets.library_api_base_url,
-    PLATFORM_API_BASE_URL: secrets.platform_api_base_url,
+    BOOK_API_BASE_URL: secrets.book_api_base_url,
+    BOOK_FEEDBACK_API_BASE_URL: secrets.book_feedback_api_base_url,
 
     LOGOUT_URL: secrets.ridi_logout_url,
     REVIEW_URL: secrets.ridi_review_url,

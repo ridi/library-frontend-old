@@ -10,6 +10,8 @@ import purchasedSearchUnitReducer from '../services/purchased/searchUnit/reducer
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
 
+import serialPreferenceReducer from '../services/serialPreference/reducers';
+
 import routerReducer from '../services/router/reducers';
 import toastReducer from '../services/toast/reducers';
 import dialogReducer from '../services/dialog/reducers';
@@ -25,6 +27,8 @@ export default combineReducers({
   purchasedSearchUnit: purchasedSearchUnitReducer,
   purchasedHidden: purchasedHiddenReducer,
   purchasedHiddenUnit: purchasedHiddenUnitReducer,
+
+  serialPreference: serialPreferenceReducer,
 
   excelDownload: excelDownloadReducer,
 

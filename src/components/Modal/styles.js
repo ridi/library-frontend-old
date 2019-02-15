@@ -1,3 +1,5 @@
+import config from '../../config';
+
 export const Align = {
   Left: 'left',
   Right: 'right',
@@ -61,6 +63,25 @@ export const item = {
     backgroundColor: '#f3f4f5',
   },
 };
+
+export const spinner = showSpinner =>
+  showSpinner
+    ? {
+        '::after': {
+          display: 'block',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          content: `''`,
+          background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+          backgroundColor: 'rgba(255, 255, 255, .9)',
+          backgroundSize: '22px 22px',
+          width: '100%',
+          height: '100%',
+          cursor: 'default',
+        },
+      }
+    : {};
 
 export const icon = {
   position: 'absolute',

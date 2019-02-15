@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { URLMap } from '../constants/urls';
 
 import createInterceptor from './interceptor';
 import API from './api';
@@ -7,23 +8,22 @@ import config from '../config';
 import { GET_API } from './actions';
 import { HttpStatusCode } from './constants';
 
-import { makeLoginURI } from '../utils/uri';
 import Window, { LOCATION } from '../utils/window';
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
     const { response } = error;
     if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+      // Token refresh
       return axios
         .post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
           withCredentials: true,
         })
         .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(err => {
+          // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            const _location = Window.get(LOCATION);
-            const currentURI = _location.href;
-            _location.href = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, currentURI);
+            Window.get(LOCATION).href = URLMap.login.href;
             return null;
           }
 

@@ -2,11 +2,13 @@ import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 const {
+  BASE_URL,
   ACCOUNT_BASE_URL,
   STORE_API_BASE_URL,
   SELECT_BASE_URL,
   LIBRARY_API_BASE_URL,
-  PLATFORM_API_BASE_URL,
+  BOOK_API_BASE_URL,
+  BOOK_FEEDBACK_API_BASE_URL,
   STATIC_URL,
   LOGOUT_URL,
   REVIEW_URL,
@@ -17,11 +19,13 @@ const {
 } = publicRuntimeConfig;
 
 const config = {
+  BASE_URL,
   ACCOUNT_BASE_URL,
   STORE_API_BASE_URL,
   SELECT_BASE_URL,
   LIBRARY_API_BASE_URL,
-  PLATFORM_API_BASE_URL,
+  BOOK_API_BASE_URL,
+  BOOK_FEEDBACK_API_BASE_URL,
   STATIC_URL,
   LOGOUT_URL,
   REVIEW_URL,

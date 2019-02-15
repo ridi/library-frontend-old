@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
+import { jsx } from '@emotion/core';
 
 const styles = {
   bookListIsEmpty: {
@@ -8,7 +8,7 @@ const styles = {
     // textAlign: 'center',
     width: '100%',
     height: '100%',
-    minHeight: 280,
+    minHeight: 400,
   },
   in: {
     width: 300,
