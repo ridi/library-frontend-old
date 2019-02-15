@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
-import InternalErrorIcon from '../../svgs/InternalErrorIcon.svg';
+import ErrorBook from '../../svgs/ErrorBook.svg';
 
 const styles = {
   pageError: {
@@ -57,7 +57,7 @@ export const InternalError = ({ onClickHistoryBack }) => (
     </Head>
     <section css={styles.pageError}>
       <div>
-        <InternalErrorIcon css={styles.icon} />
+        <ErrorBook css={styles.icon} />
       </div>
       <h2 css={styles.errorTitle}>500</h2>
       <p css={styles.errorDescription}>

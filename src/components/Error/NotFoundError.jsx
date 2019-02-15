@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
-import NotFoundErrorIcon from '../../svgs/NotFoundErrorIcon.svg';
+import ErrorBook from '../../svgs/ErrorBook.svg';
 
 const styles = {
   pageError: {
@@ -64,7 +64,7 @@ export const NotFoundError = ({ onClickHistoryBack }) => (
     </Head>
     <section css={styles.pageError}>
       <div>
-        <NotFoundErrorIcon css={styles.icon} />
+        <ErrorBook css={styles.icon} />
       </div>
       <h2 css={styles.errorTitle}>404</h2>
       <p css={styles.errorDescription}>
