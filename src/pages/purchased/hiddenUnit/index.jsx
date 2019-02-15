@@ -32,7 +32,7 @@ import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
 import SeriesView from '../../../components/SeriesView';
-import { Error } from '../../../components/Error';
+import { BookError } from '../../../components/Error';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -157,7 +157,7 @@ class HiddenUnit extends React.Component {
         </Head>
         <HorizontalRuler />
         {this.renderTitleBar()}
-        <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+        <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
     );
   }
