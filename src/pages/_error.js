@@ -17,7 +17,7 @@ export default class Error extends React.Component {
     return { errorCode };
   }
 
-  handleClickHistoryBack = () => {
+  onClickHistoryBack = () => {
     window.history.back();
   };
 
@@ -25,9 +25,9 @@ export default class Error extends React.Component {
     const { errorCode } = this.props;
 
     if (errorCode === NotFound) {
-      return <NotFoundError onClickHistoryBack={this.handleClickHistoryBack} />;
+      return <NotFoundError onClickHistoryBack={this.onClickHistoryBack} />;
     }
 
-    return <InternalError onClickHistoryBack={this.handleClickHistoryBack} />;
+    return <InternalError onClickHistoryBack={this.onClickHistoryBack} />;
   }
 }
