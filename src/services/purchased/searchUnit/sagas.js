@@ -30,6 +30,7 @@ import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -79,10 +80,10 @@ function* loadItems() {
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.item_total_count)),
     ]);
-
-    yield put(setIsFetchingSearchBook(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setIsFetchingSearchBook(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setIsFetchingSearchBook(false));
   }
 }
 
@@ -90,12 +91,26 @@ function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedBooks);
 
-  const bookIds = Object.keys(selectedBooks);
+  let queueIds;
+  try {
+    const bookIds = Object.keys(selectedBooks);
+    const revision = yield call(getRevision);
+    queueIds = yield call(requestHide, bookIds, revision);
+  } catch (err) {
+    yield all([
+      put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
+    return;
+  }
 
-  const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, bookIds, revision);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
     yield call(loadItems);
   }
@@ -114,10 +129,12 @@ function* hideSelectedBooks() {
 
 function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
-
-  const bookIds = Object.keys(selectedBooks);
-
-  yield call(downloadBooks, bookIds);
+  try {
+    const bookIds = Object.keys(selectedBooks);
+    yield call(downloadBooks, bookIds);
+  } catch (err) {
+    yield put(showDialog('다운로드 오류', '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'));
+  }
 }
 
 function* selectAllBooks() {

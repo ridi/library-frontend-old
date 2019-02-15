@@ -34,7 +34,7 @@ import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Responsive from '../../base/Responsive';
-import { Error } from '../../../components/Error';
+import { BookError } from '../../../components/Error';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -214,7 +214,7 @@ class Hidden extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+          <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
         </Editable>
       </>
     );
