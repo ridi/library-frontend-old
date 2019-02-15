@@ -93,7 +93,7 @@ class GNB extends React.Component {
 
 const mapStateToProps = state => {
   const isExcelDownloading = getIsExcelDownloading(state);
-  const { id: userId } = state.account.userInfo;
+  const userId = state.account.userInfo ? state.account.userInfo.id : null;
   return {
     userId,
     isExcelDownloading,
