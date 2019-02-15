@@ -1,4 +1,8 @@
 export const URLMap = {
+  login: {
+    href: '/login',
+    as: '/login',
+  },
   main: {
     href: '/purchased/main',
     as: '/purchased',

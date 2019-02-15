@@ -37,8 +37,15 @@ class UnitDetailView extends React.Component {
 
   renderFileInfo = infosWithDelimiter => {
     const delimiter = '|';
+
+    // TODO: <span>*</span>을 별 아이콘으로 변경
     return (
       <div css={styles.fileInfo}>
+        <div>
+          <span>*</span>
+          <span>4.7점</span>
+          <span>(2,000명)</span>
+        </div>
         {infosWithDelimiter.map(info =>
           info === delimiter ? (
             <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
