@@ -43,7 +43,7 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.fileInfo}>
         <div key={shortid.generate()} css={styles.fileInfoText}>
-          <span css={styles.starRatingText}>{bookStarRating.total_rating_score}점 </span> (
+          <span css={styles.starRatingText}>* {bookStarRating.total_rating_score}점 </span> (
           {thousandsSeperator(bookStarRating.total_rating_count)}명)
         </div>
         <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
