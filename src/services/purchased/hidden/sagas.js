@@ -71,7 +71,7 @@ function* unhideSelectedBooks() {
     if (err instanceof MakeBookIdsError) {
       message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
-    yield put(showDialog('도서 숨김 해제 오류', message));
+    yield all([put(showDialog('도서 숨김 해제 오류', message)), put(setFullScreenLoading(false))]);
     return;
   }
 
@@ -109,7 +109,10 @@ function* deleteSelectedBooks() {
   try {
     queueIds = yield call(requestDelete, bookIds, revision);
   } catch (err) {
-    yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    yield all([
+      put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
     return;
   }
 

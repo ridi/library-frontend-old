@@ -71,10 +71,10 @@ function* loadHiddenUnitItems() {
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.item_total_count)),
     ]);
-
-    yield put(setIsFetchingHiddenBook(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setIsFetchingHiddenBook(false))]);
+    yield put(setError(false));
+  } finally {
+    yield put(setIsFetchingHiddenBook(false));
   }
 }
 
@@ -89,7 +89,10 @@ function* unhideSelectedHiddenUnitBooks() {
   try {
     queueIds = yield call(requestUnhide, bookIds, revision);
   } catch (err) {
-    yield put(showDialog('도서 숨김 해제 오류', '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'));
+    yield all([
+      put(showDialog('도서 숨김 해제 오류', '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
     return;
   }
 

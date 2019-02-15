@@ -76,9 +76,10 @@ function* loadItems() {
     yield call(loadBookDescriptions, bookIds);
 
     yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
-    yield put(setIsFetchingBook(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setIsFetchingBook(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setIsFetchingBook(false));
   }
 }
 
@@ -94,7 +95,7 @@ function* hideSelectedBooks() {
   } catch (err) {
     yield all([
       put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
-      put(setFullScreenLoading(true)),
+      put(setFullScreenLoading(false)),
     ]);
     return;
   }

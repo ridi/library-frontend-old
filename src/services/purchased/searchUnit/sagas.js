@@ -99,7 +99,7 @@ function* hideSelectedBooks() {
   } catch (err) {
     yield all([
       put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
-      put(setFullScreenLoading(true)),
+      put(setFullScreenLoading(false)),
     ]);
     return;
   }

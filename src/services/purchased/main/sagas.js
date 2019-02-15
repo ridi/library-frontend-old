@@ -70,9 +70,10 @@ function* loadMainItems() {
       put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
       put(setFilterOptions(categories)),
     ]);
-    yield put(setIsFetchingBooks(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setIsFetchingBooks(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setIsFetchingBooks(false));
   }
 }
 
