@@ -28,6 +28,8 @@ import { downloadBooks } from '../../bookDownload/sagas';
 import { loadBookData, extractUnitData } from '../../book/sagas';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { URLMap } from '../../../constants/urls';
+import { MakeBookIdsError } from '../../common/errors';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -56,9 +58,10 @@ function* loadPage() {
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield call(loadBookData, bookIds);
     yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
-    yield put(setSearchIsFetchingBooks(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setSearchIsFetchingBooks(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setSearchIsFetchingBooks(false));
   }
 }
 
@@ -76,9 +79,20 @@ function* hideSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
-  const revision = yield call(getRevision);
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestHide, bookIds, revision);
+  let queueIds;
+  try {
+    const revision = yield call(getRevision);
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
+    queueIds = yield call(requestHide, bookIds, revision);
+  } catch (err) {
+    let message = '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    }
+
+    yield all([put(showDialog('도서 숨기기 오류', message)), put(setFullScreenLoading(false))]);
+    return;
+  }
 
   let isFinish = false;
   try {
@@ -107,9 +121,16 @@ function* downloadSelectedBooks() {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedBooks);
 
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
-
-  yield call(downloadBooks, bookIds);
+  try {
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
+    yield call(downloadBooks, bookIds);
+  } catch (err) {
+    let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    }
+    yield put(showDialog('다운로드 오류', message));
+  }
 }
 
 function* selectAllBooks() {
