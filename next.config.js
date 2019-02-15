@@ -27,6 +27,7 @@ module.exports = {
   },
 
   publicRuntimeConfig: {
+    BASE_URL: secrets.base_url,
     STATIC_URL: secrets.static_url,
     ACCOUNT_BASE_URL: secrets.account_base_url,
     STORE_API_BASE_URL: secrets.store_api_base_url,

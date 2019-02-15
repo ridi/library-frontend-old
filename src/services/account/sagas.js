@@ -7,8 +7,10 @@ import { fetchUserInfo } from './requests';
 import Window, { LOCATION } from '../../utils/window';
 
 function* loadUserInfo() {
-  const userInfo = yield call(fetchUserInfo);
-  yield put(setUserInfo(userInfo));
+  try {
+    const userInfo = yield call(fetchUserInfo);
+    yield put(setUserInfo(userInfo));
+  } catch (e) {}
 }
 
 function* accountTracker() {
@@ -18,10 +20,14 @@ function* accountTracker() {
     yield call(delay, TRACK_DELAY_MILLISECS);
 
     const userInfo = yield select(state => state.account.userInfo);
-    const newUserInfo = yield call(fetchUserInfo);
 
-    if (userInfo.idx !== newUserInfo.idx) {
-      Window.get(LOCATION).reload();
+    try {
+      const newUserInfo = yield call(fetchUserInfo);
+      if (userInfo.idx !== newUserInfo.idx) {
+        Window.get(LOCATION).reload();
+      }
+    } catch (e) {
+      continue;
     }
   }
 }
