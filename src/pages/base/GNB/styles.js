@@ -83,19 +83,13 @@ export const myMenuToggleButton = css({
   padding: '6px 0',
 });
 
-export const myMenuIcon = isActive =>
-  css([
-    {
-      width: 20,
-      height: 20,
-      fill: '#808991',
-      transformOrigin: 'center center',
-      transform: 'rotate(0)',
-      ':hover': {
-        transform: 'rotate(180deg)',
-      },
-    },
-    isActive && {
-      transform: 'rotate(180deg)',
-    },
-  ]);
+export const myMenuIcon = {
+  width: 24,
+  height: 24,
+  fill: '#808991',
+};
+
+export const myMenuActiveIcon = {
+  ...myMenuIcon,
+  fill: '#808991',
+};

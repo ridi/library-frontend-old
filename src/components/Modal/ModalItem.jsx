@@ -6,10 +6,10 @@ import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
-  <button type="button" css={[modalStyles.item, style]} onClick={onClick}>
+  <button type="button" css={[modalStyles.item, style, modalStyles.spinner(showSpinner)]} onClick={onClick} disabled={showSpinner}>
     {IconComponent && <IconComponent css={modalStyles.icon} />}
     {isSelected && <Check css={modalStyles.selectedIcon} />}
-    {showSpinner ? '로딩중' : title}
+    {title}
   </button>
 );
 

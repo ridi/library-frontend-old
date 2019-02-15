@@ -9,7 +9,8 @@ import { getIsExcelDownloading } from '../../../services/excelDownload/selectors
 import MyMenuModal from '../../../components/Modal/MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
-import MyMenu from '../../../svgs/MyMenu.svg';
+import MyMenuIcon from '../../../svgs/MyMenu.svg';
+import MyMenuActiveIcon from '../../../svgs/MyMenu-active.svg';
 import Responsive from '../Responsive';
 
 const RIDIBOOKS_URL = 'https://ridibooks.com';
@@ -62,7 +63,7 @@ class GNB extends React.Component {
             </div>
             <div css={styles.myMenuWrapper}>
               <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-                <MyMenu css={styles.myMenuIcon(isModalActive)} />
+                {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
                 <span css={Hidden}>마이메뉴</span>
               </button>
               <MyMenuModal
