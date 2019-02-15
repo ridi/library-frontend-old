@@ -4,6 +4,7 @@ import BookOutline from '../../svgs/BookOutline.svg';
 
 const styles = {
   errorWrapper: {
+    marginTop: 150,
     textAlign: 'center',
   },
 
@@ -37,17 +38,15 @@ const styles = {
 };
 
 export const BookError = ({ onClickRefreshButton }) => (
-  <div>
-    <div css={styles.errorWrapper}>
-      <BookOutline css={styles.icon} />
-      <p css={styles.message}>
-        도서의 정보 구성 중 오류가 발생했습니다.
-        <br />
-        잠시 후 다시 시도해주세요.
-      </p>
-      <button type="button" onClick={onClickRefreshButton} css={styles.refreshButton}>
-        새로고침
-      </button>
-    </div>
+  <div css={styles.errorWrapper}>
+    <BookOutline css={styles.icon} />
+    <p css={styles.message}>
+      도서의 정보 구성 중 오류가 발생했습니다.
+      <br />
+      잠시 후 다시 시도해주세요.
+    </p>
+    <button type="button" onClick={onClickRefreshButton} css={styles.refreshButton}>
+      새로고침
+    </button>
   </div>
 );
