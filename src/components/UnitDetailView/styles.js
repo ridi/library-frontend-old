@@ -102,6 +102,11 @@ export const fileInfoText = {
   float: 'left',
 };
 
+export const starRatingText = {
+  fontWeight: 'bold',
+  color: '#ff884d',
+};
+
 export const fileInfoDelimiter = {
   width: 1,
   height: 9,

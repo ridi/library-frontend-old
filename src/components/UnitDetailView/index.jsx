@@ -12,6 +12,7 @@ import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
+import { thousandsSeperator } from '../../utils/number';
 
 const LINE_HEIGHT = 23;
 const LINE = 3;
@@ -35,29 +36,28 @@ class UnitDetailView extends React.Component {
     }
   }
 
-  renderFileInfo = infosWithDelimiter => {
-    const delimiter = '|';
+  renderSummary() {
+    const { bookMetadata, bookStarRating } = this.props;
+    const bookInfos = bookMetadata.infos;
 
-    // TODO: <span>*</span>을 별 아이콘으로 변경
     return (
       <div css={styles.fileInfo}>
-        <div>
-          <span>*</span>
-          <span>4.7점</span>
-          <span>(2,000명)</span>
+        <div key={shortid.generate()} css={styles.fileInfoText}>
+          <span css={styles.starRatingText}>* {bookStarRating.total_rating_score}점 </span> (
+          {thousandsSeperator(bookStarRating.total_rating_count)}명)
         </div>
-        {infosWithDelimiter.map(info =>
-          info === delimiter ? (
-            <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
-          ) : (
+        <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
+        {bookInfos.map((info, index) => (
+          <>
             <div key={shortid.generate()} css={styles.fileInfoText}>
               {` ${info} `}
             </div>
-          ),
-        )}
+            {bookInfos.length !== index + 1 ? <div key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
+          </>
+        ))}
       </div>
     );
-  };
+  }
 
   expand() {
     this.setState({ isExpanded: true });
@@ -161,9 +161,9 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, primaryItem, book, bookDescription } = this.props;
+    const { unit, primaryItem, book, bookDescription, bookStarRating } = this.props;
 
-    if (!primaryItem || !book || !bookDescription) {
+    if (!primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
     }
 
@@ -181,7 +181,7 @@ class UnitDetailView extends React.Component {
           <div css={styles.infoWrapper}>
             <div css={styles.unitTitle}>{unit.title}</div>
             <div css={styles.authorList}>{bookMetadata.author}</div>
-            {UnitType.isBook(unit.type) ? this.renderFileInfo(bookMetadata.fileInfosWithDelimiter) : null}
+            {this.renderSummary()}
             {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>
@@ -202,8 +202,6 @@ const mapDispatchToProps = {
 
 const mergeProps = (state, actions, props) => {
   const book = props.primaryItem && props.books[props.primaryItem.b_id] ? props.books[props.primaryItem.b_id] : null;
-  const bookDescription =
-    props.primaryItem && props.bookDescriptions[props.primaryItem.b_id] ? props.bookDescriptions[props.primaryItem.b_id] : null;
   const bookMetadata =
     props.primaryItem && props.books[props.primaryItem.b_id] ? new BookMetaData(props.books[props.primaryItem.b_id]) : null;
 
@@ -212,7 +210,6 @@ const mergeProps = (state, actions, props) => {
     ...actions,
     ...props,
     book,
-    bookDescription,
     bookMetadata,
   };
 };

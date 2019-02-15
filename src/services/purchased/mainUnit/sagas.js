@@ -18,7 +18,7 @@ import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryIte
 
 import { UnitOrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData, loadBookDescriptions, saveUnitData } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, saveUnitData, loadBookStarRatings } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 
 import { toFlatten } from '../../../utils/array';
@@ -70,10 +70,12 @@ function* loadItems() {
     const primaryItem = yield call(loadPrimaryItem, unitId);
     yield call(saveUnitData, [itemResponse.unit]);
 
+    // 대표 책 데이터 로딩
+    yield call(loadBookDescriptions, [primaryItem.b_id]);
+    yield call(loadBookStarRatings, [primaryItem.b_id]);
+
     // 책 데이터 로딩
-    const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
-    yield call(loadBookData, bookIds);
-    yield call(loadBookDescriptions, bookIds);
+    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
 
     yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
   } catch (err) {

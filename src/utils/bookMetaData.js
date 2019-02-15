@@ -47,7 +47,7 @@ export default class BookMetaData {
     return `${names.slice(0, LIMIT).join(', ')}${extraCount}`;
   }
 
-  get fileInfosWithDelimiter() {
+  get infos() {
     const { file } = this.bookData;
     if (!file) return null;
 
@@ -74,8 +74,6 @@ export default class BookMetaData {
       infos.push('DRM Free');
     }
 
-    const delimiter = '|';
-
-    return infos.join(`\\${delimiter}\\`).split('\\');
+    return infos;
   }
 }
