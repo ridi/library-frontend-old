@@ -70,9 +70,10 @@ function* loadMainItems() {
       put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
       put(setFilterOptions(categories)),
     ]);
-    yield put(setIsFetchingBooks(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setIsFetchingBooks(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setIsFetchingBooks(false));
   }
 }
 
@@ -94,11 +95,18 @@ function* hideSelectedBooks() {
     if (err instanceof MakeBookIdsError) {
       message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
-    yield put(showDialog('도서 숨기기 오류', message));
+
+    yield all([put(showDialog('도서 숨기기 오류', message)), put(setFullScreenLoading(false))]);
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadMainItems);
   }

@@ -48,9 +48,10 @@ function* loadItems() {
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield call(loadBookData, bookIds);
     yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
-    yield put(setHiddenIsFetchingBooks(false));
   } catch (err) {
-    yield all([put(setError(true)), put(setHiddenIsFetchingBooks(false))]);
+    yield put(setError(true));
+  } finally {
+    yield put(setHiddenIsFetchingBooks(false));
   }
 }
 
@@ -70,15 +71,20 @@ function* unhideSelectedBooks() {
     if (err instanceof MakeBookIdsError) {
       message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
     }
-    yield put(showDialog('도서 숨김 해제 오류', message));
+    yield all([put(showDialog('도서 숨김 해제 오류', message)), put(setFullScreenLoading(false))]);
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadItems);
   }
-
   yield all([
     put(
       showToast(
@@ -103,15 +109,23 @@ function* deleteSelectedBooks() {
   try {
     queueIds = yield call(requestDelete, bookIds, revision);
   } catch (err) {
-    yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    yield all([
+      put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadItems);
   }
-
   // TODO 메시지 수정
   yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
 }
