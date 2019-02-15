@@ -80,7 +80,13 @@ function* hideSelectedBooks() {
   const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
   const queueIds = yield call(requestHide, bookIds, revision);
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadPage);
   }

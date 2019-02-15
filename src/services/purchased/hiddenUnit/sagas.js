@@ -93,7 +93,13 @@ function* unhideSelectedHiddenUnitBooks() {
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadHiddenUnitItems);
   }
@@ -120,11 +126,20 @@ function* deleteSelectedHiddenUnitBooks() {
   try {
     queueIds = yield call(requestDelete, bookIds, revision);
   } catch (err) {
-    yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    yield all([
+      put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadHiddenUnitItems);
   }

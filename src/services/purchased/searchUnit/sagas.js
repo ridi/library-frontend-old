@@ -95,7 +95,13 @@ function* hideSelectedBooks() {
   const revision = yield call(getRevision);
   const queueIds = yield call(requestHide, bookIds, revision);
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadItems);
   }
@@ -114,9 +120,7 @@ function* hideSelectedBooks() {
 
 function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
-
   const bookIds = Object.keys(selectedBooks);
-
   yield call(downloadBooks, bookIds);
 }
 

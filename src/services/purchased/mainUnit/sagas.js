@@ -26,11 +26,10 @@ import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading } from '../../ui/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { showDialog } from '../../dialog/actions';
-import { setError } from '../../ui/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -93,15 +92,23 @@ function* hideSelectedBooks() {
     const revision = yield call(getRevision);
     queueIds = yield call(requestHide, bookIds, revision);
   } catch (err) {
-    yield put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    yield all([
+      put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(true)),
+    ]);
     return;
   }
 
-  const isFinish = yield call(requestCheckQueueStatus, queueIds);
+  let isFinish = false;
+  try {
+    isFinish = yield call(requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
   if (isFinish) {
     yield call(loadItems);
   }
-
   yield all([
     put(
       showToast(
