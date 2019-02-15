@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
-import { getBookDescriptions, getBooks, getUnit } from '../../../services/book/selectors';
+import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
   clearSelectedBooks,
@@ -93,10 +93,18 @@ class MainUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryItem, items, books, bookDescriptions } = this.props;
+    const { unit, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
 
     return (
-      <UnitDetailView unit={unit} primaryItem={primaryItem} items={items} books={books} bookDescriptions={bookDescriptions} downloadable />
+      <UnitDetailView
+        unit={unit}
+        primaryItem={primaryItem}
+        items={items}
+        books={books}
+        bookDescription={bookDescription}
+        bookStarRating={bookStarRating}
+        downloadable
+      />
     );
   }
 
@@ -177,13 +185,14 @@ const mapStateToProps = state => {
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
-  const bookIds = toFlatten(items, 'b_id');
+  const _bookIds = toFlatten(items, 'b_id');
   if (primaryItem) {
-    bookIds.push(primaryItem.b_id);
+    _bookIds.push(primaryItem.b_id);
   }
 
-  const books = getBooks(state, bookIds);
-  const bookDescriptions = getBookDescriptions(state, bookIds);
+  const books = getBooks(state, _bookIds);
+  const bookDescription = primaryItem ? getBookDescription(state, primaryItem.b_id) : null;
+  const bookStarRating = primaryItem ? getBookStarRating(state, primaryItem.b_id) : null;
 
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
@@ -197,7 +206,8 @@ const mapStateToProps = state => {
     unit,
     primaryItem,
     books,
-    bookDescriptions,
+    bookDescription,
+    bookStarRating,
     totalCount,
     selectedBooks,
     isFetchingBook,
