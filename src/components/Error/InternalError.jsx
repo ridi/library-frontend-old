@@ -68,9 +68,9 @@ export const InternalError = ({ onClickHistoryBack }) => (
       </p>
       <ul>
         <li css={styles.errorButtonWrapper}>
-          <a css={[styles.errorButton, styles.whiteButton]} href="#">
+          <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickHistoryBack}>
             이전페이지
-          </a>
+          </button>
         </li>
       </ul>
     </section>

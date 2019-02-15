@@ -17,13 +17,17 @@ export default class Error extends React.Component {
     return { errorCode };
   }
 
+  handleClickHistoryBack = () => {
+    window.history.back();
+  };
+
   render() {
     const { errorCode } = this.props;
 
     if (errorCode === NotFound) {
-      return <NotFoundError />;
+      return <NotFoundError onClickHistoryBack={this.handleClickHistoryBack} />;
     }
 
-    return <InternalError />;
+    return <InternalError onClickHistoryBack={this.handleClickHistoryBack} />;
   }
 }

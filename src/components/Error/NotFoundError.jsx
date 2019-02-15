@@ -74,12 +74,12 @@ export const NotFoundError = ({ onClickHistoryBack }) => (
       </p>
       <ul>
         <li css={styles.errorButtonWrapper}>
-          <a css={[styles.errorButton, styles.whiteButton]} href="#">
+          <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickHistoryBack}>
             이전페이지
-          </a>
+          </button>
         </li>
         <li css={styles.errorButtonWrapper}>
-          <a css={[styles.errorButton, styles.grayButton]} href="#">
+          <a css={[styles.errorButton, styles.grayButton]} href="/">
             홈으로 돌아가기
           </a>
         </li>
