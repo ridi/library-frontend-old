@@ -65,7 +65,9 @@ export function* loadBookData(bookIds) {
 
   const books = yield call(fetchBookData, filteredBookIds);
   yield put(setBookData(books));
-  yield fork(persistBookDataToStorage);
+
+  // TODO: LRU버그로 인해 주석처리
+  // yield fork(persistBookDataToStorage);
 }
 
 export function* loadBookDescriptions(bookIds) {
@@ -111,7 +113,9 @@ export function* saveUnitData(units) {
   }, []);
 
   yield put(setUnitData(attatchTTL(filteredUnits)));
-  yield fork(persistBookDataToStorage);
+
+  // TODO: LRU버그로 인해 주석처리
+  // yield fork(persistBookDataToStorage);
 }
 
 export function* extractUnitData(items) {
