@@ -20,9 +20,11 @@ import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './select
 import { getRevision, requestUnhide, requestCheckQueueStatus, requestDelete } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showToast } from '../../toast/actions';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { showDialog } from '../../dialog/actions';
+import { MakeBookIdsError } from '../../common/errors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -31,20 +33,25 @@ function* persistPageOptionsFromQueries() {
 }
 
 function* loadItems() {
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const { page } = yield select(getOptions);
 
-  yield put(setHiddenIsFetchingBooks(true));
-  const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
+  try {
+    yield put(setHiddenIsFetchingBooks(true));
+    const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
 
-  yield call(extractUnitData, itemResponse.items);
+    yield call(extractUnitData, itemResponse.items);
 
-  // Request BookData
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
-  yield put(setHiddenIsFetchingBooks(false));
+    // Request BookData
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
+    yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+    yield put(setHiddenIsFetchingBooks(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setHiddenIsFetchingBooks(false))]);
+  }
 }
 
 function* unhideSelectedBooks() {
@@ -53,8 +60,19 @@ function* unhideSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const revision = yield call(getRevision);
-  const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestUnhide, bookIds, revision);
+
+  let queueIds;
+  try {
+    const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
+    queueIds = yield call(requestUnhide, bookIds, revision);
+  } catch (err) {
+    let message = '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    }
+    yield put(showDialog('도서 숨김 해제 오류', message));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
@@ -80,7 +98,14 @@ function* deleteSelectedBooks() {
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
-  const queueIds = yield call(requestDelete, bookIds, revision);
+
+  let queueIds;
+  try {
+    queueIds = yield call(requestDelete, bookIds, revision);
+  } catch (err) {
+    yield put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {

@@ -27,9 +27,11 @@ import { loadBookData, extractUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
+import { MakeBookIdsError } from '../../common/errors';
+import { showDialog } from '../../dialog/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -43,29 +45,35 @@ function* persistPageOptionsFromQueries() {
 }
 
 function* loadMainItems() {
+  // Clear Error
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const { page, order, filter: category } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
 
-  yield put(setIsFetchingBooks(true));
-  const [itemResponse, countResponse, categories] = yield all([
-    call(fetchMainItems, orderType, orderBy, category, page),
-    call(fetchMainItemsTotalCount, orderType, orderBy, category),
-    call(fetchPurchaseCategories),
-  ]);
+  try {
+    yield put(setIsFetchingBooks(true));
+    const [itemResponse, countResponse, categories] = yield all([
+      call(fetchMainItems, orderType, orderBy, category, page),
+      call(fetchMainItemsTotalCount, orderType, orderBy, category),
+      call(fetchPurchaseCategories),
+    ]);
 
-  yield call(extractUnitData, itemResponse.items);
+    yield call(extractUnitData, itemResponse.items);
 
-  // Request BookData
-  const bookIds = toFlatten(itemResponse.items, 'b_id');
-  yield call(loadBookData, bookIds);
-  yield all([
-    put(setItems(itemResponse.items)),
-    put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-    put(setFilterOptions(categories)),
-  ]);
-  yield put(setIsFetchingBooks(false));
+    // Request BookData
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
+    yield all([
+      put(setItems(itemResponse.items)),
+      put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+      put(setFilterOptions(categories)),
+    ]);
+    yield put(setIsFetchingBooks(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setIsFetchingBooks(false))]);
+  }
 }
 
 function* hideSelectedBooks() {
@@ -75,10 +83,20 @@ function* hideSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
-  const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, bookIds, revision);
+  let queueIds;
+  try {
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    const revision = yield call(getRevision);
+    queueIds = yield call(requestHide, bookIds, revision);
+  } catch (err) {
+    let message = '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    }
+    yield put(showDialog('도서 숨기기 오류', message));
+    return;
+  }
 
   const isFinish = yield call(requestCheckQueueStatus, queueIds);
   if (isFinish) {
@@ -103,9 +121,17 @@ function* downloadSelectedBooks() {
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = MainOrderOptions.parse(order);
-  const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
 
-  yield call(downloadBooks, bookIds);
+  try {
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    yield call(downloadBooks, bookIds);
+  } catch (err) {
+    let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    }
+    yield put(showDialog('다운로드 오류', message));
+  }
 }
 
 function* selectAllBooks() {

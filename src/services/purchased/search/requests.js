@@ -17,8 +17,17 @@ export function* fetchSearchItems(keyword, page) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  try {
+    const response = yield api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
+    return response.data;
+  } catch (err) {
+    if (err.response.status === 400) {
+      // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+      return { items: [] };
+    }
+
+    throw new Error('Unknown');
+  }
 }
 
 export function* fetchSearchItemsTotalCount(keyword) {
@@ -27,6 +36,18 @@ export function* fetchSearchItemsTotalCount(keyword) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  try {
+    const response = yield api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
+    return response.data;
+  } catch (err) {
+    if (err.response.status === 400) {
+      // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+      return {
+        unit_total_count: 0,
+        item_total_count: 0,
+      };
+    }
+
+    throw new Error('Unknown');
+  }
 }

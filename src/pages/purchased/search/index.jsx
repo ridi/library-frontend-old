@@ -28,6 +28,7 @@ import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import { Error } from '../../../components/Error';
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -207,6 +208,8 @@ class Search extends React.Component {
     const { isEditing } = this.state;
     const {
       pageInfo: { keyword },
+      isError,
+      dispatchLoadItems,
     } = this.props;
 
     let title = `'${keyword}' 검색 결과 - 내 서재`;
@@ -227,7 +230,7 @@ class Search extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{this.renderMain()}</main>
+          <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
         </Editable>
       </>
     );
@@ -248,10 +251,12 @@ const mapStateToProps = state => {
     selectedBooks,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,
+    isError: state.ui.isError,
   };
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchChangeSearchKeyword: changeSearchKeyword,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,

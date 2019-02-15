@@ -1,7 +1,7 @@
 import nookies from 'nookies/src';
 import { loadUserInfo, startAccountTracker } from '../services/account/actions';
 import { loadBookDataFromStorage } from '../services/book/actions';
-import { SET_VIEW_TYPE } from '../services/viewType/actions';
+import { SET_VIEW_TYPE } from '../services/ui/actions';
 
 import LRUCache from '../utils/lru';
 import { locationFromUrl } from '../services/router/utils';
@@ -32,7 +32,9 @@ const beforeCreatingStore = (initialState, context) => {
   // Cookie로 부터 데이터 로드
   const cookies = nookies.get(context);
   if (cookies[SET_VIEW_TYPE]) {
-    newInitialState.viewType = cookies[SET_VIEW_TYPE];
+    newInitialState.ui = {
+      viewType: cookies[SET_VIEW_TYPE],
+    };
   }
 
   return newInitialState;

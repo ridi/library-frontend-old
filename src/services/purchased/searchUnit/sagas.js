@@ -27,7 +27,7 @@ import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showToast } from '../../toast/actions';
 import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading } from '../../fullScreenLoading/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 
@@ -52,33 +52,38 @@ function* loadPrimaryItem(unitId) {
 }
 
 function* loadItems() {
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
   const { orderType, orderBy } = UnitOrderOptions.parse(order);
 
-  yield put(setIsFetchingSearchBook(true));
-  const [itemResponse, countResponse] = yield all([
-    call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
-    call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
-  ]);
+  try {
+    yield put(setIsFetchingSearchBook(true));
+    const [itemResponse, countResponse] = yield all([
+      call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
+      call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
+    ]);
 
-  // PrimaryItem과 Unit 저장
-  const primaryItem = yield call(loadPrimaryItem, unitId);
-  yield call(saveUnitData, [itemResponse.unit]);
+    // PrimaryItem과 Unit 저장
+    const primaryItem = yield call(loadPrimaryItem, unitId);
+    yield call(saveUnitData, [itemResponse.unit]);
 
-  // 책 데이터 로딩
-  const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
-  yield call(loadBookData, bookIds);
-  yield call(loadBookDescriptions, bookIds);
-  yield all([
-    put(setSearchUnitPrimaryItem(primaryItem)),
-    put(setItems(itemResponse.items)),
-    put(setTotalCount(countResponse.item_total_count)),
-  ]);
+    // 책 데이터 로딩
+    const bookIds = [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id];
+    yield call(loadBookData, bookIds);
+    yield call(loadBookDescriptions, bookIds);
+    yield all([
+      put(setSearchUnitPrimaryItem(primaryItem)),
+      put(setItems(itemResponse.items)),
+      put(setTotalCount(countResponse.item_total_count)),
+    ]);
 
-  yield put(setIsFetchingSearchBook(false));
+    yield put(setIsFetchingSearchBook(false));
+  } catch (err) {
+    yield all([put(setError(true)), put(setIsFetchingSearchBook(false))]);
+  }
 }
 
 function* hideSelectedBooks() {

@@ -32,6 +32,7 @@ import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
 import SeriesView from '../../../components/SeriesView';
+import { Error } from '../../../components/Error';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -137,8 +138,18 @@ class HiddenUnit extends React.Component {
     );
   }
 
-  render() {
+  renderMain() {
     const { unit } = this.props;
+    return (
+      <>
+        <Responsive>{this.renderDetailView()}</Responsive>
+        {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+      </>
+    );
+  }
+
+  render() {
+    const { unit, isError, dispatchLoadItems } = this.props;
     return (
       <>
         <Head>
@@ -146,10 +157,7 @@ class HiddenUnit extends React.Component {
         </Head>
         <HorizontalRuler />
         {this.renderTitleBar()}
-        <main>
-          <Responsive>{this.renderDetailView()}</Responsive>
-          {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
-        </main>
+        <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
     );
   }
@@ -187,10 +195,13 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     hiddenPageInfo,
+
+    isError: state.ui.isError,
   };
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,

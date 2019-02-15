@@ -6,7 +6,7 @@ import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
-import { setViewType } from '../../services/viewType/actions';
+import { setViewType } from '../../services/ui/actions';
 
 const MoreModal = ({
   order,
@@ -76,7 +76,7 @@ const MoreModal = ({
 );
 
 const mapStateToProps = state => ({
-  viewType: state.viewType,
+  viewType: state.ui.viewType,
 });
 
 const mapDispatchToProps = {

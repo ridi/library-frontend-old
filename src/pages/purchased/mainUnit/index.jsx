@@ -32,6 +32,7 @@ import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
+import { Error } from '../../../components/Error';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -142,8 +143,18 @@ class MainUnit extends React.Component {
     );
   }
 
-  render() {
+  renderMain() {
     const { unit } = this.props;
+    return (
+      <>
+        <Responsive>{this.renderDetailView()}</Responsive>
+        {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+      </>
+    );
+  }
+
+  render() {
+    const { unit, isError, dispatchLoadItems } = this.props;
 
     return (
       <>
@@ -152,10 +163,7 @@ class MainUnit extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
-        <main>
-          <Responsive>{this.renderDetailView()}</Responsive>
-          {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
-        </main>
+        <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
     );
   }
@@ -195,10 +203,13 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     mainPageInfo,
+
+    isError: state.ui.isError,
   };
 };
 
 const mapDispatchToProps = {
+  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
   dispatchToggleSelectBook: toggleSelectBook,
