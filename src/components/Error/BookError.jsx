@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import BookOutline from '../svgs/BookOutline.svg';
+import BookOutline from '../../svgs/BookOutline.svg';
 
 const styles = {
   errorWrapper: {
@@ -36,7 +36,7 @@ const styles = {
   },
 };
 
-export const Error = ({ onClickRefreshButton }) => (
+export const BookError = ({ onClickRefreshButton }) => (
   <div>
     <div css={styles.errorWrapper}>
       <BookOutline css={styles.icon} />

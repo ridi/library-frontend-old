@@ -32,7 +32,7 @@ import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
-import { Error } from '../../../components/Error';
+import { BookError } from '../../../components/Error';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -163,7 +163,7 @@ class MainUnit extends React.Component {
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
-        <main>{isError ? <Error onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+        <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
     );
   }
