@@ -185,7 +185,7 @@ class SerialPreference extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
-  const books = getBooks(state, toFlatten(items, 'series_id'));
+  const books = getBooks(state, [...toFlatten(items, 'series_id'), ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
