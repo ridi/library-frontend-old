@@ -2,6 +2,8 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
+import config from '../config';
+import { makeLoginURI } from '../utils/uri';
 import Footer from './base/Footer';
 
 const fixedStyle = {
@@ -60,8 +62,8 @@ const signupButtonStyle = {
 
 class Login extends React.Component {
   render() {
-    const loginUrl = '';
-    const sighupUrl = '';
+    const loginUrl = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, config.BASE_URL);
+    const sighupUrl = `${config.STORE_API_BASE_URL}/account/signup?return_url=${encodeURIComponent(config.BASE_URL)}`;
 
     return (
       <>
