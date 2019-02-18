@@ -6,9 +6,11 @@ export default class MyDocument extends Document {
   static getInitialProps({ renderPage, isServer, req }) {
     const page = renderPage();
     const styles = extractCritical(page.html);
-    const csrfToken = req.csrfToken();
 
-    return { ...page, ...styles, csrfToken };
+    // TODO: static export시에 csrfToken 발급 불가능, SSR 활성화 할때 다시 켜기
+    // const csrfToken = req.csrfToken();
+
+    return { ...page, ...styles };
   }
 
   constructor(props) {
@@ -26,7 +28,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-          <meta name="csrf-token" content={this.props.csrfToken} />
+          {/* <meta name="csrf-token" content={this.props.csrfToken} /> */}
 
           <Favicon />
 
