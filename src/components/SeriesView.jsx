@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import React from 'react';
 import ViewType from '../constants/viewType';
 import Responsive from '../pages/base/Responsive';
@@ -146,8 +148,10 @@ export default class SeriesView extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.wrapActionBarProps()}
         >
-          <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>
-          {this.renderPaginator()}
+          <div css={{ minHeight: 220 }}>
+            <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>
+            {this.renderPaginator()}
+          </div>
         </Editable>
       </>
     );
