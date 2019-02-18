@@ -1,38 +1,40 @@
 export const URLMap = {
   login: {
-    href: '/login',
-    as: '/login',
+    href: '/login/',
+    as: '/login/',
   },
   main: {
-    href: '/purchased/main',
-    as: '/purchased',
+    href: '/purchased/main/',
+    as: '/purchased/',
   },
   mainUnit: {
-    href: '/purchased/mainUnit',
-    as: unitId => `/purchased/${unitId}`,
+    href: '/purchased/mainUnit/',
+    as: unitId => `/purchased/${unitId}/`,
   },
   search: {
-    href: '/purchased/search',
-    as: '/purchased/search',
+    href: '/purchased/search/',
+    as: '/purchased/search/',
   },
   searchUnit: {
-    href: '/purchased/searchUnit',
-    as: unitId => `/purchased/search/${unitId}`,
+    href: '/purchased/searchUnit/',
+    as: unitId => `/purchased/search/${unitId}/`,
   },
   hidden: {
-    href: '/purchased/hidden',
-    as: '/purchased/hidden',
+    href: '/purchased/hidden/',
+    as: '/purchased/hidden/',
   },
   hiddenUnit: {
-    href: '/purchased/hiddenUnit',
-    as: unitId => `/purchased/hidden/${unitId}`,
+    href: '/purchased/hiddenUnit/',
+    as: unitId => `/purchased/hidden/${unitId}/`,
   },
   serialPreference: {
-    href: '/serialPreference',
-    as: '/serial-preference',
+    href: '/serialPreference/',
+    as: '/serial-preference/',
   },
-  parse: pathname => ({
-    href: URLMap.main.href,
-    as: URLMap.main.as,
-  }),
+  parse: pathname => {
+    return {
+      href: URLMap.main.href,
+      as: URLMap.main.as,
+    };
+  },
 };
