@@ -169,6 +169,14 @@ export const bookDescriptionExpend = {
   textAlign: 'right',
   marginTop: 10,
 };
+export const bookDescription = {
+  wordWrap: 'break-word',
+  wordBreak: 'break-all',
+  ':lang(ko)': {
+    wordBreak: 'keep-all',
+  },
+};
+
 export const bookDescriptionExpendButton = {
   fontSize: 15,
   textAlign: 'right',
