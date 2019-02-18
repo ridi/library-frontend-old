@@ -31,4 +31,8 @@ export const URLMap = {
     href: '/serialPreference',
     as: '/serial-preference',
   },
+  parse: pathname => ({
+    href: URLMap.main.href,
+    as: URLMap.main.as,
+  }),
 };
