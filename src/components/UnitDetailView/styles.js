@@ -102,6 +102,15 @@ export const fileInfoText = {
   float: 'left',
 };
 
+export const starRateIcon = {
+  display: 'inline-block',
+  width: 14,
+  height: 14,
+  marginRight: 4,
+  fill: '#ff884d',
+  verticalAlign: '-10%',
+};
+
 export const starRatingText = {
   fontWeight: 'bold',
   color: '#ff884d',
