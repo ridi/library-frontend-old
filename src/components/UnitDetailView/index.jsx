@@ -16,7 +16,7 @@ import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
 const LINE_HEIGHT = 23;
-const LINE = 3;
+const LINE = 6;
 
 class UnitDetailView extends React.Component {
   constructor(props) {
