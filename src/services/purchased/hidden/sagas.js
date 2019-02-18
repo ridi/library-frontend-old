@@ -126,8 +126,8 @@ function* deleteSelectedBooks() {
   if (isFinish) {
     yield call(loadItems);
   }
-  // TODO 메시지 수정
-  yield all([put(showToast(isFinish ? '큐 반영 완료' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+
+  yield all([put(showToast(isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
 }
 
 function* selectAllBooks() {
