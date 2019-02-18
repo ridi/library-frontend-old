@@ -96,10 +96,12 @@ export const fileInfo = {
   marginTop: 20,
   fontSize: 15,
   color: '#808991',
+  verticalAlign: 'top',
 };
 
 export const fileInfoText = {
   float: 'left',
+  verticalAlign: 'top',
 };
 
 export const starRateIcon = {
@@ -114,6 +116,7 @@ export const starRateIcon = {
 export const starRatingText = {
   fontWeight: 'bold',
   color: '#ff884d',
+  verticalAlign: 'top',
 };
 
 export const fileInfoDelimiter = {
@@ -166,6 +169,14 @@ export const bookDescriptionExpend = {
   textAlign: 'right',
   marginTop: 10,
 };
+export const bookDescription = {
+  wordWrap: 'break-word',
+  wordBreak: 'break-all',
+  ':lang(ko)': {
+    wordBreak: 'keep-all',
+  },
+};
+
 export const bookDescriptionExpendButton = {
   fontSize: 15,
   textAlign: 'right',
