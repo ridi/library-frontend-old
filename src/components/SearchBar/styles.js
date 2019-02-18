@@ -57,7 +57,7 @@ export const searchBoxIcon = {
   top: 0,
   width: 12,
   height: 12,
-  padding: 9,
+  padding: 8,
   '.RSGIcon': {
     width: 12,
     height: 12,
