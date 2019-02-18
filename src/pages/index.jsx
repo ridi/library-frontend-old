@@ -9,7 +9,6 @@ import { toURLMap } from '../constants/urls';
 
 export default class extends React.Component {
   componentDidMount() {
-    console.log('real?');
     const _location = window.get(LOCATION);
     const { pathname } = _location;
 
