@@ -1,3 +1,11 @@
+
+class URLMapNotFoundError extends Error {
+  constructor() {
+    super();
+    this.statusCode = 404;
+  }
+}
+
 export const URLMap = {
   login: {
     href: '/login/',
@@ -42,6 +50,10 @@ export const URLMap = {
 };
 
 export const toURLMap = pathname => {
+  if (pathname === '/') {
+    return URLMap.main;
+  }
+
   const urlMaps = Object.keys(URLMap).map(key => URLMap[key]);
   for (let index = 0; index < urlMaps.length; index += 1) {
     const urlMap = urlMaps[index];
@@ -49,18 +61,14 @@ export const toURLMap = pathname => {
 
     if (result) {
       if (typeof urlMap.as === 'function') {
-        const { unitId } = result.groups;
         return {
-          href: { pathname: urlMap.href, query: { unitId } },
-          as: { pathname: urlMap.as(unitId) },
+          href: { pathname: urlMap.href, query: { ...result.groups } },
+          as: { pathname: urlMap.as(result.groups) },
         };
       }
       return urlMap;
     }
   }
 
-  return {
-    href: '/not-found/',
-    as: '/not-found/',
-  };
+  throw new URLMapNotFoundError();
 };
