@@ -2,6 +2,7 @@
 import React from 'react';
 import { jsx } from '@emotion/core';
 import { disableScroll, enableScroll } from '../utils/scroll';
+import config from '../config';
 
 const styles = {
   background: {
@@ -17,7 +18,12 @@ const styles = {
     justifyContent: 'center',
     zIndex: 9999,
   },
-  spinner: {},
+  spinner: {
+    width: 34,
+    height: 34,
+    background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+    backgroundSize: '100%',
+  },
 };
 
 export default class FullScreenLoading extends React.Component {
@@ -32,7 +38,7 @@ export default class FullScreenLoading extends React.Component {
   render() {
     return (
       <div css={styles.background}>
-        <div css={styles.spinner}>Loading...</div>
+        <div css={styles.spinner} />
       </div>
     );
   }
