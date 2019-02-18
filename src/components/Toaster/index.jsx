@@ -1,16 +1,14 @@
 /** @jsx jsx */
-import React from 'react';
-import { connect } from 'react-redux';
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
-import Check from '../../svgs/Check.svg';
-
+import React from 'react';
+import { connect } from 'react-redux';
+import { cancelClose, closeToast, closeWithDelay } from '../../services/toast/actions';
 import { getToast } from '../../services/toast/selectors';
-import { closeToast, closeWithDelay, cancelClose } from '../../services/toast/actions';
+import Check from '../../svgs/CheckCircleFill.svg';
 import Close from '../../svgs/Close.svg';
-
-import * as styles from './styles';
 import IconButton from '../IconButton';
+import * as styles from './styles';
 
 class Toaster extends React.Component {
   onMouseOver = () => {
@@ -59,6 +57,7 @@ class Toaster extends React.Component {
         onClick={() => {
           dispatchCloseToast();
         }}
+        a11y="닫기버튼"
       >
         <Close />
       </IconButton>
