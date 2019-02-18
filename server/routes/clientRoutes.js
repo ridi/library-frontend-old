@@ -3,7 +3,7 @@ const nextRoutes = require('next-routes');
 const clientRoutes = nextRoutes();
 
 const APP_ROUTES = [
-  { page: 'home', pattern: '/' },
+  // { page: 'home', pattern: '/' },
   { page: 'login', pattern: '/login' },
   { page: 'serialPreference', pattern: '/serial-preference' },
   { page: 'purchased/main', pattern: '/purchased' },

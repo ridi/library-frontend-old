@@ -7,11 +7,8 @@ import { setLocation, commitLocation, rollbackLocation } from './actions';
 import { locationFromUrl } from './utils';
 
 const createConnectedRouterWrapper = () => {
+  const toRoute = path => path.replace(/\/$/, '') || '/';
   class RouterWrapper extends React.Component {
-    static toRoute(path) {
-      return path.replace(/\/$/, '') || '/';
-    }
-
     constructor(props, context) {
       super(props, context);
       this.store = context.store;
@@ -75,7 +72,7 @@ const createConnectedRouterWrapper = () => {
       }
 
       const { pathname, query, hash } = locationFromUrl(url, true);
-      const route = this.toRoute(pathname);
+      const route = toRoute(pathname);
       const routeInfo = Router.router.components[route];
       Router.router.changeState('replaceState', url, as);
       Router.router.set(route, pathname, query, url, {
