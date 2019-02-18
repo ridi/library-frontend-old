@@ -3,9 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
+import Check from '../../svgs/Check.svg';
 
 import { getToast } from '../../services/toast/selectors';
 import { closeToast, closeWithDelay, cancelClose } from '../../services/toast/actions';
+import Close from '../../svgs/Close.svg';
 
 import * as styles from './styles';
 import IconButton from '../IconButton';
@@ -57,7 +59,9 @@ class Toaster extends React.Component {
         onClick={() => {
           dispatchCloseToast();
         }}
-      />
+      >
+        <Close />
+      </IconButton>
     );
   }
 
@@ -70,7 +74,9 @@ class Toaster extends React.Component {
     return (
       <div css={styles.toastWrapper}>
         <div css={styles.toast} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
-          <div css={styles.toastTypeMark} />
+          <div css={styles.toastTypeMark}>
+            <Check css={styles.toastTypeMarkIcon} />
+          </div>
           <div css={styles.toastContent}>
             {toast.message}
             {this.renderToastLink()}

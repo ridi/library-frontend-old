@@ -27,8 +27,15 @@ export const toastTypeMark = {
   height: 15,
   marginRight: 6,
   alignSelf: 'flex-start',
-
+  borderRadius: '50%',
   backgroundColor: '#5abf0d',
+};
+
+export const toastTypeMarkIcon = {
+  marginLeft: 1,
+  marginRight: 1,
+  width: '100%',
+  height: '100%',
 };
 
 export const toastContent = {
@@ -53,6 +60,6 @@ export const toastCloseButton = {
   marginLeft: 15,
   width: 15,
   height: 15,
-
-  backgroundColor: '#666666',
+  backgroundColor: '#000',
+  fill: '#666666',
 };
