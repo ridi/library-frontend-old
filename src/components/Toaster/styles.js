@@ -23,19 +23,16 @@ export const toast = {
 };
 
 export const toastTypeMark = {
-  width: 15,
-  height: 15,
+  width: 16,
+  height: 16,
   marginRight: 6,
   alignSelf: 'flex-start',
-  borderRadius: '50%',
-  backgroundColor: '#5abf0d',
 };
 
 export const toastTypeMarkIcon = {
-  marginLeft: 1,
-  marginRight: 1,
   width: '100%',
   height: '100%',
+  fill: '#5abf0d',
 };
 
 export const toastContent = {
