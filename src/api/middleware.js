@@ -23,7 +23,7 @@ const authorizationInterceptor = {
         .catch(err => {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           // 로그인 페이지에서는 진행하지 않는다.
-          if (Window.get(LOCATION).href !== URLMap.login.href && err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+          if (Window.get(LOCATION).pathname !== URLMap.login.href && err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
             Window.get(LOCATION).href = URLMap.login.href;
             return null;
           }
