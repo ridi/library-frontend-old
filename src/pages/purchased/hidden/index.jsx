@@ -148,7 +148,7 @@ class Hidden extends React.Component {
           pathname: URLMap.hiddenUnit.href,
           query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.hiddenUnit.as(libraryBookData.unit_id),
+        URLMap.hiddenUnit.as({ unitId: libraryBookData.unit_id }),
       );
 
       return (

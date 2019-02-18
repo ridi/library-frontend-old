@@ -134,7 +134,7 @@ class searchUnit extends React.Component {
           currentPage,
           totalPages,
           href: { pathname: URLMap.searchUnit.href, query: { unitId } },
-          as: URLMap.searchUnit.as(unitId),
+          as: URLMap.searchUnit.as({ unitId }),
           query: { orderType, orderBy },
         }}
         actionBarProps={this.makeActionBarProps()}

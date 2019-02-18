@@ -147,7 +147,7 @@ class Main extends React.Component {
           pathname: URLMap.mainUnit.href,
           query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.mainUnit.as(libraryBookData.unit_id),
+        URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
       );
 
       return (

@@ -1,4 +1,3 @@
-
 class URLMapNotFoundError extends Error {
   constructor() {
     super();
@@ -19,7 +18,7 @@ export const URLMap = {
   },
   mainUnit: {
     href: '/purchased/mainUnit/',
-    as: unitId => `/purchased/${unitId}/`,
+    as: ({ unitId }) => `/purchased/${unitId}/`,
     regex: /^\/purchased\/(?<unitId>\d+)\/$/,
   },
   search: {
@@ -29,7 +28,7 @@ export const URLMap = {
   },
   searchUnit: {
     href: '/purchased/searchUnit/',
-    as: unitId => `/purchased/search/${unitId}/`,
+    as: ({ unitId }) => `/purchased/search/${unitId}/`,
     regex: /^\/purchased\/search\/(?<unitId>\d+)\/$/,
   },
   hidden: {
@@ -39,7 +38,7 @@ export const URLMap = {
   },
   hiddenUnit: {
     href: '/purchased/hiddenUnit/',
-    as: unitId => `/purchased/hidden/${unitId}/`,
+    as: ({ unitId }) => `/purchased/hidden/${unitId}/`,
     regex: /^\/purchased\/hidden\/(?<unitId>\d+)\/$/,
   },
   serialPreference: {

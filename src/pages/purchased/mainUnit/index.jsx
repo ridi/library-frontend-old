@@ -133,7 +133,7 @@ class MainUnit extends React.Component {
           currentPage,
           totalPages,
           href: { pathname: URLMap.mainUnit.href, query: { unitId } },
-          as: URLMap.mainUnit.as(unitId),
+          as: URLMap.mainUnit.as({ unitId }),
           query: { orderType, orderBy },
         }}
         actionBarProps={this.makeActionBarProps()}
