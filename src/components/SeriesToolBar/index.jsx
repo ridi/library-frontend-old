@@ -54,7 +54,9 @@ class SeriesToolBar extends React.Component {
                 />
               )}
             </div>
-          ) : null
+          ) : (
+            <div />
+          )
         }
         renderFlexRight={() => <Editing toggleEditingMode={toggleEditingMode} />}
       />
