@@ -12,8 +12,6 @@ const createConnectedRouterWrapper = () => {
     constructor(props, context) {
       super(props, context);
       this.store = context.store;
-      this.listenRouteChange = this.listenRouteChange.bind(this);
-      this.finishRouteChange = this.finishRouteChange.bind(this);
     }
 
     componentDidMount() {
@@ -28,25 +26,24 @@ const createConnectedRouterWrapper = () => {
       Router.events.off('routeChangeComplete', this.finishRouteChange);
     }
 
-    listenRouteChange(as) {
+    listenRouteChange = as => {
       const location = locationFromUrl(as);
       const { setLocation: dispatchSetLocation } = this.props;
       dispatchSetLocation(location);
-    }
+    };
 
-    finishRouteChange() {
+    finishRouteChange = () => {
       const [isMismatch, url] = this.checkMismatch();
       if (isMismatch) {
         this.rollback(url);
       } else {
         this.commit();
       }
-    }
+    };
 
     checkMismatch() {
       const state = this.store.getState();
       const { pathname: pathnameInStore, search: searchInStore, hash: hashInStore } = state.router.location;
-
       const { pathname: pathnameInHistory, search: searchInHistory, hash: hashInHistory } = locationFromUrl(Router.asPath);
       return [
         pathnameInStore !== pathnameInHistory || searchInStore !== searchInHistory || hashInStore !== hashInHistory,
@@ -84,7 +81,7 @@ const createConnectedRouterWrapper = () => {
 
     render() {
       const { children } = this.props;
-      return children;
+      return children || <></>;
     }
   }
   RouterWrapper.contextTypes = {

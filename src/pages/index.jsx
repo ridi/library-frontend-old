@@ -16,7 +16,7 @@ export default class extends React.Component {
     const query = parse(_location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
     const linkProps = makeLinkProps(href, as, query);
 
-    Router.replace(...linkProps);
+    Router.replace(linkProps.href, linkProps.as);
   }
 
   render() {
