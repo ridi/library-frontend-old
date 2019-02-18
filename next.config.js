@@ -3,7 +3,9 @@ const secrets = require('./secrets.json');
 module.exports = {
   distDir: '../build',
   useFileSystemPublicRoutes: false,
-  exportPathMap: () => ({}),
+  exportPathMap: () => ({
+    '/': { page: '/' },
+  }),
   webpack: config => {
     config.module.rules.push({
       test: /\.svg$/,
