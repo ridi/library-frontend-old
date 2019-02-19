@@ -1,6 +1,7 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
 import Favicon from './base/Favicon';
+import Metadata from './base/Metadata';
 
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage, isServer, req }) {
@@ -27,7 +28,7 @@ export default class MyDocument extends Document {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
           <meta name="csrf-token" content={this.props.csrfToken} />
-
+          <Metadata />
           <Favicon />
 
           <script type="text/javascript" src="https://account.ridibooks.com/script/ridi_token_refresher.0.0.3.js" />
