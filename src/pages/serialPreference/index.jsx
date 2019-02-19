@@ -31,7 +31,7 @@ import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
 import Footer from '../base/Footer';
 import { TabBar, TabMenuTypes } from '../base/LNB';
-import Responsive from '../base/Responsive';
+import { ResponsiveBooks } from '../base/Responsive';
 
 class SerialPreference extends React.Component {
   static async getInitialProps({ store }) {
@@ -140,7 +140,7 @@ class SerialPreference extends React.Component {
       return <EmptyBookList IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
     }
 
-    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
+    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
 
   renderPaginator() {
