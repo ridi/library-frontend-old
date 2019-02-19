@@ -50,7 +50,7 @@ export const URLMap = {
 
 export const toURLMap = pathname => {
   if (pathname === '/') {
-    return URLMap.main;
+    return { href: URLMap.main.href, as: URLMap.main.as };
   }
 
   const urlMaps = Object.keys(URLMap).map(key => URLMap[key]);
@@ -65,7 +65,7 @@ export const toURLMap = pathname => {
           as: { pathname: urlMap.as(result.groups) },
         };
       }
-      return urlMap;
+      return { href: urlMap.href, as: urlMap.as };
     }
   }
 
