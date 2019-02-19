@@ -21,7 +21,6 @@ stages:
     - export TAG=${CI_COMMIT_SHA::8}
 
   script:
-    - make ci-settings ns=$ENVIRONMENT
     - sh docs/script/export.sh
     - sh docs/script/upload.sh
     - docker-compose -f ./docs/docker/compose/build.yml build

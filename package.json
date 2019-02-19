@@ -2,7 +2,6 @@
   "name": "library-web",
   "version": "0.0.1",
   "description": "Rendering server with next.js",
-  "main": "server/entry.js",
   "scripts": {
     "build": "next build src",
     "export": "STATIC_URL=https://library-static.ridibooks.com next export src -o ./out"
