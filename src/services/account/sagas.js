@@ -1,3 +1,5 @@
+import Router from 'next/router';
+
 import { all, call, put, takeEvery, take, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
@@ -5,12 +7,15 @@ import { LOAD_USER_INFO, START_ACCOUNT_TRACKER, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
 import Window, { LOCATION } from '../../utils/window';
+import { URLMap } from '../../constants/urls';
 
 function* loadUserInfo() {
   try {
     const userInfo = yield call(fetchUserInfo);
     yield put(setUserInfo(userInfo));
-  } catch (e) {}
+  } catch (e) {
+    Router.replace(URLMap.login.href, URLMap.login.as);
+  }
 }
 
 function* accountTracker() {
@@ -27,7 +32,7 @@ function* accountTracker() {
         Window.get(LOCATION).reload();
       }
     } catch (e) {
-      continue;
+      Router.replace(URLMap.login.href, URLMap.login.as);
     }
   }
 }
