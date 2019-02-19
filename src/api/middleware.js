@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import axios from 'axios';
 import { URLMap } from '../constants/urls';
 
@@ -24,7 +25,7 @@ const authorizationInterceptor = {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           // 로그인 페이지에서는 진행하지 않는다.
           if (Window.get(LOCATION).pathname !== URLMap.login.href && err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            Window.get(LOCATION).href = URLMap.login.href;
+            Router.replace(URLMap.login.href, URLMap.login.as);
             return null;
           }
 
