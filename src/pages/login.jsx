@@ -18,19 +18,18 @@ const mainStyle = {
   left: '50%',
   top: '50%',
   width: 300,
-  height: 200,
-  marginTop: -160,
+  marginTop: -200,
   marginLeft: -150,
 };
 
 const messageStyle = {
   width: '100%',
-  height: 24,
+  lineHeight: '1.5em',
   fontSize: 20,
   fontWeight: 'bold',
   textAlign: 'center',
   color: '#40474d',
-  marginBottom: 8,
+  marginBottom: 16,
 };
 
 const defaultButtonStyle = {
@@ -42,6 +41,7 @@ const defaultButtonStyle = {
   textAlign: 'center',
   fontSize: 16,
   fontWeight: 'bold',
+  boxSizing: 'border-box',
 };
 
 const loginButtonStyle = {
@@ -72,7 +72,11 @@ class Login extends React.Component {
         </Head>
         <div css={fixedStyle}>
           <main css={mainStyle}>
-            <div css={messageStyle}>로그인을 진행해주세요.</div>
+            <p css={messageStyle}>
+              로그아웃 상태입니다.
+              <br />
+              로그인하여 내 서재를 확인해보세요.
+            </p>
             <div>
               <a css={loginButtonStyle} href={loginUrl}>
                 로그인

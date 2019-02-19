@@ -32,8 +32,8 @@ const _reduceBookDescriptions = bookDescriptions =>
 const _reduceBookStarRatings = bookStarRatings =>
   bookStarRatings.map(bookStarRating => ({
     id: bookStarRating.book_id,
-    total_rating_score: bookStarRating.total_rating_score,
-    total_rating_count: bookStarRating.total_rating_count,
+    buyer_rating_score: bookStarRating.buyer_rating_score,
+    buyer_rating_count: bookStarRating.buyer_rating_count,
   }));
 
 export function* fetchBookData(bookIds) {

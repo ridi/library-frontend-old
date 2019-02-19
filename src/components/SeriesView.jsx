@@ -148,10 +148,8 @@ export default class SeriesView extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.wrapActionBarProps()}
         >
-          <div css={{ minHeight: 220 }}>
-            <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>
-            {this.renderPaginator()}
-          </div>
+          <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>
+          {this.renderPaginator()}
         </Editable>
       </>
     );

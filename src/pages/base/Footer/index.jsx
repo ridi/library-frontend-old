@@ -16,7 +16,7 @@ const Footer = () => (
             </a>
           </li>
           <li css={[styles.headlineItem, styles.headlineItemSeparator]}>
-            <a css={styles.headlineLink} href="/guide">
+            <a css={styles.headlineLink} href="https://help.ridibooks.com/hc/ko/">
               고객센터
             </a>
           </li>

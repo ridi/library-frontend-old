@@ -45,8 +45,8 @@ class UnitDetailView extends React.Component {
       <div css={styles.fileInfo}>
         <div key={shortid.generate()} css={styles.fileInfoText}>
           <Star css={styles.starRateIcon} />
-          <strong css={styles.starRatingText}>{`${bookStarRating.total_rating_score}점 `}</strong>(
-          {thousandsSeperator(bookStarRating.total_rating_count)}명)
+          <strong css={styles.starRatingText}>{`${bookStarRating.buyer_rating_score}점 `}</strong>(
+          {thousandsSeperator(bookStarRating.buyer_rating_count)}명)
         </div>
         <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
         {bookInfos.map((info, index) => (
@@ -96,6 +96,7 @@ class UnitDetailView extends React.Component {
           ]}
         >
           <p
+            css={styles.bookDescription}
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
             ref={wrapper => {
               this.wrapper = wrapper;

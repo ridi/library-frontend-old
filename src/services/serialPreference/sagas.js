@@ -4,7 +4,6 @@ import { toFlatten } from '../../utils/array';
 
 import { loadBookData } from '../book/sagas';
 import { showDialog } from '../dialog/actions';
-import { setIsFetchingHiddenBook } from '../purchased/hiddenUnit/actions';
 
 import { getQuery } from '../router/selectors';
 import { showToast } from '../toast/actions';
@@ -46,7 +45,7 @@ function* loadItems() {
   } catch (err) {
     yield put(setError(true));
   } finally {
-    yield put(setIsFetchingHiddenBook(false));
+    yield put(setIsFetchingBooks(false));
   }
 }
 
