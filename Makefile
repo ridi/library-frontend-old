@@ -14,7 +14,7 @@ yarn-install:
 # run-
 local:
 	NODE_ENV=local yarn build
-	yarn export
+	NODE_ENV=local yarn export
 
 # docker
 docker-up: python-package-install settings
