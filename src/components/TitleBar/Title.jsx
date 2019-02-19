@@ -8,17 +8,15 @@ import * as styles from './styles';
 const Title = ({ title, showCount, totalCount, href, as, query, a11y = '뒤로가기' }) => (
   <div css={styles.title}>
     <Link {...makeLinkProps(href, as, query)}>
-      <a>
-        <span css={styles.backButton}>
-          <ArrowLeft css={styles.backIcon} />
-          <span className="a11y">{a11y}</span>
-        </span>
+      <a css={styles.backButton}>
+        <ArrowLeft css={styles.backIcon} />
+        <span className="a11y">{a11y}</span>
       </a>
     </Link>
-    <div css={styles.titleTextWrapper}>
+    <h2 css={styles.titleTextWrapper}>
       <span css={styles.titleText}>{title}</span>
       {showCount ? <span css={styles.count}>{totalCount}</span> : null}
-    </div>
+    </h2>
   </div>
 );
 
