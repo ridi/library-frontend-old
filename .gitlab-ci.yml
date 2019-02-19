@@ -2,10 +2,10 @@ image: python:3.6
 
 stages:
   - build
-  - manual-deploy
-  - deploy-development
-  - deploy-staging
-  - deploy-production
+  # - manual-deploy
+  # - deploy-development
+  # - deploy-staging
+  # - deploy-production
 
 .aws-docker: &aws-docker
   image: ridibooks/gitlab-ci-docker-aws:1.5.0
