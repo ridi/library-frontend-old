@@ -198,7 +198,7 @@ class Search extends React.Component {
         message = '검색어를 입력해주세요.';
       }
 
-      return <EmptyBookList IconComponent={SearchIcon} message={message} />;
+      return <EmptyBookList IconComponent={SearchIcon} iconWidth={38} message={message} />;
     }
 
     return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;

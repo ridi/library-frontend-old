@@ -27,7 +27,7 @@ export const titleTextWrapper = {
   display: 'flex',
   minWidth: 0,
   alignItems: 'center',
-  paddingBottom: 2,
+  paddingBottom: 3,
 };
 
 export const titleText = {

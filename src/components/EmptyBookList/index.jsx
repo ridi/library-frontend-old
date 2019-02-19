@@ -5,7 +5,6 @@ const styles = {
   bookListIsEmpty: {
     position: 'relative',
     color: '#40474d',
-    // textAlign: 'center',
     width: '100%',
     height: '100%',
     minHeight: 400,
@@ -23,21 +22,22 @@ const styles = {
     textAlign: 'center',
   },
   icon: {
-    width: 30,
-    height: 38,
     fill: '#d1d5d9',
     marginBottom: 20,
   },
 };
 
-const EmptyBookList = ({ message, IconComponent }) => (
-  <div css={styles.bookListIsEmpty}>
-    <div css={styles.in}>
-      {IconComponent && <IconComponent css={styles.icon} />}
-      <br />
-      {message}
+const EmptyBookList = ({ message, IconComponent, iconWidth = 30, iconHeight = 38 }) => {
+  const iconSize = { width: iconWidth, height: iconHeight };
+  return (
+    <div css={styles.bookListIsEmpty}>
+      <div css={styles.in}>
+        {IconComponent && <IconComponent css={[styles.icon, iconSize]} />}
+        <br />
+        {message}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default EmptyBookList;
