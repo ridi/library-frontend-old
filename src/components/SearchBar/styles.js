@@ -70,6 +70,9 @@ export const searchBoxInput = {
   fontSize: 13,
   letterSpacing: -0.7,
   color: '#40474d',
+  '::placeholder': {
+    color: '#9EA7AD',
+  },
 };
 
 export const searchBoxClearButton = {
