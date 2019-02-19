@@ -45,10 +45,12 @@ const beforeCreatingStore = (initialState, context) => {
 
 const afterCreatingStore = async (store, context) => {
   // General
-  await store.dispatch(loadUserInfo());
 
   // Client Only
   if (!context.isServer) {
+    // 클라에서 userInfo 셋팅
+    await store.dispatch(loadUserInfo());
+
     // TODO: LRU버그로 인해 주석처리
     // await store.dispatch(loadBookDataFromStorage());
     await store.dispatch(startAccountTracker());
