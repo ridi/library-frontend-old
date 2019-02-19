@@ -42,22 +42,20 @@ class UnitDetailView extends React.Component {
     const bookInfos = bookMetadata.infos;
 
     return (
-      <div css={styles.fileInfo}>
-        <div key={shortid.generate()} css={styles.fileInfoText}>
-          <Star css={styles.starRateIcon} />
-          <strong css={styles.starRatingText}>{`${bookStarRating.buyer_rating_score}점 `}</strong>(
-          {thousandsSeperator(bookStarRating.buyer_rating_count)}명)
-        </div>
-        <div key={shortid.generate()} css={styles.fileInfoDelimiter} />
+      <p css={styles.fileInfo}>
+        <Star css={styles.starRateIcon} />
+        <strong css={styles.starRate}>{`${bookStarRating.buyer_rating_score}점 `}</strong>
+        <span css={styles.fileInfoText}>({thousandsSeperator(bookStarRating.buyer_rating_count)}명)</span>
+        <span key={shortid.generate()} css={styles.fileInfoDelimiter} />
         {bookInfos.map((info, index) => (
           <>
-            <div key={shortid.generate()} css={styles.fileInfoText}>
+            <span key={shortid.generate()} css={styles.fileInfoText}>
               {` ${info} `}
-            </div>
-            {bookInfos.length !== index + 1 ? <div key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
+            </span>
+            {bookInfos.length !== index + 1 ? <span key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
           </>
         ))}
-      </div>
+      </p>
     );
   }
 
