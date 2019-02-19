@@ -7,7 +7,7 @@ import * as styles from './styles';
 export const NotFoundError = ({ onClickHistoryBack }) => (
   <>
     <Head>
-      <title>404</title>
+      <title>404 에러 - 내 서재</title>
     </Head>
     <section css={styles.pageError}>
       <div>
