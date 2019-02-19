@@ -48,81 +48,80 @@ build-production:
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
     S3_PATH: $PROD_S3_PATH
+# .deployment-template: &deployment
+#   <<: *aws-docker
+#   only:
+#     - master
+#   before_script:
+#     - export TAG=${CI_COMMIT_SHA::8}
+#     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
+#   script:
+#     - sh docs/script/push.sh
+#     - sh docs/script/deploy.sh
 
-.deployment-template: &deployment
-  <<: *aws-docker
-  only:
-    - master
-  before_script:
-    - export TAG=${CI_COMMIT_SHA::8}
-    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
-  script:
-    - sh docs/script/push.sh
-    - sh docs/script/deploy.sh
+# development:
+#   <<: *deployment
+#   stage: deploy-development
+#   variables:
+#     ENVIRONMENT: 'development'
+#     ECR_REPO_URL: $DEV_LIBRARY_ECR
+#     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
 
-development:
-  <<: *deployment
-  stage: deploy-development
-  variables:
-    ENVIRONMENT: 'development'
-    ECR_REPO_URL: $DEV_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+# staging:
+#   <<: *deployment
+#   stage: deploy-staging
+#   when: manual
+#   variables:
+#     ENVIRONMENT: 'staging'
+#     ECR_REPO_URL: $STAGING_LIBRARY_ECR
+#     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
 
-staging:
-  <<: *deployment
-  stage: deploy-staging
-  when: manual
-  variables:
-    ENVIRONMENT: 'staging'
-    ECR_REPO_URL: $STAGING_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+# production:
+#   <<: *deployment
+#   stage: deploy-production
+#   when: manual
+#   variables:
+#     ENVIRONMENT: 'production'
+#     ECR_REPO_URL: $PROD_LIBRARY_ECR
+#     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
 
-production:
-  <<: *deployment
-  stage: deploy-production
-  when: manual
-  variables:
-    ENVIRONMENT: 'production'
-    ECR_REPO_URL: $PROD_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+# .manual-deployment-template: &manual-deployment
+#   <<: *aws-docker
+#   stage: manual-deploy
+#   when: manual
+#   except:
+#     - master
+#   before_script:
+#     - apk add nodejs yarn
+#     - make python-package-install
+#     - export TAG=${CI_COMMIT_SHA::8}
+#     - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
+#   script:
+#     - make ci-settings ns=$ENVIRONMENT
+#     - sh docs/script/export.sh
+#     - sh docs/script/upload.sh
+#     - docker-compose -f ./docs/docker/compose/build.yml build
 
-.manual-deployment-template: &manual-deployment
-  <<: *aws-docker
-  stage: manual-deploy
-  when: manual
-  except:
-    - master
-  before_script:
-    - apk add nodejs yarn
-    - make python-package-install
-    - export TAG=${CI_COMMIT_SHA::8}
-    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
-  script:
-    - make ci-settings ns=$ENVIRONMENT
-    - sh docs/script/export.sh
-    - sh docs/script/upload.sh
-    - docker-compose -f ./docs/docker/compose/build.yml build
+#     - sh docs/script/push.sh
+#     - sh docs/script/deploy.sh
 
-    - sh docs/script/push.sh
-    - sh docs/script/deploy.sh
+# development-manual:
+#   <<: *manual-deployment
+#   variables:
+#     ENVIRONMENT: 'development'
+#     S3_PATH: $DEV_S3_PATH
+#     ECR_REPO_URL: $DEV_LIBRARY_ECR
+#     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
 
-development-manual:
-  <<: *manual-deployment
-  variables:
-    ENVIRONMENT: 'development'
-    S3_PATH: $DEV_S3_PATH
-    ECR_REPO_URL: $DEV_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
-
-staging-manual:
-  <<: *manual-deployment
-  variables:
-    ENVIRONMENT: 'staging'
-    ECR_REPO_URL: $STAGING_LIBRARY_ECR
-    S3_PATH: $STAGING_S3_PATH
-    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+# staging-manual:
+#   <<: *manual-deployment
+#   variables:
+#     ENVIRONMENT: 'staging'
+#     ECR_REPO_URL: $STAGING_LIBRARY_ECR
+#     S3_PATH: $STAGING_S3_PATH
+#     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+#     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
