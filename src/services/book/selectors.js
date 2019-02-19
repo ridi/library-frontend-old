@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { EmptyUnit } from '../../utils/dataObject';
 
 const getBookState = state => state.books;
 
@@ -35,7 +36,7 @@ export const getBookStarRatings = (state, bookIds) =>
 export const getUnit = (state, unitId) =>
   createSelector(
     getBookState,
-    bookState => bookState.units.get(unitId),
+    bookState => bookState.units.get(unitId) || EmptyUnit,
   )(state);
 
 export const getBook = (state, bookId) =>
