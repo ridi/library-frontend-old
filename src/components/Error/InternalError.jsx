@@ -7,7 +7,7 @@ import * as styles from './styles';
 export const InternalError = ({ onClickHistoryBack }) => (
   <>
     <Head>
-      <title>500 Internal Server Error - 리디</title>
+      <title>500 에러 - 내 서재</title>
     </Head>
     <section css={styles.pageError}>
       <div>
