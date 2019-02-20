@@ -26,7 +26,6 @@ import {
   getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import { UnitType } from '../../../constants/unitType';
 import TitleBar from '../../../components/TitleBar';
@@ -170,7 +169,6 @@ class searchUnit extends React.Component {
         <Head>
           <title>{unit.title} - 내 서재</title>
         </Head>
-        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
