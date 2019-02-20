@@ -18,7 +18,6 @@ stages:
   when: manual
   before_script:
     - apk add nodejs yarn
-    - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
 
   script:
