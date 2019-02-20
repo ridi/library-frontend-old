@@ -19,7 +19,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const isUnitBook = libraryBookData.unit_type && !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
-  const isNotAvailable = !isUnitBook && isAfter(new Date(), libraryBookData.expire_date);
+  const isNotAvailable = isAfter(new Date(), libraryBookData.expire_date);
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
