@@ -52,7 +52,7 @@ export default class BookMetaData {
     // info의 text 에 | 와 \ 사용되면 안된다. 두개의 문자는 예약어이다.
     const infos = [];
 
-    if (file.format !== BookFileType.BOM || file.format !== BookFileType.WEBTOON) {
+    if (!(file.format === BookFileType.BOM || file.format === BookFileType.WEBTOON)) {
       infos.push(`${BookFileType.convertToString(file.format)}`);
     }
 
