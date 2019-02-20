@@ -64,6 +64,10 @@ export default class BookMetaData {
       }
     }
 
+    if (file.page_count) {
+      infos.push(`${file.page_count}쪽`);
+    }
+
     if (file.size) {
       infos.push(`${formatFileSize(file.size)}`);
     }
