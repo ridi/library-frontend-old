@@ -95,6 +95,8 @@ const toProps = ({
   const hasUnreadSeries = recentReadPlatformBookData.series.volume < seriesProperty.opened_book_count;
   // 완결 여부
   const isSerialCompleted = seriesProperty.is_serial_complete;
+  // 성인도서 19금 뱃지
+  const isAdultOnly = platformBookData.property.is_adult_only;
 
   const additionalMetadata = (
     <p css={serialPreferenceStyles.preferenceMeta}>
@@ -118,6 +120,7 @@ const toProps = ({
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
     thumbnailUrl: `${platformBookData.thumbnail.large}?dpi=xhdpi`,
+    adultBadge: isAdultOnly,
     selectMode: isSelectMode,
     selected: isSelected,
     onSelectedChange: () => onSelectedChange(bookSeriesId),
