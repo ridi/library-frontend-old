@@ -12,6 +12,7 @@ export const title = {
 export const backButton = {
   display: 'block',
   padding: '6px 10px 6px 0',
+  fill: '#40474d',
 };
 
 export const backIcon = {
