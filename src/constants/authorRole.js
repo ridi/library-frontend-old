@@ -78,7 +78,7 @@ export default class AuthorRole {
 
   static getPriorities(authors) {
     if (authors[this.AUTHOR]) {
-      return [this.AUTHOR, this.ILLUSTRATOR];
+      return [this.AUTHOR, this.ILLUSTRATOR, this.TRANSLATOR];
     }
 
     if (authors[this.ORIG_AUTHOR]) {
