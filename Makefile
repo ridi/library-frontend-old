@@ -11,17 +11,20 @@ yarn-install:
 	@yarn global add pm2 && yarn install
 
 
-# run-
+# run
+run-local:
+	NODE_ENV=local yarn dev
+
 local:
 	NODE_ENV=local yarn build
 	NODE_ENV=local yarn export
 
 # docker
-docker-up: python-package-install settings
+docker-up:
 	@docker-compose up
 
 docker-logs:
 	@docker ps -a -q -f name=library-web | awk '{print $1}' | xargs docker logs -f
 
-docker-web: python-package-install settings
+docker-web:
 	@docker-compose up library-web

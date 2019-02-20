@@ -1,25 +1,24 @@
 version: '3.4'
 
 services:
-  # library-web:
-  #   image: node:8
-  #   container_name: library-web
-  #   volumes:
-  #     - .:/htdocs/www
-  #   working_dir: /htdocs/www
-  #   command: ['make', 'docker-all']
+  library-web:
+    image: node:10
+    container_name: library-web
+    volumes:
+      - .:/htdocs/www
+    working_dir: /htdocs/www
+    command: ['make', 'docker-all']
 
   library-web-nginx:
     image: nginx:stable
     container_name: library-web-nginx
     restart: always
     volumes:
-      - .:/htdocs/www
       - ./docs/dev/nginx:/etc/nginx/conf.d:ro
       - ./docs/dev/cert:/etc/nginx/cert/:ro
     ports:
       - 443:443
-    # depends_on:
-    #   - library-web
-    # links:
-    #   - library-web
+    depends_on:
+      - library-web
+    links:
+      - library-web
