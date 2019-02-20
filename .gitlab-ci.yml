@@ -4,7 +4,7 @@ stages:
   - deploy
 
 .aws-docker: &aws-docker
-  image: ridibooks/gitlab-ci-docker-aws:1.5.0
+  image: ridibooks/gitlab-ci-docker-aws:1.6.0
 
 .build-template: &build
   <<: *aws-docker
