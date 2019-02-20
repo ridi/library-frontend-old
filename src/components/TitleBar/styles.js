@@ -48,7 +48,7 @@ export const count = {
   paddingLeft: 6,
   fontSize: 15,
   fontWeight: 400,
-  height: titleHeight,
-  lineHeight: `${titleHeight}px`,
+  height: titleHeight - 1,
+  lineHeight: `${titleHeight - 1}px`,
   color: '#808991',
 };
