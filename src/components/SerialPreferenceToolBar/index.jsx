@@ -7,12 +7,12 @@ import * as styles from './styles';
 
 class SerialPreferenceToolBar extends React.Component {
   render() {
-    const { toggleEditingMode, totalCount } = this.props;
+    const { toggleEditingMode, totalCount, isFetchingBooks } = this.props;
 
     return (
       <FlexBar
         css={styles.toolBar}
-        renderFlexLeft={() => <span css={styles.totalCount}>총 {totalCount}작품</span>}
+        renderFlexLeft={() => <span css={styles.totalCount}>{!isFetchingBooks ? `총 ${totalCount}작품` : ''}</span>}
         renderFlexRight={() => <Editing toggleEditingMode={toggleEditingMode} />}
       />
     );

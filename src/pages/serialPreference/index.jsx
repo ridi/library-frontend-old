@@ -96,9 +96,10 @@ class SerialPreference extends React.Component {
   }
 
   renderToolBar() {
-    const { totalCount } = this.props;
+    const { totalCount, isFetchingBooks } = this.props;
 
     const toolBarProps = {
+      isFetchingBooks,
       totalCount,
       toggleEditingMode: this.toggleEditingMode,
     };
