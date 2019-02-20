@@ -32,6 +32,7 @@ function* loadUserInfo() {
     userInfo = yield call(fetchUserInfo);
   } catch (e) {
     Router.replace(URLMap.login.href, URLMap.login.as);
+    return;
   }
 
   yield put(setUserInfo(userInfo));
