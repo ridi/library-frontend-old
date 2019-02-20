@@ -1,7 +1,7 @@
 image: python:3.6
 
 stages:
-  - build
+  - deploy
   # - manual-deploy
   # - deploy-development
   # - deploy-staging
@@ -12,9 +12,10 @@ stages:
 
 .build-template: &build
   <<: *aws-docker
-  stage: build
+  stage: deploy
   only:
     - master
+  when: manual
   before_script:
     - apk add nodejs yarn
     - make python-package-install
@@ -34,25 +35,48 @@ build-development:
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
     S3_PATH: $DEV_S3_PATH
     INDEX_S3_PATH: $DEV_INDEX_S3_PATH
-# TODO: 임시 주석처리
-# build-staging:
-#   <<: *build
-#   variables:
-#     ENVIRONMENT: 'staging'
-#     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
-#     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
-#     S3_PATH: $STAGING_S3_PATH
-#     INDEX_S3_PATH: $STAGING_INDEX_S3_PATH
 
-# build-production:
-#   <<: *build
-#   variables:
-#     ENVIRONMENT: 'production'
-#     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
-#     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-#     S3_PATH: $PROD_S3_PATH
-#     INDEX_S3_PATH: $PROD_INDEX_S3_PATH
+build-staging:
+  <<: *build
+  variables:
+    ENVIRONMENT: 'staging'
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $STAGING_S3_PATH
+    INDEX_S3_PATH: $STAGING_INDEX_S3_PATH
 
+build-production:
+  <<: *build
+  variables:
+    ENVIRONMENT: 'production'
+    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $PROD_S3_PATH
+    INDEX_S3_PATH: $PROD_INDEX_S3_PATH
+
+manual-build-development:
+  <<: *build
+  when: manual
+  except:
+    - master
+  variables:
+    ENVIRONMENT: 'development'
+    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $DEV_S3_PATH
+    INDEX_S3_PATH: $DEV_INDEX_S3_PATH
+
+manual-build-staging:
+  <<: *build
+  when: manual
+  except:
+    - master
+  variables:
+    ENVIRONMENT: 'staging'
+    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $STAGING_S3_PATH
+    INDEX_S3_PATH: $STAGING_INDEX_S3_PATH
 # XXX: 커스텀 웹서버 배포 코드 주석처리
 # .deployment-template: &deployment
 #   <<: *aws-docker
