@@ -51,6 +51,6 @@ export function* getSearchUnitPrimaryItem(unitId) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI(`/items/main/${unitId}`, options, config.LIBRARY_API_BASE_URL));
+  const response = yield api.get(makeURI(`/items/search/${unitId}`, options, config.LIBRARY_API_BASE_URL));
   return attatchTTL(response.data.items)[0];
 }
