@@ -4,6 +4,7 @@ import { BookSize, FULL_MAX_WIDTH } from './constants';
 import config from '../config';
 
 const responsiveDefaultPadding = 16;
+const separatorHeight = 1;
 
 const separatorBG = {
   ...Responsive.XSmall({
@@ -52,45 +53,52 @@ export const portrait = {
 
   '.PortraitBook': {
     width: '100%',
+    height: '100%',
     maxWidth: 'inherit',
     display: 'flex',
     alignItems: 'flex-end',
-    marginBottom: 1,
   },
   ...Responsive.XSmall({
     width: BookSize.XSmall.width,
-    height: BookSize.XSmall.height,
+    height: BookSize.XSmall.height - separatorHeight,
     padding: '0 8px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.Small({
     width: BookSize.Small.width,
-    height: BookSize.Small.height,
+    height: BookSize.Small.height - separatorHeight,
     padding: '0 8px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.Medium({
     width: BookSize.Medium.width,
-    height: BookSize.Medium.height,
+    height: BookSize.Medium.height - separatorHeight,
     padding: '0 8px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.Large({
     width: BookSize.Medium.width,
-    height: BookSize.Medium.height,
+    height: BookSize.Medium.height - separatorHeight,
     padding: '0 8px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.XLarge({
     width: BookSize.Medium.width,
-    height: BookSize.Medium.height,
+    height: BookSize.Medium.height - separatorHeight,
     padding: '0 10px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.XXLarge({
     width: BookSize.Large.width,
-    height: BookSize.Large.height,
+    height: BookSize.Large.height - separatorHeight,
     padding: '0 12px',
+    marginBottom: separatorHeight,
   }),
   ...Responsive.Full({
     width: BookSize.Large.width,
-    height: BookSize.Large.height,
+    height: BookSize.Large.height - separatorHeight,
     padding: '0 10px',
+    marginBottom: separatorHeight,
   }),
 };
 
