@@ -180,7 +180,7 @@ class UnitDetailView extends React.Component {
   render() {
     const { unit, primaryItem, book, bookDescription, bookStarRating } = this.props;
 
-    if (!primaryItem || !book || !bookDescription || !bookStarRating) {
+    if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
     }
 

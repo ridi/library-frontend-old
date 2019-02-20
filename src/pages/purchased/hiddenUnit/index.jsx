@@ -83,15 +83,20 @@ class HiddenUnit extends React.Component {
     } = this.props;
 
     const titleBarProps = {
-      title: unit.title,
-      showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
-      totalCount: totalCount.itemTotalCount,
       href: URLMap.hidden.href,
       as: URLMap.hidden.as,
       query: { page },
     };
 
-    return <TitleBar {...titleBarProps} />;
+    const extraTitleBarProps = unit
+      ? {
+          title: unit.title,
+          showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
+          totalCount: totalCount.itemTotalCount,
+        }
+      : {};
+
+    return <TitleBar {...titleBarProps} {...extraTitleBarProps} />;
   }
 
   renderDetailView() {
@@ -152,17 +157,18 @@ class HiddenUnit extends React.Component {
     return (
       <>
         <Responsive>{this.renderDetailView()}</Responsive>
-        {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
       </>
     );
   }
 
   render() {
     const { unit, isError, dispatchLoadItems } = this.props;
+
     return (
       <>
         <Head>
-          <title>{unit.title} - 내 서재</title>
+          <title>{unit ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
         <HorizontalRuler />
         {this.renderTitleBar()}
@@ -194,6 +200,7 @@ const mapStateToProps = state => {
   const isFetchingBook = getIsFetchingBook(state);
 
   const hiddenPageInfo = getHiddenPageInfo(state);
+
   return {
     pageInfo,
     items,

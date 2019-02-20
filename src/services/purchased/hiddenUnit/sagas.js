@@ -40,8 +40,7 @@ function* loadPrimaryItem(unitId) {
     return _primaryItem;
   }
 
-  const primaryItem = yield call(getHiddenUnitPrimaryItem, unitId);
-  return primaryItem;
+  return yield call(getHiddenUnitPrimaryItem, unitId);
 }
 
 function* loadHiddenUnitItems() {
@@ -75,7 +74,7 @@ function* loadHiddenUnitItems() {
       put(setTotalCount(countResponse.item_total_count)),
     ]);
   } catch (err) {
-    yield put(setError(false));
+    yield put(setError(true));
   } finally {
     yield put(setIsFetchingHiddenBook(false));
   }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { InternalError, NotFoundError } from '../components/Error';
+import HorizontalRuler from '../components/HorizontalRuler';
 
 const Internal = 500;
 const NotFound = 404;
@@ -25,10 +26,15 @@ export default class Error extends React.Component {
   render() {
     const { errorCode } = this.props;
 
-    if (errorCode === NotFound) {
-      return <NotFoundError onClickHistoryBack={this.onClickHistoryBack} />;
-    }
-
-    return <InternalError onClickHistoryBack={this.onClickHistoryBack} />;
+    return (
+      <>
+        <HorizontalRuler color="#d1d5d9" />
+        {errorCode === NotFound ? (
+          <NotFoundError onClickHistoryBack={this.onClickHistoryBack} />
+        ) : (
+          <InternalError onClickHistoryBack={this.onClickHistoryBack} />
+        )}
+      </>
+    );
   }
 }

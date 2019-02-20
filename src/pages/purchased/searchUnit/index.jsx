@@ -82,15 +82,20 @@ class searchUnit extends React.Component {
     } = this.props;
 
     const titleBarProps = {
-      title: unit.title,
-      showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
-      totalCount: totalCount.itemTotalCount,
       href: URLMap.search.href,
       as: URLMap.search.as,
       query: { keyword, page },
     };
 
-    return <TitleBar {...titleBarProps} />;
+    const extraTitleBarProps = unit
+      ? {
+          title: unit.title,
+          showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
+          totalCount: totalCount.itemTotalCount,
+        }
+      : {};
+
+    return <TitleBar {...titleBarProps} {...extraTitleBarProps} />;
   }
 
   renderDetailView() {
@@ -157,7 +162,7 @@ class searchUnit extends React.Component {
     return (
       <>
         <Responsive>{this.renderDetailView()}</Responsive>
-        {UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
       </>
     );
   }
@@ -168,7 +173,7 @@ class searchUnit extends React.Component {
     return (
       <>
         <Head>
-          <title>{unit.title} - 내 서재</title>
+          <title>{unit ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}

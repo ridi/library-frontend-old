@@ -1,6 +1,6 @@
 import nookies from 'nookies';
 import { loadUserInfo, startAccountTracker } from '../services/account/actions';
-// import { loadBookDataFromStorage } from '../services/book/actions';
+
 import { SET_VIEW_TYPE } from '../services/ui/actions';
 
 import LRUCache from '../utils/lru';
@@ -34,6 +34,7 @@ const beforeCreatingStore = (initialState, context) => {
     const cookies = nookies.get(context);
     if (cookies[SET_VIEW_TYPE]) {
       newInitialState.ui = {
+        ...newInitialState.ui,
         viewType: cookies[SET_VIEW_TYPE],
       };
     }
