@@ -1,7 +1,10 @@
 image: python:3.6
 
 stages:
-  - deploy
+  - manual-deploy
+  - dev-deploy
+  - staging-deploy
+  - prod-deploy
 
 .aws-docker: &aws-docker
   image: ridibooks/gitlab-ci-docker-aws:1.6.0
@@ -20,6 +23,7 @@ stages:
 
 .mr-build-template: &mr-build
   <<: *build
+  stage: manual-deploy
   when: manual
   only:
   except:
@@ -27,6 +31,8 @@ stages:
 
 build-development:
   <<: *build
+  stage: dev-deploy
+  when: always
   variables:
     ENVIRONMENT: 'development'
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
@@ -36,6 +42,7 @@ build-development:
 
 build-staging:
   <<: *build
+  stage: staging-deploy
   variables:
     ENVIRONMENT: 'staging'
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
@@ -45,6 +52,7 @@ build-staging:
 
 build-production:
   <<: *build
+  stage: prod-deploy
   variables:
     ENVIRONMENT: 'production'
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
