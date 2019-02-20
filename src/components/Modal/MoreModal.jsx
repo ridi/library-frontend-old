@@ -32,6 +32,7 @@ const MoreModal = ({
                 onClickModalBackground();
                 dispatchSetViewType(ViewType.PORTRAIT);
               }}
+              replace
             />
           </li>
           <li>
@@ -42,6 +43,7 @@ const MoreModal = ({
                 onClickModalBackground();
                 dispatchSetViewType(ViewType.LANDSCAPE);
               }}
+              replace
             />
           </li>
         </ul>
@@ -61,6 +63,7 @@ const MoreModal = ({
                   ...query,
                   ...MainOrderOptions.parse(index),
                 }}
+                replace
               />
             </li>
           ))}

@@ -20,6 +20,7 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
                 orderType: option.orderType,
                 orderBy: option.orderBy,
               }}
+              replace
             />
           </li>
         ))}
