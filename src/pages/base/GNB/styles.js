@@ -91,6 +91,9 @@ export const BetaBadge = {
 export const myMenuToggleButton = {
   padding: '6px 0',
   marginLeft: 3,
+  width: 24,
+  height: 24,
+  boxSizing: 'content-box',
 };
 
 export const myMenuIcon = {

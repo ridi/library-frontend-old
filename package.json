@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@emotion/core": "^10.0.2",
-    "@ridi/web-ui": "^0.3.1",
+    "@ridi/web-ui": "^0.3.2",
     "@sentry/browser": "^4.4.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
