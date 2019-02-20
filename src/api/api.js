@@ -2,9 +2,10 @@ import axios from 'axios';
 import { retry } from '../utils/retry';
 
 export default class API {
-  constructor(config, retryCount = 3, retryDelay = 1000) {
+  constructor(withCredentials = false, headers = {}, retryCount = 3, retryDelay = 1000) {
     this.http = axios.create();
-    this.config = config;
+    this.withCredentials = withCredentials;
+    this.headers = headers;
     this.retryCount = retryCount;
     this.retryDelay = retryDelay;
     this.interceptors = [];
@@ -14,21 +15,31 @@ export default class API {
     return { retryCount: this.retryCount, retryDelay: this.retryDelay };
   }
 
+  getOptions(headers) {
+    return {
+      withCredentials: this.withCredentials,
+      headers: {
+        ...this.headers,
+        ...headers,
+      },
+    };
+  }
+
   // Request
-  get(url) {
-    return retry(this.getRetryOptions(), this.http.get, url, this.config);
+  get(url, headers = {}) {
+    return retry(this.getRetryOptions(), this.http.get, url, this.getOptions(headers));
   }
 
-  post(url, data) {
-    return retry(this.getRetryOptions(), this.http.post, url, data, this.config);
+  post(url, data, headers = {}) {
+    return retry(this.getRetryOptions(), this.http.post, url, data, this.getOptions(headers));
   }
 
-  put(url, data) {
-    return retry(this.getRetryOptions(), this.http.put, url, data, this.config);
+  put(url, data, headers = {}) {
+    return retry(this.getRetryOptions(), this.http.put, url, data, this.getOptions(headers));
   }
 
-  delete(url) {
-    return retry(this.getRetryOptions(), this.http.delete, url, this.config);
+  delete(url, headers = {}) {
+    return retry(this.getRetryOptions(), this.http.delete, url, this.getOptions(headers));
   }
 
   // Interceptor
