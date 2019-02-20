@@ -26,7 +26,7 @@ const _reduceBooks = books =>
 const _reduceBookDescriptions = bookDescriptions =>
   bookDescriptions.map(bookDescription => ({
     id: bookDescription.b_id,
-    intro: bookDescription.descriptions.intro.replace('\r\n', '\n').replace('\n', ''),
+    intro: bookDescription.descriptions.intro,
   }));
 
 const _reduceBookStarRatings = bookStarRatings =>
