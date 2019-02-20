@@ -11,7 +11,7 @@ import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import { MainOrderOptions, UnitOrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -179,11 +179,27 @@ class Main extends React.Component {
     );
   }
 
+  getEmptyBookListMessage() {
+    const {
+      pageInfo: { order },
+    } = this.props;
+
+    const { orderType, orderBy } = UnitOrderOptions.parse(order);
+    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
+      return '대여 중인 도서가 없습니다.';
+    }
+    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRED_BOOKS_ONLY)) {
+      return '만료된 도서가 없습니다.';
+    }
+
+    return '구매/대여하신 책이 없습니다.';
+  }
+
   renderMain() {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message="구매/대여하신 책이 없습니다." />;
+      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage()} />;
     }
 
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;

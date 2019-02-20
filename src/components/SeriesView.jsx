@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
+import { UnitOrderOptions } from '../constants/orderOptions';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import BookOutline from '../svgs/BookOutline.svg';
@@ -80,6 +81,19 @@ export default class SeriesView extends React.Component {
     );
   }
 
+  getEmptyBookListMessage(defaultMessage) {
+    const { currentOrder } = this.props;
+
+    const { orderType, orderBy } = UnitOrderOptions.parse(currentOrder);
+    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
+      return '대여 중인 도서가 없습니다.';
+    }
+    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRED_BOOKS_ONLY)) {
+      return '만료된 도서가 없습니다.';
+    }
+    return defaultMessage;
+  }
+
   renderBooks() {
     const { isEditing } = this.state;
     const {
@@ -99,7 +113,7 @@ export default class SeriesView extends React.Component {
 
     // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
     if (!isFetching && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message={message} />;
+      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage(message)} />;
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {

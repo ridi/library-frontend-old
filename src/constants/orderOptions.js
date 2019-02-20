@@ -24,6 +24,10 @@ class BaseOrderOptions {
     };
   }
 
+  static equal(a, b) {
+    return a.orderType === b.orderType && a.orderBy === b.orderBy;
+  }
+
   static toIndex(orderType, orderBy) {
     return this.toList().findIndex(value => value.orderType === orderType && value.orderBy === orderBy);
   }
