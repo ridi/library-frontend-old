@@ -50,7 +50,7 @@ class UnitDetailView extends React.Component {
         {bookInfos.map((info, index) => (
           <>
             <span key={shortid.generate()} css={styles.fileInfoText}>
-              {` ${info} `}
+              {`${info}`}
             </span>
             {bookInfos.length !== index + 1 ? <span key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
           </>
