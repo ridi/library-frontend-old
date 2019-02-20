@@ -173,7 +173,7 @@ class searchUnit extends React.Component {
     return (
       <>
         <Head>
-          <title>{unit ? `${unit.title} - ` : ''}내 서재</title>
+          <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>

@@ -169,7 +169,7 @@ class HiddenUnit extends React.Component {
     return (
       <>
         <Head>
-          <title>{unit ? `${unit.title} - ` : ''}내 서재</title>
+          <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
         <HorizontalRuler />
         {this.renderTitleBar()}
