@@ -9,14 +9,15 @@ export const GNB = {
   background: 'white',
 };
 
-export const flexWrapper = css({
+export const flexWrapper = {
   display: 'flex',
   justifyContent: 'space-between',
   margin: '0 auto',
+  alignItems: 'center',
   ...maxWidthWrapper,
-});
+};
 
-export const title = css({
+export const title = {
   display: 'inline-block',
   padding: '12px 6px 12px 0',
   fontSize: 20,
@@ -25,22 +26,22 @@ export const title = css({
   height: 24,
   lineHeight: '22px',
   verticalAlign: 'top',
-});
+};
 
-export const titleLink = css({});
+export const titleLink = {};
 
-export const familyServiceList = css({
+export const familyServiceList = {
   display: 'inline-block',
   padding: '12px 0 14px 0',
   verticalAlign: 'top',
-});
+};
 
-export const familyServiceItem = css({
+export const familyServiceItem = {
   position: 'relative',
   display: 'inline-block',
   fontSize: 0,
   padding: '0 3px 0 0',
-});
+};
 
 export const familyServiceItemSeparator = {
   padding: '0 2px',
@@ -57,31 +58,40 @@ export const familyServiceItemSeparator = {
   },
 };
 
-export const familyServiceLink = css({
+export const familyServiceLink = {
   display: 'inline-block',
   padding: 6,
-});
+};
 
-export const ridibooksIcon = css({
+export const ridibooksIcon = {
   width: 65,
   height: 10,
   fill: '#b8bfc4',
-});
+};
 
-export const ridiSelectIcon = css({
+export const ridiSelectIcon = {
   width: 62,
   height: 10,
   fill: '#b8bfc4',
-});
+};
 
-export const myMenuWrapper = css({
+export const myMenuWrapper = {
+  display: 'flex',
+  alignItems: 'center',
   position: 'relative',
   padding: '7px 0',
-});
+};
 
-export const myMenuToggleButton = css({
+export const BetaBadge = {
+  width: 27,
+  height: 12,
+  fill: '#808991',
+};
+
+export const myMenuToggleButton = {
   padding: '6px 0',
-});
+  marginLeft: 3,
+};
 
 export const myMenuIcon = {
   width: 24,

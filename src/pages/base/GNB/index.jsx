@@ -9,6 +9,7 @@ import { getIsExcelDownloading } from '../../../services/excelDownload/selectors
 import MyMenuModal from '../../../components/Modal/MyMenuModal';
 import * as styles from './styles';
 import { Hidden } from '../../../styles';
+import BetaBadge from '../../../svgs/Beta.svg';
 import MyMenuIcon from '../../../svgs/MyMenu.svg';
 import MyMenuActiveIcon from '../../../svgs/MyMenu-active.svg';
 import Responsive from '../Responsive';
@@ -37,12 +38,9 @@ class GNB extends React.Component {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
-    if (!userId) {
-      return null;
-    }
-
-    return (
+    return userId ? (
       <div css={styles.myMenuWrapper}>
+        <BetaBadge css={styles.BetaBadge} />
         <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
           {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
           <span css={Hidden}>마이메뉴</span>
@@ -55,6 +53,8 @@ class GNB extends React.Component {
           onClickModalBackground={this.onModalBackgroundClick}
         />
       </div>
+    ) : (
+      <BetaBadge css={styles.BetaBadge} />
     );
   }
 
