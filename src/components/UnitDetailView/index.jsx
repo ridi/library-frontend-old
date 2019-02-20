@@ -161,14 +161,28 @@ class UnitDetailView extends React.Component {
     );
   }
 
+  renderAuthors() {
+    const { book } = this.props;
+    const bookMetadata = new BookMetaData(book);
+
+    return (
+      <div css={styles.authorList}>
+        {bookMetadata.authors.map((author, index) => (
+          <>
+            <span key={shortid.generate()}>{` ${author} `}</span>
+            {bookMetadata.authors.length !== index + 1 ? <span key={shortid.generate()} css={styles.authorDelimiter} /> : null}
+          </>
+        ))}
+      </div>
+    );
+  }
+
   render() {
     const { unit, primaryItem, book, bookDescription, bookStarRating } = this.props;
 
     if (!primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
     }
-
-    const bookMetadata = new BookMetaData(book);
 
     return (
       <>
@@ -181,7 +195,7 @@ class UnitDetailView extends React.Component {
           </div>
           <div css={styles.infoWrapper}>
             <div css={styles.unitTitle}>{unit.title}</div>
-            <div css={styles.authorList}>{bookMetadata.author}</div>
+            {this.renderAuthors()}
             {this.renderSummary()}
             {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
