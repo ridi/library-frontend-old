@@ -3,7 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { jsx } from '@emotion/core';
+import Close from '../svgs/Close.svg';
 import { disableScroll, enableScroll } from '../utils/scroll';
+import IconButton from './IconButton';
 
 const styles = {
   dialogWrapper: {
@@ -46,8 +48,7 @@ const styles = {
 
     width: 15,
     height: 15,
-
-    backgroundColor: 'red',
+    fill: '#d1d5d9',
   },
 
   dialogContent: {
@@ -92,7 +93,9 @@ export default class Dialog extends React.Component {
         <div css={styles.dialog}>
           <div css={styles.dialogHeader}>
             <div css={styles.dialogTitle}>{title}</div>
-            <button type="button" css={styles.dialogCloseButton} onClick={onClickCloseButton} />
+            <IconButton a11y="닫기버튼" css={styles.dialogCloseButton} onClick={onClickCloseButton}>
+              <Close />
+            </IconButton>
           </div>
           <div css={styles.dialogContent}>{message}</div>
           <div css={styles.dialogFooter}>
