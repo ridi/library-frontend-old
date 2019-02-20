@@ -118,7 +118,7 @@ class Hidden extends React.Component {
 
     const titleBarProps = {
       title: '숨긴 도서 목록',
-      showCount: true,
+      showCount: totalCount.itemTotalCount > 0,
       totalCount: totalCount.itemTotalCount,
       href: URLMap.main.href,
       as: URLMap.main.as,

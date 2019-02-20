@@ -82,7 +82,7 @@ class MainUnit extends React.Component {
 
     const titleBarProps = {
       title: unit.title,
-      showCount: !UnitType.isBook(unit.type),
+      showCount: totalCount.itemTotalCount > 0,
       totalCount: totalCount.itemTotalCount,
       href: URLMap.main.href,
       as: URLMap.main.as,
