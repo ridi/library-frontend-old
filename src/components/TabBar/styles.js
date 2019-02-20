@@ -12,7 +12,7 @@ export const tabItem = {
 
 export const tabButton = {
   display: 'block',
-  padding: '0 8px',
+  padding: '0 2px',
   height: 40,
   lineHeight: '40px',
   color: '#808991',
@@ -34,7 +34,7 @@ export const activeBar = {
   left: 0,
   bottom: 0,
   width: '100%',
-  height: 3,
+  height: 2,
   background: 'white',
   transition: 'background .3s',
 };
