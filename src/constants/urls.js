@@ -7,44 +7,44 @@ class URLMapNotFoundError extends Error {
 
 export const URLMap = {
   login: {
-    href: '/login/',
-    as: '/login/',
-    regex: /^\/login\/$/,
+    href: '/login',
+    as: '/login',
+    regex: /^\/login(\/)?$/,
   },
   main: {
-    href: '/purchased/main/',
-    as: '/purchased/',
-    regex: /^\/purchased\/$/,
+    href: '/purchased/main',
+    as: '/purchased',
+    regex: /^\/purchased(\/)?$/,
   },
   mainUnit: {
-    href: '/purchased/mainUnit/',
+    href: '/purchased/mainUnit',
     as: ({ unitId }) => `/purchased/${unitId}/`,
-    regex: /^\/purchased\/(?<unitId>\d+)\/$/,
+    regex: /^\/purchased\/(?<unitId>\d+)(\/)?$/,
   },
   search: {
-    href: '/purchased/search/',
-    as: '/purchased/search/',
-    regex: /^\/purchased\/search\/$/,
+    href: '/purchased/search',
+    as: '/purchased/search',
+    regex: /^\/purchased\/search(\/)?$/,
   },
   searchUnit: {
-    href: '/purchased/searchUnit/',
-    as: ({ unitId }) => `/purchased/search/${unitId}/`,
-    regex: /^\/purchased\/search\/(?<unitId>\d+)\/$/,
+    href: '/purchased/searchUnit',
+    as: ({ unitId }) => `/purchased/search/${unitId}`,
+    regex: /^\/purchased\/search\/(?<unitId>\d+)(\/)?$/,
   },
   hidden: {
-    href: '/purchased/hidden/',
-    as: '/purchased/hidden/',
-    regex: /^\/purchased\/hidden\/$/,
+    href: '/purchased/hidden',
+    as: '/purchased/hidden',
+    regex: /^\/purchased\/hidden(\/)?$/,
   },
   hiddenUnit: {
-    href: '/purchased/hiddenUnit/',
-    as: ({ unitId }) => `/purchased/hidden/${unitId}/`,
-    regex: /^\/purchased\/hidden\/(?<unitId>\d+)\/$/,
+    href: '/purchased/hiddenUnit',
+    as: ({ unitId }) => `/purchased/hidden/${unitId}`,
+    regex: /^\/purchased\/hidden\/(?<unitId>\d+)(\/)?$/,
   },
   serialPreference: {
-    href: '/serialPreference/',
-    as: '/serial-preference/',
-    regex: /^\/serial-preference\/$/,
+    href: '/serialPreference',
+    as: '/serial-preference',
+    regex: /^\/serial-preference(\/)?$/,
   },
 };
 

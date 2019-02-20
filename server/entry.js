@@ -30,6 +30,11 @@ app
 
     const ssrRouter = express.Router();
     ssrRouter.use(cookieParser());
+    ssrRouter.use((req, _, _next) => {
+      const token = req.cookies['ridi-at'];
+      req.token = token;
+      _next();
+    });
     ssrRouter.get('*', (req, res) => handle(req, res));
     server.use('/', ssrRouter);
 
