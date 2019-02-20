@@ -96,13 +96,18 @@ export const portrait = {
 
 export const landscape = {
   width: '100%',
-  marginTop: 20,
   display: 'flex',
   position: 'relative',
 
   '.LandscapeBook': {
     width: '100%',
     borderBottom: '1px solid #d1d5d9',
+  },
+  '.LandscapeBook_Thumbnail': {
+    paddingTop: 20,
+  },
+  '.LandscapeBook_Metadata': {
+    paddingTop: 30,
   },
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: '50%',
