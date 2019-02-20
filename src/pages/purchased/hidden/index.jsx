@@ -38,6 +38,7 @@ import { ResponsiveBooks } from '../../base/Responsive';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
+    await store.dispatch(clearSelectedBooks());
     await store.dispatch(loadItems());
   }
 

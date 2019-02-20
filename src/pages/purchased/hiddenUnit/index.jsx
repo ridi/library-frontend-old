@@ -37,6 +37,7 @@ import { BookError } from '../../../components/Error';
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
+    await store.dispatch(clearSelectedBooks());
     await store.dispatch(loadItems());
   }
 
