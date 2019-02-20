@@ -84,7 +84,7 @@ class HiddenUnit extends React.Component {
 
     const titleBarProps = {
       title: unit.title,
-      showCount: totalCount.itemTotalCount > 0,
+      showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
       totalCount: totalCount.itemTotalCount,
       href: URLMap.hidden.href,
       as: URLMap.hidden.as,
