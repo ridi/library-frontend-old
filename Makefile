@@ -13,7 +13,7 @@ yarn-install:
 
 # run
 run-local:
-	NODE_ENV=local yarn dev
+	NODE_ENV=local yarn local
 
 local:
 	NODE_ENV=local yarn build
