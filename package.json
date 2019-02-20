@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Rendering server with next.js",
   "scripts": {
+    "dev": "next dev ./src",
     "build": "next build src",
     "export": "STATIC_URL=https://library-static.ridibooks.com next export src -o ./out"
   },
