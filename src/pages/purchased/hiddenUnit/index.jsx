@@ -138,7 +138,7 @@ class HiddenUnit extends React.Component {
           currentPage,
           totalPages,
           href: { pathname: URLMap.hiddenUnit.href, query: { unitId } },
-          as: URLMap.hiddenUnit.as(unitId),
+          as: URLMap.hiddenUnit.as({ unitId }),
         }}
         actionBarProps={this.makeActionBarProps()}
         emptyProps={{ icon: 'book_5', message: '숨긴 도서가 없습니다.' }}

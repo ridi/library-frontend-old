@@ -47,11 +47,12 @@ class LibraryApp extends App {
     return (
       <Container>
         <Provider store={store}>
-          <ConnectedRouterWrapper>
-            <Layout>
+          <Layout>
+            <>
+              <ConnectedRouterWrapper />
               <Component {...pageProps} />
-            </Layout>
-          </ConnectedRouterWrapper>
+            </>
+          </Layout>
         </Provider>
       </Container>
     );

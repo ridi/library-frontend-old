@@ -2,5 +2,5 @@
 set -e
 
 yarn install
-yarn run build
-yarn run export
+NODE_ENV=$ENVIRONMENT yarn run build
+NODE_ENV=$ENVIRONMENT yarn run export

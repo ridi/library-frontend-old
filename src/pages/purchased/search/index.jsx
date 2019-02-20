@@ -141,7 +141,7 @@ class Search extends React.Component {
           pathname: URLMap.searchUnit.href,
           query: { unitId: libraryBookData.unit_id },
         },
-        URLMap.searchUnit.as(libraryBookData.unit_id),
+        URLMap.searchUnit.as({ unitId: libraryBookData.unit_id }),
         { keyword: _keyword },
       );
 

@@ -2,9 +2,8 @@
   "name": "library-web",
   "version": "0.0.1",
   "description": "Rendering server with next.js",
-  "main": "server/entry.js",
   "scripts": {
-    "local": "pm2-runtime start pm2.config.js --only App --env local & onchange './src/**/*.{js,jsx}' -- prettier --write {{changed}}",
+    "dev": "next dev ./src & onchange './src/**/*.{js,jsx}' -- prettier --write {{changed}}",
     "build": "next build src",
     "export": "STATIC_URL=https://library-static.ridibooks.com next export src -o ./out"
   },

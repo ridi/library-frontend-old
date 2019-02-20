@@ -1,9 +1,20 @@
-const secrets = require('./secrets.json');
+const { NODE_ENV } = process.env;
+
+let settings;
+if (NODE_ENV === 'local') {
+  settings = require('./settings/local.json');
+} else if (NODE_ENV === 'development') {
+  settings = require('./settings/dev.json');
+} else {
+  settings = require('./settings/production.json');
+}
 
 module.exports = {
   distDir: '../build',
   useFileSystemPublicRoutes: false,
-  exportPathMap: () => ({}),
+  exportPathMap: () => ({
+    '/': { page: '/' },
+  }),
   webpack: config => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -12,37 +23,25 @@ module.exports = {
     return config;
   },
 
-  assetPrefix: secrets.static_url,
-
-  serverRuntimeConfig: {
-    ENVIRONMENT: secrets.environment,
-    RIDI_OAUTH2_JWT_SECRET: secrets.ridi_oauth2_jwt_secret,
-
-    RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
-    RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
-
-    RIDI_INTERNAL_AUTH_LIBRARY_WEB_TO_STORE: secrets.ridi_internal_auth_library_web_to_store,
-
-    SENTRY_DSN: secrets.sentry_dsn,
-  },
+  assetPrefix: settings.static_url,
 
   publicRuntimeConfig: {
-    BASE_URL: secrets.base_url,
-    STATIC_URL: secrets.static_url,
-    ACCOUNT_BASE_URL: secrets.account_base_url,
-    STORE_API_BASE_URL: secrets.store_api_base_url,
-    SELECT_BASE_URL: secrets.select_base_url,
-    LIBRARY_API_BASE_URL: secrets.library_api_base_url,
-    BOOK_API_BASE_URL: secrets.book_api_base_url,
-    BOOK_FEEDBACK_API_BASE_URL: secrets.book_feedback_api_base_url,
+    BASE_URL: settings.base_url,
+    STATIC_URL: settings.static_url,
+    ACCOUNT_BASE_URL: settings.account_base_url,
+    STORE_API_BASE_URL: settings.store_api_base_url,
+    SELECT_BASE_URL: settings.select_base_url,
+    LIBRARY_API_BASE_URL: settings.library_api_base_url,
+    BOOK_API_BASE_URL: settings.book_api_base_url,
+    BOOK_FEEDBACK_API_BASE_URL: settings.book_feedback_api_base_url,
 
-    LOGOUT_URL: secrets.ridi_logout_url,
-    REVIEW_URL: secrets.ridi_review_url,
-    READING_NOTE_URL: secrets.ridi_reading_note_url,
+    LOGOUT_URL: settings.ridi_logout_url,
+    REVIEW_URL: settings.ridi_review_url,
+    READING_NOTE_URL: settings.ridi_reading_note_url,
 
-    RIDI_TOKEN_AUTHORIZE_URL: secrets.ridi_token_authorize_url,
-    RIDI_OAUTH2_CLIENT_ID: secrets.ridi_oauth2_client_id,
+    RIDI_TOKEN_AUTHORIZE_URL: settings.ridi_token_authorize_url,
+    RIDI_OAUTH2_CLIENT_ID: settings.ridi_oauth2_client_id,
 
-    SENTRY_DSN: secrets.sentry_dsn,
+    SENTRY_DSN: settings.sentry_dsn,
   },
 };

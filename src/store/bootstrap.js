@@ -1,4 +1,4 @@
-import nookies from 'nookies/src';
+import nookies from 'nookies';
 import { loadUserInfo, startAccountTracker } from '../services/account/actions';
 
 import { SET_VIEW_TYPE } from '../services/ui/actions';
@@ -29,15 +29,15 @@ const beforeCreatingStore = (initialState, context) => {
       beforeLocation: null,
       location: locationFromUrl(context.asPath),
     };
-  }
-
-  // Cookie로 부터 데이터 로드
-  const cookies = nookies.get(context);
-  if (cookies[SET_VIEW_TYPE]) {
-    newInitialState.ui = {
-      ...newInitialState.ui,
-      viewType: cookies[SET_VIEW_TYPE],
-    };
+  } else {
+    // Cookie로 부터 데이터 로드
+    const cookies = nookies.get(context);
+    if (cookies[SET_VIEW_TYPE]) {
+      newInitialState.ui = {
+        ...newInitialState.ui,
+        viewType: cookies[SET_VIEW_TYPE],
+      };
+    }
   }
 
   return newInitialState;
@@ -45,10 +45,12 @@ const beforeCreatingStore = (initialState, context) => {
 
 const afterCreatingStore = async (store, context) => {
   // General
-  await store.dispatch(loadUserInfo());
 
   // Client Only
   if (!context.isServer) {
+    // 클라에서 userInfo 셋팅
+    await store.dispatch(loadUserInfo());
+
     // TODO: LRU버그로 인해 주석처리
     // await store.dispatch(loadBookDataFromStorage());
     await store.dispatch(startAccountTracker());

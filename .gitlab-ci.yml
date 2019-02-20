@@ -1,30 +1,29 @@
 image: python:3.6
 
 stages:
-  - build
-  - manual-deploy
-  - deploy-development
-  - deploy-staging
-  - deploy-production
+  - deploy
 
 .aws-docker: &aws-docker
-  image: ridibooks/gitlab-ci-docker-aws:1.5.0
+  image: ridibooks/gitlab-ci-docker-aws:1.6.0
 
 .build-template: &build
   <<: *aws-docker
-  stage: build
+  stage: deploy
   only:
     - master
+  when: manual
   before_script:
-    - apk add nodejs yarn
-    - make python-package-install
     - export TAG=${CI_COMMIT_SHA::8}
-
   script:
-    - make ci-settings ns=$ENVIRONMENT
     - sh docs/script/export.sh
     - sh docs/script/upload.sh
-    - docker-compose -f ./docs/docker/compose/build.yml build
+
+.mr-build-template: &mr-build
+  <<: *build
+  when: manual
+  only:
+  except:
+    - master
 
 build-development:
   <<: *build
@@ -33,6 +32,7 @@ build-development:
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
     S3_PATH: $DEV_S3_PATH
+    INDEX_S3_PATH: $DEV_INDEX_S3_PATH
 
 build-staging:
   <<: *build
@@ -41,6 +41,7 @@ build-staging:
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
     S3_PATH: $STAGING_S3_PATH
+    INDEX_S3_PATH: $STAGING_INDEX_S3_PATH
 
 build-production:
   <<: *build
@@ -49,81 +50,22 @@ build-production:
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
     S3_PATH: $PROD_S3_PATH
+    INDEX_S3_PATH: $PROD_INDEX_S3_PATH
 
-.deployment-template: &deployment
-  <<: *aws-docker
-  only:
-    - master
-  before_script:
-    - export TAG=${CI_COMMIT_SHA::8}
-    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
-  script:
-    - sh docs/script/push.sh
-    - sh docs/script/deploy.sh
-
-development:
-  <<: *deployment
-  stage: deploy-development
+manual-build-development:
+  <<: *mr-build
   variables:
     ENVIRONMENT: 'development'
-    ECR_REPO_URL: $DEV_LIBRARY_ECR
     AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
-
-staging:
-  <<: *deployment
-  stage: deploy-staging
-  when: manual
-  variables:
-    ENVIRONMENT: 'staging'
-    ECR_REPO_URL: $STAGING_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
-
-production:
-  <<: *deployment
-  stage: deploy-production
-  when: manual
-  variables:
-    ENVIRONMENT: 'production'
-    ECR_REPO_URL: $PROD_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
-
-.manual-deployment-template: &manual-deployment
-  <<: *aws-docker
-  stage: manual-deploy
-  when: manual
-  except:
-    - master
-  before_script:
-    - apk add nodejs yarn
-    - make python-package-install
-    - export TAG=${CI_COMMIT_SHA::8}
-    - '`aws ecr get-login --no-include-email --region=$AWS_DEFAULT_REGION`'
-  script:
-    - make ci-settings ns=$ENVIRONMENT
-    - sh docs/script/export.sh
-    - sh docs/script/upload.sh
-    - docker-compose -f ./docs/docker/compose/build.yml build
-
-    - sh docs/script/push.sh
-    - sh docs/script/deploy.sh
-
-development-manual:
-  <<: *manual-deployment
-  variables:
-    ENVIRONMENT: 'development'
     S3_PATH: $DEV_S3_PATH
-    ECR_REPO_URL: $DEV_LIBRARY_ECR
-    AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
-    AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
+    INDEX_S3_PATH: $DEV_INDEX_S3_PATH
 
-staging-manual:
-  <<: *manual-deployment
+manual-build-staging:
+  <<: *mr-build
   variables:
     ENVIRONMENT: 'staging'
-    ECR_REPO_URL: $STAGING_LIBRARY_ECR
-    S3_PATH: $STAGING_S3_PATH
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
+    S3_PATH: $STAGING_S3_PATH
+    INDEX_S3_PATH: $STAGING_INDEX_S3_PATH
