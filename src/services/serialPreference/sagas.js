@@ -30,6 +30,7 @@ function* persistPageOptionsFromQueries() {
 }
 
 function* loadItems() {
+  yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
   const { page } = yield select(getOptions);
