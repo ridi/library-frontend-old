@@ -23,7 +23,8 @@ stages:
   script:
     - sh docs/script/export.sh
     - sh docs/script/upload.sh
-    - docker-compose -f ./docs/docker/compose/build.yml build
+    # XXX: 커스텀 웹서버 빌드 코드 주석처리
+    # - docker-compose -f ./docs/docker/compose/build.yml build
 
 build-development:
   <<: *build
@@ -52,6 +53,7 @@ build-development:
 #     S3_PATH: $PROD_S3_PATH
 #     INDEX_S3_PATH: $PROD_INDEX_S3_PATH
 
+# XXX: 커스텀 웹서버 배포 코드 주석처리
 # .deployment-template: &deployment
 #   <<: *aws-docker
 #   only:
