@@ -1,14 +1,12 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
 import Favicon from './base/Favicon';
+import Metadata from './base/Metadata';
 
 export default class MyDocument extends Document {
-  static getInitialProps({ renderPage, isServer, req }) {
+  static getInitialProps({ renderPage }) {
     const page = renderPage();
     const styles = extractCritical(page.html);
-
-    // TODO: static export시에 csrfToken 발급 불가능, SSR 활성화 할때 다시 켜기
-    // const csrfToken = req.csrfToken();
 
     return { ...page, ...styles };
   }
@@ -28,8 +26,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-          {/* <meta name="csrf-token" content={this.props.csrfToken} /> */}
-
+          <Metadata />
           <Favicon />
 
           <script type="text/javascript" src="https://account.ridibooks.com/script/ridi_token_refresher.0.0.3.js" />

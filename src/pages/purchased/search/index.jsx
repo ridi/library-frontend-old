@@ -27,7 +27,7 @@ import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
-import Responsive from '../../base/Responsive';
+import { ResponsiveBooks } from '../../base/Responsive';
 import { BookError } from '../../../components/Error';
 
 class Search extends React.Component {
@@ -198,10 +198,10 @@ class Search extends React.Component {
         message = '검색어를 입력해주세요.';
       }
 
-      return <EmptyBookList IconComponent={SearchIcon} message={message} />;
+      return <EmptyBookList IconComponent={SearchIcon} iconWidth={38} message={message} />;
     }
 
-    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
+    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
 
   render() {

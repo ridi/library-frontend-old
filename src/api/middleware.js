@@ -43,32 +43,11 @@ const createApi = context => {
 
   if (isServer) {
     const { token } = req;
-    return new API({
-      headers: {
-        Cookie: `ridi-at=${token};`,
-      },
-    });
+    return new API(false, { Cookie: `ridi-at=${token};` });
   }
 
-  const api = new API({
-    withCredentials: true,
-  });
-
-  api.addInterceptor(authorizationInterceptor);
-  api.registerInterceptor();
-
-  return api;
-};
-
-const createApiIncludeCsrfToken = () => {
-  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  const api = new API({
-    withCredentials: true,
-    headers: {
-      'CSRF-Token': token,
-    },
-  });
+  const withCredentials = true;
+  const api = new API(withCredentials);
 
   api.addInterceptor(authorizationInterceptor);
   api.registerInterceptor();
@@ -78,17 +57,9 @@ const createApiIncludeCsrfToken = () => {
 
 const createApiMiddleware = context => {
   const api = createApi(context);
-  let apiIncludeCsrf = null;
 
   return () => next => action => {
     if (action.type === GET_API) {
-      if (action.payload.includeCsrfToken) {
-        if (apiIncludeCsrf === null) {
-          apiIncludeCsrf = createApiIncludeCsrfToken();
-        }
-        return apiIncludeCsrf;
-      }
-
       return api;
     }
 

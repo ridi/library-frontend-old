@@ -116,6 +116,17 @@ export function* requestHide(bookIds, revision) {
   return toFlatten(response.data.items, 'id');
 }
 
+export function* fetchRequestToken() {
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI('/commands/items/u/request-token/', {}, config.LIBRARY_API_BASE_URL));
+  return response.data.token;
+}
+
+export function* getRequestTokenHeader() {
+  const token = yield fetchRequestToken();
+  return { 'X-REQUEST-TOKEN': token };
+}
+
 export function* requestDelete(bookIds, revision) {
   function* internalRequestDelete(_bookIds) {
     const options = {
@@ -123,10 +134,15 @@ export function* requestDelete(bookIds, revision) {
       revision,
     };
 
-    const api = yield put(getAPI(true));
-    const response = yield api.post(makeURI('/remove'), options);
+    const api = yield put(getAPI());
+    const response = yield api.put(
+      makeURI('/commands/items/u/delete/', {}, config.LIBRARY_API_BASE_URL),
+      options,
+      yield getRequestTokenHeader(),
+    );
     return toFlatten(response.data, 'id');
   }
+
   const chunked = splitArrayByChunk(bookIds, DELETE_API_CHUNK_COUNT);
   const queueIds = [];
 

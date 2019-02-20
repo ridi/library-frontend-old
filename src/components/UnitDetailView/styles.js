@@ -92,41 +92,47 @@ export const authorList = {
   }),
 };
 
-export const fileInfo = {
-  marginTop: 20,
-  fontSize: 15,
-  color: '#808991',
-  verticalAlign: 'top',
+export const authorDelimiter = {
+  width: 1,
+  height: 10,
+  margin: '0 2px',
+  backgroundColor: '#d1d5d9',
+  display: 'inline-block',
 };
 
-export const fileInfoText = {
-  float: 'left',
-  verticalAlign: 'top',
+export const fileInfo = {
+  marginTop: 20,
+  display: 'flex',
+  alignItems: 'center',
 };
 
 export const starRateIcon = {
-  display: 'inline-block',
   width: 14,
   height: 14,
   marginRight: 4,
+  marginBottom: 2,
   fill: '#ff884d',
-  verticalAlign: '-10%',
 };
 
-export const starRatingText = {
+export const starRate = {
+  fontSize: 15,
   fontWeight: 'bold',
   color: '#ff884d',
-  verticalAlign: 'top',
+  marginRight: 4,
+};
+
+export const fileInfoText = {
+  fontSize: 15,
+  color: '#808991',
+  height: 20,
+  lineHeight: '20px',
 };
 
 export const fileInfoDelimiter = {
   width: 1,
-  height: 9,
-  marginTop: 5,
-  marginLeft: 5,
-  marginRight: 5,
+  height: 10,
+  margin: '0 5px',
   backgroundColor: '#d1d5d9',
-  float: 'left',
 };
 
 export const description = {

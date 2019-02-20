@@ -4,11 +4,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookOutline from '../../../svgs/BookOutline.svg';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
+import { BookError } from '../../../components/Error';
 import HorizontalRuler from '../../../components/HorizontalRuler';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
@@ -31,10 +31,10 @@ import {
   getTotalCount,
 } from '../../../services/purchased/hidden/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
-import Responsive from '../../base/Responsive';
-import { BookError } from '../../../components/Error';
+import { ResponsiveBooks } from '../../base/Responsive';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -118,7 +118,7 @@ class Hidden extends React.Component {
 
     const titleBarProps = {
       title: '숨긴 도서 목록',
-      showCount: true,
+      showCount: totalCount.itemTotalCount > 0,
       totalCount: totalCount.itemTotalCount,
       href: URLMap.main.href,
       as: URLMap.main.as,
@@ -194,7 +194,7 @@ class Hidden extends React.Component {
       return <EmptyBookList IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
     }
 
-    return <Responsive hasPadding={false}>{this.renderBooks()}</Responsive>;
+    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
 
   render() {

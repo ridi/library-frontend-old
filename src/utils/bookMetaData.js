@@ -8,26 +8,24 @@ export default class BookMetaData {
     this.bookData = platformBookData;
   }
 
-  get author() {
+  get authors() {
     const LIMIT = 2;
     const { authors } = this.bookData;
     if (!authors) return null;
 
     const roles = AuthorRole.getPriorities(authors);
-    return roles
-      .reduce((previous, role) => {
-        const author = authors[role];
+    return roles.reduce((previous, role) => {
+      const author = authors[role];
 
-        if (author) {
-          const names =
-            author.length > LIMIT
-              ? `${author[0].name}, ${author[1].name} 외 ${author.length - LIMIT}명`
-              : author.map(value => value.name).join(', ');
-          previous.push(`${names} ${AuthorRole.convertToString(role)}`);
-        }
-        return previous;
-      }, [])
-      .join(' | ');
+      if (author) {
+        const names =
+          author.length > LIMIT
+            ? `${author[0].name}, ${author[1].name} 외 ${author.length - LIMIT}명`
+            : author.map(value => value.name).join(', ');
+        previous.push(`${names} ${AuthorRole.convertToString(role)}`);
+      }
+      return previous;
+    }, []);
   }
 
   get authorSimple() {
@@ -54,7 +52,7 @@ export default class BookMetaData {
     // info의 text 에 | 와 \ 사용되면 안된다. 두개의 문자는 예약어이다.
     const infos = [];
 
-    if (file.format !== BookFileType.BOM) {
+    if (!(file.format === BookFileType.BOM || file.format === BookFileType.WEBTOON)) {
       infos.push(`${BookFileType.convertToString(file.format)}`);
     }
 
@@ -64,6 +62,10 @@ export default class BookMetaData {
       if (characterCount) {
         infos.push(`약 ${numberWithUnit(file.character_count)}자`);
       }
+    }
+
+    if (file.page_count) {
+      infos.push(`${file.page_count}쪽`);
     }
 
     if (file.size) {
