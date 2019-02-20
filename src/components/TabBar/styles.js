@@ -6,7 +6,7 @@ export const tabItem = {
   display: 'inline-block',
   position: 'relative',
   verticalAlign: 'top',
-  marginRight: 8,
+  marginRight: 16,
   background: 'white',
 };
 
