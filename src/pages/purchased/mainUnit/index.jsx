@@ -27,7 +27,6 @@ import {
   getPrimaryItem,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
 import { UnitOrderOptions } from '../../../constants/orderOptions';
@@ -174,7 +173,6 @@ class MainUnit extends React.Component {
         <Head>
           <title>{unit ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
-        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>
