@@ -3,6 +3,11 @@ export default class AuthorRole {
     return 'author';
   }
 
+  // 만화장르에서는 글, 그림으로 노출하기 위해 임의로 COMIC_AUTHOR 를 만듬
+  static get COMIC_AUTHOR() {
+    return 'comic_author';
+  }
+
   static get TRANSLATOR() {
     return 'translator';
   }
@@ -58,6 +63,7 @@ export default class AuthorRole {
 
   static convertToString(role) {
     const rolesMap = {
+      [this.COMIC_AUTHOR]: '글, 그림',
       [this.AUTHOR]: '저',
       [this.STORY_WRITER]: '글',
       [this.ILLUSTRATOR]: '그림',

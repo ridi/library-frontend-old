@@ -1,4 +1,5 @@
 import AuthorRole from '../constants/authorRole';
+import Genre from '../constants/category';
 import { BookFileType } from '../services/book/constants';
 import { numberWithUnit } from './number';
 import { formatFileSize } from './file';
@@ -22,10 +23,18 @@ export default class BookMetaData {
           author.length > LIMIT
             ? `${author[0].name}, ${author[1].name} 외 ${author.length - LIMIT}명`
             : author.map(value => value.name).join(', ');
-        previous.push(`${names} ${AuthorRole.convertToString(role)}`);
+
+        // 만화 장르의 저자는 글, 그림으로 노출하기 위해 role 을 변경한다.
+        const roleForString = this.genre === Genre.COMIC && role === AuthorRole.AUTHOR ? AuthorRole.COMIC_AUTHOR : role;
+        previous.push(`${names} ${AuthorRole.convertToString(roleForString)}`);
       }
       return previous;
     }, []);
+  }
+
+  get genre() {
+    // 카테고리는 무조건 1개 이상 있다.
+    return this.bookData.categories[0].genre;
   }
 
   get authorSimple() {
