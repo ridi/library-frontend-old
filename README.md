@@ -19,6 +19,17 @@ make yarn-install
 
 ## Run Development
 
+- SSR 버젼으로 개발
+
 ```
 make docker-up
+```
+
+## Run Static Development
+
+- CSR 버젼으로 개발
+
+```
+make docker-static-up
+make build-local
 ```

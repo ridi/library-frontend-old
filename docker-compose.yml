@@ -14,7 +14,7 @@ services:
     container_name: library-web-nginx
     restart: always
     volumes:
-      - ./docs/dev/nginx:/etc/nginx/conf.d:ro
+      - ./docs/dev/nginx/dynamic.conf:/etc/nginx/conf.d/dynamic.conf:ro
       - ./docs/dev/cert:/etc/nginx/cert/:ro
     ports:
       - 443:443
