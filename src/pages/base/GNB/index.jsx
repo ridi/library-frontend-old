@@ -1,7 +1,7 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
 import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
@@ -53,13 +53,25 @@ class GNB extends React.Component {
     );
   }
 
+  renderRightUi() {
+    return (
+      <div css={styles.myMenuWrapper}>
+        {this.renderFamilyServiceIcons()}
+        {this.renderMyMenu()}
+      </div>
+    );
+  }
+
   renderMyMenu() {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
-    return userId ? (
-      <div css={styles.myMenuWrapper}>
-        {this.renderFamilyServiceIcons()}
+    if (!userId) {
+      return null;
+    }
+
+    return (
+      <>
         <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
           {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
           <span css={Hidden}>마이메뉴</span>
@@ -71,9 +83,7 @@ class GNB extends React.Component {
           dispatchStartExcelDownload={dispatchStartExcelDownload}
           onClickModalBackground={this.onModalBackgroundClick}
         />
-      </div>
-    ) : (
-      <div css={styles.myMenuWrapper}>{this.renderFamilyServiceIcons()}</div>
+      </>
     );
   }
 
@@ -90,7 +100,7 @@ class GNB extends React.Component {
               </h1>
               <BetaBadge css={styles.BetaBadge} />
             </div>
-            {this.renderMyMenu()}
+            {this.renderRightUi()}
           </header>
         </Responsive>
       </>
