@@ -8,6 +8,7 @@ export const landscapeBook = {
   alignItems: 'center',
   padding: '0 24px',
   borderBottom: '1px solid #eee',
+  paddingTop: 20,
 };
 
 export const thumbnailWrapper = {

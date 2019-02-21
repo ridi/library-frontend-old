@@ -14,7 +14,7 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
 );
 
 export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, href, as, style, query = {}, replace = false }) => (
-  <Link replace={replace} {...makeLinkProps(href, as, query)}>
+  <Link prefetch replace={replace} {...makeLinkProps(href, as, query)}>
     <a css={[modalStyles.item, style]}>
       {IconComponent && <IconComponent css={modalStyles.icon} />}
       {isSelected && <Check css={modalStyles.selectedIcon} />}

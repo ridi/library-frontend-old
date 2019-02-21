@@ -26,7 +26,7 @@ export default class Paginator extends React.Component {
     return (
       <>
         <div css={styles.buttonWrapper}>
-          <Link {...this.getLinkProps(1)}>
+          <Link prefetch {...this.getLinkProps(1)}>
             <a css={[styles.pageButton, styles.textButton]}>처음</a>
           </Link>
         </div>
@@ -50,7 +50,7 @@ export default class Paginator extends React.Component {
           <ThreeDotsHorizontal css={styles.dots} />
         </span>
         <div css={styles.buttonWrapper}>
-          <Link {...this.getLinkProps(totalPages)}>
+          <Link prefetch {...this.getLinkProps(totalPages)}>
             <a css={[styles.pageButton, styles.textButton]}>마지막</a>
           </Link>
         </div>
@@ -72,7 +72,7 @@ export default class Paginator extends React.Component {
 
     return (
       <div css={styles.buttonWrapper}>
-        <Link {...this.getLinkProps(firstPrevBlockPage)}>
+        <Link prefetch {...this.getLinkProps(firstPrevBlockPage)}>
           <a css={styles.pageButton}>
             <NoneDashedArrowLeft css={styles.pageItemIcon} />
             <span className="a11y">이전 페이지</span>
@@ -96,7 +96,7 @@ export default class Paginator extends React.Component {
 
     return (
       <div css={styles.buttonWrapper}>
-        <Link {...this.getLinkProps(firstNextBlockPage)}>
+        <Link prefetch {...this.getLinkProps(firstNextBlockPage)}>
           <a css={styles.pageButton}>
             <NoneDashedArrowRight css={styles.pageItemIcon} />
             <span className="a11y">다음 페이지</span>
@@ -114,7 +114,7 @@ export default class Paginator extends React.Component {
       <ul css={styles.pageItems}>
         {pageRange.map(page => (
           <li key={page} css={styles.pageItem}>
-            <Link {...this.getLinkProps(page)}>
+            <Link prefetch {...this.getLinkProps(page)}>
               <a css={[styles.pageButton, currentPage === page && styles.pageButtonActive]}>{page}</a>
             </Link>
           </li>
