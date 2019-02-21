@@ -19,7 +19,7 @@ export const flexWrapper = {
 
 export const title = {
   display: 'inline-block',
-  padding: '12px 6px 12px 0',
+  padding: '14px 6px 12px 0',
   fontSize: 20,
   fontWeight: 900,
   color: '#212529',
