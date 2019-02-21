@@ -1,10 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
+import connect from 'react-redux/es/connect/connect';
 import { UnitOrderOptions } from '../constants/orderOptions';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
+import { getLocationHref } from '../services/router/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
+import { makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -13,7 +16,7 @@ import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
 
-export default class SeriesView extends React.Component {
+class SeriesView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -104,6 +107,7 @@ export default class SeriesView extends React.Component {
       isFetching,
       linkWebviewer,
       emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
+      locationHref,
     } = this.props;
 
     // Data 가져오는 상태면서 캐싱된 items가 없으면 Skeleton 노출
@@ -121,9 +125,8 @@ export default class SeriesView extends React.Component {
         return null;
       }
 
-      // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
       return (
-        <a href={`https://view.ridibooks.com/books/${platformBookData.id}`} target="_blank" rel="noopener noreferrer">
+        <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
           웹뷰어로 보기
         </a>
       );
@@ -169,3 +172,14 @@ export default class SeriesView extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  locationHref: getLocationHref(state),
+});
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SeriesView);
