@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
+import { isAfter } from 'date-fns';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import shortid from 'shortid';
@@ -110,8 +111,7 @@ class UnitDetailView extends React.Component {
   renderDownloadButton() {
     const { unit, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
-    const bookExpired = new Date(primaryItem.expire_date) < new Date();
-    if (!downloadable || bookExpired) {
+    if (!downloadable || isAfter(new Date(), primaryItem.expire_date)) {
       return null;
     }
 
@@ -178,18 +178,25 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, primaryItem, book, bookDescription, bookStarRating } = this.props;
+    const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
     }
 
+    const _notAvailable = items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     return (
       <>
         <section css={styles.header}>
           <div css={styles.thumbnailWrapper}>
             <div css={styles.thumbnail}>
-              <Book.ThumbnailImage thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`} css={{ width: '100%' }} />
+              <Book.Thumbnail
+                expired={_notAvailable}
+                notAvailable={_notAvailable}
+                adultBadge={book.property.is_adult_only}
+                thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`}
+                css={{ width: '100%' }}
+              />
             </div>
             {this.renderLink()}
           </div>
