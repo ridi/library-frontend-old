@@ -13,6 +13,7 @@ import { fetchBookData, fetchBookDescriptions, fetchStarRatings } from './reques
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion, attatchTTL } from '../../utils/ttl';
+import { getBooks } from './selectors';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -71,14 +72,24 @@ export function* loadBookData(bookIds) {
 }
 
 export function* loadBookDescriptions(bookIds) {
+  // Step 1. 시리즈도서인 경우 시리즈 ID 추출
+  // 시리즈 도서의 경우 Description 을 시리즈 대표 도서로 노출해야 한다.
+  yield call(loadBookData, bookIds);
+  const books = yield select(getBooks, bookIds);
+  const bookSeriesIds = Object.values(books)
+    .filter(book => !!book.series)
+    .map(book => book.series.id);
+
+  // Step 2. 요청할 Book id 를 추려낸다.
   // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
-  const filteredBookIds = filterBookIds(bookIds, existBookDescriptions);
+  const filteredBookIds = filterBookIds([...bookIds, ...bookSeriesIds], existBookDescriptions);
 
   if (filteredBookIds.length === 0) {
     return;
   }
 
+  // Step 3. 데이터 요청
   const bookDescriptions = yield call(fetchBookDescriptions, filteredBookIds);
   yield put(setBookDescriptions(bookDescriptions));
 }

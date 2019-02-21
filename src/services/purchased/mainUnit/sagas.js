@@ -47,8 +47,7 @@ function* loadPrimaryItem(unitId) {
     return _primaryItem;
   }
 
-  const primaryItem = yield call(getMainUnitPrimaryItem, unitId);
-  return primaryItem;
+  return yield call(getMainUnitPrimaryItem, unitId);
 }
 
 function* loadItems() {

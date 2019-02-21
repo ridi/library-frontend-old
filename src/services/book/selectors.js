@@ -39,16 +39,13 @@ export const getUnit = (state, unitId) =>
     bookState => bookState.units.get(unitId) || EmptyUnit,
   )(state);
 
-export const getBook = (state, bookId) =>
-  createSelector(
-    getBookState,
-    bookState => bookState.books.get(bookId),
-  )(state);
-
 export const getBookDescription = (state, bookId) =>
   createSelector(
     getBookState,
-    bookState => bookState.bookDescriptions.get(bookId),
+    bookState => {
+      const book = bookState.books.get(bookId);
+      return book && book.series ? bookState.bookDescriptions.get(book.series.id) : bookState.bookDescriptions.get(bookId);
+    },
   )(state);
 
 export const getBookStarRating = (state, bookId) =>
