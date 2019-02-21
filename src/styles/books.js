@@ -33,7 +33,7 @@ export const booksWrapper = (viewType, additionalPadding) => {
     flexDirection: 'row',
     justifyContent: 'left',
     alignItems: 'flex-end',
-    paddingBottom: 26,
+    paddingBottom: 25,
     maxWidth: FULL_MAX_WIDTH,
     margin: '0 auto',
     boxSizing: 'border-box',
