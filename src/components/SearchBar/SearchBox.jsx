@@ -24,6 +24,10 @@ export default class SearchBox extends React.Component {
     this.handleOnClickOutOfSearchBar = this.handleOnClickOutOfSearchBar.bind(this);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
+  }
+
   setActivation(isActive) {
     const { onFocus, onBlur } = this.props;
     document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
