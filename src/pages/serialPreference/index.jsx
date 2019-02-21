@@ -117,7 +117,7 @@ class SerialPreference extends React.Component {
     const showSkeleton = isFetchingBooks && items.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBooks viewType />
+      <SkeletonBooks viewType={viewType} />
     ) : (
       <>
         <SerialPreferenceBooks
@@ -126,7 +126,7 @@ class SerialPreference extends React.Component {
           selectedBooks={selectedBooks}
           isSelectMode={isSelectMode}
           onSelectedChange={onSelectedChange}
-          viewType="{viewType"
+          viewType={viewType}
         />
         {this.renderPaginator()}
       </>
