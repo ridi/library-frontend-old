@@ -44,8 +44,8 @@ export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
 
 export function* getSearchUnitPrimaryItem(unitId) {
   const options = {
-    orderType: UnitOrderOptions.DEFAULT.orderType,
-    orderBy: UnitOrderOptions.DEFAULT.orderBy,
+    orderType: UnitOrderOptions.PURCHASE_DATE.orderType,
+    orderBy: UnitOrderOptions.PURCHASE_DATE.orderBy,
     offset: 0,
     limit: 1,
   };

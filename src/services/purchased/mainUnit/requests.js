@@ -45,8 +45,8 @@ export function* fetchMainUnitItemsTotalCount(unitId, orderType, orderBy) {
 
 export function* getMainUnitPrimaryItem(unitId) {
   const options = {
-    orderType: UnitOrderOptions.DEFAULT.orderType,
-    orderBy: UnitOrderOptions.DEFAULT.orderBy,
+    orderType: UnitOrderOptions.PURCHASE_DATE.orderType,
+    orderBy: UnitOrderOptions.PURCHASE_DATE.orderBy,
     offset: 0,
     limit: 1,
   };
