@@ -9,6 +9,7 @@ import { GET_API } from './actions';
 import { HttpStatusCode } from './constants';
 
 import Window, { LOCATION } from '../utils/window';
+import { notifySentry } from '../utils/sentry';
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
@@ -28,8 +29,7 @@ const authorizationInterceptor = {
             return null;
           }
 
-          // TODO: Add Sentry
-          console.log('error token refresh');
+          notifySentry(err);
           return Promise.reject(err);
         });
     }
