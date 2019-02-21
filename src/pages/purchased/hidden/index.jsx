@@ -68,6 +68,14 @@ class Hidden extends React.Component {
     this.setState({ isEditing: false });
   };
 
+  deleteSelectedBooks = () => {
+    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
+
+    dispatchDeleteSelectedBooks();
+    dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
   handleOnClickDelete = () => {
     this.props.dispatchShowConfirm(
       '영구 삭제',
@@ -78,12 +86,8 @@ class Hidden extends React.Component {
         그래도 삭제하시겠습니까?
       </>,
       '삭제',
+      this.deleteSelectedBooks,
     );
-    // const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    // dispatchDeleteSelectedBooks();
-    // dispatchClearSelectedBooks();
-    // this.setState({ isEditing: false });
   };
 
   makeEditingBarProps() {

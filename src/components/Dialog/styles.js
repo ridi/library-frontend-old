@@ -25,6 +25,8 @@ export const dialogHeader = {
   position: 'relative',
 };
 
+export const dialogFooter = {};
+
 export const dialogTitle = {
   fontSize: 17,
   fontWeight: 'bold',

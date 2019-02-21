@@ -16,25 +16,32 @@ export default class Confirm extends React.Component {
   }
 
   render() {
-    const { title, message, confirmLabel = '확인', onClickCloseButton } = this.props;
+    const { title, message, confirmLabel = '확인', onClickCloseButton, onClickConfirmButton } = this.props;
+
     return (
-      <div css={styles.dialogWrapper}>
-        <div css={styles.dialog}>
-          <div css={styles.dialogHeader}>
-            <div css={styles.dialogTitle}>{title}</div>
-            <IconButton a11y="닫기버튼" css={styles.dialogCloseButton} onClick={onClickCloseButton}>
+      <div css={styles.confirmWrapper}>
+        <div css={styles.confirm}>
+          <div css={styles.confirmHeader}>
+            <div css={styles.confirmTitle}>{title}</div>
+            <IconButton a11y="닫기버튼" css={styles.confirmCloseButton} onClick={onClickCloseButton}>
               <Close />
             </IconButton>
           </div>
-          <div css={styles.dialogContent}>{message}</div>
-          <div css={styles.dialogFooter}>
-            <button type="button" css={styles.agreeButton} onClick={onClickCloseButton}>
+          <div css={styles.confirmContent}>{message}</div>
+          <div css={styles.confirmFooter}>
+            <button
+              type="button"
+              css={styles.confirmButton}
+              onClick={() => {
+                onClickConfirmButton();
+                onClickCloseButton();
+              }}
+            >
               {confirmLabel}
             </button>
             <button type="button" css={styles.cancelButton} onClick={onClickCloseButton}>
               취소
             </button>
-
             <div css={styles.clear} />
           </div>
         </div>
