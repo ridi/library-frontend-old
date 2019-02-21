@@ -15,7 +15,7 @@ module.exports = {
   exportPathMap: () => ({
     '/': { page: '/' },
   }),
-  webpack: config => {
+  webpack: (config, { dev, buildId, isServer }) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

@@ -1,6 +1,7 @@
 import React from 'react';
 import { InternalError, NotFoundError } from '../components/Error';
 import HorizontalRuler from '../components/HorizontalRuler';
+import { notifySentry } from '../utils/sentry';
 
 const Internal = 500;
 const NotFound = 404;
@@ -16,6 +17,7 @@ export default class Error extends React.Component {
       errorCode = err.statusCode;
     }
 
+    notifySentry(err);
     return { errorCode };
   }
 

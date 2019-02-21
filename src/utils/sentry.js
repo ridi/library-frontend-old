@@ -7,7 +7,7 @@ export const initializeSentry = () => {
   });
 };
 
-const configure = () => {
+export const configure = () => {
   configureScope(scope => {
     // TODO: 필요한 ExtraData, Tag, User 셋팅
     // scope.setExtra('battery', 0.7);
@@ -16,8 +16,15 @@ const configure = () => {
   });
 };
 
+export const notifySentry = err => {
+  if (!err) {
+    return;
+  }
+
+  captureException(err);
+};
+
 export default {
-  configure,
   captureMessage,
   captureException,
   captureEvent,
