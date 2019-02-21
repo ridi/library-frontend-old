@@ -1,47 +1,23 @@
+import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
 export const header = {
-  display: 'flex',
-  padding: '50px 40px 30px 40px',
-  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
-    paddingTop: 28,
-    flexDirection: 'column',
-    paddingLeft: 0,
-    paddingRight: 0,
-  }),
-  ...Responsive.Large({
-    flexDirection: 'column',
-  }),
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    paddingLeft: 82,
-  }),
-};
-
-export const headerContentsWrapper = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  flexDirection: 'column',
+  ...defaultLayout.header,
 };
 
 export const thumbnailWrapper = {
-  ...headerContentsWrapper,
-  alignItems: 'center',
-  justifyContent: 'center',
+  ...defaultLayout.thumbnailWrapper,
 };
 
 export const thumbnail = {
-  width: 130,
+  ...defaultLayout.thumbnail,
   boxShadow: '2px 4px 10px rgba(0, 0, 0, .15)',
-  lineHeight: 0,
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    width: 180,
-  }),
 };
 
 export const outerTextLink = {
+  ...defaultLayout.outerTextLink,
   fontSize: 15,
   color: '#1f8ce6',
-  marginTop: 16,
 };
 
 export const outerLinkIcon = {
@@ -52,20 +28,7 @@ export const outerLinkIcon = {
 };
 
 export const infoWrapper = {
-  ...headerContentsWrapper,
-  justifyContent: 'left',
-  paddingTop: 42,
-  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
-    paddingTop: 24,
-    alignItems: 'start',
-  }),
-  ...Responsive.Large({
-    alignItems: 'center',
-  }),
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    alignItems: 'start',
-    paddingLeft: 40,
-  }),
+  ...defaultLayout.infoWrapper,
 };
 
 export const unitTitle = {
@@ -73,7 +36,6 @@ export const unitTitle = {
   fontWeight: 'bold',
   lineHeight: 1.54,
   color: '#212529',
-
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     fontSize: 30,
     fontWeight: 'bold',
@@ -84,12 +46,9 @@ export const unitTitle = {
 };
 
 export const authorList = {
+  ...defaultLayout.authorList,
   fontSize: 15,
   color: '#40474d',
-  marginTop: 12,
-  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
-    marginTop: 6,
-  }),
 };
 
 export const authorDelimiter = {
@@ -101,9 +60,7 @@ export const authorDelimiter = {
 };
 
 export const fileInfo = {
-  marginTop: 20,
-  display: 'flex',
-  alignItems: 'center',
+  ...defaultLayout.fileInfo,
 };
 
 export const starRateIcon = {

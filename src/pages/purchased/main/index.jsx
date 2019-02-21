@@ -152,7 +152,7 @@ class Main extends React.Component {
       );
 
       return (
-        <Link {...linkProps}>
+        <Link prefetch {...linkProps}>
           <a>더보기</a>
         </Link>
       );
