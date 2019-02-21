@@ -1,3 +1,5 @@
+const withSourceMaps = require('@zeit/next-source-maps');
+
 const { NODE_ENV } = process.env;
 
 let settings;
@@ -9,13 +11,13 @@ if (NODE_ENV === 'local') {
   settings = require('./settings/production.json');
 }
 
-module.exports = {
+module.exports = withSourceMaps({
   distDir: '../build',
   useFileSystemPublicRoutes: false,
   exportPathMap: () => ({
     '/': { page: '/' },
   }),
-  webpack: config => {
+  webpack: (config, { dev, buildId, isServer }) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
@@ -44,4 +46,4 @@ module.exports = {
 
     SENTRY_DSN: settings.sentry_dsn,
   },
-};
+});
