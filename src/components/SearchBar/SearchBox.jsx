@@ -73,6 +73,12 @@ export default class SearchBox extends React.Component {
     this.setActivation(false);
   }
 
+  handleOnKeyPressed = event => {
+    var code = event.charCode || event.keyCode;
+    if (code == 27) {
+    }
+  };
+
   render() {
     const { keyword, isSearchBoxFocused } = this.state;
     return (
@@ -96,6 +102,7 @@ export default class SearchBox extends React.Component {
           value={keyword}
           onChange={this.handleChange}
           onFocus={() => this.setActivation(true)}
+          onKeyDown={this.handleOnKeyPressed}
         />
         <IconButton
           a11y="검색어 제거"
