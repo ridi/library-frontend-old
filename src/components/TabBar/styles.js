@@ -18,6 +18,9 @@ export const tabButton = {
   color: '#808991',
   fontSize: 16,
   textAlign: 'center',
+  ':hover': {
+    color: '#40474d',
+  },
 };
 
 export const tabButtonToggle = isActive =>
