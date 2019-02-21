@@ -31,7 +31,9 @@ function* loadUserInfo() {
   try {
     userInfo = yield call(fetchUserInfo);
   } catch (e) {
-    Router.replace(URLMap.login.href, URLMap.login.as);
+    if (Window.get(LOCATION).pathname !== URLMap.login.href) {
+      Router.replace(URLMap.login.href, URLMap.login.as);
+    }
     return;
   }
 
@@ -49,7 +51,10 @@ function* accountTracker() {
     try {
       newUserInfo = yield call(fetchUserInfo);
     } catch (e) {
-      Router.replace(URLMap.login.href, URLMap.login.as);
+      if (Window.get(LOCATION).pathname !== URLMap.login.href) {
+        Router.replace(URLMap.login.href, URLMap.login.as);
+      }
+      return;
     }
 
     const userInfo = yield select(state => state.account.userInfo);
