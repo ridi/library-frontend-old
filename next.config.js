@@ -1,5 +1,3 @@
-const withSourceMaps = require('@zeit/next-source-maps');
-
 const { NODE_ENV } = process.env;
 
 let settings;
@@ -11,7 +9,7 @@ if (NODE_ENV === 'local') {
   settings = require('./settings/production.json');
 }
 
-module.exports = withSourceMaps({
+module.exports = {
   distDir: '../build',
   useFileSystemPublicRoutes: false,
   exportPathMap: () => ({
@@ -46,4 +44,4 @@ module.exports = withSourceMaps({
 
     SENTRY_DSN: settings.sentry_dsn,
   },
-});
+};
