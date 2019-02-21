@@ -35,7 +35,7 @@ class Toaster extends React.Component {
     }
 
     return (
-      <Link {...linkProps}>
+      <Link prefetch {...linkProps}>
         <button
           css={styles.toastLink}
           type="button"
