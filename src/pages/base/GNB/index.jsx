@@ -73,7 +73,7 @@ class GNB extends React.Component {
         />
       </div>
     ) : (
-      <div css={styles.myMenuWrapper}>{this.randerFamilyServiceIcons()}</div>
+      <div css={styles.myMenuWrapper}>{this.renderFamilyServiceIcons()}</div>
     );
   }
 
