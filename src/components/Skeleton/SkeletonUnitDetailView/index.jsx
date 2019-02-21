@@ -1,16 +1,17 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import * as styles from './unitDetailViewStyles';
+import * as styles from './styles';
 
 const SkeletonUnitDetailView = () => (
-  <section css={styles.detailView}>
+  <section css={styles.header}>
     <div css={styles.thumbnailWrapper}>
       <div css={styles.thumbnail} />
-      <div css={styles.ridibooksLink} />
+      <div css={styles.outerTextLink} />
     </div>
     <div css={styles.infoWrapper}>
-      <div css={styles.unitTitle} />
+      <div css={styles.title} />
       <div css={styles.authorList} />
+      <div css={styles.fileInfo} />
     </div>
   </section>
 );
