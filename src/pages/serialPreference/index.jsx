@@ -7,7 +7,7 @@ import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
 import EmptyBookList from '../../components/EmptyBookList';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
-import { SerialPreferenceBooks } from '../../components/SerialPreferenceBooks';
+import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
 import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../constants/urls';
@@ -121,14 +121,12 @@ class SerialPreference extends React.Component {
     ) : (
       <>
         <SerialPreferenceBooks
-          {...{
-            items,
-            platformBookDTO,
-            selectedBooks,
-            isSelectMode,
-            onSelectedChange,
-            viewType,
-          }}
+          items={items}
+          platformBookDTO={platformBookDTO}
+          selectedBooks={selectedBooks}
+          isSelectMode={isSelectMode}
+          onSelectedChange={onSelectedChange}
+          viewType="{viewType"
         />
         {this.renderPaginator()}
       </>

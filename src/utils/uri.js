@@ -26,6 +26,10 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
 export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
   `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
 
+// 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
+export const makeWebViewerURI = (bookId, currentUri) =>
+  `https://view.ridibooks.com/books/${bookId}?referer=${encodeURIComponent(currentUri)}`;
+
 export const makeLinkProps = (href, as, query) => {
   const _query = typeof query === 'object' ? snakelize(query) : null;
 

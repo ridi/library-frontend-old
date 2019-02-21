@@ -1,10 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { merge } from 'lodash';
 import Genre from '../../constants/category';
+import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
+import { makeWebViewerURI } from '../../utils/uri';
 import BooksWrapper from '../BooksWrapper';
 
 const serialPreferenceStyles = {
@@ -75,6 +79,7 @@ const toProps = ({
   isSelectMode,
   isSelected,
   onSelectedChange,
+  locationHref,
 }) => {
   const { property: seriesProperty } = platformBookData.series;
   const bookMetaData = new BookMetaData(platformBookData);
@@ -108,7 +113,7 @@ const toProps = ({
 
   const additionalButton = (
     <a
-      href={`https://view.ridibooks.com/books/${recentReadBookId}`}
+      href={makeWebViewerURI(recentReadBookId, locationHref)}
       target="_blank"
       rel="noopener noreferrer"
       css={serialPreferenceStyles.button}
@@ -137,34 +142,52 @@ const toProps = ({
   return merge(defaultBookProps, landscapeBookProps);
 };
 
-export const SerialPreferenceBooks = ({ items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder }) => (
-  <BooksWrapper
-    viewType={viewType}
-    renderBooks={({ className }) =>
-      items.map(item => {
-        const bookSeriesId = item.series_id;
-        const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
-        const platformBookData = platformBookDTO[bookSeriesId];
-        const isSelected = !!selectedBooks[bookSeriesId];
-        const recentReadBookId = item.recent_read_b_id;
-        const libraryBookProps = toProps({
-          bookSeriesId,
-          platformBookData,
-          recentReadPlatformBookData,
-          recentReadBookId,
-          isSelectMode,
-          isSelected,
-          onSelectedChange,
-          viewType,
-          linkBuilder,
-        });
+class SerialPreferenceBooks extends React.Component {
+  render() {
+    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder, locationHref } = this.props;
 
-        return (
-          <div key={bookSeriesId} className={className} css={styles.landscape}>
-            <Book.LandscapeBook {...libraryBookProps} />
-          </div>
-        );
-      })
-    }
-  />
-);
+    return (
+      <BooksWrapper
+        viewType={viewType}
+        renderBooks={({ className }) =>
+          items.map(item => {
+            const bookSeriesId = item.series_id;
+            const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
+            const platformBookData = platformBookDTO[bookSeriesId];
+            const isSelected = !!selectedBooks[bookSeriesId];
+            const recentReadBookId = item.recent_read_b_id;
+            const libraryBookProps = toProps({
+              bookSeriesId,
+              platformBookData,
+              recentReadPlatformBookData,
+              recentReadBookId,
+              isSelectMode,
+              isSelected,
+              onSelectedChange,
+              viewType,
+              linkBuilder,
+              locationHref,
+            });
+
+            return (
+              <div key={bookSeriesId} className={className} css={styles.landscape}>
+                <Book.LandscapeBook {...libraryBookProps} />
+              </div>
+            );
+          })
+        }
+      />
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  locationHref: getLocationHref(state),
+});
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SerialPreferenceBooks);
