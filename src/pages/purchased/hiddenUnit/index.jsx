@@ -122,6 +122,7 @@ class HiddenUnit extends React.Component {
       isFetchingBook,
       items,
       books,
+      unit,
       selectedBooks,
       dispatchToggleSelectBook,
       dispatchSelectAllBooks,
@@ -145,6 +146,7 @@ class HiddenUnit extends React.Component {
         isFetching={isFetchingBook}
         items={items}
         books={books}
+        unit={unit}
         selectedBooks={selectedBooks}
         onSelectedChange={dispatchToggleSelectBook}
         onClickSelectAllBooks={dispatchSelectAllBooks}

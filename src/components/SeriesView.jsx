@@ -3,11 +3,12 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { UnitOrderOptions } from '../constants/orderOptions';
+import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getLocationHref } from '../services/router/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeWebViewerURI } from '../utils/uri';
+import { makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -105,6 +106,7 @@ class SeriesView extends React.Component {
       selectedBooks,
       onSelectedChange,
       isFetching,
+      unit,
       linkWebviewer,
       emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
       locationHref,
@@ -129,13 +131,15 @@ class SeriesView extends React.Component {
         );
       }
 
-      if (platformBookData) {
+      if (UnitType.isShelf(unit.type)) {
         return (
-          <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
-            웹뷰어로 보기
+          <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+            리디북스에서 보기
           </a>
         );
       }
+
+      return null;
     };
 
     return (
