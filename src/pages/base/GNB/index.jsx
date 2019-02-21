@@ -34,13 +34,32 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
+  randerFamilyServiceIcons() {
+    return (
+      <ul css={styles.familyServiceList}>
+        <li css={styles.familyServiceItem}>
+          <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
+            <LogoRidibooks css={styles.ridibooksIcon} />
+            <span css={Hidden}>RIDIBOOKS</span>
+          </a>
+        </li>
+        <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
+          <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
+            <LogoRidiselect css={styles.ridiSelectIcon} />
+            <span css={Hidden}>RIDI Select</span>
+          </a>
+        </li>
+      </ul>
+    );
+  }
+
   renderMyMenu() {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
     return userId ? (
       <div css={styles.myMenuWrapper}>
-        <BetaBadge css={styles.BetaBadge} />
+        {this.randerFamilyServiceIcons()}
         <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
           {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
           <span css={Hidden}>마이메뉴</span>
@@ -54,7 +73,7 @@ class GNB extends React.Component {
         />
       </div>
     ) : (
-      <BetaBadge css={styles.BetaBadge} />
+      <div css={styles.myMenuWrapper}>{this.randerFamilyServiceIcons()}</div>
     );
   }
 
@@ -69,20 +88,7 @@ class GNB extends React.Component {
                   내 서재
                 </a>
               </h1>
-              <ul css={styles.familyServiceList}>
-                <li css={styles.familyServiceItem}>
-                  <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
-                    <LogoRidibooks css={styles.ridibooksIcon} />
-                    <span css={Hidden}>RIDIBOOKS</span>
-                  </a>
-                </li>
-                <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-                  <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
-                    <LogoRidiselect css={styles.ridiSelectIcon} />
-                    <span css={Hidden}>RIDI Select</span>
-                  </a>
-                </li>
-              </ul>
+              <BetaBadge css={styles.BetaBadge} />
             </div>
             {this.renderMyMenu()}
           </header>

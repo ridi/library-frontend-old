@@ -66,13 +66,13 @@ export const familyServiceLink = {
 export const ridibooksIcon = {
   width: 65,
   height: 10,
-  fill: '#b8bfc4',
+  fill: '#9ea7ad',
 };
 
 export const ridiSelectIcon = {
   width: 62,
   height: 10,
-  fill: '#b8bfc4',
+  fill: '#9ea7ad',
 };
 
 export const myMenuWrapper = {
@@ -86,6 +86,7 @@ export const BetaBadge = {
   width: 27,
   height: 12,
   fill: '#808991',
+  padding: '20px 0 14px 0',
 };
 
 export const myMenuToggleButton = {
