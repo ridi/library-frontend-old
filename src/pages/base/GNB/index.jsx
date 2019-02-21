@@ -34,7 +34,7 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
-  randerFamilyServiceIcons() {
+  static renderFamilyServiceIcons() {
     return (
       <ul css={styles.familyServiceList}>
         <li css={styles.familyServiceItem}>
@@ -59,7 +59,7 @@ class GNB extends React.Component {
 
     return userId ? (
       <div css={styles.myMenuWrapper}>
-        {this.randerFamilyServiceIcons()}
+        {this.renderFamilyServiceIcons()}
         <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
           {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
           <span css={Hidden}>마이메뉴</span>
