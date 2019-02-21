@@ -86,7 +86,7 @@ export const BetaBadge = {
   width: 27,
   height: 12,
   fill: '#808991',
-  padding: '20px 0 14px 0',
+  padding: '19px 0 14px 0',
 };
 
 export const myMenuToggleButton = {

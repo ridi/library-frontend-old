@@ -121,15 +121,21 @@ class SeriesView extends React.Component {
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
-      if (!_linkWebviewer || !platformBookData.support.web_viewer) {
-        return null;
+      if (_linkWebviewer && platformBookData.support.web_viewer) {
+        return (
+          <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
+            웹뷰어로 보기
+          </a>
+        );
       }
 
-      return (
-        <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
-          웹뷰어로 보기
-        </a>
-      );
+      if (platformBookData) {
+        return (
+          <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
+            웹뷰어로 보기
+          </a>
+        );
+      }
     };
 
     return (
