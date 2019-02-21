@@ -34,7 +34,7 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
-  static renderFamilyServiceIcons() {
+  renderFamilyServiceIcons() {
     return (
       <ul css={styles.familyServiceList}>
         <li css={styles.familyServiceItem}>
