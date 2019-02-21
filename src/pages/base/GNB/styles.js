@@ -103,6 +103,11 @@ export const myMenuIcon = {
   fill: '#808991',
 };
 
+export const myMenuInactiveIcon = {
+  ...myMenuIcon,
+  opacity: 0.3,
+};
+
 export const myMenuActiveIcon = {
   ...myMenuIcon,
   fill: '#808991',

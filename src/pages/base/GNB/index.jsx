@@ -66,23 +66,29 @@ class GNB extends React.Component {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
-    if (!userId) {
-      return null;
-    }
-
     return (
       <>
-        <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-          {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
-          <span css={Hidden}>마이메뉴</span>
-        </button>
-        <MyMenuModal
-          userId={userId}
-          isActive={isModalActive}
-          isExcelDownloading={isExcelDownloading}
-          dispatchStartExcelDownload={dispatchStartExcelDownload}
-          onClickModalBackground={this.onModalBackgroundClick}
-        />
+        {userId ? (
+          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
+            {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
+            <span css={Hidden}>마이메뉴</span>
+          </button>
+        ) : (
+          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} type="button">
+            {<MyMenuIcon css={styles.myMenuInactiveIcon} />}
+            <span css={Hidden}>마이메뉴</span>
+          </button>
+        )}
+
+        {userId ? (
+          <MyMenuModal
+            userId={userId}
+            isActive={isModalActive}
+            isExcelDownloading={isExcelDownloading}
+            dispatchStartExcelDownload={dispatchStartExcelDownload}
+            onClickModalBackground={this.onModalBackgroundClick}
+          />
+        ) : null}
       </>
     );
   }
@@ -111,6 +117,7 @@ class GNB extends React.Component {
 const mapStateToProps = state => {
   const isExcelDownloading = getIsExcelDownloading(state);
   const userId = state.account.userInfo ? state.account.userInfo.id : null;
+
   return {
     userId,
     isExcelDownloading,
