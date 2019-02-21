@@ -34,6 +34,7 @@ import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
+import { showConfirm } from '../../../services/confirm/actions';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -68,11 +69,21 @@ class Hidden extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    this.props.dispatchShowConfirm(
+      '영구 삭제',
+      <>
+        구매 목록에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+        <br />
+        <br />
+        그래도 삭제하시겠습니까?
+      </>,
+      '삭제',
+    );
+    // const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchDeleteSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
+    // dispatchDeleteSelectedBooks();
+    // dispatchClearSelectedBooks();
+    // this.setState({ isEditing: false });
   };
 
   makeEditingBarProps() {
@@ -244,6 +255,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,

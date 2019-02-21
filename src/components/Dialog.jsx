@@ -71,10 +71,21 @@ const styles = {
     float: 'right',
   },
   cancelButton: {
+    float: 'right',
     color: 'red',
   },
   agreeButton: {
-    ...['dialogButton'],
+    width: 92,
+    height: 40,
+    borderRadius: 4,
+    backgroundColor: '#1f8ce6',
+
+    fontSize: 14,
+    fontWeight: 'bold',
+    letterSpacing: -0.3,
+    textAlign: 'center',
+    color: '#ffffff',
+    float: 'right',
   },
   clear: {
     clear: 'both',
@@ -91,7 +102,7 @@ export default class Dialog extends React.Component {
   }
 
   render() {
-    const { title, message, onClickCloseButton, isConfirm = false, confirmLabel = '확인' } = this.props;
+    const { title, message, onClickCloseButton } = this.props;
     return (
       <div css={styles.dialogWrapper}>
         <div css={styles.dialog}>
@@ -103,20 +114,9 @@ export default class Dialog extends React.Component {
           </div>
           <div css={styles.dialogContent}>{message}</div>
           <div css={styles.dialogFooter}>
-            {isConfirm ? (
-              <>
-                <button type="button" css={styles.cancelButton} onClick={onClickCloseButton}>
-                  취소
-                </button>
-                <button type="button" css={styles.agreeButton} onClick={onClickCloseButton}>
-                  {confirmLabel}
-                </button>
-              </>
-            ) : (
-              <button type="button" css={styles.dialogButton} onClick={onClickCloseButton}>
-                확인
-              </button>
-            )}
+            <button type="button" css={styles.dialogButton} onClick={onClickCloseButton}>
+              확인
+            </button>
             <div css={styles.clear} />
           </div>
         </div>
