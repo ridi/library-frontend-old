@@ -10,6 +10,7 @@ import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } 
 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 import Layout from './base/Layout';
+import Prefetch from '../components/Prefetch';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -50,6 +51,7 @@ class LibraryApp extends App {
           <Layout>
             <>
               <ConnectedRouterWrapper />
+              <Prefetch />
               <Component {...pageProps} />
             </>
           </Layout>
