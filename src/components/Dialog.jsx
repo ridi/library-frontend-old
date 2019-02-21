@@ -1,8 +1,6 @@
 /** @jsx jsx */
-import React from 'react';
-import { connect } from 'react-redux';
-
 import { jsx } from '@emotion/core';
+import React from 'react';
 import Close from '../svgs/Close.svg';
 import { disableScroll, enableScroll } from '../utils/scroll';
 import IconButton from './IconButton';
@@ -72,6 +70,12 @@ const styles = {
     color: '#ffffff',
     float: 'right',
   },
+  cancelButton: {
+    color: 'red',
+  },
+  agreeButton: {
+    ...['dialogButton'],
+  },
   clear: {
     clear: 'both',
   },
@@ -87,7 +91,7 @@ export default class Dialog extends React.Component {
   }
 
   render() {
-    const { title, message, onClickCloseButton } = this.props;
+    const { title, message, onClickCloseButton, isConfirm = false, confirmLabel = '확인' } = this.props;
     return (
       <div css={styles.dialogWrapper}>
         <div css={styles.dialog}>
@@ -99,9 +103,20 @@ export default class Dialog extends React.Component {
           </div>
           <div css={styles.dialogContent}>{message}</div>
           <div css={styles.dialogFooter}>
-            <button type="button" css={styles.dialogButton} onClick={onClickCloseButton}>
-              확인
-            </button>
+            {isConfirm ? (
+              <>
+                <button type="button" css={styles.cancelButton} onClick={onClickCloseButton}>
+                  취소
+                </button>
+                <button type="button" css={styles.agreeButton} onClick={onClickCloseButton}>
+                  {confirmLabel}
+                </button>
+              </>
+            ) : (
+              <button type="button" css={styles.dialogButton} onClick={onClickCloseButton}>
+                확인
+              </button>
+            )}
             <div css={styles.clear} />
           </div>
         </div>
