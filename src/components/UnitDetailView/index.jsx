@@ -189,7 +189,11 @@ class UnitDetailView extends React.Component {
         <section css={styles.header}>
           <div css={styles.thumbnailWrapper}>
             <div css={styles.thumbnail}>
-              <Book.ThumbnailImage thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`} css={{ width: '100%' }} />
+              <Book.Thumbnail
+                adultBadge={book.property.is_adult_only}
+                thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`}
+                css={{ width: '100%' }}
+              />
             </div>
             {this.renderLink()}
           </div>
