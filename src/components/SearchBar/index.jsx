@@ -16,8 +16,6 @@ class SearchBar extends React.Component {
     this.state = {
       hideTools: false,
     };
-
-    console.log('SearchBar constructor');
   }
 
   handleOnSubmitSearchBar = value => {
