@@ -31,13 +31,8 @@ class SeriesView extends React.Component {
   }
 
   scrollToHeadWhenChangeOrder(prevProps) {
-    const {
-      pageInfo: { order },
-    } = this.props;
-
-    const {
-      pageInfo: { order: prevOrder },
-    } = prevProps;
+    const { currentOrder: order } = this.props;
+    const { currentOrder: prevOrder } = prevProps;
 
     if (order !== prevOrder) {
       setTimeout(() => {
