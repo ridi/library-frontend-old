@@ -17,11 +17,6 @@ export default class SearchBox extends React.Component {
 
     this.input = null;
     this.searchBarForm = null;
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleOnClickCancel = this.handleOnClickCancel.bind(this);
-    this.handleOnClickOutOfSearchBar = this.handleOnClickOutOfSearchBar.bind(this);
   }
 
   componentWillUnmount() {
@@ -42,8 +37,9 @@ export default class SearchBox extends React.Component {
     onFocus && onFocus();
   }
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
+
     const { onSubmit } = this.props;
     const { keyword } = this.state;
 
@@ -52,30 +48,34 @@ export default class SearchBox extends React.Component {
     }
 
     onSubmit(keyword);
-  }
+  };
 
-  handleChange(e) {
+  handleChange = e => {
     this.setState({
       keyword: e.target.value,
     });
-  }
+  };
 
-  handleOnClickCancel() {
+  handleOnClickCancel = () => {
     this.setState({ keyword: '' });
     this.input && this.input.focus();
-  }
+  };
 
-  handleOnClickOutOfSearchBar(e) {
+  handleOnClickOutOfSearchBar = e => {
     if (this.searchBarForm && this.searchBarForm.contains(e.target)) {
       return;
     }
 
     this.setActivation(false);
-  }
+  };
 
-  handleOnKeyPressed = event => {
-    var code = event.charCode || event.keyCode;
+  handleOnKeyUp = e => {
+    const { onBlur } = this.props;
+    var code = e.charCode || e.keyCode;
     if (code == 27) {
+      this.input.blur();
+      onBlur && onBlur();
+      this.setState({ isSearchBoxFocused: false });
     }
   };
 
@@ -102,7 +102,7 @@ export default class SearchBox extends React.Component {
           value={keyword}
           onChange={this.handleChange}
           onFocus={() => this.setActivation(true)}
-          onKeyDown={this.handleOnKeyPressed}
+          onKeyUp={this.handleOnKeyUp}
         />
         <IconButton
           a11y="검색어 제거"
