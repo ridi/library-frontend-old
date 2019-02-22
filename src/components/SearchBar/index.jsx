@@ -37,7 +37,18 @@ class SearchBar extends React.Component {
 
   render() {
     const { hideTools } = this.state;
-    const { filter, filterOptions, order, orderOptions, orderBy, orderType, toggleEditingMode, keyword = '' } = this.props;
+    const {
+      filter,
+      filterOptions,
+      order,
+      orderOptions,
+      orderBy,
+      orderType,
+      toggleEditingMode,
+      onClickSearchCancel,
+      keyword = '',
+      isSearchPage,
+    } = this.props;
 
     return (
       <FlexBar
@@ -50,6 +61,7 @@ class SearchBar extends React.Component {
               onSubmit={this.handleOnSubmitSearchBar}
               onFocus={this.handleOnFocusSearchBar}
               onBlur={this.handleOnBlurSearchBar}
+              isSearchPage={isSearchPage}
             />
           </div>
         }

@@ -114,7 +114,7 @@ class Search extends React.Component {
       toggleEditingMode: this.toggleEditingMode,
     };
 
-    return <SearchBar {...searchBarProps} />;
+    return <SearchBar isSearchPage {...searchBarProps} />;
   }
 
   renderBooks() {
