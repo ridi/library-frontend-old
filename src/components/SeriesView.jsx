@@ -23,7 +23,7 @@ class SeriesView extends React.Component {
     this.state = {
       isEditing: false,
     };
-    this.seriesView = React.createRef();
+    this.seriesViewRef = React.createRef();
   }
 
   componentDidUpdate(prevProps) {
@@ -186,7 +186,7 @@ class SeriesView extends React.Component {
     const { isEditing } = this.state;
 
     return (
-      <div ref={this.seriesView}>
+      <div ref={this.seriesViewRef}>
         <HorizontalRuler color="#d1d5d9" />
         <Editable
           allowFixed

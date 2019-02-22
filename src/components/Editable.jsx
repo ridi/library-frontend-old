@@ -51,12 +51,12 @@ export default class Editable extends React.Component {
       return;
     }
 
-    if (this.navRef === null || this.sectionRef === null) {
+    if (this.navRef.current === null || this.sectionRef.current === null) {
       return;
     }
 
     const currentScroll = window.scrollY;
-    const offsetTop = isFixed ? this.sectionRef.offsetTop : this.navRef.offsetTop;
+    const offsetTop = isFixed ? this.sectionRef.current.offsetTop : this.navRef.current.offsetTop;
     const newIsFixed = currentScroll >= offsetTop;
     if (isFixed === newIsFixed) {
       return;
