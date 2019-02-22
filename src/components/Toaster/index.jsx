@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { cancelClose, closeToast, closeWithDelay } from '../../services/toast/actions';
 import { getToast } from '../../services/toast/selectors';
 import Check from '../../svgs/CheckCircleFill.svg';
+import ArrowIcon from '../../svgs/NoneDashedDoubleArrowRight.svg';
 import Close from '../../svgs/Close.svg';
 import IconButton from '../IconButton';
 import * as styles from './styles';
@@ -41,6 +42,7 @@ class Toaster extends React.Component {
             }}
           >
             {linkName}
+            <ArrowIcon css={styles.toastLinkArrowIcon} />
           </button>
         </Link>
       );
@@ -58,6 +60,7 @@ class Toaster extends React.Component {
           rel="noopener noreferrer"
         >
           {linkName}
+          <ArrowIcon css={styles.toastLinkArrowIcon} />
         </a>
       );
     }

@@ -67,6 +67,15 @@ export const toastLink = {
   color: 'white',
 };
 
+export const toastLinkArrowIcon = {
+  display: 'inline-block',
+  width: 6,
+  height: 6,
+  fill: 'white',
+  marginLeft: 6,
+  verticalAlign: '6%',
+};
+
 export const toastCloseButton = {
   marginLeft: 5,
   width: 15,
