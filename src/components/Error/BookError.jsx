@@ -5,6 +5,7 @@ import BookOutline from '../../svgs/BookOutline.svg';
 const styles = {
   errorWrapper: {
     marginTop: 150,
+    marginBottom: 150,
     textAlign: 'center',
   },
 
