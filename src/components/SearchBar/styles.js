@@ -1,4 +1,3 @@
-import { maxWidthWrapper } from '../../styles';
 import { Responsive, MQ } from '../../styles/responsive';
 
 export const searchBar = {
