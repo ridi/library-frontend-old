@@ -114,6 +114,7 @@ export default class SearchBox extends React.Component {
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur}
           onKeyUp={this.handleOnKeyUp}
+          autoComplete="off"
         />
         {this.renderCancelButton()}
       </form>
