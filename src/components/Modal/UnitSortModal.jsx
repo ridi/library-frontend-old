@@ -11,6 +11,7 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
         {orderOptions.map((option, index) => (
           <li key={shortid.generate()}>
             <ModalLinkItem
+              scroll={false}
               title={option.title}
               isSelected={index === order}
               href={href}

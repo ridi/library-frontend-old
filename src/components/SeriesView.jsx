@@ -23,6 +23,22 @@ class SeriesView extends React.Component {
     this.state = {
       isEditing: false,
     };
+    this.seriesView = React.createRef();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.scrollToHeadWhenChangeOrder(prevProps);
+  }
+
+  scrollToHeadWhenChangeOrder(prevProps) {
+    const { currentOrder: order } = this.props;
+    const { currentOrder: prevOrder } = prevProps;
+
+    if (order !== prevOrder) {
+      setTimeout(() => {
+        window.scrollTo(0, this.seriesView.current.offsetTop - 10);
+      }, 300);
+    }
   }
 
   toggleEditingMode = () => {
@@ -170,7 +186,7 @@ class SeriesView extends React.Component {
     const { isEditing } = this.state;
 
     return (
-      <>
+      <div ref={this.seriesView}>
         <HorizontalRuler color="#d1d5d9" />
         <Editable
           allowFixed
@@ -182,7 +198,7 @@ class SeriesView extends React.Component {
           <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
           {this.renderPaginator()}
         </Editable>
-      </>
+      </div>
     );
   }
 }

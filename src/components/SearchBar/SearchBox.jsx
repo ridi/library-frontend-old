@@ -18,8 +18,8 @@ export default class SearchBox extends React.Component {
       isSearchBoxFocused: false,
     };
 
-    this.input = null;
-    this.searchBarForm = null;
+    this.input = React.createRef();
+    this.searchBarForm = React.createRef();
   }
 
   handleSubmit = e => {
@@ -42,8 +42,8 @@ export default class SearchBox extends React.Component {
   };
 
   handleOnKeyUp = e => {
-    var code = e.charCode || e.keyCode;
-    if (code == 27) {
+    const code = e.charCode || e.keyCode;
+    if (code === 27) {
       this.input.blur();
     }
   };
@@ -93,18 +93,14 @@ export default class SearchBox extends React.Component {
     const { keyword, isSearchBoxFocused } = this.state;
     return (
       <form
-        ref={ref => {
-          this.searchBarForm = ref;
-        }}
+        ref={this.searchBarForm}
         css={[styles.searchBox, isSearchBoxFocused && styles.searchBoxFocused, keyword && styles.searchBoxKeywordAdded]}
         onSubmit={this.handleSubmit}
         action="."
       >
         <Search css={styles.searchBoxIcon} />
         <input
-          ref={ref => {
-            this.input = ref;
-          }}
+          ref={this.input}
           type="search"
           name="search"
           placeholder="모든 책 검색"

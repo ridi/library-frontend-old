@@ -26,8 +26,8 @@ export default class Editable extends React.Component {
       isFixed: false,
     };
 
-    this.navRef = null;
-    this.sectionRef = null;
+    this.navRef = React.createRef();
+    this.sectionRef = React.createRef();
   }
 
   componentDidMount() {
@@ -71,21 +71,10 @@ export default class Editable extends React.Component {
 
     return (
       <>
-        <nav
-          ref={ref => {
-            this.navRef = ref;
-          }}
-          css={isFixed ? styles.fixed : {}}
-        >
+        <nav ref={this.navRef} css={isFixed ? styles.fixed : {}}>
           {isEditing ? <EditingBar {...editingBarProps} /> : nonEditBar}
         </nav>
-        <section
-          ref={ref => {
-            this.sectionRef = ref;
-          }}
-        >
-          {children}
-        </section>
+        <section ref={this.sectionRef}>{children}</section>
         {isEditing ? <BottomActionBar {...actionBarProps} /> : null}
       </>
     );
