@@ -19,6 +19,9 @@ export const iconButton = isActive => ({
   whiteSpace: 'nowrap',
   background: isActive ? '#e6e8eb' : null,
   fill: '#40474d',
+  ':hover': {
+    background: '#e6e8eb',
+  },
 });
 
 export const iconWrapper = {
