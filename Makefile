@@ -15,13 +15,16 @@ yarn-install:
 run-local:
 	NODE_ENV=local yarn local
 
-local:
+build-local:
 	NODE_ENV=local yarn build
 	NODE_ENV=local yarn export
 
 # docker
 docker-up:
 	@docker-compose up
+
+docker-static-up:
+	@docker-compose -f docker-compose-static.yml up
 
 docker-logs:
 	@docker ps -a -q -f name=library-web | awk '{print $1}' | xargs docker logs -f

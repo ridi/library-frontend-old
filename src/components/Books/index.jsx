@@ -23,7 +23,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
-  const unitBookCount = <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
+  const unitBookCount = bookCount > 1 && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = libraryBookData.unit_title || platformBookData.title.main;
 
   const defaultBookProps = {

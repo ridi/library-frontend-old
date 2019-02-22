@@ -1,7 +1,7 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
 import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
@@ -34,27 +34,62 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
+  renderFamilyServiceIcons() {
+    return (
+      <ul css={styles.familyServiceList}>
+        <li css={styles.familyServiceItem}>
+          <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
+            <LogoRidibooks css={styles.ridibooksIcon} />
+            <span css={Hidden}>RIDIBOOKS</span>
+          </a>
+        </li>
+        <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
+          <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
+            <LogoRidiselect css={styles.ridiSelectIcon} />
+            <span css={Hidden}>RIDI Select</span>
+          </a>
+        </li>
+      </ul>
+    );
+  }
+
+  renderRightUi() {
+    return (
+      <div css={styles.myMenuWrapper}>
+        {this.renderFamilyServiceIcons()}
+        {this.renderMyMenu()}
+      </div>
+    );
+  }
+
   renderMyMenu() {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
-    return userId ? (
-      <div css={styles.myMenuWrapper}>
-        <BetaBadge css={styles.BetaBadge} />
-        <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-          {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
-          <span css={Hidden}>마이메뉴</span>
-        </button>
-        <MyMenuModal
-          userId={userId}
-          isActive={isModalActive}
-          isExcelDownloading={isExcelDownloading}
-          dispatchStartExcelDownload={dispatchStartExcelDownload}
-          onClickModalBackground={this.onModalBackgroundClick}
-        />
-      </div>
-    ) : (
-      <BetaBadge css={styles.BetaBadge} />
+    return (
+      <>
+        {userId ? (
+          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
+            {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
+            <span css={Hidden}>마이메뉴</span>
+          </button>
+        ) : (
+          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} type="button">
+            {<MyMenuIcon css={styles.myMenuInactiveIcon} />}
+            <span css={Hidden}>마이메뉴</span>
+          </button>
+        )}
+
+        {userId ? (
+          <MyMenuModal
+            userId={userId}
+            isActive={isModalActive}
+            isExcelDownloading={isExcelDownloading}
+            dispatchStartExcelDownload={dispatchStartExcelDownload}
+            onClickModalBackground={this.onModalBackgroundClick}
+          />
+        ) : null}
+      </>
     );
   }
 
@@ -69,22 +104,9 @@ class GNB extends React.Component {
                   내 서재
                 </a>
               </h1>
-              <ul css={styles.familyServiceList}>
-                <li css={styles.familyServiceItem}>
-                  <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
-                    <LogoRidibooks css={styles.ridibooksIcon} />
-                    <span css={Hidden}>RIDIBOOKS</span>
-                  </a>
-                </li>
-                <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-                  <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
-                    <LogoRidiselect css={styles.ridiSelectIcon} />
-                    <span css={Hidden}>RIDI Select</span>
-                  </a>
-                </li>
-              </ul>
+              <BetaBadge css={styles.BetaBadge} />
             </div>
-            {this.renderMyMenu()}
+            {this.renderRightUi()}
           </header>
         </Responsive>
       </>
@@ -95,6 +117,7 @@ class GNB extends React.Component {
 const mapStateToProps = state => {
   const isExcelDownloading = getIsExcelDownloading(state);
   const userId = state.account.userInfo ? state.account.userInfo.id : null;
+
   return {
     userId,
     isExcelDownloading,

@@ -13,6 +13,7 @@ import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import Star from '../../svgs/Star.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { thousandsSeperator } from '../../utils/number';
+import { makeRidiSelectUri, makeRidiStoreUri } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
@@ -149,9 +150,7 @@ class UnitDetailView extends React.Component {
 
   renderLink() {
     const { book, primaryItem } = this.props;
-    const href = primaryItem.is_ridiselect
-      ? `${config.SELECT_BASE_URL}/book/${book.id}`
-      : `${config.STORE_API_BASE_URL}/v2/Detail?id=${book.id}`;
+    const href = primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
     const serviceName = primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
     return (
       <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">

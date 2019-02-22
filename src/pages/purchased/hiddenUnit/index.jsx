@@ -3,7 +3,6 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import HorizontalRuler from '../../../components/HorizontalRuler';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
@@ -122,6 +121,7 @@ class HiddenUnit extends React.Component {
       isFetchingBook,
       items,
       books,
+      unit,
       selectedBooks,
       dispatchToggleSelectBook,
       dispatchSelectAllBooks,
@@ -145,6 +145,7 @@ class HiddenUnit extends React.Component {
         isFetching={isFetchingBook}
         items={items}
         books={books}
+        unit={unit}
         selectedBooks={selectedBooks}
         onSelectedChange={dispatchToggleSelectBook}
         onClickSelectAllBooks={dispatchSelectAllBooks}
@@ -171,7 +172,6 @@ class HiddenUnit extends React.Component {
         <Head>
           <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
         </Head>
-        <HorizontalRuler />
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
       </>

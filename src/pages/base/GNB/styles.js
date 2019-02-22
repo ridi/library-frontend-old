@@ -19,7 +19,7 @@ export const flexWrapper = {
 
 export const title = {
   display: 'inline-block',
-  padding: '12px 6px 12px 0',
+  padding: '14px 6px 12px 0',
   fontSize: 20,
   fontWeight: 900,
   color: '#212529',
@@ -66,13 +66,13 @@ export const familyServiceLink = {
 export const ridibooksIcon = {
   width: 65,
   height: 10,
-  fill: '#b8bfc4',
+  fill: '#9ea7ad',
 };
 
 export const ridiSelectIcon = {
   width: 62,
   height: 10,
-  fill: '#b8bfc4',
+  fill: '#9ea7ad',
 };
 
 export const myMenuWrapper = {
@@ -86,6 +86,7 @@ export const BetaBadge = {
   width: 27,
   height: 12,
   fill: '#808991',
+  padding: '19px 0 14px 0',
 };
 
 export const myMenuToggleButton = {
@@ -100,6 +101,11 @@ export const myMenuIcon = {
   width: 24,
   height: 24,
   fill: '#808991',
+};
+
+export const myMenuInactiveIcon = {
+  ...myMenuIcon,
+  opacity: 0.3,
 };
 
 export const myMenuActiveIcon = {

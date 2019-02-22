@@ -9,7 +9,6 @@ import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
 import { BookError } from '../../../components/Error';
-import HorizontalRuler from '../../../components/HorizontalRuler';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
@@ -207,7 +206,6 @@ class Hidden extends React.Component {
         <Head>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Head>
-        <HorizontalRuler />
         <Editable
           allowFixed
           isEditing={isEditing}

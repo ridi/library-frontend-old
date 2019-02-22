@@ -24,8 +24,10 @@ const authorizationInterceptor = {
         .catch(err => {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           // 로그인 페이지에서는 진행하지 않는다.
-          if (Window.get(LOCATION).pathname !== URLMap.login.href && err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            Window.get(LOCATION).href = URLMap.login.href;
+          if (!URLMap.login.regex.exec(Window.get(LOCATION).pathname) && err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+            // 로직을 끊고 가기 위해 location 에 바로 주입한다.
+            // Router 를 사용하면 시점이 꼬이게 된다.
+            Window.get(LOCATION).href = URLMap.login.as;
             return null;
           }
 

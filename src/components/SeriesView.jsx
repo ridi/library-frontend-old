@@ -3,11 +3,12 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import { UnitOrderOptions } from '../constants/orderOptions';
+import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getLocationHref } from '../services/router/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeWebViewerURI } from '../utils/uri';
+import { makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -87,6 +88,10 @@ class SeriesView extends React.Component {
   getEmptyBookListMessage(defaultMessage) {
     const { currentOrder } = this.props;
 
+    if (!currentOrder) {
+      return defaultMessage;
+    }
+
     const { orderType, orderBy } = UnitOrderOptions.parse(currentOrder);
     if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
       return '대여 중인 도서가 없습니다.';
@@ -105,6 +110,7 @@ class SeriesView extends React.Component {
       selectedBooks,
       onSelectedChange,
       isFetching,
+      unit,
       linkWebviewer,
       emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
       locationHref,
@@ -121,15 +127,23 @@ class SeriesView extends React.Component {
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
-      if (!_linkWebviewer || !platformBookData.support.web_viewer) {
-        return null;
+      if (_linkWebviewer && platformBookData.support.web_viewer) {
+        return (
+          <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
+            웹뷰어로 보기
+          </a>
+        );
       }
 
-      return (
-        <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
-          웹뷰어로 보기
-        </a>
-      );
+      if (UnitType.isShelf(unit.type)) {
+        return (
+          <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+            리디북스에서 보기
+          </a>
+        );
+      }
+
+      return null;
     };
 
     return (

@@ -14,11 +14,14 @@ export const buttonWrapper = {
 
 export const iconButton = isActive => ({
   position: 'relative',
-  padding: 2,
+  padding: '2px 3px',
   borderRadius: 3,
   whiteSpace: 'nowrap',
   background: isActive ? '#e6e8eb' : null,
   fill: '#40474d',
+  ':hover': {
+    background: '#e6e8eb',
+  },
 });
 
 export const iconWrapper = {

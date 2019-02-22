@@ -8,7 +8,8 @@ import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
-import { makeWebViewerURI } from '../../utils/uri';
+import { makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
+import LandscapeFullButton from './LandscapeFullButton';
 import BooksWrapper from '../BooksWrapper';
 
 const serialPreferenceStyles = {
@@ -68,6 +69,12 @@ const serialPreferenceStyles = {
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
+    zIndex: 10,
+  },
+  buttonsWrapper: {
+    '.LandscapeBook_Buttons': {
+      zIndex: 10,
+    },
   },
 };
 
@@ -84,6 +91,12 @@ const toProps = ({
   const { property: seriesProperty } = platformBookData.series;
   const bookMetaData = new BookMetaData(platformBookData);
   const { title } = seriesProperty;
+
+  const thumbnailLink = (
+    <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+      리디북스에서 보기
+    </a>
+  );
 
   // 장르
   // 무조건 카테고리는 1개 이상 존재한다.
@@ -129,6 +142,7 @@ const toProps = ({
     selectMode: isSelectMode,
     selected: isSelected,
     onSelectedChange: () => onSelectedChange(bookSeriesId),
+    thumbnailLink,
   };
 
   const landscapeBookProps = {
@@ -144,7 +158,7 @@ const toProps = ({
 
 class SerialPreferenceBooks extends React.Component {
   render() {
-    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder, locationHref } = this.props;
+    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
 
     return (
       <BooksWrapper
@@ -165,13 +179,14 @@ class SerialPreferenceBooks extends React.Component {
               isSelected,
               onSelectedChange,
               viewType,
-              linkBuilder,
               locationHref,
             });
+            const { thumbnailLink } = libraryBookProps;
 
             return (
-              <div key={bookSeriesId} className={className} css={styles.landscape}>
+              <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
                 <Book.LandscapeBook {...libraryBookProps} />
+                {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
               </div>
             );
           })

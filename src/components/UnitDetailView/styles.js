@@ -61,6 +61,7 @@ export const authorDelimiter = {
 
 export const fileInfo = {
   ...defaultLayout.fileInfo,
+  flexWrap: 'wrap',
 };
 
 export const starRateIcon = {
@@ -81,8 +82,8 @@ export const starRate = {
 export const fileInfoText = {
   fontSize: 15,
   color: '#808991',
-  height: 20,
-  lineHeight: '20px',
+  height: 22,
+  lineHeight: '22px',
 };
 
 export const fileInfoDelimiter = {

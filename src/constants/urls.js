@@ -9,42 +9,42 @@ export const URLMap = {
   login: {
     href: '/login',
     as: '/login',
-    regex: /^\/login(\/)?$/,
+    regex: /^\/login\/?$/,
   },
   main: {
     href: '/purchased/main',
     as: '/purchased',
-    regex: /^\/purchased(\/)?$/,
+    regex: /^\/purchased\/?$/,
   },
   mainUnit: {
     href: '/purchased/mainUnit',
     as: ({ unitId }) => `/purchased/${unitId}/`,
-    regex: /^\/purchased\/(?<unitId>\d+)(\/)?$/,
+    regex: /^\/purchased\/(\d+)\/?$/,
   },
   search: {
     href: '/purchased/search',
     as: '/purchased/search',
-    regex: /^\/purchased\/search(\/)?$/,
+    regex: /^\/purchased\/search\/?$/,
   },
   searchUnit: {
     href: '/purchased/searchUnit',
     as: ({ unitId }) => `/purchased/search/${unitId}`,
-    regex: /^\/purchased\/search\/(?<unitId>\d+)(\/)?$/,
+    regex: /^\/purchased\/search\/(\d+)\/?$/,
   },
   hidden: {
     href: '/purchased/hidden',
     as: '/purchased/hidden',
-    regex: /^\/purchased\/hidden(\/)?$/,
+    regex: /^\/purchased\/hidden\/?$/,
   },
   hiddenUnit: {
     href: '/purchased/hiddenUnit',
     as: ({ unitId }) => `/purchased/hidden/${unitId}`,
-    regex: /^\/purchased\/hidden\/(?<unitId>\d+)(\/)?$/,
+    regex: /^\/purchased\/hidden\/(\d+)\/?$/,
   },
   serialPreference: {
     href: '/serialPreference',
     as: '/serial-preference',
-    regex: /^\/serial-preference(\/)?$/,
+    regex: /^\/serial-preference\/?$/,
   },
 };
 
@@ -68,9 +68,12 @@ export const toURLMap = pathname => {
 
     if (result) {
       if (typeof urlMap.as === 'function') {
+        const query = {
+          unitId: result[1],
+        };
         return {
-          href: { pathname: urlMap.href, query: { ...result.groups } },
-          as: { pathname: urlMap.as(result.groups) },
+          href: { pathname: urlMap.href, query },
+          as: { pathname: urlMap.as(query) },
         };
       }
       return { href: urlMap.href, as: urlMap.as };
