@@ -88,6 +88,10 @@ class SeriesView extends React.Component {
   getEmptyBookListMessage(defaultMessage) {
     const { currentOrder } = this.props;
 
+    if (!currentOrder) {
+      return defaultMessage;
+    }
+
     const { orderType, orderBy } = UnitOrderOptions.parse(currentOrder);
     if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
       return '대여 중인 도서가 없습니다.';
