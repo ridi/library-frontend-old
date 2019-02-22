@@ -8,19 +8,19 @@ const separatorHeight = 1;
 
 const separatorBG = {
   ...Responsive.XSmall({
-    background: `url(${config.STATIC_URL}/static/separator/book_w86.png) center top repeat-y`,
+    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w86.png) center top repeat-y`,
     backgroundSize: `100% ${BookSize.XSmall.height}px`,
   }),
   ...Responsive.Small({
-    background: `url(${config.STATIC_URL}/static/separator/book_w100.png) center top repeat-y`,
+    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w100.png) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Small.height}px`,
   }),
   ...MQ([Responsive.Medium, Responsive.Large, Responsive.XLarge], {
-    background: `url(${config.STATIC_URL}/static/separator/book_w110.png) center top repeat-y`,
+    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w110.png) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Medium.height}px`,
   }),
   ...MQ([Responsive.XXLarge, Responsive.Full], {
-    background: `url(${config.STATIC_URL}/static/separator/book_w140.png) center top repeat-y`,
+    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w140.png) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Large.height}px`,
   }),
 };
