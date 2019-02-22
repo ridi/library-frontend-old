@@ -15,8 +15,8 @@ const titleBar = {
 const TitleBar = ({ title, showCount, totalCount, href, as, query, showTools, toggleEditingMode }) => (
   <FlexBar
     css={titleBar}
-    renderFlexLeft={() => <Title title={title} showCount={showCount} totalCount={totalCount} href={href} as={as} query={query} />}
-    renderFlexRight={() =>
+    flexLeft={<Title title={title} showCount={showCount} totalCount={totalCount} href={href} as={as} query={query} />}
+    flexRight={
       showTools ? (
         <div css={styles.toolsWrapper}>
           {<Editing toggleEditingMode={toggleEditingMode} />}

@@ -43,7 +43,7 @@ class SearchBar extends React.Component {
       <FlexBar
         css={styles.searchBar}
         hideTools={hideTools}
-        renderFlexLeft={() => (
+        flexLeft={
           <div css={styles.searchBoxWrapper}>
             <SearchBox
               keyword={keyword}
@@ -52,8 +52,8 @@ class SearchBar extends React.Component {
               onBlur={this.handleOnBlurSearchBar}
             />
           </div>
-        )}
-        renderFlexRight={() => (
+        }
+        flexRight={
           <div css={styles.toolsWrapper}>
             {filterOptions && <Filter filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} />}
             {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
@@ -64,7 +64,7 @@ class SearchBar extends React.Component {
               </Link>
             )}
           </div>
-        )}
+        }
       />
     );
   }

@@ -4,11 +4,11 @@ import classname from 'classnames';
 import Responsive from '../../pages/base/Responsive';
 import * as styles from './styles';
 
-const FlexBar = ({ hideTools, renderFlexLeft = () => null, renderFlexRight = () => null, className }) => (
+const FlexBar = ({ hideTools, flexLeft = null, flexRight = null, className }) => (
   <Responsive className={classname([className, hideTools ? 'hideTools' : null])}>
     <div css={styles.flexWrapper}>
-      {renderFlexLeft()}
-      {renderFlexRight()}
+      {flexLeft}
+      {flexRight}
     </div>
   </Responsive>
 );
