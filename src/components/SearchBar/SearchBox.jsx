@@ -19,24 +19,6 @@ export default class SearchBox extends React.Component {
     this.searchBarForm = null;
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
-  }
-
-  setActivation(isActive) {
-    const { onFocus, onBlur } = this.props;
-    document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
-    if (!isActive) {
-      onBlur && onBlur();
-      this.setState({ isSearchBoxFocused: false });
-      return;
-    }
-
-    document.addEventListener('click', this.handleOnClickOutOfSearchBar, true);
-    this.setState({ isSearchBoxFocused: true });
-    onFocus && onFocus();
-  }
-
   handleSubmit = e => {
     e.preventDefault();
 
@@ -56,27 +38,28 @@ export default class SearchBox extends React.Component {
     });
   };
 
-  handleOnClickCancel = () => {
-    this.setState({ keyword: '' });
-    this.input && this.input.focus();
-  };
-
-  handleOnClickOutOfSearchBar = e => {
-    if (this.searchBarForm && this.searchBarForm.contains(e.target)) {
-      return;
-    }
-
-    this.setActivation(false);
-  };
-
   handleOnKeyUp = e => {
-    const { onBlur } = this.props;
     var code = e.charCode || e.keyCode;
     if (code == 27) {
       this.input.blur();
-      onBlur && onBlur();
-      this.setState({ isSearchBoxFocused: false });
     }
+  };
+
+  handleOnFocus = () => {
+    const { onFocus } = this.props;
+    onFocus && onFocus();
+    this.setState({ isSearchBoxFocused: true });
+  };
+
+  handleOnBlur = () => {
+    const { onBlur } = this.props;
+    onBlur && onBlur();
+    this.setState({ isSearchBoxFocused: false });
+  };
+
+  handleOnClickCancel = () => {
+    this.setState({ keyword: '' });
+    this.input && this.input.focus();
   };
 
   render() {
@@ -101,12 +84,13 @@ export default class SearchBox extends React.Component {
           css={styles.searchBoxInput}
           value={keyword}
           onChange={this.handleChange}
-          onFocus={() => this.setActivation(true)}
+          onFocus={this.handleOnFocus}
+          onBlur={this.handleOnBlur}
           onKeyUp={this.handleOnKeyUp}
         />
         <IconButton
           a11y="검색어 제거"
-          css={[styles.searchBoxClearButton, keyword && styles.searchBoxClearButtonActive]}
+          css={[styles.searchBoxClearButton, isSearchBoxFocused && styles.searchBoxClearButtonActive]}
           onClick={this.handleOnClickCancel}
         >
           <Close css={styles.searchBoxClearIcon} />
