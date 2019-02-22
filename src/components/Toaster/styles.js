@@ -4,7 +4,7 @@ export const toastWrapper = {
   position: 'fixed',
   left: 0,
   right: 0,
-  bottom: 50,
+  bottom: 10,
   zIndex: 9999,
 };
 
