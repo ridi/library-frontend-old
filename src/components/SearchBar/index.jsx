@@ -1,8 +1,8 @@
 /** @jsx jsx */
+import React from 'react';
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 import Router from 'next/router';
-import React from 'react';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps, makeURI } from '../../utils/uri';
 import FlexBar from '../FlexBar';
@@ -16,6 +16,8 @@ class SearchBar extends React.Component {
     this.state = {
       hideTools: false,
     };
+
+    console.log('SearchBar constructor');
   }
 
   handleOnSubmitSearchBar = value => {
@@ -37,18 +39,7 @@ class SearchBar extends React.Component {
 
   render() {
     const { hideTools } = this.state;
-    const {
-      filter,
-      filterOptions,
-      order,
-      orderOptions,
-      orderBy,
-      orderType,
-      toggleEditingMode,
-      onClickSearchCancel,
-      keyword = '',
-      isSearchPage,
-    } = this.props;
+    const { filter, filterOptions, order, orderOptions, orderBy, orderType, toggleEditingMode, keyword = '', isSearchPage } = this.props;
 
     return (
       <FlexBar
