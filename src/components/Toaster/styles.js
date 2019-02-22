@@ -1,3 +1,5 @@
+import { ToastStyle } from '../../services/toast/constants';
+
 export const toastWrapper = {
   position: 'fixed',
   left: 0,
@@ -29,23 +31,35 @@ export const toastTypeMark = {
   alignSelf: 'flex-start',
 };
 
-export const toastTypeMarkIcon = {
-  width: '100%',
-  height: '100%',
-  fill: '#5abf0d',
+const toastStyleColor = toastStyle => {
+  switch (toastStyle) {
+    case ToastStyle.BLUE:
+      return '#99d1ff';
+    default:
+      return '#5abf0d';
+  }
 };
 
-export const toastContent = {
+export const toastTypeMarkIcon = toastStyle => ({
+  width: '100%',
+  height: '100%',
+  fill: toastStyleColor(toastStyle),
+});
+
+export const toastContent = toastStyle => ({
   fontSize: 14,
   letterSpacing: -0.7,
-  color: '#5abf0d',
+  color: toastStyleColor(toastStyle),
 
   wordBreak: 'break-word',
   flex: 1,
-};
-export const toastLink = {
-  marginLeft: 6,
+});
 
+export const toastContentMessage = {
+  marginRight: 6,
+};
+
+export const toastLink = {
   fontSize: 13,
   fontWeight: 'bold',
   letterSpacing: -0.7,
@@ -54,7 +68,7 @@ export const toastLink = {
 };
 
 export const toastCloseButton = {
-  marginLeft: 15,
+  marginLeft: 5,
   width: 15,
   height: 15,
   backgroundColor: '#000',

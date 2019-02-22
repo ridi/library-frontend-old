@@ -26,27 +26,43 @@ class Toaster extends React.Component {
 
   renderToastLink() {
     const {
-      toast: { linkName, linkProps },
+      toast: { linkName, linkProps, outLink },
       closeToast: dispatchCloseToast,
     } = this.props;
 
-    if (!linkProps) {
-      return null;
+    if (linkProps) {
+      return (
+        <Link prefetch {...linkProps}>
+          <button
+            css={styles.toastLink}
+            type="button"
+            onClick={() => {
+              dispatchCloseToast();
+            }}
+          >
+            {linkName}
+          </button>
+        </Link>
+      );
     }
 
-    return (
-      <Link prefetch {...linkProps}>
-        <button
+    if (outLink) {
+      return (
+        <a
           css={styles.toastLink}
-          type="button"
           onClick={() => {
             dispatchCloseToast();
           }}
+          href={outLink}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           {linkName}
-        </button>
-      </Link>
-    );
+        </a>
+      );
+    }
+
+    return null;
   }
 
   renderCloseButton() {
@@ -74,10 +90,10 @@ class Toaster extends React.Component {
       <div css={styles.toastWrapper}>
         <div css={styles.toast} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
           <div css={styles.toastTypeMark}>
-            <Check css={styles.toastTypeMarkIcon} />
+            <Check css={styles.toastTypeMarkIcon(toast.toastStyle)} />
           </div>
-          <div css={styles.toastContent}>
-            {toast.message}
+          <div css={styles.toastContent(toast.toastStyle)}>
+            <span css={styles.toastContentMessage}>{toast.message}</span>
             {this.renderToastLink()}
           </div>
           {this.renderCloseButton()}

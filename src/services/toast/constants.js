@@ -3,3 +3,8 @@ export const Duration = {
   NORMAL: 3000,
   LONG: 5000,
 };
+
+export const ToastStyle = {
+  GREEN: 'green',
+  BLUE: 'blue',
+};
