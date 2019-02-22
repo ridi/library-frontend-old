@@ -13,8 +13,20 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
   </button>
 );
 
-export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, href, as, style, query = {}, replace = false }) => (
-  <Link prefetch replace={replace} {...makeLinkProps(href, as, query)}>
+export const ModalLinkItem = ({
+  title,
+  isSelected,
+  children,
+  count,
+  IconComponent,
+  href,
+  as,
+  style,
+  query = {},
+  replace = false,
+  scroll = true,
+}) => (
+  <Link prefetch replace={replace} scroll={scroll} {...makeLinkProps(href, as, query)}>
     <a css={[modalStyles.item, style]}>
       {IconComponent && <IconComponent css={modalStyles.icon} />}
       {isSelected && <Check css={modalStyles.selectedIcon} />}
