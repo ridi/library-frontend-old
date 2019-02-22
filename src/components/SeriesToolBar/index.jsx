@@ -23,7 +23,7 @@ class SeriesToolBar extends React.Component {
     return (
       <FlexBar
         css={styles.seriesToolBar}
-        renderFlexLeft={() =>
+        flexLeft={
           orderTitle ? (
             <div css={styles.buttonWrapper}>
               <button
@@ -58,7 +58,7 @@ class SeriesToolBar extends React.Component {
             <div />
           )
         }
-        renderFlexRight={() => <Editing toggleEditingMode={toggleEditingMode} />}
+        flexRight={<Editing toggleEditingMode={toggleEditingMode} />}
       />
     );
   }

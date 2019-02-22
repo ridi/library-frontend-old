@@ -1,10 +1,13 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
+import Link from 'next/link';
+import { jsx } from '@emotion/core';
 import Close from '../../svgs/Close.svg';
 import Search from '../../svgs/Search.svg';
 import IconButton from '../IconButton';
 import * as styles from './styles';
+import { makeLinkProps } from '../../utils/uri';
+import { URLMap } from '../../constants/urls';
 
 export default class SearchBox extends React.Component {
   constructor(props) {
@@ -17,29 +20,11 @@ export default class SearchBox extends React.Component {
 
     this.input = null;
     this.searchBarForm = null;
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleOnClickCancel = this.handleOnClickCancel.bind(this);
-    this.handleOnClickOutOfSearchBar = this.handleOnClickOutOfSearchBar.bind(this);
   }
 
-  setActivation(isActive) {
-    const { onFocus, onBlur } = this.props;
-    document.removeEventListener('click', this.handleOnClickOutOfSearchBar, true);
-    if (!isActive) {
-      onBlur && onBlur();
-      this.setState({ isSearchBoxFocused: false });
-      return;
-    }
-
-    document.addEventListener('click', this.handleOnClickOutOfSearchBar, true);
-    this.setState({ isSearchBoxFocused: true });
-    onFocus && onFocus();
-  }
-
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
+
     const { onSubmit } = this.props;
     const { keyword } = this.state;
 
@@ -48,25 +33,60 @@ export default class SearchBox extends React.Component {
     }
 
     onSubmit(keyword);
-  }
+  };
 
-  handleChange(e) {
+  handleChange = e => {
     this.setState({
       keyword: e.target.value,
     });
-  }
+  };
 
-  handleOnClickCancel() {
+  handleOnKeyUp = e => {
+    var code = e.charCode || e.keyCode;
+    if (code == 27) {
+      this.input.blur();
+    }
+  };
+
+  handleOnFocus = () => {
+    const { onFocus } = this.props;
+    onFocus && onFocus();
+    this.setState({ isSearchBoxFocused: true });
+  };
+
+  handleOnBlur = () => {
+    const { onBlur } = this.props;
+    onBlur && onBlur();
+    this.setState({ isSearchBoxFocused: false });
+  };
+
+  handleOnClickCancel = () => {
     this.setState({ keyword: '' });
-    this.input && this.input.focus();
-  }
+  };
 
-  handleOnClickOutOfSearchBar(e) {
-    if (this.searchBarForm && this.searchBarForm.contains(e.target)) {
-      return;
+  renderCancelButton() {
+    const { keyword, isSearchBoxFocused } = this.state;
+    const { isSearchPage } = this.props;
+
+    if (isSearchPage) {
+      return (
+        <Link prefetch {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
+          <a css={[styles.searchBoxClearButton, (isSearchBoxFocused || keyword) && styles.searchBoxClearButtonActive]}>
+            <Close css={styles.searchBoxClearIcon} />
+          </a>
+        </Link>
+      );
     }
 
-    this.setActivation(false);
+    return (
+      <IconButton
+        a11y="검색어 제거"
+        css={[styles.searchBoxClearButton, (isSearchBoxFocused || keyword) && styles.searchBoxClearButtonActive]}
+        onClick={this.handleOnClickCancel}
+      >
+        <Close css={styles.searchBoxClearIcon} />
+      </IconButton>
+    );
   }
 
   render() {
@@ -91,15 +111,12 @@ export default class SearchBox extends React.Component {
           css={styles.searchBoxInput}
           value={keyword}
           onChange={this.handleChange}
-          onFocus={() => this.setActivation(true)}
+          onFocus={this.handleOnFocus}
+          onBlur={this.handleOnBlur}
+          onKeyUp={this.handleOnKeyUp}
+          autoComplete="off"
         />
-        <IconButton
-          a11y="검색어 제거"
-          css={[styles.searchBoxClearButton, keyword && styles.searchBoxClearButtonActive]}
-          onClick={this.handleOnClickCancel}
-        >
-          <Close css={styles.searchBoxClearIcon} />
-        </IconButton>
+        {this.renderCancelButton()}
       </form>
     );
   }

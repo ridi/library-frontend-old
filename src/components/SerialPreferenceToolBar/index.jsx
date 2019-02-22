@@ -12,8 +12,8 @@ class SerialPreferenceToolBar extends React.Component {
     return (
       <FlexBar
         css={styles.toolBar}
-        renderFlexLeft={() => <span css={styles.totalCount}>{!isFetchingBooks ? `총 ${totalCount}작품` : ''}</span>}
-        renderFlexRight={() => <Editing toggleEditingMode={toggleEditingMode} />}
+        flexLeft={<span css={styles.totalCount}>{!isFetchingBooks ? `총 ${totalCount}작품` : ''}</span>}
+        flexRight={<Editing toggleEditingMode={toggleEditingMode} />}
       />
     );
   }
