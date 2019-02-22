@@ -11,7 +11,7 @@ export const title = {
 
 export const backButton = {
   display: 'block',
-  padding: '6px 10px 6px 0',
+  padding: '13px 10px 13px 0',
   fill: '#40474d',
 };
 
