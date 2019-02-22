@@ -24,6 +24,12 @@ function loadActualPage() {
 function* loadUserInfo() {
   let userInfo;
 
+  // 로그인 페이지라면 먼저 UI 를 그려준다.
+  if (URLMap.login.regex.exec(Window.get(LOCATION).pathname)) {
+    yield delay(1);
+    loadActualPage();
+  }
+
   // Step 1. 로그인이 되어 있는지 API 를 통해 확인하다.
   try {
     userInfo = yield call(fetchUserInfo);
