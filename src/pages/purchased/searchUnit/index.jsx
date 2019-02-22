@@ -118,7 +118,7 @@ class searchUnit extends React.Component {
     const {
       unit,
       primaryItem,
-      pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId },
+      pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId, keyword },
       isFetchingBook,
       items,
       books,
@@ -138,8 +138,8 @@ class searchUnit extends React.Component {
         pageProps={{
           currentPage,
           totalPages,
-          href: { pathname: URLMap.searchUnit.href, query: { unitId } },
-          as: URLMap.searchUnit.as({ unitId }),
+          href: { pathname: URLMap.searchUnit.href, query: { unitId, keyword } },
+          as: { pathname: URLMap.searchUnit.as({ unitId }), query: { keyword } },
           query: { orderType, orderBy },
         }}
         actionBarProps={this.makeActionBarProps()}
