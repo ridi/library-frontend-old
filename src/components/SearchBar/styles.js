@@ -1,4 +1,5 @@
 import { maxWidthWrapper } from '../../styles';
+import { Responsive, MQ } from '../../styles/responsive';
 
 export const searchBar = {
   backgroundColor: '#f3f4f5',
@@ -9,9 +10,10 @@ export const searchBar = {
 export const searchBoxWrapper = {
   flex: 1,
   maxWidth: 600,
-  transition: 'max-width .3s',
   '.hideTools & ': {
-    ...maxWidthWrapper,
+    ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
+      maxWidth: '100%',
+    }),
   },
 };
 
@@ -20,13 +22,11 @@ export const toolsWrapper = {
   alignItems: 'center',
   paddingLeft: 2,
   maxWidth: 600,
-  opacity: 1,
-  transition: 'max-width .3s, opacity .3s',
   whiteSpace: 'nowrap',
   '.hideTools & ': {
-    overflowX: 'hidden',
-    maxWidth: 0,
-    opacity: 0,
+    ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
+      display: 'none',
+    }),
   },
 };
 
