@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx, css } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import EditingBar from './EditingBar';
 import BottomActionBar from './BottomActionBar';
 
 const styles = {
-  fixed: css({
+  fixed: {
     position: 'fixed',
     top: 0,
     left: 0,
@@ -15,7 +15,7 @@ const styles = {
     '& + section': {
       paddingTop: 46,
     },
-  }),
+  },
 };
 
 export default class Editable extends React.Component {
@@ -75,7 +75,7 @@ export default class Editable extends React.Component {
           ref={ref => {
             this.navRef = ref;
           }}
-          css={isFixed ? styles.fixed : null}
+          css={isFixed ? styles.fixed : {}}
         >
           {isEditing ? <EditingBar {...editingBarProps} /> : nonEditBar}
         </nav>
