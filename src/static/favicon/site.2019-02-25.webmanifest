@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "내서재",
+  "short_name": "내서재",
   "icons": [
     {
       "src": "./android-chrome-192x192.png",
