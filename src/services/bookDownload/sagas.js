@@ -56,7 +56,7 @@ function* _installApp(start, isIos, isAndroid) {
         '이용 방법 보기',
         null,
         'https://help.ridibooks.com/hc/ko/sections/115003069928',
-        Duration.NORMAL,
+        Duration.VERY_LONG,
         ToastStyle.BLUE,
       ),
     );
