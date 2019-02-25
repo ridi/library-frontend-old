@@ -32,6 +32,7 @@ import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
 import SeriesView from '../../../components/SeriesView';
 import { BookError } from '../../../components/Error';
+import { showConfirm } from '../../../services/confirm/actions';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -47,11 +48,25 @@ class HiddenUnit extends React.Component {
     dispatchClearSelectedBooks();
   };
 
-  handleOnClickDelete = () => {
+  deleteSelectedBooks = () => {
     const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedBooks();
+  };
+
+  handleOnClickDelete = () => {
+    this.props.dispatchShowConfirm(
+      '영구 삭제',
+      <>
+        구매 목록에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+        <br />
+        <br />
+        그래도 삭제하시겠습니까?
+      </>,
+      '삭제',
+      this.deleteSelectedBooks,
+    );
   };
 
   makeActionBarProps() {
@@ -221,6 +236,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
+  dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
