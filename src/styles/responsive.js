@@ -37,13 +37,13 @@ export const Responsive = {
       ...styles,
     },
   }),
-  XXLarge: styles => ({
-    [BP.XXLarge]: {
+  XLarge: styles => ({
+    [BP.XLarge]: {
       ...styles,
     },
   }),
-  XLarge: styles => ({
-    [BP.XLarge]: {
+  XXLarge: styles => ({
+    [BP.XXLarge]: {
       ...styles,
     },
   }),

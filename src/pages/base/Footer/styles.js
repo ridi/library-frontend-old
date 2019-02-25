@@ -1,4 +1,5 @@
 import { maxWidthWrapper } from '../../../styles';
+import { MQ, Responsive } from '../../../styles/responsive';
 
 export const FOOTER_HEIGHT = 254;
 
@@ -7,83 +8,143 @@ export const footerMargin = {
 };
 
 export const footer = {
-  width: '100%',
-  height: FOOTER_HEIGHT,
-  boxSizing: 'border-box',
-  padding: '40px 0 0 0',
-  textAlign: 'center',
-  background: 'white',
   position: 'absolute',
-  left: 0,
   bottom: 0,
+  left: 0,
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '24px 16px',
+  backgroundColor: 'white',
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    paddingBottom: 42,
+  }),
 };
 
-export const contentsWrapper = {
+export const footerWrapper = {
   margin: '0 auto',
   ...maxWidthWrapper,
 };
 
-export const headlineItem = {
+export const headingList = {
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    display: 'inline-block',
+    verticalAlign: 'top',
+  }),
+};
+
+export const headingItem = {
   position: 'relative',
   display: 'inline-block',
-  padding: '0 7px 0 8px',
-};
-
-export const headlineItemSeparator = {
-  '&::before': {
-    content: `''`,
-    display: 'block',
-    position: 'absolute',
-    left: -1,
-    top: '50%',
-    transform: 'translate3d(0, -50%, 0)',
-    width: 3,
-    height: 3,
-    borderRadius: 3,
-    background: '#b8bfc4',
-  },
-};
-
-export const headlineLink = {
-  fontSize: 15,
-  fontWeight: 900,
+  fontSize: 16,
+  fontWeight: 'bold',
   color: '#40474d',
-};
 
-export const ridibooksLogoIcon = {
-  width: 16,
-  height: 16,
-  fill: '#1f8ce6',
-  margin: '1px 6px 0 0',
-  verticalAlign: 'top',
-};
-
-export const bizInfoList = {
-  marginTop: 16,
-};
-
-export const infoItem = {
-  fontSize: 11,
-  lineHeight: '17px',
-  color: '#9ea7ad',
-  '.CompanyInfoList & ': {
-    display: 'inline-block',
+  padding: '0 8px',
+  ':first-of-type': {
+    padding: '0 6px 0 0',
+    letterSpacing: 'normal',
   },
+};
+
+export const contentList = {
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
+    margin: '12px -16px 0 -16px',
+    width: 360,
+  }),
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    display: 'inline-block',
+    verticalAlign: 'top',
+    width: 534,
+    marginTop: 2,
+    marginLeft: 24,
+  }),
+};
+
+export const contentItem = {
+  marginTop: 12,
+  marginLeft: 16,
+  display: 'inline-block',
+  height: 17,
+  width: 162,
+  lineHeight: '17px',
+  fontSize: 14,
+
+  letterSpacing: -0.2,
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    marginTop: 0,
+    ':nth-of-type(n+4)': {
+      marginTop: 16,
+    },
+  }),
+};
+
+export const hideInMobile = {
+  display: 'none',
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    display: 'inline-block',
+  }),
+};
+
+export const footerPaperIcon = {
+  height: 12,
+};
+
+export const footerNewIcon = {
+  marginLeft: 4,
+  height: 12,
+  fill: '#339cf2',
+};
+
+export const footerTermWrapper = {
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    marginTop: 42,
+  }),
+};
+
+export const copyright = {
+  marginTop: 24,
+  color: '#9ea7ad',
+  fontSize: 14,
+  height: 17,
+  lineHeight: '17px',
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    display: 'inline-block',
+    marginTop: 0,
+  }),
 };
 
 export const termsList = {
-  marginTop: 20,
-  fontSize: 0,
+  marginTop: 10,
+
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    display: 'inline-block',
+    verticalAlign: 'top',
+    marginTop: 0,
+    marginLeft: 24,
+  }),
 };
 
 export const termsItem = {
   position: 'relative',
   display: 'inline-block',
-  padding: '0 4px 0 5px',
-  fontSize: 0,
+  height: 20,
+  fontSize: 11,
+  lineHeight: '20px',
+  letterSpacing: -0.2,
+  color: '#9ea7ad',
+
+  padding: '0 6px',
+  ':first-of-type': {
+    paddingLeft: 0,
+  },
 };
 
-export const tersItemSeparator = {
+export const verticalSeparator = {
   '&::before': {
     content: `''`,
     position: 'absolute',
@@ -92,22 +153,6 @@ export const tersItemSeparator = {
     transform: 'translate3d(0, -50%, 0)',
     width: 1,
     height: 10,
-    background: '#e6e8eb',
+    background: '#9ea7ad',
   },
-};
-
-export const termLink = {
-  display: 'block',
-  fontSize: 11,
-  height: 12,
-  lineHeight: '12px',
-  color: '#808991',
-};
-
-export const copyright = {
-  marginTop: 20,
-  color: '#9ea7ad',
-  fontSize: 14,
-  height: 17,
-  lineHeight: '17px',
 };
