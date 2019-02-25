@@ -21,6 +21,7 @@ const headerContentsWrapper = {
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'column',
+  overflow: 'hidden',
 };
 
 export const thumbnailWrapper = {

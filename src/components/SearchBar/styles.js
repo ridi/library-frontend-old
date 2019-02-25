@@ -17,10 +17,11 @@ export const searchBoxWrapper = {
 };
 
 export const toolsWrapper = {
+  flex: 'auto',
+  justifyContent: 'flex-end',
   display: 'flex',
   alignItems: 'center',
   paddingLeft: 2,
-  maxWidth: 600,
   whiteSpace: 'nowrap',
   '.hideTools & ': {
     ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
