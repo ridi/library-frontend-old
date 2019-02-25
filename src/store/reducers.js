@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import accountReducer from '../services/account/reducers';
 import bookReducer from '../services/book/reducers';
+import bookDownloadReducer from '../services/bookDownload/reducers';
 import confirmReducer from '../services/confirm/reducers';
 import dialogReducer from '../services/dialog/reducers';
 import excelDownloadReducer from '../services/excelDownload/reducers';
@@ -29,6 +30,7 @@ export default combineReducers({
   serialPreference: serialPreferenceReducer,
 
   excelDownload: excelDownloadReducer,
+  bookDownload: bookDownloadReducer,
 
   router: routerReducer,
   toast: toastReducer,

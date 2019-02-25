@@ -5,6 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Books } from '../../../components/Books';
+import BookDownLoader from '../../../components/BookDownLoader';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
 import { BookError } from '../../../components/Error';
@@ -242,6 +243,7 @@ class Main extends React.Component {
           <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
         </Editable>
         <Footer />
+        <BookDownLoader />
       </>
     );
   }

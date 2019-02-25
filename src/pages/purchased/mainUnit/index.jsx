@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
+import BookDownLoader from '../../../components/BookDownLoader';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
@@ -177,6 +178,7 @@ class MainUnit extends React.Component {
         </Head>
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+        <BookDownLoader />
       </>
     );
   }

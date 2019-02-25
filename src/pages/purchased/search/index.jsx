@@ -5,6 +5,7 @@ import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Books } from '../../../components/Books';
+import BookDownLoader from '../../../components/BookDownLoader';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
@@ -232,6 +233,7 @@ class Search extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+          <BookDownLoader />
         </Editable>
       </>
     );

@@ -9,12 +9,12 @@ import { getBookIdsByUnitIds } from '../common/sagas';
 
 import { showToast } from '../toast/actions';
 import { Duration, ToastStyle } from '../toast/constants';
-import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS } from './actions';
+import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, setBookDownloadSrc } from './actions';
 
 import { triggerDownload } from './requests';
 import { DownloadError } from './errors';
 
-function _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
+function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   const Location = Window.get(LOCATION);
   if (isIos) {
     try {
@@ -30,7 +30,7 @@ function _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
       Location.href = appUri;
     }
   } else {
-    // $('#iframe_book_download').attr('src', appUri);
+    yield put(setBookDownloadSrc(appUri));
   }
 }
 
@@ -50,6 +50,7 @@ function* _installApp(start, isIos, isAndroid) {
   } else if (isAndroid) {
     Location.href = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
   } else {
+    yield put(setBookDownloadSrc(''));
     yield put(
       showToast(
         '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.',
@@ -68,7 +69,7 @@ export function* _download(bookIds, url) {
   const { isIos, isAndroid, isFirefox } = getDeviceInfo();
   const start = new Date();
 
-  _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
+  yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
   yield call(_installApp, start, isIos, isAndroid);
 }
 

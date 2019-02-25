@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
+import BookDownLoader from '../../../components/BookDownLoader';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
@@ -178,6 +179,7 @@ class searchUnit extends React.Component {
         </Head>
         {this.renderTitleBar()}
         <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+        <BookDownLoader />
       </>
     );
   }
