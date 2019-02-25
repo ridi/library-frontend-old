@@ -25,12 +25,6 @@ export default class More extends React.Component {
     const { isMoreModalShow } = this.state;
     const { order, orderOptions, query, showViewType, showOrder, showHidden } = this.props;
 
-    const onClickModalBackground = () => {
-      this.setState({
-        isMoreModalShow: false,
-      });
-    };
-
     return (
       <div css={styles.buttonWrapper}>
         <IconButton
@@ -52,8 +46,11 @@ export default class More extends React.Component {
             orderOptions={orderOptions}
             query={query}
             isActive={isMoreModalShow}
-            onClickModalBackground={() => {
-              onClickModalBackground();
+            onClickModalBackground={e => {
+              e.stopPropagation();
+              this.setState({
+                isMoreModalShow: false,
+              });
             }}
             showViewType={showViewType}
             showOrder={showOrder}
