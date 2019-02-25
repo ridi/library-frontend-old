@@ -128,11 +128,11 @@ class searchUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
-    const orderOptions = UnitType.isSeries(unit.type) ? UnitOrderOptions.toSeriesList() : UnitOrderOptions.toShelfList();
 
-    if (!primaryItem) {
-      return null;
-    }
+    const bookUnitOfCount = books[primaryItem.b_id].series ? books[primaryItem.b_id].series.property.unit : null;
+    const orderOptions = UnitType.isSeries(unit.type)
+      ? UnitOrderOptions.toSeriesList(bookUnitOfCount)
+      : UnitOrderOptions.toShelfList(bookUnitOfCount);
 
     return (
       <SeriesView

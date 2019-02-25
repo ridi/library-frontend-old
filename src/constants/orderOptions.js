@@ -91,17 +91,28 @@ export class MainOrderOptions extends BaseOrderOptions {
   }
 }
 
+const applyUnitOfCount = (order, unitOfCount) => ({
+  ...order,
+  title: order.titleTemplate(unitOfCount),
+});
+
 export class UnitOrderOptions extends BaseOrderOptions {
-  static toSeriesList() {
-    return [this.UNIT_ORDER_DESC, this.UNIT_ORDER_ASC, this.PURCHASE_DATE, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
+  static toSeriesList(unitOfCount) {
+    return [
+      this.UNIT_ORDER_DESC,
+      applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
+      this.PURCHASE_DATE,
+      this.EXPIRE_DATE,
+      this.EXPIRED_BOOKS_ONLY,
+    ];
   }
 
-  static toShelfList() {
-    return [...this.toSeriesList(), this.BOOK_TITLE, this.BOOK_AUTHOR];
+  static toShelfList(unitOfCount) {
+    return [...this.toSeriesList(unitOfCount), this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
-  static toList() {
-    return this.toShelfList();
+  static toList(unitOfCount) {
+    return this.toShelfList(unitOfCount);
   }
 
   static get DEFAULT() {
@@ -118,6 +129,8 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get UNIT_ORDER_ASC() {
     return {
+      titleTemplate: unitOfCount => `1${unitOfCount || '권'}부터`,
+
       title: '1권부터',
       orderType: OrderType.UNIT_ORDER,
       orderBy: OrderBy.ASC,
