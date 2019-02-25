@@ -1,4 +1,5 @@
 import config from '../../config';
+import { Hoverable } from '../../styles/responsive';
 
 export const Align = {
   Left: 'left',
@@ -59,9 +60,9 @@ export const item = {
   fontSize: 15,
   color: '#40474d',
   textAlign: 'left',
-  ':hover': {
+  ...Hoverable({
     backgroundColor: '#f3f4f5',
-  },
+  }),
 };
 
 export const spinner = showSpinner =>

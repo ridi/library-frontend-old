@@ -15,6 +15,13 @@ export default class Filter extends React.Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.filter !== this.props.filter) {
+      this.setState({ isFilterModalShow: false });
+    }
+    return true;
+  }
+
   render() {
     const { filter, filterOptions, query } = this.props;
     const { isFilterModalShow } = this.state;

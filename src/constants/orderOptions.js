@@ -99,7 +99,7 @@ const applyUnitOfCount = (order, unitOfCount) => ({
 export class UnitOrderOptions extends BaseOrderOptions {
   static toSeriesList(unitOfCount) {
     return [
-      this.UNIT_ORDER_DESC,
+      applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
       applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
       this.PURCHASE_DATE,
       this.EXPIRE_DATE,
@@ -121,7 +121,9 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get UNIT_ORDER_DESC() {
     return {
-      title: '최신순',
+      titleTemplate: unitOfCount => `마지막 ${unitOfCount || '권'}부터`,
+
+      title: '마지막 권부터',
       orderType: OrderType.UNIT_ORDER,
       orderBy: OrderBy.DESC,
     };

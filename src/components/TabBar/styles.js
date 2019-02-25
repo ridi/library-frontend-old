@@ -1,3 +1,5 @@
+import { Hoverable } from '../../styles/responsive';
+
 export const tabBar = {
   width: '100%',
 };
@@ -18,9 +20,9 @@ export const tabButton = {
   color: '#808991',
   fontSize: 16,
   textAlign: 'center',
-  ':hover': {
+  ...Hoverable({
     color: '#40474d',
-  },
+  }),
 };
 
 export const tabButtonToggle = isActive =>
