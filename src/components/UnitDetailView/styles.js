@@ -154,6 +154,10 @@ export const bookDescriptionExpendIcon = {
   marginLeft: 5,
 };
 
+export const bookDescriptionExpendIconExpanded = {
+  transform: 'rotate(180deg)',
+};
+
 const defaultButtonStyle = {
   width: 250,
   height: 50,
