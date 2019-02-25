@@ -90,11 +90,13 @@ export const hideInMobile = {
 };
 
 export const footerPaperIcon = {
+  width: 46,
   height: 12,
 };
 
 export const footerNewIcon = {
   marginLeft: 4,
+  width: 12,
   height: 12,
   fill: '#339cf2',
 };
