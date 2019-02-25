@@ -52,7 +52,7 @@ export const toastContent = toastStyle => ({
   color: toastStyleColor(toastStyle),
 
   wordBreak: 'break-word',
-  flex: 1,
+  flex: 'auto',
 });
 
 export const toastContentMessage = {

@@ -23,7 +23,7 @@ export const actionButton = disable => {
       }
     : {};
   return {
-    flex: 1,
+    flex: 'auto',
     fontSize: 15,
     lineHeight: '1.2em',
     textAlign: 'center',

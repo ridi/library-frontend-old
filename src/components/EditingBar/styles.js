@@ -18,7 +18,7 @@ export const editingBar = {
 };
 
 export const editingBarIconWrapper = {
-  flex: 1,
+  flex: 'auto',
 };
 
 export const editingBarIcon = {

@@ -7,7 +7,7 @@ export const searchBar = {
 };
 
 export const searchBoxWrapper = {
-  flex: 1,
+  flex: 'auto',
   maxWidth: 600,
   '.hideTools & ': {
     ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {

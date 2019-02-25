@@ -32,6 +32,7 @@ export const thumbnailWrapper = {
 export const thumbnail = {
   width: 130,
   lineHeight: 0,
+  overflowY: 'hidden',
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: 180,
   }),
