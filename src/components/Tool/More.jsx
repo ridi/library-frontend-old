@@ -46,9 +46,7 @@ export default class More extends React.Component {
             orderOptions={orderOptions}
             query={query}
             isActive={isMoreModalShow}
-            onClickModalBackground={e => {
-              e.preventDefault();
-              e.stopPropagation();
+            onClickModalBackground={() => {
               this.setState({
                 isMoreModalShow: false,
               });

@@ -53,3 +53,16 @@ export const Responsive = {
     },
   }),
 };
+
+export const Hoverable = styles => ({
+  '@media (hover: hover)': {
+    ':hover': {
+      ...styles,
+    },
+  },
+  '@media (hover: none)': {
+    ':active': {
+      ...styles,
+    },
+  },
+});

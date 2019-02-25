@@ -52,9 +52,7 @@ export default class Filter extends React.Component {
             filterOptions={filterOptions}
             query={query}
             isActive={isFilterModalShow}
-            onClickModalBackground={e => {
-              e.preventDefault();
-              e.stopPropagation();
+            onClickModalBackground={() => {
               this.setState({
                 isFilterModalShow: false,
               });
