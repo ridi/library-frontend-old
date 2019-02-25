@@ -4,7 +4,11 @@ import Head from 'next/head';
 import ErrorBook from '../../svgs/ErrorBook.svg';
 import * as styles from './styles';
 
-export const NotFoundError = ({ onClickHistoryBack }) => (
+const onClickHistoryBack = () => {
+  window.history.back();
+};
+
+export const NotFoundError = () => (
   <>
     <Head>
       <title>404 에러 - 내 서재</title>

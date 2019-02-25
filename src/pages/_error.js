@@ -21,21 +21,13 @@ export default class Error extends React.Component {
     return { errorCode };
   }
 
-  onClickHistoryBack = () => {
-    window.history.back();
-  };
-
   render() {
     const { errorCode } = this.props;
 
     return (
       <>
         <HorizontalRuler color="#d1d5d9" />
-        {errorCode === NotFound ? (
-          <NotFoundError onClickHistoryBack={this.onClickHistoryBack} />
-        ) : (
-          <InternalError onClickHistoryBack={this.onClickHistoryBack} />
-        )}
+        {errorCode === NotFound ? <NotFoundError /> : <InternalError />}
       </>
     );
   }

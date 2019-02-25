@@ -4,7 +4,11 @@ import Head from 'next/head';
 import ErrorBook from '../../svgs/ErrorBook.svg';
 import * as styles from './styles';
 
-export const InternalError = ({ onClickHistoryBack }) => (
+const onClickReload = () => {
+  window.location.reload();
+};
+
+export const InternalError = () => (
   <>
     <Head>
       <title>500 에러 - 내 서재</title>
@@ -22,8 +26,8 @@ export const InternalError = ({ onClickHistoryBack }) => (
       </p>
       <ul>
         <li css={styles.errorButtonWrapper}>
-          <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickHistoryBack}>
-            이전페이지
+          <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickReload}>
+            다시 시도
           </button>
         </li>
       </ul>
