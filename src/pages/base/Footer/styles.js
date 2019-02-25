@@ -1,10 +1,11 @@
 import { maxWidthWrapper } from '../../../styles';
 import { MQ, Responsive } from '../../../styles/responsive';
 
-export const FOOTER_HEIGHT = 254;
-
 export const footerMargin = {
-  height: FOOTER_HEIGHT,
+  height: 211,
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    height: 183,
+  }),
 };
 
 export const footer = {
