@@ -61,7 +61,7 @@ export const Hoverable = styles => ({
     },
   },
   '@media (hover: none)': {
-    ':active': {
+    ':active, :focus': {
       ...styles,
     },
   },
