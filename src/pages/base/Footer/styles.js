@@ -4,7 +4,7 @@ import { MQ, Responsive } from '../../../styles/responsive';
 export const footerMargin = {
   height: 223,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    height: 183,
+    height: 189,
   }),
 };
 
@@ -14,7 +14,7 @@ export const footer = {
   left: 0,
   width: '100%',
   boxSizing: 'border-box',
-  padding: '30px 24px',
+  padding: '30px 0px 30px 24px',
   backgroundColor: 'white',
 
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
