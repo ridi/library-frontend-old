@@ -34,34 +34,32 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   }
 }
 
-function* _installApp(start, isIos, isAndroid) {
-  // App이 Launch되면 Timer가 이벤트 루프에서 빠지지 않음.
-  // App이 Launch될 시간을 주기 위해 1.5초 딜레이를 검
-  yield call(delay, 1500);
-  const Location = Window.get(LOCATION);
-
+function _installApp(start, isIos, isAndroid) {
   // 2.5초 이후에 온 거라면 정상 처리된 거임
   if (new Date() - start > 2500) {
     return;
   }
 
+  const Location = Window.get(LOCATION);
   if (isIos) {
     Location.href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   } else if (isAndroid) {
     Location.href = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
-  } else {
-    yield put(setBookDownloadSrc(''));
-    yield put(
-      showToast(
-        '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.',
-        '이용 방법 보기',
-        null,
-        'https://help.ridibooks.com/hc/ko/sections/115003069928',
-        Duration.VERY_LONG,
-        ToastStyle.BLUE,
-      ),
-    );
   }
+}
+
+function* _showViewerGuildLink() {
+  yield put(setBookDownloadSrc(''));
+  yield put(
+    showToast(
+      '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.',
+      '이용 방법 보기',
+      null,
+      'https://help.ridibooks.com/hc/ko/sections/115003069928',
+      Duration.VERY_LONG,
+      ToastStyle.BLUE,
+    ),
+  );
 }
 
 export function* _download(bookIds, url) {
@@ -72,8 +70,10 @@ export function* _download(bookIds, url) {
   yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
   // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
   // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 해당 URL 넣어줘야 한다.
-  if (!isAndroid || isFirefox) {
-    yield call(_installApp, start, isIos, isAndroid);
+  if (isIos || isFirefox) {
+    setTimeout(() => _installApp(start, isIos, isAndroid), 1500);
+  } else {
+    yield call(_showViewerGuildLink);
   }
 }
 
