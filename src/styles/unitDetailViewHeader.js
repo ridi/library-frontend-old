@@ -28,16 +28,18 @@ export const thumbnailWrapper = {
   ...headerContentsWrapper,
   alignItems: 'center',
   justifyContent: 'center',
+  minHeight: 215,
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    minHeight: 275,
+  }),
 };
 
 export const thumbnail = {
   width: 130,
-  minHeight: 180,
   lineHeight: 0,
   overflowY: 'hidden',
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: 180,
-    minHeight: 240,
   }),
 };
 

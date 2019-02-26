@@ -14,7 +14,7 @@ export const landscapeBook = {
 export const thumbnailWrapper = {
   paddingRight: 16,
   alignSelf: 'flex-end',
-  flex: '0 1 0px',
+  flex: '0 0 auto',
 };
 
 export const thumbnail = {
@@ -24,7 +24,7 @@ export const thumbnail = {
 };
 
 export const metadataWrapper = {
-  flex: '1 1 0px',
+  flex: 'auto',
   padding: '10px 0',
 };
 
