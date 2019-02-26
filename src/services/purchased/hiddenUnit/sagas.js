@@ -1,4 +1,4 @@
-import Router from 'next/dist/lib/router';
+import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
@@ -73,6 +73,7 @@ function* loadHiddenUnitItems() {
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.item_total_count) {
       yield moveToFirstPage();
+      return;
     }
 
     // PrimaryItem과 Unit 저장
