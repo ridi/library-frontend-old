@@ -2,6 +2,7 @@ import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 const {
+  ENVIRONMENT,
   BASE_URL,
   ACCOUNT_BASE_URL,
   STORE_API_BASE_URL,
@@ -19,6 +20,7 @@ const {
 } = publicRuntimeConfig;
 
 const config = {
+  ENVIRONMENT,
   BASE_URL,
   ACCOUNT_BASE_URL,
   STORE_API_BASE_URL,
