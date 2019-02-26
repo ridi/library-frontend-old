@@ -1,5 +1,4 @@
 import { call, put, all, takeEvery } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
 import { OrderBy, OrderType } from '../../constants/orderOptions';
 
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
@@ -40,7 +39,7 @@ function _installiOSApp(start) {
     if (new Date() - start > 2500) {
       return;
     }
-
+    console.log(start, new Date());
     Window.get(LOCATION).href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   }, 1500);
 }
