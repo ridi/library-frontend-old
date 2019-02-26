@@ -13,6 +13,12 @@ export default class BooksWrapper extends React.Component {
     this.bookClassName = 'Book';
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.viewType !== this.props.viewType) {
+      this.setBooksAdditionalPadding();
+    }
+  }
+
   componentDidMount() {
     this.setBooksAdditionalPadding();
     window.addEventListener('resize', this.setBooksAdditionalPadding);
