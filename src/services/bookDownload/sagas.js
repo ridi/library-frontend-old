@@ -9,13 +9,18 @@ import { getBookIdsByUnitIds } from '../common/sagas';
 import { showToast } from '../toast/actions';
 import { Duration, ToastStyle } from '../toast/constants';
 import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, setBookDownloadSrc } from './actions';
+import { DownloadError } from './errors';
 
 import { triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   const Location = Window.get(LOCATION);
   if (isIos) {
-    yield put(setBookDownloadSrc(appUri));
+    try {
+      Location.href = appUri;
+    } catch (e) {
+      throw new DownloadError();
+    }
   } else if (isAndroid) {
     const androidUri = isFirefox ? appUri : convertUriToAndroidIntentUri(appUri, 'com.initialcoms.ridi');
     try {
