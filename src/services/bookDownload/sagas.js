@@ -34,18 +34,15 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   }
 }
 
-function _installApp(start, isIos, isAndroid) {
-  // 2.5초 이후에 온 거라면 정상 처리된 거임
-  if (new Date() - start > 2500) {
-    return;
-  }
+function _installiOSApp(start) {
+  setTimeout(() => {
+    // 2.5초 이후에 온 거라면 정상 처리된 거임
+    if (new Date() - start > 2500) {
+      return;
+    }
 
-  const Location = Window.get(LOCATION);
-  if (isIos) {
-    Location.href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
-  } else if (isAndroid) {
-    Location.href = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
-  }
+    Window.get(LOCATION).href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
+  }, 1500);
 }
 
 function* _showViewerGuildLink() {
@@ -68,11 +65,12 @@ export function* _download(bookIds, url) {
   const start = new Date();
 
   yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
+
   // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
-  // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 해당 URL 넣어줘야 한다.
-  if (isIos || isFirefox) {
-    setTimeout(() => _installApp(start, isIos, isAndroid), 1500);
-  } else {
+  // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 뷰어 오픈이 성공 했어도 뷰어 가이드를 보여준다.
+  if (isIos) {
+    _installiOSApp(start);
+  } else if (!isAndroid || isFirefox) {
     yield call(_showViewerGuildLink);
   }
 }
