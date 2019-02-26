@@ -51,7 +51,7 @@ export const headingItem = {
 export const contentList = {
   ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
     margin: '12px -16px 0 -16px',
-    width: 360,
+    width: 320,
   }),
 
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
@@ -68,7 +68,7 @@ export const contentItem = {
   marginLeft: 16,
   display: 'inline-block',
   height: 17,
-  width: 162,
+  width: 144,
   lineHeight: '17px',
   fontSize: 14,
 

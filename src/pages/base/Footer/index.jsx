@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import FooterPaperIcon from '../../../svgs/FooterPaperIcon.svg';
 import FooterNewIcon from '../../../svgs/FooterNewIcon.svg';
+import FooterPaperIcon from '../../../svgs/FooterPaperIcon.svg';
 import * as styles from './styles';
 
 const Footer = () => (
@@ -13,7 +13,7 @@ const Footer = () => (
           <ul css={styles.headingList}>
             <li css={styles.headingItem}>1644-0331</li>
             <li css={[styles.headingItem, styles.verticalSeparator]}>
-              <a href="https://help.ridibooks.com/hc/ko/" target="_blank">
+              <a href="https://help.ridibooks.com/hc/ko/" target="_blank" rel="noopener noreferrer">
                 고객센터
               </a>
             </li>
