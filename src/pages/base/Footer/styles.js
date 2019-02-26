@@ -2,7 +2,7 @@ import { maxWidthWrapper } from '../../../styles';
 import { MQ, Responsive } from '../../../styles/responsive';
 
 export const footerMargin = {
-  height: 211,
+  height: 223,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     height: 183,
   }),
@@ -14,7 +14,7 @@ export const footer = {
   left: 0,
   width: '100%',
   boxSizing: 'border-box',
-  padding: '24px 16px',
+  padding: '30px 24px',
   backgroundColor: 'white',
 
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
