@@ -11,16 +11,11 @@ import { Duration, ToastStyle } from '../toast/constants';
 import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, setBookDownloadSrc } from './actions';
 
 import { triggerDownload } from './requests';
-import { DownloadError } from './errors';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   const Location = Window.get(LOCATION);
   if (isIos) {
-    try {
-      Location.href = appUri;
-    } catch (e) {
-      throw new DownloadError();
-    }
+    yield put(setBookDownloadSrc(appUri));
   } else if (isAndroid) {
     const androidUri = isFirefox ? appUri : convertUriToAndroidIntentUri(appUri, 'com.initialcoms.ridi');
     try {
@@ -36,12 +31,12 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
 function _installiOSApp(start) {
   setTimeout(() => {
     // 2.5초 이후에 온 거라면 정상 처리된 거임
-    if (new Date() - start > 2500) {
+    if (new Date() - start > 3100) {
       return;
     }
-    console.log(start, new Date());
+
     Window.get(LOCATION).href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
-  }, 1500);
+  }, 3000);
 }
 
 function* _showViewerGuildLink() {
