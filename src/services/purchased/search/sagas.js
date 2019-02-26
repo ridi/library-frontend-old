@@ -39,6 +39,17 @@ function* persistPageOptionsFromQueries() {
   yield all([put(setPage(page)), put(setSearchKeyword(keyword))]);
 }
 
+function* moveToFirstPage() {
+  const query = yield select(getQuery);
+
+  const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, {
+    ...query,
+    page: 1,
+  });
+
+  Router.replace(linkProps.href, linkProps.as);
+}
+
 function* loadPage() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
@@ -48,10 +59,16 @@ function* loadPage() {
   if (!keyword) {
     return;
   }
+
   try {
     yield put(setSearchIsFetchingBooks(true));
 
     const [itemResponse, countResponse] = yield all([call(fetchSearchItems, keyword, page), call(fetchSearchItemsTotalCount, keyword)]);
+
+    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+    if (!itemResponse.items.length && countResponse.unit_total_count) {
+      yield moveToFirstPage();
+    }
 
     yield call(extractUnitData, itemResponse.items);
 
