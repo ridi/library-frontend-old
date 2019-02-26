@@ -49,7 +49,7 @@ function* _installApp(start, isIos, isAndroid) {
     Location.href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   } else if (isAndroid) {
     // Location.href = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
-    window.location.href = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
+    yield put(setBookDownloadSrc('https://play.google.com/store/apps/details?id=com.initialcoms.ridi'));
   } else {
     yield put(setBookDownloadSrc(''));
     yield put(
