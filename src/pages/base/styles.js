@@ -1,10 +1,8 @@
 import { css } from '@emotion/core';
-import { PAGINATOR_HEIGHT } from '../../components/Paginator/styles';
 import { reset } from '../../styles';
 
 export const bodyStyle = {
   body: {
-    paddingBottom: PAGINATOR_HEIGHT / 2,
     position: 'relative',
     minWidth: 320,
     minHeight: '100vh',

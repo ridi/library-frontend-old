@@ -5,6 +5,7 @@ import { SET_VIEW_TYPE } from '../services/ui/actions';
 
 import LRUCache from '../utils/lru';
 import { locationFromUrl } from '../services/router/utils';
+import config from '../config';
 
 const beforeCreatingStore = (initialState, context) => {
   const newInitialState = {
@@ -29,7 +30,9 @@ const beforeCreatingStore = (initialState, context) => {
       beforeLocation: null,
       location: locationFromUrl(context.asPath),
     };
-  } else {
+  }
+
+  if (!context.isServer || config.ENVIRONMENT === 'local') {
     // Cookie로 부터 데이터 로드
     const cookies = nookies.get(context);
     if (cookies[SET_VIEW_TYPE]) {

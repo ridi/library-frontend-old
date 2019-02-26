@@ -17,9 +17,10 @@ const mainStyle = {
   position: 'absolute',
   left: '50%',
   top: '50%',
-  width: 300,
+  width: 360,
   marginTop: -200,
-  marginLeft: -150,
+  marginLeft: -180,
+  textAlign: 'center',
 };
 
 const messageStyle = {
@@ -38,7 +39,6 @@ const defaultButtonStyle = {
   display: 'inline-block',
   lineHeight: '50px',
   borderRadius: 4,
-  textAlign: 'center',
   fontSize: 16,
   fontWeight: 'bold',
   boxSizing: 'border-box',

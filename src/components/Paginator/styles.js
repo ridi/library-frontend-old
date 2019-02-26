@@ -10,13 +10,10 @@ const wrapperStyle = {
   verticalAlign: 'top',
 };
 
-export const PAGINATOR_HEIGHT = 51;
-
 export const paginator = {
   boxSizing: 'border-box',
   width: '100%',
-  height: PAGINATOR_HEIGHT,
-  padding: '9px 0 0 0',
+  paddingBottom: 25,
   textAlign: 'center',
   whiteSpace: 'nowrap',
 };

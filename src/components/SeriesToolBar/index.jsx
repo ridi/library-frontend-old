@@ -16,6 +16,13 @@ class SeriesToolBar extends React.Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.currentOrder !== this.props.currentOrder) {
+      this.setState({ isSortModalShow: false });
+    }
+    return true;
+  }
+
   render() {
     const { orderTitle, toggleEditingMode, currentOrder, orderOptions, href, as } = this.props;
     const { isSortModalShow } = this.state;

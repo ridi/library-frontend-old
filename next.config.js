@@ -26,6 +26,7 @@ module.exports = {
   assetPrefix: settings.static_url,
 
   publicRuntimeConfig: {
+    ENVIRONMENT: settings.environment,
     BASE_URL: settings.base_url,
     STATIC_URL: settings.static_url,
     ACCOUNT_BASE_URL: settings.account_base_url,
