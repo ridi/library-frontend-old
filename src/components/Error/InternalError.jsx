@@ -27,7 +27,7 @@ export const InternalError = () => (
       <ul>
         <li css={styles.errorButtonWrapper}>
           <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickReload}>
-            다시 시도
+            새로 고침
           </button>
         </li>
       </ul>
