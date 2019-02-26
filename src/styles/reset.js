@@ -88,7 +88,9 @@ export const reset = {
   h4: css([resetLayout]),
   h5: css([resetLayout]),
   h6: css([resetLayout]),
-  iframe: css([resetLayout]),
+  iframe: css([resetLayout], {
+    display: 'block',
+  }),
   img: css({
     border: 0,
     msInterpolationMode: 'bicubic',
