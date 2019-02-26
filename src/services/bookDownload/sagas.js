@@ -70,7 +70,9 @@ export function* _download(bookIds, url) {
   const start = new Date();
 
   yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
-  if (!isAndroid) {
+  // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
+  // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 해당 URL 넣어줘야 한다.
+  if (!isAndroid || isFirefox) {
     yield call(_installApp, start, isIos, isAndroid);
   }
 }
