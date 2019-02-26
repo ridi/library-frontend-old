@@ -1,4 +1,6 @@
+import Router from 'next/dist/lib/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { getUnitId } from '../hiddenUnit/selectors';
 
 import {
   LOAD_HIDDEN_ITEMS,
@@ -32,6 +34,17 @@ function* persistPageOptionsFromQueries() {
   yield put(setPage(page));
 }
 
+function* moveToFirstPage() {
+  const query = yield select(getQuery);
+
+  const linkProps = makeLinkProps({ pathname: URLMap.hidden.href }, URLMap.hidden.as, {
+    ...query,
+    page: 1,
+  });
+
+  Router.replace(linkProps.href, linkProps.as);
+}
+
 function* loadItems() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
@@ -41,6 +54,11 @@ function* loadItems() {
   try {
     yield put(setHiddenIsFetchingBooks(true));
     const [itemResponse, countResponse] = yield all([call(fetchHiddenItems, page), call(fetchHiddenItemsTotalCount)]);
+
+    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+    if (!itemResponse.items.length && countResponse.unit_total_count) {
+      yield moveToFirstPage();
+    }
 
     yield call(extractUnitData, itemResponse.items);
 

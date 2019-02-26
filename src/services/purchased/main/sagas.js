@@ -1,4 +1,6 @@
+import Router from 'next/dist/lib/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { getUnitId } from '../mainUnit/selectors';
 
 import {
   DOWNLOAD_SELECTED_MAIN_BOOKS,
@@ -44,6 +46,17 @@ function* persistPageOptionsFromQueries() {
   yield all([put(setPage(page)), put(setOrder(order)), put(setFilter(filter))]);
 }
 
+function* moveToFirstPage() {
+  const query = yield select(getQuery);
+
+  const linkProps = makeLinkProps({ pathname: URLMap.main.href }, URLMap.main.as, {
+    ...query,
+    page: 1,
+  });
+
+  Router.replace(linkProps.href, linkProps.as);
+}
+
 function* loadMainItems() {
   // Clear Error
   yield put(setError(false));
@@ -59,6 +72,11 @@ function* loadMainItems() {
       call(fetchMainItemsTotalCount, orderType, orderBy, category),
       call(fetchPurchaseCategories),
     ]);
+
+    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+    if (!itemResponse.items.length && countResponse.unit_total_count) {
+      yield moveToFirstPage();
+    }
 
     yield call(extractUnitData, itemResponse.items);
 

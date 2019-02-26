@@ -1,3 +1,4 @@
+import Router from 'next/dist/lib/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { downloadBooks } from '../../bookDownload/sagas';
 
@@ -50,6 +51,18 @@ function* loadPrimaryItem(unitId) {
   return yield call(getMainUnitPrimaryItem, unitId);
 }
 
+function* moveToFirstPage() {
+  const query = yield select(getQuery);
+  const unitId = yield select(getUnitId);
+
+  const linkProps = makeLinkProps({ pathname: URLMap.mainUnit.href, query: { unitId } }, URLMap.mainUnit.as({ unitId }), {
+    ...query,
+    page: 1,
+  });
+
+  Router.replace(linkProps.href, linkProps.as);
+}
+
 function* loadItems() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
@@ -64,6 +77,11 @@ function* loadItems() {
       call(fetchMainUnitItems, unitId, orderType, orderBy, page),
       call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
     ]);
+
+    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+    if (!itemResponse.items.length && countResponse.item_total_count) {
+      yield moveToFirstPage();
+    }
 
     // PrimaryItem과 Unit 저장
     const primaryItem = yield call(loadPrimaryItem, unitId);
