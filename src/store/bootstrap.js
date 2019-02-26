@@ -32,6 +32,10 @@ const beforeCreatingStore = (initialState, context) => {
     };
   }
 
+  // Local 개발 서버의 경우 NextJS 서버를 그대로 사용한다.
+  // 해당 로직을 Client Only로 실행할 경우 서버에서는 Portrait 기반으로 DOM을 내려준다.
+  // 만약 Client Cookie에 Landscape로 설정되어 있는 경우
+  // hydrate로 인해 Portrait과 Landscape의 혼종이 발생한다.
   if (!context.isServer || config.ENVIRONMENT === 'local') {
     // Cookie로 부터 데이터 로드
     const cookies = nookies.get(context);
