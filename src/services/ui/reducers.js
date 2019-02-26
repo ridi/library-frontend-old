@@ -1,4 +1,4 @@
-import { setCookie } from 'nookies';
+import nookies from 'nookies';
 import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
 import { initialState } from './state';
 
@@ -10,7 +10,7 @@ const uiReducer = (state = initialState, action) => {
         fullScreenLoading: action.payload.isLoading,
       };
     case SET_VIEW_TYPE:
-      setCookie(null, SET_VIEW_TYPE, action.payload.viewType);
+      nookies.set(null, SET_VIEW_TYPE, action.payload.viewType, { path: '/' });
       return {
         ...state,
         viewType: action.payload.viewType,
