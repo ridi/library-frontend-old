@@ -16,54 +16,57 @@ class SeriesToolBar extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     if (nextProps.currentOrder !== this.props.currentOrder) {
       this.setState({ isSortModalShow: false });
     }
     return true;
   }
 
-  render() {
-    const { toggleEditingMode, currentOrder, orderOptions, href, as } = this.props;
+  renderOrder() {
+    const { currentOrder, orderOptions, href, as } = this.props;
     const { isSortModalShow } = this.state;
 
-    const orderTitle = orderOptions.find(option => option.key === currentOrder).title;
+    if (!currentOrder || !orderOptions) {
+      return <div css={styles.buttonWrapper} />;
+    }
+
     return (
-      <FlexBar
-        css={styles.seriesToolBar}
-        flexLeft={
-          <div css={styles.buttonWrapper}>
-            <button
-              css={styles.orderButton}
-              type="button"
-              onClick={() => {
-                this.setState({
-                  isSortModalShow: true,
-                });
-              }}
-            >
-              {orderTitle}
-              <ArrowTriangleDown css={styles.arrow} />
-            </button>
-            {currentOrder !== undefined && orderOptions !== undefined && (
-              <UnitSortModal
-                horizontalAlign={Align.Left}
-                order={currentOrder}
-                orderOptions={orderOptions}
-                isActive={isSortModalShow}
-                onClickModalBackground={() => {
-                  this.setState({
-                    isSortModalShow: false,
-                  });
-                }}
-                href={href}
-                as={as}
-              />
-            )}
-          </div>
-        }
-        flexRight={<Editing toggleEditingMode={toggleEditingMode} />}
-      />
+      <div css={styles.buttonWrapper}>
+        <button
+          css={styles.orderButton}
+          type="button"
+          onClick={() => {
+            this.setState({
+              isSortModalShow: true,
+            });
+          }}
+        >
+          {orderOptions.find(option => option.key === currentOrder).title}
+          <ArrowTriangleDown css={styles.arrow} />
+        </button>
+        <UnitSortModal
+          horizontalAlign={Align.Left}
+          order={currentOrder}
+          orderOptions={orderOptions}
+          isActive={isSortModalShow}
+          onClickModalBackground={() => {
+            this.setState({
+              isSortModalShow: false,
+            });
+          }}
+          href={href}
+          as={as}
+        />
+      </div>
+    );
+  }
+
+  render() {
+    const { toggleEditingMode } = this.props;
+
+    return (
+      <FlexBar css={styles.seriesToolBar} flexLeft={this.renderOrder()} flexRight={<Editing toggleEditingMode={toggleEditingMode} />} />
     );
   }
 }
