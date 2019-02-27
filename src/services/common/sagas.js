@@ -1,6 +1,14 @@
-import { call } from 'redux-saga/effects';
+import Router from 'next/router';
+import { parse } from 'qs';
 
+import { all, take, call } from 'redux-saga/effects';
+
+import { LOAD_ACTUAL_PAGE } from './actions';
 import { requestGetBookIdsByUnitIds, requestGetBookIdsByUnitIdsForHidden } from './requests';
+
+import { toURLMap, URLMap } from '../../constants/urls';
+import { makeLinkProps } from '../../utils/uri';
+import { loadUserInfo } from '../account/sagas';
 
 const _reduceSelectedBookIds = (items, selectedBookIds) =>
   selectedBookIds.reduce(
@@ -40,4 +48,38 @@ export function* getBookIdsByUnitIdsForHidden(items, selectedBookIds) {
   const bookIdsInUnit = _flattenBookIds(bookIdsInUnitData);
 
   return [...bookIds, ...bookIdsInUnit];
+}
+
+function* loadActualPage() {
+  yield take(LOAD_ACTUAL_PAGE);
+
+  // Step 1. 접속한 URL의 현재 페이지 정보를 생성한다.
+  const { href, as } = toURLMap(window.location.pathname);
+  const query = parse(window.location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
+  const currentlinkProps = makeLinkProps(href, as, query);
+
+  try {
+    // Step 2. 로그인 정보를 가져오는 메소드를 호출한다.
+    yield call(loadUserInfo);
+  } catch (e) {
+    // Step 3. 로그인 안되어 있다면 로그인 페이지 로드한다.
+    console.log('비로그인');
+    Router.replace(URLMap.login.href, URLMap.login.as);
+    return;
+  }
+
+  // Step 4. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
+  if (currentlinkProps.href === URLMap.login.href) {
+    console.log('로그인상태인데 로그인을?');
+    Router.replace(URLMap.main.href, URLMap.main.as);
+    return;
+  }
+
+  console.log(currentlinkProps);
+  // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로디안다.
+  Router.replace(currentlinkProps.href, currentlinkProps.as);
+}
+
+export default function* commonRootSaga() {
+  yield all([loadActualPage()]);
 }
