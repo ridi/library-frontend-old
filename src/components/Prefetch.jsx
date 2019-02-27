@@ -1,7 +1,8 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/core';
 import React from 'react';
 import Link from 'next/link';
-import { jsx } from '@emotion/core';
+import * as shortid from 'shortid';
 import { URLMap } from '../constants/urls';
 
 const styles = {
@@ -32,7 +33,7 @@ export default class extends React.Component {
             };
           }
           return (
-            <Link prefetch {...linkProps}>
+            <Link prefetch {...linkProps} key={shortid.generate()}>
               <a />
             </Link>
           );

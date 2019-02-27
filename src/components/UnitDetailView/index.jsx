@@ -50,12 +50,12 @@ class UnitDetailView extends React.Component {
         <span css={styles.fileInfoText}>({thousandsSeperator(bookStarRating.buyer_rating_count)}명)</span>
         <span key={shortid.generate()} css={styles.fileInfoDelimiter} />
         {bookInfos.map((info, index) => (
-          <>
+          <React.Fragment key={shortid.generate()}>
             <span key={shortid.generate()} css={styles.fileInfoText}>
               {`${info}`}
             </span>
             {bookInfos.length !== index + 1 ? <span key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
-          </>
+          </React.Fragment>
         ))}
       </p>
     );
@@ -168,10 +168,10 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.authorList}>
         {bookMetadata.authors.map((author, index) => (
-          <>
+          <React.Fragment key={shortid.generate()}>
             <span key={shortid.generate()}>{` ${author} `}</span>
             {bookMetadata.authors.length !== index + 1 ? <span key={shortid.generate()} css={styles.authorDelimiter} /> : null}
-          </>
+          </React.Fragment>
         ))}
       </div>
     );
