@@ -13,7 +13,7 @@ export const initialState = {
     ],
     selected: null,
   },
-  order: 10,
+  order: 'PURCHASE_DATE',
   data: {},
 
   selectedBooks: {},

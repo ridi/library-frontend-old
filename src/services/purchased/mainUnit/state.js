@@ -5,7 +5,7 @@ export const initialState = {
   primaryItems: {},
   data: {},
 
-  order: 10,
+  order: 'PURCHASE_DATE',
   selectedBooks: {},
   isFetchingBook: false,
 };

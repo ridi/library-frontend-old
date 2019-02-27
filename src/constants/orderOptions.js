@@ -17,7 +17,7 @@ export const OrderType = {
 
 class BaseOrderOptions {
   static parse(key) {
-    return this.toList().find(value => value.key === parseInt(key, 10));
+    return this.toList().find(value => value.key === key);
   }
 
   static equal(a, b) {
@@ -49,7 +49,7 @@ export class MainOrderOptions extends BaseOrderOptions {
 
   static get PURCHASE_DATE() {
     return {
-      key: 10,
+      key: 'PURCHASE_DATE',
       title: '최근 구매순',
       orderType: OrderType.PURCHASE_DATE,
       orderBy: OrderBy.DESC,
@@ -58,7 +58,7 @@ export class MainOrderOptions extends BaseOrderOptions {
 
   static get EXPIRE_DATE() {
     return {
-      key: 20,
+      key: 'EXPIRE_DATE',
       title: '대여 만료 임박순',
       orderType: OrderType.EXPIRE_DATE,
       orderBy: OrderBy.ASC,
@@ -67,7 +67,7 @@ export class MainOrderOptions extends BaseOrderOptions {
 
   static get UNIT_TITLE() {
     return {
-      key: 30,
+      key: 'UNIT_TITLE',
       title: '제목 가나다순',
       orderType: OrderType.UNIT_TITLE,
       orderBy: OrderBy.ASC,
@@ -76,7 +76,7 @@ export class MainOrderOptions extends BaseOrderOptions {
 
   static get UNIT_AUTHOR() {
     return {
-      key: 40,
+      key: 'UNIT_AUTHOR',
       title: '저자 가나다순',
       orderType: OrderType.UNIT_AUTHOR,
       orderBy: OrderBy.ASC,
@@ -85,7 +85,7 @@ export class MainOrderOptions extends BaseOrderOptions {
 
   static get EXPIRED_BOOKS_ONLY() {
     return {
-      key: 50,
+      key: 'EXPIRED_BOOKS_ONLY',
       title: '만료 도서만 보기',
       orderType: OrderType.EXPIRED_BOOKS_ONLY,
       orderBy: OrderBy.DESC,
@@ -125,7 +125,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
     return {
       titleTemplate: unitOfCount => `마지막 ${unitOfCount || '권'}부터`,
 
-      key: 10,
+      key: 'UNIT_ORDER_DESC',
       title: '마지막 권부터',
       orderType: OrderType.UNIT_ORDER,
       orderBy: OrderBy.DESC,
@@ -136,7 +136,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
     return {
       titleTemplate: unitOfCount => `1${unitOfCount || '권'}부터`,
 
-      key: 20,
+      key: 'UNIT_ORDER_ASC',
       title: '1권부터',
       orderType: OrderType.UNIT_ORDER,
       orderBy: OrderBy.ASC,
@@ -145,7 +145,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get PURCHASE_DATE() {
     return {
-      key: 30,
+      key: 'PURCHASE_DATE',
       title: '최근 구매순',
       orderType: OrderType.PURCHASE_DATE,
       orderBy: OrderBy.DESC,
@@ -154,7 +154,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get BOOK_TITLE() {
     return {
-      key: 40,
+      key: 'BOOK_TITLE',
       title: '제목순',
       orderType: OrderType.BOOK_TITLE,
       orderBy: OrderBy.ASC,
@@ -163,7 +163,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get BOOK_AUTHOR() {
     return {
-      key: 50,
+      key: 'BOOK_AUTHOR',
       title: '저자순',
       orderType: OrderType.BOOK_AUTHOR,
       orderBy: OrderBy.ASC,
@@ -172,7 +172,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get EXPIRE_DATE() {
     return {
-      key: 60,
+      key: 'EXPIRE_DATE',
       title: '대여 만료 임박순',
       orderType: OrderType.EXPIRE_DATE,
       orderBy: OrderBy.ASC,
@@ -181,7 +181,7 @@ export class UnitOrderOptions extends BaseOrderOptions {
 
   static get EXPIRED_BOOKS_ONLY() {
     return {
-      key: 70,
+      key: 'EXPIRED_BOOKS_ONLY',
       title: '만료 도서만 보기',
       orderType: OrderType.EXPIRED_BOOKS_ONLY,
       orderBy: OrderBy.DESC,
