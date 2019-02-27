@@ -83,15 +83,8 @@ class SeriesView extends React.Component {
       pageProps: { href, as },
     } = this.props;
 
-    let orderTitle = null;
-
-    if (orderOptions && orderOptions[currentOrder]) {
-      orderTitle = orderOptions[currentOrder].title;
-    }
-
     return (
       <SeriesToolBar
-        orderTitle={orderTitle}
         toggleEditingMode={this.toggleEditingMode}
         currentOrder={currentOrder}
         orderOptions={orderOptions}
@@ -108,11 +101,10 @@ class SeriesView extends React.Component {
       return defaultMessage;
     }
 
-    const { orderType, orderBy } = UnitOrderOptions.parse(currentOrder);
-    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
+    if (UnitOrderOptions.EXPIRE_DATE.key === currentOrder) {
       return '대여 중인 도서가 없습니다.';
     }
-    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRED_BOOKS_ONLY)) {
+    if (UnitOrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
       return '만료된 도서가 없습니다.';
     }
     return defaultMessage;

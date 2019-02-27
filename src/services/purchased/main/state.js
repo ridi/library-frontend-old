@@ -13,7 +13,7 @@ export const initialState = {
     ],
     selected: null,
   },
-  order: 0,
+  order: 10,
   data: {},
 
   selectedBooks: {},
