@@ -17,6 +17,10 @@ import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
 
+const seriesViewStyle = {
+  paddingBottom: 51, // 하단 툴바의 사이즈 만큼 준다.
+};
+
 class SeriesView extends React.Component {
   constructor(props) {
     super(props);
@@ -178,7 +182,7 @@ class SeriesView extends React.Component {
     const { isEditing } = this.state;
 
     return (
-      <div ref={this.seriesViewRef}>
+      <div css={seriesViewStyle} ref={this.seriesViewRef}>
         <HorizontalRuler color="#d1d5d9" />
         <Editable
           allowFixed

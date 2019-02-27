@@ -8,7 +8,6 @@ import config from '../config';
 import { GET_API } from './actions';
 import { HttpStatusCode } from './constants';
 
-import Window, { LOCATION } from '../utils/window';
 import { notifySentry } from '../utils/sentry';
 
 const authorizationInterceptor = {
@@ -25,10 +24,10 @@ const authorizationInterceptor = {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           // 로그인 페이지에서는 진행하지 않는다.
           if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            if (!URLMap.login.regex.exec(Window.get(LOCATION).pathname)) {
+            if (!URLMap.login.regex.exec(window.location.pathname)) {
               // 로직을 끊고 가기 위해 location 에 바로 주입한다.
               // Router 를 사용하면 시점이 꼬이게 된다.
-              Window.get(LOCATION).href = URLMap.login.as;
+              window.location.href = URLMap.login.as;
               return null;
             }
           } else {

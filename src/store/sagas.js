@@ -1,5 +1,6 @@
 import { all } from 'redux-saga/effects';
 
+import commonRootSaga from '../services/common/sagas';
 import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
@@ -17,6 +18,7 @@ import toastRootSaga from '../services/toast/sagas';
 
 export default function* rootSaga() {
   yield all([
+    commonRootSaga(),
     accountRootSaga(),
     bookRootSaga(),
     excelDownloadRootSaga(),
