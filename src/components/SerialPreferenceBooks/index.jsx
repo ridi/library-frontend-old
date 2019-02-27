@@ -51,7 +51,7 @@ const serialPreferenceStyles = {
     borderRadius: 2,
     marginLeft: 4,
 
-    padding: '1px',
+    padding: '0px 2px 0 1px',
     boxSizing: 'border-box',
   },
 
