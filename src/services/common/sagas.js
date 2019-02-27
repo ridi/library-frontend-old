@@ -2,6 +2,7 @@ import Router from 'next/router';
 import { parse } from 'qs';
 
 import { all, take, call } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 
 import { LOAD_ACTUAL_PAGE } from './actions';
 import { requestGetBookIdsByUnitIds, requestGetBookIdsByUnitIdsForHidden } from './requests';
@@ -58,16 +59,24 @@ function* loadActualPage() {
   const query = parse(window.location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
   const currentlinkProps = makeLinkProps(href, as, query);
 
+  // Step 2. 로그인 페이지의 경우 로그인 API를 통해 로그인 여부를 판단할 때까지 시간이 걸려서 미리 로드해준다.
+  if (currentlinkProps.href.pathname === URLMap.login.href) {
+    yield delay(1);
+    Router.replace(URLMap.login.href, URLMap.login.as);
+  }
+
   try {
-    // Step 2. 로그인 정보를 가져오는 메소드를 호출한다.
+    // Step 3. 로그인 정보를 가져오는 메소드를 호출한다.
     yield call(loadUserInfo);
   } catch (e) {
-    // Step 3. 로그인 안되어 있다면 로그인 페이지 로드한다.
-    Router.replace(URLMap.login.href, URLMap.login.as);
+    // Step 4-1. 로그인 안되어 있는데 로그인 페이지가 아니라면 로그인으로 이동한다.
+    if (currentlinkProps.href.pathname !== URLMap.login.href) {
+      Router.replace(URLMap.login.href, URLMap.login.as);
+    }
     return;
   }
 
-  // Step 4. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
+  // Step 4-2. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
   if (currentlinkProps.href.pathname === URLMap.login.href) {
     Router.replace(URLMap.main.href, URLMap.main.as);
     return;
