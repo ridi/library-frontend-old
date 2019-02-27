@@ -186,11 +186,10 @@ class Main extends React.Component {
       pageInfo: { order },
     } = this.props;
 
-    const { orderType, orderBy } = UnitOrderOptions.parse(order);
-    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRE_DATE)) {
+    if (UnitOrderOptions.EXPIRE_DATE.key === order) {
       return '대여 중인 도서가 없습니다.';
     }
-    if (UnitOrderOptions.equal({ orderType, orderBy }, UnitOrderOptions.EXPIRED_BOOKS_ONLY)) {
+    if (UnitOrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
       return '만료된 도서가 없습니다.';
     }
 

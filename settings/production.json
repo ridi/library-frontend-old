@@ -2,7 +2,7 @@
   "environment": "production",
   "library_api_base_url": "https://library-api.ridibooks.com",
   "platform_api_base_url": "https://book-api.ridibooks.com",
-  "ridi_logout_url": "https://ridibooks.com/account/logout?return_url=https%3A%2F%2Flibrary.ridibooks.com",
+  "ridi_logout_url": "https://ridibooks.com/account/logout?return_url=https%3A%2F%2Flibrary.ridibooks.com%2Flogin",
   "ridi_reading_note_url": "https://ridibooks.com/reading-note/timeline",
   "ridi_review_url": "https://ridibooks.com/review",
   "ridi_token_authorize_url": "https://account.ridibooks.com/ridi/authorize",

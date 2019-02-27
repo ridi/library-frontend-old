@@ -8,12 +8,12 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground} horizontalAlign={horizontalAlign}>
     <ModalItemGroup groupTitle="정렬 순서">
       <ul>
-        {orderOptions.map((option, index) => (
-          <li key={shortid.generate()}>
+        {orderOptions.map(option => (
+          <li key={option.key}>
             <ModalLinkItem
               scroll={false}
               title={option.title}
-              isSelected={index === order}
+              isSelected={option.key === order}
               href={href}
               as={as}
               query={{

@@ -38,7 +38,7 @@ function* persistPageOptionsFromQueries() {
 
   const page = parseInt(query.page, 10) || 1;
   const { order_type: orderType = UnitOrderOptions.DEFAULT.orderType, order_by: orderBy = UnitOrderOptions.DEFAULT.orderBy } = query;
-  const order = UnitOrderOptions.toIndex(orderType, orderBy);
+  const order = UnitOrderOptions.toKey(orderType, orderBy);
 
   yield all([put(setPage(page)), put(setOrder(order)), put(setKeyword(query.keyword))]);
 }

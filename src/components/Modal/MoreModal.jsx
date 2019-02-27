@@ -52,16 +52,17 @@ const MoreModal = ({
     {showOrder ? (
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
-          {orderOptions.map((option, index) => (
-            <li key={shortid.generate()}>
+          {orderOptions.map(option => (
+            <li key={option.key}>
               <ModalLinkItem
                 title={option.title}
-                isSelected={index === order}
+                isSelected={option.key === order}
                 href={URLMap.main.href}
                 as={URLMap.main.as}
                 query={{
                   ...query,
-                  ...MainOrderOptions.parse(index),
+                  orderType: option.orderType,
+                  orderBy: option.orderBy,
                 }}
                 replace
               />

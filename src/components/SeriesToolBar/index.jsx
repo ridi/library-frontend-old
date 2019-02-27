@@ -24,46 +24,43 @@ class SeriesToolBar extends React.Component {
   }
 
   render() {
-    const { orderTitle, toggleEditingMode, currentOrder, orderOptions, href, as } = this.props;
+    const { toggleEditingMode, currentOrder, orderOptions, href, as } = this.props;
     const { isSortModalShow } = this.state;
 
+    const orderTitle = orderOptions.find(option => option.key === currentOrder).title;
     return (
       <FlexBar
         css={styles.seriesToolBar}
         flexLeft={
-          orderTitle ? (
-            <div css={styles.buttonWrapper}>
-              <button
-                css={styles.orderButton}
-                type="button"
-                onClick={() => {
+          <div css={styles.buttonWrapper}>
+            <button
+              css={styles.orderButton}
+              type="button"
+              onClick={() => {
+                this.setState({
+                  isSortModalShow: true,
+                });
+              }}
+            >
+              {orderTitle}
+              <ArrowTriangleDown css={styles.arrow} />
+            </button>
+            {currentOrder !== undefined && orderOptions !== undefined && (
+              <UnitSortModal
+                horizontalAlign={Align.Left}
+                order={currentOrder}
+                orderOptions={orderOptions}
+                isActive={isSortModalShow}
+                onClickModalBackground={() => {
                   this.setState({
-                    isSortModalShow: true,
+                    isSortModalShow: false,
                   });
                 }}
-              >
-                {orderTitle}
-                <ArrowTriangleDown css={styles.arrow} />
-              </button>
-              {currentOrder !== undefined && orderOptions !== undefined && (
-                <UnitSortModal
-                  horizontalAlign={Align.Left}
-                  order={currentOrder}
-                  orderOptions={orderOptions}
-                  isActive={isSortModalShow}
-                  onClickModalBackground={() => {
-                    this.setState({
-                      isSortModalShow: false,
-                    });
-                  }}
-                  href={href}
-                  as={as}
-                />
-              )}
-            </div>
-          ) : (
-            <div />
-          )
+                href={href}
+                as={as}
+              />
+            )}
+          </div>
         }
         flexRight={<Editing toggleEditingMode={toggleEditingMode} />}
       />

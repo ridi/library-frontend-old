@@ -1,3 +1,4 @@
+import { UnitOrderOptions } from '../../../constants/orderOptions';
 import { concat } from '../../../utils/array';
 
 export const initialState = {
@@ -5,7 +6,7 @@ export const initialState = {
   primaryItems: {},
   data: {},
 
-  order: 0,
+  order: UnitOrderOptions.DEFAULT.key,
   selectedBooks: {},
   isFetchingBook: false,
 };
