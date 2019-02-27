@@ -70,9 +70,9 @@ function* loadActualPage() {
     yield call(loadUserInfo);
   } catch (e) {
     // Step 4-1. 로그인 안되어 있는데 로그인 페이지가 아니라면 로그인으로 이동한다.
-    if (currentlinkProps.href.pathname !== URLMap.login.href) {
-      Router.replace(URLMap.login.href, URLMap.login.as);
-    }
+    // fetchUserInfo 를 요청하기 때문에 middleware 에서 로그인 페이지로 이동한다,
+    // 여기서 다시 페이지 이동을 호출하면 화면이 깜박거린다.
+    // 로그인 페이지라면 위에서 먼저 렌더를 했기 떄문에 나머지 처리는 하지 않아도 된다.
     return;
   }
 
