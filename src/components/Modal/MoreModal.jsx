@@ -72,7 +72,7 @@ const MoreModal = ({
     ) : null}
     {showHidden ? (
       <ModalItemGroup groupTitle="숨김 메뉴">
-        <ModalLinkItem title="숨김 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
+        <ModalLinkItem title="숨긴 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
       </ModalItemGroup>
     ) : null}
   </Modal>

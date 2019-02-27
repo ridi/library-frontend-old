@@ -1,7 +1,6 @@
 import { delay } from 'redux-saga';
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { downloadFile } from '../../utils/file';
-import { addBeforeunloadEventListener, getBeforePageUnloadEventFunc, removeBeforeunloadEventListener } from '../../utils/window';
 import { setExcelDownloadStatus, START_EXCEL_DOWNLOAD } from './actions';
 import { CHECK_EXCEL_DOWNLOAD_STATUS_RETRY_DELAY, EXCEL_FILE_NAME, ExcelDownloadStatusCode } from './constants';
 import { fetchCheckExcelDownload, fetchStartExcelDownload } from './requests';
@@ -30,10 +29,15 @@ function* requestExcelDownloadUrl() {
 }
 
 function* startExcelDownload() {
-  const beforePageUnloadEventFunc = getBeforePageUnloadEventFunc('아직 Excel 다운로드가 진행 중입니다. 페이지를 벗어나시겠습니까?');
+  const beforePageUnloadEventFunc = beforeunloadEvent => {
+    const beforeunloadMessage = '아직 Excel 다운로드가 진행 중입니다. 페이지를 벗어나시겠습니까?';
+    beforeunloadEvent.preventDefault();
+    beforeunloadEvent.returnValue = beforeunloadMessage;
+    return beforeunloadMessage;
+  };
 
   yield put(setExcelDownloadStatus(true));
-  addBeforeunloadEventListener(beforePageUnloadEventFunc);
+  window.addEventListener('beforeunload', beforePageUnloadEventFunc);
 
   let downloadUrl = '';
   try {
@@ -42,7 +46,7 @@ function* startExcelDownload() {
     alert('Excel 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
     return;
   } finally {
-    removeBeforeunloadEventListener(beforePageUnloadEventFunc);
+    window.removeEventListener('beforeunload', beforePageUnloadEventFunc);
     yield put(setExcelDownloadStatus(false));
   }
 
