@@ -11,6 +11,7 @@ import BookMetaData from '../../utils/bookMetaData';
 import { makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
 import LandscapeFullButton from './LandscapeFullButton';
 import BooksWrapper from '../BooksWrapper';
+import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 
 const serialPreferenceStyles = {
   authorFieldSeparator: {
@@ -47,16 +48,19 @@ const serialPreferenceStyles = {
   },
   seriesComplete: {
     background: '#b3b3b3',
-    color: 'white',
-    display: 'inline-block',
-    padding: '0 3px 0 2px',
-    fontSize: 9,
-    height: 12,
-    lineHeight: '12px',
-    verticalAlign: '12%',
     borderRadius: 2,
     marginLeft: 4,
+
+    padding: '1px',
+    boxSizing: 'border-box',
   },
+
+  seriesCompleteIcon: {
+    fill: 'white',
+    width: 16,
+    height: 8,
+  },
+
   button: {
     display: 'block',
     width: 68,
@@ -120,7 +124,11 @@ const toProps = ({
     <p css={serialPreferenceStyles.preferenceMeta}>
       {hasUnreadSeries && <span css={serialPreferenceStyles.unreadDot} />}
       <strong>{recentReadPlatformBookData.series.volume}화</strong> / 총 {seriesProperty.opened_book_count}화
-      {isSerialCompleted && <span css={serialPreferenceStyles.seriesComplete}>완결</span>}
+      {isSerialCompleted && (
+        <span css={serialPreferenceStyles.seriesComplete}>
+          <SeriesCompleteIcon css={serialPreferenceStyles.seriesCompleteIcon} />
+        </span>
+      )}
     </p>
   );
 
