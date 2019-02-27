@@ -1,5 +1,6 @@
 import nookies from 'nookies';
-import { loadUserInfo, startAccountTracker } from '../services/account/actions';
+import { loadActualPage } from '../services/common/actions';
+import { startAccountTracker } from '../services/account/actions';
 
 import { SET_VIEW_TYPE } from '../services/ui/actions';
 
@@ -55,8 +56,7 @@ const afterCreatingStore = async (store, context) => {
 
   // Client Only
   if (!context.isServer) {
-    // 클라에서 userInfo 셋팅
-    await store.dispatch(loadUserInfo());
+    await store.dispatch(loadActualPage());
 
     // TODO: LRU버그로 인해 주석처리
     // await store.dispatch(loadBookDataFromStorage());
