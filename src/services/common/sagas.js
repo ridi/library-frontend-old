@@ -63,19 +63,16 @@ function* loadActualPage() {
     yield call(loadUserInfo);
   } catch (e) {
     // Step 3. 로그인 안되어 있다면 로그인 페이지 로드한다.
-    console.log('비로그인');
     Router.replace(URLMap.login.href, URLMap.login.as);
     return;
   }
 
   // Step 4. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
   if (currentlinkProps.href.pathname === URLMap.login.href) {
-    console.log('로그인상태인데 로그인을?');
     Router.replace(URLMap.main.href, URLMap.main.as);
     return;
   }
 
-  console.log(currentlinkProps);
   // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로디안다.
   Router.replace(currentlinkProps.href, currentlinkProps.as);
 }
