@@ -3,7 +3,6 @@ import { OrderBy, OrderType } from '../../constants/orderOptions';
 
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
-import Window, { LOCATION } from '../../utils/window';
 import { getBookIdsByUnitIds } from '../common/sagas';
 
 import { showToast } from '../toast/actions';
@@ -14,19 +13,18 @@ import { DownloadError } from './errors';
 import { triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
-  const Location = Window.get(LOCATION);
   if (isIos) {
     try {
-      Location.href = appUri;
+      window.location.href = appUri;
     } catch (e) {
       throw new DownloadError();
     }
   } else if (isAndroid) {
     const androidUri = isFirefox ? appUri : convertUriToAndroidIntentUri(appUri, 'com.initialcoms.ridi');
     try {
-      Location.href = androidUri;
+      window.location.href = androidUri;
     } catch (e) {
-      Location.href = appUri;
+      window.location.href = appUri;
     }
   } else {
     yield put(setBookDownloadSrc(appUri));
@@ -40,7 +38,7 @@ function _installiOSApp(start) {
       return;
     }
 
-    Window.get(LOCATION).href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
+    window.location.href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   }, 3000);
 }
 

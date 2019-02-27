@@ -7,16 +7,12 @@ import { delay } from 'redux-saga';
 import { LOAD_USER_INFO, START_ACCOUNT_TRACKER, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
-import Window, { LOCATION } from '../../utils/window';
 import { makeLinkProps } from '../../utils/uri';
 import { URLMap, toURLMap } from '../../constants/urls';
 
 function loadActualPage() {
-  const _location = Window.get(LOCATION);
-  const { pathname } = _location;
-
-  const { href, as } = toURLMap(pathname);
-  const query = parse(_location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
+  const { href, as } = toURLMap(window.location.pathname);
+  const query = parse(window.location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
   const linkProps = makeLinkProps(href, as, query);
   Router.replace(linkProps.href, linkProps.as);
 }
@@ -25,7 +21,7 @@ function* loadUserInfo() {
   let userInfo;
 
   // 로그인 페이지라면 먼저 UI 를 그려준다.
-  if (URLMap.login.regex.exec(Window.get(LOCATION).pathname)) {
+  if (URLMap.login.regex.exec(window.location.pathname)) {
     yield delay(1);
     loadActualPage();
   }
@@ -35,14 +31,14 @@ function* loadUserInfo() {
     userInfo = yield call(fetchUserInfo);
   } catch (e) {
     // Step 2. 로그인 안되어 있다면 로그인 페이지 로드하고 종료
-    if (URLMap.login.regex.exec(Window.get(LOCATION).pathname)) {
+    if (URLMap.login.regex.exec(window.location.pathname)) {
       loadActualPage();
     }
     return;
   }
 
   // Step 3. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
-  if (URLMap.login.regex.exec(Window.get(LOCATION).pathname)) {
+  if (URLMap.login.regex.exec(window.location.pathname)) {
     Router.replace(URLMap.main.href, URLMap.main.as);
     return;
   }
@@ -68,7 +64,7 @@ function* accountTracker() {
 
     const userInfo = yield select(state => state.account.userInfo);
     if (userInfo.idx !== newUserInfo.idx) {
-      Window.get(LOCATION).reload();
+      window.location.reload();
     }
   }
 }

@@ -1,5 +1,3 @@
-import Window, { LOCAL_STORAGE } from './window';
-
 const STORAGE_KEY_PREFIX = 'library.web';
 
 const makeKey = key => `${STORAGE_KEY_PREFIX}.${key}`;
@@ -12,7 +10,7 @@ export const StorageKey = {
 export default {
   load: key => {
     const _key = makeKey(key);
-    const storage = Window.get(LOCAL_STORAGE);
+    const storage = window.localStorage;
     if (!storage) {
       return [];
     }
@@ -26,7 +24,7 @@ export default {
   },
   save: (key, state) => {
     const _key = makeKey(key);
-    const storage = Window.get(LOCAL_STORAGE);
+    const storage = window.localStorage;
     if (!storage) {
       return;
     }
