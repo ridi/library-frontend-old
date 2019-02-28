@@ -30,7 +30,7 @@ import {
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
-import { UnitOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
 import { BookError } from '../../../components/Error';
 
@@ -132,8 +132,8 @@ class MainUnit extends React.Component {
     }
     const bookUnitOfCount = primaryItem && books[primaryItem.b_id].series ? books[primaryItem.b_id].series.property.unit : null;
     const orderOptions = UnitType.isSeries(unit.type)
-      ? UnitOrderOptions.toSeriesList(bookUnitOfCount)
-      : UnitOrderOptions.toShelfList(bookUnitOfCount);
+      ? OrderOptions.toSeriesList(bookUnitOfCount)
+      : OrderOptions.toShelfList(bookUnitOfCount);
 
     return (
       <SeriesView

@@ -1,4 +1,4 @@
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { concat } from '../../../utils/array';
 
 export const initialState = {
@@ -14,7 +14,7 @@ export const initialState = {
     ],
     selected: null,
   },
-  order: MainOrderOptions.PURCHASE_DATE.key,
+  order: OrderOptions.PURCHASE_DATE.key,
   data: {},
 
   selectedBooks: {},

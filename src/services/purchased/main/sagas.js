@@ -18,7 +18,7 @@ import {
 import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
 
-import { MainOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
 import { getQuery } from '../../router/selectors';
@@ -38,8 +38,8 @@ function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
   const page = parseInt(query.page, 10) || 1;
 
-  const { order_type: orderType = MainOrderOptions.DEFAULT.orderType, order_by: orderBy = MainOrderOptions.DEFAULT.orderBy } = query;
-  const order = MainOrderOptions.toKey(orderType, orderBy);
+  const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
+  const order = OrderOptions.toKey(orderType, orderBy);
   const filter = parseInt(query.filter, 10) || null;
 
   yield all([put(setPage(page)), put(setOrder(order)), put(setFilter(filter))]);
@@ -62,7 +62,7 @@ function* loadMainItems() {
   yield call(persistPageOptionsFromQueries);
 
   const { page, order, filter: category } = yield select(getOptions);
-  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { orderType, orderBy } = OrderOptions.parse(order);
 
   try {
     yield put(setIsFetchingBooks(true));
@@ -101,7 +101,7 @@ function* hideSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const { order } = yield select(getOptions);
-  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { orderType, orderBy } = OrderOptions.parse(order);
 
   let queueIds;
   try {
@@ -146,7 +146,7 @@ function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedBooks);
 
   const { order } = yield select(getOptions);
-  const { orderType, orderBy } = MainOrderOptions.parse(order);
+  const { orderType, orderBy } = OrderOptions.parse(order);
 
   try {
     const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);

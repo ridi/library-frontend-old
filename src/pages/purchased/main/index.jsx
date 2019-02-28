@@ -12,7 +12,7 @@ import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import { MainOrderOptions, UnitOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
 import {
@@ -117,7 +117,7 @@ class Main extends React.Component {
       pageInfo: { order, orderType, orderBy, filter },
       filterOptions,
     } = this.props;
-    const orderOptions = MainOrderOptions.toList();
+    const orderOptions = OrderOptions.toMainList();
 
     const searchBarProps = {
       filter,
@@ -141,15 +141,24 @@ class Main extends React.Component {
       dispatchToggleSelectBook,
       isFetchingBooks,
       viewType,
+      pageInfo: { order, orderType, orderBy },
     } = this.props;
+
     const onSelectedChange = dispatchToggleSelectBook;
     const linkBuilder = () => libraryBookData => {
+      const query = {};
+      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+        query.orderType = orderType;
+        query.orderBy = orderBy;
+      }
+
       const linkProps = makeLinkProps(
         {
           pathname: URLMap.mainUnit.href,
           query: { unitId: libraryBookData.unit_id },
         },
         URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+        query,
       );
 
       return (
@@ -186,10 +195,10 @@ class Main extends React.Component {
       pageInfo: { order },
     } = this.props;
 
-    if (UnitOrderOptions.EXPIRE_DATE.key === order) {
+    if (OrderOptions.EXPIRE_DATE.key === order) {
       return '대여 중인 도서가 없습니다.';
     }
-    if (UnitOrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
       return '만료된 도서가 없습니다.';
     }
 
