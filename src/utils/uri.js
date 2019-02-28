@@ -3,7 +3,8 @@ import config from '../config';
 import { snakelize } from './snakelize';
 
 export const makeURI = (pathname, query = {}, baseHost = null) => {
-  const _query = snakelize(query);
+  // IE11 버그로 get 요청 캐싱 무마하기위해 t 시간값을 매 요청마다 추가
+  const _query = snakelize({ ...query, t: +new Date() });
   const path = `${pathname}?${stringify(_query, { skipNulls: true })}`;
 
   if (baseHost) {
