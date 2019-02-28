@@ -15,6 +15,11 @@ export const OrderType = {
   RELEASE_DATE: 'release_date',
 };
 
+const applyUnitOfCount = (order, unitOfCount) => ({
+  ...order,
+  title: order.titleTemplate(unitOfCount),
+});
+
 class BaseOrderOptions {
   static parse(key) {
     return this.toList().find(value => value.key === key);
@@ -30,7 +35,7 @@ class BaseOrderOptions {
   }
 
   static toList() {
-    throw new Error('Need Implement Default');
+    throw new Error('Need Implement toList');
   }
 
   static get DEFAULT() {
@@ -38,9 +43,37 @@ class BaseOrderOptions {
   }
 }
 
-export class MainOrderOptions extends BaseOrderOptions {
-  static toList() {
+export class OrderOptions extends BaseOrderOptions {
+  static toMainList() {
     return [this.PURCHASE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
+  }
+
+  static toSeriesList(unitOfCount) {
+    return [
+      applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
+      applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
+      this.PURCHASE_DATE,
+      this.EXPIRE_DATE,
+      this.EXPIRED_BOOKS_ONLY,
+    ];
+  }
+
+  static toShelfList(unitOfCount) {
+    return [...this.toSeriesList(unitOfCount), this.BOOK_TITLE, this.BOOK_AUTHOR];
+  }
+
+  static toList() {
+    return [
+      this.PURCHASE_DATE,
+      this.UNIT_TITLE,
+      this.UNIT_AUTHOR,
+      this.EXPIRE_DATE,
+      this.EXPIRED_BOOKS_ONLY,
+      this.UNIT_ORDER_DESC,
+      this.UNIT_ORDER_ASC,
+      this.BOOK_TITLE,
+      this.BOOK_AUTHOR,
+    ];
   }
 
   static get DEFAULT() {
@@ -91,35 +124,6 @@ export class MainOrderOptions extends BaseOrderOptions {
       orderBy: OrderBy.DESC,
     };
   }
-}
-
-const applyUnitOfCount = (order, unitOfCount) => ({
-  ...order,
-  title: order.titleTemplate(unitOfCount),
-});
-
-export class UnitOrderOptions extends BaseOrderOptions {
-  static toSeriesList(unitOfCount) {
-    return [
-      applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
-      applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
-      this.PURCHASE_DATE,
-      this.EXPIRE_DATE,
-      this.EXPIRED_BOOKS_ONLY,
-    ];
-  }
-
-  static toShelfList(unitOfCount) {
-    return [...this.toSeriesList(unitOfCount), this.BOOK_TITLE, this.BOOK_AUTHOR];
-  }
-
-  static toList(unitOfCount) {
-    return this.toShelfList(unitOfCount);
-  }
-
-  static get DEFAULT() {
-    return this.UNIT_ORDER_DESC;
-  }
 
   static get UNIT_ORDER_DESC() {
     return {
@@ -143,15 +147,6 @@ export class UnitOrderOptions extends BaseOrderOptions {
     };
   }
 
-  static get PURCHASE_DATE() {
-    return {
-      key: 'PURCHASE_DATE',
-      title: '최근 구매순',
-      orderType: OrderType.PURCHASE_DATE,
-      orderBy: OrderBy.DESC,
-    };
-  }
-
   static get BOOK_TITLE() {
     return {
       key: 'BOOK_TITLE',
@@ -167,24 +162,6 @@ export class UnitOrderOptions extends BaseOrderOptions {
       title: '저자순',
       orderType: OrderType.BOOK_AUTHOR,
       orderBy: OrderBy.ASC,
-    };
-  }
-
-  static get EXPIRE_DATE() {
-    return {
-      key: 'EXPIRE_DATE',
-      title: '대여 만료 임박순',
-      orderType: OrderType.EXPIRE_DATE,
-      orderBy: OrderBy.ASC,
-    };
-  }
-
-  static get EXPIRED_BOOKS_ONLY() {
-    return {
-      key: 'EXPIRED_BOOKS_ONLY',
-      title: '만료 도서만 보기',
-      orderType: OrderType.EXPIRED_BOOKS_ONLY,
-      orderBy: OrderBy.DESC,
     };
   }
 }
