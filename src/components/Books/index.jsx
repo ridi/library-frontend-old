@@ -61,6 +61,10 @@ export const Books = ({ libraryBookDTO, platformBookDTO, selectedBooks, isSelect
       libraryBookDTO.map(libraryBookData => {
         const bookId = libraryBookData.b_id;
         const platformBookData = platformBookDTO[bookId];
+        if (!platformBookData) {
+          return null;
+        }
+
         const isSelected = !!selectedBooks[bookId];
         const libraryBookProps = toProps({
           bookId,
