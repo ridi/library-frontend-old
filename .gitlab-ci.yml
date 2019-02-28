@@ -20,6 +20,7 @@ stages:
   script:
     - sh docs/script/export.sh
     - sh docs/script/upload.sh
+    - sh docs/script/slack.sh
 
 .mr-build-template: &mr-build
   <<: *build
