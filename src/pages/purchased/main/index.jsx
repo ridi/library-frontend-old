@@ -141,15 +141,24 @@ class Main extends React.Component {
       dispatchToggleSelectBook,
       isFetchingBooks,
       viewType,
+      pageInfo: { order, orderType, orderBy },
     } = this.props;
+
     const onSelectedChange = dispatchToggleSelectBook;
     const linkBuilder = () => libraryBookData => {
+      const query = {};
+      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+        query.orderType = orderType;
+        query.orderBy = orderBy;
+      }
+
       const linkProps = makeLinkProps(
         {
           pathname: URLMap.mainUnit.href,
           query: { unitId: libraryBookData.unit_id },
         },
         URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+        query,
       );
 
       return (
