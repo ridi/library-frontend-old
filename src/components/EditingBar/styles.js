@@ -2,12 +2,6 @@ export const editingBarWrapper = {
   backgroundColor: '#0077d9',
   boxShadow: '0 2px 10px 0 rgba(0, 0, 0, .04)',
   width: '100%',
-  opacity: 0,
-  transition: 'opacity .3s',
-};
-
-export const editingBarActive = {
-  opacity: 1,
 };
 
 export const editingBar = {
