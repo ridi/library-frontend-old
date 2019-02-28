@@ -84,12 +84,11 @@ function* loadPage() {
 }
 
 function changeSearchKeyword(action) {
-  const query = {
+  const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, {
     page: 1,
     keyword: action.payload.keyword,
-  };
-
-  Router.push(makeURI('/purchased/search', query));
+  });
+  Router.push(linkProps.href, linkProps.as);
 }
 
 function* hideSelectedBooks() {

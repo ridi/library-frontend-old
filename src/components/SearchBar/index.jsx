@@ -19,8 +19,8 @@ class SearchBar extends React.Component {
   }
 
   handleOnSubmitSearchBar = value => {
-    const { href, as } = URLMap.search;
-    Router.push(makeURI(href, { keyword: value }), makeURI(as, { keyword: value }));
+    const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, { keyword: value });
+    Router.push(linkProps.href, linkProps.as);
   };
 
   handleOnFocusSearchBar = () => {
