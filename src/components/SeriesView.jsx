@@ -60,7 +60,10 @@ class SeriesView extends React.Component {
       isSelectedAllBooks,
       onClickSelectAllBooks,
       onClickUnselectAllBooks,
-      onClickSuccessButton: this.toggleEditingMode,
+      onClickSuccessButton: () => {
+        onClickUnselectAllBooks();
+        this.setState({ isEditing: false });
+      },
     };
   }
 
