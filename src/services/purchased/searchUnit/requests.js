@@ -6,7 +6,7 @@ import { getAPI } from '../../../api/actions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { makeURI } from '../../../utils/uri';
-import { OrderType, UnitOrderOptions } from '../../../constants/orderOptions';
+import { OrderType, OrderOptions } from '../../../constants/orderOptions';
 import { attatchTTL } from '../../../utils/ttl';
 
 export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
@@ -44,8 +44,8 @@ export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
 
 export function* getSearchUnitPrimaryItem(unitId) {
   const options = {
-    orderType: UnitOrderOptions.PURCHASE_DATE.orderType,
-    orderBy: UnitOrderOptions.PURCHASE_DATE.orderBy,
+    orderType: OrderOptions.PURCHASE_DATE.orderType,
+    orderBy: OrderOptions.PURCHASE_DATE.orderBy,
     offset: 0,
     limit: 1,
   };

@@ -17,7 +17,7 @@ import {
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
 
-import { UnitOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 
 import { loadBookData, loadBookDescriptions, saveUnitData, loadBookStarRatings } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
@@ -36,8 +36,8 @@ function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
 
   const page = parseInt(query.page, 10) || 1;
-  const { order_type: orderType = UnitOrderOptions.DEFAULT.orderType, order_by: orderBy = UnitOrderOptions.DEFAULT.orderBy } = query;
-  const order = UnitOrderOptions.toKey(orderType, orderBy);
+  const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
+  const order = OrderOptions.toKey(orderType, orderBy);
 
   yield all([put(setPage(page)), put(setOrder(order))]);
 }
@@ -69,7 +69,7 @@ function* loadItems() {
 
   const unitId = yield select(getUnitId);
   const { page, order } = yield select(getOptions);
-  const { orderType, orderBy } = UnitOrderOptions.parse(order);
+  const { orderType, orderBy } = OrderOptions.parse(order);
 
   try {
     yield put(setIsFetchingBook(true));

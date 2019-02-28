@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
-import { UnitOrderOptions } from '../constants/orderOptions';
+import { OrderOptions } from '../constants/orderOptions';
 import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
@@ -108,10 +108,10 @@ class SeriesView extends React.Component {
       return defaultMessage;
     }
 
-    if (UnitOrderOptions.EXPIRE_DATE.key === currentOrder) {
+    if (OrderOptions.EXPIRE_DATE.key === currentOrder) {
       return '대여 중인 도서가 없습니다.';
     }
-    if (UnitOrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
+    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
       return '만료된 도서가 없습니다.';
     }
     return defaultMessage;

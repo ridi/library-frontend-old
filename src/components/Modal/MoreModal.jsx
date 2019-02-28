@@ -1,9 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
-import shortid from 'shortid';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
-import { MainOrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { setViewType } from '../../services/ui/actions';

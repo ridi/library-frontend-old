@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
-import { UnitOrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { initialDataState, getKey } from './state';
 
 const getState = state => state.purchasedSearchUnit;
@@ -31,7 +31,7 @@ export const getPageInfo = createSelector(
   (state, dataState) => {
     const { unitId, order, keyword } = state;
     const { page, itemTotalCount } = dataState;
-    const { orderType, orderBy } = UnitOrderOptions.parse(order);
+    const { orderType, orderBy } = OrderOptions.parse(order);
 
     return {
       unitId,
