@@ -1,5 +1,6 @@
 import { call, put, all, takeEvery } from 'redux-saga/effects';
 import { OrderBy, OrderType } from '../../constants/orderOptions';
+import { delay } from '../../utils/delay';
 
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
@@ -31,44 +32,33 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
   }
 }
 
-function _installiOSApp(start) {
-  setTimeout(() => {
-    // 2.5초 이후에 온 거라면 정상 처리된 거임
-    if (new Date() - start > 3100) {
-      return;
-    }
-
-    window.location.href = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
-  }, 3000);
-}
-
-function* _showViewerGuildLink() {
+function* _showViewerGuildLink(isIos, isAndroid) {
   yield put(setBookDownloadSrc(''));
-  yield put(
-    showToast(
-      '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.',
-      '이용 방법 보기',
-      null,
-      'https://help.ridibooks.com/hc/ko/sections/115003069928',
-      Duration.VERY_LONG,
-      ToastStyle.BLUE,
-    ),
-  );
+
+  const message = isIos || isAndroid ? '리디북스 뷰어에서 책을 이용하실 수 있습니다.' : '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.';
+  // eslint-disable-next-line no-nested-ternary
+  const linkName = isIos ? '앱스토어로 가기' : isAndroid ? '플레이스토어로 가기' : '이용 방법 보기';
+
+  const helpLink = 'https://help.ridibooks.com/hc/ko/sections/115003069928';
+  const appStoreLink = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
+  const playStoreLink = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
+  // eslint-disable-next-line no-nested-ternary
+  const link = isIos ? appStoreLink : isAndroid ? playStoreLink : helpLink;
+
+  yield put(showToast(message, linkName, null, link, Duration.VERY_LONG, ToastStyle.BLUE));
 }
 
 export function* _download(bookIds, url) {
   const appUri = `${url}&payload=${encodeURIComponent(JSON.stringify({ b_ids: bookIds }))}`;
   const { isIos, isAndroid, isFirefox } = getDeviceInfo();
-  const start = new Date();
 
   yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
 
   // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
   // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 뷰어 오픈이 성공 했어도 뷰어 가이드를 보여준다.
-  if (isIos) {
-    _installiOSApp(start);
-  } else if (!isAndroid || isFirefox) {
-    yield call(_showViewerGuildLink);
+  if (!isAndroid || isFirefox) {
+    yield call(delay, 1000);
+    yield call(_showViewerGuildLink, isIos, isAndroid);
   }
 }
 
