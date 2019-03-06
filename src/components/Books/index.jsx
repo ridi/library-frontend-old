@@ -3,11 +3,13 @@ import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import { merge } from 'lodash';
+import React from 'react';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
 import BooksWrapper from '../BooksWrapper';
+import EmptyLandscapeBook from './EmptyLandscapeBook';
 import LandscapeFullButton from './LandscapeFullButton';
 
 const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkBuilder }) => {
@@ -57,8 +59,8 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
 export const Books = ({ libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder }) => (
   <BooksWrapper
     viewType={viewType}
-    renderBooks={({ className }) =>
-      libraryBookDTO.map(libraryBookData => {
+    renderBooks={({ className }) => {
+      const libraryBooks = libraryBookDTO.map(libraryBookData => {
         const bookId = libraryBookData.b_id;
         const platformBookData = platformBookDTO[bookId];
         if (!platformBookData) {
@@ -88,7 +90,17 @@ export const Books = ({ libraryBookDTO, platformBookDTO, selectedBooks, isSelect
             {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
           </div>
         );
-      })
-    }
+      });
+      const libraryBooksCount = libraryBookDTO.length;
+      const isNeedLandscapeBookSeparator =
+        viewType === ViewType.LANDSCAPE && libraryBooks && libraryBooksCount !== 0 && libraryBooksCount % 2 !== 0;
+
+      return (
+        <React.Fragment>
+          {libraryBooks}
+          {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
+        </React.Fragment>
+      );
+    }}
   />
 );
