@@ -117,7 +117,13 @@ export const landscape = {
   '.LandscapeBook_Metadata': {
     paddingTop: 30,
   },
+  '&.EmptyLandscapeBook': {
+    display: 'none',
+  },
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     width: '50%',
+    '&.EmptyLandscapeBook': {
+      display: 'flex',
+    },
   }),
 };

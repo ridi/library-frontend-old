@@ -4,6 +4,7 @@ import React from 'react';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
 import MoreModal from '../Modal/MoreModal';
+import { Tooltip } from '../Tooltip';
 import * as styles from './styles';
 
 export default class More extends React.Component {
@@ -40,6 +41,9 @@ export default class More extends React.Component {
             <ThreeDotsVertical css={styles.threeDotsIcon} />
           </div>
         </IconButton>
+        <Tooltip name="TOOLTIP" expires={new Date(2019, 3, 25)}>
+          여기서 <strong>기간 만료 도서를</strong> 한번에 숨겨보세요.
+        </Tooltip>
         {isMoreModalShow && (
           <MoreModal
             order={order}
