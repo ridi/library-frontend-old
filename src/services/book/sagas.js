@@ -9,10 +9,10 @@ import {
   setBookStarRatings,
 } from './actions';
 
-import { fetchBookData, fetchBookDescriptions, fetchStarRatings } from './requests';
+import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
-import { getCriterion, attatchTTL } from '../../utils/ttl';
+import { getCriterion } from '../../utils/ttl';
 import { getBooks } from './selectors';
 
 function* persistBookDataToStorage() {
