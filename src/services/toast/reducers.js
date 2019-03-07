@@ -1,8 +1,6 @@
 import { SET_TOAST, UNSET_TOAST } from './actions';
 
-const initialState = {
-  isShow: false,
-};
+const initialState = null;
 
 const toastReducer = (state = initialState, action) => {
   switch (action.type) {
