@@ -44,6 +44,7 @@
     "react-emotion": "^10.0.0",
     "react-redux": "^5.0.7",
     "react-responsive": "^6.0.1",
+    "react-transition-group": "^2.6.0",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",
     "reselect": "^4.0.0",
