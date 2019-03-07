@@ -102,7 +102,7 @@ export const setIsFetchingSearchBook = isFetchingBook => ({
   },
 });
 
-export const setSearchUnitPrimaryItem = primaryItem => ({
+export const setPrimaryItem = primaryItem => ({
   type: SET_SEARCH_UNIT_PRIMARY_ITEM,
   payload: {
     primaryItem,

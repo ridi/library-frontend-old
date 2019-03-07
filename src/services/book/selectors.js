@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { EmptyUnit } from '../../utils/dataObject';
+import { makeUnitOrderKey } from './actions';
 
 const getBookState = state => state.books;
 
@@ -37,6 +38,12 @@ export const getUnit = (state, unitId) =>
   createSelector(
     getBookState,
     bookState => bookState.units.get(unitId) || EmptyUnit,
+  )(state);
+
+export const getUnitOrders = (state, unitId, orderType, orderBy, page) =>
+  createSelector(
+    getBookState,
+    bookState => bookState.unitOrders.get(makeUnitOrderKey(unitId, orderType, orderBy, page)),
   )(state);
 
 export const getBookDescription = (state, bookId) =>

@@ -16,7 +16,7 @@ export const DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS = 'DOWNLOAD_SELECTED_MAIN_UNIT_BO
 
 export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
 
-export const SET_PRIMARY_ITEM = 'SET_PRIMARY_ITEM';
+export const SET_MAIN_UNIT_PRIMARY_ITEM = 'SET_MAIN_UNIT_PRIMARY_ITEM';
 
 export const loadItems = () => ({
   type: LOAD_MAIN_UNIT_ITEMS,
@@ -95,7 +95,7 @@ export const setIsFetchingBook = isFetchingBook => ({
 });
 
 export const setPrimaryItem = primaryItem => ({
-  type: SET_PRIMARY_ITEM,
+  type: SET_MAIN_UNIT_PRIMARY_ITEM,
   payload: {
     primaryItem,
   },

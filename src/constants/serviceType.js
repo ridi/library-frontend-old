@@ -1,4 +1,8 @@
 export class ServiceType {
+  static get NORMAL() {
+    return 'normal';
+  }
+
   static get RENT() {
     return 'rent';
   }
