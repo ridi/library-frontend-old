@@ -15,7 +15,7 @@ import {
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount, getHiddenUnitPrimaryItem } from './requests';
 
-import { loadBookData, saveUnitData, loadBookDescriptions, loadBookStarRatings } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
@@ -65,6 +65,10 @@ function* loadHiddenUnitItems() {
 
   try {
     yield put(setIsFetchingHiddenBook(true));
+
+    // Unit 로딩
+    yield call(loadUnitData, [unitId]);
+
     const [itemResponse, countResponse] = yield all([
       call(fetchHiddenUnitItems, unitId, page),
       call(fetchHiddenUnitItemsTotalCount, unitId),
@@ -76,11 +80,8 @@ function* loadHiddenUnitItems() {
       return;
     }
 
-    // PrimaryItem과 Unit 저장
-    const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(saveUnitData, [itemResponse.unit]);
-
     // 대표 책 데이터 로딩
+    const primaryItem = yield call(loadPrimaryItem, unitId);
     yield call(loadBookDescriptions, [primaryItem.b_id]);
     yield call(loadBookStarRatings, [primaryItem.b_id]);
 

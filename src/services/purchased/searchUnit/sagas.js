@@ -20,7 +20,7 @@ import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrim
 
 import { OrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData, loadBookDescriptions, saveUnitData, loadBookStarRatings } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
@@ -74,6 +74,10 @@ function* loadItems() {
 
   try {
     yield put(setIsFetchingSearchBook(true));
+
+    // Unit 로딩
+    yield call(loadUnitData, [unitId]);
+
     const [itemResponse, countResponse] = yield all([
       call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
       call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
@@ -85,11 +89,8 @@ function* loadItems() {
       return;
     }
 
-    // PrimaryItem과 Unit 저장
-    const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(saveUnitData, [itemResponse.unit]);
-
     // 대표 책 데이터 로딩
+    const primaryItem = yield call(loadPrimaryItem, unitId);
     yield call(loadBookDescriptions, [primaryItem.b_id]);
     yield call(loadBookStarRatings, [primaryItem.b_id]);
 
