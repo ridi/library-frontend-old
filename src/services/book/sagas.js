@@ -9,10 +9,10 @@ import {
   setBookStarRatings,
 } from './actions';
 
-import { fetchBookData, fetchBookDescriptions, fetchStarRatings } from './requests';
+import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
-import { getCriterion, attatchTTL } from '../../utils/ttl';
+import { getCriterion } from '../../utils/ttl';
 import { getBooks } from './selectors';
 
 function* persistBookDataToStorage() {
@@ -33,23 +33,23 @@ function* loadBookDataFromStorage() {
   yield fork(persistBookDataToStorage);
 }
 
-function filterBookIds(bookIds, existBooks) {
-  // Step 1. Get exist book data
-  // Step 2. Filter expired or not cached book data via payload.bookIds
-  // Step 3. Fetch book data
-  // Step 4. Set book data
+function filterTTLObj(itemIds, existItems) {
+  // Step 1. Get exist ttl item data
+  // Step 2. Filter expired or not cached ttl item data via payload
+  // Step 3. Fetch ttl item data
+  // Step 4. Set ttl item data
   const criterion = getCriterion();
-  return bookIds.reduce((previous, bookId) => {
-    const book = existBooks.find(bookId);
+  return itemIds.reduce((previous, itemId) => {
+    const item = existItems.find(itemId);
 
-    if (!book) {
+    if (!item) {
       // 없거나
-      return [...previous, bookId];
+      return [...previous, itemId];
     }
 
-    if (book.value.ttl <= criterion) {
+    if (item.value.ttl <= criterion) {
       // TTL이 만료되었거나
-      return [...previous, book.value.id];
+      return [...previous, itemId];
     }
 
     return previous;
@@ -58,7 +58,7 @@ function filterBookIds(bookIds, existBooks) {
 
 export function* loadBookData(bookIds) {
   const existBooks = yield select(state => state.books.books);
-  const filteredBookIds = filterBookIds(bookIds, existBooks);
+  const filteredBookIds = filterTTLObj(bookIds, existBooks);
 
   if (filteredBookIds.length === 0) {
     return;
@@ -83,7 +83,7 @@ export function* loadBookDescriptions(bookIds) {
   // Step 2. 요청할 Book id 를 추려낸다.
   // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
-  const filteredBookIds = filterBookIds([...bookIds, ...bookSeriesIds], existBookDescriptions);
+  const filteredBookIds = filterTTLObj([...bookIds, ...bookSeriesIds], existBookDescriptions);
 
   if (filteredBookIds.length === 0) {
     return;
@@ -96,7 +96,7 @@ export function* loadBookDescriptions(bookIds) {
 
 export function* loadBookStarRatings(bookIds) {
   const existStartRatings = yield select(state => state.books.bookStarRatings);
-  const filteredBookIds = filterBookIds(bookIds, existStartRatings);
+  const filteredBookIds = filterTTLObj(bookIds, existStartRatings);
 
   if (filteredBookIds.length === 0) {
     return;
@@ -106,38 +106,16 @@ export function* loadBookStarRatings(bookIds) {
   yield put(setBookStarRatings(starRatings));
 }
 
-export function* saveUnitData(units) {
-  const criterion = getCriterion();
+export function* loadUnitData(unitIds) {
   const existUnits = yield select(state => state.books.units);
-  const filteredUnits = units.reduce((previous, unit) => {
-    const _unit = existUnits.find(unit.id);
+  const filteredUnitIds = filterTTLObj(unitIds, existUnits);
 
-    if (!_unit) {
-      return [...previous, unit];
-    }
+  if (filteredUnitIds.length === 0) {
+    return;
+  }
 
-    if (_unit.value.ttl <= criterion) {
-      return [...previous, unit];
-    }
-
-    return previous;
-  }, []);
-
-  yield put(setUnitData(attatchTTL(filteredUnits)));
-
-  // TODO: LRU버그로 인해 주석처리
-  // yield fork(persistBookDataToStorage);
-}
-
-export function* extractUnitData(items) {
-  const units = items.map(item => ({
-    id: item.unit_id,
-    title: item.unit_title,
-    type: item.unit_type,
-    type_int: item.unit_type_int,
-  }));
-
-  yield call(saveUnitData, units);
+  const units = yield call(fetchUnitData, filteredUnitIds);
+  yield put(setUnitData(units));
 }
 
 export default function* bookRootSaga() {
