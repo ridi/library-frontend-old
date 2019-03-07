@@ -162,8 +162,8 @@ class UnitDetailView extends React.Component {
   }
 
   renderAuthors() {
-    const { book } = this.props;
-    const bookMetadata = new BookMetaData(book);
+    const { unit, book } = this.props;
+    const bookMetadata = new BookMetaData(book, unit);
 
     return (
       <div css={styles.authorList}>
@@ -225,7 +225,7 @@ const mapDispatchToProps = {
 const mergeProps = (state, actions, props) => {
   const book = props.primaryItem && props.books[props.primaryItem.b_id] ? props.books[props.primaryItem.b_id] : null;
   const bookMetadata =
-    props.primaryItem && props.books[props.primaryItem.b_id] ? new BookMetaData(props.books[props.primaryItem.b_id]) : null;
+    props.primaryItem && props.books[props.primaryItem.b_id] ? new BookMetaData(props.books[props.primaryItem.b_id], props.unit) : null;
 
   return {
     ...state,

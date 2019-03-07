@@ -5,8 +5,9 @@ import { numberWithUnit } from './number';
 import { formatFileSize } from './file';
 
 export default class BookMetaData {
-  constructor(platformBookData) {
+  constructor(platformBookData, unitData) {
     this.bookData = platformBookData;
+    this.unitData = unitData;
   }
 
   get authors() {
@@ -65,20 +66,20 @@ export default class BookMetaData {
       infos.push(`${BookFileType.convertToString(file.format)}`);
     }
 
-    if (file.character_count) {
-      const characterCount = numberWithUnit(file.character_count);
+    if (this.unitData.character_count) {
+      const characterCount = numberWithUnit(this.unitData.character_count);
       // null 일 수 있다.
       if (characterCount) {
-        infos.push(`약 ${numberWithUnit(file.character_count)}자`);
+        infos.push(`약 ${characterCount}자`);
       }
     }
 
-    if (file.page_count) {
-      infos.push(`${file.page_count}쪽`);
+    if (this.unitData.page_count) {
+      infos.push(`${this.unitData.page_count}쪽`);
     }
 
-    if (file.size) {
-      infos.push(`${formatFileSize(file.size)}`);
+    if (this.unitData.file_size) {
+      infos.push(`${formatFileSize(this.unitData.file_size)}`);
     }
 
     if (file.is_drm_free) {
