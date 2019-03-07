@@ -54,3 +54,9 @@ export function* fetchStarRatings(bookIds) {
 
   return attatchTTL(_reduceBookStarRatings(response.data.rating_summaries));
 }
+
+export function* fetchUnitData(unitIds) {
+  const api = yield put(getAPI());
+  const response = yield api.post(makeURI('/books/units', {}, config.LIBRARY_API_BASE_URL), { unit_ids: unitIds });
+  return attatchTTL(response.data.units);
+}
