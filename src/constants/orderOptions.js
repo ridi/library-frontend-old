@@ -48,8 +48,14 @@ export class OrderOptions extends BaseOrderOptions {
     return [this.PURCHASE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
   }
 
-  static toSeriesList() {
-    return [this.UNIT_ORDER_DESC, this.UNIT_ORDER_ASC, this.PURCHASE_DATE, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
+  static toSeriesList(unitOfCount) {
+    return [
+      this.UNIT_ORDER_DESC,
+      applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
+      this.PURCHASE_DATE,
+      this.EXPIRE_DATE,
+      this.EXPIRED_BOOKS_ONLY,
+    ];
   }
 
   static toShelfList(unitOfCount) {

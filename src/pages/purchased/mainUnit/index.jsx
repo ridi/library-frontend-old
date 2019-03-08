@@ -132,7 +132,9 @@ class MainUnit extends React.Component {
     }
 
     const bookUnitOfCount = primaryItem && books[primaryItem.b_id].series ? books[primaryItem.b_id].series.property.unit : null;
-    const orderOptions = UnitType.isSeries(unit.type) ? OrderOptions.toSeriesList() : OrderOptions.toShelfList(bookUnitOfCount);
+    const orderOptions = UnitType.isSeries(unit.type)
+      ? OrderOptions.toSeriesList(bookUnitOfCount)
+      : OrderOptions.toShelfList(bookUnitOfCount);
 
     return (
       <SeriesView
