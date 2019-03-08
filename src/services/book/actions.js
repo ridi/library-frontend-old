@@ -7,8 +7,6 @@ export const SET_UNIT_ORDERS = 'SET_UNIT_ORDERS';
 export const SET_BOOK_DATA_FROM_STORAGE = 'SET_BOOK_DATA_FROM_STORAGE';
 export const LOAD_BOOK_DATA_FROM_STORAGE = 'LOAD_BOOK_DATA_FROM_STORAGE';
 
-export const SET_READ_LATEST_DATA = 'SET_READ_LATEST_DATA';
-
 export const makeUnitOrderKey = (unitId, orderType, orderBy, page) => `${unitId}-${orderType}-${orderBy}-${page}`;
 
 export const setBookData = books => ({
@@ -60,12 +58,4 @@ export const setBookDataFromStorage = (books, units) => ({
 
 export const loadBookDataFromStorage = () => ({
   type: LOAD_BOOK_DATA_FROM_STORAGE,
-});
-
-export const setReadLatestData = (bookId, readLatestBookId) => ({
-  type: SET_READ_LATEST_DATA,
-  payload: {
-    bookId,
-    readLatestBookId,
-  },
 });

@@ -4,7 +4,6 @@ import {
   SET_BOOK_DESCRIPTIONS,
   SET_UNIT_DATA,
   SET_BOOK_STAR_RATINGS,
-  SET_READ_LATEST_DATA,
   SET_UNIT_ORDERS,
   makeUnitOrderKey,
 } from './actions';
@@ -34,14 +33,6 @@ const bookReducer = (state = {}, action) => {
       state.books.assign(action.payload.books, compareWithTTL, true);
       state.units.assign(action.payload.units, compareWithTTL, true);
       return state;
-    case SET_READ_LATEST_DATA:
-      return {
-        ...state,
-        bookReadLatests: {
-          ...state.bookReadLatests,
-          [action.payload.bookId]: action.payload.readLatestBookId,
-        },
-      };
     default:
       return state;
   }
