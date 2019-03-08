@@ -42,6 +42,7 @@ export const modal = (isActive, horizontalAlign = Align.Right) => {
     pointerEvents: 'none',
     overflowX: 'hidden',
     overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
     ...customScrollBar,
     ...active,
   };
