@@ -6,6 +6,8 @@ export const SET_UNIT_DATA = 'SET_UNIT_DATA';
 export const SET_BOOK_DATA_FROM_STORAGE = 'SET_BOOK_DATA_FROM_STORAGE';
 export const LOAD_BOOK_DATA_FROM_STORAGE = 'LOAD_BOOK_DATA_FROM_STORAGE';
 
+export const SET_READ_LATEST_DATA = 'SET_READ_LATEST_DATA';
+
 export const setBookData = books => ({
   type: SET_BOOK_DATA,
   payload: {
@@ -44,4 +46,12 @@ export const setBookDataFromStorage = (books, units) => ({
 
 export const loadBookDataFromStorage = () => ({
   type: LOAD_BOOK_DATA_FROM_STORAGE,
+});
+
+export const setReadLatestData = (bookId, LatestReadBookId) => ({
+  type: SET_READ_LATEST_DATA,
+  payload: {
+    bookId,
+    LatestReadBookId,
+  },
 });

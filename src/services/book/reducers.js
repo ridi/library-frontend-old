@@ -1,4 +1,11 @@
-import { SET_BOOK_DATA, SET_BOOK_DATA_FROM_STORAGE, SET_BOOK_DESCRIPTIONS, SET_UNIT_DATA, SET_BOOK_STAR_RATINGS } from './actions';
+import {
+  SET_BOOK_DATA,
+  SET_BOOK_DATA_FROM_STORAGE,
+  SET_BOOK_DESCRIPTIONS,
+  SET_UNIT_DATA,
+  SET_BOOK_STAR_RATINGS,
+  SET_READ_LATEST_DATA,
+} from './actions';
 
 const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
 const compareWithTTL = (oldValue, newValue) => oldValue.ttl < newValue.ttl;
@@ -21,6 +28,14 @@ const bookReducer = (state = {}, action) => {
       state.books.assign(action.payload.books, compareWithTTL, true);
       state.units.assign(action.payload.units, compareWithTTL, true);
       return state;
+    case SET_READ_LATEST_DATA:
+      return {
+        ...state,
+        bookReadLatests: {
+          ...state.bookReadLatests,
+          [action.payload.bookId]: action.payload.LatestReadBookId,
+        },
+      };
     default:
       return state;
   }
