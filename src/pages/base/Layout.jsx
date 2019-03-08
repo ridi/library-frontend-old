@@ -7,6 +7,7 @@ import FullScreenLoading from '../../components/FullScreenLoading';
 import Toaster from '../../components/Toaster';
 import { closeConfirm } from '../../services/confirm/actions';
 import { closeDialog } from '../../services/dialog/actions';
+import { Environment } from './Environment';
 import GNB from './GNB';
 import { globalStyles } from './styles';
 
@@ -16,6 +17,7 @@ class Layout extends React.Component {
     return (
       <>
         <Global styles={globalStyles} />
+        <Environment />
         <GNB />
         {children}
         <Toaster />
