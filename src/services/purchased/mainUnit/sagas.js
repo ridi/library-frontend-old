@@ -8,14 +8,14 @@ import { toFlatten } from '../../../utils/array';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { makeLinkProps } from '../../../utils/uri';
 
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData, loadReadLatestBook } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showDialog } from '../../dialog/actions';
 import { getQuery } from '../../router/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
-import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
+import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
@@ -108,7 +108,7 @@ function* loadItems() {
       yield loadOwnItems(unitId, orderType, orderBy, page);
     }
 
-    yield fork(loadReadLatestBook, primaryItem.b_id);
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

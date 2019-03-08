@@ -190,6 +190,12 @@ export const drmFreeDownloadButton = {
   color: '#808991',
 };
 
+export const readLatestButtonAnchor = {
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
+    width: '100%',
+  }),
+};
+
 export const readLatestButton = {
   ...defaultButtonStyle,
   marginTop: 10,

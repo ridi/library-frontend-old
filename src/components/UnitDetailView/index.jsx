@@ -18,7 +18,7 @@ import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
 import { getLocationHref } from '../../services/router/selectors';
-import { getReadLatestBookId } from '../../services/book/selectors';
+import { getReadLatestBookId } from '../../services/purchased/common/selectors';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -131,7 +131,12 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <a href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)} target="_blank" rel="noopener noreferrer">
+      <a
+        css={styles.readLatestButtonAnchor}
+        href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <button type="button" css={styles.readLatestButton}>
           {readLatestBookId ? '이어보기' : '첫화보기'}
         </button>
@@ -247,7 +252,7 @@ class UnitDetailView extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
   locationHref: getLocationHref(state),
-  readLatestBookId: ownProps.primaryItem ? getReadLatestBookId(state, ownProps.primaryItem.b_id) : null,
+  readLatestBookId: ownProps.unit ? getReadLatestBookId(state, ownProps.unit.id) : null,
   loadingReadLatest: state.ui.loadingReadLatest,
 });
 

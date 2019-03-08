@@ -5,5 +5,5 @@ const getPurchasedCommonState = state => state.purchasedCommon;
 export const getReadLatestBookId = (state, unitId) =>
   createSelector(
     getPurchasedCommonState,
-    state => state.readLatestBookId[unitId],
+    state => state.readLatestBookIds[unitId],
   )(state);

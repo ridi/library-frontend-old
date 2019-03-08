@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { downloadBooks } from '../../bookDownload/sagas';
-import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
+import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
@@ -21,7 +21,7 @@ import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrim
 
 import { OrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData, loadReadLatestBook } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
@@ -108,7 +108,7 @@ function* loadItems() {
     } else {
       yield loadOwnItems(unitId, orderType, orderBy, page);
     }
-    yield fork(loadReadLatestBook, primaryItem.b_id);
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

@@ -5,7 +5,7 @@ import bookDownloadReducer from '../services/bookDownload/reducers';
 import confirmReducer from '../services/confirm/reducers';
 import dialogReducer from '../services/dialog/reducers';
 import excelDownloadReducer from '../services/excelDownload/reducers';
-import purchaseCommonReducer from '../services/purchased/common/reducers';
+import purchasedCommonReducer from '../services/purchased/common/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
@@ -21,7 +21,7 @@ export default combineReducers({
   account: accountReducer,
   books: bookReducer,
 
-  purchaseCommon: purchaseCommonReducer,
+  purchasedCommon: purchasedCommonReducer,
   purchasedMain: purchasedMainReducer,
   purchasedMainUnit: purchasedMainUnitReducer,
   purchasedSearch: purchasedSearchReducer,

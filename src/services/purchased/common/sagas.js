@@ -5,8 +5,10 @@ import { UnitType } from '../../../constants/unitType';
 import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 import { getUnit, getUnitOrders } from '../../book/selectors';
-import { fetchItems } from './requests';
+import { fetchItems, fetchReadLatestBookId } from './requests';
 import { setReadLatestBookId } from './actions';
+
+import { setLoadingReadLatest } from '../../ui/actions';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -61,8 +63,8 @@ export function* isTotalSeriesView(unitId, order) {
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
 }
 
-export function* loadReadLatestBookIds(bookId) {
-  const book = yield select(state => state.books.books.get(bookId));
+export function* loadReadLatestBookId(unitId, primaryBookId) {
+  const book = yield select(state => state.books.books.get(primaryBookId));
   if (!book.series) {
     return;
   }
@@ -71,7 +73,8 @@ export function* loadReadLatestBookIds(bookId) {
   yield put(setLoadingReadLatest(true));
   try {
     const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
-    yield put(setReadLatestBookId(bookId, readLatestBookId));
+    yield put(setReadLatestBookId(unitId, readLatestBookId));
+  } catch (err) {
   } finally {
     yield put(setLoadingReadLatest(false));
   }
