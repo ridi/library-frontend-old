@@ -114,20 +114,26 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readLatestBookId, locationHref } = this.props;
+    const { unit, books, primaryItem, readLatestBookId, locationHref } = this.props;
 
-    if (!readLatestBookId) {
-      return (
-        <button type="button" css={styles.readLatestButton}>
-          <div css={styles.readLatestButtonSpinner} />
-        </button>
-      );
+    const primaryBook = books[primaryItem.b_id];
+    if (!(UnitType.isSeries(unit.type) && primaryBook.support.web_viewer)) {
+      // 시리즈면서 web_viewser 서포트일때만 이어보기 노출
+      return null;
     }
 
+    // if (!readLatestBookId) {
+    //   return (
+    //     <button type="button" css={styles.readLatestButton}>
+    //       <div css={styles.readLatestButtonSpinner} />
+    //     </button>
+    //   );
+    // }
+
     return (
-      <a href={makeWebViewerURI(readLatestBookId, locationHref)} target="_blank" rel="noopener noreferrer">
+      <a href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)} target="_blank" rel="noopener noreferrer">
         <button type="button" css={styles.readLatestButton}>
-          이어보기
+          {readLatestBookId ? '이어보기' : '첫화보기'}
         </button>
       </a>
     );
@@ -227,7 +233,7 @@ class UnitDetailView extends React.Component {
             <div css={styles.unitTitle}>{unit.title}</div>
             {this.renderAuthors()}
             {this.renderSummary()}
-            {UnitType.isSeries(unit.type) ? this.renderReadLatestButton() : null}
+            {this.renderReadLatestButton()}
             {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>

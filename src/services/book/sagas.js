@@ -125,17 +125,13 @@ export function* loadReadLatestBook(bookId) {
   if (!book.series) {
     return;
   }
-  const seriesId = book.series.id;
 
-  yield put(setReadLatestData(bookId, bookId));
-  // try {
-  //   const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
-  //   yield put(setReadLatestData(bookId, readLatestBookId));
-  // } catch (err) {
-  //   if (err instanceof NotFoundReadLatestError) {
-  //     yield put(setReadLatestData(bookId, bookId));
-  //   }
-  // }
+  const seriesId = book.series.id;
+  try {
+    const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
+    yield put(setReadLatestData(bookId, readLatestBookId));
+  } finally {
+  }
 }
 
 export default function* bookRootSaga() {
