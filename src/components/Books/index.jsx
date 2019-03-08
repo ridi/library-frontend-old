@@ -16,12 +16,12 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
-  const isExpired = !isRidiselect && isAfter(new Date(), libraryBookData.expire_date);
+  const isExpired = !isRidiselect && libraryBookData.expire_date && isAfter(new Date(), libraryBookData.expire_date);
   const expiredAt = libraryBookData.remain_time;
   const isUnitBook = libraryBookData.unit_type && !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
-  const isNotAvailable = isAfter(new Date(), libraryBookData.expire_date);
+  const isNotAvailable = libraryBookData.expire_date ? isAfter(new Date(), libraryBookData.expire_date) : false;
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
@@ -35,7 +35,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
     expired: isExpired,
     notAvailable: isNotAvailable,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode,
+    selectMode: isSelectMode && libraryBookData.purchase_date,
     selected: isSelected,
     unitBook: isUnitBook,
     unitBookCount,
