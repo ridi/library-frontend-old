@@ -8,7 +8,7 @@ import { toFlatten } from '../../../utils/array';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { makeLinkProps } from '../../../utils/uri';
 
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData, loadReadLatestBook } from '../../book/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showDialog } from '../../dialog/actions';
