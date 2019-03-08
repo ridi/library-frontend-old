@@ -4,5 +4,4 @@ export const initialState = {
   viewType: ViewType.PORTRAIT,
   fullScreenLoading: false,
   isError: false,
-  loadReadLatest: false,
 };

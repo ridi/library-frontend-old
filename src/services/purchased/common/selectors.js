@@ -7,3 +7,8 @@ export const getReadLatestBookId = (state, unitId) =>
     getPurchasedCommonState,
     state => state.readLatestBookIds[unitId],
   )(state);
+
+export const getIsLoadingReadLatest = createSelector(
+  getPurchasedCommonState,
+  state => state.loadingReadLatest,
+);

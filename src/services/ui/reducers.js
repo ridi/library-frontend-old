@@ -20,11 +20,6 @@ const uiReducer = (state = initialState, action) => {
         ...state,
         isError: action.payload.isError,
       };
-    case SET_LOADING_READ_LATEST:
-      return {
-        ...state,
-        loadingReadLatest: action.payload.loadingReadLatest,
-      };
     default:
       return state;
   }

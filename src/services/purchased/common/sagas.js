@@ -6,9 +6,7 @@ import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 import { getUnit, getUnitOrders } from '../../book/selectors';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId } from './actions';
-
-import { setLoadingReadLatest } from '../../ui/actions';
+import { setReadLatestBookId, setLoadingReadLatest } from './actions';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);

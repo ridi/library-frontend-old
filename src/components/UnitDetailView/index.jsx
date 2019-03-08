@@ -18,7 +18,7 @@ import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
 import { getLocationHref } from '../../services/router/selectors';
-import { getReadLatestBookId } from '../../services/purchased/common/selectors';
+import { getReadLatestBookId, getIsLoadingReadLatest } from '../../services/purchased/common/selectors';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -253,7 +253,7 @@ class UnitDetailView extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   locationHref: getLocationHref(state),
   readLatestBookId: ownProps.unit ? getReadLatestBookId(state, ownProps.unit.id) : null,
-  loadingReadLatest: state.ui.loadingReadLatest,
+  loadingReadLatest: getIsLoadingReadLatest(state),
 });
 
 const mapDispatchToProps = {
