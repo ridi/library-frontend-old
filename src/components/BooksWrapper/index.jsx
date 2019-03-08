@@ -31,6 +31,12 @@ export default class BooksWrapper extends React.Component {
   setBooksAdditionalPadding = () => {
     const books = document.querySelector(`.${this.booksWrapperClassName}`);
     const book = document.querySelector(`.${this.bookClassName}`);
+
+    if (!books || !book) {
+      setTimeout(() => this.setBooksAdditionalPadding(), 100);
+      return;
+    }
+
     const additionalPadding = Math.floor((books.offsetWidth % book.offsetWidth) / 2);
     this.setState({ additionalPadding });
   };
