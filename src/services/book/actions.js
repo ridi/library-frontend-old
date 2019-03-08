@@ -48,10 +48,10 @@ export const loadBookDataFromStorage = () => ({
   type: LOAD_BOOK_DATA_FROM_STORAGE,
 });
 
-export const setReadLatestData = (bookId, LatestReadBookId) => ({
+export const setReadLatestData = (bookId, readLatestBookId) => ({
   type: SET_READ_LATEST_DATA,
   payload: {
     bookId,
-    LatestReadBookId,
+    readLatestBookId,
   },
 });

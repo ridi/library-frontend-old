@@ -6,6 +6,8 @@ import config from '../../config';
 import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
 
+import { NotFoundReadLatestError } from './errors';
+
 const _reduceBooks = books =>
   books.map(book => ({
     id: book.id,
@@ -59,4 +61,20 @@ export function* fetchUnitData(unitIds) {
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books/units', {}, config.LIBRARY_API_BASE_URL), { unit_ids: unitIds });
   return attatchTTL(response.data.units);
+}
+
+export function* fetchReadLatestBookId(seriesId) {
+  const api = yield put(getAPI());
+
+  try {
+    const response = yield api.get(
+      makeURI(`/api/user/reading-histories/series/${seriesId}/latest`, { simple: true }, config.STORE_API_BASE_URL),
+    );
+    return response.data.result;
+  } catch (err) {
+    if (err.response.status === 404) {
+      throw new NotFoundReadLatestError();
+    }
+    throw err;
+  }
 }

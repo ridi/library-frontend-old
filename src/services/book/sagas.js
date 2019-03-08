@@ -7,13 +7,15 @@ import {
   setBookDescriptions,
   setUnitData,
   setBookStarRatings,
+  setReadLatestData,
 } from './actions';
 
-import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings } from './requests';
+import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings, fetchReadLatestBookId } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { getBooks } from './selectors';
+import { NotFoundReadLatestError } from './errors';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -116,6 +118,24 @@ export function* loadUnitData(unitIds) {
 
   const units = yield call(fetchUnitData, filteredUnitIds);
   yield put(setUnitData(units));
+}
+
+export function* loadReadLatestBook(bookId) {
+  const book = yield select(state => state.books.books.get(bookId));
+  if (!book.series) {
+    return;
+  }
+  const seriesId = book.series.id;
+
+  yield put(setReadLatestData(bookId, bookId));
+  // try {
+  //   const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
+  //   yield put(setReadLatestData(bookId, readLatestBookId));
+  // } catch (err) {
+  //   if (err instanceof NotFoundReadLatestError) {
+  //     yield put(setReadLatestData(bookId, bookId));
+  //   }
+  // }
 }
 
 export default function* bookRootSaga() {

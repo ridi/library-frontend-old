@@ -33,7 +33,7 @@ const bookReducer = (state = {}, action) => {
         ...state,
         bookReadLatests: {
           ...state.bookReadLatests,
-          [action.payload.bookId]: action.payload.LatestReadBookId,
+          [action.payload.bookId]: action.payload.readLatestBookId,
         },
       };
     default:
