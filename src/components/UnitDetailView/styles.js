@@ -1,3 +1,5 @@
+import config from '../../config';
+
 import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
@@ -62,6 +64,8 @@ export const authorDelimiter = {
 export const fileInfo = {
   ...defaultLayout.fileInfo,
   flexWrap: 'wrap',
+
+  marginBottom: 14,
 };
 
 export const starRateIcon = {
@@ -171,11 +175,11 @@ const defaultButtonStyle = {
 
 export const downloadButton = {
   ...defaultButtonStyle,
-  marginTop: 24,
-  border: '1px solid #0077d9',
+  marginTop: 10,
+  border: '2px solid #0077d9',
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-  backgroundColor: '#1f8ce6',
-  color: 'white',
+  backgroundColor: 'white',
+  color: '#1f8ce6',
 };
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
@@ -184,4 +188,27 @@ export const drmFreeDownloadButton = {
   boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
   backgroundColor: 'white',
   color: '#808991',
+};
+
+export const readLatestButtonAnchor = {
+  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
+    width: '100%',
+  }),
+};
+
+export const readLatestButton = {
+  ...defaultButtonStyle,
+  marginTop: 10,
+  boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
+  border: '1px solid #0077d9',
+  backgroundColor: '#1f8ce6',
+  color: 'white',
+};
+
+export const readLatestButtonSpinner = {
+  width: 17,
+  height: 17,
+  background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+  backgroundSize: '100%',
+  margin: '0 auto',
 };

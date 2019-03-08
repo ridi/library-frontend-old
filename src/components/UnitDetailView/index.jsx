@@ -13,9 +13,12 @@ import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import Star from '../../svgs/Star.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { thousandsSeperator } from '../../utils/number';
-import { makeRidiSelectUri, makeRidiStoreUri } from '../../utils/uri';
+import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
+
+import { getLocationHref } from '../../services/router/selectors';
+import { getReadLatestBookId, getIsLoadingReadLatest } from '../../services/purchased/common/selectors';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -110,6 +113,37 @@ class UnitDetailView extends React.Component {
     );
   }
 
+  renderReadLatestButton() {
+    const { unit, books, primaryItem, readLatestBookId, locationHref, loadingReadLatest } = this.props;
+
+    const primaryBook = books[primaryItem.b_id];
+    if (!(UnitType.isSeries(unit.type) && primaryBook.support.web_viewer)) {
+      // 시리즈면서 web_viewser 서포트일때만 이어보기 노출
+      return null;
+    }
+
+    if (loadingReadLatest) {
+      return (
+        <button type="button" css={styles.readLatestButton}>
+          <div css={styles.readLatestButtonSpinner} />
+        </button>
+      );
+    }
+
+    return (
+      <a
+        css={styles.readLatestButtonAnchor}
+        href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <button type="button" css={styles.readLatestButton}>
+          {readLatestBookId ? '이어보기' : '첫화보기'}
+        </button>
+      </a>
+    );
+  }
+
   renderDownloadButton() {
     const { unit, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
@@ -178,7 +212,7 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
+    const { unit, items, primaryItem, book, bookDescription, bookStarRating, readLatestBookId } = this.props;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
@@ -204,6 +238,7 @@ class UnitDetailView extends React.Component {
             <div css={styles.unitTitle}>{unit.title}</div>
             {this.renderAuthors()}
             {this.renderSummary()}
+            {this.renderReadLatestButton()}
             {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>
@@ -215,7 +250,11 @@ class UnitDetailView extends React.Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state, ownProps) => ({
+  locationHref: getLocationHref(state),
+  readLatestBookId: ownProps.unit ? getReadLatestBookId(state, ownProps.unit.id) : null,
+  loadingReadLatest: getIsLoadingReadLatest(state),
+});
 
 const mapDispatchToProps = {
   dispatchDownloadBooks: downloadBooks,

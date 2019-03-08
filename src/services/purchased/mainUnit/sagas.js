@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 
 import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
@@ -15,7 +15,7 @@ import { showDialog } from '../../dialog/actions';
 import { getQuery } from '../../router/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
-import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
+import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
@@ -107,6 +107,8 @@ function* loadItems() {
     } else {
       yield loadOwnItems(unitId, orderType, orderBy, page);
     }
+
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {
