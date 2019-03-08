@@ -2,6 +2,8 @@ import { put } from 'redux-saga/effects';
 import { getAPI } from '../../api/actions';
 
 import config from '../../config';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
+import { calcOffset } from '../../utils/pagination';
 
 import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
@@ -59,4 +61,17 @@ export function* fetchUnitData(unitIds) {
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books/units', {}, config.LIBRARY_API_BASE_URL), { unit_ids: unitIds });
   return attatchTTL(response.data.units);
+}
+
+export function* fetchUnitOrders(unitId, orderType, orderBy, page) {
+  const options = {
+    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
+    limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
+    orderType,
+    orderBy,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI(`/books/units/${unitId}/order`, options, config.LIBRARY_API_BASE_URL));
+  return response.data;
 }

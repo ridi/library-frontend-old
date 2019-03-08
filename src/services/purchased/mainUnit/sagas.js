@@ -1,36 +1,37 @@
 import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
+import { OrderOptions } from '../../../constants/orderOptions';
+import { URLMap } from '../../../constants/urls';
+
+import { toFlatten } from '../../../utils/array';
+import { isExpiredTTL } from '../../../utils/ttl';
+import { makeLinkProps } from '../../../utils/uri';
+
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
+import { showDialog } from '../../dialog/actions';
+import { getQuery } from '../../router/selectors';
+import { showToast } from '../../toast/actions';
+import { setError, setFullScreenLoading } from '../../ui/actions';
+import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
   HIDE_SELECTED_MAIN_UNIT_BOOKS,
   LOAD_MAIN_UNIT_ITEMS,
   SELECT_ALL_MAIN_UNIT_BOOKS,
+  selectBooks,
+  setIsFetchingBook,
   setItems,
   setOrder,
   setPage,
-  setTotalCount,
-  selectBooks,
-  setIsFetchingBook,
   setPrimaryItem,
+  setTotalCount,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
-
-import { OrderOptions } from '../../../constants/orderOptions';
-
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
-import { getQuery } from '../../router/selectors';
-
-import { toFlatten } from '../../../utils/array';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
-import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { showToast } from '../../toast/actions';
-import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { makeLinkProps } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { showDialog } from '../../dialog/actions';
+import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -63,6 +64,25 @@ function* moveToFirstPage() {
   Router.replace(linkProps.href, linkProps.as);
 }
 
+function* loadOwnItems(unitId, orderType, orderBy, page) {
+  const [itemResponse, countResponse] = yield all([
+    call(fetchMainUnitItems, unitId, orderType, orderBy, page),
+    call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
+  ]);
+
+  // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+  if (!itemResponse.items.length && countResponse.item_total_count) {
+    yield moveToFirstPage();
+    return;
+  }
+
+  yield all([
+    call(loadBookData, toFlatten(itemResponse.items, 'b_id')),
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.item_total_count)),
+  ]);
+}
+
 function* loadItems() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
@@ -75,28 +95,18 @@ function* loadItems() {
     yield put(setIsFetchingBook(true));
 
     // Unit 로딩
-    yield call(loadUnitData, [unitId]);
-
-    const [itemResponse, countResponse] = yield all([
-      call(fetchMainUnitItems, unitId, orderType, orderBy, page),
-      call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
+    const [_, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
+    yield all([
+      put(setPrimaryItem(primaryItem)),
+      call(loadBookDescriptions, [primaryItem.b_id]),
+      call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
 
-    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
-    if (!itemResponse.items.length && countResponse.item_total_count) {
-      yield moveToFirstPage();
-      return;
+    if (yield call(isTotalSeriesView, unitId, order)) {
+      yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
+    } else {
+      yield loadOwnItems(unitId, orderType, orderBy, page);
     }
-
-    // 대표 책 데이터 로딩
-    const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(loadBookDescriptions, [primaryItem.b_id]);
-    yield call(loadBookStarRatings, [primaryItem.b_id]);
-
-    // 책 데이터 로딩
-    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
-
-    yield all([put(setPrimaryItem(primaryItem)), put(setItems(itemResponse.items)), put(setTotalCount(countResponse.item_total_count))]);
   } catch (err) {
     yield put(setError(true));
   } finally {

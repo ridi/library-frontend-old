@@ -7,9 +7,10 @@ import {
   setBookDescriptions,
   setUnitData,
   setBookStarRatings,
+  setUnitOrders,
 } from './actions';
 
-import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings } from './requests';
+import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings, fetchUnitOrders } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
@@ -116,6 +117,11 @@ export function* loadUnitData(unitIds) {
 
   const units = yield call(fetchUnitData, filteredUnitIds);
   yield put(setUnitData(units));
+}
+
+export function* loadUnitOrders(unitId, orderType, orderBy, page) {
+  const unitOrders = yield call(fetchUnitOrders, unitId, orderType, orderBy, page);
+  yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
 }
 
 export default function* bookRootSaga() {
