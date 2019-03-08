@@ -95,7 +95,7 @@ function* loadItems() {
     yield put(setIsFetchingBook(true));
 
     // Unit 로딩
-    const [, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
+    const [_, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
     yield all([
       put(setPrimaryItem(primaryItem)),
       call(loadBookDescriptions, [primaryItem.b_id]),
