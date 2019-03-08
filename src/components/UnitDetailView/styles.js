@@ -1,3 +1,5 @@
+import config from '../../config';
+
 import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
@@ -188,11 +190,19 @@ export const drmFreeDownloadButton = {
   color: '#808991',
 };
 
-export const continueButton = {
+export const readLatestButton = {
   ...defaultButtonStyle,
   marginTop: 10,
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
   border: '1px solid #0077d9',
   backgroundColor: '#1f8ce6',
   color: 'white',
+};
+
+export const readLatestButtonSpinner = {
+  width: 17,
+  height: 17,
+  background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+  backgroundSize: '100%',
+  margin: '0 auto',
 };

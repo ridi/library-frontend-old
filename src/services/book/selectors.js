@@ -53,3 +53,9 @@ export const getBookStarRating = (state, bookId) =>
     getBookState,
     bookState => bookState.bookStarRatings.get(bookId),
   )(state);
+
+export const getReadLatestBookId = (state, bookId) =>
+  createSelector(
+    getBookState,
+    bookState => bookState.bookReadLatests[bookId],
+  )(state);
