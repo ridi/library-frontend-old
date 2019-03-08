@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { downloadBooks } from '../../bookDownload/sagas';
 
 import {
@@ -20,7 +20,7 @@ import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrim
 
 import { OrderOptions } from '../../../constants/orderOptions';
 
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData, loadReadLatestBook } from '../../book/sagas';
 import { getQuery } from '../../router/selectors';
 import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
 
@@ -91,11 +91,10 @@ function* loadItems() {
 
     // 대표 책 데이터 로딩
     const primaryItem = yield call(loadPrimaryItem, unitId);
+    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
     yield call(loadBookDescriptions, [primaryItem.b_id]);
     yield call(loadBookStarRatings, [primaryItem.b_id]);
-
-    // 책 데이터 로딩
-    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
+    yield fork(loadReadLatestBook, primaryItem.b_id);
 
     yield all([
       put(setSearchUnitPrimaryItem(primaryItem)),
