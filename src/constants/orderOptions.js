@@ -80,6 +80,10 @@ export class OrderOptions extends BaseOrderOptions {
     return this.PURCHASE_DATE;
   }
 
+  static get UNIT_LIST_DEFAULT() {
+    return this.UNIT_ORDER_DESC;
+  }
+
   static get PURCHASE_DATE() {
     return {
       key: 'PURCHASE_DATE',

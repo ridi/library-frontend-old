@@ -7,7 +7,7 @@ export const initialState = {
   data: {},
   primaryItems: {},
 
-  order: OrderOptions.DEFAULT.key,
+  order: OrderOptions.UNIT_LIST_DEFAULT.key,
   selectedBooks: {},
 
   isFetchingBook: false,
