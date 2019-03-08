@@ -1,5 +1,5 @@
 import nookies from 'nookies';
-import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
+import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR, SET_LOADING_READ_LATEST } from './actions';
 import { initialState } from './state';
 
 const uiReducer = (state = initialState, action) => {
@@ -19,6 +19,11 @@ const uiReducer = (state = initialState, action) => {
       return {
         ...state,
         isError: action.payload.isError,
+      };
+    case SET_LOADING_READ_LATEST:
+      return {
+        ...state,
+        loadingReadLatest: action.payload.loadingReadLatest,
       };
     default:
       return state;

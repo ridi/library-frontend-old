@@ -16,6 +16,7 @@ import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { getBooks } from './selectors';
 import { NotFoundReadLatestError } from './errors';
+import { setLoadingReadLatest } from '../ui/actions';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -127,10 +128,12 @@ export function* loadReadLatestBook(bookId) {
   }
 
   const seriesId = book.series.id;
+  yield put(setLoadingReadLatest(true));
   try {
     const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
     yield put(setReadLatestData(bookId, readLatestBookId));
   } finally {
+    yield put(setLoadingReadLatest(false));
   }
 }
 

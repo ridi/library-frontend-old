@@ -114,7 +114,7 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { unit, books, primaryItem, readLatestBookId, locationHref } = this.props;
+    const { unit, books, primaryItem, readLatestBookId, locationHref, loadingReadLatest } = this.props;
 
     const primaryBook = books[primaryItem.b_id];
     if (!(UnitType.isSeries(unit.type) && primaryBook.support.web_viewer)) {
@@ -122,13 +122,13 @@ class UnitDetailView extends React.Component {
       return null;
     }
 
-    // if (!readLatestBookId) {
-    //   return (
-    //     <button type="button" css={styles.readLatestButton}>
-    //       <div css={styles.readLatestButtonSpinner} />
-    //     </button>
-    //   );
-    // }
+    if (loadingReadLatest) {
+      return (
+        <button type="button" css={styles.readLatestButton}>
+          <div css={styles.readLatestButtonSpinner} />
+        </button>
+      );
+    }
 
     return (
       <a href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)} target="_blank" rel="noopener noreferrer">
@@ -248,6 +248,7 @@ class UnitDetailView extends React.Component {
 const mapStateToProps = (state, ownProps) => ({
   locationHref: getLocationHref(state),
   readLatestBookId: ownProps.primaryItem ? getReadLatestBookId(state, ownProps.primaryItem.b_id) : null,
+  loadingReadLatest: state.ui.loadingReadLatest,
 });
 
 const mapDispatchToProps = {
