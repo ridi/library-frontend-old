@@ -52,7 +52,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     };
   });
 
-  yield all([call(loadBookData, [bookIds]), put(setItems(items)), put(setTotalCount(unitOrders.length))]);
+  yield all([call(loadBookData, [bookIds]), put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
 }
 
 export function* isTotalSeriesView(unitId, order) {
