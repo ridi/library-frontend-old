@@ -103,7 +103,7 @@ function* loadItems() {
       call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
 
-    if (isTotalSeriesView(unitId, order)) {
+    if (yield call(isTotalSeriesView, unitId, order)) {
       yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
     } else {
       yield loadOwnItems(unitId, orderType, orderBy, page);
