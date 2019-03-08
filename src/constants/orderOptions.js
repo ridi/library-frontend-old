@@ -48,18 +48,20 @@ export class OrderOptions extends BaseOrderOptions {
     return [this.PURCHASE_DATE, this.UNIT_TITLE, this.UNIT_AUTHOR, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
   }
 
-  static toSeriesList(unitOfCount) {
+  static toSeriesList() {
+    return [this.UNIT_ORDER_DESC, this.UNIT_ORDER_ASC, this.PURCHASE_DATE, this.EXPIRE_DATE, this.EXPIRED_BOOKS_ONLY];
+  }
+
+  static toShelfList(unitOfCount) {
     return [
       applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
       applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
       this.PURCHASE_DATE,
       this.EXPIRE_DATE,
       this.EXPIRED_BOOKS_ONLY,
+      this.BOOK_TITLE,
+      this.BOOK_AUTHOR,
     ];
-  }
-
-  static toShelfList(unitOfCount) {
-    return [...this.toSeriesList(unitOfCount), this.BOOK_TITLE, this.BOOK_AUTHOR];
   }
 
   static toList() {
@@ -134,7 +136,7 @@ export class OrderOptions extends BaseOrderOptions {
       titleTemplate: unitOfCount => `마지막 ${unitOfCount || '권'}부터`,
 
       key: 'UNIT_ORDER_DESC',
-      title: '마지막 권부터',
+      title: '최근 업데이트순',
       orderType: OrderType.UNIT_ORDER,
       orderBy: OrderBy.DESC,
     };
