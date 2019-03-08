@@ -16,7 +16,9 @@ const beforeCreatingStore = (initialState, context) => {
       bookDescriptions: new LRUCache(200000),
       bookStarRatings: new LRUCache(200000),
       books: new LRUCache(200000),
-      bookReadLatests: {},
+      bookReadLatests: {
+        ...initialState.books.bookReadLatests,
+      },
     },
   };
 
