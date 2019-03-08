@@ -17,6 +17,8 @@ import { makeRidiSelectUri, makeRidiStoreUri } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
+import ContinueButton from './ContinueButton';
+
 const LINE_HEIGHT = 23;
 const LINE = 6;
 
@@ -204,6 +206,7 @@ class UnitDetailView extends React.Component {
             <div css={styles.unitTitle}>{unit.title}</div>
             {this.renderAuthors()}
             {this.renderSummary()}
+            <ContinueButton />
             {this.renderDownloadButton()}
             {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
           </div>

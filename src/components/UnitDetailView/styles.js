@@ -62,6 +62,8 @@ export const authorDelimiter = {
 export const fileInfo = {
   ...defaultLayout.fileInfo,
   flexWrap: 'wrap',
+
+  marginBottom: 14,
 };
 
 export const starRateIcon = {
@@ -171,11 +173,11 @@ const defaultButtonStyle = {
 
 export const downloadButton = {
   ...defaultButtonStyle,
-  marginTop: 24,
-  border: '1px solid #0077d9',
+  marginTop: 10,
+  border: '2px solid #0077d9',
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-  backgroundColor: '#1f8ce6',
-  color: 'white',
+  backgroundColor: 'white',
+  color: '#1f8ce6',
 };
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
@@ -184,4 +186,13 @@ export const drmFreeDownloadButton = {
   boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
   backgroundColor: 'white',
   color: '#808991',
+};
+
+export const continueButton = {
+  ...defaultButtonStyle,
+  marginTop: 10,
+  boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
+  border: '1px solid #0077d9',
+  backgroundColor: '#1f8ce6',
+  color: 'white',
 };
