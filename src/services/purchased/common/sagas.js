@@ -16,7 +16,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current));
-  const libraryItems = toDict((yield call(fetchItems, bookIds)).items, 'b_id');
+  const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
 
   // unitOrders와 libraryItems을 병합해서 재구성한다.
   const items = unitOrders.items.map(unitOrder => {
@@ -28,7 +28,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
       expire_date: libraryItem ? libraryItem.expire_date : '9999-12-31T23:59:59+09:00',
       purchase_date: libraryItem ? libraryItem.purchase_date : '9999-12-31T23:59:59+09:00',
       service_type: libraryItem ? libraryItem.service_type : ServiceType.NORMAL,
-      remain_time: libraryItem ? libraryItem.remain_time : '',
+      remain_time: libraryItem ? libraryItem.b_id : '',
     };
   });
 
