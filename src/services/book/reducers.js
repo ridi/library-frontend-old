@@ -5,6 +5,8 @@ import {
   SET_UNIT_DATA,
   SET_BOOK_STAR_RATINGS,
   SET_READ_LATEST_DATA,
+  SET_UNIT_ORDERS,
+  makeUnitOrderKey,
 } from './actions';
 
 const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
@@ -23,6 +25,10 @@ const bookReducer = (state = {}, action) => {
       return state;
     case SET_UNIT_DATA:
       state.units.merge(makeEntries(action.payload.units), compareWithTTL);
+      return state;
+    case SET_UNIT_ORDERS:
+      const key = makeUnitOrderKey(action.payload.unitId, action.payload.orderType, action.payload.orderBy, action.payload.page);
+      state.unitOrders.merge([{ key, value: action.payload.unitOrders }], compareWithTTL);
       return state;
     case SET_BOOK_DATA_FROM_STORAGE:
       state.books.assign(action.payload.books, compareWithTTL, true);

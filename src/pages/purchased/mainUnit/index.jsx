@@ -127,9 +127,10 @@ class MainUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
-    if (!primaryItem) {
+    if (!primaryItem || !books[primaryItem.b_id]) {
       return null;
     }
+
     const bookUnitOfCount = primaryItem && books[primaryItem.b_id].series ? books[primaryItem.b_id].series.property.unit : null;
     const orderOptions = UnitType.isSeries(unit.type)
       ? OrderOptions.toSeriesList(bookUnitOfCount)

@@ -1,6 +1,7 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { downloadBooks } from '../../bookDownload/sagas';
+import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
@@ -14,7 +15,7 @@ import {
   selectBooks,
   setKeyword,
   setIsFetchingSearchBook,
-  setSearchUnitPrimaryItem,
+  setPrimaryItem,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrimaryItem } from './requests';
 
@@ -64,6 +65,25 @@ function* moveToFirstPage() {
   Router.replace(linkProps.href, linkProps.as);
 }
 
+function* loadOwnItems(unitId, orderType, orderBy, page) {
+  const [itemResponse, countResponse] = yield all([
+    call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
+    call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
+  ]);
+
+  // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
+  if (!itemResponse.items.length && countResponse.item_total_count) {
+    yield moveToFirstPage();
+    return;
+  }
+
+  yield all([
+    call(loadBookData, toFlatten(itemResponse.items, 'b_id')),
+    put(setItems(itemResponse.items)),
+    put(setTotalCount(countResponse.item_total_count)),
+  ]);
+}
+
 function* loadItems() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
@@ -76,31 +96,19 @@ function* loadItems() {
     yield put(setIsFetchingSearchBook(true));
 
     // Unit 로딩
-    yield call(loadUnitData, [unitId]);
-
-    const [itemResponse, countResponse] = yield all([
-      call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
-      call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
-    ]);
-
-    // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
-    if (!itemResponse.items.length && countResponse.item_total_count) {
-      yield moveToFirstPage();
-      return;
-    }
-
-    // 대표 책 데이터 로딩
-    const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
-    yield call(loadBookDescriptions, [primaryItem.b_id]);
-    yield call(loadBookStarRatings, [primaryItem.b_id]);
-    yield fork(loadReadLatestBook, primaryItem.b_id);
-
+    const [_, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
     yield all([
-      put(setSearchUnitPrimaryItem(primaryItem)),
-      put(setItems(itemResponse.items)),
-      put(setTotalCount(countResponse.item_total_count)),
+      put(setPrimaryItem(primaryItem)),
+      call(loadBookDescriptions, [primaryItem.b_id]),
+      call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
+
+    if (yield call(isTotalSeriesView, unitId, order)) {
+      yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
+    } else {
+      yield loadOwnItems(unitId, orderType, orderBy, page);
+    }
+    yield fork(loadReadLatestBook, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

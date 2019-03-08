@@ -2,11 +2,14 @@ export const SET_BOOK_DATA = 'SET_BOOK_DATA';
 export const SET_BOOK_DESCRIPTIONS = 'SET_BOOK_DESCRIPTIONS';
 export const SET_BOOK_STAR_RATINGS = 'SET_BOOK_STAR_RATINGS';
 export const SET_UNIT_DATA = 'SET_UNIT_DATA';
+export const SET_UNIT_ORDERS = 'SET_UNIT_ORDERS';
 
 export const SET_BOOK_DATA_FROM_STORAGE = 'SET_BOOK_DATA_FROM_STORAGE';
 export const LOAD_BOOK_DATA_FROM_STORAGE = 'LOAD_BOOK_DATA_FROM_STORAGE';
 
 export const SET_READ_LATEST_DATA = 'SET_READ_LATEST_DATA';
+
+export const makeUnitOrderKey = (unitId, orderType, orderBy, page) => `${unitId}-${orderType}-${orderBy}-${page}`;
 
 export const setBookData = books => ({
   type: SET_BOOK_DATA,
@@ -33,6 +36,17 @@ export const setUnitData = units => ({
   type: SET_UNIT_DATA,
   payload: {
     units,
+  },
+});
+
+export const setUnitOrders = (unitId, orderType, orderBy, page, unitOrders) => ({
+  type: SET_UNIT_ORDERS,
+  payload: {
+    unitId,
+    orderType,
+    orderBy,
+    page,
+    unitOrders,
   },
 });
 

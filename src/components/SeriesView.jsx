@@ -40,6 +40,10 @@ class SeriesView extends React.Component {
 
     if (order !== prevOrder) {
       setTimeout(() => {
+        if (!this.seriesViewRef.seriesViewRef) {
+          return;
+        }
+
         window.scrollTo(0, this.seriesViewRef.current.offsetTop - 10);
       }, 300);
     }

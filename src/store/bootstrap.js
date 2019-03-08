@@ -17,6 +17,7 @@ const beforeCreatingStore = (initialState, context) => {
       bookStarRatings: new LRUCache(200000),
       books: new LRUCache(200000),
       bookReadLatests: {},
+      unitOrders: new LRUCache(200000),
     },
   };
 
@@ -26,6 +27,7 @@ const beforeCreatingStore = (initialState, context) => {
     newInitialState.books.bookStarRatings.assign(initialState.books.bookStarRatings);
     newInitialState.books.units.assign(initialState.books.units);
     newInitialState.books.bookReadLatests = initialState.books.bookReadLatests;
+    newInitialState.books.unitOrders.assign(initialState.books.unitOrders);
   }
 
   if (context.isServer) {

@@ -8,14 +8,14 @@ import {
   setUnitData,
   setBookStarRatings,
   setReadLatestData,
+  setUnitOrders,
 } from './actions';
 
-import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings, fetchReadLatestBookId } from './requests';
+import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings, fetchReadLatestBookId, fetchUnitOrders } from './requests';
 
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { getBooks } from './selectors';
-import { NotFoundReadLatestError } from './errors';
 import { setLoadingReadLatest } from '../ui/actions';
 
 function* persistBookDataToStorage() {
@@ -135,6 +135,11 @@ export function* loadReadLatestBook(bookId) {
   } finally {
     yield put(setLoadingReadLatest(false));
   }
+}
+
+export function* loadUnitOrders(unitId, orderType, orderBy, page) {
+  const unitOrders = yield call(fetchUnitOrders, unitId, orderType, orderBy, page);
+  yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
 }
 
 export default function* bookRootSaga() {

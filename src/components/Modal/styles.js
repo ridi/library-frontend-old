@@ -6,6 +6,18 @@ export const Align = {
   Right: 'right',
 };
 
+const customScrollBar = {
+  '::-webkit-scrollbar': {
+    width: 12,
+  },
+  '::-webkit-scrollbar-thumb': {
+    border: '4px solid rgba(0, 0, 0, 0)',
+    borderRadius: '12px',
+    background: '#d1d5d9',
+    backgroundClip: 'padding-box',
+  },
+};
+
 export const modal = (isActive, horizontalAlign = Align.Right) => {
   const active = isActive
     ? {
@@ -30,6 +42,8 @@ export const modal = (isActive, horizontalAlign = Align.Right) => {
     pointerEvents: 'none',
     overflowX: 'hidden',
     overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    ...customScrollBar,
     ...active,
   };
 };
