@@ -7,6 +7,7 @@
   "ridi_review_url": "https://ridibooks.com/review",
   "ridi_token_authorize_url": "https://account.ridibooks.com/ridi/authorize",
   "store_api_base_url": "https://ridibooks.com",
+  "viewer_api_base_url": "https://ridibooks.com",
   "account_base_url": "https://account.ridibooks.com",
   "base_url": "https://library.ridibooks.com",
   "book_api_base_url": "https://book-api.ridibooks.com",
