@@ -6,6 +6,11 @@ import Download from '../../svgs/Download.svg';
 import Logout from '../../svgs/Logout.svg';
 import Note from '../../svgs/Note.svg';
 import Review from '../../svgs/Review.svg';
+import ReturnIcon from '../../svgs/ReturnIcon.svg';
+import FeedbackIcon from '../../svgs/FeedbackIcon.svg';
+
+const BEFORE_LIBRARY_URL = 'https://ridibooks.com/library/';
+const FEEDBACK_URL = '';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
@@ -26,6 +31,16 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       <p css={userIdStyle}>
         <strong>{userId}</strong> 님
       </p>
+    </ModalItemGroup>
+    <ModalItemGroup>
+      <ul>
+        <li>
+          <ModalAnchorItem title="이전 구매 목록으로 가기" IconComponent={ReturnIcon} href={BEFORE_LIBRARY_URL} isOuterLink />
+        </li>
+        <li>
+          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} isOuterLink />
+        </li>
+      </ul>
     </ModalItemGroup>
     <ModalItemGroup>
       <ul>
