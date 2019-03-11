@@ -154,7 +154,7 @@ class UnitDetailView extends React.Component {
     return (
       <button
         type="button"
-        css={styles.downloadButton}
+        css={styles.downloadButton(UnitType.isSeries(unit.type))}
         onClick={() => {
           dispatchDownloadBooksByUnitIds([unit.id]);
         }}
