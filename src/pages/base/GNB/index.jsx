@@ -34,35 +34,24 @@ class GNB extends React.Component {
     this.setState({ isModalActive: !isModalActive });
   };
 
-  renderFamilyServiceIcons() {
-    return (
-      <ul css={styles.familyServiceList}>
-        <li css={styles.familyServiceItem}>
-          <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
-            <LogoRidibooks css={styles.ridibooksIcon} />
-            <span css={Hidden}>RIDIBOOKS</span>
-          </a>
-        </li>
-        <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-          <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
-            <LogoRidiselect css={styles.ridiSelectIcon} />
-            <span css={Hidden}>RIDI Select</span>
-          </a>
-        </li>
-      </ul>
-    );
-  }
+  renderFamilyServiceIcons = () => (
+    <ul css={styles.familyServiceList}>
+      <li css={styles.familyServiceItem}>
+        <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
+          <LogoRidibooks css={styles.ridibooksIcon} />
+          <span css={Hidden}>RIDIBOOKS</span>
+        </a>
+      </li>
+      <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
+        <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
+          <LogoRidiselect css={styles.ridiSelectIcon} />
+          <span css={Hidden}>RIDI Select</span>
+        </a>
+      </li>
+    </ul>
+  );
 
-  renderRightUi() {
-    return (
-      <div css={styles.myMenuWrapper}>
-        {this.renderFamilyServiceIcons()}
-        {this.renderMyMenu()}
-      </div>
-    );
-  }
-
-  renderMyMenu() {
+  renderMyMenu = () => {
     const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
     const { isModalActive } = this.state;
 
@@ -90,6 +79,15 @@ class GNB extends React.Component {
           />
         ) : null}
       </>
+    );
+  };
+
+  renderRightUi() {
+    return (
+      <div css={styles.myMenuWrapper}>
+        {this.renderFamilyServiceIcons()}
+        {this.renderMyMenu()}
+      </div>
     );
   }
 

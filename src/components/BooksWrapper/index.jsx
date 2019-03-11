@@ -1,54 +1,38 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React from 'react';
+import { useState, useLayoutEffect } from 'react';
 import * as styles from '../../styles/books';
 
-export default class BooksWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      additionalPadding: 0, // additional padding for horizontal align center
-    };
-    this.booksWrapperClassName = 'BooksWrapper';
-    this.bookClassName = 'Book';
-  }
+const BooksWrapper = ({ viewType, renderBooks }) => {
+  const booksWrapperClassName = 'BooksWrapper';
+  const bookClassName = 'Book';
+  const [additionalPadding, setAdditionalPadding] = useState(0);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.viewType !== this.props.viewType) {
-      this.setBooksAdditionalPadding();
-    }
-  }
-
-  componentDidMount() {
-    this.setBooksAdditionalPadding();
-    window.addEventListener('resize', this.setBooksAdditionalPadding);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setBooksAdditionalPadding);
-  }
-
-  setBooksAdditionalPadding = () => {
-    const books = document.querySelector(`.${this.booksWrapperClassName}`);
-    const book = document.querySelector(`.${this.bookClassName}`);
+  const setBooksAdditionalPadding = () => {
+    const books = document.querySelector(`.${booksWrapperClassName}`);
+    const book = document.querySelector(`.${bookClassName}`);
 
     if (!books || !book) {
-      setTimeout(() => this.setBooksAdditionalPadding(), 100);
+      setTimeout(() => setBooksAdditionalPadding(), 100);
       return;
     }
 
-    const additionalPadding = Math.floor((books.offsetWidth % book.offsetWidth) / 2);
-    this.setState({ additionalPadding });
+    setAdditionalPadding(Math.floor((books.offsetWidth % book.offsetWidth) / 2));
   };
 
-  render() {
-    const { viewType } = this.props;
-    const { additionalPadding } = this.state;
+  useLayoutEffect(() => {
+    setBooksAdditionalPadding();
+    window.addEventListener('resize', setBooksAdditionalPadding);
+    return () => {
+      window.removeEventListener('resize', setBooksAdditionalPadding);
+    };
+  });
 
-    return (
-      <div className={this.booksWrapperClassName} css={styles.booksWrapper(viewType, additionalPadding)}>
-        {this.props.renderBooks({ className: this.bookClassName })}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={booksWrapperClassName} css={styles.booksWrapper(viewType, additionalPadding)}>
+      {renderBooks({ className: bookClassName })}
+    </div>
+  );
+};
+
+export default BooksWrapper;
