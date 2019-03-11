@@ -10,7 +10,7 @@ import ReturnIcon from '../../svgs/ReturnIcon.svg';
 import FeedbackIcon from '../../svgs/FeedbackIcon.svg';
 
 const BEFORE_LIBRARY_URL = 'https://ridibooks.com/library/';
-const FEEDBACK_URL = 'https://ridihelp.zendesk.com/agent/admin/ticket_forms/edit/573127';
+const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=573127';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
