@@ -40,8 +40,8 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   // unitOrders와 libraryItems을 병합해서 재구성한다.
   const items = unitOrders.items.map(unitOrder => {
     const libraryItem = getLibraryItem(unitOrder.b_ids, libraryItems);
-    // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 마지막 도서가 제일 최신일 꺼라고 가정한다.
-    const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[unitOrder.b_ids.length - 1];
+    // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 첫 도서가 제일 최신일 꺼라고 가정한다.
+    const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[0];
 
     return {
       b_id: bookId,
