@@ -30,7 +30,7 @@ export const modal = (isActive, horizontalAlign = Align.Right) => {
     display: 'block',
     position: 'absolute',
     minWidth: 200,
-    maxHeight: 430,
+    maxHeight: 450,
     [horizontalAlign]: -6,
     top: 30,
     zIndex: 9999,
