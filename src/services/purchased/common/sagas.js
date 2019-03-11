@@ -4,7 +4,7 @@ import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
 import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
-import { getUnit, getUnitOrders } from '../../book/selectors';
+import { getUnit, getUnitOrders, getBooks } from '../../book/selectors';
 import { fetchItems, fetchReadLatestBookId } from './requests';
 import { setReadLatestBookId, setLoadingReadLatest, LOAD_READ_LATEST_BOOK_ID } from './actions';
 
@@ -59,6 +59,14 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
 export function* isTotalSeriesView(unitId, order) {
   const unit = yield select(getUnit, unitId);
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
+}
+
+export function* loadLastBookDataInSeries(bookIds) {
+  const books = yield select(getBooks, bookIds);
+  const lastBookIds = Object.values(books)
+    .filter(book => !!book.series)
+    .map(book => book.series.property.last_volume_id);
+  yield call(loadBookData, lastBookIds);
 }
 
 export function* loadReadLatestBookId(action) {
