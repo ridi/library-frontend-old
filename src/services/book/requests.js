@@ -23,6 +23,7 @@ const _reduceBooks = books =>
     },
     // RSG Book Component에서 사용함
     categories: book.categories,
+    publish: book.publish,
   }));
 
 const _reduceBookDescriptions = bookDescriptions =>
