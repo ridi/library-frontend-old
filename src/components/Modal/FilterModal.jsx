@@ -35,14 +35,17 @@ const FilterModal = props => {
   const checkedItemEl = useRef(null);
   const modalEl = useRef(null);
 
-  useLayoutEffect(() => {
-    const modal = modalEl.current;
+  useLayoutEffect(
+    () => {
+      const modal = modalEl.current;
 
-    const ModalTitleHeight = 32;
-    const modalScrollTop = modal.getBoundingClientRect().top;
-    const checkedItemScrollTop = checkedItemEl.current.getBoundingClientRect().top;
-    modal.scrollTo(0, checkedItemScrollTop - modalScrollTop - ModalTitleHeight);
-  }, isActive);
+      const ModalTitleHeight = 32;
+      const modalScrollTop = modal.getBoundingClientRect().top;
+      const checkedItemScrollTop = checkedItemEl.current.getBoundingClientRect().top;
+      modal.scrollTo(0, checkedItemScrollTop - modalScrollTop - ModalTitleHeight);
+    },
+    [isActive],
+  );
 
   return (
     <Modal modalRef={modalEl} isActive={isActive} a11y="카테고리 필터" onClickModalBackground={onClickModalBackground}>
