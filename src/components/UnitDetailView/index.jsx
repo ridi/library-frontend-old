@@ -17,6 +17,7 @@ import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../uti
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
+import { loadReadLatestBookId } from '../../services/purchased/common/actions';
 import { getLocationHref } from '../../services/router/selectors';
 import { getReadLatestBookId, getIsLoadingReadLatest } from '../../services/purchased/common/selectors';
 
@@ -32,6 +33,34 @@ class UnitDetailView extends React.Component {
       isExpanded: false,
       isTruncated: false,
     };
+  }
+
+  componentDidMount() {
+    const { unit, book } = this.props;
+
+    // Mount시에 데이터가 전부 있으면 로딩
+    // Unit의 경우 EmptyUnit이라 id를 검사
+    if (!unit.id || !book) {
+      return;
+    }
+
+    this.loadReadLatest(unit.id, book.id);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { unit, book } = this.props;
+    const { unit: prevUnit, book: prevBook } = prevProps;
+
+    // Mount시에 데이터가 없을 수 있기 때문에 Update시에도 확인한다.
+    // 이전에 데이터가 없었다가 데이터가 전부 생겼을때 로딩
+    if ((!prevUnit.id || !prevBook) && (unit.id && book)) {
+      this.loadReadLatest(unit.id, book.id);
+    }
+  }
+
+  loadReadLatest(unitId, bookId) {
+    const { dispatchLoadReadLatestBookId } = this.props;
+    dispatchLoadReadLatestBookId(unitId, bookId);
   }
 
   checkTruncated() {
@@ -114,7 +143,11 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { unit, books, primaryItem, readLatestBookId, locationHref, loadingReadLatest } = this.props;
+    const { readableLatest, unit, books, primaryItem, readLatestBookId, locationHref, loadingReadLatest } = this.props;
+
+    if (!readableLatest) {
+      return;
+    }
 
     const primaryBook = books[primaryItem.b_id];
     if (!(UnitType.isSeries(unit.type) && primaryBook.support.web_viewer)) {
@@ -259,6 +292,7 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
   dispatchDownloadBooks: downloadBooks,
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
+  dispatchLoadReadLatestBookId: loadReadLatestBookId,
 };
 
 const mergeProps = (state, actions, props) => {

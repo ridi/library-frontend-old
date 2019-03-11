@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { downloadBooks } from '../../bookDownload/sagas';
-import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
+import { isTotalSeriesView, loadTotalItems } from '../common/sagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
@@ -111,7 +111,6 @@ function* loadItems() {
     } else {
       yield loadOwnItems(unitId, orderType, orderBy, page);
     }
-    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

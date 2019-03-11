@@ -1,4 +1,4 @@
-import { all, call, put, select } from 'redux-saga/effects';
+import { all, takeEvery, call, put, select } from 'redux-saga/effects';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
@@ -6,7 +6,7 @@ import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 import { getUnit, getUnitOrders } from '../../book/selectors';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId, setLoadingReadLatest } from './actions';
+import { setReadLatestBookId, setLoadingReadLatest, LOAD_READ_LATEST_BOOK_ID } from './actions';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -61,8 +61,9 @@ export function* isTotalSeriesView(unitId, order) {
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
 }
 
-export function* loadReadLatestBookId(unitId, primaryBookId) {
-  const book = yield select(state => state.books.books.get(primaryBookId));
+export function* loadReadLatestBookId(action) {
+  const { unitId, bookId } = action.payload;
+  const book = yield select(state => state.books.books.get(bookId));
   if (!book.series) {
     return;
   }
@@ -76,4 +77,8 @@ export function* loadReadLatestBookId(unitId, primaryBookId) {
   } finally {
     yield put(setLoadingReadLatest(false));
   }
+}
+
+export default function* purchasedCommonRootSaga() {
+  yield all([takeEvery(LOAD_READ_LATEST_BOOK_ID, loadReadLatestBookId)]);
 }
