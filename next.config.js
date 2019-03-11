@@ -31,6 +31,7 @@ module.exports = {
     STATIC_URL: settings.static_url,
     ACCOUNT_BASE_URL: settings.account_base_url,
     STORE_API_BASE_URL: settings.store_api_base_url,
+    VIEWER_API_BASE_URL: settings.viewer_api_base_url,
     SELECT_BASE_URL: settings.select_base_url,
     LIBRARY_API_BASE_URL: settings.library_api_base_url,
     BOOK_API_BASE_URL: settings.book_api_base_url,
