@@ -1,3 +1,4 @@
+import Router from 'next/dist/lib/router';
 import { takeEvery } from 'redux-saga';
 import { all, call, put, select } from 'redux-saga/effects';
 import { OrderOptions } from '../../../constants/orderOptions';
@@ -127,6 +128,7 @@ export function* hideAllExpiredBooks() {
     return;
   }
 
+  // Step 5. 완료 토스트를 띄운다.
   yield all([
     put(
       showToast(
@@ -137,7 +139,9 @@ export function* hideAllExpiredBooks() {
     ),
     put(setFullScreenLoading(false)),
   ]);
-  // Step 5. 완료 토스트를 띄운다.
+
+  // Step 6. 메인으로 이동한다.
+  Router.replace(URLMap.main.href, URLMap.main.as);
 }
 
 export default function* purchasedCommonSaga() {
