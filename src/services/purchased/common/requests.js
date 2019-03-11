@@ -19,7 +19,7 @@ export function* fetchReadLatestBookId(seriesId) {
 
   try {
     const response = yield api.get(
-      makeURI(`/api/user/reading-histories/series/${seriesId}/latest`, { simple: true }, config.STORE_API_BASE_URL),
+      makeURI(`/api/user/reading-histories/series/${seriesId}/latest`, { simple: true }, config.VIEWER_API_BASE_URL),
     );
     return response.data.result;
   } catch (err) {
