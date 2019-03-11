@@ -5,6 +5,7 @@ import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
 import excelDownloadRootSaga from '../services/excelDownload/sagas';
+import purchasedCommonSaga from '../services/purchased/common/sagas';
 
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
 import purchasedMainUnitRootSaga from '../services/purchased/mainUnit/sagas';
@@ -22,6 +23,7 @@ export default function* rootSaga() {
     accountRootSaga(),
     bookRootSaga(),
     excelDownloadRootSaga(),
+    purchasedCommonSaga(),
     purchasedMainRootSaga(),
     purchasedMainUnitRootSaga(),
     purchasedSearchRootSaga(),

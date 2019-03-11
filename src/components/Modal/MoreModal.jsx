@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
+import { hideAllExpiredBooks } from '../../services/purchased/common/actions';
 import { setViewType } from '../../services/ui/actions';
 
 const MoreModal = ({
@@ -14,6 +15,7 @@ const MoreModal = ({
   onClickModalBackground,
   viewType,
   dispatchSetViewType,
+  dispatchHideAllExpiredBooks,
   showViewType,
   showOrder,
   showHidden,
@@ -71,6 +73,14 @@ const MoreModal = ({
     ) : null}
     {showHidden ? (
       <ModalItemGroup groupTitle="숨김 메뉴">
+        <ModalButtonItem
+          title="만료 도서 전체 숨기기"
+          onClick={() => {
+            onClickModalBackground();
+            dispatchHideAllExpiredBooks();
+          }}
+          replace
+        />
         <ModalLinkItem title="숨긴 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
       </ModalItemGroup>
     ) : null}
@@ -83,6 +93,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   dispatchSetViewType: setViewType,
+  dispatchHideAllExpiredBooks: hideAllExpiredBooks,
 };
 
 export default connect(
