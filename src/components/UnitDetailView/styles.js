@@ -173,14 +173,23 @@ const defaultButtonStyle = {
   }),
 };
 
-export const downloadButton = {
+export const downloadButton = isSeries => ({
   ...defaultButtonStyle,
   marginTop: 10,
-  border: '2px solid #0077d9',
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-  backgroundColor: 'white',
-  color: '#1f8ce6',
-};
+  ...(isSeries
+    ? {
+        border: '2px solid #0077d9',
+        backgroundColor: 'white',
+        color: '#1f8ce6',
+      }
+    : {
+        border: '1px solid #0077d9',
+        backgroundColor: '#1f8ce6',
+        color: 'white',
+      }),
+});
+
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
   marginTop: 10,
