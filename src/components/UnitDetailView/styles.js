@@ -3,6 +3,13 @@ import config from '../../config';
 import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
+export const unitDetailViewWrapper = {
+  ...Responsive.Full({
+    maxWidth: 1000,
+    margin: '0 auto',
+  }),
+};
+
 export const header = {
   ...defaultLayout.header,
 };

@@ -220,7 +220,7 @@ class UnitDetailView extends React.Component {
 
     const _notAvailable = items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     return (
-      <>
+      <div css={styles.unitDetailViewWrapper}>
         <section css={styles.header}>
           <div css={styles.thumbnailWrapper}>
             <div css={styles.thumbnail}>
@@ -245,7 +245,7 @@ class UnitDetailView extends React.Component {
         </section>
 
         {this.renderDescription()}
-      </>
+      </div>
     );
   }
 }
