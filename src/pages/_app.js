@@ -59,8 +59,8 @@ class LibraryApp extends App {
                 name="NEW_LIBRARY"
                 expires={new Date(2019, 3, 25)}
                 message="새로운 구매 목록인 내 서재를 이용해보세요."
-                linkName="이전 구매 목록으로 가기"
-                outLink="https://library.ridibooks.com/library/"
+                linkName="변경 사항 안내 바로가기"
+                outLink="https://help.ridibooks.com/hc/ko/articles/360019333294"
                 duration={Duration.VERY_LONG}
                 toastStyle={ToastStyle.BLUE}
               />
