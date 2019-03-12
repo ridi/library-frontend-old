@@ -11,6 +11,8 @@ import BookMetaData from '../../utils/bookMetaData';
 import BooksWrapper from '../BooksWrapper';
 import EmptyLandscapeBook from './EmptyLandscapeBook';
 import LandscapeFullButton from './LandscapeFullButton';
+import LandscapeBook from '../Skeleton/SkeletonBooks/LandscapeBook';
+import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 
 const toProps = ({
   bookId,
@@ -86,7 +88,15 @@ export const Books = ({
         const bookId = libraryBookData.b_id;
         const platformBookData = platformBookDTO[bookId];
         if (!platformBookData) {
-          return null;
+          return viewType === ViewType.PORTRAIT ? (
+            <div key={bookId} className={className} css={styles.portrait}>
+              <PortraitBook />
+            </div>
+          ) : (
+            <div key={bookId} className={className} css={styles.landscape}>
+              <LandscapeBook />
+            </div>
+          );
         }
 
         const isSelected = !!selectedBooks[bookId];
