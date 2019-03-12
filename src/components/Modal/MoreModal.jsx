@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
+import { showConfirm } from '../../services/confirm/actions';
 import { hideAllExpiredBooks } from '../../services/purchased/common/actions';
 import { setViewType } from '../../services/ui/actions';
 
@@ -15,6 +16,7 @@ const MoreModal = ({
   onClickModalBackground,
   viewType,
   dispatchSetViewType,
+  dispatchShowConfirm,
   dispatchHideAllExpiredBooks,
   showViewType,
   showOrder,
@@ -77,7 +79,12 @@ const MoreModal = ({
           title="만료 도서 전체 숨기기"
           onClick={() => {
             onClickModalBackground();
-            dispatchHideAllExpiredBooks();
+            dispatchShowConfirm(
+              '만료 도서 전체 숨기기',
+              <>구매목록에서 만료된 전체 도서를 숨기시겠습니까?</>,
+              '숨기기',
+              dispatchHideAllExpiredBooks,
+            );
           }}
           replace
         />
@@ -93,6 +100,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   dispatchSetViewType: setViewType,
+  dispatchShowConfirm: showConfirm,
   dispatchHideAllExpiredBooks: hideAllExpiredBooks,
 };
 
