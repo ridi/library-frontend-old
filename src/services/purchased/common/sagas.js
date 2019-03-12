@@ -1,24 +1,17 @@
 import { isAfter, subDays } from 'date-fns';
-import Router from 'next/dist/lib/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import { OrderOptions } from '../../../constants/orderOptions';
 import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
-import { URLMap } from '../../../constants/urls';
 import { toDict, toFlatten } from '../../../utils/array';
-import { makeLinkProps } from '../../../utils/uri';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 
 import { getBooks, getUnit, getUnitOrders } from '../../book/selectors';
-import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { showDialog } from '../../dialog/actions';
-import { showToast } from '../../toast/actions';
-import { setFullScreenLoading } from '../../ui/actions';
-import { fetchMainItems } from '../main/requests';
 import { HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from './actions';
 import { fetchItems, fetchReadLatestBookId } from './requests';
 import { getReadLatestData } from './selectors';
+import { hideAllExpiredBooks } from './services/hideAllExpiredBooksService';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -109,63 +102,6 @@ export function* loadReadLatestBookId(unitId, bookId) {
   } finally {
     yield put(setFetchingReadLatest(false));
   }
-}
-
-export function* _hideAllExpiredBooks(bookIds) {
-  const revision = yield call(getRevision);
-  const queueIds = yield call(requestHide, bookIds, revision);
-
-  let isFinish = false;
-  try {
-    isFinish = yield call(requestCheckQueueStatus, queueIds);
-  } catch (err) {
-    isFinish = false;
-  }
-  return isFinish;
-}
-
-export function* hideAllExpiredBooks() {
-  yield put(setFullScreenLoading(true));
-
-  let isFinish = true;
-  const { orderType, orderBy } = OrderOptions.parse(OrderOptions.EXPIRED_BOOKS_ONLY.key);
-
-  try {
-    while (true) {
-      // Step 1. 만료책 리스트를 1page 만 가져온다.
-      const itemResponse = yield call(fetchMainItems, orderType, orderBy, null, 1);
-
-      // Step 2. 만료된 책이 없으면 종료한다.
-      if (!itemResponse.items.length) {
-        break;
-      }
-
-      // Step 3. 숨긴다. 한 번이라도 실패하면 실패이다.
-      // 그런데 False 리턴되는 케이스는 없을것 같다.
-      isFinish = yield call(_hideAllExpiredBooks, itemResponse.items.map(item => item.b_id));
-    }
-  } catch (e) {
-    yield all([
-      put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
-      put(setFullScreenLoading(false)),
-    ]);
-    return;
-  }
-
-  // Step 5. 완료 토스트를 띄운다.
-  yield all([
-    put(
-      showToast(
-        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
-        '숨긴 도서 목록 보기',
-        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
-      ),
-    ),
-    put(setFullScreenLoading(false)),
-  ]);
-
-  // Step 6. 메인으로 이동한다.
-  Router.replace(URLMap.main.href, URLMap.main.as);
 }
 
 export default function* purchasedCommonRootSaga() {
