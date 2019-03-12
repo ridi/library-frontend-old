@@ -12,7 +12,7 @@ import { fetchMainItems, fetchMainItemsTotalCount } from '../../main/requests';
 import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER } from '../constants';
 
 function* getExpiredBookIds() {
-  const { orderType, orderBy } = OrderOptions.parse(OrderOptions.EXPIRED_BOOKS_ONLY.key);
+  const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
   let bookIds = [];
 
   let index = 1;
@@ -35,7 +35,7 @@ function* getExpiredBookIds() {
 }
 
 function* checkQueueIsDone(queueIds) {
-  const { orderType, orderBy } = OrderOptions.parse(OrderOptions.EXPIRED_BOOKS_ONLY.key);
+  const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
   const countResponse = yield call(fetchMainItemsTotalCount, orderType, orderBy, null);
 
   // 이 후에 또 할게 있으면 반영 완료되어야 한다.
