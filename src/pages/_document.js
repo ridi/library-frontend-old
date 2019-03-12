@@ -19,6 +19,17 @@ export default class MyDocument extends Document {
     }
   }
 
+  addSearchJSONLD = () => `{
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://library.ridibooks.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://library.ridibooks.com/purchased/search/?keyword={keyword}&amp;referer=sitelinks_searchbox",
+        "query-input": "required name=keyword"
+      }
+    }`;
+
   render() {
     return (
       <html lang="ko">
@@ -35,6 +46,7 @@ export default class MyDocument extends Document {
           <Favicon />
 
           <script type="text/javascript" src="https://account.ridibooks.com/script/ridi_token_refresher.0.0.3.js" />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: this.addSearchJSONLD() }} />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>
         <body>
