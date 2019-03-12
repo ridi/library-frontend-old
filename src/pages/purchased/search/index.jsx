@@ -123,6 +123,7 @@ class Search extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
@@ -165,6 +166,7 @@ class Search extends React.Component {
             viewType,
             linkBuilder: linkBuilder(keyword),
           }}
+          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {this.renderPaginator()}
       </>
@@ -247,10 +249,16 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const lastBookIds = Object.values(books)
+    .filter(book => !!book.series)
+    .map(book => book.series.property.last_volume_id);
+  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+
   return {
     pageInfo,
     items,
     books,
+    recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,

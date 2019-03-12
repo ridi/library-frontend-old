@@ -36,6 +36,7 @@ import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -137,6 +138,7 @@ class Main extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
@@ -184,6 +186,7 @@ class Main extends React.Component {
             viewType,
             linkBuilder: linkBuilder(),
           }}
+          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {this.renderPaginator()}
       </>
@@ -265,11 +268,17 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const lastBookIds = Object.values(books)
+    .filter(book => !!book.series)
+    .map(book => book.series.property.last_volume_id);
+  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+
   return {
     pageInfo,
     filterOptions,
     items,
     books,
+    recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
     viewType: state.ui.viewType,
