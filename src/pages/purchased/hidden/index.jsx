@@ -80,7 +80,7 @@ class Hidden extends React.Component {
     this.props.dispatchShowConfirm(
       '영구 삭제',
       <>
-        구매 목록에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+        내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
         <br />
         <br />
         그래도 삭제하시겠습니까?

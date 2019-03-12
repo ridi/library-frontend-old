@@ -81,7 +81,7 @@ const MoreModal = ({
             onClickModalBackground();
             dispatchShowConfirm(
               '만료 도서 전체 숨기기',
-              <>구매목록에서 만료된 전체 도서를 숨기시겠습니까?</>,
+              <>내 서재에서 만료된 전체 도서를 숨기시겠습니까?</>,
               '숨기기',
               dispatchHideAllExpiredBooks,
             );
