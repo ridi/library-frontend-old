@@ -3,6 +3,13 @@ import config from '../../config';
 import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
+export const unitDetailViewWrapper = {
+  ...Responsive.Full({
+    maxWidth: 1000,
+    margin: '0 auto',
+  }),
+};
+
 export const header = {
   ...defaultLayout.header,
 };
@@ -50,7 +57,7 @@ export const unitTitle = {
 export const authorList = {
   ...defaultLayout.authorList,
   fontSize: 15,
-  color: '#40474d',
+  color: '#303538',
 };
 
 export const authorDelimiter = {
@@ -99,7 +106,7 @@ export const fileInfoDelimiter = {
 
 export const description = {
   fontSize: 15,
-  color: '#40474d',
+  color: '#303538',
   clear: 'both',
   padding: '8px 40px 40px 40px',
   ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
