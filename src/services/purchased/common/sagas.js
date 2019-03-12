@@ -6,7 +6,8 @@ import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 import { getUnit, getUnitOrders, getBooks } from '../../book/selectors';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId, setLoadingReadLatest, LOAD_READ_LATEST_BOOK_ID } from './actions';
+import { setReadLatestBookId, setLoadingReadLatest, setRecentlyUpdatedData, LOAD_READ_LATEST_BOOK_ID } from './actions';
+import { isAfter, subDays } from 'date-fns';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -61,12 +62,25 @@ export function* isTotalSeriesView(unitId, order) {
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
 }
 
-export function* loadLastBookDataInSeries(bookIds) {
+export function* loadRecentlyUpdatedData(bookIds) {
   const books = yield select(getBooks, bookIds);
   const lastBookIds = Object.values(books)
     .filter(book => !!book.series)
     .map(book => book.series.property.last_volume_id);
   yield call(loadBookData, lastBookIds);
+
+  const lastBooks = yield select(getBooks, lastBookIds);
+  const threeDaysAgo = subDays(new Date(), 3);
+  const recentlyUpdatedData = Object.values(lastBooks).reduce((previous, lastBook) => {
+    if (lastBook.publish.ridibooks_publish) {
+      previous[lastBook.id] = isAfter(lastBook.publish.ridibooks_publish, threeDaysAgo);
+    } else {
+      previous[lastBook.id] = false;
+    }
+    return previous;
+  }, {});
+
+  yield put(setRecentlyUpdatedData(recentlyUpdatedData));
 }
 
 export function* loadReadLatestBookId(action) {

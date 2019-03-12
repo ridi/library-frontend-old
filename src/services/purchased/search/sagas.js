@@ -72,8 +72,10 @@ function* loadPage() {
     }
 
     // Request BookData
-    yield call(loadBookData, toFlatten(itemResponse.items, 'b_id'));
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
     yield call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'));
+    yield fork(loadRecentlyUpdatedData, bookIds);
 
     yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
   } catch (err) {

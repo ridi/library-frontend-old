@@ -27,7 +27,7 @@ import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './select
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
-import { loadLastBookDataInSeries } from '../../purchased/common/sagas';
+import { loadRecentlyUpdatedData } from '../../purchased/common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
@@ -83,7 +83,7 @@ function* loadMainItems() {
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield call(loadBookData, bookIds);
     yield call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'));
-    yield fork(loadLastBookDataInSeries, bookIds);
+    yield fork(loadRecentlyUpdatedData, bookIds);
 
     yield all([
       put(setItems(itemResponse.items)),
