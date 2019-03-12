@@ -5,6 +5,8 @@ if (NODE_ENV === 'local') {
   settings = require('./settings/local.json');
 } else if (NODE_ENV === 'development') {
   settings = require('./settings/dev.json');
+} else if (NODE_ENV === 'staging') {
+  settings = require('./settings/staging.json');
 } else {
   settings = require('./settings/production.json');
 }

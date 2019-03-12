@@ -110,6 +110,7 @@ class MainUnit extends React.Component {
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable
+        readableLatest
       />
     );
   }

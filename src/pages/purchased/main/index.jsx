@@ -12,6 +12,7 @@ import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
+import Toast from '../../../components/Toast';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getBooks } from '../../../services/book/selectors';
@@ -30,12 +31,14 @@ import {
   getPageInfo,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
+import { Duration, ToastStyle } from '../../../services/toast/constants';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
 class Main extends React.Component {
   static async getInitialProps({ store }) {
@@ -137,6 +140,7 @@ class Main extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
@@ -184,6 +188,7 @@ class Main extends React.Component {
             viewType,
             linkBuilder: linkBuilder(),
           }}
+          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {this.renderPaginator()}
       </>
@@ -252,6 +257,15 @@ class Main extends React.Component {
         </Editable>
         <Footer />
         <BookDownLoader />
+        <Toast
+          name="NEW_LIBRARY"
+          expires={new Date(2019, 3, 25)}
+          message="새로운 구매 목록인 내 서재를 이용해보세요."
+          linkName="변경 사항 안내 바로가기"
+          outLink="https://help.ridibooks.com/hc/ko/articles/360019333294"
+          duration={Duration.VERY_LONG}
+          toastStyle={ToastStyle.BLUE}
+        />
       </>
     );
   }
@@ -265,11 +279,15 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
+  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+
   return {
     pageInfo,
     filterOptions,
     items,
     books,
+    recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
     viewType: state.ui.viewType,

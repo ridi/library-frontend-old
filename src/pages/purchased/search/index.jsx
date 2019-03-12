@@ -31,6 +31,8 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 import { BookError } from '../../../components/Error';
 
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
+
 class Search extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(clearSelectedBooks());
@@ -123,6 +125,7 @@ class Search extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
@@ -165,6 +168,7 @@ class Search extends React.Component {
             viewType,
             linkBuilder: linkBuilder(keyword),
           }}
+          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {this.renderPaginator()}
       </>
@@ -247,10 +251,14 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
+  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+
   return {
     pageInfo,
     items,
     books,
+    recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,

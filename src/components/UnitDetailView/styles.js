@@ -3,6 +3,13 @@ import config from '../../config';
 import * as defaultLayout from '../../styles/unitDetailViewHeader';
 import { MQ, Responsive } from '../../styles/responsive';
 
+export const unitDetailViewWrapper = {
+  ...Responsive.Full({
+    maxWidth: 1000,
+    margin: '0 auto',
+  }),
+};
+
 export const header = {
   ...defaultLayout.header,
 };
@@ -50,7 +57,7 @@ export const unitTitle = {
 export const authorList = {
   ...defaultLayout.authorList,
   fontSize: 15,
-  color: '#40474d',
+  color: '#303538',
 };
 
 export const authorDelimiter = {
@@ -99,7 +106,7 @@ export const fileInfoDelimiter = {
 
 export const description = {
   fontSize: 15,
-  color: '#40474d',
+  color: '#303538',
   clear: 'both',
   padding: '8px 40px 40px 40px',
   ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
@@ -116,6 +123,9 @@ export const description = {
 export const descriptionTitle = {
   fontWeight: 'bold',
   lineHeight: 'normal',
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    fontSize: 17,
+  }),
 };
 export const bookDescriptionBody = lineHeight => ({
   marginTop: 9,
@@ -173,14 +183,23 @@ const defaultButtonStyle = {
   }),
 };
 
-export const downloadButton = {
+export const downloadButton = isSeries => ({
   ...defaultButtonStyle,
   marginTop: 10,
-  border: '2px solid #0077d9',
   boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-  backgroundColor: 'white',
-  color: '#1f8ce6',
-};
+  ...(isSeries
+    ? {
+        border: '2px solid #0077d9',
+        backgroundColor: 'white',
+        color: '#1f8ce6',
+      }
+    : {
+        border: '1px solid #0077d9',
+        backgroundColor: '#1f8ce6',
+        color: 'white',
+      }),
+});
+
 export const drmFreeDownloadButton = {
   ...defaultButtonStyle,
   marginTop: 10,

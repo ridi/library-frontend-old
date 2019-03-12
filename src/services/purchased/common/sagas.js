@@ -1,12 +1,17 @@
-import { all, call, put, select } from 'redux-saga/effects';
+import { isAfter, subDays } from 'date-fns';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../../constants/orderOptions';
 import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
 import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
-import { getUnit, getUnitOrders } from '../../book/selectors';
+
+import { getBooks, getUnit, getUnitOrders } from '../../book/selectors';
+import { HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from './actions';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId, setLoadingReadLatest } from './actions';
+import { getReadLatestData } from './selectors';
+import { hideAllExpiredBooks } from './services/hideAllExpiredBooksService';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -40,8 +45,8 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   // unitOrders와 libraryItems을 병합해서 재구성한다.
   const items = unitOrders.items.map(unitOrder => {
     const libraryItem = getLibraryItem(unitOrder.b_ids, libraryItems);
-    // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 마지막 도서가 제일 최신일 꺼라고 가정한다.
-    const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[unitOrder.b_ids.length - 1];
+    // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 첫 도서가 제일 최신일 꺼라고 가정한다.
+    const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[0];
 
     return {
       b_id: bookId,
@@ -61,19 +66,44 @@ export function* isTotalSeriesView(unitId, order) {
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
 }
 
-export function* loadReadLatestBookId(unitId, primaryBookId) {
-  const book = yield select(state => state.books.books.get(primaryBookId));
+export function* loadRecentlyUpdatedData(bookIds) {
+  const books = yield select(getBooks, bookIds);
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
+  yield call(loadBookData, lastBookIds);
+
+  const lastBooks = yield select(getBooks, lastBookIds);
+  const threeDaysAgo = subDays(new Date(), 3);
+  const recentlyUpdatedData = Object.values(lastBooks).reduce((previous, lastBook) => {
+    if (lastBook.publish.ridibooks_publish) {
+      previous[lastBook.id] = isAfter(lastBook.publish.ridibooks_publish, threeDaysAgo);
+    } else {
+      previous[lastBook.id] = false;
+    }
+    return previous;
+  }, {});
+
+  yield put(setRecentlyUpdatedData(recentlyUpdatedData));
+}
+
+export function* loadReadLatestBookId(unitId, bookId) {
+  const book = yield select(state => state.books.books.get(bookId));
   if (!book.series) {
     return;
   }
 
+  const existReadLatest = yield select(getReadLatestData, unitId);
   const seriesId = book.series.id;
-  yield put(setLoadingReadLatest(true));
+  yield put(setFetchingReadLatest(existReadLatest ? !existReadLatest.loaded : true));
   try {
     const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
     yield put(setReadLatestBookId(unitId, readLatestBookId));
   } catch (err) {
+    yield put(setReadLatestBookId(unitId, null));
   } finally {
-    yield put(setLoadingReadLatest(false));
+    yield put(setFetchingReadLatest(false));
   }
+}
+
+export default function* purchasedCommonRootSaga() {
+  yield all([takeEvery(HIDE_ALL_EXPIRED_BOOKS, hideAllExpiredBooks)]);
 }
