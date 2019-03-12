@@ -31,6 +31,8 @@ import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 import { BookError } from '../../../components/Error';
 
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
+
 class Search extends React.Component {
   static async getInitialProps({ store }) {
     await store.dispatch(clearSelectedBooks());
