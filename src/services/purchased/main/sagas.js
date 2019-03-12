@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, fork, call, put, select, takeEvery } from 'redux-saga/effects';
 
 import {
   DOWNLOAD_SELECTED_MAIN_BOOKS,
@@ -27,6 +27,7 @@ import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './select
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
+import { loadRecentlyUpdatedData } from '../../purchased/common/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
@@ -79,8 +80,10 @@ function* loadMainItems() {
     }
 
     // Request BookData
-    yield call(loadBookData, toFlatten(itemResponse.items, 'b_id'));
+    const bookIds = toFlatten(itemResponse.items, 'b_id');
+    yield call(loadBookData, bookIds);
     yield call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'));
+    yield fork(loadRecentlyUpdatedData, bookIds);
 
     yield all([
       put(setItems(itemResponse.items)),
