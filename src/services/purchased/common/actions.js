@@ -1,4 +1,7 @@
 export const SET_READ_LATEST_BOOK_ID = 'SET_READ_LATEST_BOOK_ID';
+
+export const HIDE_ALL_EXPIRED_BOOKS = 'HIDE_ALL_EXPIRED_BOOKS';
+
 export const SET_FETCHING_READ_LATEST = 'SET_FETCHING_READ_LATEST';
 export const SET_RECENTLY_UPDATED_DATA = 'SET_RECENTLY_UPDATED_DATA';
 
@@ -22,4 +25,8 @@ export const setRecentlyUpdatedData = recentlyUpdatedData => ({
   payload: {
     recentlyUpdatedData,
   },
+});
+
+export const hideAllExpiredBooks = () => ({
+  type: HIDE_ALL_EXPIRED_BOOKS,
 });
