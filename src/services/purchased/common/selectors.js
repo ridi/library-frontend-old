@@ -2,15 +2,15 @@ import { createSelector } from 'reselect';
 
 const getPurchasedCommonState = state => state.purchasedCommon;
 
-export const getReadLatestBookId = (state, unitId) =>
+export const getReadLatestData = (state, unitId) =>
   createSelector(
     getPurchasedCommonState,
     state => state.readLatestBookIds[unitId],
   )(state);
 
-export const getIsLoadingReadLatest = createSelector(
+export const getFetchingReadLatest = createSelector(
   getPurchasedCommonState,
-  state => state.loadingReadLatest,
+  state => state.fetchingReadLatest,
 );
 
 export const getRecentlyUpdatedData = (state, bookIds) =>

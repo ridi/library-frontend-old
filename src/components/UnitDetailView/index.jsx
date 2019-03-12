@@ -17,9 +17,8 @@ import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../uti
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
-import { loadReadLatestBookId } from '../../services/purchased/common/actions';
 import { getLocationHref } from '../../services/router/selectors';
-import { getReadLatestBookId, getIsLoadingReadLatest } from '../../services/purchased/common/selectors';
+import { getReadLatestData, getFetchingReadLatest } from '../../services/purchased/common/selectors';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -33,34 +32,6 @@ class UnitDetailView extends React.Component {
       isExpanded: false,
       isTruncated: false,
     };
-  }
-
-  componentDidMount() {
-    const { unit, book } = this.props;
-
-    // Mount시에 데이터가 전부 있으면 로딩
-    // Unit의 경우 EmptyUnit이라 id를 검사
-    if (!unit.id || !book) {
-      return;
-    }
-
-    this.loadReadLatest(unit.id, book.id);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { unit, book } = this.props;
-    const { unit: prevUnit, book: prevBook } = prevProps;
-
-    // Mount시에 데이터가 없을 수 있기 때문에 Update시에도 확인한다.
-    // 이전에 데이터가 없었다가 데이터가 전부 생겼을때 로딩
-    if ((!prevUnit.id || !prevBook) && (unit.id && book)) {
-      this.loadReadLatest(unit.id, book.id);
-    }
-  }
-
-  loadReadLatest(unitId, bookId) {
-    const { dispatchLoadReadLatestBookId } = this.props;
-    dispatchLoadReadLatestBookId(unitId, bookId);
   }
 
   checkTruncated() {
@@ -143,19 +114,18 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readableLatest, unit, books, primaryItem, readLatestBookId, locationHref, loadingReadLatest } = this.props;
+    const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
 
     if (!readableLatest) {
       return;
     }
 
-    const primaryBook = books[primaryItem.b_id];
-    if (!(UnitType.isSeries(unit.type) && primaryBook.support.web_viewer)) {
+    if (!(UnitType.isSeries(unit.type) && book.support.web_viewer)) {
       // 시리즈면서 web_viewser 서포트일때만 이어보기 노출
       return null;
     }
 
-    if (loadingReadLatest) {
+    if (fetchingReadLatest || !readLatestBookData) {
       return (
         <button type="button" css={styles.readLatestButton}>
           <div css={styles.readLatestButtonSpinner} />
@@ -166,19 +136,19 @@ class UnitDetailView extends React.Component {
     return (
       <a
         css={styles.readLatestButtonAnchor}
-        href={makeWebViewerURI(readLatestBookId || primaryBook.series.id, locationHref)}
+        href={makeWebViewerURI(readLatestBookData.bookId || book.series.id, locationHref)}
         target="_blank"
         rel="noopener noreferrer"
       >
         <button type="button" css={styles.readLatestButton}>
-          {readLatestBookId ? '이어보기' : '첫화보기'}
+          {readLatestBookData.bookId ? '이어보기' : '첫화보기'}
         </button>
       </a>
     );
   }
 
   renderDownloadButton() {
-    const { unit, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
+    const { unit, book, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
     if (!downloadable || isAfter(new Date(), primaryItem.expire_date)) {
       return null;
@@ -187,7 +157,7 @@ class UnitDetailView extends React.Component {
     return (
       <button
         type="button"
-        css={styles.downloadButton(UnitType.isSeries(unit.type))}
+        css={styles.downloadButton(UnitType.isSeries(unit.type) && book.support.web_viewer)}
         onClick={() => {
           dispatchDownloadBooksByUnitIds([unit.id]);
         }}
@@ -285,14 +255,13 @@ class UnitDetailView extends React.Component {
 
 const mapStateToProps = (state, ownProps) => ({
   locationHref: getLocationHref(state),
-  readLatestBookId: ownProps.unit ? getReadLatestBookId(state, ownProps.unit.id) : null,
-  loadingReadLatest: getIsLoadingReadLatest(state),
+  readLatestBookData: ownProps.unit ? getReadLatestData(state, ownProps.unit.id) : null,
+  fetchingReadLatest: getFetchingReadLatest(state),
 });
 
 const mapDispatchToProps = {
   dispatchDownloadBooks: downloadBooks,
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
-  dispatchLoadReadLatestBookId: loadReadLatestBookId,
 };
 
 const mergeProps = (state, actions, props) => {

@@ -6,8 +6,9 @@ import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
 import { getUnit, getUnitOrders, getBooks } from '../../book/selectors';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId, setLoadingReadLatest, setRecentlyUpdatedData, LOAD_READ_LATEST_BOOK_ID } from './actions';
+import { setReadLatestBookId, setRecentlyUpdatedData, LOAD_READ_LATEST_BOOK_ID, setFetchingReadLatest } from './actions';
 import { isAfter, subDays } from 'date-fns';
+import { getReadLatestData } from './selectors';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -81,24 +82,25 @@ export function* loadRecentlyUpdatedData(bookIds) {
   yield put(setRecentlyUpdatedData(recentlyUpdatedData));
 }
 
-export function* loadReadLatestBookId(action) {
-  const { unitId, bookId } = action.payload;
+export function* loadReadLatestBookId(unitId, bookId) {
   const book = yield select(state => state.books.books.get(bookId));
   if (!book.series) {
     return;
   }
 
+  const existReadLatest = yield select(getReadLatestData, unitId);
   const seriesId = book.series.id;
-  yield put(setLoadingReadLatest(true));
+  yield put(setFetchingReadLatest(existReadLatest ? !existReadLatest.loaded : true));
   try {
     const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
     yield put(setReadLatestBookId(unitId, readLatestBookId));
   } catch (err) {
+    yield put(setReadLatestBookId(unitId, null));
   } finally {
-    yield put(setLoadingReadLatest(false));
+    yield put(setFetchingReadLatest(false));
   }
 }
 
 export default function* purchasedCommonRootSaga() {
-  yield all([takeEvery(LOAD_READ_LATEST_BOOK_ID, loadReadLatestBookId)]);
+  yield all([]);
 }
