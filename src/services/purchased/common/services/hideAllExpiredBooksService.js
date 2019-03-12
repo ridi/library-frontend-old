@@ -57,7 +57,8 @@ function* checkQueueIsDone(queueIds) {
 
     // 바로 요청해 봐야 안될 확률이 높기 때문에 쉬고다시 요청한다.
     // 다시 요청 할 때마다 딜레이 시간을 늘린다.
-    yield delay(500 * index);
+    // 최대 10 초로 한다.
+    yield delay(index < 20 ? 500 * index : 500 * 20);
     index += 1;
   }
 
