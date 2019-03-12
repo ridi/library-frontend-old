@@ -5,6 +5,7 @@ import { OrderOptions } from '../../../../constants/orderOptions';
 import { URLMap } from '../../../../constants/urls';
 import { makeLinkProps } from '../../../../utils/uri';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../../common/requests';
+import { getBookIdsByUnitIds } from '../../../common/sagas';
 import { showDialog } from '../../../dialog/actions';
 import { showToast } from '../../../toast/actions';
 import { setFullScreenLoading } from '../../../ui/actions';
@@ -22,7 +23,10 @@ function* getExpiredBookIds() {
       break;
     }
 
-    bookIds = bookIds.concat(itemResponse.items.map(item => item.b_id));
+    const unitIds = itemResponse.items.map(item => item.unit_id);
+    const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, orderType, orderBy);
+
+    bookIds = bookIds.concat(bookIdsInUnit);
 
     // 최대치를 넘으면 그만 한다.
     if (bookIds.length >= HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER) {
