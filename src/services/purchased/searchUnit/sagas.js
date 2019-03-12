@@ -111,6 +111,7 @@ function* loadItems() {
     } else {
       yield loadOwnItems(unitId, orderType, orderBy, page);
     }
+
     yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));

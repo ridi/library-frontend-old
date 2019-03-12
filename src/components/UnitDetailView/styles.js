@@ -116,6 +116,9 @@ export const description = {
 export const descriptionTitle = {
   fontWeight: 'bold',
   lineHeight: 'normal',
+  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    fontSize: 17,
+  }),
 };
 export const bookDescriptionBody = lineHeight => ({
   marginTop: 9,

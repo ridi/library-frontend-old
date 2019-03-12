@@ -12,7 +12,17 @@ import BooksWrapper from '../BooksWrapper';
 import EmptyLandscapeBook from './EmptyLandscapeBook';
 import LandscapeFullButton from './LandscapeFullButton';
 
-const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSelected, onSelectedChange, viewType, linkBuilder }) => {
+const toProps = ({
+  bookId,
+  libraryBookData,
+  platformBookData,
+  isSelectMode,
+  isSelected,
+  onSelectedChange,
+  viewType,
+  linkBuilder,
+  recentlyUpdatedMap,
+}) => {
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
@@ -22,6 +32,8 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = libraryBookData.expire_date ? isAfter(new Date(), libraryBookData.expire_date) : false;
+  const updateBadge =
+    platformBookData.series && recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.last_volume_id] : false;
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
@@ -34,6 +46,7 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
+    updateBadge,
     ridiselect: isRidiselect,
     selectMode: isSelectMode && libraryBookData.purchase_date,
     selected: isSelected,
@@ -56,7 +69,16 @@ const toProps = ({ bookId, libraryBookData, platformBookData, isSelectMode, isSe
   return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);
 };
 
-export const Books = ({ libraryBookDTO, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, linkBuilder }) => (
+export const Books = ({
+  libraryBookDTO,
+  platformBookDTO,
+  selectedBooks,
+  isSelectMode,
+  onSelectedChange,
+  viewType,
+  linkBuilder,
+  recentlyUpdatedMap,
+}) => (
   <BooksWrapper
     viewType={viewType}
     renderBooks={({ className }) => {
@@ -77,6 +99,7 @@ export const Books = ({ libraryBookDTO, platformBookDTO, selectedBooks, isSelect
           onSelectedChange,
           viewType,
           linkBuilder,
+          recentlyUpdatedMap,
         });
         const { thumbnailLink } = libraryBookProps;
 

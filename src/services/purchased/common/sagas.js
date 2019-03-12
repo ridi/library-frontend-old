@@ -1,6 +1,7 @@
+import { isAfter, subDays } from 'date-fns';
 import Router from 'next/dist/lib/router';
-import { takeEvery } from 'redux-saga';
-import { all, call, put, select } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../../constants/orderOptions';
 import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
@@ -8,14 +9,16 @@ import { URLMap } from '../../../constants/urls';
 import { toDict, toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
-import { getUnit, getUnitOrders } from '../../book/selectors';
+
+import { getBooks, getUnit, getUnitOrders } from '../../book/selectors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { showDialog } from '../../dialog/actions';
 import { showToast } from '../../toast/actions';
 import { setFullScreenLoading } from '../../ui/actions';
 import { fetchMainItems } from '../main/requests';
-import { HIDE_ALL_EXPIRED_BOOKS, setLoadingReadLatest, setReadLatestBookId } from './actions';
+import { HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from './actions';
 import { fetchItems, fetchReadLatestBookId } from './requests';
+import { getReadLatestData } from './selectors';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -70,20 +73,41 @@ export function* isTotalSeriesView(unitId, order) {
   return UnitType.isSeries(unit.type) && (order === OrderOptions.UNIT_ORDER_ASC.key || order === OrderOptions.UNIT_ORDER_DESC.key);
 }
 
-export function* loadReadLatestBookId(unitId, primaryBookId) {
-  const book = yield select(state => state.books.books.get(primaryBookId));
+export function* loadRecentlyUpdatedData(bookIds) {
+  const books = yield select(getBooks, bookIds);
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
+  yield call(loadBookData, lastBookIds);
+
+  const lastBooks = yield select(getBooks, lastBookIds);
+  const threeDaysAgo = subDays(new Date(), 3);
+  const recentlyUpdatedData = Object.values(lastBooks).reduce((previous, lastBook) => {
+    if (lastBook.publish.ridibooks_publish) {
+      previous[lastBook.id] = isAfter(lastBook.publish.ridibooks_publish, threeDaysAgo);
+    } else {
+      previous[lastBook.id] = false;
+    }
+    return previous;
+  }, {});
+
+  yield put(setRecentlyUpdatedData(recentlyUpdatedData));
+}
+
+export function* loadReadLatestBookId(unitId, bookId) {
+  const book = yield select(state => state.books.books.get(bookId));
   if (!book.series) {
     return;
   }
 
+  const existReadLatest = yield select(getReadLatestData, unitId);
   const seriesId = book.series.id;
-  yield put(setLoadingReadLatest(true));
+  yield put(setFetchingReadLatest(existReadLatest ? !existReadLatest.loaded : true));
   try {
     const readLatestBookId = yield call(fetchReadLatestBookId, seriesId);
     yield put(setReadLatestBookId(unitId, readLatestBookId));
   } catch (err) {
+    yield put(setReadLatestBookId(unitId, null));
   } finally {
-    yield put(setLoadingReadLatest(false));
+    yield put(setFetchingReadLatest(false));
   }
 }
 
@@ -144,6 +168,6 @@ export function* hideAllExpiredBooks() {
   Router.replace(URLMap.main.href, URLMap.main.as);
 }
 
-export default function* purchasedCommonSaga() {
+export default function* purchasedCommonRootSaga() {
   yield all([takeEvery(HIDE_ALL_EXPIRED_BOOKS, hideAllExpiredBooks)]);
 }

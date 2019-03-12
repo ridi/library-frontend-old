@@ -111,6 +111,7 @@ class searchUnit extends React.Component {
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable
+        readableLatest
       />
     );
   }

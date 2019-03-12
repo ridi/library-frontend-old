@@ -11,8 +11,6 @@ import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } 
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 import Layout from './base/Layout';
 import Prefetch from '../components/Prefetch';
-import Toast from '../components/Toast';
-import { Duration, ToastStyle } from '../services/toast/constants';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -55,15 +53,6 @@ class LibraryApp extends App {
               <ConnectedRouterWrapper />
               <Prefetch />
               <Component {...pageProps} />
-              <Toast
-                name="NEW_LIBRARY"
-                expires={new Date(2019, 3, 25)}
-                message="새로운 구매 목록인 내 서재를 이용해보세요."
-                linkName="이전 구매 목록으로 가기"
-                outLink="https://library.ridibooks.com/library/"
-                duration={Duration.VERY_LONG}
-                toastStyle={ToastStyle.BLUE}
-              />
             </>
           </Layout>
         </Provider>
