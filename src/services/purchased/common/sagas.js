@@ -64,9 +64,7 @@ export function* isTotalSeriesView(unitId, order) {
 
 export function* loadRecentlyUpdatedData(bookIds) {
   const books = yield select(getBooks, bookIds);
-  const lastBookIds = Object.values(books)
-    .filter(book => !!book.series)
-    .map(book => book.series.property.last_volume_id);
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
   yield call(loadBookData, lastBookIds);
 
   const lastBooks = yield select(getBooks, lastBookIds);

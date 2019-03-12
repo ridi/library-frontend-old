@@ -268,9 +268,7 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
-  const lastBookIds = Object.values(books)
-    .filter(book => !!book.series)
-    .map(book => book.series.property.last_volume_id);
+  const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
 
   return {
