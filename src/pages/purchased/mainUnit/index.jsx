@@ -137,9 +137,6 @@ class MainUnit extends React.Component {
       ? OrderOptions.toSeriesList(bookUnitOfCount)
       : OrderOptions.toShelfList(bookUnitOfCount);
 
-    console.log('renderSeriesView');
-    console.log(items);
-    console.log(books);
     return (
       <SeriesView
         pageProps={{
