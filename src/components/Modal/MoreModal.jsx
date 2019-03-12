@@ -81,7 +81,12 @@ const MoreModal = ({
             onClickModalBackground();
             dispatchShowConfirm(
               '만료 도서 전체 숨기기',
-              <>내 서재에서 만료된 전체 도서를 숨기시겠습니까?</>,
+              <>
+                만료된 전체 도서를 숨기시겠습니까?
+                <br />
+                <br />
+                도서가 많으면 오래 걸릴 수 있습니다.
+              </>,
               '숨기기',
               dispatchHideAllExpiredBooks,
             );
