@@ -35,7 +35,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="이전 구매 목록으로 가기" IconComponent={ReturnIcon} href={BEFORE_LIBRARY_URL} isOuterLink />
+          <ModalAnchorItem title="구매 목록으로 가기" IconComponent={ReturnIcon} href={BEFORE_LIBRARY_URL} isOuterLink />
         </li>
         <li>
           <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} isOuterLink />
