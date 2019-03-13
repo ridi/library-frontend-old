@@ -106,14 +106,15 @@ function* loadItems() {
       call(loadPrimaryItem, unitId),
       call(fetchSearchUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
     ]);
+
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
+
     yield all([
       put(setPrimaryItem(primaryItem)),
       put(setPurchasedTotalCount(countResponse.item_total_count)),
       call(loadBookDescriptions, [primaryItem.b_id]),
       call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
-
-    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
 
     if (yield call(isTotalSeriesView, unitId, order)) {
       yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
