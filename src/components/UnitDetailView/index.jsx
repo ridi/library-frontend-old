@@ -72,16 +72,14 @@ class UnitDetailView extends React.Component {
   renderExpanderButton() {
     const { isExpanded, isTruncated } = this.state;
 
-    if (!isTruncated) {
-      return null;
-    }
-
     return (
       <div css={styles.bookDescriptionExpend}>
-        <button type="button" onClick={() => this.toggleExpand()} css={styles.bookDescriptionExpendButton}>
-          {isExpanded ? '접기' : '계속 읽기'}
-          <NoneDashedArrowDown css={[styles.bookDescriptionExpendIcon, isExpanded && styles.bookDescriptionExpendIconExpanded]} />
-        </button>
+        {isTruncated ? (
+          <button type="button" onClick={() => this.toggleExpand()} css={styles.bookDescriptionExpendButton}>
+            {isExpanded ? '접기' : '계속 읽기'}
+            <NoneDashedArrowDown css={[styles.bookDescriptionExpendIcon, isExpanded && styles.bookDescriptionExpendIconExpanded]} />
+          </button>
+        ) : null}
       </div>
     );
   }
@@ -218,7 +216,11 @@ class UnitDetailView extends React.Component {
     const { unit, items, primaryItem, book, bookDescription, bookStarRating, readLatestBookId } = this.props;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
-      return <SkeletonUnitDetailView />;
+      return (
+        <div css={styles.unitDetailViewWrapper}>
+          <SkeletonUnitDetailView />
+        </div>
+      );
     }
 
     const _notAvailable = items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
