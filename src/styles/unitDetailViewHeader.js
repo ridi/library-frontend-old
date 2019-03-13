@@ -1,4 +1,5 @@
 import { Responsive, MQ } from './responsive';
+import { Width } from './constants';
 
 export const header = {
   display: 'flex',
@@ -34,12 +35,14 @@ export const thumbnailWrapper = {
   }),
 };
 
+export const getResponsiveBookWidthForDetailHeader = screenWidth => (screenWidth && screenWidth >= Width.W834 ? 180 : 130);
+
 export const thumbnail = {
-  width: 130,
+  width: getResponsiveBookWidthForDetailHeader(),
   lineHeight: 0,
   overflowY: 'hidden',
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    width: 180,
+    width: getResponsiveBookWidthForDetailHeader(Width.W834),
   }),
 };
 

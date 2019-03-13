@@ -19,6 +19,7 @@ import * as styles from './styles';
 
 import { getLocationHref } from '../../services/router/selectors';
 import { getReadLatestData, getFetchingReadLatest } from '../../services/purchased/common/selectors';
+import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -31,7 +32,26 @@ class UnitDetailView extends React.Component {
     this.state = {
       isExpanded: false,
       isTruncated: false,
+      thumbnailWidth: '100%',
     };
+  }
+
+  setThumbnailWidth = () => {
+    const newThumbnailWidth = getResponsiveBookWidthForDetailHeader(window.innerWidth);
+    if (this.state.thumbnailWidth !== newThumbnailWidth) {
+      this.setState({
+        thumbnailWidth: newThumbnailWidth,
+      });
+    }
+  };
+
+  componentDidMount() {
+    this.setThumbnailWidth();
+    window.addEventListener('resize', this.setThumbnailWidth);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setThumbnailWidth);
   }
 
   checkTruncated() {
@@ -117,7 +137,7 @@ class UnitDetailView extends React.Component {
     const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
 
     if (!readableLatest) {
-      return;
+      return null;
     }
 
     if (!(UnitType.isSeries(unit.type) && book.support.web_viewer)) {
@@ -215,7 +235,8 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, items, primaryItem, book, bookDescription, bookStarRating, readLatestBookId } = this.props;
+    const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
+    const { thumbnailWidth } = this.state;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
       return <SkeletonUnitDetailView />;
@@ -232,7 +253,7 @@ class UnitDetailView extends React.Component {
                 notAvailable={_notAvailable}
                 adultBadge={book.property.is_adult_only}
                 thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`}
-                css={{ width: '100%' }}
+                thumbnailWidth={thumbnailWidth}
               />
             </div>
             {this.renderLink()}
