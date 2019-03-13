@@ -4,7 +4,6 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import React from 'react';
 import connect from 'react-redux/es/connect/connect';
-import shortid from 'shortid';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
@@ -71,13 +70,13 @@ class UnitDetailView extends React.Component {
         <Star css={styles.starRateIcon} />
         <strong css={styles.starRate}>{`${bookStarRating.buyer_rating_score}점 `}</strong>
         <span css={styles.fileInfoText}>({thousandsSeperator(bookStarRating.buyer_rating_count)}명)</span>
-        <span key={shortid.generate()} css={styles.fileInfoDelimiter} />
+        <span key="s-d-star-rate" css={styles.fileInfoDelimiter} />
         {bookInfos.map((info, index) => (
-          <React.Fragment key={shortid.generate()}>
-            <span key={shortid.generate()} css={styles.fileInfoText}>
+          <React.Fragment key={`s-d-m-f-${info}`}>
+            <span key={`s-d-m-s-${info}`} css={styles.fileInfoText}>
               {`${info}`}
             </span>
-            {bookInfos.length !== index + 1 ? <span key={shortid.generate()} css={styles.fileInfoDelimiter} /> : null}
+            {bookInfos.length !== index + 1 ? <span key={`s-d-m-d-${info}`} css={styles.fileInfoDelimiter} /> : null}
           </React.Fragment>
         ))}
       </p>
@@ -223,9 +222,9 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.authorList}>
         {bookMetadata.authors.map((author, index) => (
-          <React.Fragment key={shortid.generate()}>
-            <span key={shortid.generate()}>{` ${author} `}</span>
-            {bookMetadata.authors.length !== index + 1 ? <span key={shortid.generate()} css={styles.authorDelimiter} /> : null}
+          <React.Fragment key={`a-f-${author}`}>
+            <span key={`a-s-${author}`}>{` ${author} `}</span>
+            {bookMetadata.authors.length !== index + 1 ? <span key={`a-s-delimiter-${author}`} css={styles.authorDelimiter} /> : null}
           </React.Fragment>
         ))}
       </div>
