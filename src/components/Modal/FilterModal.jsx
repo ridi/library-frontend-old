@@ -37,11 +37,10 @@ const FilterModal = props => {
   useLayoutEffect(
     () => {
       const modal = modalEl.current;
-
       const ModalTitleHeight = 32;
       const modalScrollTop = modal.getBoundingClientRect().top;
       const checkedItemScrollTop = checkedItemEl.current.getBoundingClientRect().top;
-      modal.scrollTo(0, checkedItemScrollTop - modalScrollTop - ModalTitleHeight);
+      modal.scrollTop = checkedItemScrollTop - modalScrollTop - ModalTitleHeight;
     },
     [isActive],
   );
