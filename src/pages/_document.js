@@ -27,7 +27,7 @@ export default class MyDocument extends Document {
       "url": "${config.BASE_URL}/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "${config.BASE_URL}/${URLMap.search.as}/?keyword={keyword}&amp;referer=sitelinks_searchbox",
+        "target": "${config.BASE_URL}${URLMap.search.as}/?keyword={keyword}&amp;referer=sitelinks_searchbox",
         "query-input": "required name=keyword"
       }
     }`;
