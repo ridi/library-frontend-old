@@ -26,7 +26,6 @@ import {
   getUnitId,
   getItemsByPage,
   getPrimaryItem,
-  getPurchasedTotalCount,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
