@@ -51,6 +51,11 @@ export const URLMap = {
     as: '/serial-preference',
     regex: /^\/serial-preference\/?$/,
   },
+  notFound: {
+    href: '/errors/notFound',
+    as: '/errors/not-found',
+    regex: /^\/errors\/not-found\/?$/,
+  },
 };
 
 // XXX: ----
@@ -81,5 +86,5 @@ export const toURLMap = pathname => {
     }
   }
 
-  throw new URLMapNotFoundError();
+  return { href: URLMap.notFound, as: URLMap.notFound.as };
 };
