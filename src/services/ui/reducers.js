@@ -1,5 +1,5 @@
 import nookies from 'nookies';
-import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR, SET_LOADING_READ_LATEST } from './actions';
+import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
 import { initialState } from './state';
 
 const uiReducer = (state = initialState, action) => {

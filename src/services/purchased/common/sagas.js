@@ -1,14 +1,17 @@
-import { all, takeEvery, call, put, select } from 'redux-saga/effects';
+import { isAfter, subDays } from 'date-fns';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../../constants/orderOptions';
 import { ServiceType } from '../../../constants/serviceType';
 import { UnitType } from '../../../constants/unitType';
 import { toDict, toFlatten } from '../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../book/sagas';
-import { getUnit, getUnitOrders, getBooks } from '../../book/selectors';
+
+import { getBooks, getUnit, getUnitOrders } from '../../book/selectors';
+import { HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from './actions';
 import { fetchItems, fetchReadLatestBookId } from './requests';
-import { setReadLatestBookId, setRecentlyUpdatedData, LOAD_READ_LATEST_BOOK_ID, setFetchingReadLatest } from './actions';
-import { isAfter, subDays } from 'date-fns';
 import { getReadLatestData } from './selectors';
+import { hideAllExpiredBooks } from './services/hideAllExpiredBooksService';
 
 function getLibraryItem(bookIds, libraryItems) {
   const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
@@ -102,5 +105,5 @@ export function* loadReadLatestBookId(unitId, bookId) {
 }
 
 export default function* purchasedCommonRootSaga() {
-  yield all([]);
+  yield all([takeEvery(HIDE_ALL_EXPIRED_BOOKS, hideAllExpiredBooks)]);
 }
