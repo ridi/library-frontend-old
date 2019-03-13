@@ -104,6 +104,7 @@ export const portrait = {
 
 export const landscape = {
   width: '100%',
+  minHeight: 110,
   display: 'flex',
   position: 'relative',
 
