@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
-import { isAfter } from 'date-fns';
+import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
 import React from 'react';
 import { UnitType } from '../../constants/unitType';
@@ -23,6 +23,7 @@ const toProps = ({
   onSelectedChange,
   viewType,
   linkBuilder,
+  isSeriesView,
   recentlyUpdatedMap,
 }) => {
   const bookMetaData = new BookMetaData(platformBookData);
@@ -34,8 +35,15 @@ const toProps = ({
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = libraryBookData.expire_date ? isAfter(new Date(), libraryBookData.expire_date) : false;
-  const updateBadge =
-    platformBookData.series && recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.last_volume_id] : false;
+
+  let updateBadge = false;
+  if (platformBookData.series) {
+    if (isSeriesView) {
+      updateBadge = isAfter(platformBookData.publish.ridibooks_publish, subDays(new Date(), 3));
+    } else {
+      updateBadge = recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.last_volume_id] : false;
+    }
+  }
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
@@ -79,6 +87,7 @@ export const Books = ({
   onSelectedChange,
   viewType,
   linkBuilder,
+  isSeriesView,
   recentlyUpdatedMap,
 }) => (
   <BooksWrapper
@@ -109,6 +118,7 @@ export const Books = ({
           onSelectedChange,
           viewType,
           linkBuilder,
+          isSeriesView,
           recentlyUpdatedMap,
         });
         const { thumbnailLink } = libraryBookProps;
