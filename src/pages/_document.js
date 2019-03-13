@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
       "url": "https://library.ridibooks.com/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://library.ridibooks.com/purchased/search/?keyword={keyword}&amp;referer=sitelinks_searchbox",
+        "target": "https://library.ridibooks.com/books/search/?keyword={keyword}&amp;referer=sitelinks_searchbox",
         "query-input": "required name=keyword"
       }
     }`;
