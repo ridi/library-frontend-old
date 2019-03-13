@@ -3,9 +3,9 @@ import { jsx } from '@emotion/core';
 import * as modalStyles from './styles';
 import { ModalBackground } from './ModalBackground';
 
-export const Modal = ({ a11y, isActive, children, style, onClickModalBackground, horizontalAlign }) => (
+export const Modal = ({ a11y, isActive, children, style, onClickModalBackground, horizontalAlign, modalRef }) => (
   <>
-    <section css={[modalStyles.modal(isActive, horizontalAlign), style]}>
+    <section ref={modalRef} css={[modalStyles.modal(isActive, horizontalAlign), style]}>
       {a11y && <h2 className="a11y">{a11y}</h2>}
       {children}
     </section>

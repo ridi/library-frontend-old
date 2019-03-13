@@ -1,12 +1,13 @@
 /** @jsx jsx */
+import { useLayoutEffect, useRef } from 'react';
 import { jsx } from '@emotion/core';
 import shortid from 'shortid';
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import { filterModalStyle as styles } from './styles';
 
-const makeModalLinkItem = (option, filter, query, isChild) => (
-  <li key={shortid.generate()}>
+const makeModalLinkItem = (option, filter, query, isChild, checkedItemRef) => (
+  <li key={shortid.generate()} ref={option.value === filter ? checkedItemRef : null}>
     <ModalLinkItem
       count={option.count}
       isSelected={option.value === filter}
@@ -31,17 +32,31 @@ const makeModalLinkItem = (option, filter, query, isChild) => (
 
 const FilterModal = props => {
   const { isActive, filter, filterOptions, query, onClickModalBackground } = props;
+  const checkedItemEl = useRef(null);
+  const modalEl = useRef(null);
+
+  useLayoutEffect(
+    () => {
+      const modal = modalEl.current;
+
+      const ModalTitleHeight = 32;
+      const modalScrollTop = modal.getBoundingClientRect().top;
+      const checkedItemScrollTop = checkedItemEl.current.getBoundingClientRect().top;
+      modal.scrollTo(0, checkedItemScrollTop - modalScrollTop - ModalTitleHeight);
+    },
+    [isActive],
+  );
 
   return (
-    <Modal isActive={isActive} a11y="카테고리 필터" onClickModalBackground={onClickModalBackground}>
+    <Modal modalRef={modalEl} isActive={isActive} a11y="카테고리 필터" onClickModalBackground={onClickModalBackground}>
       <ModalItemGroup groupTitle="모든 책 카테고리">
         <ul>
           {filterOptions.map(option => {
             const items = [];
-            items.push(makeModalLinkItem(option, filter, query, false));
+            items.push(makeModalLinkItem(option, filter, query, false, checkedItemEl));
 
             if (option.children) {
-              option.children.map(childOption => items.push(makeModalLinkItem(childOption, filter, query, true)));
+              option.children.map(childOption => items.push(makeModalLinkItem(childOption, filter, query, true, checkedItemEl)));
             }
 
             return items;
