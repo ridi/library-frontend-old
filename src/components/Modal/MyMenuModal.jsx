@@ -56,7 +56,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       <ul>
         <li>
           <ModalButtonItem
-            title="구매 목록 엑셀 다운로드"
+            title={isExcelDownloading ? '파일 생성중' : '모든 책 목록 다운로드'}
             IconComponent={Download}
             onClick={() => dispatchStartExcelDownload()}
             showSpinner={isExcelDownloading}

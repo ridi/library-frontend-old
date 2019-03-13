@@ -62,7 +62,7 @@ function* loadActualPage() {
   // Step 2. 로그인 페이지의 경우 로그인 API를 통해 로그인 여부를 판단할 때까지 시간이 걸려서 미리 로드해준다.
   if (currentlinkProps.href.pathname === URLMap.login.href) {
     yield delay(1);
-    Router.replace(URLMap.login.href, URLMap.login.as);
+    Router.replace(URLMap.index.href, URLMap.index.as);
   }
 
   try {
@@ -78,7 +78,7 @@ function* loadActualPage() {
 
   // Step 4-2. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
   if (currentlinkProps.href.pathname === URLMap.login.href) {
-    Router.replace(URLMap.main.href, URLMap.main.as);
+    Router.replace(URLMap.index.href, URLMap.main.as);
     return;
   }
 
