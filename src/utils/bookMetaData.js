@@ -65,7 +65,7 @@ export default class BookMetaData {
       infos.push(`${BookFileType.convertToString(file.format)}`);
     }
 
-    if (this.unitData.character_count) {
+    if (this.unitData.character_count || file.format !== BookFileType.WEBTOON) {
       const characterCount = numberWithUnit(this.unitData.character_count);
       // null 일 수 있다.
       if (characterCount) {
@@ -73,7 +73,7 @@ export default class BookMetaData {
       }
     }
 
-    if (this.unitData.page_count) {
+    if (this.unitData.page_count || file.format !== BookFileType.WEBTOON) {
       infos.push(`${this.unitData.page_count}쪽`);
     }
 
