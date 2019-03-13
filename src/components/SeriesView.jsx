@@ -154,15 +154,11 @@ class SeriesView extends React.Component {
         );
       }
 
-      if (UnitType.isShelf(unit.type)) {
-        return (
-          <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-            리디북스에서 보기
-          </a>
-        );
-      }
-
-      return null;
+      return (
+        <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+          리디북스에서 보기
+        </a>
+      );
     };
 
     return (
