@@ -86,5 +86,5 @@ export const toURLMap = pathname => {
     }
   }
 
-  return { href: URLMap.notFound, as: URLMap.notFound.as };
+  return { href: URLMap.notFound.href, as: URLMap.notFound.as };
 };
