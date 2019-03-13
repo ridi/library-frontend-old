@@ -40,7 +40,7 @@ class SeriesView extends React.Component {
 
     if (order !== prevOrder) {
       setTimeout(() => {
-        if (!this.seriesViewRef.seriesViewRef) {
+        if (!this.seriesViewRef.current) {
           return;
         }
 
