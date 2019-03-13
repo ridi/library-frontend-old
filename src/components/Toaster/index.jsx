@@ -103,6 +103,7 @@ class Toaster extends React.Component {
                 </div>
                 <div css={styles.toastContent(toast.toastStyle)}>
                   <span css={styles.toastContentMessage}>{toast.message}</span>
+                  <br />
                   {this.renderToastLink()}
                 </div>
                 {this.renderCloseButton()}
