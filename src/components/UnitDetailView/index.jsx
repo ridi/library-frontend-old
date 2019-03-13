@@ -218,7 +218,11 @@ class UnitDetailView extends React.Component {
     const { unit, items, primaryItem, book, bookDescription, bookStarRating, readLatestBookId } = this.props;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
-      return <SkeletonUnitDetailView />;
+      return (
+        <div css={styles.unitDetailViewWrapper}>
+          <SkeletonUnitDetailView />
+        </div>
+      );
     }
 
     const _notAvailable = items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
