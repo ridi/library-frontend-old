@@ -2,9 +2,9 @@ import { maxWidthWrapper } from '../../../styles';
 import { MQ, Responsive } from '../../../styles/responsive';
 
 export const footerMargin = {
-  height: 223,
+  height: 124,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    height: 189,
+    height: 124,
   }),
 };
 
@@ -14,8 +14,10 @@ export const footer = {
   left: 0,
   width: '100%',
   boxSizing: 'border-box',
-  padding: '30px 0px 30px 24px',
-  backgroundColor: 'white',
+  padding: '2px 0px 30px 0px',
+  backgroundColor: '#f3f4f5',
+  textAlign: 'center',
+  fontFamily: 'HelveticaNeue',
 
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     paddingBottom: 42,
@@ -25,81 +27,6 @@ export const footer = {
 export const footerWrapper = {
   margin: '0 auto',
   ...maxWidthWrapper,
-};
-
-export const headingList = {
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    display: 'inline-block',
-    verticalAlign: 'top',
-  }),
-};
-
-export const headingItem = {
-  position: 'relative',
-  display: 'inline-block',
-  fontSize: 16,
-  fontWeight: 'bold',
-  color: '#40474d',
-
-  padding: '0 8px',
-  ':first-of-type': {
-    padding: '0 6px 0 0',
-    letterSpacing: 'normal',
-  },
-};
-
-export const contentList = {
-  ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], {
-    margin: '12px -16px 0 -16px',
-    width: 320,
-  }),
-
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    display: 'inline-block',
-    verticalAlign: 'top',
-    width: 534,
-    marginTop: 2,
-    marginLeft: 24,
-  }),
-};
-
-export const contentItem = {
-  marginTop: 12,
-  marginLeft: 16,
-  display: 'inline-block',
-  height: 17,
-  width: 144,
-  lineHeight: '17px',
-  fontSize: 14,
-
-  letterSpacing: -0.2,
-
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    marginTop: 0,
-    ':nth-of-type(n+4)': {
-      marginTop: 16,
-    },
-  }),
-};
-
-export const hideInMobile = {
-  display: 'none',
-
-  ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    display: 'inline-block',
-  }),
-};
-
-export const footerPaperIcon = {
-  width: 46,
-  height: 12,
-};
-
-export const footerNewIcon = {
-  marginLeft: 4,
-  width: 12,
-  height: 12,
-  fill: '#339cf2',
 };
 
 export const footerTermWrapper = {
@@ -151,7 +78,7 @@ export const verticalSeparator = {
   '&::before': {
     content: `''`,
     position: 'absolute',
-    left: 0,
+    right: 0,
     top: '50%',
     transform: 'translate3d(0, -50%, 0)',
     width: 1,
