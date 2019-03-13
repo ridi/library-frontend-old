@@ -27,6 +27,7 @@ const toProps = ({
   isSeriesView,
   recentlyUpdatedMap,
   thumbnailWidth,
+  isPurchasedBook,
 }) => {
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
@@ -37,6 +38,7 @@ const toProps = ({
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
   const isNotAvailable = libraryBookData.expire_date ? isAfter(new Date(), libraryBookData.expire_date) : false;
+  const isRidiselectSingleUnit = isRidiselect && isUnitBook && bookCount === 1;
 
   let updateBadge = false;
   if (platformBookData.series) {
@@ -49,7 +51,7 @@ const toProps = ({
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
-  const unitBookCount = bookCount > 1 && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
+  const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = libraryBookData.unit_title || platformBookData.title.main;
 
   const defaultBookProps = {
@@ -60,16 +62,16 @@ const toProps = ({
     notAvailable: isNotAvailable,
     updateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && libraryBookData.purchase_date,
+    selectMode: isSelectMode && isPurchasedBook,
     selected: isSelected,
-    unitBook: isUnitBook,
+    unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
     onSelectedChange: () => onSelectedChange(bookId),
     thumbnailLink,
   };
   const portraitBookProps = {
     thumbnailWidth,
-    expiredAt: expiredAt.replace(/\s남음/g, ''),
+    expiredAt,
   };
   const landscapeBookProps = {
     title,
@@ -94,7 +96,7 @@ export const Books = props => {
     isSeriesView,
     recentlyUpdatedMap,
   } = props;
-  const [thumbnailWidth, setThumbnailWidth] = useState(100);
+  const [thumbnailWidth, setThumbnailWidth] = useState('100%');
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
@@ -127,6 +129,7 @@ export const Books = props => {
               </div>
             );
           }
+          const isPurchasedBook = !!libraryBookData.purchase_date;
 
           const isSelected = !!selectedBooks[bookId];
           const libraryBookProps = toProps({
@@ -141,15 +144,17 @@ export const Books = props => {
             isSeriesView,
             recentlyUpdatedMap,
             thumbnailWidth,
+            isPurchasedBook,
           });
           const { thumbnailLink } = libraryBookProps;
+          const opacity = !isPurchasedBook && isSelectMode ? 0.4 : null;
 
           return viewType === ViewType.PORTRAIT ? (
-            <div key={bookId} className={className} css={styles.portrait}>
+            <div key={bookId} className={className} css={[styles.portrait, { opacity }]}>
               <Book.PortraitBook {...libraryBookProps} />
             </div>
           ) : (
-            <div key={bookId} className={className} css={styles.landscape}>
+            <div key={bookId} className={className} css={[styles.landscape, { opacity }]}>
               <Book.LandscapeBook {...libraryBookProps} />
               {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
             </div>
