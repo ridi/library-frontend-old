@@ -49,6 +49,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
       service_type: libraryItem ? libraryItem.service_type : null,
       is_ridiselect: libraryItem && libraryItem.service_type === ServiceType.RIDISELECT,
       remain_time: libraryItem ? getRemainTime(libraryItem) : '',
+      purchased: !!libraryItem,
     };
   });
 

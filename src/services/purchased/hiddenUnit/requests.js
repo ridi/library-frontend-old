@@ -16,7 +16,7 @@ export function* fetchHiddenUnitItems(unitId, page) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/hidden/${unitId}`, options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  return response.data.map(item => ({ ...item, purchased: true }));
 }
 
 export function* fetchHiddenUnitItemsTotalCount(unitId) {
