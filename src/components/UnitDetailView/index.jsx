@@ -72,16 +72,14 @@ class UnitDetailView extends React.Component {
   renderExpanderButton() {
     const { isExpanded, isTruncated } = this.state;
 
-    if (!isTruncated) {
-      return null;
-    }
-
     return (
       <div css={styles.bookDescriptionExpend}>
-        <button type="button" onClick={() => this.toggleExpand()} css={styles.bookDescriptionExpendButton}>
-          {isExpanded ? '접기' : '계속 읽기'}
-          <NoneDashedArrowDown css={[styles.bookDescriptionExpendIcon, isExpanded && styles.bookDescriptionExpendIconExpanded]} />
-        </button>
+        {isTruncated ? (
+          <button type="button" onClick={() => this.toggleExpand()} css={styles.bookDescriptionExpendButton}>
+            {isExpanded ? '접기' : '계속 읽기'}
+            <NoneDashedArrowDown css={[styles.bookDescriptionExpendIcon, isExpanded && styles.bookDescriptionExpendIconExpanded]} />
+          </button>
+        ) : null}
       </div>
     );
   }

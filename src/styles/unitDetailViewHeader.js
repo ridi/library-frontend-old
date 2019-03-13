@@ -28,9 +28,9 @@ export const thumbnailWrapper = {
   ...headerContentsWrapper,
   alignItems: 'center',
   justifyContent: 'flex-end',
-  minHeight: 215,
+  minHeight: 246,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    minHeight: 320,
+    minHeight: 327,
   }),
 };
 
