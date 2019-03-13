@@ -1,13 +1,12 @@
 /** @jsx jsx */
 import { useLayoutEffect, useRef } from 'react';
 import { jsx } from '@emotion/core';
-import shortid from 'shortid';
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import { filterModalStyle as styles } from './styles';
 
 const makeModalLinkItem = (option, filter, query, isChild, checkedItemRef) => (
-  <li key={shortid.generate()} ref={option.value === filter ? checkedItemRef : null}>
+  <li key={`${JSON.stringify(option)}-${isChild}`} ref={option.value === filter ? checkedItemRef : null}>
     <ModalLinkItem
       count={option.count}
       isSelected={option.value === filter}

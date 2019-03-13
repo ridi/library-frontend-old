@@ -33,7 +33,7 @@ export default class extends React.Component {
             };
           }
           return (
-            <Link prefetch {...linkProps} key={shortid.generate()}>
+            <Link prefetch {...linkProps} key={`${JSON.stringify(urlMap)}`}>
               <a />
             </Link>
           );

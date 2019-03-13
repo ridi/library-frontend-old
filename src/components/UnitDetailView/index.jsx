@@ -213,7 +213,7 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, items, primaryItem, book, bookDescription, bookStarRating, readLatestBookId } = this.props;
+    const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
 
     if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
       return (
