@@ -18,6 +18,7 @@ export const DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_UNI
 export const SET_IS_FETCHING_SEARCH_BOOK = 'SET_IS_FETCHING_SEARCH_BOOK';
 
 export const SET_SEARCH_UNIT_PRIMARY_ITEM = 'SET_SEARCH_UNIT_PRIMARY_ITEM';
+export const SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT = 'SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT';
 
 export const loadItems = () => ({
   type: LOAD_SEARCH_UNIT_ITEMS,
@@ -106,5 +107,12 @@ export const setPrimaryItem = primaryItem => ({
   type: SET_SEARCH_UNIT_PRIMARY_ITEM,
   payload: {
     primaryItem,
+  },
+});
+
+export const setPurchasedTotalCount = totalCount => ({
+  type: SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT,
+  payload: {
+    totalCount,
   },
 });

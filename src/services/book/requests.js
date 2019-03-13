@@ -76,3 +76,14 @@ export function* fetchUnitOrders(unitId, orderType, orderBy, page) {
   const response = yield api.get(makeURI(`/books/units/${unitId}/order`, options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
+
+export function* fetchUnitTotalCount(unitId) {
+  const options = {
+    offset: 0,
+    limit: 0,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.get(makeURI(`/books/units/${unitId}/order`, options, config.LIBRARY_API_BASE_URL));
+  return response.data;
+}

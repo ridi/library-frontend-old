@@ -25,6 +25,7 @@ import {
   getTotalCount,
   getUnitId,
   getPrimaryItem,
+  getPurchasedTotalCount,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
@@ -78,7 +79,7 @@ class searchUnit extends React.Component {
     const {
       unit,
       totalCount,
-      pageInfo: { keyword },
+      pageInfo: { keyword, order },
       searchPageInfo: { currentPage: page },
     } = this.props;
 
@@ -88,11 +89,14 @@ class searchUnit extends React.Component {
       query: { keyword, page },
     };
 
+    const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
+
     const extraTitleBarProps = unit
       ? {
           title: unit.title,
-          showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
-          totalCount: totalCount.itemTotalCount,
+          showCount:
+            !UnitType.isBook(unit.type) && usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0,
+          totalCount: usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount,
         }
       : {};
 

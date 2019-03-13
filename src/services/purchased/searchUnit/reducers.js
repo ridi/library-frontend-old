@@ -1,19 +1,20 @@
-import { initialState, initialDataState, getKey } from './state';
+import { toDict, toFlatten } from '../../../utils/array';
 
 import {
   CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
+  SET_IS_FETCHING_SEARCH_BOOK,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
   SET_SEARCH_UNIT_KEYWORD,
   SET_SEARCH_UNIT_ORDER,
   SET_SEARCH_UNIT_PAGE,
+  SET_SEARCH_UNIT_PRIMARY_ITEM,
+  SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT,
   SET_SEARCH_UNIT_TOTAL_COUNT,
   SET_SELECT_SEARCH_UNIT_BOOKS,
   TOGGLE_SELECT_SEARCH_UNIT_BOOK,
-  SET_IS_FETCHING_SEARCH_BOOK,
-  SET_SEARCH_UNIT_PRIMARY_ITEM,
 } from './actions';
-import { toDict, toFlatten } from '../../../utils/array';
+import { getKey, initialDataState, initialState } from './state';
 
 const searchUnitReducer = (state = initialState, action) => {
   const key = getKey(state);
@@ -71,6 +72,17 @@ const searchUnitReducer = (state = initialState, action) => {
         primaryItems: {
           ...state.primaryItems,
           [state.unitId]: action.payload.primaryItem,
+        },
+      };
+    case SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            purchasedTotalCount: action.payload.purchasedTotalCount,
+          },
         },
       };
     case SET_SEARCH_UNIT_ORDER:

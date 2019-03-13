@@ -1,38 +1,40 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+
+import { OrderOptions } from '../../../constants/orderOptions';
+import { URLMap } from '../../../constants/urls';
+
+import { toFlatten } from '../../../utils/array';
+import { isExpiredTTL } from '../../../utils/ttl';
+import { makeLinkProps } from '../../../utils/uri';
+
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
 import { downloadBooks } from '../../bookDownload/sagas';
-import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
+import { showDialog } from '../../dialog/actions';
+import { getQuery } from '../../router/selectors';
+import { showToast } from '../../toast/actions';
+import { setError, setFullScreenLoading } from '../../ui/actions';
+import { loadReadLatestBookId } from '../common/sagas/rootSagas';
+import { isTotalSeriesView, loadTotalItems } from '../common/sagas/seriesViewSagas';
 
 import {
   DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS,
   HIDE_SELECTED_SEARCH_UNIT_BOOKS,
   LOAD_SEARCH_UNIT_ITEMS,
   SELECT_ALL_SEARCH_UNIT_BOOKS,
+  selectBooks,
+  setIsFetchingSearchBook,
   setItems,
+  setKeyword,
   setOrder,
   setPage,
-  setTotalCount,
-  selectBooks,
-  setKeyword,
-  setIsFetchingSearchBook,
   setPrimaryItem,
+  setPurchasedTotalCount,
+  setTotalCount,
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrimaryItem } from './requests';
-
-import { OrderOptions } from '../../../constants/orderOptions';
-
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
-import { getQuery } from '../../router/selectors';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
-
-import { toFlatten } from '../../../utils/array';
-import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { showToast } from '../../toast/actions';
-import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { makeLinkProps } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { showDialog } from '../../dialog/actions';
+import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -68,7 +70,7 @@ function* moveToFirstPage() {
   Router.replace(linkProps.href, linkProps.as);
 }
 
-function* loadOwnItems(unitId, orderType, orderBy, page) {
+function* loadPurchasedItems(unitId, orderType, orderBy, page) {
   const [itemResponse, countResponse] = yield all([
     call(fetchSearchUnitItems, unitId, orderType, orderBy, page),
     call(fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
@@ -99,20 +101,25 @@ function* loadItems() {
     yield put(setIsFetchingSearchBook(true));
 
     // Unit 로딩
-    const [_, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
+    const [_, primaryItem, countResponse] = yield all([
+      call(loadUnitData, [unitId]),
+      call(loadPrimaryItem, unitId),
+      call(fetchSearchUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
+    ]);
     yield all([
       put(setPrimaryItem(primaryItem)),
+      put(setPurchasedTotalCount(countResponse.item_total_count)),
       call(loadBookDescriptions, [primaryItem.b_id]),
       call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
 
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
+
     if (yield call(isTotalSeriesView, unitId, order)) {
       yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
     } else {
-      yield loadOwnItems(unitId, orderType, orderBy, page);
+      yield loadPurchasedItems(unitId, orderType, orderBy, page);
     }
-
-    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

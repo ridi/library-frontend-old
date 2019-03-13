@@ -11,6 +11,7 @@ import {
   TOGGLE_SELECT_MAIN_UNIT_BOOK,
   SET_IS_FETCHING_BOOK,
   SET_MAIN_UNIT_PRIMARY_ITEM,
+  SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -65,6 +66,17 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
         primaryItems: {
           ...state.primaryItems,
           [state.unitId]: action.payload.primaryItem,
+        },
+      };
+    case SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: {
+            ...dataState,
+            purchasedTotalCount: action.payload.purchasedTotalCount,
+          },
         },
       };
     case SET_MAIN_UNIT_ID:
