@@ -29,6 +29,7 @@ export function* loadRecentlyUpdatedData(bookIds) {
 }
 
 export function* loadReadLatestBookId(unitId, bookId) {
+  yield call(loadBookData, [bookId]);
   const book = yield select(state => state.books.books.get(bookId));
   if (!book || !book.series) {
     return;
