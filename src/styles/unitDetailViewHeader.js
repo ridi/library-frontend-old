@@ -30,7 +30,7 @@ export const thumbnailWrapper = {
   justifyContent: 'center',
   minHeight: 215,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    minHeight: 275,
+    minHeight: 320,
   }),
 };
 
