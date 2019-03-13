@@ -1,4 +1,4 @@
-import { Width } from './constants';
+import { BookSize, Width } from './constants';
 
 const under = maxWidth => `@media all and (max-width: ${maxWidth - 1}px)`;
 const between = (minWidth, maxWidth) => `@media all and (min-width: ${minWidth}px) and (max-width: ${maxWidth - 1}px)`;
@@ -12,6 +12,27 @@ export const BP = {
   XLarge: between(Width.W834, Width.W1280),
   XXLarge: between(Width.W1280, Width.W1440),
   Full: moreThan(Width.W1440),
+};
+
+export const getResponsiveBookSizeForBookList = screenWidth => {
+  const bookSize = {
+    width: BookSize.Medium.width,
+    height: BookSize.Medium.height,
+  };
+  if (screenWidth >= Width.W1280) {
+    bookSize.width = BookSize.Large.width;
+    bookSize.height = BookSize.Large.height;
+  } else if (screenWidth >= Width.W414) {
+    bookSize.width = BookSize.Medium.width;
+    bookSize.height = BookSize.Medium.height;
+  } else if (screenWidth >= Width.W360) {
+    bookSize.width = BookSize.Small.width;
+    bookSize.height = BookSize.Small.height;
+  } else {
+    bookSize.width = BookSize.XSmall.width;
+    bookSize.height = BookSize.XSmall.height;
+  }
+  return bookSize;
 };
 
 export const MQ = (breakPoints, styles) => breakPoints.reduce((acc, breakPoint) => Object.assign(breakPoint(styles), acc), {});
