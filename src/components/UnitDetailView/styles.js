@@ -146,6 +146,7 @@ export const bookDescriptionExpended = {
 export const bookDescriptionExpend = {
   textAlign: 'right',
   marginTop: 10,
+  height: 20,
 };
 export const bookDescription = {
   wordWrap: 'break-word',
