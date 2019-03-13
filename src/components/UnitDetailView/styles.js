@@ -228,7 +228,7 @@ export const readLatestButton = {
 export const readLatestButtonSpinner = {
   width: 17,
   height: 17,
-  background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+  background: `url(${config.STATIC_URL}/static/spinner/blue_spinner.gif) center no-repeat`,
   backgroundSize: '100%',
   margin: '0 auto',
 };
