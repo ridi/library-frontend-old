@@ -174,6 +174,7 @@ class SeriesView extends React.Component {
         viewType={ViewType.LANDSCAPE}
         onSelectedChange={onSelectedChange}
         linkBuilder={linkBuilder(linkWebviewer)}
+        isSeriesView={UnitType.isSeries(unit.type)}
       />
     );
   }

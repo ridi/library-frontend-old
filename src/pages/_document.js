@@ -1,5 +1,7 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
+import config from '../config';
+import { URLMap } from '../constants/urls';
 import Favicon from './base/Favicon';
 import Metadata from './base/Metadata';
 
@@ -22,10 +24,10 @@ export default class MyDocument extends Document {
   addSearchJSONLD = () => `{
       "@context": "http://schema.org",
       "@type": "WebSite",
-      "url": "https://library.ridibooks.com/",
+      "url": "${config.BASE_URL}/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://library.ridibooks.com/books/search/?keyword={keyword}&amp;referer=sitelinks_searchbox",
+        "target": "${config.BASE_URL}${URLMap.search.as}/?keyword={keyword}&amp;referer=sitelinks_searchbox",
         "query-input": "required name=keyword"
       }
     }`;

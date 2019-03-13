@@ -79,6 +79,7 @@ class MainUnit extends React.Component {
       unit,
       totalCount,
       mainPageInfo: { currentPage: page, orderType, orderBy, filter },
+      pageInfo: { order },
     } = this.props;
 
     const titleBarProps = {
@@ -87,11 +88,14 @@ class MainUnit extends React.Component {
       query: { page, orderType, orderBy, filter },
     };
 
+    const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
+
     const extraTitleBarProps = unit
       ? {
           title: unit.title,
-          showCount: !UnitType.isBook(unit.type) && totalCount.itemTotalCount > 0,
-          totalCount: totalCount.itemTotalCount,
+          showCount:
+            !UnitType.isBook(unit.type) && usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0,
+          totalCount: usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount,
         }
       : {};
 
@@ -206,6 +210,7 @@ const mapStateToProps = state => {
   const bookStarRating = primaryItem ? getBookStarRating(state, primaryItem.b_id) : null;
 
   const totalCount = getTotalCount(state);
+
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBook = getIsFetchingBook(state);
 

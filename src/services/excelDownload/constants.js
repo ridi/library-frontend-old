@@ -6,4 +6,4 @@ export const ExcelDownloadStatusCode = {
   DONE: 1000,
 };
 
-export const EXCEL_FILE_NAME = '리디북스_구매목록.xlsx';
+export const EXCEL_FILE_NAME = 'ridi_book_list.xlsx';

@@ -28,10 +28,10 @@ const headerContentsWrapper = {
 export const thumbnailWrapper = {
   ...headerContentsWrapper,
   alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: 215,
+  justifyContent: 'flex-end',
+  minHeight: 246,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    minHeight: 275,
+    minHeight: 327,
   }),
 };
 

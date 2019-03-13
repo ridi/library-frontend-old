@@ -56,17 +56,16 @@ export default class BookMetaData {
   }
 
   get infos() {
-    const { file } = this.bookData;
-    if (!file) return null;
+    const { file, series } = this.bookData;
 
     // info의 text 에 | 와 \ 사용되면 안된다. 두개의 문자는 예약어이다.
     const infos = [];
 
-    if (!(file.format === BookFileType.BOM || file.format === BookFileType.WEBTOON)) {
+    if (file && !(file.format === BookFileType.BOM || file.format === BookFileType.WEBTOON)) {
       infos.push(`${BookFileType.convertToString(file.format)}`);
     }
 
-    if (this.unitData.character_count) {
+    if (this.unitData.character_count && file.format !== BookFileType.WEBTOON) {
       const characterCount = numberWithUnit(this.unitData.character_count);
       // null 일 수 있다.
       if (characterCount) {
@@ -74,7 +73,7 @@ export default class BookMetaData {
       }
     }
 
-    if (this.unitData.page_count) {
+    if (this.unitData.page_count && file.format !== BookFileType.WEBTOON) {
       infos.push(`${this.unitData.page_count}쪽`);
     }
 
@@ -82,7 +81,12 @@ export default class BookMetaData {
       infos.push(`${formatFileSize(this.unitData.file_size)}`);
     }
 
-    if (file.is_drm_free) {
+    if (this.unitData.total_count > 1) {
+      const unitOfCount = series ? series.property.unit : '권';
+      infos.push(`총 ${this.unitData.total_count}${unitOfCount}`);
+    }
+
+    if (file && file.is_drm_free) {
       infos.push('DRM Free');
     }
 
