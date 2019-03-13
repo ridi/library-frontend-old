@@ -15,7 +15,8 @@ import { showDialog } from '../../dialog/actions';
 import { getQuery } from '../../router/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
-import { isTotalSeriesView, loadTotalItems, loadReadLatestBookId } from '../common/sagas';
+import { loadReadLatestBookId } from '../common/sagas/rootSagas';
+import { isTotalSeriesView, loadTotalItems } from '../common/sagas/seriesViewSagas';
 
 import {
   DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS,
@@ -26,6 +27,7 @@ import {
   setIsFetchingBook,
   setItems,
   setOrder,
+  setPurchasedTotalCount,
   setPage,
   setPrimaryItem,
   setTotalCount,
@@ -67,7 +69,7 @@ function* moveToFirstPage() {
   Router.replace(linkProps.href, linkProps.as);
 }
 
-function* loadOwnItems(unitId, orderType, orderBy, page) {
+function* loadPurchasedItems(unitId, orderType, orderBy, page) {
   const [itemResponse, countResponse] = yield all([
     call(fetchMainUnitItems, unitId, orderType, orderBy, page),
     call(fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
@@ -98,9 +100,17 @@ function* loadItems() {
     yield put(setIsFetchingBook(true));
 
     // Unit 로딩
-    const [_, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, unitId)]);
+    const [_, primaryItem, countResponse] = yield all([
+      call(loadUnitData, [unitId]),
+      call(loadPrimaryItem, unitId),
+      call(fetchMainUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
+    ]);
+
+    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
+
     yield all([
       put(setPrimaryItem(primaryItem)),
+      put(setPurchasedTotalCount(countResponse.item_total_count)),
       call(loadBookDescriptions, [primaryItem.b_id]),
       call(loadBookStarRatings, [primaryItem.b_id]),
     ]);
@@ -108,10 +118,8 @@ function* loadItems() {
     if (yield call(isTotalSeriesView, unitId, order)) {
       yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
     } else {
-      yield loadOwnItems(unitId, orderType, orderBy, page);
+      yield loadPurchasedItems(unitId, orderType, orderBy, page);
     }
-
-    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
   } catch (err) {
     yield put(setError(true));
   } finally {

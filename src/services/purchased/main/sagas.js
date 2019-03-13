@@ -27,7 +27,7 @@ import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './select
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
-import { loadRecentlyUpdatedData } from '../../purchased/common/sagas';
+import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
 import { downloadBooks } from '../../bookDownload/sagas';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';

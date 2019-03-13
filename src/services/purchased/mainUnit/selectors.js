@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
+import { OrderOptions } from '../../../constants/orderOptions';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
-import { OrderOptions } from '../../../constants/orderOptions';
-import { initialDataState, getKey } from './state';
+import { getKey, initialDataState } from './state';
 
 const getState = state => state.purchasedMainUnit;
 const getDataState = state => {
@@ -75,7 +75,7 @@ export const getSelectedBooks = createSelector(
 
 export const getTotalCount = createSelector(
   getDataState,
-  dataState => ({ itemTotalCount: dataState.itemTotalCount }),
+  dataState => ({ itemTotalCount: dataState.itemTotalCount, purchasedTotalCount: dataState.purchasedTotalCount }),
 );
 
 export const getIsFetchingBook = createSelector(

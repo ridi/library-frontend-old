@@ -78,7 +78,7 @@ function* loadActualPage() {
 
   // Step 4-2. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
   if (currentlinkProps.href.pathname === URLMap.login.href) {
-    Router.replace(URLMap.main.href, URLMap.main.as);
+    Router.replace(URLMap.index.href, URLMap.index.as);
     return;
   }
 

@@ -17,6 +17,7 @@ export const DOWNLOAD_SELECTED_MAIN_UNIT_BOOKS = 'DOWNLOAD_SELECTED_MAIN_UNIT_BO
 export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
 
 export const SET_MAIN_UNIT_PRIMARY_ITEM = 'SET_MAIN_UNIT_PRIMARY_ITEM';
+export const SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT = 'SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT';
 
 export const loadItems = () => ({
   type: LOAD_MAIN_UNIT_ITEMS,
@@ -98,5 +99,12 @@ export const setPrimaryItem = primaryItem => ({
   type: SET_MAIN_UNIT_PRIMARY_ITEM,
   payload: {
     primaryItem,
+  },
+});
+
+export const setPurchasedTotalCount = purchasedTotalCount => ({
+  type: SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT,
+  payload: {
+    purchasedTotalCount,
   },
 });

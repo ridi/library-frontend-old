@@ -6,6 +6,11 @@ class URLMapNotFoundError extends Error {
 }
 
 export const URLMap = {
+  index: {
+    href: '/purchased/main',
+    as: '/',
+    regex: /^\/$/,
+  },
   login: {
     href: '/login',
     as: '/login',
@@ -13,38 +18,43 @@ export const URLMap = {
   },
   main: {
     href: '/purchased/main',
-    as: '/purchased',
-    regex: /^\/purchased\/?$/,
+    as: '/books',
+    regex: /^\/books\/?$/,
   },
   mainUnit: {
     href: '/purchased/mainUnit',
-    as: ({ unitId }) => `/purchased/${unitId}/`,
-    regex: /^\/purchased\/(\d+)\/?$/,
+    as: ({ unitId }) => `/books/${unitId}/`,
+    regex: /^\/books\/(\d+)\/?$/,
   },
   search: {
     href: '/purchased/search',
-    as: '/purchased/search',
-    regex: /^\/purchased\/search\/?$/,
+    as: '/books/search',
+    regex: /^\/books\/search\/?$/,
   },
   searchUnit: {
     href: '/purchased/searchUnit',
-    as: ({ unitId }) => `/purchased/search/${unitId}`,
-    regex: /^\/purchased\/search\/(\d+)\/?$/,
+    as: ({ unitId }) => `/books/search/${unitId}`,
+    regex: /^\/books\/search\/(\d+)\/?$/,
   },
   hidden: {
     href: '/purchased/hidden',
     as: '/purchased/hidden',
-    regex: /^\/purchased\/hidden\/?$/,
+    regex: /^\/books\/hidden\/?$/,
   },
   hiddenUnit: {
     href: '/purchased/hiddenUnit',
-    as: ({ unitId }) => `/purchased/hidden/${unitId}`,
-    regex: /^\/purchased\/hidden\/(\d+)\/?$/,
+    as: ({ unitId }) => `/books/hidden/${unitId}`,
+    regex: /^\/books\/hidden\/(\d+)\/?$/,
   },
   serialPreference: {
     href: '/serialPreference',
     as: '/serial-preference',
     regex: /^\/serial-preference\/?$/,
+  },
+  notFound: {
+    href: '/errors/notFound',
+    as: '/errors/not-found',
+    regex: /^\/errors\/not-found\/?$/,
   },
 };
 
@@ -57,10 +67,6 @@ export const URLMap = {
 // 3. index.html에 접속시 pathname을 가져와서 실제로 로딩해야하는 페이지로 replace
 // ----
 export const toURLMap = pathname => {
-  if (pathname === '/') {
-    return { href: URLMap.main.href, as: URLMap.main.as };
-  }
-
   const urlMaps = Object.keys(URLMap).map(key => URLMap[key]);
   for (let index = 0; index < urlMaps.length; index += 1) {
     const urlMap = urlMaps[index];
@@ -80,5 +86,5 @@ export const toURLMap = pathname => {
     }
   }
 
-  throw new URLMapNotFoundError();
+  return { href: URLMap.notFound.href, as: URLMap.notFound.as };
 };
