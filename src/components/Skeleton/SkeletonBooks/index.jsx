@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import shortid from 'shortid';
 import ViewType from '../../../constants/viewType';
 import * as styles from '../../../styles/books';
 import BooksWrapper from '../../BooksWrapper';
@@ -13,19 +12,17 @@ const SkeletonBooks = ({ viewType }) => (
   <BooksWrapper
     viewType={viewType}
     renderBooks={({ className }) =>
-      Array(SkeletonBookCount)
-        .fill()
-        .map(() =>
-          viewType === ViewType.PORTRAIT ? (
-            <div key={shortid.generate()} className={className} css={styles.portrait}>
-              <PortraitBook />
-            </div>
-          ) : (
-            <div key={shortid.generate()} className={className} css={styles.landscape}>
-              <LandscapeBook />
-            </div>
-          ),
-        )
+      [...Array(SkeletonBookCount).keys()].map(index =>
+        viewType === ViewType.PORTRAIT ? (
+          <div key={`${viewType}-${index}`} className={className} css={styles.portrait}>
+            <PortraitBook />
+          </div>
+        ) : (
+          <div key={`${viewType}-${index}`} className={className} css={styles.landscape}>
+            <LandscapeBook />
+          </div>
+        ),
+      )
     }
   />
 );

@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { merge } from 'lodash';
-import * as shortid from 'shortid';
 import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
@@ -109,7 +108,7 @@ const toProps = ({
   const authorAndGenre = (
     <>
       {genre}
-      <span css={serialPreferenceStyles.authorFieldSeparator} key={shortid.generate()} />
+      <span css={serialPreferenceStyles.authorFieldSeparator} key={`${platformBookData.id}-a-f-s`} />
       {bookMetaData.authorSimple}
     </>
   );
@@ -123,10 +122,11 @@ const toProps = ({
 
   const additionalMetadata = (
     <p css={serialPreferenceStyles.preferenceMeta}>
-      {hasUnreadSeries && <span css={serialPreferenceStyles.unreadDot} key={shortid.generate()} />}
-      <strong key={shortid.generate()}>{recentReadPlatformBookData.series.volume}화</strong> / 총 {seriesProperty.opened_book_count}화
+      {hasUnreadSeries && <span css={serialPreferenceStyles.unreadDot} key={`${platformBookData.id}-s-p-u-d`} />}
+      <strong key={`${platformBookData.id}-s-p-r-r-v`}>{recentReadPlatformBookData.series.volume}화</strong>
+      {` / 총 ${seriesProperty.opened_book_count}화`}
       {isSerialCompleted && (
-        <span css={serialPreferenceStyles.seriesComplete} key={shortid.generate()}>
+        <span css={serialPreferenceStyles.seriesComplete} key={`${platformBookData.id}-s-p-s-c`}>
           <SeriesCompleteIcon css={serialPreferenceStyles.seriesCompleteIcon} />
         </span>
       )}
