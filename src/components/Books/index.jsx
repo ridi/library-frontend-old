@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import * as styles from '../../styles/books';
@@ -11,6 +11,7 @@ import BookMetaData from '../../utils/bookMetaData';
 import BooksWrapper from '../BooksWrapper';
 import EmptyLandscapeBook from './EmptyLandscapeBook';
 import LandscapeFullButton from './LandscapeFullButton';
+import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import LandscapeBook from '../Skeleton/SkeletonBooks/LandscapeBook';
 import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 
@@ -25,6 +26,7 @@ const toProps = ({
   linkBuilder,
   isSeriesView,
   recentlyUpdatedMap,
+  thumbnailWidth,
 }) => {
   const bookMetaData = new BookMetaData(platformBookData);
   const isAdultOnly = platformBookData.property.is_adult_only;
@@ -66,7 +68,7 @@ const toProps = ({
     thumbnailLink,
   };
   const portraitBookProps = {
-    thumbnailWidth: '100%',
+    thumbnailWidth,
     expiredAt: expiredAt.replace(/\s남음/g, ''),
   };
   const landscapeBookProps = {
@@ -79,71 +81,91 @@ const toProps = ({
   return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);
 };
 
-export const Books = ({
-  libraryBookDTO,
-  platformBookDTO,
-  selectedBooks,
-  isSelectMode,
-  onSelectedChange,
-  viewType,
-  linkBuilder,
-  isSeriesView,
-  recentlyUpdatedMap,
-}) => (
-  <BooksWrapper
-    viewType={viewType}
-    renderBooks={({ className }) => {
-      const libraryBooks = libraryBookDTO.map(libraryBookData => {
-        const bookId = libraryBookData.b_id;
-        const platformBookData = platformBookDTO[bookId];
-        if (!platformBookData) {
+export const Books = props => {
+  const isLoaded = true;
+  const {
+    libraryBookDTO,
+    platformBookDTO,
+    selectedBooks,
+    isSelectMode,
+    onSelectedChange,
+    viewType,
+    linkBuilder,
+    isSeriesView,
+    recentlyUpdatedMap,
+  } = props;
+  const [thumbnailWidth, setThumbnailWidth] = useState(100);
+  const setResponsiveThumbnailWidth = () => {
+    setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
+  };
+  useEffect(
+    () => {
+      setResponsiveThumbnailWidth();
+      window.addEventListener('resize', setResponsiveThumbnailWidth);
+      return () => {
+        window.removeEventListener('resize', setResponsiveThumbnailWidth);
+      };
+    },
+    [isLoaded],
+  );
+
+  return (
+    <BooksWrapper
+      viewType={viewType}
+      renderBooks={({ className }) => {
+        const libraryBooks = libraryBookDTO.map(libraryBookData => {
+          const bookId = libraryBookData.b_id;
+          const platformBookData = platformBookDTO[bookId];
+          if (!platformBookData) {
+            return viewType === ViewType.PORTRAIT ? (
+              <div key={bookId} className={className} css={styles.portrait}>
+                <PortraitBook />
+              </div>
+            ) : (
+              <div key={bookId} className={className} css={styles.landscape}>
+                <LandscapeBook />
+              </div>
+            );
+          }
+
+          const isSelected = !!selectedBooks[bookId];
+          const libraryBookProps = toProps({
+            bookId,
+            libraryBookData,
+            platformBookData,
+            isSelectMode,
+            isSelected,
+            onSelectedChange,
+            viewType,
+            linkBuilder,
+            isSeriesView,
+            recentlyUpdatedMap,
+            thumbnailWidth,
+          });
+          const { thumbnailLink } = libraryBookProps;
+
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className={className} css={styles.portrait}>
-              <PortraitBook />
+              <Book.PortraitBook {...libraryBookProps} />
             </div>
           ) : (
             <div key={bookId} className={className} css={styles.landscape}>
-              <LandscapeBook />
+              <Book.LandscapeBook {...libraryBookProps} />
+              {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
             </div>
           );
-        }
-
-        const isSelected = !!selectedBooks[bookId];
-        const libraryBookProps = toProps({
-          bookId,
-          libraryBookData,
-          platformBookData,
-          isSelectMode,
-          isSelected,
-          onSelectedChange,
-          viewType,
-          linkBuilder,
-          isSeriesView,
-          recentlyUpdatedMap,
         });
-        const { thumbnailLink } = libraryBookProps;
+        const libraryBooksCount = libraryBookDTO.length;
+        const isNeedLandscapeBookSeparator =
+          viewType === ViewType.LANDSCAPE && libraryBooks && libraryBooksCount !== 0 && libraryBooksCount % 2 !== 0;
 
-        return viewType === ViewType.PORTRAIT ? (
-          <div key={bookId} className={className} css={styles.portrait}>
-            <Book.PortraitBook {...libraryBookProps} />
-          </div>
-        ) : (
-          <div key={bookId} className={className} css={styles.landscape}>
-            <Book.LandscapeBook {...libraryBookProps} />
-            {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
-          </div>
+        return (
+          <React.Fragment>
+            {libraryBooks}
+            {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
+          </React.Fragment>
         );
-      });
-      const libraryBooksCount = libraryBookDTO.length;
-      const isNeedLandscapeBookSeparator =
-        viewType === ViewType.LANDSCAPE && libraryBooks && libraryBooksCount !== 0 && libraryBooksCount % 2 !== 0;
-
-      return (
-        <React.Fragment>
-          {libraryBooks}
-          {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
-        </React.Fragment>
-      );
-    }}
-  />
-);
+      }}
+    />
+  );
+};
