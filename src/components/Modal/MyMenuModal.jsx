@@ -35,20 +35,20 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="구매 목록으로 가기" IconComponent={ReturnIcon} href={BEFORE_LIBRARY_URL} isOuterLink />
+          <ModalAnchorItem title="구매 목록으로 가기" IconComponent={ReturnIcon} href={BEFORE_LIBRARY_URL} />
         </li>
         <li>
-          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} isOuterLink />
+          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} />
         </li>
       </ul>
     </ModalItemGroup>
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.READING_NOTE_URL} isOuterLink />
+          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.READING_NOTE_URL} />
         </li>
         <li>
-          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.REVIEW_URL} isOuterLink />
+          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.REVIEW_URL} />
         </li>
       </ul>
     </ModalItemGroup>

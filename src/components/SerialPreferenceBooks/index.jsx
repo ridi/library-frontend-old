@@ -145,12 +145,7 @@ const toProps = ({
   );
 
   const additionalButton = (
-    <a
-      href={makeWebViewerURI(recentReadBookId, locationHref)}
-      target="_blank"
-      rel="noopener noreferrer"
-      css={serialPreferenceStyles.button}
-    >
+    <a href={makeWebViewerURI(recentReadBookId, locationHref)} css={serialPreferenceStyles.button}>
       {recentReadPlatformBookData.series.volume === 1 ? '첫화보기' : '이어보기'}
     </a>
   );

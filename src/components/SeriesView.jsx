@@ -147,18 +147,10 @@ class SeriesView extends React.Component {
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
       if (_linkWebviewer && platformBookData.support.web_viewer) {
-        return (
-          <a href={makeWebViewerURI(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
-            웹뷰어로 보기
-          </a>
-        );
+        return <a href={makeWebViewerURI(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
       }
 
-      return (
-        <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-          리디북스에서 보기
-        </a>
-      );
+      return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
     };
 
     return (
