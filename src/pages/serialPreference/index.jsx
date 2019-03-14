@@ -110,7 +110,7 @@ class SerialPreference extends React.Component {
 
   renderBooks() {
     const { isEditing: isSelectMode } = this.state;
-    const { items, books: platformBookDTO, selectedBooks, dispatchToggleSelectBook, isFetchingBooks, viewType } = this.props;
+    const { items, toUnitIdMap, books: platformBookDTO, selectedBooks, dispatchToggleSelectBook, isFetchingBooks, viewType } = this.props;
 
     const onSelectedChange = dispatchToggleSelectBook;
 
@@ -122,6 +122,7 @@ class SerialPreference extends React.Component {
       <>
         <SerialPreferenceBooks
           items={items}
+          toUnitIdMap={toUnitIdMap}
           platformBookDTO={platformBookDTO}
           selectedBooks={selectedBooks}
           isSelectMode={isSelectMode}
@@ -185,7 +186,11 @@ class SerialPreference extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
-  const books = getBooks(state, [...toFlatten(items, 'series_id'), ...toFlatten(items, 'recent_read_b_id')]);
+
+  const seriesBookIds = toFlatten(items, 'series_id');
+
+  const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
+  const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
@@ -193,6 +198,7 @@ const mapStateToProps = state => {
   return {
     pageInfo,
     items,
+    toUnitIdMap,
     books,
     totalCount,
     selectedBooks,
