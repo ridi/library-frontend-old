@@ -26,6 +26,7 @@ import {
   getUnitId,
   getItemsByPage,
   getPrimaryItem,
+  getPrimaryBookId,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
@@ -103,11 +104,12 @@ class MainUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
+    const { unit, primaryBookId, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
 
     return (
       <UnitDetailView
         unit={unit}
+        primaryBookId={primaryBookId}
         primaryItem={primaryItem}
         items={items}
         books={books}
@@ -197,17 +199,13 @@ const mapStateToProps = state => {
 
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
+  const primaryBookId = getPrimaryBookId(state);
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
-  const _bookIds = toFlatten(items, 'b_id');
-  if (primaryItem) {
-    _bookIds.push(primaryItem.b_id);
-  }
-
-  const books = getBooks(state, _bookIds);
-  const bookDescription = primaryItem ? getBookDescription(state, primaryItem.b_id) : null;
-  const bookStarRating = primaryItem ? getBookStarRating(state, primaryItem.b_id) : null;
+  const books = getBooks(state, [...toFlatten(items, 'b_id'), primaryBookId]);
+  const bookDescription = getBookDescription(state, primaryBookId);
+  const bookStarRating = getBookStarRating(state, primaryBookId);
 
   const totalCount = getTotalCount(state);
 
@@ -220,6 +218,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     unit,
+    primaryBookId,
     primaryItem,
     books,
     bookDescription,

@@ -7,6 +7,7 @@ import { calcOffset } from '../../utils/pagination';
 
 import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
+import { OrderOptions } from '../../constants/orderOptions';
 
 const _reduceBooks = books =>
   books.map(book => ({
@@ -77,15 +78,17 @@ export function* fetchUnitOrders(unitId, orderType, orderBy, page) {
   return response.data;
 }
 
-export function* fetchUnitTotalCount(unitId) {
+export function* getPrimaryBookId(unitId) {
   const options = {
     offset: 0,
-    limit: 0,
+    limit: 1,
+    orderType: OrderOptions.UNIT_LIST_DEFAULT.orderType,
+    orderBy: OrderOptions.UNIT_LIST_DEFAULT.orderBy,
   };
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/books/units/${unitId}/order`, options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  return response.data.items[0].b_ids[0];
 }
 
 export function* fetchUnitIdMap(bookIds) {

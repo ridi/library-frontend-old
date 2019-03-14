@@ -167,7 +167,7 @@ class UnitDetailView extends React.Component {
   renderDownloadButton() {
     const { unit, book, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
-    if (!downloadable || isAfter(new Date(), primaryItem.expire_date)) {
+    if (!downloadable || (primaryItem && isAfter(new Date(), primaryItem.expire_date))) {
       return null;
     }
 
@@ -205,8 +205,8 @@ class UnitDetailView extends React.Component {
 
   renderLink() {
     const { book, primaryItem } = this.props;
-    const href = primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
-    const serviceName = primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
+    const href = primaryItem && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
+    const serviceName = primaryItem && primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
     return (
       <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
         {serviceName}에서 보기
@@ -235,7 +235,7 @@ class UnitDetailView extends React.Component {
     const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
     const { thumbnailWidth } = this.state;
 
-    if (!unit || !primaryItem || !book || !bookDescription || !bookStarRating) {
+    if (!unit || !book || !bookDescription || !bookStarRating) {
       return (
         <div css={styles.unitDetailViewWrapper}>
           <SkeletonUnitDetailView />
@@ -243,7 +243,7 @@ class UnitDetailView extends React.Component {
       );
     }
 
-    const _notAvailable = items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
+    const _notAvailable = primaryItem && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     return (
       <div css={styles.unitDetailViewWrapper}>
         <section css={styles.header}>
@@ -287,9 +287,8 @@ const mapDispatchToProps = {
 };
 
 const mergeProps = (state, actions, props) => {
-  const book = props.primaryItem && props.books[props.primaryItem.b_id] ? props.books[props.primaryItem.b_id] : null;
-  const bookMetadata =
-    props.primaryItem && props.books[props.primaryItem.b_id] ? new BookMetaData(props.books[props.primaryItem.b_id], props.unit) : null;
+  const book = props.books[props.primaryBookId];
+  const bookMetadata = new BookMetaData(props.books[props.primaryBookId], props.unit);
 
   return {
     ...state,
