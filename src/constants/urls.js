@@ -38,7 +38,7 @@ export const URLMap = {
   },
   hidden: {
     href: '/purchased/hidden',
-    as: '/purchased/hidden',
+    as: '/books/hidden',
     regex: /^\/books\/hidden\/?$/,
   },
   hiddenUnit: {
