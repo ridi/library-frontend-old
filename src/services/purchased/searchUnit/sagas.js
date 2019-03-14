@@ -35,6 +35,8 @@ import {
 } from './actions';
 import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrimaryItem } from './requests';
 import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
+import { fetchPrimaryBookId } from '../../book/requests';
+import { setPrimaryBookId } from '../common/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -54,8 +56,11 @@ function* loadPrimaryItem(unitId) {
   if (_primaryItem && !isExpiredTTL(_primaryItem)) {
     return _primaryItem;
   }
-
-  return yield call(getSearchUnitPrimaryItem, unitId);
+  try {
+    return yield call(getSearchUnitPrimaryItem, unitId);
+  } catch (err) {
+    return null;
+  }
 }
 
 function* moveToFirstPage() {
@@ -106,14 +111,16 @@ function* loadItems() {
       call(loadPrimaryItem, unitId),
       call(fetchSearchUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
     ]);
+    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
-    yield fork(loadReadLatestBookId, unitId, primaryItem.b_id);
+    yield fork(loadReadLatestBookId, unitId, primaryBookId);
 
     yield all([
+      put(setPrimaryBookId(unitId, primaryBookId)),
       put(setPrimaryItem(primaryItem)),
       put(setPurchasedTotalCount(countResponse.item_total_count)),
-      call(loadBookDescriptions, [primaryItem.b_id]),
-      call(loadBookStarRatings, [primaryItem.b_id]),
+      call(loadBookDescriptions, [primaryBookId]),
+      call(loadBookStarRatings, [primaryBookId]),
     ]);
 
     if (yield call(isTotalSeriesView, unitId, order)) {
