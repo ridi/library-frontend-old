@@ -115,7 +115,7 @@ function* loadItems() {
     yield fork(loadReadLatestBookId, unitId, primaryBookId);
 
     yield all([
-      put(setPrimaryBookId(primaryBookId)),
+      put(setPrimaryBookId(unitId, primaryBookId)),
       put(setPrimaryItem(primaryItem)),
       put(setPurchasedTotalCount(countResponse.item_total_count)),
       call(loadBookDescriptions, [primaryBookId]),
