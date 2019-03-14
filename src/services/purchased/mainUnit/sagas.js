@@ -31,11 +31,11 @@ import {
   setPage,
   setPrimaryItem,
   setTotalCount,
-  setPrimaryBookId,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
 import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
 import { getPrimaryBookId } from '../../book/requests';
+import { setPrimaryBookId } from '../common/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

@@ -1,8 +1,9 @@
-import { SET_READ_LATEST_BOOK_ID, SET_RECENTLY_UPDATED_DATA, SET_FETCHING_READ_LATEST } from './actions';
+import { SET_READ_LATEST_BOOK_ID, SET_RECENTLY_UPDATED_DATA, SET_FETCHING_READ_LATEST, SET_PRIMARY_BOOK_ID } from './actions';
 
 const initializeState = {
   readLatestBookIds: {},
   recentlyUpdatedData: {},
+  primaryBookIds: {},
   fetchingReadLatest: false,
 };
 
@@ -27,6 +28,14 @@ const purchasedCommonReducer = (state = initializeState, action) => {
         recentlyUpdatedData: {
           ...state.recentlyUpdatedData,
           ...action.payload.recentlyUpdatedData,
+        },
+      };
+    case SET_PRIMARY_BOOK_ID:
+      return {
+        ...state,
+        primaryBookIds: {
+          ...state.primaryBookIds,
+          [state.unitId]: action.payload.primaryBookId,
         },
       };
     default:

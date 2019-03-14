@@ -4,7 +4,6 @@ import { concat } from '../../../utils/array';
 export const initialState = {
   unitId: null,
   primaryItems: {},
-  primaryBookIds: {},
   data: {},
 
   order: OrderOptions.UNIT_LIST_DEFAULT.key,

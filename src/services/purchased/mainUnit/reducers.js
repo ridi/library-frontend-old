@@ -12,7 +12,6 @@ import {
   SET_IS_FETCHING_BOOK,
   SET_MAIN_UNIT_PRIMARY_ITEM,
   SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT,
-  SET_MAIN_UNIT_PRIMARY_BOOK_ID,
 } from './actions';
 import { toDict, toFlatten } from '../../../utils/array';
 
@@ -59,14 +58,6 @@ const purchasedMainUnitReducer = (state = initialState, action) => {
             ...dataState,
             page: action.payload.page,
           },
-        },
-      };
-    case SET_MAIN_UNIT_PRIMARY_BOOK_ID:
-      return {
-        ...state,
-        primaryBookIds: {
-          ...state.primaryBookIds,
-          [state.unitId]: action.payload.primaryBookId,
         },
       };
     case SET_MAIN_UNIT_PRIMARY_ITEM:

@@ -26,7 +26,6 @@ import {
   getUnitId,
   getItemsByPage,
   getPrimaryItem,
-  getPrimaryBookId,
 } from '../../../services/purchased/mainUnit/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
@@ -34,6 +33,7 @@ import TitleBar from '../../../components/TitleBar';
 import { OrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
 import { BookError } from '../../../components/Error';
+import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -199,7 +199,7 @@ const mapStateToProps = state => {
 
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
-  const primaryBookId = getPrimaryBookId(state);
+  const primaryBookId = getPrimaryBookId(state, unitId);
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
