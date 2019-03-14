@@ -124,7 +124,7 @@ class MainUnit extends React.Component {
   renderSeriesView() {
     const {
       unit,
-      primaryItem,
+      primaryBookId,
       pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId },
       isFetchingBook,
       items,
@@ -134,11 +134,11 @@ class MainUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
-    if (!primaryItem || !books[primaryItem.b_id]) {
+    if (!books[primaryBookId]) {
       return null;
     }
 
-    const bookUnitOfCount = primaryItem && books[primaryItem.b_id].series ? books[primaryItem.b_id].series.property.unit : null;
+    const bookUnitOfCount = books[primaryBookId].series ? books[primaryBookId].series.property.unit : null;
     const orderOptions = UnitType.isSeries(unit.type)
       ? OrderOptions.toSeriesList(bookUnitOfCount)
       : OrderOptions.toShelfList(bookUnitOfCount);
