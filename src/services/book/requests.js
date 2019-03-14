@@ -88,12 +88,12 @@ export function* fetchUnitTotalCount(unitId) {
   return response.data;
 }
 
-export function* fetchDisplayUnits(bookIds) {
+export function* fetchUnitIdMap(bookIds) {
   const data = {
     b_ids: bookIds,
   };
 
   const api = yield put(getAPI());
-  const response = yield api.post(makeURI('/books/units/display', null, config.LIBRARY_API_BASE_URL), data);
+  const response = yield api.post(makeURI('/books/units/ids', null, config.LIBRARY_API_BASE_URL), data);
   return response.data;
 }

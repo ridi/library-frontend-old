@@ -1,6 +1,6 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
-import { toFlatten, toDict } from '../../utils/array';
+import { toFlatten } from '../../utils/array';
 
 import { loadBookData } from '../book/sagas';
 import { showDialog } from '../dialog/actions';
@@ -22,6 +22,7 @@ import {
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
 import { getItemsByPage, getOptions, getSelectedBooks } from './selectors';
+import { fetchUnitIdMap } from '../book/requests';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -41,13 +42,16 @@ function* loadItems() {
     const itemResponse = yield call(fetchSerialPreferenceItems, page);
     const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
 
-    const unitResponse = yield call(fetchDisplayUnits, seriesBookIds);
-    const unitIdMap = toDict(unitResponse.units, 'b_id', unit => unit.id);
+    const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
 
     // Request BookData
     const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
     yield call(loadBookData, bookIds);
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(itemResponse.book_count)), put(setSerialUnitIdMap(unitIdMap))]);
+    yield all([
+      put(setItems(itemResponse.items)),
+      put(setTotalCount(itemResponse.book_count)),
+      put(setSerialUnitIdMap(unitIdMapResponse.result)),
+    ]);
   } catch (err) {
     yield put(setError(true));
   } finally {
