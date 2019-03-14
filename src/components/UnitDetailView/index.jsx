@@ -131,9 +131,9 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
+    const { readableLatest, unit, primaryItem, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
 
-    if (!readableLatest) {
+    if (!readableLatest || !primaryItem) {
       return null;
     }
 
@@ -167,7 +167,7 @@ class UnitDetailView extends React.Component {
   renderDownloadButton() {
     const { unit, book, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
-    if (!downloadable || (primaryItem && isAfter(new Date(), primaryItem.expire_date))) {
+    if (!downloadable || !primaryItem || (primaryItem && isAfter(new Date(), primaryItem.expire_date))) {
       return null;
     }
 
@@ -185,7 +185,11 @@ class UnitDetailView extends React.Component {
   }
 
   renderDrmFreeDownloadButton() {
-    const { book } = this.props;
+    const { unit, book, primaryItem } = this.props;
+    if (!UnitType.isBook(unit.type) || !primaryItem) {
+      return null;
+    }
+
     if (!book.file.is_drm_free) {
       return null;
     }
@@ -265,7 +269,7 @@ class UnitDetailView extends React.Component {
             {this.renderSummary()}
             {this.renderReadLatestButton()}
             {this.renderDownloadButton()}
-            {UnitType.isBook(unit.type) ? this.renderDrmFreeDownloadButton() : null}
+            {this.renderDrmFreeDownloadButton()}
           </div>
         </section>
 
