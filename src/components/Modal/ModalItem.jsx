@@ -37,15 +37,9 @@ export const ModalLinkItem = ({
   </Link>
 );
 
-export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style, isOuterLink = false }) => {
-  const additionalProps = isOuterLink
-    ? {
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      }
-    : {};
+export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style }) => {
   return (
-    <a css={[modalStyles.item, style]} href={href} {...additionalProps}>
+    <a css={[modalStyles.item, style]} href={href}>
       {IconComponent && <IconComponent css={modalStyles.icon} />}
       {isSelected && <Check css={modalStyles.selectedIcon} />}
       {title}

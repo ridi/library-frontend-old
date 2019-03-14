@@ -151,12 +151,7 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <a
-        css={styles.readLatestButtonAnchor}
-        href={makeWebViewerURI(readLatestBookData.bookId || book.series.id, locationHref)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a css={styles.readLatestButtonAnchor} href={makeWebViewerURI(readLatestBookData.bookId || book.series.id, locationHref)}>
         <button type="button" css={styles.readLatestButton}>
           {readLatestBookData.bookId ? '이어보기' : '첫화보기'}
         </button>
@@ -208,7 +203,7 @@ class UnitDetailView extends React.Component {
     const href = primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
     const serviceName = primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
     return (
-      <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
+      <a css={styles.outerTextLink} href={href}>
         {serviceName}에서 보기
         <NoneDashedArrowRight css={styles.outerLinkIcon} />
       </a>

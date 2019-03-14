@@ -57,8 +57,6 @@ class Toaster extends React.Component {
             dispatchCloseToast();
           }}
           href={outLink}
-          target="_blank"
-          rel="noopener noreferrer"
         >
           {linkName}
           <ArrowIcon css={styles.toastLinkArrowIcon} />
