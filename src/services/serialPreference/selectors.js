@@ -69,7 +69,7 @@ export const getUnitIdsMap = (state, bookIds) =>
     getState,
     state =>
       bookIds.reduce((previous, bookId) => {
-        previous['bookId'] = state.unitIdMap[bookId];
+        previous[bookId] = state.unitIdMap[bookId];
         return previous;
       }, {}),
   )(state);
