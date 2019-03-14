@@ -35,7 +35,7 @@ const purchasedCommonReducer = (state = initializeState, action) => {
         ...state,
         primaryBookIds: {
           ...state.primaryBookIds,
-          [state.unitId]: action.payload.primaryBookId,
+          [action.payload.unitId]: action.payload.primaryBookId,
         },
       };
     default:

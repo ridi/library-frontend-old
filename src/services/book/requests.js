@@ -78,7 +78,7 @@ export function* fetchUnitOrders(unitId, orderType, orderBy, page) {
   return response.data;
 }
 
-export function* getPrimaryBookId(unitId) {
+export function* fetchPrimaryBookId(unitId) {
   const options = {
     offset: 0,
     limit: 1,

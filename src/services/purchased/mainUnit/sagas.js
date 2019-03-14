@@ -34,7 +34,7 @@ import {
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
 import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
-import { getPrimaryBookId } from '../../book/requests';
+import { fetchPrimaryBookId } from '../../book/requests';
 import { setPrimaryBookId } from '../common/actions';
 
 function* persistPageOptionsFromQueries() {
@@ -110,7 +110,7 @@ function* loadItems() {
       call(loadPrimaryItem, unitId),
       call(fetchMainUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
     ]);
-    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(getPrimaryBookId, unitId);
+    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
     yield fork(loadReadLatestBookId, unitId, primaryBookId);
 

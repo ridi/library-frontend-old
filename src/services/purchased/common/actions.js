@@ -32,7 +32,7 @@ export const hideAllExpiredBooks = () => ({
   type: HIDE_ALL_EXPIRED_BOOKS,
 });
 
-export const setPrimaryBookId = primaryBookId => ({
+export const setPrimaryBookId = (unitId, primaryBookId) => ({
   type: SET_PRIMARY_BOOK_ID,
   payload: {
     primaryBookId,
