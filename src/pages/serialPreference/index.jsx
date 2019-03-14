@@ -26,6 +26,7 @@ import {
   getPageInfo,
   getSelectedBooks,
   getTotalCount,
+  getUnitIdsMap,
 } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
