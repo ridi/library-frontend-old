@@ -94,7 +94,7 @@ class searchUnit extends React.Component {
       ? {
           title: unit.title,
           showCount:
-            !UnitType.isBook(unit.type) && usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0,
+            !UnitType.isBook(unit.type) && (usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0),
           totalCount: usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount,
         }
       : {};
