@@ -10,6 +10,7 @@ const titleBar = {
   backgroundColor: '#ffffff',
   borderTop: '1px solid #f3f4f5',
   borderBottom: '1px solid #d1d5d9',
+  marginTop: -1,
 };
 
 const TitleBar = ({ title, showCount, totalCount, href, as, query, showTools, toggleEditingMode }) => (
