@@ -25,6 +25,6 @@ export const getRecentlyUpdatedData = (state, bookIds) =>
 
 export const getPrimaryBookId = (state, unitId) =>
   createSelector(
-    getState,
+    getPurchasedCommonState,
     commonState => commonState.primaryBookIds[unitId],
   )(state);
