@@ -56,7 +56,7 @@ function* moveToFirstPage() {
   Router.replace(linkProps.href, linkProps.as);
 }
 
-function* loadHiddenUnitItems() {
+function* loadItems() {
   yield put(setError(false));
   yield call(persistPageOptionsFromQueries);
 
@@ -100,7 +100,7 @@ function* loadHiddenUnitItems() {
   }
 }
 
-function* unhideSelectedHiddenUnitBooks() {
+function* unhideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedBooks);
 
@@ -126,7 +126,7 @@ function* unhideSelectedHiddenUnitBooks() {
   }
 
   if (isFinish) {
-    yield call(loadHiddenUnitItems);
+    yield call(loadItems);
   }
 
   yield all([
@@ -141,7 +141,7 @@ function* unhideSelectedHiddenUnitBooks() {
   ]);
 }
 
-function* deleteSelectedHiddenUnitBooks() {
+function* deleteSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedBooks);
 
@@ -166,23 +166,23 @@ function* deleteSelectedHiddenUnitBooks() {
   }
 
   if (isFinish) {
-    yield call(loadHiddenUnitItems);
+    yield call(loadItems);
   }
 
   yield all([put(showToast(isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
 }
 
-function* selectAllHiddenUnitBooks() {
+function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items, 'b_id');
+  const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
   yield put(selectBooks(bookIds));
 }
 
 export default function* purchaseHiddenUnitRootSaga() {
   yield all([
-    takeEvery(LOAD_HIDDEN_UNIT_ITEMS, loadHiddenUnitItems),
-    takeEvery(SELECT_ALL_HIDDEN_UNIT_BOOKS, selectAllHiddenUnitBooks),
-    takeEvery(UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS, unhideSelectedHiddenUnitBooks),
-    takeEvery(DELETE_SELECTED_HIDDEN_UNIT_BOOKS, deleteSelectedHiddenUnitBooks),
+    takeEvery(LOAD_HIDDEN_UNIT_ITEMS, loadItems),
+    takeEvery(SELECT_ALL_HIDDEN_UNIT_BOOKS, selectAllBooks),
+    takeEvery(UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS, unhideSelectedBooks),
+    takeEvery(DELETE_SELECTED_HIDDEN_UNIT_BOOKS, deleteSelectedBooks),
   ]);
 }
