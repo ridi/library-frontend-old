@@ -180,7 +180,7 @@ function* downloadSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items, 'b_id');
+  const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
   yield put(selectBooks(bookIds));
 }
 

@@ -24,7 +24,7 @@ export function* fetchSearchUnitItems(unitId, orderType, orderBy, page) {
 
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/search/${unitId}`, options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  return response.data.map(item => ({ ...item, purchased: true }));
 }
 
 export function* fetchSearchUnitItemsTotalCount(unitId, orderType, orderBy) {
