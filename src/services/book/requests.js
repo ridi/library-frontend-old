@@ -87,3 +87,13 @@ export function* fetchUnitTotalCount(unitId) {
   const response = yield api.get(makeURI(`/books/units/${unitId}/order`, options, config.LIBRARY_API_BASE_URL));
   return response.data;
 }
+
+export function* fetchDisplayUnits(bookIds) {
+  const data = {
+    b_ids: bookIds,
+  };
+
+  const api = yield put(getAPI());
+  const response = yield api.post(makeURI('/books/units/display', null, config.LIBRARY_API_BASE_URL), data);
+  return response.data;
+}
