@@ -27,6 +27,8 @@ import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
 import { URLMap } from '../../../constants/urls';
 import { showDialog } from '../../dialog/actions';
+import { fetchPrimaryBookId } from '../../book/requests';
+import { setPrimaryBookId } from '../common/actions';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -73,6 +75,7 @@ function* loadItems() {
       call(fetchHiddenUnitItems, unitId, page),
       call(fetchHiddenUnitItemsTotalCount, unitId),
     ]);
+    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.item_total_count) {
@@ -82,13 +85,14 @@ function* loadItems() {
 
     // 대표 책 데이터 로딩
     const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(loadBookDescriptions, [primaryItem.b_id]);
-    yield call(loadBookStarRatings, [primaryItem.b_id]);
+    yield call(loadBookDescriptions, [primaryBookId]);
+    yield call(loadBookStarRatings, [primaryBookId]);
 
     // 책 데이터 로딩
-    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryItem.b_id]);
+    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryBookId]);
 
     yield all([
+      put(setPrimaryBookId(unitId, primaryBookId)),
       put(setHiddenUnitPrimaryItem(primaryItem)),
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.item_total_count)),

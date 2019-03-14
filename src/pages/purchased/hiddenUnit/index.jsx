@@ -33,6 +33,7 @@ import { UnitType } from '../../../constants/unitType';
 import SeriesView from '../../../components/SeriesView';
 import { BookError } from '../../../components/Error';
 import { showConfirm } from '../../../services/confirm/actions';
+import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -115,11 +116,12 @@ class HiddenUnit extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
+    const { unit, primaryBookId, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
 
     return (
       <UnitDetailView
         unit={unit}
+        primaryBookId={primaryBookId}
         primaryItem={primaryItem}
         items={items}
         books={books}
@@ -131,7 +133,7 @@ class HiddenUnit extends React.Component {
 
   renderSeriesView() {
     const {
-      primaryItem,
+      primaryBookId,
       pageInfo: { currentPage, totalPages, unitId },
       isFetchingBook,
       items,
@@ -143,7 +145,7 @@ class HiddenUnit extends React.Component {
       dispatchClearSelectedBooks,
     } = this.props;
 
-    if (!primaryItem) {
+    if (!books[primaryBookId]) {
       return null;
     }
 
@@ -199,17 +201,13 @@ const mapStateToProps = state => {
 
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
+  const primaryBookId = getPrimaryBookId(state, unitId);
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
-  const _bookIds = toFlatten(items, 'b_id');
-  if (primaryItem) {
-    _bookIds.push(primaryItem.b_id);
-  }
-
-  const books = getBooks(state, _bookIds);
-  const bookDescription = primaryItem ? getBookDescription(state, primaryItem.b_id) : null;
-  const bookStarRating = primaryItem ? getBookStarRating(state, primaryItem.b_id) : null;
+  const books = getBooks(state, [...toFlatten(items, 'b_id'), primaryBookId]);
+  const bookDescription = getBookDescription(state, primaryBookId);
+  const bookStarRating = getBookStarRating(state, primaryBookId);
 
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
@@ -221,6 +219,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     unit,
+    primaryBookId,
     primaryItem,
     books,
     bookDescription,
