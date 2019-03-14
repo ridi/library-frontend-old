@@ -26,6 +26,11 @@ export const getPrimaryItem = createSelector(
   state => state.primaryItems[state.unitId],
 );
 
+export const getPrimaryBookId = createSelector(
+  getState,
+  state => state.primaryBookIds[state.unitId],
+);
+
 export const getPageInfo = createSelector(
   [getState, getDataState],
   (state, dataState) => {
