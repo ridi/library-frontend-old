@@ -1,4 +1,5 @@
 import { put } from 'redux-saga/effects';
+import { HttpStatusCode } from '../../../api/constants';
 
 import config from '../../../config';
 
@@ -21,7 +22,7 @@ export function* fetchSearchItems(keyword, page) {
     const response = yield api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
-    if (err.response.status === 400) {
+    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
       // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
       return { items: [] };
     }
@@ -40,7 +41,7 @@ export function* fetchSearchItemsTotalCount(keyword) {
     const response = yield api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
-    if (err.response.status === 400) {
+    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
       // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
       return {
         unit_total_count: 0,

@@ -1,5 +1,6 @@
 import { put } from 'redux-saga/effects';
 import { getAPI } from '../../../api/actions';
+import { HttpStatusCode } from '../../../api/constants';
 
 import config from '../../../config';
 import { makeURI } from '../../../utils/uri';
@@ -23,7 +24,7 @@ export function* fetchReadLatestBookId(seriesId) {
     );
     return response.data.result;
   } catch (err) {
-    if (err.response.status === 404) {
+    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
       throw new NotFoundReadLatestError();
     }
     throw err;
