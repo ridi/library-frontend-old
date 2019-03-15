@@ -103,10 +103,10 @@ const toProps = ({
     <Link
       {...makeLinkProps(
         {
-          pathname: URLMap.mainUnit.href,
+          pathname: URLMap.serialPreferenceUnit.href,
           query: { unitId },
         },
-        URLMap.mainUnit.as({ unitId }),
+        URLMap.serialPreferenceUnit.as({ unitId }),
       )}
     >
       <a>시리즈뷰 가기</a>

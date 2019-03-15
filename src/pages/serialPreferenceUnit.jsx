@@ -2,9 +2,9 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import { URLMap, PageType } from '../../../constants/urls';
-import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
-import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import { URLMap, PageType } from '../constants/urls';
+import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../services/book/selectors';
+import { getPageInfo as getSerialPrefPageInfo } from '../services/serialPreference/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -13,7 +13,7 @@ import {
   selectAllBooks,
   setUnitId,
   toggleSelectBook,
-} from '../../../services/purchased/mainUnit/actions';
+} from '../services/purchased/mainUnit/actions';
 import {
   getIsFetchingBook,
   getPageInfo,
@@ -22,12 +22,12 @@ import {
   getUnitId,
   getItemsByPage,
   getPrimaryItem,
-} from '../../../services/purchased/mainUnit/selectors';
-import { toFlatten } from '../../../utils/array';
-import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
-import UnitPageTemplate from '../../base/UnitPageTemplate';
+} from '../services/purchased/mainUnit/selectors';
+import { toFlatten } from '../utils/array';
+import { getPrimaryBookId } from '../services/purchased/common/selectors';
+import UnitPageTemplate from './base/UnitPageTemplate';
 
-class MainUnit extends React.Component {
+class SerialPreferenceUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(clearSelectedBooks());
@@ -56,7 +56,7 @@ const mapStateToProps = state => {
   const isFetchingBook = getIsFetchingBook(state);
 
   const pageInfo = getPageInfo(state);
-  const mainPageInfo = getMainPageInfo(state);
+  const serialPrefPageInfo = getSerialPrefPageInfo(state);
 
   return {
     items,
@@ -71,7 +71,7 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     pageInfo,
-    mainPageInfo,
+    serialPrefPageInfo,
 
     isError: state.ui.isError,
   };
@@ -90,26 +90,20 @@ const mergeProps = (state, actions, props) => {
   const {
     unitId,
     pageInfo: { currentPage, totalPages, orderType, orderBy },
-    mainPageInfo,
+    serialPrefPageInfo,
   } = state;
-
   const pageProps = {
     currentPage,
     totalPages,
-    href: { pathname: URLMap[PageType.MAIN_UNIT].href, query: { unitId } },
-    as: URLMap[PageType.MAIN_UNIT].as({ unitId }),
+    href: { pathname: URLMap[PageType.SERIAL_PREFERENCE_UNIT].href, query: { unitId } },
+    as: URLMap[PageType.SERIAL_PREFERENCE_UNIT].as({ unitId }),
     query: { orderType: orderType, orderBy: orderBy },
   };
 
   const backPageProps = {
-    href: URLMap[PageType.MAIN].href,
-    as: URLMap[PageType.MAIN].as,
-    query: {
-      page: mainPageInfo.currentPage,
-      orderType: mainPageInfo.orderType,
-      orderBy: mainPageInfo.orderBy,
-      filter: mainPageInfo.filter,
-    },
+    href: URLMap[PageType.SERIAL_PREFERENCE].href,
+    as: URLMap[PageType.SERIAL_PREFERENCE].as,
+    query: { page: serialPrefPageInfo.currentPage },
   };
 
   return {
@@ -125,4 +119,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps,
-)(MainUnit);
+)(SerialPreferenceUnit);
