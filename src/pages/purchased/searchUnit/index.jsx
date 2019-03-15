@@ -1,11 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import BookDownLoader from '../../../components/BookDownLoader';
-import UnitDetailView from '../../../components/UnitDetailView';
-import { URLMap } from '../../../constants/urls';
+import { URLMap, PageType } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import {
@@ -27,13 +24,8 @@ import {
   getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
 import { toFlatten } from '../../../utils/array';
-import Responsive from '../../base/Responsive';
-import { UnitType } from '../../../constants/unitType';
-import TitleBar from '../../../components/TitleBar';
-import { OrderOptions } from '../../../constants/orderOptions';
-import SeriesView from '../../../components/SeriesView';
-import { BookError } from '../../../components/Error';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
+import UnitPageTemplate from '../../base/UnitPageTemplate';
 
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -42,161 +34,12 @@ class searchUnit extends React.Component {
     await store.dispatch(loadItems());
   }
 
-  handleOnClickHide = () => {
-    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    dispatchHideSelectedBooks();
-    dispatchClearSelectedBooks();
-  };
-
-  handleOnClickDownload = () => {
-    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    dispatchDownloadSelectedBooks();
-    dispatchClearSelectedBooks();
-  };
-
-  makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
-    return {
-      buttonProps: [
-        {
-          name: '선택 숨기기',
-          onClick: this.handleOnClickHide,
-          disable,
-        },
-        {
-          name: '선택 다운로드',
-          onClick: this.handleOnClickDownload,
-          disable,
-        },
-      ],
-    };
-  }
-
-  renderTitleBar() {
-    const {
-      unit,
-      totalCount,
-      pageInfo: { keyword, order },
-      searchPageInfo: { currentPage: page },
-    } = this.props;
-
-    const titleBarProps = {
-      href: URLMap.search.href,
-      as: URLMap.search.as,
-      query: { keyword, page },
-    };
-
-    const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
-
-    const extraTitleBarProps = unit
-      ? {
-          title: unit.title,
-          showCount:
-            !UnitType.isBook(unit.type) && (usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0),
-          totalCount: usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount,
-        }
-      : {};
-
-    return <TitleBar {...titleBarProps} {...extraTitleBarProps} />;
-  }
-
-  renderDetailView() {
-    const { unit, primaryBookId, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
-
-    return (
-      <UnitDetailView
-        unit={unit}
-        primaryBookId={primaryBookId}
-        primaryItem={primaryItem}
-        items={items}
-        books={books}
-        bookDescription={bookDescription}
-        bookStarRating={bookStarRating}
-        downloadable
-        readableLatest
-      />
-    );
-  }
-
-  renderSeriesView() {
-    const {
-      unit,
-      primaryBookId,
-      pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId, keyword },
-      isFetchingBook,
-      items,
-      books,
-      selectedBooks,
-      dispatchToggleSelectBook,
-      dispatchSelectAllBooks,
-      dispatchClearSelectedBooks,
-    } = this.props;
-    if (!books[primaryBookId]) {
-      return null;
-    }
-
-    const bookUnitOfCount = books[primaryBookId].series ? books[primaryBookId].series.property.unit : null;
-    const orderOptions = UnitType.isSeries(unit.type)
-      ? OrderOptions.toSeriesList(bookUnitOfCount)
-      : OrderOptions.toShelfList(bookUnitOfCount);
-
-    return (
-      <SeriesView
-        pageProps={{
-          currentPage,
-          totalPages,
-          href: { pathname: URLMap.searchUnit.href, query: { unitId, keyword } },
-          as: { pathname: URLMap.searchUnit.as({ unitId }), query: { keyword } },
-          query: { orderType, orderBy },
-        }}
-        actionBarProps={this.makeActionBarProps()}
-        currentOrder={order}
-        orderOptions={orderOptions}
-        isFetching={isFetchingBook}
-        items={items}
-        books={books}
-        unit={unit}
-        linkWebviewer
-        selectedBooks={selectedBooks}
-        onSelectedChange={dispatchToggleSelectBook}
-        onClickSelectAllBooks={dispatchSelectAllBooks}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
-      />
-    );
-  }
-
-  renderMain() {
-    const { unit } = this.props;
-    return (
-      <>
-        <Responsive>{this.renderDetailView()}</Responsive>
-        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
-      </>
-    );
-  }
-
   render() {
-    const { unit, isError, dispatchLoadItems } = this.props;
-
-    return (
-      <>
-        <Head>
-          <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
-        </Head>
-        {this.renderTitleBar()}
-        <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
-        <BookDownLoader />
-      </>
-    );
+    return <UnitPageTemplate {...this.props} />;
   }
 }
 
 const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
-
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
   const primaryBookId = getPrimaryBookId(state, unitId);
@@ -212,10 +55,13 @@ const mapStateToProps = state => {
 
   const isFetchingBook = getIsFetchingBook(state);
 
+  const pageInfo = getPageInfo(state);
   const searchPageInfo = getSearchPageInfo(state);
+
   return {
     pageInfo,
     items,
+    unitId,
     unit,
     primaryBookId,
     primaryItem,
@@ -240,7 +86,38 @@ const mapDispatchToProps = {
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
+const mergeProps = (state, actions, props) => {
+  const {
+    unitId,
+    pageInfo: { keyword, currentPage, totalPages, orderType, orderBy },
+    searchPageInfo,
+  } = state;
+
+  const pageProps = {
+    currentPage,
+    totalPages,
+    href: { pathname: URLMap[PageType.SEARCH_UNIT].href, query: { unitId, keyword } },
+    as: { pathname: URLMap[PageType.SEARCH_UNIT].as({ unitId }), query: { keyword } },
+    query: { orderType, orderBy },
+  };
+
+  const backPageProps = {
+    href: URLMap[PageType.SEARCH].href,
+    as: URLMap[PageType.SEARCH].as,
+    query: { keyword, page: searchPageInfo.currentPage },
+  };
+
+  return {
+    ...state,
+    ...actions,
+    ...props,
+    pageProps,
+    backPageProps,
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(searchUnit);
