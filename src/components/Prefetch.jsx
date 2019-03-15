@@ -21,19 +21,19 @@ const styles = {
 export default class extends React.Component {
   render() {
     const _virtualUnitId = 1;
-    const urlMapList = Object.keys(URLMap).map(key => URLMap[key]);
     return (
       <div css={styles.hidden}>
-        {urlMapList.map(urlMap => {
-          let linkProps = { href: urlMap.href, as: urlMap.as };
-          if (typeof urlMap.as === 'function') {
+        {Object.keys(URLMap).map(key => {
+          const urlInfo = URLMap[key];
+          let linkProps = { href: urlInfo.href, as: urlInfo.as };
+          if (typeof urlInfo.as === 'function') {
             linkProps = {
-              href: { pathname: urlMap.href, query: { unitId: _virtualUnitId } },
-              as: { pathname: urlMap.as({ unitId: _virtualUnitId }) },
+              href: { pathname: urlInfo.href, query: { unitId: _virtualUnitId } },
+              as: { pathname: urlInfo.as({ unitId: _virtualUnitId }) },
             };
           }
           return (
-            <Link prefetch {...linkProps} key={`${JSON.stringify(urlMap)}`}>
+            <Link prefetch {...linkProps} key={key}>
               <a />
             </Link>
           );
