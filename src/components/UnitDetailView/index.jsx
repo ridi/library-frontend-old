@@ -35,6 +35,11 @@ class UnitDetailView extends React.Component {
     };
   }
 
+  get isPurchased() {
+    const { primaryItem } = this.props;
+    return !!primaryItem;
+  }
+
   setThumbnailWidth = () => {
     const newThumbnailWidth = getResponsiveBookWidthForDetailHeader(window.innerWidth);
     if (this.state.thumbnailWidth !== newThumbnailWidth) {
@@ -131,9 +136,9 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readableLatest, unit, primaryItem, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
+    const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
 
-    if (!readableLatest || !primaryItem) {
+    if (!readableLatest) {
       return null;
     }
 
@@ -162,7 +167,11 @@ class UnitDetailView extends React.Component {
   renderDownloadButton() {
     const { unit, book, primaryItem, items, downloadable, dispatchDownloadBooksByUnitIds } = this.props;
 
-    if (!downloadable || !primaryItem || (primaryItem && isAfter(new Date(), primaryItem.expire_date))) {
+    if (!this.isPurchased) {
+      return null;
+    }
+
+    if (!downloadable || isAfter(new Date(), primaryItem.expire_date)) {
       return null;
     }
 
@@ -180,8 +189,13 @@ class UnitDetailView extends React.Component {
   }
 
   renderDrmFreeDownloadButton() {
-    const { unit, book, primaryItem } = this.props;
-    if (!UnitType.isBook(unit.type) || !primaryItem) {
+    const { unit, book } = this.props;
+
+    if (!this.isPurchased) {
+      return null;
+    }
+
+    if (!UnitType.isBook(unit.type)) {
       return null;
     }
 
@@ -204,8 +218,8 @@ class UnitDetailView extends React.Component {
 
   renderLink() {
     const { book, primaryItem } = this.props;
-    const href = primaryItem && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
-    const serviceName = primaryItem && primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
+    const href = this.isPurchased && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
+    const serviceName = this.isPurchased && primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
     return (
       <a css={styles.outerTextLink} href={href}>
         {serviceName}에서 보기
@@ -242,7 +256,7 @@ class UnitDetailView extends React.Component {
       );
     }
 
-    const _notAvailable = primaryItem && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
+    const _notAvailable = this.isPurchased && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     return (
       <div css={styles.unitDetailViewWrapper}>
         <section css={styles.header}>
