@@ -51,6 +51,11 @@ export const URLMap = {
     as: '/serial-preferences',
     regex: /^\/serial-preferences\/?$/,
   },
+  serialPreferenceUnit: {
+    href: '/purchased/mainUnit',
+    as: ({ unitId }) => `/serial-preferences/${unitId}/`,
+    regex: /^\/serial-preferences\/(\d+)\/?$/,
+  },
   notFound: {
     href: '/errors/notFound',
     as: '/errors/not-found',
