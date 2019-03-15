@@ -5,62 +5,87 @@ class URLMapNotFoundError extends Error {
   }
 }
 
+export const PageType = {
+  INDEX: 'index',
+  LOGIN: 'login',
+  MAIN: 'main',
+  MAIN_UNIT: 'mainUnit',
+  SEARCH: 'search',
+  SEARCH_UNIT: 'searchUnit',
+  HIDDEN: 'hidden',
+  HIDDEN_UNIT: 'hiddenUnit',
+  SERIAL_PREFERENCE: 'serialPreference',
+  SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
+  NOT_FOUND: 'notFound',
+};
+
 export const URLMap = {
-  index: {
+  [PageType.INDEX]: {
     href: '/purchased/main',
     as: '/',
     regex: /^\/$/,
   },
-  login: {
+  [PageType.LOGIN]: {
     href: '/login',
     as: '/login',
     regex: /^\/login\/?$/,
   },
-  main: {
+  [PageType.MAIN]: {
     href: '/purchased/main',
     as: '/books',
     regex: /^\/books\/?$/,
   },
-  mainUnit: {
+  [PageType.MAIN_UNIT]: {
     href: '/purchased/mainUnit',
     as: ({ unitId }) => `/books/${unitId}/`,
     regex: /^\/books\/(\d+)\/?$/,
   },
-  search: {
+  [PageType.SEARCH]: {
     href: '/purchased/search',
     as: '/books/search',
     regex: /^\/books\/search\/?$/,
   },
-  searchUnit: {
+  [PageType.SEARCH_UNIT]: {
     href: '/purchased/searchUnit',
     as: ({ unitId }) => `/books/search/${unitId}`,
     regex: /^\/books\/search\/(\d+)\/?$/,
   },
-  hidden: {
+  [PageType.HIDDEN]: {
     href: '/purchased/hidden',
     as: '/books/hidden',
     regex: /^\/books\/hidden\/?$/,
   },
-  hiddenUnit: {
+  [PageType.HIDDEN_UNIT]: {
     href: '/purchased/hiddenUnit',
     as: ({ unitId }) => `/books/hidden/${unitId}`,
     regex: /^\/books\/hidden\/(\d+)\/?$/,
   },
-  serialPreference: {
+  [PageType.SERIAL_PREFERENCE]: {
     href: '/serialPreference',
     as: '/serial-preferences',
     regex: /^\/serial-preferences\/?$/,
   },
-  serialPreferenceUnit: {
+  [PageType.SERIAL_PREFERENCE_UNIT]: {
     href: '/purchased/mainUnit',
     as: ({ unitId }) => `/serial-preferences/${unitId}/`,
     regex: /^\/serial-preferences\/(\d+)\/?$/,
   },
-  notFound: {
+  [PageType.NOT_FOUND]: {
     href: '/errors/notFound',
     as: '/errors/not-found',
     regex: /^\/errors\/not-found\/?$/,
   },
+};
+
+export const toPageType = pathname => {
+  for (const pageType of Object.values(PageType)) {
+    const urlInfo = URLMap[pageType];
+    if (urlInfo.regex.test(pathname)) {
+      return pageType;
+    }
+  }
+
+  return PageType.MAIN_UNIT;
 };
 
 // XXX: ----
@@ -72,22 +97,22 @@ export const URLMap = {
 // 3. index.html에 접속시 pathname을 가져와서 실제로 로딩해야하는 페이지로 replace
 // ----
 export const toURLMap = pathname => {
-  const urlMaps = Object.keys(URLMap).map(key => URLMap[key]);
+  const urlMaps = Object.values(URLMap);
   for (let index = 0; index < urlMaps.length; index += 1) {
-    const urlMap = urlMaps[index];
-    const result = urlMap.regex.exec(pathname);
+    const urlInfo = urlMaps[index];
+    const result = urlInfo.regex.exec(pathname);
 
     if (result) {
-      if (typeof urlMap.as === 'function') {
+      if (typeof urlInfo.as === 'function') {
         const query = {
           unitId: result[1],
         };
         return {
-          href: { pathname: urlMap.href, query },
-          as: { pathname: urlMap.as(query) },
+          href: { pathname: urlInfo.href, query },
+          as: { pathname: urlInfo.as(query) },
         };
       }
-      return { href: urlMap.href, as: urlMap.as };
+      return { href: urlInfo.href, as: urlInfo.as };
     }
   }
 
