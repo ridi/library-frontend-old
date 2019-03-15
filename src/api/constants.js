@@ -1,4 +1,6 @@
 export const HttpStatusCode = {
   HTTP_200_SUCCESS: 200,
+  HTTP_400_BAD_REQUEST: 400,
   HTTP_401_UNAUTHORIZED: 401,
+  HTTP_404_NOT_FOUND: 404,
 };

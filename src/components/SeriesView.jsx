@@ -8,7 +8,7 @@ import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getLocationHref } from '../services/router/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
+import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -124,6 +124,7 @@ class SeriesView extends React.Component {
   renderBooks() {
     const { isEditing } = this.state;
     const {
+      primaryItem,
       items,
       books,
       selectedBooks,
@@ -146,10 +147,23 @@ class SeriesView extends React.Component {
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
+      // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && platformBookData.support.web_viewer) {
         return <a href={makeWebViewerURI(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
       }
 
+      // 구매한 책이면 책의 서비스에 따라 이동
+      if (libraryBookData.purchased) {
+        if (libraryBookData.is_ridiselect) {
+          return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
+        }
+        return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
+      }
+
+      // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
+      if (primaryItem && primaryItem.is_ridiselect) {
+        return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
+      }
       return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
     };
 
