@@ -60,6 +60,7 @@ const mapStateToProps = state => {
 
   return {
     items,
+    unitId,
     unit,
     primaryBookId,
     primaryItem,
