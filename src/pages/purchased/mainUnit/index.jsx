@@ -125,6 +125,7 @@ class MainUnit extends React.Component {
     const {
       unit,
       primaryBookId,
+      primaryItem,
       pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId },
       isFetchingBook,
       items,
@@ -152,6 +153,7 @@ class MainUnit extends React.Component {
           as: URLMap.mainUnit.as({ unitId }),
           query: { orderType, orderBy },
         }}
+        primaryItem={primaryItem}
         actionBarProps={this.makeActionBarProps()}
         currentOrder={order}
         orderOptions={orderOptions}
