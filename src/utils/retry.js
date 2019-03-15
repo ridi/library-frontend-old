@@ -1,7 +1,8 @@
 import { delay } from './delay';
 
-export class NoMoreRetryError {
+export class NoMoreRetryError extends Error {
   constructor(error) {
+    super();
     this.error = error;
   }
 }
