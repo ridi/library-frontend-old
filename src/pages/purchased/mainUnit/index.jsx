@@ -6,9 +6,10 @@ import { connect } from 'react-redux';
 import BookDownLoader from '../../../components/BookDownLoader';
 import UnitDetailView from '../../../components/UnitDetailView';
 import { UnitType } from '../../../constants/unitType';
-import { URLMap } from '../../../constants/urls';
+import { URLMap, toPageType, PageType } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import { getPageInfo as getSerialPreferencePageInfo } from '../../../services/serialPreference/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -34,6 +35,7 @@ import { OrderOptions } from '../../../constants/orderOptions';
 import SeriesView from '../../../components/SeriesView';
 import { BookError } from '../../../components/Error';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
+import { getLocation } from '../../../services/router/selectors';
 
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
@@ -79,15 +81,9 @@ class MainUnit extends React.Component {
     const {
       unit,
       totalCount,
-      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
       pageInfo: { order },
+      backPageProps,
     } = this.props;
-
-    const titleBarProps = {
-      href: URLMap.main.href,
-      as: URLMap.main.as,
-      query: { page, orderType, orderBy, filter },
-    };
 
     const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
 
@@ -100,7 +96,7 @@ class MainUnit extends React.Component {
         }
       : {};
 
-    return <TitleBar {...titleBarProps} {...extraTitleBarProps} />;
+    return <TitleBar {...backPageProps} {...extraTitleBarProps} />;
   }
 
   renderDetailView() {
@@ -125,7 +121,8 @@ class MainUnit extends React.Component {
     const {
       unit,
       primaryBookId,
-      pageInfo: { order, orderType, orderBy, currentPage, totalPages, unitId },
+      pageInfo: { order },
+      pageProps,
       isFetchingBook,
       items,
       books,
@@ -145,13 +142,7 @@ class MainUnit extends React.Component {
 
     return (
       <SeriesView
-        pageProps={{
-          currentPage,
-          totalPages,
-          href: { pathname: URLMap.mainUnit.href, query: { unitId } },
-          as: URLMap.mainUnit.as({ unitId }),
-          query: { orderType, orderBy },
-        }}
+        pageProps={pageProps}
         actionBarProps={this.makeActionBarProps()}
         currentOrder={order}
         orderOptions={orderOptions}
@@ -195,8 +186,6 @@ class MainUnit extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
-
   const unitId = getUnitId(state);
   const unit = getUnit(state, unitId);
   const primaryBookId = getPrimaryBookId(state, unitId);
@@ -212,10 +201,13 @@ const mapStateToProps = state => {
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBook = getIsFetchingBook(state);
 
+  const pageInfo = getPageInfo(state);
   const mainPageInfo = getMainPageInfo(state);
+  const serialPrefPageInfo = getSerialPreferencePageInfo(state);
+
+  const location = getLocation(state);
 
   return {
-    pageInfo,
     items,
     unit,
     primaryBookId,
@@ -227,7 +219,10 @@ const mapStateToProps = state => {
     selectedBooks,
     isFetchingBook,
 
+    pageInfo,
     mainPageInfo,
+    serialPrefPageInfo,
+    location,
 
     isError: state.ui.isError,
   };
@@ -242,7 +237,56 @@ const mapDispatchToProps = {
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
+const mergeProps = (state, actions, props) => {
+  const {
+    unitId,
+    location: { pathname },
+    pageInfo: { currentPage, totalPages, orderType, orderBy },
+    mainPageInfo,
+    serialPrefPageInfo,
+  } = state;
+  const pageType = toPageType(pathname);
+  const pageProps = {
+    currentPage,
+    totalPages,
+    href: { pathname: URLMap[pageType].href, query: { unitId } },
+    as: URLMap[pageType].as({ unitId }),
+    query: { orderType: orderType, orderBy: orderBy },
+  };
+
+  // TODO: Unit파일 통합하면 외부에선 UnitPageTemplate에 pageProps, backPageProps, actions등을 주입하는 식으로 변경
+  // 파일을 각각 유지하더라도 아래 로직은 분리해서 복잡하지 않게 유지
+  let backPageProps;
+  if (pageType === PageType.MAIN_UNIT) {
+    backPageProps = {
+      href: URLMap[PageType.MAIN].href,
+      as: URLMap[PageType.MAIN].as,
+      query: {
+        page: mainPageInfo.currentPage,
+        orderType: mainPageInfo.orderType,
+        orderBy: mainPageInfo.orderBy,
+        filter: mainPageInfo.filter,
+      },
+    };
+  } else if (pageType === PageType.SERIAL_PREFERENCE_UNIT) {
+    backPageProps = {
+      href: URLMap[PageType.SERIAL_PREFERENCE].href,
+      as: URLMap[PageType.SERIAL_PREFERENCE].as,
+      query: { page: serialPrefPageInfo.currentPage },
+    };
+  }
+
+  return {
+    ...state,
+    ...actions,
+    ...props,
+    pageProps,
+    backPageProps,
+  };
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mergeProps,
 )(MainUnit);
