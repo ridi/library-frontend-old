@@ -1,5 +1,18 @@
 import axios from 'axios';
-import { retry } from '../utils/retry';
+import { NoMoreRetryError, retry } from '../utils/retry';
+import { HttpStatusCode } from './constants';
+
+const _filterNotFound = fn => async (...params) => {
+  try {
+    return await fn(...params);
+  } catch (err) {
+    // Request 요청시 404응답은 재시도 하지 않는다.
+    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
+      throw NoMoreRetryError(err);
+    }
+    throw err;
+  }
+};
 
 export default class API {
   constructor(withCredentials = false, headers = {}, retryCount = 3, retryDelay = 1000) {
@@ -27,19 +40,19 @@ export default class API {
 
   // Request
   get(url, headers = {}) {
-    return retry(this.getRetryOptions(), this.http.get, url, this.getOptions(headers));
+    return retry(this.getRetryOptions(), _filterNotFound(this.http.get), url, this.getOptions(headers));
   }
 
   post(url, data, headers = {}) {
-    return retry(this.getRetryOptions(), this.http.post, url, data, this.getOptions(headers));
+    return retry(this.getRetryOptions(), _filterNotFound(this.http.post), url, data, this.getOptions(headers));
   }
 
   put(url, data, headers = {}) {
-    return retry(this.getRetryOptions(), this.http.put, url, data, this.getOptions(headers));
+    return retry(this.getRetryOptions(), _filterNotFound(this.http.put), url, data, this.getOptions(headers));
   }
 
   delete(url, headers = {}) {
-    return retry(this.getRetryOptions(), this.http.delete, url, this.getOptions(headers));
+    return retry(this.getRetryOptions(), _filterNotFound(this.http.delete), url, this.getOptions(headers));
   }
 
   // Interceptor
