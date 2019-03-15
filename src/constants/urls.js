@@ -48,8 +48,8 @@ export const URLMap = {
   },
   serialPreference: {
     href: '/serialPreference',
-    as: '/serial-preference',
-    regex: /^\/serial-preference\/?$/,
+    as: '/serial-preferences',
+    regex: /^\/serial-preferences\/?$/,
   },
   notFound: {
     href: '/errors/notFound',
