@@ -5,7 +5,8 @@ const routes = nextRoutes();
 const APP_ROUTES = [
   { page: 'purchased/main', pattern: '/' },
   { page: 'login', pattern: '/login' },
-  { page: 'serialPreference', pattern: '/serial-preference' },
+  { page: 'serialPreference', pattern: '/serial-preferences' },
+  { page: 'serialPreferenceUnit', pattern: '/serial-preferences/:unit_id' },
   { page: 'purchased/main', pattern: '/books' },
   { page: 'purchased/hidden', pattern: '/books/hidden' },
   { page: 'purchased/hiddenUnit', pattern: '/books/hidden/:unit_id' },

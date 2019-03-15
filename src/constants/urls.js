@@ -66,7 +66,7 @@ export const URLMap = {
     regex: /^\/serial-preferences\/?$/,
   },
   [PageType.SERIAL_PREFERENCE_UNIT]: {
-    href: '/purchased/mainUnit',
+    href: '/serialPreferenceUnit',
     as: ({ unitId }) => `/serial-preferences/${unitId}/`,
     regex: /^\/serial-preferences\/(\d+)\/?$/,
   },
