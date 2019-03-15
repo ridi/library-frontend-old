@@ -63,3 +63,13 @@ export const getIsFetchingBooks = createSelector(
   getState,
   state => state.isFetchingBooks,
 );
+
+export const getUnitIdsMap = (state, bookIds) =>
+  createSelector(
+    getState,
+    state =>
+      bookIds.reduce((previous, bookId) => {
+        previous[bookId] = state.unitIdMap[bookId];
+        return previous;
+      }, {}),
+  )(state);

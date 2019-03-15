@@ -18,9 +18,11 @@ import {
   setItems,
   setPage,
   setTotalCount,
+  setSerialUnitIdMap,
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
 import { getItemsByPage, getOptions, getSelectedBooks } from './selectors';
+import { fetchUnitIdMap } from '../book/requests';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -38,11 +40,18 @@ function* loadItems() {
   try {
     yield put(setIsFetchingBooks(true));
     const itemResponse = yield call(fetchSerialPreferenceItems, page);
+    const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
+
+    const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
 
     // Request BookData
-    const bookIds = [...toFlatten(itemResponse.items, 'series_id'), ...toFlatten(itemResponse.items, 'recent_read_b_id')];
+    const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
     yield call(loadBookData, bookIds);
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(itemResponse.book_count))]);
+    yield all([
+      put(setItems(itemResponse.items)),
+      put(setTotalCount(itemResponse.book_count)),
+      put(setSerialUnitIdMap(unitIdMapResponse.result)),
+    ]);
   } catch (err) {
     yield put(setError(true));
   } finally {

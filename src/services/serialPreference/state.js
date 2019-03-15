@@ -2,6 +2,7 @@ const _DEFAULT_KEY = 'ALL';
 
 export const initialState = {
   data: {},
+  unitIdMap: {},
 
   selectedBooks: {},
   isFetchingBooks: false,

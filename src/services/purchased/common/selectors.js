@@ -16,9 +16,15 @@ export const getFetchingReadLatest = createSelector(
 export const getRecentlyUpdatedData = (state, bookIds) =>
   createSelector(
     getPurchasedCommonState,
-    state =>
+    commonState =>
       bookIds.reduce((previous, bookId) => {
-        previous[bookId] = state.recentlyUpdatedData[bookId];
+        previous[bookId] = commonState.recentlyUpdatedData[bookId];
         return previous;
       }, {}),
+  )(state);
+
+export const getPrimaryBookId = (state, unitId) =>
+  createSelector(
+    getPurchasedCommonState,
+    commonState => commonState.primaryBookIds[unitId],
   )(state);

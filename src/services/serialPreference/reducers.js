@@ -8,6 +8,7 @@ import {
   SELECT_SERIAL_PREFERENCE_BOOKS,
   TOGGLE_SELECT_SERIAL_PREFERENCE_BOOK,
   SET_IS_FETCHING_BOOKS,
+  SET_SERIAL_UNIT_ID_MAP,
 } from './actions';
 
 import { toDict, toFlatten } from '../../utils/array';
@@ -55,6 +56,14 @@ const serialPreferenceReducer = (state = initialState, action) => {
             ...dataState,
             page: action.payload.page,
           },
+        },
+      };
+    case SET_SERIAL_UNIT_ID_MAP:
+      return {
+        ...state,
+        unitIdMap: {
+          ...state.unitIdMap,
+          ...action.payload.unitIdMap,
         },
       };
     case CLEAR_SELECTED_SERIAL_PREFERENCE_BOOKS:

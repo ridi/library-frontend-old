@@ -1,6 +1,7 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
+import { jsx } from '@emotion/core';
+import Link from 'next/link';
 import { connect } from 'react-redux';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { merge } from 'lodash';
@@ -8,10 +9,11 @@ import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
-import { makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
+import { makeRidiStoreUri, makeWebViewerURI, makeLinkProps } from '../../utils/uri';
 import LandscapeFullButton from './LandscapeFullButton';
 import BooksWrapper from '../BooksWrapper';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
+import { URLMap } from '../../constants/urls';
 
 const serialPreferenceStyles = {
   authorFieldSeparator: {
@@ -91,12 +93,25 @@ const toProps = ({
   isSelected,
   onSelectedChange,
   locationHref,
+  unitId,
 }) => {
   const { property: seriesProperty } = platformBookData.series;
   const bookMetaData = new BookMetaData(platformBookData);
   const { title } = seriesProperty;
 
-  const thumbnailLink = <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
+  const thumbnailLink = (
+    <Link
+      {...makeLinkProps(
+        {
+          pathname: URLMap.mainUnit.href,
+          query: { unitId },
+        },
+        URLMap.mainUnit.as({ unitId }),
+      )}
+    >
+      <a>시리즈뷰 가기</a>
+    </Link>
+  );
 
   // 장르
   // 무조건 카테고리는 1개 이상 존재한다.
@@ -158,7 +173,7 @@ const toProps = ({
 
 class SerialPreferenceBooks extends React.Component {
   render() {
-    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
+    const { items, toUnitIdMap, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
 
     return (
       <BooksWrapper
@@ -169,6 +184,7 @@ class SerialPreferenceBooks extends React.Component {
             const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
             const platformBookData = platformBookDTO[bookSeriesId];
             const isSelected = !!selectedBooks[bookSeriesId];
+            const unitId = toUnitIdMap[bookSeriesId];
             const recentReadBookId = item.recent_read_b_id;
             const libraryBookProps = toProps({
               bookSeriesId,
@@ -180,6 +196,7 @@ class SerialPreferenceBooks extends React.Component {
               onSelectedChange,
               viewType,
               locationHref,
+              unitId,
             });
             const { thumbnailLink } = libraryBookProps;
 

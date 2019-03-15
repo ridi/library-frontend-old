@@ -1,6 +1,10 @@
-export const toDict = (arr, key) =>
+export const toDict = (arr, key, extracter = null) =>
   arr.reduce((previous, current) => {
-    previous[current[key]] = current;
+    if (extracter) {
+      previous[current[key]] = extracter(current);
+    } else {
+      previous[current[key]] = current;
+    }
     return previous;
   }, {});
 
