@@ -131,9 +131,9 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readableLatest, unit, primaryItem, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
+    const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
 
-    if (!readableLatest || !primaryItem) {
+    if (!readableLatest) {
       return null;
     }
 
