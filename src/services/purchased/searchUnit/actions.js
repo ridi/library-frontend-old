@@ -110,9 +110,9 @@ export const setPrimaryItem = primaryItem => ({
   },
 });
 
-export const setPurchasedTotalCount = totalCount => ({
+export const setPurchasedTotalCount = purchasedTotalCount => ({
   type: SET_SEARCH_UNIT_PURCHASED_TOTAL_COUNT,
   payload: {
-    totalCount,
+    purchasedTotalCount,
   },
 });

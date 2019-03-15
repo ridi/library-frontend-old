@@ -82,15 +82,10 @@ export const getSelectedBooks = createSelector(
 
 export const getTotalCount = createSelector(
   getDataState,
-  dataState => ({ itemTotalCount: dataState.itemTotalCount }),
+  dataState => ({ itemTotalCount: dataState.itemTotalCount, purchasedTotalCount: dataState.purchasedTotalCount }),
 );
 
 export const getIsFetchingBook = createSelector(
   getState,
   state => state.isFetchingBook,
-);
-
-export const getPurchasedTotalCount = createSelector(
-  getDataState,
-  dataState => ({ itemTotalCount: dataState.purchasedTotalCount }),
 );
