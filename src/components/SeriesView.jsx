@@ -8,7 +8,7 @@ import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getLocationHref } from '../services/router/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
+import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
 import EmptyBookList from './EmptyBookList';
@@ -148,6 +148,10 @@ class SeriesView extends React.Component {
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
       if (_linkWebviewer && platformBookData.support.web_viewer) {
         return <a href={makeWebViewerURI(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
+      }
+
+      if (libraryBookData && libraryBookData.is_ridiselect) {
+        return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
       }
 
       return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
