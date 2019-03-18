@@ -1,7 +1,8 @@
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withReduxSaga from 'next-redux-saga';
-import { hydrate } from 'emotion';
+import { hydrate, cache } from 'emotion';
+import { CacheProvider } from '@emotion/core';
 
 import injectStore from '../store';
 import flow from '../utils/flow';
@@ -20,13 +21,16 @@ class LibraryApp extends App {
 
   constructor() {
     super();
+    this.disposeBag = [];
+  }
+
+  componentWillMount() {
     // emotion을 통해 중복 CSS를 만들지 않기 위해서 hydrate 로직을 추가한다.
     if (typeof window !== 'undefined') {
       hydrate(window.__NEXT_DATA__.ids);
       initializeTabKeyFocus();
       initializeSentry();
     }
-    this.disposeBag = [];
   }
 
   componentDidMount() {
@@ -48,13 +52,13 @@ class LibraryApp extends App {
     return (
       <Container>
         <Provider store={store}>
-          <Layout>
-            <>
+          <CacheProvider value={cache}>
+            <Layout>
               <ConnectedRouterWrapper />
               <Prefetch />
               <Component {...pageProps} />
-            </>
-          </Layout>
+            </Layout>
+          </CacheProvider>
         </Provider>
       </Container>
     );
