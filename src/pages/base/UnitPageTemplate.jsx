@@ -92,6 +92,7 @@ export default class UnitPageTemplate extends React.Component {
       pageInfo: { order },
       pageProps,
       isFetchingBook,
+      primaryItem,
       items,
       books,
       selectedBooks,
@@ -115,6 +116,7 @@ export default class UnitPageTemplate extends React.Component {
         currentOrder={order}
         orderOptions={orderOptions}
         isFetching={isFetchingBook}
+        primaryItem={primaryItem}
         items={items}
         books={books}
         unit={unit}
