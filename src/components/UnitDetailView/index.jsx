@@ -274,7 +274,7 @@ class UnitDetailView extends React.Component {
             {this.renderLink()}
           </div>
           <div css={styles.infoWrapper}>
-            <div css={styles.unitTitle}>{unit.title}</div>
+            <h2 css={styles.unitTitle}>{unit.title}</h2>
             {this.renderAuthors()}
             {this.renderSummary()}
             {this.renderReadLatestButton()}

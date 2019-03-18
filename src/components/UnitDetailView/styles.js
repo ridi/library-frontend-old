@@ -45,10 +45,14 @@ export const unitTitle = {
   fontWeight: 'bold',
   lineHeight: 1.54,
   color: '#212529',
+  width: '100%',
+  ...Responsive.Large({
+    textAlign: 'center',
+  }),
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     fontSize: 30,
     fontWeight: 'bold',
-    lineHeight: 1.03,
+    lineHeight: 1.3,
     letterSpacing: -0.6,
     color: '#212529',
   }),
