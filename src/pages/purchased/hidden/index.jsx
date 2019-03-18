@@ -13,7 +13,7 @@ import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
 import { URLMap } from '../../../constants/urls';
-import { getBooks } from '../../../services/book/selectors';
+import { getBooks, getUnits } from '../../../services/book/selectors';
 import {
   clearSelectedBooks,
   deleteSelectedBooks,
@@ -151,6 +151,7 @@ class Hidden extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      units,
       selectedBooks,
       dispatchToggleSelectBook,
       isFetchingBooks,
@@ -182,6 +183,7 @@ class Hidden extends React.Component {
           {...{
             libraryBookDTO,
             platformBookDTO,
+            units,
             selectedBooks,
             isSelectMode,
             onSelectedChange,
@@ -239,6 +241,7 @@ const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalCount = getTotalCount(state);
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
@@ -249,6 +252,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     books,
+    units,
     totalCount,
     selectedBooks,
     isFetchingBooks,

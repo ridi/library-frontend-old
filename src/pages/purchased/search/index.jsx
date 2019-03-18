@@ -13,7 +13,7 @@ import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
-import { getBooks } from '../../../services/book/selectors';
+import { getBooks, getUnits } from '../../../services/book/selectors';
 import {
   changeSearchKeyword,
   clearSelectedBooks,
@@ -125,6 +125,7 @@ class Search extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      units,
       recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
@@ -162,6 +163,7 @@ class Search extends React.Component {
           {...{
             libraryBookDTO,
             platformBookDTO,
+            units,
             selectedBooks,
             isSelectMode,
             onSelectedChange,
@@ -248,6 +250,7 @@ const mapStateToProps = state => {
   const pageInfo = getSearchPageInfo(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const units = getUnits(state, toFlatten(items, 'unit_id'));
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
@@ -258,6 +261,7 @@ const mapStateToProps = state => {
     pageInfo,
     items,
     books,
+    units,
     recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
