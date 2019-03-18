@@ -808,10 +808,10 @@
     eslint-plugin-jsx-a11y "^6.1.1"
     eslint-plugin-react "^7.11.0"
 
-"@ridi/web-ui@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.3.9.tgz#5ffe1a7d868545b79ac24083bfc4c61838a0fcf2"
-  integrity sha512-wYJi+rfSD+ms4gwcwAgP+hrdpro2mv/pF0RF13AVs0GqaWT6DgzpGPrwnkDhLm7K6aswXGTA3m1A0y3z61Td9w==
+"@ridi/web-ui@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.3.10.tgz#b6e874dacf10e224179dc07abdf28da766626f4b"
+  integrity sha512-wq+95kMxk6sYPriwr4CgKEngJ4Z0/+ta8Wxed7jd+l1gqoGTcTSc8c9qGH7yFcMesSTbZZRtBXeFuX/S98Jj/g==
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"
