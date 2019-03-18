@@ -108,7 +108,12 @@ export const landscape = {
   display: 'flex',
   position: 'relative',
   alignItems: 'flex-end',
-
+  // IE11 flex bug fix: when container has min-height
+  '&::after': {
+    content: `''`,
+    minHeight: 'inherit',
+    fontSize: '0',
+  },
   '.LandscapeBook': {
     width: '100%',
     borderBottom: '1px solid #d1d5d9',
