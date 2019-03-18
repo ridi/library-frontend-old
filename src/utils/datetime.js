@@ -16,7 +16,7 @@ export const timeLeft = date => {
 
   return `${[years && `${years}년`, days && `${days}일`, hours && !years && `${hours}시간`, minutes && !years && !days && `${minutes}분`]
     .filter(t => !!t)
-    .join(' ')} 남음`;
+    .join(' ')}`;
 };
 
 export const formatExpiredDate = date => `${moment(date).format('YYYY.MM.DD.')} 만료`;

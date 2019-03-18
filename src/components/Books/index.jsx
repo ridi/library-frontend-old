@@ -33,7 +33,10 @@ const toProps = ({
   const isAdultOnly = platformBookData.property.is_adult_only;
   const isRidiselect = libraryBookData.is_ridiselect;
   const isExpired = !isRidiselect && libraryBookData.expire_date && isAfter(new Date(), libraryBookData.expire_date);
-  const expiredAt = libraryBookData.remain_time;
+  const expiredAt = libraryBookData.remain_time
+    .replace('남음', '')
+    .replace('지남', '')
+    .trim(); // 여백이 없기 떄문에 남음, 지남을 출력하지 않는다.
   const isUnitBook = libraryBookData.unit_type && !UnitType.isBook(libraryBookData.unit_type);
   const bookCount = libraryBookData.unit_count;
   const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
