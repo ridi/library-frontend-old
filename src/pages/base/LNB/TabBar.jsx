@@ -13,11 +13,11 @@ export const TabMenuTypes = {
 };
 
 const styles = {
-  LNBTabBarWrapper: css({
+  LNBTabBarWrapper: {
     height: 40,
     backgroundColor: '#ffffff',
     borderBottom: '1px solid #d1d5d9',
-  }),
+  },
 };
 
 const TabMenus = [
