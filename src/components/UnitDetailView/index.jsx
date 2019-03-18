@@ -268,6 +268,7 @@ class UnitDetailView extends React.Component {
                 adultBadge={book.property.is_adult_only}
                 thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`}
                 thumbnailWidth={thumbnailWidth}
+                expiredAt={UnitType.isBook(unit.type) && this.isPurchased && primaryItem.remain_time}
               />
             </div>
             {this.renderLink()}
