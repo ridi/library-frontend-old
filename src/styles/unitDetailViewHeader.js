@@ -14,6 +14,7 @@ export const header = {
     flexDirection: 'column',
   }),
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
+    justifyContent: 'space-between',
     paddingLeft: 82,
   }),
 };
@@ -32,6 +33,7 @@ export const thumbnailWrapper = {
   minHeight: 246,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     minHeight: 327,
+    flex: '0 0 auto',
   }),
 };
 
@@ -56,14 +58,16 @@ export const infoWrapper = {
   paddingTop: 42,
   ...MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium], {
     paddingTop: 24,
-    alignItems: 'start',
+    alignItems: 'flex-start',
   }),
   ...Responsive.Large({
     alignItems: 'center',
   }),
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    alignItems: 'start',
+    alignItems: 'flex-start',
     paddingLeft: 40,
+    flex: 'auto',
+    flexWrap: 'wrap',
   }),
 };
 

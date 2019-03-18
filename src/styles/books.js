@@ -107,6 +107,7 @@ export const landscape = {
   minHeight: 120,
   display: 'flex',
   position: 'relative',
+  alignItems: 'flex-end',
 
   '.LandscapeBook': {
     width: '100%',
