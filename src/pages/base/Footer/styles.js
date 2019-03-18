@@ -17,7 +17,6 @@ export const footer = {
   padding: '2px 0px 30px 0px',
   backgroundColor: '#f3f4f5',
   textAlign: 'center',
-  fontFamily: 'HelveticaNeue',
 
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
     paddingBottom: 42,

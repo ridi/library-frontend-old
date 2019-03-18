@@ -10,7 +10,7 @@ const Footer = () => (
     <footer css={styles.footer}>
       <div css={styles.footerWrapper}>
         <div css={styles.footerTermWrapper}>
-          <div css={styles.copyright}>© RIDI Corp.</div>
+          <p css={styles.copyright}>© RIDI Corp.</p>
           <div>
             <ul css={styles.termsList}>
               <li css={[styles.termsItem, styles.verticalSeparator]}>1644-0331</li>
