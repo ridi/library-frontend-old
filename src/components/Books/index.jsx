@@ -14,6 +14,7 @@ import LandscapeFullButton from './LandscapeFullButton';
 import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import LandscapeBook from '../Skeleton/SkeletonBooks/LandscapeBook';
 import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
+import { Disabled } from './Disabled';
 
 const toProps = ({
   bookId,
@@ -147,15 +148,15 @@ export const Books = props => {
             isPurchasedBook,
           });
           const { thumbnailLink } = libraryBookProps;
-          const opacity = !isPurchasedBook && isSelectMode ? 0.4 : null;
 
           return viewType === ViewType.PORTRAIT ? (
-            <div key={bookId} className={className} css={[styles.portrait, { opacity }]}>
+            <div key={bookId} className={className} css={styles.portrait}>
               <Book.PortraitBook {...libraryBookProps} />
             </div>
           ) : (
-            <div key={bookId} className={className} css={[styles.landscape, { opacity }]}>
+            <div key={bookId} className={className} css={styles.landscape}>
               <Book.LandscapeBook {...libraryBookProps} />
+              {isSelectMode && !isPurchasedBook && <Disabled />}
               {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
             </div>
           );

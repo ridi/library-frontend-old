@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { useEffect, useState, useLayoutEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as styles from '../../styles/books';
 
 const BooksWrapper = ({ viewType, renderBooks }) => {
@@ -21,7 +21,7 @@ const BooksWrapper = ({ viewType, renderBooks }) => {
     setAdditionalPadding(Math.floor((books.offsetWidth % book.offsetWidth) / 2));
   };
 
-  useLayoutEffect(
+  useEffect(
     () => {
       setBooksAdditionalPadding();
       window.addEventListener('resize', setBooksAdditionalPadding);
