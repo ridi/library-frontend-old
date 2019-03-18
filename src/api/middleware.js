@@ -27,7 +27,8 @@ const authorizationInterceptor = {
             if (!URLMap.login.regex.exec(window.location.pathname)) {
               // 로직을 끊고 가기 위해 location 에 바로 주입한다.
               // Router 를 사용하면 시점이 꼬이게 된다.
-              window.location.href = URLMap.login.as;
+              const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
+              window.location.href = `${URLMap.login.as}?next=${next}`;
               return null;
             }
           } else {
