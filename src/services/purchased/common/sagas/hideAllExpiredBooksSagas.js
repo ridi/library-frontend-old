@@ -11,6 +11,7 @@ import { showToast } from '../../../toast/actions';
 import { setFullScreenLoading } from '../../../ui/actions';
 import { fetchMainItems, fetchMainItemsTotalCount } from '../../main/requests';
 import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER } from '../constants';
+import { NotFoundExpiredBooksError } from '../errors';
 
 function* getExpiredBookIds() {
   const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
@@ -72,13 +73,17 @@ function* checkQueueIsDone(queueIds) {
 
 function* internalHideAllExpiredBooks() {
   let isFinish = true;
-
+  let isRequested = false;
   while (true) {
     // Step 1. 만료책 리스트를 가져온다.
     const bookIds = yield call(getExpiredBookIds);
 
     // Step 2. 만료된 책이 없으면 종료한다.
     if (!bookIds.length) {
+      // Step 2-1. 만료된 책이 없는데 이전에 숨김 요청한 적이 없으면 에러처리
+      if (!isRequested) {
+        throw new NotFoundExpiredBooksError();
+      }
       break;
     }
 
@@ -88,6 +93,7 @@ function* internalHideAllExpiredBooks() {
 
     // Step 4. 숨긴 도서를 확인한다.
     isFinish = isFinish && (yield checkQueueIsDone(queueIds));
+    isRequested = true;
   }
 
   return isFinish;
@@ -110,6 +116,11 @@ export function* hideAllExpiredBooks() {
       put(setFullScreenLoading(false)),
     ]);
   } catch (e) {
+    if (e instanceof NotFoundExpiredBooksError) {
+      yield all([put(showToast('만료된 도서가 없습니다.')), put(setFullScreenLoading(false))]);
+      return;
+    }
+
     yield all([
       put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
       put(setFullScreenLoading(false)),
