@@ -40,6 +40,16 @@ export const getUnit = (state, unitId) =>
     bookState => bookState.units.get(unitId) || EmptyUnit,
   )(state);
 
+export const getUnits = (state, unitIds) =>
+  createSelector(
+    getBookState,
+    bookState =>
+      unitIds.reduce((previous, unitId) => {
+        previous[unitId] = bookState.units.get(unitId);
+        return previous;
+      }, {}),
+  )(state);
+
 export const getUnitOrders = (state, unitId, orderType, orderBy, page) =>
   createSelector(
     getBookState,

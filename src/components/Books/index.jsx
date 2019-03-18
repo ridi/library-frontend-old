@@ -20,6 +20,7 @@ const toProps = ({
   bookId,
   libraryBookData,
   platformBookData,
+  unit,
   isSelectMode,
   isSelected,
   onSelectedChange,
@@ -53,7 +54,7 @@ const toProps = ({
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
   const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
-  const title = libraryBookData.unit_title || platformBookData.title.main;
+  const title = unit ? unit.title : libraryBookData.unit_title || platformBookData.title.main;
 
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
@@ -89,6 +90,7 @@ export const Books = props => {
   const {
     libraryBookDTO,
     platformBookDTO,
+    units,
     selectedBooks,
     isSelectMode,
     onSelectedChange,
@@ -131,12 +133,14 @@ export const Books = props => {
             );
           }
           const isPurchasedBook = !!libraryBookData.purchase_date;
+          const unit = units && units[libraryBookData.unit_id] ? units[libraryBookData.unit_id] : null;
 
           const isSelected = !!selectedBooks[bookId];
           const libraryBookProps = toProps({
             bookId,
             libraryBookData,
             platformBookData,
+            unit,
             isSelectMode,
             isSelected,
             onSelectedChange,

@@ -15,7 +15,7 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Toast from '../../../components/Toast';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
-import { getBooks } from '../../../services/book/selectors';
+import { getBooks, getUnits } from '../../../services/book/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -140,6 +140,7 @@ class Main extends React.Component {
     const {
       items: libraryBookDTO,
       books: platformBookDTO,
+      units,
       recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
@@ -182,6 +183,7 @@ class Main extends React.Component {
           {...{
             libraryBookDTO,
             platformBookDTO,
+            units,
             selectedBooks,
             isSelectMode,
             onSelectedChange,
@@ -276,6 +278,7 @@ const mapStateToProps = state => {
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
+  const units = getUnits(state, toFlatten(items, 'unit_id'));
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
@@ -287,6 +290,7 @@ const mapStateToProps = state => {
     filterOptions,
     items,
     books,
+    units,
     recentlyUpdatedMap,
     selectedBooks,
     isFetchingBooks,
