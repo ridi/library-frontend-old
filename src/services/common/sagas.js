@@ -51,18 +51,22 @@ export function* getBookIdsByUnitIdsForHidden(items, selectedBookIds) {
   return [...bookIds, ...bookIdsInUnit];
 }
 
+function getLinkProps(pathname, search) {
+  const { href, as } = toURLMap(pathname);
+  const query = parse(search, { charset: 'utf-8', ignoreQueryPrefix: true });
+  return makeLinkProps(href, as, query);
+}
+
 function* loadActualPage() {
   yield take(LOAD_ACTUAL_PAGE);
 
   // Step 1. 접속한 URL의 현재 페이지 정보를 생성한다.
-  const { href, as } = toURLMap(window.location.pathname);
-  const query = parse(window.location.search, { charset: 'utf-8', ignoreQueryPrefix: true });
-  const currentlinkProps = makeLinkProps(href, as, query);
+  const currentLinkProps = getLinkProps(window.location.pathname, window.location.search);
 
   // Step 2. 로그인 페이지의 경우 로그인 API를 통해 로그인 여부를 판단할 때까지 시간이 걸려서 미리 로드해준다.
-  if (currentlinkProps.href.pathname === URLMap.login.href) {
+  if (currentLinkProps.href.pathname === URLMap.login.href) {
     yield delay(1);
-    Router.replace(URLMap.login.href, URLMap.login.as);
+    Router.replace(currentLinkProps.href, currentLinkProps.as);
   }
 
   try {
@@ -77,13 +81,21 @@ function* loadActualPage() {
   }
 
   // Step 4-2. 로그인 되어 있는데 로그인 페이지에 있다면 모든 책으로 이동한다.
-  if (currentlinkProps.href.pathname === URLMap.login.href) {
-    Router.replace(URLMap.index.href, URLMap.index.as);
+  // Next값을 확인해서 값이 있으면 재대로 이동, 없으면 메인으로 이동
+  if (currentLinkProps.href.pathname === URLMap.login.href) {
+    if (currentLinkProps.href.query.next) {
+      const [pathname, search] = currentLinkProps.href.query.next.split('?');
+      const linkProps = getLinkProps(pathname, search);
+      Router.replace(linkProps.href, linkProps.as);
+    } else {
+      Router.replace(URLMap.index.href, URLMap.index.as);
+    }
+
     return;
   }
 
   // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로디안다.
-  Router.replace(currentlinkProps.href, currentlinkProps.as);
+  Router.replace(currentLinkProps.href, currentLinkProps.as);
 }
 
 export default function* commonRootSaga() {
