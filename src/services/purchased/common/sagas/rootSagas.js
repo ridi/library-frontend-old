@@ -17,7 +17,7 @@ export function* loadRecentlyUpdatedData(bookIds) {
   const lastBooks = yield select(getBooks, lastBookIds);
   const threeDaysAgo = subDays(new Date(), 3);
   const recentlyUpdatedData = Object.values(lastBooks).reduce((previous, lastBook) => {
-    if (!lastBook || lastBook.publish) {
+    if (!lastBook || !lastBook.publish) {
       return previous;
     }
 
