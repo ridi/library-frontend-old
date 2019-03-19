@@ -85,12 +85,14 @@ function* loadMainItems() {
     yield call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'));
     yield fork(loadRecentlyUpdatedData, bookIds);
 
+    console.log(itemResponse.items);
     yield all([
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
       put(setFilterOptions(categories)),
     ]);
   } catch (err) {
+    console.log(err);
     yield put(setError(true));
   } finally {
     yield put(setIsFetchingBooks(false));
