@@ -81,9 +81,11 @@ function* loadMainItems() {
 
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
-    yield call(loadBookData, bookIds);
-    yield call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'));
-    yield fork(loadRecentlyUpdatedData, bookIds);
+    yield all([
+      call(loadBookData, bookIds),
+      call(loadUnitData, toFlatten(itemResponse.items, 'unit_id')),
+      fork(loadRecentlyUpdatedData, bookIds),
+    ]);
 
     yield all([
       put(setItems(itemResponse.items)),
