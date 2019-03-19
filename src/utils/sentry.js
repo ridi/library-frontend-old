@@ -1,4 +1,4 @@
-import { init, captureMessage, captureException, captureEvent, configureScope } from '@sentry/browser';
+import { init, captureMessage, captureException, captureEvent, configureScope, Severity } from '@sentry/browser';
 import config from '../config';
 
 export const initializeSentry = () => {
@@ -22,6 +22,10 @@ export const notifySentry = err => {
   }
 
   captureException(err);
+};
+
+export const notifyMessage = msg => {
+  captureMessage(msg, Severity.Info);
 };
 
 export default {
