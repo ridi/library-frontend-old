@@ -97,7 +97,7 @@ const toProps = ({
   locationHref,
   unitId,
 }) => {
-  if (!platformBookData.series || !recentReadPlatformBookData.series || true) {
+  if (!platformBookData.series || !recentReadPlatformBookData.series) {
     notifyMessage(`[선호작품][${platformBookData.id}] 시리즈 정보가 존재하지 않습니다.`);
   }
 
