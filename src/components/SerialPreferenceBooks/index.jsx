@@ -9,7 +9,7 @@ import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
 import BookMetaData from '../../utils/bookMetaData';
-import { makeRidiStoreUri, makeWebViewerURI, makeLinkProps } from '../../utils/uri';
+import { makeWebViewerURI, makeLinkProps } from '../../utils/uri';
 import LandscapeFullButton from './LandscapeFullButton';
 import BooksWrapper from '../BooksWrapper';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
