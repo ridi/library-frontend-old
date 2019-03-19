@@ -28,6 +28,8 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
 export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
   `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
 
+export const makeLibraryLoginURI = (libraryURI, next) => `${libraryURI}?next=${next}`;
+
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
 export const makeWebViewerURI = (bookId, currentUri) =>
   `https://view.ridibooks.com/books/${bookId}?referrer=${encodeURIComponent(currentUri)}`;
