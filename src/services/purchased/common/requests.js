@@ -24,7 +24,7 @@ export function* fetchReadLatestBookId(seriesId) {
     );
     return response.data.result;
   } catch (err) {
-    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
+    if (err.response.status === HttpStatusCode.HTTP_404_NOT_FOUND) {
       throw new NotFoundReadLatestError();
     }
     throw err;
