@@ -14,6 +14,7 @@ import LandscapeFullButton from './LandscapeFullButton';
 import BooksWrapper from '../BooksWrapper';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import { URLMap } from '../../constants/urls';
+import { EmptySeries } from '../../utils/dataObject';
 
 const serialPreferenceStyles = {
   authorFieldSeparator: {
@@ -95,9 +96,10 @@ const toProps = ({
   locationHref,
   unitId,
 }) => {
-  const { property: seriesProperty } = platformBookData.series;
+  const { series = EmptySeries } = platformBookData;
+  const { series: recentReadSeries = EmptySeries } = recentReadPlatformBookData;
   const bookMetaData = new BookMetaData(platformBookData);
-  const { title } = seriesProperty;
+  const { title = platformBookData.title.main } = series.property;
 
   const thumbnailLink = (
     <Link
@@ -125,17 +127,17 @@ const toProps = ({
   );
 
   // 시리즈 내 더 읽을 도서 여부
-  const hasUnreadSeries = recentReadPlatformBookData.series.volume < seriesProperty.opened_book_count;
+  const hasUnreadSeries = recentReadSeries.volume < series.property.opened_book_count;
   // 완결 여부
-  const isSerialCompleted = seriesProperty.is_serial_complete;
+  const isSerialCompleted = series.property.is_serial_complete;
   // 성인도서 19금 뱃지
   const isAdultOnly = platformBookData.property.is_adult_only;
 
   const additionalMetadata = (
     <p css={serialPreferenceStyles.preferenceMeta}>
       {hasUnreadSeries && <span css={serialPreferenceStyles.unreadDot} key={`${platformBookData.id}-s-p-u-d`} />}
-      <strong key={`${platformBookData.id}-s-p-r-r-v`}>{recentReadPlatformBookData.series.volume}화</strong>
-      {` / 총 ${seriesProperty.opened_book_count}화`}
+      <strong key={`${platformBookData.id}-s-p-r-r-v`}>{recentReadSeries.volume}화</strong>
+      {` / 총 ${series.property.opened_book_count}화`}
       {isSerialCompleted && (
         <span css={serialPreferenceStyles.seriesComplete} key={`${platformBookData.id}-s-p-s-c`}>
           <SeriesCompleteIcon css={serialPreferenceStyles.seriesCompleteIcon} />
@@ -146,7 +148,7 @@ const toProps = ({
 
   const additionalButton = (
     <a href={makeWebViewerURI(recentReadBookId, locationHref)} css={serialPreferenceStyles.button}>
-      {recentReadPlatformBookData.series.volume === 1 ? '첫화보기' : '이어보기'}
+      {recentReadSeries.volume === 1 ? '첫화보기' : '이어보기'}
     </a>
   );
 
