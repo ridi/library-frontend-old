@@ -78,7 +78,7 @@ export function* loadBookDescriptions(bookIds) {
   // 시리즈 도서의 경우 Description 을 시리즈 대표 도서로 노출해야 한다.
   yield call(loadBookData, bookIds);
   const books = yield select(getBooks, bookIds);
-  const bookSeriesIds = toFlatten(Object.values(books), 'series.property.id', true);
+  const bookSeriesIds = toFlatten(Object.values(books), 'series.id', true);
 
   // Step 2. 요청할 Book id 를 추려낸다.
   // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
