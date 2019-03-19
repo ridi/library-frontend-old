@@ -33,9 +33,10 @@ function getRemainTime(libraryItem) {
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
-  console.log('00000000');
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
+  console.log(11111111);
   const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+  console.log(22222222);
 
   // unitOrders와 libraryItems을 병합해서 재구성한다.
   const items = unitOrders.items.map(unitOrder => {
@@ -53,7 +54,8 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
       purchased: !!libraryItem,
     };
   });
-
+  console.log(items);
+  console.log(33333333);
   yield all([call(loadBookData, bookIds), put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
 }
 
