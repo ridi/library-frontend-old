@@ -41,9 +41,9 @@ export default class More extends React.Component {
             <ThreeDotsVertical css={styles.threeDotsIcon} />
           </div>
         </IconButton>
-        {/* <Tooltip name="TOOLTIP" expires={new Date(2019, 3, 25)}>
+        <Tooltip name="TOOLTIP" expires={new Date(2019, 3, 25)}>
           여기서 <strong>기간 만료 도서를</strong> 한번에 숨겨보세요.
-        </Tooltip> */}
+        </Tooltip>
         {isMoreModalShow && (
           <MoreModal
             order={order}

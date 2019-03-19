@@ -75,14 +75,14 @@ const MoreModal = ({
     ) : null}
     {showHidden ? (
       <ModalItemGroup groupTitle="숨김 메뉴">
-        {/* <ModalButtonItem
+        <ModalButtonItem
           title="만료 도서 전체 숨기기"
           onClick={() => {
             onClickModalBackground();
             dispatchShowConfirm('만료 도서 전체 숨기기', <>만료된 전체 도서를 숨기시겠습니까?</>, '숨기기', dispatchHideAllExpiredBooks);
           }}
           replace
-        /> */}
+        />
         <ModalLinkItem title="숨긴 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
       </ModalItemGroup>
     ) : null}
