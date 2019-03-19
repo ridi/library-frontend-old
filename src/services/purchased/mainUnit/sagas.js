@@ -111,10 +111,9 @@ function* loadItems() {
       call(fetchMainUnitItemsTotalCount, unitId, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy),
     ]);
     const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
-    console.log('1');
+
     yield fork(loadReadLatestBookId, unitId, primaryBookId);
 
-    console.log('2');
     yield all([
       put(setPrimaryBookId(unitId, primaryBookId)),
       put(setPrimaryItem(primaryItem)),
@@ -123,16 +122,12 @@ function* loadItems() {
       call(loadBookStarRatings, [primaryBookId]),
     ]);
 
-    console.log('3');
     if (yield call(isTotalSeriesView, unitId, order)) {
       yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
-      console.log('4');
     } else {
       yield loadPurchasedItems(unitId, orderType, orderBy, page);
-      console.log('5');
     }
   } catch (err) {
-    console.log(err);
     yield put(setError(true));
   } finally {
     yield put(setIsFetchingBook(false));
