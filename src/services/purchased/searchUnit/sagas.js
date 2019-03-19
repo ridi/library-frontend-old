@@ -129,6 +129,7 @@ function* loadItems() {
       yield loadPurchasedItems(unitId, orderType, orderBy, page);
     }
   } catch (err) {
+    console.log(err);
     yield put(setError(true));
   } finally {
     yield put(setIsFetchingSearchBook(false));
