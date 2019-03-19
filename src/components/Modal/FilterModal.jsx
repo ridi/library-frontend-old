@@ -38,8 +38,8 @@ const FilterModal = props => {
     () => {
       const modal = modalEl.current;
       const ModalTitleHeight = 32;
-      const modalScrollTop = modal.getBoundingClientRect().top;
-      const checkedItemScrollTop = checkedItemEl.current.getBoundingClientRect().top;
+      const modalScrollTop = modal ? modal.getBoundingClientRect().top : 0;
+      const checkedItemScrollTop = checkedItemEl.current ? checkedItemEl.current.getBoundingClientRect().top : ModalTitleHeight;
       modal.scrollTop = checkedItemScrollTop - modalScrollTop - ModalTitleHeight;
     },
     [isActive],
