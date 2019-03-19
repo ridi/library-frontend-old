@@ -6,8 +6,8 @@ const _filterNotFound = fn => async (...params) => {
   try {
     return await fn(...params);
   } catch (err) {
-    // Request 요청시 404응답은 재시도 하지 않는다.
-    if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
+    // Request 요청시 401, 404응답은 재시도 하지 않는다.
+    if ([HttpStatusCode.HTTP_404_NOT_FOUND, HttpStatusCode.HTTP_401_UNAUTHORIZED].includes(err.response.status)) {
       throw NoMoreRetryError(err);
     }
     throw err;
