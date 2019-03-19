@@ -12,9 +12,11 @@ export const toFlatten = (arr, key, skipNull = false) => {
   const splited = key.split('.');
   const _key = splited.shift();
 
-  let data = arr.map(value => value[_key]);
+  let data;
   if (skipNull) {
-    data = data.filter(element => !!element);
+    data = arr.filter(value => !!value).map(value => value[_key]);
+  } else {
+    data = arr.map((value = value[_key]));
   }
 
   if (splited.length === 0) {

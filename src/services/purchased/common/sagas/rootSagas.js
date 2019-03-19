@@ -9,7 +9,7 @@ import { fetchReadLatestBookId } from '../requests';
 import { getReadLatestData } from '../selectors';
 import { hideAllExpiredBooks } from './hideAllExpiredBooksSagas';
 
-export function* loadRecentlyUpdatedData(bookIds) {
+export function* ㄹloadRecentlyUpdatedData(bookIds) {
   const books = yield select(getBooks, bookIds);
   const lastBookIds = toFlatten(Object.values(books), 'series.property.last_volume_id', true);
   yield call(loadBookData, lastBookIds);
