@@ -15,6 +15,7 @@ import BooksWrapper from '../BooksWrapper';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import { URLMap } from '../../constants/urls';
 import { EmptySeries } from '../../utils/dataObject';
+import { notifyMessage } from '../../utils/sentry';
 
 const serialPreferenceStyles = {
   authorFieldSeparator: {
@@ -96,6 +97,10 @@ const toProps = ({
   locationHref,
   unitId,
 }) => {
+  if (!platformBookData.series || !recentReadPlatformBookData.series || true) {
+    notifyMessage(`[선호작품][${platformBookData.id}] 시리즈 정보가 존재하지 않습니다.`);
+  }
+
   const { series = EmptySeries } = platformBookData;
   const { series: recentReadSeries = EmptySeries } = recentReadPlatformBookData;
   const bookMetaData = new BookMetaData(platformBookData);
