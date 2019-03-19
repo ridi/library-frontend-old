@@ -36,7 +36,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
 
   let items = [];
-  if (bookIds) {
+  if (bookIds.length > 0) {
     const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
     // unitOrders와 libraryItems을 병합해서 재구성한다.
     items = unitOrders.items.map(unitOrder => {
