@@ -34,28 +34,28 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
-  console.log(11111111);
-  const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
-  console.log(22222222);
 
-  // unitOrders와 libraryItems을 병합해서 재구성한다.
-  const items = unitOrders.items.map(unitOrder => {
-    const libraryItem = getLibraryItem(unitOrder.b_ids, libraryItems);
-    // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 첫 도서가 제일 최신일 꺼라고 가정한다.
-    const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[0];
+  let items = [];
+  if (bookIds) {
+    const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+    // unitOrders와 libraryItems을 병합해서 재구성한다.
+    items = unitOrders.items.map(unitOrder => {
+      const libraryItem = getLibraryItem(unitOrder.b_ids, libraryItems);
+      // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 첫 도서가 제일 최신일 꺼라고 가정한다.
+      const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[0];
 
-    return {
-      b_id: bookId,
-      expire_date: libraryItem ? libraryItem.expire_date : null,
-      purchase_date: libraryItem ? libraryItem.purchase_date : null,
-      service_type: libraryItem ? libraryItem.service_type : null,
-      is_ridiselect: libraryItem && libraryItem.service_type === ServiceType.RIDISELECT,
-      remain_time: libraryItem ? getRemainTime(libraryItem) : '',
-      purchased: !!libraryItem,
-    };
-  });
-  console.log(items);
-  console.log(33333333);
+      return {
+        b_id: bookId,
+        expire_date: libraryItem ? libraryItem.expire_date : null,
+        purchase_date: libraryItem ? libraryItem.purchase_date : null,
+        service_type: libraryItem ? libraryItem.service_type : null,
+        is_ridiselect: libraryItem && libraryItem.service_type === ServiceType.RIDISELECT,
+        remain_time: libraryItem ? getRemainTime(libraryItem) : '',
+        purchased: !!libraryItem,
+      };
+    });
+  }
+
   yield all([call(loadBookData, bookIds), put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
 }
 
