@@ -16,7 +16,7 @@ export const toFlatten = (arr, key, skipNull = false) => {
   if (skipNull) {
     data = arr.filter(value => !!value).map(value => value[_key]);
   } else {
-    data = arr.map((value = value[_key]));
+    data = arr.map(value => value[_key]);
   }
 
   if (splited.length === 0) {
