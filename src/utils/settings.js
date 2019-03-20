@@ -16,7 +16,7 @@ class Settings {
   }
 
   makeKey(key) {
-    return `${SettingKeyPrefix}:key`;
+    return `${SettingKeyPrefix}:${key}`;
   }
 
   get(keySalt) {
