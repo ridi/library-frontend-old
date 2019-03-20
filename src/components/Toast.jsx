@@ -6,7 +6,7 @@ import { isAfter } from 'date-fns';
 
 import { showToast } from '../services/toast/actions';
 import { Duration, ToastStyle } from '../services/toast/constants';
-import Cookies from '../utils/cookies';
+import settings from '../utils/settings';
 
 class Toast extends React.Component {
   componentDidMount() {
@@ -26,9 +26,9 @@ class Toast extends React.Component {
       return;
     }
 
-    const _cookie = Cookies.get(null, name);
-    if (!_cookie) {
-      Cookies.set(null, name, true, { path: '/', expires });
+    const _val = settings.get(name);
+    if (!_val) {
+      settings.set(name, true, { path: '/', expires });
       dispatchShowToast(message, linkName, linkProps, outLink, duration, toastStyle);
     }
   }
