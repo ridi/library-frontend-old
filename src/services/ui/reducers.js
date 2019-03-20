@@ -1,6 +1,6 @@
 import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
 import { initialState } from './state';
-import Cookies, { CookieKey } from '../../utils/cookies';
+import settings from '../../utils/settings';
 
 const uiReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -10,7 +10,7 @@ const uiReducer = (state = initialState, action) => {
         fullScreenLoading: action.payload.isLoading,
       };
     case SET_VIEW_TYPE:
-      Cookies.set(null, CookieKey.VIEW_TYPE, action.payload.viewType, { path: '/' });
+      settings.viewType = action.payload.viewType;
       return {
         ...state,
         viewType: action.payload.viewType,

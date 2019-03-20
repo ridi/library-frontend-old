@@ -3,7 +3,7 @@ import { startAccountTracker } from '../services/account/actions';
 import LRUCache from '../utils/lru';
 import { locationFromUrl } from '../services/router/utils';
 import config from '../config';
-import Cookies, { CookieKey } from '../utils/cookies';
+import settings from '../utils/settings';
 
 const beforeCreatingStore = (initialState, context) => {
   const newInitialState = {
@@ -38,7 +38,7 @@ const beforeCreatingStore = (initialState, context) => {
   // hydrate로 인해 Portrait과 Landscape의 혼종이 발생한다.
   if (!context.isServer || config.ENVIRONMENT === 'local') {
     // Cookie로 부터 데이터 로드
-    const viewType = Cookies.get(context, CookieKey.VIEW_TYPE);
+    const viewType = settings.viewType;
     if (viewType) {
       newInitialState.ui = {
         ...newInitialState.ui,
