@@ -61,9 +61,17 @@ const signupButtonStyle = {
 };
 
 class Login extends React.Component {
+  static async getInitialProps({ query }) {
+    return {
+      next: query.next || '/',
+    };
+  }
+
   render() {
-    const loginUrl = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, config.BASE_URL);
-    const sighupUrl = `${config.STORE_API_BASE_URL}/account/signup?return_url=${encodeURIComponent(config.BASE_URL)}`;
+    const { next } = this.props;
+    const returnUrl = encodeURIComponent(`${config.BASE_URL}${next}`);
+    const loginUrl = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, returnUrl);
+    const sighupUrl = `${config.STORE_API_BASE_URL}/account/signup?return_url=${returnUrl})}`;
 
     return (
       <>

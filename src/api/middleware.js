@@ -9,6 +9,7 @@ import { GET_API } from './actions';
 import { HttpStatusCode } from './constants';
 
 import { notifySentry } from '../utils/sentry';
+import { makeLibraryLoginURI } from '../utils/uri';
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
@@ -27,7 +28,8 @@ const authorizationInterceptor = {
             if (!URLMap.login.regex.exec(window.location.pathname)) {
               // 로직을 끊고 가기 위해 location 에 바로 주입한다.
               // Router 를 사용하면 시점이 꼬이게 된다.
-              window.location.href = URLMap.login.as;
+              const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
+              window.location.href = makeLibraryLoginURI(URLMap.login.as, next);
               return null;
             }
           } else {
