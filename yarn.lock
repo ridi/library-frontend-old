@@ -3477,6 +3477,11 @@ jsesc@~0.5.0:
   version "0.5.0"
   resolved "http://registry.npmjs.org/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
 
+jsmin@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/jsmin/-/jsmin-1.0.1.tgz#e7bd0dcd6496c3bf4863235bf461a3d98aa3b98c"
+  integrity sha1-570NzWSWw79IYyNb9GGj2YqjuYw=
+
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
@@ -4114,11 +4119,14 @@ node-releases@^1.0.1:
   dependencies:
     semver "^5.3.0"
 
-nookies@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/nookies/-/nookies-1.2.0.tgz#570c8be505b93fed391dc076814aa502f5bcce78"
+nookies@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/nookies/-/nookies-2.0.4.tgz#f1ed1ac03b4531039d029d395f13eec26b4942f8"
+  integrity sha512-tWmk2rjsbrUoOGm5U5Zk7xOUOmKSfAd4i9hi9f65Z+kiCwo/K4LBAYecZEvhde7iFc2uIUAzYxdBmlKvRPCMzg==
   dependencies:
     cookie "^0.3.1"
+    jsmin "^1.0.1"
+    set-cookie-parser "^2.2.1"
 
 nopt@^4.0.1:
   version "4.0.1"
@@ -5102,6 +5110,11 @@ serve-static@1.13.2:
 set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/set-blocking/-/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
+
+set-cookie-parser@^2.2.1:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.3.5.tgz#e2c16c93f063dee2486c5d48e26621ad75fd3bab"
+  integrity sha512-cN4GIBOE11PDqW1tXs4y9hQX68eOczUAQSrmB1ByNG3zH4hSOeBVtBe3lmEyjt8iy2F7JR17JLRwYLb1XncfuA==
 
 set-value@^0.4.3:
   version "0.4.3"

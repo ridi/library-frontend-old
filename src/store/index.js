@@ -6,6 +6,7 @@ import createApiMiddleware from '../api/middleware';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 import bootstrap from './bootstrap';
+import settings from '../utils/settings';
 
 const makeComposeEnhancer = isServer => {
   let composeEnhancer = compose;
@@ -34,6 +35,10 @@ const makeStore = (initialState, context) => {
 };
 
 const injectStore = withRedux((initialState = {}, context) => {
+  // 라이프사이클상 가장 최초는 여기다.
+  settings.setContext(context);
+  settings.migrate();
+
   const preloadState = bootstrap.beforeCreatingStore(initialState, context);
   const store = makeStore(preloadState, context);
   bootstrap.afterCreatingStore(store, context);
