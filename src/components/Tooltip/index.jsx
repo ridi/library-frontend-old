@@ -5,20 +5,20 @@ import { useState, useEffect } from 'react';
 import CheckIcon from '../../svgs/Check.svg';
 import * as toolTipStyles from './styles';
 import { TooltipBackground } from './TooltipBackground';
-import Cookies from '../../utils/cookies';
+import settings from '../../utils/settings';
 
 export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => {
   const [isActive, setActive] = useState(false);
 
   const showTooltip = isTooltipActive => {
-    Cookies.set(null, name, isTooltipActive, { path: '/', expires });
+    settings.set(name, isTooltipActive, { path: '/', expires });
     setActive(isTooltipActive);
   };
 
   useEffect(
     () => {
       if (expires && isBefore(new Date(), expires)) {
-        const isTooltipActive = !Cookies.get(null, name);
+        const isTooltipActive = !settings.get(name);
         showTooltip(isTooltipActive);
       }
     },
