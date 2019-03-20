@@ -11,14 +11,14 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
   const [isActive, setActive] = useState(false);
 
   const showTooltip = isTooltipActive => {
-    settings.set(name, isTooltipActive, { path: '/', expires });
     setActive(isTooltipActive);
   };
 
   useEffect(
     () => {
-      if (expires && isBefore(new Date(), expires)) {
-        const isTooltipActive = !settings.get(name);
+      const isTooltipActive = !settings.get(name);
+      if (expires && isBefore(new Date(), expires) && isTooltipActive) {
+        settings.set(name, true, { path: '/', expires });
         showTooltip(isTooltipActive);
       }
     },
