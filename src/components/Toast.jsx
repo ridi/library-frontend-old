@@ -2,11 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { jsx } from '@emotion/core';
-import nookies from 'nookies';
 import { isAfter } from 'date-fns';
 
 import { showToast } from '../services/toast/actions';
 import { Duration, ToastStyle } from '../services/toast/constants';
+import Cookies from '../utils/cookies';
 
 class Toast extends React.Component {
   componentDidMount() {
@@ -26,9 +26,9 @@ class Toast extends React.Component {
       return;
     }
 
-    const cookies = nookies.get();
-    if (!cookies[name]) {
-      nookies.set(null, name, true, { path: '/', expires });
+    const _cookie = Cookies.get(null, name);
+    if (!_cookie) {
+      Cookies.set(null, name, true, { path: '/', expires });
       dispatchShowToast(message, linkName, linkProps, outLink, duration, toastStyle);
     }
   }

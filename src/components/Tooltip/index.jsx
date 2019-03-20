@@ -1,25 +1,24 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import nookies from 'nookies';
 import { isBefore } from 'date-fns';
 import { useState, useEffect } from 'react';
 import CheckIcon from '../../svgs/Check.svg';
 import * as toolTipStyles from './styles';
 import { TooltipBackground } from './TooltipBackground';
+import Cookies from '../../utils/cookies';
 
 export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => {
   const [isActive, setActive] = useState(false);
 
   const showTooltip = isTooltipActive => {
-    nookies.set(null, name, isTooltipActive, { path: '/', expires });
+    Cookies.set(null, name, isTooltipActive, { path: '/', expires });
     setActive(isTooltipActive);
   };
 
   useEffect(
     () => {
       if (expires && isBefore(new Date(), expires)) {
-        const cookies = nookies.get();
-        const isTooltipActive = cookies[name] === undefined || cookies[name] === true;
+        const isTooltipActive = !Cookies.get(null, name);
         showTooltip(isTooltipActive);
       }
     },
