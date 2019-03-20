@@ -13,6 +13,9 @@ const Cookies = {
   set: (context, key, value, options) => {
     nookies.set(context, key, value, options);
   },
+  delete: (context, key) => {
+    nookies.destroy(context, key);
+  },
 };
 
 export default Cookies;
