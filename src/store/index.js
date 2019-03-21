@@ -35,9 +35,14 @@ const makeStore = (initialState, context) => {
 };
 
 const injectStore = withRedux((initialState = {}, context) => {
-  // 라이프사이클상 가장 최초는 여기다.
-  settings.setContext(context);
-  settings.migrate();
+  // TODO: SSR Enable할때 아래 조건문 제거
+  // client이거나, server면서 headers가 있을때
+  // export 시에 isServer는 True지만 req에 header가 없다.
+  if (!context.isServer || context.req.headers) {
+    // 라이프사이클상 가장 최초는 여기다.
+    settings.setContext(context);
+    settings.migrate();
+  }
 
   const preloadState = bootstrap.beforeCreatingStore(initialState, context);
   const store = makeStore(preloadState, context);

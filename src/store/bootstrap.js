@@ -32,6 +32,7 @@ const beforeCreatingStore = (initialState, context) => {
     };
   }
 
+  // TODO: SSR Enable할때 아래 조건문 제거
   // Local 개발 서버의 경우 NextJS 서버를 그대로 사용한다.
   // 해당 로직을 Client Only로 실행할 경우 서버에서는 Portrait 기반으로 DOM을 내려준다.
   // 만약 Client Cookie에 Landscape로 설정되어 있는 경우
