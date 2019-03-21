@@ -35,6 +35,7 @@ const makeStore = (initialState, context) => {
 };
 
 const injectStore = withRedux((initialState = {}, context) => {
+  // TODO: SSR Enable할때 아래 조건문 제거
   // client이거나, server면서 headers가 있을때
   // export 시에 isServer는 True지만 req에 header가 없다.
   if (!context.isServer || context.req.headers) {

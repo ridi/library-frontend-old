@@ -12,7 +12,6 @@ class Settings {
   }
 
   setContext(ctx) {
-    console.log('setContext');
     this.ctx = ctx;
   }
 
@@ -31,7 +30,6 @@ class Settings {
   }
 
   migrate() {
-    console.log('migrate');
     // 마이그레이션 코드는 필연적으로 노가다가 될 수 밖에 없다..
 
     // SET_VIEW_TYPE -> ridi_lib:VIEW_TYPE
