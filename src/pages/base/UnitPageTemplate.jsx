@@ -8,7 +8,7 @@ import { UnitType } from '../../constants/unitType';
 import Responsive from './Responsive';
 import TitleBar from '../../components/TitleBar';
 import { OrderOptions } from '../../constants/orderOptions';
-import SeriesView from '../../components/SeriesView';
+import SeriesList from '../../components/SeriesList';
 import { BookError } from '../../components/Error';
 
 export default class UnitPageTemplate extends React.Component {
@@ -85,7 +85,7 @@ export default class UnitPageTemplate extends React.Component {
     );
   }
 
-  renderSeriesView() {
+  renderSeriesList() {
     const {
       unit,
       primaryBookId,
@@ -110,7 +110,7 @@ export default class UnitPageTemplate extends React.Component {
       : OrderOptions.toShelfList(bookUnitOfCount);
 
     return (
-      <SeriesView
+      <SeriesList
         pageProps={pageProps}
         actionBarProps={this.makeActionBarProps()}
         currentOrder={order}
@@ -134,7 +134,7 @@ export default class UnitPageTemplate extends React.Component {
     return (
       <>
         <Responsive>{this.renderDetailView()}</Responsive>
-        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesList()}
       </>
     );
   }

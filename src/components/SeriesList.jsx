@@ -17,17 +17,17 @@ import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
 
-const seriesViewStyle = {
+const seriesListStyle = {
   paddingBottom: 51, // 하단 툴바의 사이즈 만큼 준다.
 };
 
-class SeriesView extends React.Component {
+class SeriesList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isEditing: false,
     };
-    this.seriesViewRef = React.createRef();
+    this.seriesListRef = React.createRef();
   }
 
   componentDidUpdate(prevProps) {
@@ -40,11 +40,11 @@ class SeriesView extends React.Component {
 
     if (order !== prevOrder) {
       setTimeout(() => {
-        if (!this.seriesViewRef.current) {
+        if (!this.seriesListRef.current) {
           return;
         }
 
-        window.scrollTo(0, this.seriesViewRef.current.offsetTop - 10);
+        window.scrollTo(0, this.seriesListRef.current.offsetTop - 10);
       }, 300);
     }
   }
@@ -192,7 +192,7 @@ class SeriesView extends React.Component {
     const { isEditing } = this.state;
 
     return (
-      <div css={seriesViewStyle} ref={this.seriesViewRef}>
+      <div css={seriesListStyle} ref={this.seriesListRef}>
         <HorizontalRuler color="#d1d5d9" />
         <Editable
           allowFixed
@@ -218,4 +218,5 @@ const mapDispatchToProps = {};
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SeriesView);
+)(SeriesList);
+``;

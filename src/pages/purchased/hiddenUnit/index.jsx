@@ -30,7 +30,7 @@ import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { UnitType } from '../../../constants/unitType';
-import SeriesView from '../../../components/SeriesView';
+import SeriesList from '../../../components/SeriesList';
 import { BookError } from '../../../components/Error';
 import { showConfirm } from '../../../services/confirm/actions';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
@@ -131,7 +131,7 @@ class HiddenUnit extends React.Component {
     );
   }
 
-  renderSeriesView() {
+  renderSeriesList() {
     const {
       primaryBookId,
       pageInfo: { currentPage, totalPages, unitId },
@@ -150,7 +150,7 @@ class HiddenUnit extends React.Component {
     }
 
     return (
-      <SeriesView
+      <SeriesList
         pageProps={{
           currentPage,
           totalPages,
@@ -176,7 +176,7 @@ class HiddenUnit extends React.Component {
     return (
       <>
         <Responsive>{this.renderDetailView()}</Responsive>
-        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesView()}
+        {unit && UnitType.isBook(unit.type) ? null : this.renderSeriesList()}
       </>
     );
   }
