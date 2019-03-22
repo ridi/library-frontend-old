@@ -28,7 +28,4 @@
 
 ## Reviewers
 
-- [ ] @antiline
-- [ ] @JungleKim
 - [ ] @nnyamm
-- [ ] @sm.paik
