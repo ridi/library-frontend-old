@@ -122,10 +122,14 @@ const toProps = ({
 
   // 장르
   // 무조건 카테고리는 1개 이상 존재한다.
-  const genre = Genre.convertToString(platformBookData.categories[0].genre);
+  // BL 여부는 sub_genre 로 판단하며 BL 인 경우 만화, 소설 구분이 있는 경우 추가
+  const { genre: mainGenre, sub_genre: subGenre, name: categoryName } = platformBookData.categories[0];
+  const isBL = subGenre && subGenre === Genre.BL;
+  const genre = Genre.convertToString(isBL ? subGenre : mainGenre);
   const authorAndGenre = (
     <>
       {genre}
+      {isBL && categoryName ? ` ${categoryName}` : ''}
       <span css={serialPreferenceStyles.authorFieldSeparator} key={`${platformBookData.id}-a-f-s`} />
       {bookMetaData.authorSimple}
     </>
