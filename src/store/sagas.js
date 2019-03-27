@@ -16,6 +16,7 @@ import purchaseHiddenUnitRootSaga from '../services/purchased/hiddenUnit/sagas';
 import serialPreferenceRootSaga from '../services/serialPreference/sagas';
 
 import toastRootSaga from '../services/toast/sagas';
+import trackingRootSaga from '../services/tracking/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -32,6 +33,7 @@ export default function* rootSaga() {
     purchaseHiddenUnitRootSaga(),
     serialPreferenceRootSaga(),
     toastRootSaga(),
+    trackingRootSaga(),
     bookDownloadRootSaga(),
   ]);
 }
