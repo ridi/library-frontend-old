@@ -18,6 +18,14 @@ module.exports = {
     '/': { page: '/' },
   }),
   webpack: (config, { dev, buildId, isServer }) => {
+    const originalEntry = config.entry;
+    config.entry = async () => {
+      const entries = await originalEntry();
+      Object.values(entries).forEach(entry => {
+        if (!entry.includes('@babel/polyfill')) entry.unshift('@babel/polyfill');
+      });
+      return entries;
+    };
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

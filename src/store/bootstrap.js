@@ -1,8 +1,10 @@
-import { loadActualPage } from '../services/common/actions';
-import { startAccountTracker } from '../services/account/actions';
-import LRUCache from '../utils/lru';
-import { locationFromUrl } from '../services/router/utils';
+import Router from 'next/router';
 import config from '../config';
+import { startAccountTracker } from '../services/account/actions';
+import { loadActualPage } from '../services/common/actions';
+import { locationFromUrl } from '../services/router/utils';
+import { locationChange } from '../services/tracking/actions';
+import LRUCache from '../utils/lru';
 import settings from '../utils/settings';
 
 const beforeCreatingStore = (initialState, context) => {
@@ -39,7 +41,7 @@ const beforeCreatingStore = (initialState, context) => {
   // hydrate로 인해 Portrait과 Landscape의 혼종이 발생한다.
   if (!context.isServer || config.ENVIRONMENT === 'local') {
     // Cookie로 부터 데이터 로드
-    const viewType = settings.viewType;
+    const { viewType } = settings;
     if (viewType) {
       newInitialState.ui = {
         ...newInitialState.ui,
@@ -61,6 +63,8 @@ const afterCreatingStore = async (store, context) => {
     // TODO: LRU버그로 인해 주석처리
     // await store.dispatch(loadBookDataFromStorage());
     await store.dispatch(startAccountTracker());
+
+    Router.events.on('routeChangeComplete', url => store.dispatch(locationChange(url)));
   }
 };
 
