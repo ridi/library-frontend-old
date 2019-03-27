@@ -37,6 +37,13 @@ export default class MyDocument extends Document {
       <html lang="ko">
         <Head>
           <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `if (window.navigator.userAgent.indexOf('MSIE ') > 0) location.replace('${
+                config.STORE_STATIC_BASE_URL
+              }/pages/end_support_ie.html');`,
+            }}
+          />
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
