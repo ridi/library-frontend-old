@@ -98,7 +98,7 @@ const mergeProps = (state, actions, props) => {
     totalPages,
     href: { pathname: URLMap[PageType.SERIAL_PREFERENCE_UNIT].href, query: { unitId } },
     as: URLMap[PageType.SERIAL_PREFERENCE_UNIT].as({ unitId }),
-    query: { orderType: orderType, orderBy: orderBy },
+    query: { orderType, orderBy },
   };
 
   const backPageProps = {
