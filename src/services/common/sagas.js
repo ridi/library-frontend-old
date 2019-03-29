@@ -94,7 +94,7 @@ function* loadActualPage() {
     return;
   }
 
-  // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로디안다.
+  // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로드한다.
   Router.replace(currentLinkProps.href, currentLinkProps.as);
 }
 

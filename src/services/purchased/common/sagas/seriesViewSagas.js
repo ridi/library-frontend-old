@@ -4,11 +4,11 @@ import { ServiceType } from '../../../../constants/serviceType';
 import { UnitType } from '../../../../constants/unitType';
 import { toDict, toFlatten } from '../../../../utils/array';
 import { loadBookData, loadUnitOrders } from '../../../book/sagas';
-import { getUnit, getUnitOrders } from '../../../book/selectors';
+import { getUnit, getUnitOrders, getBooks } from '../../../book/selectors';
 import { fetchItems } from '../requests';
 
-function getLibraryItem(bookIds, libraryItems) {
-  const selectedLibraryItems = bookIds.filter(bookId => !!libraryItems[bookId]);
+function getLibraryItem(itemBookIds, libraryItems) {
+  const selectedLibraryItems = itemBookIds.filter(bookId => !!libraryItems[bookId]);
   return selectedLibraryItems ? libraryItems[selectedLibraryItems[0]] : null;
 }
 
@@ -30,19 +30,29 @@ function getRemainTime(libraryItem) {
   return libraryItem.expire_date === '9999-12-31T23:59:59+09:00' ? '구매한 책' : '대여했던 책';
 }
 
+export function getOpendBookId(itemBookIds, pageBookData) {
+  const opendBookId = itemBookIds.find(bookId => pageBookData[bookId].property.is_open);
+  return opendBookId || itemBookIds[0];
+}
+
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
+  // 시리즈 리스트 페이지별 도서 목록
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
+  yield call(loadBookData, bookIds);
+  const pageBookData = yield select(getBooks, bookIds);
 
   let items = [];
   if (bookIds.length > 0) {
+    // 내가 갖고있는 도서 목록
     const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+
     // unitOrders와 libraryItems을 병합해서 재구성한다.
     items = unitOrders.items.map(unitOrder => {
-      const libraryItem = getLibraryItem(unitOrder.b_ids, libraryItems);
-      // 구매한 도서가 없으면 b_ids 의 제일 마지막 도서를 선택한다. 첫 도서가 제일 최신일 꺼라고 가정한다.
-      const bookId = libraryItem ? libraryItem.b_id : unitOrder.b_ids[0];
+      const { b_ids: itemBookIds } = unitOrder;
+      const libraryItem = getLibraryItem(itemBookIds, libraryItems);
+      const bookId = libraryItem ? libraryItem.b_id : getOpendBookId(itemBookIds, pageBookData);
 
       return {
         b_id: bookId,
@@ -56,7 +66,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     });
   }
 
-  yield all([call(loadBookData, bookIds), put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
+  yield all([put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
 }
 
 export function* isTotalSeriesView(unitId, order) {
