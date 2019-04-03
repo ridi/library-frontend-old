@@ -2,6 +2,8 @@ import Router from 'next/router';
 import config from '../config';
 import { startAccountTracker } from '../services/account/actions';
 import { loadActualPage } from '../services/common/actions';
+import { setMaintenance } from '../services/maintenance/actions';
+import { getMaintenanceStatus } from '../services/maintenance/requests';
 import { locationFromUrl } from '../services/router/utils';
 import { locationChange } from '../services/tracking/actions';
 import LRUCache from '../utils/lru';
@@ -58,13 +60,21 @@ const afterCreatingStore = async (store, context) => {
 
   // Client Only
   if (!context.isServer) {
-    await store.dispatch(loadActualPage());
+    const maintenanceStatue = await getMaintenanceStatus();
+    await store.dispatch(
+      setMaintenance({
+        ...maintenanceStatue,
+      }),
+    );
+    if (!maintenanceStatue.isShow) {
+      await store.dispatch(loadActualPage());
 
-    // TODO: LRU버그로 인해 주석처리
-    // await store.dispatch(loadBookDataFromStorage());
-    await store.dispatch(startAccountTracker());
+      // TODO: LRU버그로 인해 주석처리
+      // await store.dispatch(loadBookDataFromStorage());
+      await store.dispatch(startAccountTracker());
 
-    Router.events.on('routeChangeComplete', url => store.dispatch(locationChange(url)));
+      Router.events.on('routeChangeComplete', url => store.dispatch(locationChange(url)));
+    }
   }
 };
 

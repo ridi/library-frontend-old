@@ -13,7 +13,7 @@ export const retry = async (options, fn, ...params) => {
   try {
     return await fn(...params);
   } catch (err) {
-    if (err instanceof NoMoreRetryError()) {
+    if (err instanceof NoMoreRetryError) {
       throw err.error;
     }
 
