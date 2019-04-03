@@ -10,20 +10,26 @@ import { closeDialog } from '../../services/dialog/actions';
 import { Environment } from './Environment';
 import GNB from './GNB';
 import { globalStyles } from './styles';
+import Maintenance from '../../components/Maintenance';
 
 class Layout extends React.Component {
   render() {
-    const { children, showFullScreenLoading, confirm, dispatchCloseConfirm, dialog, dispatchCloseDialog } = this.props;
+    const { children, showFullScreenLoading, confirm, dispatchCloseConfirm, dialog, dispatchCloseDialog, maintenance } = this.props;
     return (
       <>
         <Global styles={globalStyles} />
         <Environment />
-        <GNB />
-        {children}
-        <Toaster />
-        {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
-        {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
-        {showFullScreenLoading ? <FullScreenLoading /> : null}
+        {maintenance.isShow && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
+        {maintenance.isShow === false && (
+          <>
+            <GNB />
+            {children}
+            <Toaster />
+            {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
+            {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
+            {showFullScreenLoading ? <FullScreenLoading /> : null}
+          </>
+        )}
       </>
     );
   }
@@ -33,6 +39,7 @@ const mapStateToProps = state => ({
   showFullScreenLoading: state.ui.fullScreenLoading,
   dialog: state.dialog,
   confirm: state.confirm,
+  maintenance: state.maintenance,
 });
 
 const mapDispatchToProps = {

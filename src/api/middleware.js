@@ -1,15 +1,24 @@
 import axios from 'axios';
-import { URLMap } from '../constants/urls';
-
-import createInterceptor from './interceptor';
-import API from './api';
-
 import config from '../config';
-import { GET_API } from './actions';
-import { HttpStatusCode } from './constants';
-
+import { URLMap } from '../constants/urls';
+import { getMaintenanceStatus } from '../services/maintenance/requests';
 import { notifySentry } from '../utils/sentry';
 import { makeLibraryLoginURI } from '../utils/uri';
+import { GET_API } from './actions';
+import API from './api';
+import { HttpStatusCode } from './constants';
+import createInterceptor from './interceptor';
+
+const maintenanceInterceptor = {
+  response: createInterceptor(null, async error => {
+    const maintenanceStatue = await getMaintenanceStatus();
+    if (maintenanceStatue.isShow) {
+      window.location.reload();
+      return null;
+    }
+    return Promise.reject(error);
+  }),
+};
 
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
@@ -54,7 +63,7 @@ const createApi = context => {
   const withCredentials = true;
   const api = new API(withCredentials);
 
-  api.addInterceptor(authorizationInterceptor);
+  api.addInterceptors([maintenanceInterceptor, authorizationInterceptor]);
   api.registerInterceptor();
 
   return api;

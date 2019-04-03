@@ -5,6 +5,7 @@ import bookDownloadReducer from '../services/bookDownload/reducers';
 import confirmReducer from '../services/confirm/reducers';
 import dialogReducer from '../services/dialog/reducers';
 import excelDownloadReducer from '../services/excelDownload/reducers';
+import maintenanceReducer from '../services/maintenance/reducers';
 import purchasedCommonReducer from '../services/purchased/common/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
@@ -33,6 +34,8 @@ export default combineReducers({
 
   excelDownload: excelDownloadReducer,
   bookDownload: bookDownloadReducer,
+
+  maintenance: maintenanceReducer,
 
   router: routerReducer,
   toast: toastReducer,

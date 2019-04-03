@@ -33,6 +33,7 @@
     "lodash": "^4.17.11",
     "lru-fast": "^0.2.2",
     "moment": "^2.22.2",
+    "moment-timezone": "^0.5.23",
     "next": "^7.0.0",
     "next-redux-saga": "^3.0.0",
     "next-redux-wrapper": "^2.0.0",
