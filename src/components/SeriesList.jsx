@@ -157,14 +157,14 @@ class SeriesList extends React.Component {
         if (libraryBookData.is_ridiselect) {
           return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
         }
-        return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
+        return <a href={makeRidiStoreUri(platformBookData.id)}>서점에서 보기</a>;
       }
 
       // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
       if (primaryItem && primaryItem.is_ridiselect) {
         return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
       }
-      return <a href={makeRidiStoreUri(platformBookData.id)}>리디북스에서 보기</a>;
+      return <a href={makeRidiStoreUri(platformBookData.id)}>서점에서 보기</a>;
     };
 
     return (
