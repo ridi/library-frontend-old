@@ -219,7 +219,7 @@ class UnitDetailView extends React.Component {
   renderLink() {
     const { book, primaryItem } = this.props;
     const href = this.isPurchased && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
-    const serviceName = this.isPurchased && primaryItem.is_ridiselect ? '리디셀렉트' : '리디북스';
+    const serviceName = this.isPurchased && primaryItem.is_ridiselect ? '리디셀렉트' : '서점';
     return (
       <a css={styles.outerTextLink} href={href}>
         {serviceName}에서 보기
