@@ -81,17 +81,13 @@ function* loadMainItems() {
 
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
-    yield all([
-      call(loadBookData, bookIds),
-      call(loadUnitData, toFlatten(itemResponse.items, 'unit_id')),
-      fork(loadRecentlyUpdatedData, bookIds),
-    ]);
-
+    yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
     yield all([
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
       put(setFilterOptions(categories)),
     ]);
+    yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
     yield put(setError(true));
   } finally {
