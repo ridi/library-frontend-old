@@ -1,42 +1,33 @@
 import { ToastStyle } from '../../services/toast/constants';
 import { Responsive, MQ } from '../../styles/responsive';
 
-const isWrapperNarrow = [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large];
-const isWrapperWide = [Responsive.XLarge, Responsive.XXLarge, Responsive.Full];
+const isNarrowWrapper = [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large];
+const isWideWrapper = [Responsive.XLarge, Responsive.XXLarge, Responsive.Full];
 
 export const toastWrapper = {
   position: 'fixed',
   left: 0,
-  right: 0,
+  width: '100%',
   zIndex: 9999,
-  padding: '0 10px',
-  ...MQ(isWrapperNarrow, {
+  ...MQ(isNarrowWrapper, {
     bottom: 10,
   }),
-  ...MQ(isWrapperWide, {
+  ...MQ(isWideWrapper, {
     top: 72,
   }),
 };
 
 export const toast = {
+  position: 'absolute',
+  left: '50%',
   boxSizing: 'border-box',
   width: '100%',
   maxWidth: '400px',
-  margin: '10px auto',
-  padding: 15,
-
-  borderRadius: 4,
-  boxShadow: '0 2px 4px 0 rgba(0, 0, 0, .5)',
-  background: 'rgba(0, 0, 0, .87)',
-
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-
-  ...MQ(isWrapperNarrow, {
+  padding: '0 10px',
+  ...MQ(isNarrowWrapper, {
     bottom: 10,
   }),
-  ...MQ(isWrapperWide, {
+  ...MQ(isWideWrapper, {
     top: 72,
   }),
 };
@@ -45,16 +36,16 @@ const getAnimation = duration => ({
   duration: `${duration / 1000}s`,
   hide: {
     opacity: 0,
-    ...MQ(isWrapperNarrow, {
-      transform: 'translate3d(0, 50px, 0)',
+    ...MQ(isNarrowWrapper, {
+      transform: 'translate3d(-50%, 50px, 0)',
     }),
-    ...MQ(isWrapperWide, {
-      transform: 'translate3d(0, -50px, 0)',
+    ...MQ(isWideWrapper, {
+      transform: 'translate3d(-50%, -50px, 0)',
     }),
   },
   show: {
     opacity: 1,
-    transform: 'translate3d(0, 0, 0)',
+    transform: 'translate3d(-50%, 0, 0)',
   },
 });
 
@@ -70,6 +61,19 @@ export const toggleAnimation = duration => {
       ...animation.show,
     },
   };
+};
+
+export const toastContentsBox = {
+  boxSizing: 'border-box',
+  width: '100%',
+  padding: 15,
+  borderRadius: 4,
+  boxShadow: '0 2px 4px 0 rgba(0, 0, 0, .5)',
+  background: 'rgba(0, 0, 0, .87)',
+
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
 };
 
 export const toastTypeMark = {

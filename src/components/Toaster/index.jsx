@@ -96,15 +96,17 @@ class Toaster extends React.Component {
                 onMouseOut={this.onMouseOut}
                 className={state}
               >
-                <div css={styles.toastTypeMark}>
-                  <Check css={styles.toastTypeMarkIcon(toast.toastStyle)} />
+                <div css={styles.toastContentsBox}>
+                  <div css={styles.toastTypeMark}>
+                    <Check css={styles.toastTypeMarkIcon(toast.toastStyle)} />
+                  </div>
+                  <div css={styles.toastContent(toast.toastStyle)}>
+                    <span css={styles.toastContentMessage}>{toast.message}</span>
+                    <br />
+                    {this.renderToastLink()}
+                  </div>
+                  {this.renderCloseButton()}
                 </div>
-                <div css={styles.toastContent(toast.toastStyle)}>
-                  <span css={styles.toastContentMessage}>{toast.message}</span>
-                  <br />
-                  {this.renderToastLink()}
-                </div>
-                {this.renderCloseButton()}
               </div>
             </div>
           ) : null
