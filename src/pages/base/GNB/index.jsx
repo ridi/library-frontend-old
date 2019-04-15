@@ -2,20 +2,18 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
-import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
+import MyMenuModal from '../../../components/Modal/MyMenuModal';
+import config from '../../../config';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
-import MyMenuModal from '../../../components/Modal/MyMenuModal';
-import * as styles from './styles';
 import { Hidden } from '../../../styles';
 import BetaBadge from '../../../svgs/Beta.svg';
-import MyMenuIcon from '../../../svgs/MyMenu.svg';
+import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
+import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import MyMenuActiveIcon from '../../../svgs/MyMenu-active.svg';
+import MyMenuIcon from '../../../svgs/MyMenu.svg';
 import Responsive from '../Responsive';
-
-const RIDIBOOKS_URL = 'https://ridibooks.com';
-const RIDISELECT_URL = 'https://select.ridibooks.com';
+import * as styles from './styles';
 
 class GNB extends React.Component {
   constructor(props) {
@@ -37,13 +35,13 @@ class GNB extends React.Component {
   renderFamilyServiceIcons = () => (
     <ul css={styles.familyServiceList}>
       <li css={styles.familyServiceItem}>
-        <a css={styles.familyServiceLink} href={RIDIBOOKS_URL}>
+        <a css={styles.familyServiceLink} href={config.STORE_BASE_URL}>
           <LogoRidibooks css={styles.ridibooksIcon} />
           <span css={Hidden}>RIDIBOOKS</span>
         </a>
       </li>
       <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-        <a css={styles.familyServiceLink} href={RIDISELECT_URL}>
+        <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL}>
           <LogoRidiselect css={styles.ridiSelectIcon} />
           <span css={Hidden}>RIDI Select</span>
         </a>

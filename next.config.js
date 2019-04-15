@@ -40,6 +40,7 @@ module.exports = {
     BASE_URL: settings.base_url,
     STATIC_URL: settings.static_url,
     ACCOUNT_BASE_URL: settings.account_base_url,
+    STORE_BASE_URL: settings.store_base_url,
     STORE_API_BASE_URL: settings.store_api_base_url,
     STORE_STATIC_BASE_URL: settings.store_static_base_url,
     VIEWER_API_BASE_URL: settings.viewer_api_base_url,

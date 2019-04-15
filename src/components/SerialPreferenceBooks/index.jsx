@@ -1,90 +1,21 @@
 /** @jsx jsx */
-import React from 'react';
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
-import { connect } from 'react-redux';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { merge } from 'lodash';
+import React from 'react';
+import { connect } from 'react-redux';
+import config from '../../config';
 import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
 import * as styles from '../../styles/books';
-import BookMetaData from '../../utils/bookMetaData';
-import { makeWebViewerURI, makeLinkProps } from '../../utils/uri';
-import LandscapeFullButton from './LandscapeFullButton';
-import BooksWrapper from '../BooksWrapper';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
-import { URLMap } from '../../constants/urls';
+import BookMetaData from '../../utils/bookMetaData';
 import { EmptySeries } from '../../utils/dataObject';
 import { notifyMessage } from '../../utils/sentry';
-
-const serialPreferenceStyles = {
-  authorFieldSeparator: {
-    display: 'inline-block',
-    position: 'relative',
-    width: 9,
-    height: 16,
-    verticalAlign: 'top',
-    '::after': {
-      content: `''`,
-      display: 'block',
-      width: 1,
-      height: 9,
-      background: '#d1d5d9',
-      position: 'absolute',
-      left: 4,
-      top: 3,
-    },
-  },
-  preferenceMeta: {
-    marginTop: 4,
-    fontSize: 12,
-    lineHeight: '1.3em',
-    color: '#808991',
-  },
-  unreadDot: {
-    display: 'inline-block',
-    width: 4,
-    height: 4,
-    background: '#5abf0d',
-    borderRadius: 4,
-    verticalAlign: '12%',
-    marginRight: 4,
-  },
-  seriesComplete: {
-    background: '#b3b3b3',
-    borderRadius: 2,
-    marginLeft: 4,
-
-    padding: '0px 2px 0 1px',
-    boxSizing: 'border-box',
-  },
-
-  seriesCompleteIcon: {
-    fill: 'white',
-    width: 16,
-    height: 8,
-  },
-
-  button: {
-    display: 'block',
-    width: 68,
-    lineHeight: '30px',
-    borderRadius: 4,
-    border: '1px solod #0077d9',
-    boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-    backgroundColor: '#1f8ce6',
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    zIndex: 10,
-  },
-  buttonsWrapper: {
-    '.LandscapeBook_Buttons': {
-      zIndex: 10,
-    },
-  },
-};
+import { makeWebViewerURI } from '../../utils/uri';
+import BooksWrapper from '../BooksWrapper';
+import LandscapeFullButton from './LandscapeFullButton';
+import * as serialPreferenceStyles from './styles';
 
 const toProps = ({
   bookSeriesId,
@@ -95,30 +26,16 @@ const toProps = ({
   isSelected,
   onSelectedChange,
   locationHref,
-  unitId,
 }) => {
   if (!platformBookData.series || !recentReadPlatformBookData.series) {
-    notifyMessage(`[선호작품][${platformBookData.id}] 시리즈 정보가 존재하지 않습니다.`);
+    notifyMessage(`[선호 작품][${platformBookData.id}] 시리즈 정보가 존재하지 않습니다.`);
   }
 
   const { series = EmptySeries } = platformBookData;
   const { series: recentReadSeries = EmptySeries } = recentReadPlatformBookData;
   const bookMetaData = new BookMetaData(platformBookData);
   const { title = platformBookData.title.main } = series.property;
-
-  const thumbnailLink = (
-    <Link
-      {...makeLinkProps(
-        {
-          pathname: URLMap.serialPreferenceUnit.href,
-          query: { unitId },
-        },
-        URLMap.serialPreferenceUnit.as({ unitId }),
-      )}
-    >
-      <a>시리즈뷰 가기</a>
-    </Link>
-  );
+  const thumbnailLink = <a href={`${config.STORE_BASE_URL}/v2/Detail?id=${platformBookData.id}`}>서점 상세페이지로 이동</a>;
 
   // 장르
   // 무조건 카테고리는 1개 이상 존재한다.
@@ -184,7 +101,7 @@ const toProps = ({
 
 class SerialPreferenceBooks extends React.Component {
   render() {
-    const { items, toUnitIdMap, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
+    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
 
     return (
       <BooksWrapper
@@ -195,7 +112,6 @@ class SerialPreferenceBooks extends React.Component {
             const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
             const platformBookData = platformBookDTO[bookSeriesId];
             const isSelected = !!selectedBooks[bookSeriesId];
-            const unitId = toUnitIdMap[bookSeriesId];
             const recentReadBookId = item.recent_read_b_id;
             const libraryBookProps = toProps({
               bookSeriesId,
@@ -207,7 +123,6 @@ class SerialPreferenceBooks extends React.Component {
               onSelectedChange,
               viewType,
               locationHref,
-              unitId,
             });
             const { thumbnailLink } = libraryBookProps;
 
