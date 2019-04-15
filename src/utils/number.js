@@ -1,6 +1,4 @@
-export const thousandsSeperator = value => {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
+export const thousandsSeperator = value => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const numberWithUnit = value => {
   let floorNums = 0;
