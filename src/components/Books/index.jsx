@@ -47,7 +47,7 @@ const toProps = ({
     if (isSeriesView) {
       updateBadge = isAfter(platformBookData.publish.ridibooks_publish, subDays(new Date(), 3));
     } else {
-      updateBadge = recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.last_volume_id] : false;
+      updateBadge = recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.opened_last_volume_id] : false;
     }
   }
 
