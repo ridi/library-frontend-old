@@ -1,17 +1,21 @@
 import Router from 'next/dist/lib/router';
-import { delay } from 'redux-saga';
-import { all, call, put } from 'redux-saga/effects';
+import { channel, delay } from 'redux-saga';
+import { all, call, put, take } from 'redux-saga/effects';
 import { OrderOptions } from '../../../../constants/orderOptions';
 import { URLMap } from '../../../../constants/urls';
 import { makeLinkProps } from '../../../../utils/uri';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../../common/requests';
 import { getBookIdsByUnitIds } from '../../../common/sagas';
+import { showConfirm } from '../../../confirm/actions';
 import { showDialog } from '../../../dialog/actions';
 import { showToast } from '../../../toast/actions';
 import { setFullScreenLoading } from '../../../ui/actions';
 import { fetchMainItems, fetchMainItemsTotalCount } from '../../main/requests';
+import { HIDE_ALL_EXPIRED_BOOKS } from '../actions';
 import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER } from '../constants';
 import { NotFoundExpiredBooksError } from '../errors';
+
+const confirmChannel = channel();
 
 function* getExpiredBookIds() {
   const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
@@ -127,5 +131,25 @@ export function* hideAllExpiredBooks() {
     ]);
   } finally {
     Router.replace(URLMap.main.href, URLMap.main.as);
+  }
+}
+
+export function* confirmHideAllExpiredBooks() {
+  yield put(setFullScreenLoading(true));
+  const bookIds = yield call(getExpiredBookIds);
+  yield put(setFullScreenLoading(false));
+
+  if (bookIds.length) {
+    yield put(
+      showConfirm('만료 도서 전체 숨기기', '만료된 전체 도서를 숨기시겠습니까?', '숨기기', () => {
+        confirmChannel.put({
+          type: HIDE_ALL_EXPIRED_BOOKS,
+        });
+      }),
+    );
+    const action = yield take(confirmChannel);
+    if (action.type === HIDE_ALL_EXPIRED_BOOKS) yield call(hideAllExpiredBooks);
+  } else {
+    yield put(showToast('만료된 도서가 없습니다.'));
   }
 }

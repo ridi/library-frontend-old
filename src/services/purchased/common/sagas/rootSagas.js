@@ -2,12 +2,11 @@ import { isAfter, subDays } from 'date-fns';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { toFlatten } from '../../../../utils/array';
 import { loadBookData } from '../../../book/sagas';
-
 import { getBooks } from '../../../book/selectors';
-import { HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from '../actions';
+import { CONFIRM_HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from '../actions';
 import { fetchReadLatestBookId } from '../requests';
 import { getReadLatestData } from '../selectors';
-import { hideAllExpiredBooks } from './hideAllExpiredBooksSagas';
+import { confirmHideAllExpiredBooks } from './hideAllExpiredBooksSagas';
 
 export function* loadRecentlyUpdatedData(bookIds) {
   const books = yield select(getBooks, bookIds);
@@ -53,5 +52,5 @@ export function* loadReadLatestBookId(unitId, bookId) {
 }
 
 export default function* purchasedCommonRootSaga() {
-  yield all([takeEvery(HIDE_ALL_EXPIRED_BOOKS, hideAllExpiredBooks)]);
+  yield all([takeEvery(CONFIRM_HIDE_ALL_EXPIRED_BOOKS, confirmHideAllExpiredBooks)]);
 }
