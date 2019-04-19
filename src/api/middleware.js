@@ -23,7 +23,9 @@ const maintenanceInterceptor = {
 const authorizationInterceptor = {
   response: createInterceptor(null, error => {
     const { response } = error;
-    if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+    if (!response) {
+      notifySentry(error);
+    } else if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
       // Token refresh
       return axios
         .post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
