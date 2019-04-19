@@ -10,7 +10,8 @@ import { confirmHideAllExpiredBooks } from './hideAllExpiredBooksSagas';
 
 export function* loadRecentlyUpdatedData(bookIds) {
   const books = yield select(getBooks, bookIds);
-  const lastBookIds = toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true);
+  const openedBooks = Object.values(books).filter(book => book.property.is_open);
+  const lastBookIds = toFlatten(openedBooks, 'series.property.opened_last_volume_id', true);
   yield call(loadBookData, lastBookIds);
 
   const lastBooks = yield select(getBooks, lastBookIds);
