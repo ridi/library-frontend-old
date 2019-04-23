@@ -3,7 +3,7 @@ set -e
 
 yarn install
 
-if [ -n "${SENTRY_AUTH_TOKEN}" ]; then
+if [ "$ENVIRONMENT" != 'development' ]; then
   export SENTRY_RELEASE_VERSION="${SENTRY_PROJECT}-${ENVIRONMENT}-${TAG}"
 fi
 
