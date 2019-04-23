@@ -106,33 +106,34 @@ class SerialPreferenceBooks extends React.Component {
     return (
       <BooksWrapper
         viewType={viewType}
-        books={items}
-        renderBook={({ book: item, className }) => {
-          const bookSeriesId = item.series_id;
-          const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
-          const platformBookData = platformBookDTO[bookSeriesId];
-          const isSelected = !!selectedBooks[bookSeriesId];
-          const recentReadBookId = item.recent_read_b_id;
-          const libraryBookProps = toProps({
-            bookSeriesId,
-            platformBookData,
-            recentReadPlatformBookData,
-            recentReadBookId,
-            isSelectMode,
-            isSelected,
-            onSelectedChange,
-            viewType,
-            locationHref,
-          });
-          const { thumbnailLink } = libraryBookProps;
+        renderBooks={({ className }) =>
+          items.map(item => {
+            const bookSeriesId = item.series_id;
+            const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
+            const platformBookData = platformBookDTO[bookSeriesId];
+            const isSelected = !!selectedBooks[bookSeriesId];
+            const recentReadBookId = item.recent_read_b_id;
+            const libraryBookProps = toProps({
+              bookSeriesId,
+              platformBookData,
+              recentReadPlatformBookData,
+              recentReadBookId,
+              isSelectMode,
+              isSelected,
+              onSelectedChange,
+              viewType,
+              locationHref,
+            });
+            const { thumbnailLink } = libraryBookProps;
 
-          return (
-            <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
-              <Book.LandscapeBook {...libraryBookProps} />
-              {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
-            </div>
-          );
-        }}
+            return (
+              <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
+                <Book.LandscapeBook {...libraryBookProps} />
+                {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+              </div>
+            );
+          })
+        }
       />
     );
   }

@@ -1,8 +1,11 @@
 export const LOAD_MAIN_ITEMS = 'LOAD_MAIN_ITEMS';
-export const START_LOAD_MAIN_ITEMS = 'START_LOAD_MAIN_ITEMS';
 
-export const UPDATE_MAIN_ITEMS = 'UPDATE_MAIN_ITEMS';
-export const UPDATE_MAIN_OPTIONS = 'UPDATE_MAIN_OPTIONS';
+export const SET_MAIN_ITEMS = 'SET_MAIN_ITEMS';
+export const SET_MAIN_TOTAL_COUNT = 'SET_MAIN_TOTAL_COUNT';
+export const SET_MAIN_PAGE = 'SET_MAIN_PAGE';
+export const SET_MAIN_ORDER = 'SET_MAIN_ORDER';
+export const SET_MAIN_FILTER = 'SET_MAIN_FILTER';
+export const SET_MAIN_FILTER_OPTIONS = 'SET_MAIN_FILTER_OPTIONS';
 
 export const SELECT_MAIN_BOOKS = 'SELECT_MAIN_BOOKS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
@@ -18,18 +21,46 @@ export const loadItems = () => ({
   type: LOAD_MAIN_ITEMS,
 });
 
-export const startLoadItems = options => ({
-  type: START_LOAD_MAIN_ITEMS,
-  payload: options,
-});
-
-export const updateItems = ({ items, unitTotalCount, itemTotalCount, filterOptions }) => ({
-  type: UPDATE_MAIN_ITEMS,
+export const setItems = items => ({
+  type: SET_MAIN_ITEMS,
   payload: {
     items,
+  },
+});
+
+export const setTotalCount = (unitTotalCount, itemTotalCount) => ({
+  type: SET_MAIN_TOTAL_COUNT,
+  payload: {
     unitTotalCount,
     itemTotalCount,
-    filterOptions,
+  },
+});
+
+export const setPage = page => ({
+  type: SET_MAIN_PAGE,
+  payload: {
+    page,
+  },
+});
+
+export const setOrder = order => ({
+  type: SET_MAIN_ORDER,
+  payload: {
+    order,
+  },
+});
+
+export const setFilter = filter => ({
+  type: SET_MAIN_FILTER,
+  payload: {
+    filter,
+  },
+});
+
+export const setFilterOptions = options => ({
+  type: SET_MAIN_FILTER_OPTIONS,
+  payload: {
+    options,
   },
 });
 

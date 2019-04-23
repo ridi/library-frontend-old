@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import createCachedSelector from 're-reselect';
 
 const getPurchasedCommonState = state => state.purchasedCommon;
 
@@ -14,15 +13,15 @@ export const getFetchingReadLatest = createSelector(
   state => state.fetchingReadLatest,
 );
 
-export const getRecentlyUpdatedData = createCachedSelector(
-  state => state.purchasedCommon.recentlyUpdatedData,
-  (state, bookIds) => bookIds,
-  (recentlyUpdatedData, bookIds) =>
-    bookIds.reduce((obj, bookId) => {
-      obj[bookId] = recentlyUpdatedData[bookId];
-      return obj;
-    }, {}),
-)((state, bookIds) => [...bookIds].sort().join(','));
+export const getRecentlyUpdatedData = (state, bookIds) =>
+  createSelector(
+    getPurchasedCommonState,
+    commonState =>
+      bookIds.reduce((previous, bookId) => {
+        previous[bookId] = commonState.recentlyUpdatedData[bookId];
+        return previous;
+      }, {}),
+  )(state);
 
 export const getPrimaryBookId = (state, unitId) =>
   createSelector(

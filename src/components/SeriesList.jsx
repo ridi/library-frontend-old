@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
-import { connect } from 'react-redux';
+import connect from 'react-redux/es/connect/connect';
 import { OrderOptions } from '../constants/orderOptions';
 import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
