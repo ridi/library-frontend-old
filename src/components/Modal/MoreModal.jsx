@@ -74,7 +74,7 @@ const MoreModal = ({
     {showHidden ? (
       <ModalItemGroup groupTitle="숨김 메뉴">
         <ModalButtonItem
-          title="만료 도서 전체 숨기기"
+          title="만료 도서 모두 숨기기"
           onClick={() => {
             onClickModalBackground();
             dispatchConfirmHideAllExpiredBooks();
