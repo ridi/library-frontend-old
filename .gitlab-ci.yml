@@ -33,7 +33,6 @@ stages:
 .sentry-env-template: &sentry-env
   SENTRY_ORG: ridi
   SENTRY_PROJECT: library-web
-  SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
 
 build-development:
   <<: *build

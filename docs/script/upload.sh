@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ -n "${SENTRY_AUTH_TOKEN}" ]; then
+if [ "$ENVIRONMENT" != 'development' ]; then
   SENTRY_RELEASE_VERSION="${SENTRY_PROJECT}-${ENVIRONMENT}-${TAG}"
   PREFIX="~$(node -p "new (require('url').URL)('${S3_PATH}').pathname")"
   echo "Prefix is: $PREFIX"
@@ -12,15 +12,13 @@ if [ -n "${SENTRY_AUTH_TOKEN}" ]; then
     --no-rewrite \
     --validate \
     ./out
-fi
 
-if [ "$ENVIRONMENT" != 'development' ]; then
   find ./out -name '*.map' -and -type f | xargs rm
 fi
 
 aws s3 sync ./out $S3_PATH --cache-control max-age=31536000,s-maxage=31536000 --exclude "index.html"
 aws s3 sync ./out $INDEX_S3_PATH --cache-control max-age=0,no-cache,no-store,must-revalidate --exclude "*" --include "index.html"
 
-if [ -n "${SENTRY_AUTH_TOKEN}" ]; then
+if [ "$ENVIRONMENT" != 'development' ]; then
   yarn sentry-cli releases finalize $SENTRY_RELEASE_VERSION
 fi
