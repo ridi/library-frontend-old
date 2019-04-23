@@ -30,6 +30,11 @@ stages:
   except:
     - master
 
+.sentry-env-template: &sentry-env
+  SENTRY_ORG: ridi
+  SENTRY_PROJECT: library-web
+  SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+
 build-development:
   <<: *build
   stage: dev-deploy
@@ -45,6 +50,7 @@ build-staging:
   <<: *build
   stage: staging-deploy
   variables:
+    <<: *sentry-env
     ENVIRONMENT: 'staging'
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY
@@ -55,6 +61,7 @@ build-production:
   <<: *build
   stage: prod-deploy
   variables:
+    <<: *sentry-env
     ENVIRONMENT: 'production'
     AWS_ACCESS_KEY_ID: $PROD_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $PROD_AWS_SECRET_ACCESS_KEY
@@ -73,6 +80,7 @@ manual-build-development:
 manual-build-staging:
   <<: *mr-build
   variables:
+    <<: *sentry-env
     ENVIRONMENT: 'staging'
     AWS_ACCESS_KEY_ID: $STAGING_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $STAGING_AWS_SECRET_ACCESS_KEY

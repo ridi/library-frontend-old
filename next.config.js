@@ -1,4 +1,8 @@
-const { NODE_ENV } = process.env;
+const withSourceMaps = require('./next-source-maps')({
+  devtool: 'hidden-source-map',
+});
+
+const { NODE_ENV, SENTRY_RELEASE_VERSION } = process.env;
 
 let settings;
 if (NODE_ENV === 'local') {
@@ -11,7 +15,7 @@ if (NODE_ENV === 'local') {
   settings = require('./settings/production.json');
 }
 
-module.exports = {
+module.exports = withSourceMaps({
   distDir: '../build',
   useFileSystemPublicRoutes: false,
   exportPathMap: () => ({
@@ -57,5 +61,6 @@ module.exports = {
     RIDI_OAUTH2_CLIENT_ID: settings.ridi_oauth2_client_id,
 
     SENTRY_DSN: settings.sentry_dsn,
+    SENTRY_RELEASE_VERSION,
   },
-};
+});
