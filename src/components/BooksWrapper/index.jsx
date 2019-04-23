@@ -1,22 +1,29 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as styles from '../../styles/books';
 
-const BooksWrapper = ({ viewType, books, renderBook, children }) => {
+const BooksWrapper = ({ viewType, renderBooks }) => {
   const isLoaded = true;
   const booksWrapperClassName = 'BooksWrapper';
   const bookClassName = 'Book';
   const [additionalPadding, setAdditionalPadding] = useState(0);
 
   const setBooksAdditionalPadding = () => {
-    const booksNode = document.querySelector(`.${booksWrapperClassName}`);
-    const bookNode = document.querySelector(`.${bookClassName}`);
-    setAdditionalPadding(Math.floor((booksNode.offsetWidth % bookNode.offsetWidth) / 2));
+    const books = document.querySelector(`.${booksWrapperClassName}`);
+    const book = document.querySelector(`.${bookClassName}`);
+
+    if (!books || !book) {
+      setTimeout(() => setBooksAdditionalPadding(), 100);
+      return;
+    }
+
+    setAdditionalPadding(Math.floor((books.offsetWidth % book.offsetWidth) / 2));
   };
 
   useEffect(
     () => {
+      setBooksAdditionalPadding();
       window.addEventListener('resize', setBooksAdditionalPadding);
       return () => {
         window.removeEventListener('resize', setBooksAdditionalPadding);
@@ -25,21 +32,16 @@ const BooksWrapper = ({ viewType, books, renderBook, children }) => {
     [isLoaded],
   );
 
-  useLayoutEffect(
+  useEffect(
     () => {
       setBooksAdditionalPadding();
     },
-    [isLoaded, viewType],
+    [viewType],
   );
 
-  const bookElements = books.map(book => renderBook({ book, className: bookClassName }));
-  let body = bookElements;
-  if (typeof children === 'function') {
-    body = children({ books: bookElements });
-  }
   return (
     <div className={booksWrapperClassName} css={styles.booksWrapper(viewType, additionalPadding)}>
-      {body}
+      {renderBooks({ className: bookClassName })}
     </div>
   );
 };

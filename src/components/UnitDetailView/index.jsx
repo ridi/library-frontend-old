@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import React from 'react';
-import { connect } from 'react-redux';
+import connect from 'react-redux/es/connect/connect';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';

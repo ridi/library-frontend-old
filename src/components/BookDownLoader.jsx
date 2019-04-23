@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import React from 'react';
-import { connect } from 'react-redux';
+import connect from 'react-redux/es/connect/connect';
 import { getBookDownloadSrc } from '../services/bookDownload/selectors';
 
 class BookDownLoader extends React.Component {
