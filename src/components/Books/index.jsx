@@ -117,65 +117,66 @@ export const Books = props => {
   return (
     <BooksWrapper
       viewType={viewType}
-      renderBooks={({ className }) => {
-        const libraryBooks = libraryBookDTO.map(libraryBookData => {
-          const bookId = libraryBookData.b_id;
-          const platformBookData = platformBookDTO[bookId];
-          if (!platformBookData) {
-            return viewType === ViewType.PORTRAIT ? (
-              <div key={bookId} className={className} css={styles.portrait}>
-                <PortraitBook />
-              </div>
-            ) : (
-              <div key={bookId} className={className} css={styles.landscape}>
-                <LandscapeBook />
-              </div>
-            );
-          }
-          const isPurchasedBook = !!libraryBookData.purchase_date;
-          const unit = units && units[libraryBookData.unit_id] ? units[libraryBookData.unit_id] : null;
-
-          const isSelected = !!selectedBooks[bookId];
-          const libraryBookProps = toProps({
-            bookId,
-            libraryBookData,
-            platformBookData,
-            unit,
-            isSelectMode,
-            isSelected,
-            onSelectedChange,
-            viewType,
-            linkBuilder,
-            isSeriesView,
-            recentlyUpdatedMap,
-            thumbnailWidth,
-            isPurchasedBook,
-          });
-          const { thumbnailLink } = libraryBookProps;
-
+      books={libraryBookDTO}
+      renderBook={({ book: libraryBookData, className }) => {
+        const bookId = libraryBookData.b_id;
+        const platformBookData = platformBookDTO[bookId];
+        if (!platformBookData) {
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className={className} css={styles.portrait}>
-              <Book.PortraitBook {...libraryBookProps} />
+              <PortraitBook />
             </div>
           ) : (
             <div key={bookId} className={className} css={styles.landscape}>
-              <Book.LandscapeBook {...libraryBookProps} />
-              {isSelectMode && !isPurchasedBook && <Disabled />}
-              {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+              <LandscapeBook />
             </div>
           );
+        }
+        const isPurchasedBook = !!libraryBookData.purchase_date;
+        const unit = units && units[libraryBookData.unit_id] ? units[libraryBookData.unit_id] : null;
+
+        const isSelected = !!selectedBooks[bookId];
+        const libraryBookProps = toProps({
+          bookId,
+          libraryBookData,
+          platformBookData,
+          unit,
+          isSelectMode,
+          isSelected,
+          onSelectedChange,
+          viewType,
+          linkBuilder,
+          isSeriesView,
+          recentlyUpdatedMap,
+          thumbnailWidth,
+          isPurchasedBook,
         });
+        const { thumbnailLink } = libraryBookProps;
+
+        return viewType === ViewType.PORTRAIT ? (
+          <div key={bookId} className={className} css={styles.portrait}>
+            <Book.PortraitBook {...libraryBookProps} />
+          </div>
+        ) : (
+          <div key={bookId} className={className} css={styles.landscape}>
+            <Book.LandscapeBook {...libraryBookProps} />
+            {isSelectMode && !isPurchasedBook && <Disabled />}
+            {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+          </div>
+        );
+      }}
+    >
+      {({ books }) => {
         const libraryBooksCount = libraryBookDTO.length;
-        const isNeedLandscapeBookSeparator =
-          viewType === ViewType.LANDSCAPE && libraryBooks && libraryBooksCount !== 0 && libraryBooksCount % 2 !== 0;
+        const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (
           <React.Fragment>
-            {libraryBooks}
+            {books}
             {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
           </React.Fragment>
         );
       }}
-    />
+    </BooksWrapper>
   );
 };

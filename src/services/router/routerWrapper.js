@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Router from 'next/router';
 
@@ -9,11 +8,6 @@ import { locationFromUrl } from './utils';
 const createConnectedRouterWrapper = () => {
   const toRoute = path => path.replace(/\/$/, '') || '/';
   class RouterWrapper extends React.Component {
-    constructor(props, context) {
-      super(props, context);
-      this.store = context.store;
-    }
-
     componentDidMount() {
       Router.events.on('routeChangeStart', this.listenRouteChange);
       Router.events.on('routeChangeError', this.finishRouteChange);
@@ -42,8 +36,9 @@ const createConnectedRouterWrapper = () => {
     };
 
     checkMismatch() {
-      const state = this.store.getState();
-      const { pathname: pathnameInStore, search: searchInStore, hash: hashInStore } = state.router.location;
+      const {
+        location: { pathname: pathnameInStore, search: searchInStore, hash: hashInStore },
+      } = this.props;
       const { pathname: pathnameInHistory, search: searchInHistory, hash: hashInHistory } = locationFromUrl(Router.asPath);
       return [
         pathnameInStore !== pathnameInHistory || searchInStore !== searchInHistory || hashInStore !== hashInHistory,
@@ -84,14 +79,9 @@ const createConnectedRouterWrapper = () => {
       return children || <></>;
     }
   }
-  RouterWrapper.contextTypes = {
-    store: PropTypes.shape({
-      getState: PropTypes.func.isRequired,
-    }),
-  };
 
   return connect(
-    null,
+    state => ({ location: state.router.location }),
     {
       setLocation,
       commitLocation,
