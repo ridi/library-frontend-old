@@ -6,12 +6,8 @@ import {
   HIDE_SELECTED_MAIN_BOOKS,
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
-  setFilter,
-  setFilterOptions,
-  setItems,
-  setOrder,
-  setPage,
-  setTotalCount,
+  startLoadItems,
+  updateItems,
   selectBooks,
   setIsFetchingBooks,
 } from './actions';
@@ -35,15 +31,14 @@ import { URLMap } from '../../../constants/urls';
 import { MakeBookIdsError } from '../../common/errors';
 import { showDialog } from '../../dialog/actions';
 
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
+function paramFromQuery(query) {
   const page = parseInt(query.page, 10) || 1;
 
   const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
   const order = OrderOptions.toKey(orderType, orderBy);
-  const filter = parseInt(query.filter, 10) || null;
+  const filterSelected = parseInt(query.filter, 10) || null;
 
-  yield all([put(setPage(page)), put(setOrder(order)), put(setFilter(filter))]);
+  return { page, order, filterSelected };
 }
 
 function* moveToFirstPage() {
@@ -60,13 +55,16 @@ function* moveToFirstPage() {
 function* loadMainItems() {
   // Clear Error
   yield put(setError(false));
-  yield call(persistPageOptionsFromQueries);
 
-  const { page, order, filter: category } = yield select(getOptions);
+  const originalOptions = yield select(getOptions);
+  const query = yield select(getQuery);
+  const queryOptions = paramFromQuery(query);
+  const { page, order } = { ...originalOptions, ...queryOptions };
+  const category = { ...originalOptions.filter, selected: queryOptions.filterSelected };
   const { orderType, orderBy } = OrderOptions.parse(order);
+  yield put(startLoadItems({ page, order, filterSelected: category.selected }));
 
   try {
-    yield put(setIsFetchingBooks(true));
     const [itemResponse, countResponse, categories] = yield all([
       call(fetchMainItems, orderType, orderBy, category, page),
       call(fetchMainItemsTotalCount, orderType, orderBy, category),
@@ -82,11 +80,14 @@ function* loadMainItems() {
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
-    yield all([
-      put(setItems(itemResponse.items)),
-      put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
-      put(setFilterOptions(categories)),
-    ]);
+    yield put(
+      updateItems({
+        items: itemResponse.items,
+        unitTotalCount: countResponse.unit_total_count,
+        itemTotalCount: countResponse.item_total_count,
+        filterOptions: categories,
+      }),
+    );
     yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
     yield put(setError(true));
