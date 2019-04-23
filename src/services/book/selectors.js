@@ -1,18 +1,19 @@
 import { createSelector } from 'reselect';
+import createCachedSelector from 're-reselect';
 import { EmptyUnit } from '../../utils/dataObject';
 import { makeUnitOrderKey } from './actions';
 
 const getBookState = state => state.books;
 
-export const getBooks = (state, bookIds) =>
-  createSelector(
-    getBookState,
-    bookState =>
-      bookIds.reduce((previous, bookId) => {
-        previous[bookId] = bookState.books.get(bookId);
-        return previous;
-      }, {}),
-  )(state);
+export const getBooks = createCachedSelector(
+  state => state.books.books,
+  (state, bookIds) => bookIds,
+  (books, bookIds) =>
+    bookIds.reduce((obj, bookId) => {
+      obj[bookId] = books.get(bookId);
+      return obj;
+    }, {}),
+)((state, bookIds) => [...bookIds].sort().join(','));
 
 export const getBookDescriptions = (state, bookIds) =>
   createSelector(
@@ -40,15 +41,15 @@ export const getUnit = (state, unitId) =>
     bookState => bookState.units.get(unitId) || EmptyUnit,
   )(state);
 
-export const getUnits = (state, unitIds) =>
-  createSelector(
-    getBookState,
-    bookState =>
-      unitIds.reduce((previous, unitId) => {
-        previous[unitId] = bookState.units.get(unitId);
-        return previous;
-      }, {}),
-  )(state);
+export const getUnits = createCachedSelector(
+  state => state.books.units,
+  (state, unitIds) => unitIds,
+  (units, unitIds) =>
+    unitIds.reduce((obj, unitId) => {
+      obj[unitId] = units.get(unitId);
+      return obj;
+    }, {}),
+)((state, unitIds) => [...unitIds].sort().join(','));
 
 export const getUnitOrders = (state, unitId, orderType, orderBy, page) =>
   createSelector(

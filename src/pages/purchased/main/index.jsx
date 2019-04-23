@@ -13,9 +13,10 @@ import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Toast from '../../../components/Toast';
+import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
-import { getBooks, getUnits } from '../../../services/book/selectors';
+import { getUnits } from '../../../services/book/selectors';
 import {
   clearSelectedBooks,
   downloadSelectedBooks,
@@ -28,19 +29,21 @@ import {
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
+  getBooksByPage,
+  getUnitIdsByPage,
+  getLastBookIdsByPage,
   getPageInfo,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
 import { Duration, ToastStyle } from '../../../services/toast/constants';
 import BookOutline from '../../../svgs/BookOutline.svg';
-import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
-class Main extends React.Component {
+class Main extends React.PureComponent {
   static async getInitialProps({ store }) {
     await store.dispatch(clearSelectedBooks());
     await store.dispatch(loadItems());
@@ -135,7 +138,38 @@ class Main extends React.Component {
     return <SearchBar {...searchBarProps} />;
   }
 
+  linkBuilder = libraryBookData => {
+    const {
+      pageInfo: { order, orderType, orderBy },
+    } = this.props; // eslint-disable-line react/no-this-in-sfc
+
+    const query = {};
+    if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+      query.orderType = orderType;
+      query.orderBy = orderBy;
+    }
+
+    const linkProps = makeLinkProps(
+      {
+        pathname: URLMap.mainUnit.href,
+        query: { unitId: libraryBookData.unit_id },
+      },
+      URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+      query,
+    );
+
+    return (
+      <Link prefetch {...linkProps}>
+        <a>더보기</a>
+      </Link>
+    );
+  };
+
   renderBooks() {
+    if (this.props.listInstruction === ListInstructions.SKELETON) {
+      return <SkeletonBooks viewType={this.props.viewType} />;
+    }
+
     const { isEditing: isSelectMode } = this.state;
     const {
       items: libraryBookDTO,
@@ -144,40 +178,12 @@ class Main extends React.Component {
       recentlyUpdatedMap,
       selectedBooks,
       dispatchToggleSelectBook,
-      isFetchingBooks,
       viewType,
-      pageInfo: { order, orderType, orderBy },
     } = this.props;
 
     const onSelectedChange = dispatchToggleSelectBook;
-    const linkBuilder = () => libraryBookData => {
-      const query = {};
-      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-        query.orderType = orderType;
-        query.orderBy = orderBy;
-      }
 
-      const linkProps = makeLinkProps(
-        {
-          pathname: URLMap.mainUnit.href,
-          query: { unitId: libraryBookData.unit_id },
-        },
-        URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
-        query,
-      );
-
-      return (
-        <Link prefetch {...linkProps}>
-          <a>더보기</a>
-        </Link>
-      );
-    };
-
-    const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
-
-    return showSkeleton ? (
-      <SkeletonBooks viewType={viewType} />
-    ) : (
+    return (
       <>
         <Books
           {...{
@@ -188,9 +194,9 @@ class Main extends React.Component {
             isSelectMode,
             onSelectedChange,
             viewType,
-            linkBuilder: linkBuilder(),
+            linkBuilder: this.linkBuilder,
+            recentlyUpdatedMap,
           }}
-          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {this.renderPaginator()}
       </>
@@ -213,12 +219,11 @@ class Main extends React.Component {
   }
 
   renderMain() {
-    const { items, isFetchingBooks } = this.props;
+    const { listInstruction } = this.props;
 
-    if (!isFetchingBooks && items.length === 0) {
+    if (listInstruction === ListInstructions.EMPTY) {
       return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage()} />;
     }
-
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
 
@@ -255,7 +260,7 @@ class Main extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+          <main>{isError ? <BookError onClickRefreshButton={dispatchLoadItems} /> : this.renderMain()}</main>
         </Editable>
         <Footer />
         <BookDownLoader />
@@ -277,14 +282,22 @@ const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
-  const books = getBooks(state, toFlatten(items, 'b_id'));
-  const units = getUnits(state, toFlatten(items, 'unit_id'));
+  const books = getBooksByPage(state);
+  const unitIds = getUnitIdsByPage(state);
+  const units = getUnits(state, unitIds);
   const selectedBooks = getSelectedBooks(state);
   const isFetchingBooks = getIsFetchingBooks(state);
-
-  const lastBookIds = toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true);
+  const lastBookIds = getLastBookIdsByPage(state);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
 
+  let listInstruction;
+  if (items.length !== 0) {
+    listInstruction = ListInstructions.SHOW;
+  } else if (isFetchingBooks) {
+    listInstruction = ListInstructions.SKELETON;
+  } else {
+    listInstruction = ListInstructions.EMPTY;
+  }
   return {
     pageInfo,
     filterOptions,
@@ -293,7 +306,7 @@ const mapStateToProps = state => {
     units,
     recentlyUpdatedMap,
     selectedBooks,
-    isFetchingBooks,
+    listInstruction,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
   };
