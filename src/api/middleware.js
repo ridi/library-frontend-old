@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../config';
 import { URLMap } from '../constants/urls';
 import { getMaintenanceStatus } from '../services/maintenance/requests';
+import { retry, throwNetworkError } from '../utils/retry';
 import { notifySentry } from '../utils/sentry';
 import { makeLibraryLoginURI } from '../utils/uri';
 import { GET_API } from './actions';
@@ -27,10 +28,9 @@ const authorizationInterceptor = {
       notifySentry(error);
     } else if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
       // Token refresh
-      return axios
-        .post(`${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
-          withCredentials: true,
-        })
+      return retry({ retryCount: 3, retryDelay: 1000 }, throwNetworkError(axios.post), `${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
+        withCredentials: true,
+      })
         .then(() => axios(response.config)) // 원래 요청 재시도
         .catch(err => {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.

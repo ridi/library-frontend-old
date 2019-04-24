@@ -1,18 +1,5 @@
 import axios from 'axios';
-import { NoMoreRetryError, retry } from '../utils/retry';
-import { HttpStatusCode } from './constants';
-
-const _filterNotFound = fn => async (...params) => {
-  try {
-    return await fn(...params);
-  } catch (err) {
-    // 응답이 있으면 재시도 하지 않는다. 네트워크 에러만 재시도 한다.
-    if (err.response) {
-      throw NoMoreRetryError(err);
-    }
-    throw err;
-  }
-};
+import { retry, throwNetworkError } from '../utils/retry';
 
 export default class API {
   constructor(withCredentials = false, headers = {}, retryCount = 3, retryDelay = 1000) {
@@ -40,19 +27,19 @@ export default class API {
 
   // Request
   get(url, headers = {}) {
-    return retry(this.getRetryOptions(), _filterNotFound(this.http.get), url, this.getOptions(headers));
+    return retry(this.getRetryOptions(), throwNetworkError(this.http.get), url, this.getOptions(headers));
   }
 
   post(url, data, headers = {}) {
-    return retry(this.getRetryOptions(), _filterNotFound(this.http.post), url, data, this.getOptions(headers));
+    return retry(this.getRetryOptions(), throwNetworkError(this.http.post), url, data, this.getOptions(headers));
   }
 
   put(url, data, headers = {}) {
-    return retry(this.getRetryOptions(), _filterNotFound(this.http.put), url, data, this.getOptions(headers));
+    return retry(this.getRetryOptions(), throwNetworkError(this.http.put), url, data, this.getOptions(headers));
   }
 
   delete(url, headers = {}) {
-    return retry(this.getRetryOptions(), _filterNotFound(this.http.delete), url, this.getOptions(headers));
+    return retry(this.getRetryOptions(), throwNetworkError(this.http.delete), url, this.getOptions(headers));
   }
 
   // Interceptor
