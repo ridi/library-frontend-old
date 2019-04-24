@@ -54,7 +54,6 @@ export default class MyDocument extends Document {
           <Metadata />
           <Favicon />
 
-          <script type="text/javascript" src="https://account.ridibooks.com/script/ridi_token_refresher.0.0.3.js" />
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: this.addSearchJSONLD() }} />
           <style dangerouslySetInnerHTML={{ __html: this.props.css }} />
         </Head>
