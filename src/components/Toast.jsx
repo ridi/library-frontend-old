@@ -1,9 +1,6 @@
-/** @jsx jsx */
+import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
-import { isAfter } from 'date-fns';
-
 import { showToast } from '../services/toast/actions';
 import { Duration, ToastStyle } from '../services/toast/constants';
 import settings from '../utils/settings';
