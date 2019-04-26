@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser';
 import { all, call, put, take, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
@@ -6,6 +7,13 @@ import { fetchUserInfo } from './requests';
 
 export function* loadUserInfo() {
   const userInfo = yield call(fetchUserInfo);
+  Sentry.configureScope(scope => {
+    scope.setUser({
+      id: userInfo.idx,
+      username: userInfo.id,
+      email: userInfo.email,
+    });
+  });
   yield put(setUserInfo(userInfo));
 }
 
