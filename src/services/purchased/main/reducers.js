@@ -3,7 +3,7 @@ import produce from 'immer';
 import { initialState, initialDataState, getKey } from './state';
 
 import {
-  START_LOAD_MAIN_ITEMS,
+  LOAD_MAIN_ITEMS,
   UPDATE_MAIN_ITEMS,
   CLEAR_SELECTED_MAIN_BOOKS,
   SELECT_MAIN_BOOKS,
@@ -11,30 +11,30 @@ import {
   SET_IS_FETCHING_BOOKS,
 } from './actions';
 
+import { OrderOptions } from '../../../constants/orderOptions';
 import { concat, toDict, toFlatten } from '../../../utils/array';
 
 const mainReducer = produce((draft, action) => {
-  const key =
-    action.type === START_LOAD_MAIN_ITEMS && action.payload != null
-      ? concat([action.payload.filterSelected, action.payload.order])
-      : getKey(draft);
+  let key = getKey(draft);
   if (draft.data[key] == null) {
-    draft.data[key] = initialDataState;
+    draft.data[key] = { ...initialDataState };
   }
 
   switch (action.type) {
-    case START_LOAD_MAIN_ITEMS:
-      if ('page' in action.payload) {
-        draft.data[key].page = action.payload.page;
+    case LOAD_MAIN_ITEMS: {
+      const { currentPage, orderType, orderBy, categoryFilter } = action.payload;
+      const order = OrderOptions.toKey(orderType, orderBy);
+      key = concat([categoryFilter, order]);
+      if (draft.data[key] == null) {
+        draft.data[key] = { ...initialDataState };
       }
-      if ('order' in action.payload) {
-        draft.order = action.payload.order;
-      }
-      if ('filterSelected' in action.payload) {
-        draft.filter.selected = action.payload.filterSelected;
-      }
+
+      draft.data[key].page = currentPage;
+      draft.order = order;
+      draft.filter.selected = categoryFilter;
       draft.isFetchingBooks = true;
       break;
+    }
     case UPDATE_MAIN_ITEMS:
       draft.data[key].items = { ...draft.data[key].items, ...toDict(action.payload.items, 'b_id') };
       draft.data[key].itemIdsForPage[draft.data[key].page] = toFlatten(action.payload.items, 'b_id');

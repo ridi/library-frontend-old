@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 
+import { OrderOptions } from '../../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { toFlatten } from '../../../utils/array';
 import { calcPage } from '../../../utils/pagination';
-import { OrderOptions } from '../../../constants/orderOptions';
 import { initialDataState, getKey } from './state';
 
 import { getBooks } from '../../book/selectors';
@@ -50,26 +50,9 @@ export const getLastBookIdsByPage = createSelector(
   books => toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true),
 );
 
-export const getPageInfo = createSelector(
-  [getState, getDataState],
-  (state, dataState) => {
-    const {
-      order,
-      filter: { selected },
-    } = state;
-    const { page, unitTotalCount } = dataState;
-
-    const { orderType, orderBy } = OrderOptions.parse(order);
-
-    return {
-      currentPage: page,
-      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-      order,
-      orderType,
-      orderBy,
-      filter: selected,
-    };
-  },
+export const getTotalPages = createSelector(
+  getDataState,
+  dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
 export const getPage = createSelector(
@@ -99,6 +82,24 @@ export const getOptions = createSelector(
     order,
     filter,
   }),
+);
+
+export const getPageInfo = createSelector(
+  getPage,
+  getTotalPages,
+  getOrder,
+  getFilter,
+  (currentPage, totalPages, order, filter) => {
+    const { orderType, orderBy } = OrderOptions.parse(order);
+    return {
+      currentPage,
+      totalPages,
+      order,
+      orderType,
+      orderBy,
+      filter,
+    };
+  },
 );
 
 export const getSelectedBooks = createSelector(
