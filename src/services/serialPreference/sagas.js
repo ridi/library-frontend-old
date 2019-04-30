@@ -40,18 +40,17 @@ function* loadItems() {
   try {
     yield put(setIsFetchingBooks(true));
     const itemResponse = yield call(fetchSerialPreferenceItems, page);
-    const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
 
-    const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
+    if (itemResponse.items.length !== 0) {
+      const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
+      const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
+      // Request BookData
+      const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
+      yield call(loadBookData, bookIds);
+      yield put(setSerialUnitIdMap(unitIdMapResponse.result));
+    }
 
-    // Request BookData
-    const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
-    yield call(loadBookData, bookIds);
-    yield all([
-      put(setItems(itemResponse.items)),
-      put(setTotalCount(itemResponse.book_count)),
-      put(setSerialUnitIdMap(unitIdMapResponse.result)),
-    ]);
+    yield all([put(setItems(itemResponse.items)), put(setTotalCount(itemResponse.book_count))]);
   } catch (err) {
     yield put(setError(true));
   } finally {
