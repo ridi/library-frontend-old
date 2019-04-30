@@ -32,7 +32,10 @@ import {
   getBooksByPage,
   getUnitIdsByPage,
   getLastBookIdsByPage,
-  getPageInfo,
+  getPage,
+  getOrder,
+  getFilter,
+  getTotalPages,
   getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
 import { Duration, ToastStyle } from '../../../services/toast/constants';
@@ -44,9 +47,16 @@ import { ResponsiveBooks } from '../../base/Responsive';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
 class Main extends React.PureComponent {
-  static async getInitialProps({ store }) {
+  static async getInitialProps({ query, req, store }) {
+    const isServer = Boolean(req);
+
+    const currentPage = parseInt(query.page, 10) || 1;
+    const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
+    const categoryFilter = parseInt(query.filter, 10) || null;
+
+    const params = { currentPage, orderType, orderBy, categoryFilter };
     await store.dispatch(clearSelectedBooks());
-    await store.dispatch(loadItems());
+    await store.dispatch(loadItems(params, isServer));
   }
 
   constructor(props) {
@@ -119,10 +129,8 @@ class Main extends React.PureComponent {
   }
 
   renderSearchBar() {
-    const {
-      pageInfo: { order, orderType, orderBy, filter },
-      filterOptions,
-    } = this.props;
+    const { orderType, orderBy, categoryFilter: filter, filterOptions } = this.props;
+    const order = OrderOptions.toKey(orderType, orderBy);
     const orderOptions = OrderOptions.toMainList();
 
     const searchBarProps = {
@@ -139,9 +147,8 @@ class Main extends React.PureComponent {
   }
 
   linkBuilder = libraryBookData => {
-    const {
-      pageInfo: { order, orderType, orderBy },
-    } = this.props; // eslint-disable-line react/no-this-in-sfc
+    const { orderType, orderBy } = this.props; // eslint-disable-line react/no-this-in-sfc
+    const order = OrderOptions.toKey(orderType, orderBy);
 
     const query = {};
     if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
@@ -204,9 +211,8 @@ class Main extends React.PureComponent {
   }
 
   getEmptyBookListMessage() {
-    const {
-      pageInfo: { order },
-    } = this.props;
+    const { orderType, orderBy } = this.props;
+    const order = OrderOptions.toKey(orderType, orderBy);
 
     if (OrderOptions.EXPIRE_DATE.key === order) {
       return '대여 중인 도서가 없습니다.';
@@ -228,9 +234,7 @@ class Main extends React.PureComponent {
   }
 
   renderPaginator() {
-    const {
-      pageInfo: { orderType, orderBy, filter, currentPage, totalPages },
-    } = this.props;
+    const { currentPage, orderType, orderBy, categoryFilter: filter, totalPages } = this.props;
 
     return (
       <ResponsivePaginator
@@ -243,9 +247,14 @@ class Main extends React.PureComponent {
     );
   }
 
+  dispatchLoadItems = () => {
+    const { currentPage, orderType, orderBy, categoryFilter, dispatchLoadItems } = this.props;
+    return dispatchLoadItems({ currentPage, orderType, orderBy, categoryFilter });
+  };
+
   render() {
     const { isEditing } = this.state;
-    const { isError, dispatchLoadItems } = this.props;
+    const { isError } = this.props;
 
     return (
       <>
@@ -260,7 +269,7 @@ class Main extends React.PureComponent {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <BookError onClickRefreshButton={dispatchLoadItems} /> : this.renderMain()}</main>
+          <main>{isError ? <BookError onClickRefreshButton={this.dispatchLoadItems} /> : this.renderMain()}</main>
         </Editable>
         <Footer />
         <BookDownLoader />
@@ -270,7 +279,11 @@ class Main extends React.PureComponent {
 }
 
 const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
+  const currentPage = getPage(state);
+  const order = getOrder(state);
+  const { orderType, orderBy } = OrderOptions.parse(order);
+  const categoryFilter = getFilter(state);
+  const totalPages = getTotalPages(state);
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state);
   const books = getBooksByPage(state);
@@ -290,7 +303,11 @@ const mapStateToProps = state => {
     listInstruction = ListInstructions.EMPTY;
   }
   return {
-    pageInfo,
+    currentPage,
+    orderType,
+    orderBy,
+    categoryFilter,
+    totalPages,
     filterOptions,
     items,
     books,

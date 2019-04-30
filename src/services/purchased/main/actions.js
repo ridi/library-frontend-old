@@ -1,5 +1,4 @@
 export const LOAD_MAIN_ITEMS = 'LOAD_MAIN_ITEMS';
-export const START_LOAD_MAIN_ITEMS = 'START_LOAD_MAIN_ITEMS';
 
 export const UPDATE_MAIN_ITEMS = 'UPDATE_MAIN_ITEMS';
 export const UPDATE_MAIN_OPTIONS = 'UPDATE_MAIN_OPTIONS';
@@ -14,13 +13,12 @@ export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
 export const SET_IS_FETCHING_BOOKS = 'SET_IS_FETCHING_BOOKS';
 
-export const loadItems = () => ({
+export const loadItems = (payload, isServer = false) => ({
   type: LOAD_MAIN_ITEMS,
-});
-
-export const startLoadItems = options => ({
-  type: START_LOAD_MAIN_ITEMS,
-  payload: options,
+  payload: {
+    ...payload,
+    isServer,
+  },
 });
 
 export const updateItems = ({ items, unitTotalCount, itemTotalCount, filterOptions }) => ({

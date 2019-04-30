@@ -6,7 +6,6 @@ import {
   HIDE_SELECTED_MAIN_BOOKS,
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
-  startLoadItems,
   updateItems,
   selectBooks,
   setIsFetchingBooks,
@@ -17,7 +16,6 @@ import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } fro
 import { OrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
-import { getQuery } from '../../router/selectors';
 import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './selectors';
 
 import { loadBookData, loadUnitData } from '../../book/sagas';
@@ -31,46 +29,38 @@ import { URLMap } from '../../../constants/urls';
 import { MakeBookIdsError } from '../../common/errors';
 import { showDialog } from '../../dialog/actions';
 
-function paramFromQuery(query) {
-  const page = parseInt(query.page, 10) || 1;
-
-  const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
-  const order = OrderOptions.toKey(orderType, orderBy);
-  const filterSelected = parseInt(query.filter, 10) || null;
-
-  return { page, order, filterSelected };
-}
-
-function* moveToFirstPage() {
-  const query = yield select(getQuery);
-
+function moveToFirstPage(payload) {
   const linkProps = makeLinkProps({ pathname: URLMap.main.href }, URLMap.main.as, {
-    ...query,
     page: 1,
+    order_type: payload.orderType,
+    order_by: payload.orderBy,
+    filter: payload.categoryFilter,
   });
 
   Router.replace(linkProps.href, linkProps.as);
 }
 
-function* loadMainItems() {
+function* loadMainItems(action) {
   // Clear Error
   yield put(setError(false));
 
-  const query = yield select(getQuery);
-  const { page, order, filterSelected } = paramFromQuery(query);
-  const { orderType, orderBy } = OrderOptions.parse(order);
-  yield put(startLoadItems({ page, order, filterSelected }));
+  const { currentPage, orderType, orderBy, categoryFilter } = action.payload;
 
   try {
     const [itemResponse, countResponse, categories] = yield all([
-      call(fetchMainItems, orderType, orderBy, filterSelected, page),
-      call(fetchMainItemsTotalCount, orderType, orderBy, filterSelected),
+      call(fetchMainItems, orderType, orderBy, categoryFilter, currentPage),
+      call(fetchMainItemsTotalCount, orderType, orderBy, categoryFilter),
       call(fetchPurchaseCategories),
     ]);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.unit_total_count) {
-      yield moveToFirstPage();
+      // 서버 렌더링에서는 바로 리디렉트하기 까다로우므로 로딩 표시를 띄워놓는
+      // 것으로 대체
+      if (!action.payload.isServer) {
+        moveToFirstPage(action.payload);
+      }
+      // 이대로 리턴하면 로딩 표시가 남는다
       return;
     }
 
@@ -88,9 +78,8 @@ function* loadMainItems() {
     yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
     yield put(setError(true));
-  } finally {
-    yield put(setIsFetchingBooks(false));
   }
+  yield put(setIsFetchingBooks(false));
 }
 
 function* hideSelectedBooks() {
