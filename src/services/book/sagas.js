@@ -61,12 +61,13 @@ function filterTTLObj(itemIds, existItems) {
 export function* loadBookData(bookIds) {
   const existBooks = yield select(state => state.books.books);
   const filteredBookIds = filterTTLObj(bookIds, existBooks);
+  const bookIdsWithoutEmptyString = filteredBookIds.filter(bookId => bookId !== '');
 
-  if (filteredBookIds.length === 0) {
+  if (bookIdsWithoutEmptyString.length === 0) {
     return;
   }
 
-  const books = yield call(fetchBookData, filteredBookIds);
+  const books = yield call(fetchBookData, bookIdsWithoutEmptyString);
   yield put(setBookData(books));
 
   // TODO: LRU버그로 인해 주석처리
