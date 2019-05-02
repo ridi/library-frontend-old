@@ -16,7 +16,7 @@ import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } fro
 import { OrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
-import { getItems, getItemsByPage, getOptions, getSelectedBooks } from './selectors';
+import { getItems, getItemsByPage, getFilter, getOptions, getPage, getSelectedBooks } from './selectors';
 
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
@@ -40,12 +40,11 @@ function moveToFirstPage(payload) {
   Router.replace(linkProps.href, linkProps.as);
 }
 
-function* loadMainItems(action) {
+function* loadMainItemsWithPayload(payload) {
   // Clear Error
   yield put(setError(false));
 
-  const { currentPage, orderType, orderBy, categoryFilter } = action.payload;
-
+  const { currentPage, orderType, orderBy, categoryFilter, isServer } = payload;
   try {
     const [itemResponse, countResponse, categories] = yield all([
       call(fetchMainItems, orderType, orderBy, categoryFilter, currentPage),
@@ -57,8 +56,8 @@ function* loadMainItems(action) {
     if (!itemResponse.items.length && countResponse.unit_total_count) {
       // 서버 렌더링에서는 바로 리디렉트하기 까다로우므로 로딩 표시를 띄워놓는
       // 것으로 대체
-      if (!action.payload.isServer) {
-        moveToFirstPage(action.payload);
+      if (!isServer) {
+        moveToFirstPage(payload);
       }
       // 이대로 리턴하면 로딩 표시가 남는다
       return;
@@ -80,6 +79,10 @@ function* loadMainItems(action) {
     yield put(setError(true));
   }
   yield put(setIsFetchingBooks(false));
+}
+
+function* loadMainItems(action) {
+  yield call(loadMainItemsWithPayload, action.payload);
 }
 
 function* hideSelectedBooks() {
@@ -113,7 +116,9 @@ function* hideSelectedBooks() {
   }
 
   if (isFinish) {
-    yield call(loadMainItems);
+    const currentPage = yield select(getPage);
+    const categoryFilter = yield select(getFilter);
+    yield call(loadMainItemsWithPayload, { currentPage, orderType, orderBy, categoryFilter, isServer: false });
   }
 
   yield all([
