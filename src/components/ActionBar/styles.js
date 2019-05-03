@@ -1,5 +1,7 @@
 import { ButtonType } from './constants';
 
+export const ACTION_BAR_HEIGHT = 51;
+
 export const actionBarFixedWrapper = {
   position: 'fixed',
   bottom: 0,
@@ -13,7 +15,7 @@ export const actionBarFixedWrapper = {
 
 export const actionBar = {
   display: 'flex',
-  height: 50,
+  height: `${ACTION_BAR_HEIGHT - 1}px`,
 };
 
 export const actionButton = disable => {

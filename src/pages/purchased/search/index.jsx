@@ -4,16 +4,19 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Books } from '../../../components/Books';
+import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
+import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
+import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import { getBooks, getUnits } from '../../../services/book/selectors';
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import {
   changeSearchKeyword,
   clearSelectedBooks,
@@ -29,9 +32,10 @@ import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
-import { BookError } from '../../../components/Error';
 
-import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
+const paddingForPagination = {
+  paddingBottom: ACTION_BAR_HEIGHT,
+};
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -209,7 +213,11 @@ class Search extends React.Component {
       return <EmptyBookList IconComponent={SearchIcon} iconWidth={38} message={message} />;
     }
 
-    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
+    return (
+      <div css={paddingForPagination}>
+        <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
+      </div>
+    );
   }
 
   render() {

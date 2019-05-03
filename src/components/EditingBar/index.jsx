@@ -1,9 +1,7 @@
 /** @jsx jsx */
-import React from 'react';
 import { jsx } from '@emotion/core';
-import Check from '../../svgs/Check.svg';
 import Responsive from '../../pages/base/Responsive';
-
+import Check from '../../svgs/Check.svg';
 import * as styles from './styles';
 
 const EditingBar = ({ totalSelectedCount, isSelectedAllBooks, onClickSelectAllBooks, onClickUnselectAllBooks, onClickSuccessButton }) => (
