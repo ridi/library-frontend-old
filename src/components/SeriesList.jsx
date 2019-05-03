@@ -16,9 +16,10 @@ import HorizontalRuler from './HorizontalRuler';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
+import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 
 const seriesListStyle = {
-  paddingBottom: 51, // 하단 툴바의 사이즈 만큼 준다.
+  paddingBottom: ACTION_BAR_HEIGHT,
 };
 
 class SeriesList extends React.Component {
@@ -57,7 +58,7 @@ class SeriesList extends React.Component {
   makeEditingBarProps() {
     const { items, selectedBooks, onClickSelectAllBooks, onClickUnselectAllBooks } = this.props;
     const totalSelectedCount = Object.keys(selectedBooks).length;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const isSelectedAllBooks = totalSelectedCount === items.filter(item => item.purchased).length;
 
     return {
       totalSelectedCount,
@@ -219,4 +220,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(SeriesList);
-``;
