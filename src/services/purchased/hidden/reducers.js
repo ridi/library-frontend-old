@@ -1,74 +1,30 @@
-import { initialState } from './state';
-import {
-  SET_HIDDEN_ITEMS,
-  SET_HIDDEN_TOTAL_COUNT,
-  SET_HIDDEN_PAGE,
-  CLEAR_SELECTED_HIDDEN_BOOKS,
-  TOGGLE_SELECT_HIDDEN_BOOK,
-  SELECT_HIDDEN_BOOKS,
-  SET_HIDDEN_IS_FETCHING_BOOKS,
-} from './actions';
-
+import produce from 'immer';
 import { toDict, toFlatten } from '../../../utils/array';
+import { SET_HIDDEN_ITEMS, SET_HIDDEN_TOTAL_COUNT, SET_HIDDEN_PAGE, SET_HIDDEN_IS_FETCHING_BOOKS } from './actions';
+import { initialState } from './state';
 
-const purchasedHiddenReducer = (state = initialState, action) => {
+const purchasedHiddenReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_HIDDEN_ITEMS:
-      return {
-        ...state,
-        items: {
-          ...state.items,
-          ...toDict(action.payload.items, 'b_id'),
-        },
-        itemIdsForPage: {
-          ...state.itemIdsForPage,
-          [state.page]: toFlatten(action.payload.items, 'b_id'),
-        },
+      draft.items = {
+        ...draft.items,
+        ...toDict(action.payload.items, 'b_id'),
       };
+      draft.itemIdsForPage[draft.page] = toFlatten(action.payload.items, 'b_id');
+      break;
     case SET_HIDDEN_TOTAL_COUNT:
-      return {
-        ...state,
-        unitTotalCount: action.payload.unitTotalCount,
-        itemTotalCount: action.payload.itemTotalCount,
-      };
+      draft.unitTotalCount = action.payload.unitTotalCount;
+      draft.itemTotalCount = action.payload.itemTotalCount;
+      break;
     case SET_HIDDEN_PAGE:
-      return {
-        ...state,
-        page: action.payload.page,
-      };
-    case CLEAR_SELECTED_HIDDEN_BOOKS:
-      return {
-        ...state,
-        selectedBooks: {},
-      };
-    case TOGGLE_SELECT_HIDDEN_BOOK:
-      const { selectedBooks } = state;
-      if (selectedBooks[action.payload.bookId]) {
-        delete selectedBooks[action.payload.bookId];
-      } else {
-        selectedBooks[action.payload.bookId] = 1;
-      }
-
-      return {
-        ...state,
-        selectedBooks,
-      };
-    case SELECT_HIDDEN_BOOKS:
-      return {
-        ...state,
-        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
-          previous[bookId] = 1;
-          return previous;
-        }, {}),
-      };
+      draft.page = action.payload.page;
+      break;
     case SET_HIDDEN_IS_FETCHING_BOOKS:
-      return {
-        ...state,
-        isFetchingBooks: action.payload.isFetchingBooks,
-      };
+      draft.isFetchingBooks = action.payload.isFetchingBooks;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default purchasedHiddenReducer;

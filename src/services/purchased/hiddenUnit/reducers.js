@@ -1,110 +1,46 @@
-import { initialState, getKey, initialDataState } from './state';
-
+import produce from 'immer';
+import { toDict, toFlatten } from '../../../utils/array';
 import {
-  CLEAR_SELECTED_HIDDEN_UNIT_BOOKS,
   SET_HIDDEN_UNIT_ID,
   SET_HIDDEN_UNIT_ITEMS,
   SET_HIDDEN_UNIT_PAGE,
-  SET_HIDDEN_UNIT_TOTAL_COUNT,
-  SELECT_HIDDEN_UNIT_BOOKS,
-  TOGGLE_SELECT_HIDDEN_UNIT_BOOK,
-  SET_IS_FETCHING_HIDDEN_BOOK,
   SET_HIDDEN_UNIT_PRIMARY_ITEM,
+  SET_HIDDEN_UNIT_TOTAL_COUNT,
+  SET_IS_FETCHING_HIDDEN_BOOK,
 } from './actions';
-import { toDict, toFlatten } from '../../../utils/array';
+import { getKey, initialDataState, initialState } from './state';
 
-const hiddenUnitReducer = (state = initialState, action) => {
-  const key = getKey(state);
-  const dataState = state.data[key] || initialDataState;
-
+const hiddenUnitReducer = produce((draft, action) => {
+  const key = getKey(draft);
+  if (draft.data[key] == null) {
+    draft.data[key] = { ...initialDataState };
+  }
   switch (action.type) {
     case SET_HIDDEN_UNIT_ITEMS:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            items: {
-              ...dataState.items,
-              ...toDict(action.payload.items, 'b_id'),
-            },
-            itemIdsForPage: {
-              ...dataState.itemIdsForPage,
-              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
-            },
-          },
-        },
+      draft.data[key].items = {
+        ...draft.data[key].items,
+        ...toDict(action.payload.items, 'b_id'),
       };
+      draft.data[key].itemIdsForPage[draft.data[key].page] = toFlatten(action.payload.items, 'b_id');
+      break;
     case SET_HIDDEN_UNIT_TOTAL_COUNT:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            itemTotalCount: action.payload.itemTotalCount,
-          },
-        },
-      };
+      draft.data[key].itemTotalCount = action.payload.itemTotalCount;
+      break;
     case SET_HIDDEN_UNIT_PAGE:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            page: action.payload.page,
-          },
-        },
-      };
-
+      draft.data[key].page = action.payload.page;
+      break;
     case SET_HIDDEN_UNIT_PRIMARY_ITEM:
-      return {
-        ...state,
-        primaryItems: {
-          ...state.primaryItems,
-          [state.unitId]: action.payload.primaryItem,
-        },
-      };
+      draft.primaryItems[draft.unitId] = action.payload.primaryItem;
+      break;
     case SET_HIDDEN_UNIT_ID:
-      return {
-        ...state,
-        unitId: action.payload.unitId,
-      };
-    case CLEAR_SELECTED_HIDDEN_UNIT_BOOKS:
-      return {
-        ...state,
-        selectedBooks: {},
-      };
-    case TOGGLE_SELECT_HIDDEN_UNIT_BOOK:
-      const { selectedBooks } = state;
-      if (selectedBooks[action.payload.bookId]) {
-        delete selectedBooks[action.payload.bookId];
-      } else {
-        selectedBooks[action.payload.bookId] = 1;
-      }
-
-      return {
-        ...state,
-        selectedBooks,
-      };
-    case SELECT_HIDDEN_UNIT_BOOKS:
-      return {
-        ...state,
-        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
-          previous[bookId] = 1;
-          return previous;
-        }, {}),
-      };
+      draft.unitId = action.payload.unitId;
+      break;
     case SET_IS_FETCHING_HIDDEN_BOOK:
-      return {
-        ...state,
-        isFetchingBook: action.payload.isFetchingBook,
-      };
+      draft.isFetchingBook = action.payload.isFetchingBook;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default hiddenUnitReducer;

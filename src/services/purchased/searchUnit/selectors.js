@@ -75,11 +75,6 @@ export const getOptions = createSelector(
   }),
 );
 
-export const getSelectedBooks = createSelector(
-  getState,
-  state => state.selectedBooks,
-);
-
 export const getTotalCount = createSelector(
   getDataState,
   dataState => ({ itemTotalCount: dataState.itemTotalCount, purchasedTotalCount: dataState.purchasedTotalCount }),

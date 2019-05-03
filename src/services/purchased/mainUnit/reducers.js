@@ -1,127 +1,52 @@
-import { initialState, initialDataState, getKey } from './state';
-
+import produce from 'immer';
+import { toDict, toFlatten } from '../../../utils/array';
 import {
-  CLEAR_SELECTED_MAIN_UNIT_BOOKS,
   SET_MAIN_UNIT_ID,
   SET_MAIN_UNIT_ITEMS,
   SET_MAIN_UNIT_ORDER,
   SET_MAIN_UNIT_PAGE,
   SET_MAIN_UNIT_TOTAL_COUNT,
-  SELECT_MAIN_UNIT_BOOKS,
-  TOGGLE_SELECT_MAIN_UNIT_BOOK,
   SET_IS_FETCHING_BOOK,
   SET_MAIN_UNIT_PRIMARY_ITEM,
   SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT,
 } from './actions';
-import { toDict, toFlatten } from '../../../utils/array';
+import { initialState, initialDataState, getKey } from './state';
 
-const purchasedMainUnitReducer = (state = initialState, action) => {
-  const key = getKey(state);
-  const dataState = state.data[key] || initialDataState;
+const purchasedMainUnitReducer = produce((draft, action) => {
+  const key = getKey(draft);
+  if (draft.data[key] == null) {
+    draft.data[key] = { ...initialDataState };
+  }
 
   switch (action.type) {
     case SET_MAIN_UNIT_ITEMS:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            items: {
-              ...dataState.items,
-              ...toDict(action.payload.items, 'b_id'),
-            },
-            itemIdsForPage: {
-              ...dataState.itemIdsForPage,
-              [dataState.page]: toFlatten(action.payload.items, 'b_id'),
-            },
-          },
-        },
-      };
+      draft.data[key].items = { ...draft.data[key].items, ...toDict(action.payload.items, 'b_id') };
+      draft.data[key].itemIdsForPage[draft.data[key].page] = toFlatten(action.payload.items, 'b_id');
+      break;
     case SET_MAIN_UNIT_TOTAL_COUNT:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            itemTotalCount: action.payload.itemTotalCount,
-          },
-        },
-      };
+      draft.data[key].itemTotalCount = action.payload.itemTotalCount;
+      break;
     case SET_MAIN_UNIT_PAGE:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            page: action.payload.page,
-          },
-        },
-      };
+      draft.data[key].page = action.payload.page;
+      break;
     case SET_MAIN_UNIT_PRIMARY_ITEM:
-      return {
-        ...state,
-        primaryItems: {
-          ...state.primaryItems,
-          [state.unitId]: action.payload.primaryItem,
-        },
-      };
+      draft.primaryItems[draft.unitId] = action.payload.primaryItem;
+      break;
     case SET_MAIN_UNIT_PURCHASED_TOTAL_COUNT:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            purchasedTotalCount: action.payload.purchasedTotalCount,
-          },
-        },
-      };
+      draft.data[key].purchasedTotalCount = action.payload.purchasedTotalCount;
+      break;
     case SET_MAIN_UNIT_ID:
-      return {
-        ...state,
-        unitId: action.payload.unitId,
-      };
+      draft.unitId = action.payload.unitId;
+      break;
     case SET_MAIN_UNIT_ORDER:
-      return {
-        ...state,
-        order: action.payload.order,
-      };
-    case CLEAR_SELECTED_MAIN_UNIT_BOOKS:
-      return {
-        ...state,
-        selectedBooks: {},
-      };
-    case TOGGLE_SELECT_MAIN_UNIT_BOOK:
-      const { selectedBooks } = state;
-      if (selectedBooks[action.payload.bookId]) {
-        delete selectedBooks[action.payload.bookId];
-      } else {
-        selectedBooks[action.payload.bookId] = 1;
-      }
-
-      return {
-        ...state,
-        selectedBooks,
-      };
-    case SELECT_MAIN_UNIT_BOOKS:
-      return {
-        ...state,
-        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
-          previous[bookId] = 1;
-          return previous;
-        }, {}),
-      };
+      draft.order = action.payload.order;
+      break;
     case SET_IS_FETCHING_BOOK:
-      return {
-        ...state,
-        isFetchingBook: action.payload.isFetchingBook,
-      };
+      draft.isFetchingBook = action.payload.isFetchingBook;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default purchasedMainUnitReducer;

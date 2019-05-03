@@ -3,11 +3,7 @@ export const LOAD_MAIN_ITEMS = 'LOAD_MAIN_ITEMS';
 export const UPDATE_MAIN_ITEMS = 'UPDATE_MAIN_ITEMS';
 export const UPDATE_MAIN_OPTIONS = 'UPDATE_MAIN_OPTIONS';
 
-export const SELECT_MAIN_BOOKS = 'SELECT_MAIN_BOOKS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
-export const TOGGLE_SELECT_MAIN_BOOK = 'TOGGLE_SELECT_MAIN_BOOK';
-export const CLEAR_SELECTED_MAIN_BOOKS = 'CLEAR_SELECTED_MAIN_BOOKS';
-
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
@@ -31,26 +27,8 @@ export const updateItems = ({ items, unitTotalCount, itemTotalCount, filterOptio
   },
 });
 
-export const selectBooks = bookIds => ({
-  type: SELECT_MAIN_BOOKS,
-  payload: {
-    bookIds,
-  },
-});
-
 export const selectAllBooks = () => ({
   type: SELECT_ALL_MAIN_BOOKS,
-});
-
-export const toggleSelectBook = bookId => ({
-  type: TOGGLE_SELECT_MAIN_BOOK,
-  payload: {
-    bookId,
-  },
-});
-
-export const clearSelectedBooks = () => ({
-  type: CLEAR_SELECTED_MAIN_BOOKS,
 });
 
 export const hideSelectedBooks = () => ({

@@ -7,11 +7,7 @@ export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE';
 export const SET_SEARCH_KEYWORD = 'SET_SEARCH_KEYWORD';
 export const CHANGE_SEARCH_KEYWORD = 'CHANGE_SEARCH_KEYWORD';
 
-export const SELECT_SEARCH_BOOKS = 'SELECT_SEARCH_BOOKS';
 export const SELECT_ALL_SEARCH_BOOKS = 'SELECT_ALL_SEARCH_BOOKS';
-export const TOGGLE_SELECT_SEARCH_BOOK = 'TOGGLE_SELECT_SEARCH_BOOK';
-export const CLEAR_SELECTED_SEARCH_BOOKS = 'CLEAR_SELECTED_SEARCH_BOOKS';
-
 export const HIDE_SELECTED_SEARCH_BOOKS = 'HIDE_SELECTED_SEARCH_BOOKS';
 export const DOWNLOAD_SELECTED_SEARCH_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_BOOKS';
 
@@ -57,26 +53,8 @@ export const changeSearchKeyword = keyword => ({
   },
 });
 
-export const setSelectBooks = bookIds => ({
-  type: SELECT_SEARCH_BOOKS,
-  payload: {
-    bookIds,
-  },
-});
-
 export const selectAllBooks = () => ({
   type: SELECT_ALL_SEARCH_BOOKS,
-});
-
-export const toggleSelectBook = bookId => ({
-  type: TOGGLE_SELECT_SEARCH_BOOK,
-  payload: {
-    bookId,
-  },
-});
-
-export const clearSelectedBooks = () => ({
-  type: CLEAR_SELECTED_SEARCH_BOOKS,
 });
 
 export const hideSelectedBooks = () => ({

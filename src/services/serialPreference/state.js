@@ -4,7 +4,6 @@ export const initialState = {
   data: {},
   unitIdMap: {},
 
-  selectedBooks: {},
   isFetchingBooks: false,
 };
 

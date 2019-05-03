@@ -1,28 +1,24 @@
+import produce from 'immer';
+import settings from '../../utils/settings';
 import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
 import { initialState } from './state';
-import settings from '../../utils/settings';
 
-const uiReducer = (state = initialState, action) => {
+const uiReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_FULL_SCREEN_LOADING:
-      return {
-        ...state,
-        fullScreenLoading: action.payload.isLoading,
-      };
+      draft.fullScreenLoading = action.payload.isLoading;
+      break;
     case SET_VIEW_TYPE:
+      // TODO: 사이드이펙트 없애기
       settings.viewType = action.payload.viewType;
-      return {
-        ...state,
-        viewType: action.payload.viewType,
-      };
+      draft.viewType = action.payload.viewType;
+      break;
     case SET_IS_ERROR:
-      return {
-        ...state,
-        isError: action.payload.isError,
-      };
+      draft.isError = action.payload.isError;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default uiReducer;

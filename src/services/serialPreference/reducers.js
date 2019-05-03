@@ -1,104 +1,45 @@
-import { initialState, initialDataState, getKey } from './state';
-
+import produce from 'immer';
+import { toDict, toFlatten } from '../../utils/array';
 import {
-  CLEAR_SELECTED_SERIAL_PREFERENCE_BOOKS,
+  SET_IS_FETCHING_BOOKS,
   SET_SERIAL_PREFERENCE_ITEMS,
   SET_SERIAL_PREFERENCE_PAGE,
   SET_SERIAL_PREFERENCE_TOTAL_COUNT,
-  SELECT_SERIAL_PREFERENCE_BOOKS,
-  TOGGLE_SELECT_SERIAL_PREFERENCE_BOOK,
-  SET_IS_FETCHING_BOOKS,
   SET_SERIAL_UNIT_ID_MAP,
 } from './actions';
+import { getKey, initialDataState, initialState } from './state';
 
-import { toDict, toFlatten } from '../../utils/array';
-
-const serialPreferenceReducer = (state = initialState, action) => {
-  const key = getKey(state);
-  const dataState = state.data[key] || initialDataState;
-
+const serialPreferenceReducer = produce((draft, action) => {
+  const key = getKey(draft);
+  if (draft.data[key] == null) {
+    draft.data[key] = { ...initialDataState };
+  }
   switch (action.type) {
     case SET_SERIAL_PREFERENCE_ITEMS:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            items: {
-              ...dataState.items,
-              ...toDict(action.payload.items, 'series_id'),
-            },
-            itemIdsForPage: {
-              ...dataState.itemIdsForPage,
-              [dataState.page]: toFlatten(action.payload.items, 'series_id'),
-            },
-          },
-        },
+      draft.data[key].items = {
+        ...draft.data[key].items,
+        ...toDict(action.payload.items, 'series_id'),
       };
+      draft.data[key].itemIdsForPage[draft.data[key].page] = toFlatten(action.payload.items, 'series_id');
+      break;
     case SET_SERIAL_PREFERENCE_TOTAL_COUNT:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            totalCount: action.payload.totalCount,
-          },
-        },
-      };
+      draft.data[key].totalCount = action.payload.totalCount;
+      break;
     case SET_SERIAL_PREFERENCE_PAGE:
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [key]: {
-            ...dataState,
-            page: action.payload.page,
-          },
-        },
-      };
+      draft.data[key].page = action.payload.page;
+      break;
     case SET_SERIAL_UNIT_ID_MAP:
-      return {
-        ...state,
-        unitIdMap: {
-          ...state.unitIdMap,
-          ...action.payload.unitIdMap,
-        },
+      draft.unitIdMap = {
+        ...draft.unitIdMap,
+        ...action.payload.unitIdMap,
       };
-    case CLEAR_SELECTED_SERIAL_PREFERENCE_BOOKS:
-      return {
-        ...state,
-        selectedBooks: {},
-      };
-    case TOGGLE_SELECT_SERIAL_PREFERENCE_BOOK:
-      const { selectedBooks } = state;
-      if (selectedBooks[action.payload.bookId]) {
-        delete selectedBooks[action.payload.bookId];
-      } else {
-        selectedBooks[action.payload.bookId] = 1;
-      }
-
-      return {
-        ...state,
-        selectedBooks,
-      };
-    case SELECT_SERIAL_PREFERENCE_BOOKS:
-      return {
-        ...state,
-        selectedBooks: action.payload.bookIds.reduce((previous, bookId) => {
-          previous[bookId] = 1;
-          return previous;
-        }, {}),
-      };
+      break;
     case SET_IS_FETCHING_BOOKS:
-      return {
-        ...state,
-        isFetchingBooks: action.payload.isFetchingBooks,
-      };
+      draft.isFetchingBooks = action.payload.isFetchingBooks;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default serialPreferenceReducer;

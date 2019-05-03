@@ -13,7 +13,6 @@ import {
   DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS,
   LOAD_SERIAL_PREFERENCE_ITEMS,
   SELECT_ALL_SERIAL_PREFERENCE_BOOKS,
-  selectBooks,
   setIsFetchingBooks,
   setItems,
   setPage,
@@ -21,7 +20,9 @@ import {
   setSerialUnitIdMap,
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
-import { getItemsByPage, getOptions, getSelectedBooks } from './selectors';
+import { getItemsByPage, getOptions } from './selectors';
+import { selectBooks } from '../selection/actions';
+import { getSelectedBooks } from '../selection/selectors';
 import { fetchUnitIdMap } from '../book/requests';
 
 function* persistPageOptionsFromQueries() {

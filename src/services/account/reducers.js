@@ -1,15 +1,16 @@
+import produce from 'immer';
 import { SET_USER_INFO } from './actions';
 
-const accountReducer = (state = {}, action) => {
+const initialState = {};
+
+const accountReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_USER_INFO:
-      return {
-        ...state,
-        userInfo: action.payload.userInfo,
-      };
+      draft.userInfo = action.payload.userInfo;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default accountReducer;

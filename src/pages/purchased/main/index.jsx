@@ -17,14 +17,8 @@ import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
-import {
-  clearSelectedBooks,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  loadItems,
-  selectAllBooks,
-  toggleSelectBook,
-} from '../../../services/purchased/main/actions';
+import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
+import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
 import {
   getFilterOptions,
   getIsFetchingBooks,
@@ -36,8 +30,8 @@ import {
   getOrder,
   getFilter,
   getTotalPages,
-  getSelectedBooks,
 } from '../../../services/purchased/main/selectors';
+import { getSelectedBooks } from '../../../services/selection/selectors';
 import { Duration, ToastStyle } from '../../../services/toast/constants';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
@@ -324,7 +318,7 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

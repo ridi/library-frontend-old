@@ -1,36 +1,34 @@
 import Router from 'next/router';
-import { all, fork, call, select, put, takeEvery } from 'redux-saga/effects';
-
-import { getQuery } from '../../router/selectors';
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
-import { makeURI, makeLinkProps } from '../../../utils/uri';
-
+import { makeLinkProps } from '../../../utils/uri';
+import { loadBookData, loadUnitData } from '../../book/sagas';
+import { downloadBooks } from '../../bookDownload/sagas';
+import { MakeBookIdsError } from '../../common/errors';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
+import { getBookIdsByItems } from '../../common/sagas';
+import { showDialog } from '../../dialog/actions';
+import { getQuery } from '../../router/selectors';
+import { selectBooks } from '../../selection/actions';
+import { getSelectedBooks } from '../../selection/selectors';
+import { showToast } from '../../toast/actions';
+import { setError, setFullScreenLoading } from '../../ui/actions';
+import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
 import {
-  LOAD_SEARCH_ITEMS,
   CHANGE_SEARCH_KEYWORD,
-  HIDE_SELECTED_SEARCH_BOOKS,
   DOWNLOAD_SELECTED_SEARCH_BOOKS,
+  HIDE_SELECTED_SEARCH_BOOKS,
+  LOAD_SEARCH_ITEMS,
   SELECT_ALL_SEARCH_BOOKS,
+  setItems,
   setPage,
+  setSearchIsFetchingBooks,
   setSearchKeyword,
   setTotalCount,
-  setItems,
-  setSelectBooks,
-  setSearchIsFetchingBooks,
 } from './actions';
-import { showToast } from '../../toast/actions';
-import { getItemsByPage, getOptions, getSelectedBooks, getItems } from './selectors';
-
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getRevision, requestHide, requestCheckQueueStatus } from '../../common/requests';
-import { getBookIdsByItems } from '../../common/sagas';
-import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
-import { downloadBooks } from '../../bookDownload/sagas';
-import { loadBookData, loadUnitData } from '../../book/sagas';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { URLMap } from '../../../constants/urls';
-import { MakeBookIdsError } from '../../common/errors';
-import { showDialog } from '../../dialog/actions';
+import { getItems, getItemsByPage, getOptions } from './selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -100,8 +98,8 @@ function* hideSelectedBooks() {
 
   let queueIds;
   try {
-    const revision = yield call(getRevision);
     const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks));
+    const revision = yield call(getRevision);
     queueIds = yield call(requestHide, bookIds, revision);
   } catch (err) {
     let message = '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
@@ -155,7 +153,7 @@ function* downloadSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(setSelectBooks(bookIds));
+  yield put(selectBooks(bookIds));
 }
 
 export default function* purchasedSearchRootSaga() {

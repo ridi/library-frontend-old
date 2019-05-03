@@ -1,13 +1,15 @@
+import produce from 'immer';
 import { SET_BOOK_DOWNLOAD_SRC } from './actions';
 import { initialState } from './state';
 
-const bookDownloadReducer = (state = initialState, action) => {
+const bookDownloadReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_BOOK_DOWNLOAD_SRC:
-      return { ...state, src: action.payload.src };
+      draft.src = action.payload.src;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default bookDownloadReducer;

@@ -8,10 +8,6 @@ export const SET_SEARCH_UNIT_ORDER = 'SET_SEARCH_UNIT_ORDER';
 export const SET_SEARCH_UNIT_KEYWORD = 'SET_SEARCH_UNIT_KEYWORD';
 
 export const SELECT_ALL_SEARCH_UNIT_BOOKS = 'SELECT_ALL_SEARCH_UNIT_BOOKS ';
-export const CLEAR_SELECTED_SEARCH_UNIT_BOOKS = 'CLEAR_SELECTED_SEARCH_UNIT_BOOKS';
-export const TOGGLE_SELECT_SEARCH_UNIT_BOOK = 'TOGGLE_SELECT_SEARCH_UNIT_BOOK';
-export const SET_SELECT_SEARCH_UNIT_BOOKS = 'SET_SELECT_SEARCH_UNIT_BOOKS';
-
 export const HIDE_SELECTED_SEARCH_UNIT_BOOKS = 'HIDE_SELECTED_SEARCH_UNIT_BOOKS';
 export const DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_UNIT_BOOKS';
 
@@ -66,26 +62,8 @@ export const setKeyword = keyword => ({
   },
 });
 
-export const selectBooks = bookIds => ({
-  type: SET_SELECT_SEARCH_UNIT_BOOKS,
-  payload: {
-    bookIds,
-  },
-});
-
 export const selectAllBooks = () => ({
   type: SELECT_ALL_SEARCH_UNIT_BOOKS,
-});
-
-export const toggleSelectBook = bookId => ({
-  type: TOGGLE_SELECT_SEARCH_UNIT_BOOK,
-  payload: {
-    bookId,
-  },
-});
-
-export const clearSelectedBooks = () => ({
-  type: CLEAR_SELECTED_SEARCH_UNIT_BOOKS,
 });
 
 export const hideSelectedBooks = () => ({

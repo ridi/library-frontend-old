@@ -14,6 +14,7 @@ import purchasedMainUnitReducer from '../services/purchased/mainUnit/reducers';
 import purchasedSearchReducer from '../services/purchased/search/reducers';
 import purchasedSearchUnitReducer from '../services/purchased/searchUnit/reducers';
 import routerReducer from '../services/router/reducers';
+import selectionReducer from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
 import toastReducer from '../services/toast/reducers';
 import uiReducer from '../services/ui/reducers';
@@ -21,6 +22,7 @@ import uiReducer from '../services/ui/reducers';
 export default combineReducers({
   account: accountReducer,
   books: bookReducer,
+  selection: selectionReducer,
 
   purchasedCommon: purchasedCommonReducer,
   purchasedMain: purchasedMainReducer,
