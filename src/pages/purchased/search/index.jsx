@@ -19,14 +19,14 @@ import { getBooks, getUnits } from '../../../services/book/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import {
   changeSearchKeyword,
-  clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
   loadItems,
   selectAllBooks,
-  toggleSelectBook,
 } from '../../../services/purchased/search/actions';
-import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo, getSelectedBooks } from '../../../services/purchased/search/selectors';
+import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
+import { getSelectedBooks } from '../../../services/selection/selectors';
 import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -283,7 +283,7 @@ const mapDispatchToProps = {
   dispatchChangeSearchKeyword: changeSearchKeyword,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

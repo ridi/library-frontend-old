@@ -13,21 +13,10 @@ import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
-import {
-  clearSelectedBooks,
-  deleteSelectedBooks,
-  loadItems,
-  selectAllBooks,
-  toggleSelectBook,
-} from '../../services/serialPreference/actions';
-import {
-  getIsFetchingBooks,
-  getItemsByPage,
-  getPageInfo,
-  getSelectedBooks,
-  getTotalCount,
-  getUnitIdsMap,
-} from '../../services/serialPreference/selectors';
+import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
+import { clearSelectedBooks, toggleBook } from '../../services/selection/actions';
+import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
+import { getSelectedBooks } from '../../services/selection/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
 import Footer from '../base/Footer';
@@ -211,7 +200,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 

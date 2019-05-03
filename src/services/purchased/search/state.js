@@ -4,7 +4,6 @@ export const initialState = {
   keyword: null,
   data: {},
 
-  selectedBooks: {},
   isFetchingBooks: false,
 };
 

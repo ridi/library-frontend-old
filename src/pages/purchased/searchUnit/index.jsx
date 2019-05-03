@@ -6,23 +6,22 @@ import { URLMap, PageType } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import {
-  clearSelectedBooks,
   downloadSelectedBooks,
   hideSelectedBooks,
   loadItems,
   selectAllBooks,
   setUnitId,
-  toggleSelectBook,
 } from '../../../services/purchased/searchUnit/actions';
+import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
 import {
   getIsFetchingBook,
   getItemsByPage,
   getPageInfo,
-  getSelectedBooks,
   getTotalCount,
   getUnitId,
   getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
+import { getSelectedBooks } from '../../../services/selection/selectors';
 import { toFlatten } from '../../../utils/array';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 import UnitPageTemplate from '../../base/UnitPageTemplate';
@@ -81,7 +80,7 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

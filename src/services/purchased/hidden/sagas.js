@@ -9,17 +9,18 @@ import {
   setItems,
   setPage,
   setTotalCount,
-  selectBooks,
   setHiddenIsFetchingBooks,
 } from './actions';
 import { getQuery } from '../../router/selectors';
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { toFlatten } from '../../../utils/array';
-import { getOptions, getItems, getItemsByPage, getSelectedBooks } from './selectors';
+import { getOptions, getItems, getItemsByPage } from './selectors';
+import { getSelectedBooks } from '../../selection/selectors';
 
 import { getRevision, requestUnhide, requestCheckQueueStatus, requestDelete } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
+import { selectBooks } from '../../selection/actions';
 import { showToast } from '../../toast/actions';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';

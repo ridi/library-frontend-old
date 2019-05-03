@@ -17,7 +17,6 @@ export const initialState = {
   order: OrderOptions.PURCHASE_DATE.key,
   data: {},
 
-  selectedBooks: {},
   isFetchingBooks: false,
 };
 

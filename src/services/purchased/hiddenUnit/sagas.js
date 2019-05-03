@@ -8,7 +8,6 @@ import {
   setItems,
   setPage,
   setTotalCount,
-  selectBooks,
   UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
   setIsFetchingHiddenBook,
   setHiddenUnitPrimaryItem,
@@ -16,12 +15,14 @@ import {
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount, getHiddenUnitPrimaryItem } from './requests';
 
 import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
-import { getOptions, getUnitId, getItemsByPage, getSelectedBooks, getPrimaryItem } from './selectors';
+import { getOptions, getUnitId, getItemsByPage, getPrimaryItem } from './selectors';
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
+import { selectBooks } from '../../selection/actions';
 import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
+import { getSelectedBooks } from '../../selection/selectors';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';

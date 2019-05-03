@@ -23,7 +23,6 @@ import {
   HIDE_SELECTED_MAIN_UNIT_BOOKS,
   LOAD_MAIN_UNIT_ITEMS,
   SELECT_ALL_MAIN_UNIT_BOOKS,
-  selectBooks,
   setIsFetchingBook,
   setItems,
   setOrder,
@@ -33,9 +32,11 @@ import {
   setTotalCount,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
-import { getItemsByPage, getOptions, getPrimaryItem, getSelectedBooks, getUnitId } from './selectors';
+import { getItemsByPage, getOptions, getPrimaryItem, getUnitId } from './selectors';
 import { fetchPrimaryBookId } from '../../book/requests';
 import { setPrimaryBookId } from '../common/actions';
+import { selectBooks } from '../../selection/actions';
+import { getSelectedBooks } from '../../selection/selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

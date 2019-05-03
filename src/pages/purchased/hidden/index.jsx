@@ -14,21 +14,10 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnits } from '../../../services/book/selectors';
-import {
-  clearSelectedBooks,
-  deleteSelectedBooks,
-  loadItems,
-  selectAllBooks,
-  toggleSelectBook,
-  unhideSelectedBooks,
-} from '../../../services/purchased/hidden/actions';
-import {
-  getIsFetchingBooks,
-  getItemsByPage,
-  getPageInfo,
-  getSelectedBooks,
-  getTotalCount,
-} from '../../../services/purchased/hidden/selectors';
+import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
+import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount } from '../../../services/purchased/hidden/selectors';
+import { getSelectedBooks } from '../../../services/selection/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
@@ -267,7 +256,7 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

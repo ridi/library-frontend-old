@@ -8,23 +8,22 @@ import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getPageInfo as getHiddenPageInfo } from '../../../services/purchased/hidden/selectors';
 import {
-  clearSelectedBooks,
   deleteSelectedBooks,
   loadItems,
   selectAllBooks,
   setUnitId,
-  toggleSelectBook,
   unhideSelectedBooks,
 } from '../../../services/purchased/hiddenUnit/actions';
+import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
 import {
   getIsFetchingBook,
   getItemsByPage,
   getPageInfo,
-  getSelectedBooks,
   getTotalCount,
   getUnitId,
   getPrimaryItem,
 } from '../../../services/purchased/hiddenUnit/selectors';
+import { getSelectedBooks } from '../../../services/selection/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
@@ -239,7 +238,7 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleSelectBook,
+  dispatchToggleSelectBook: toggleBook,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

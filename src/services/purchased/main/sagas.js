@@ -7,16 +7,17 @@ import {
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
   updateItems,
-  selectBooks,
   setIsFetchingBooks,
 } from './actions';
+import { selectBooks } from '../../selection/actions';
 import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
 
 import { OrderOptions } from '../../../constants/orderOptions';
 import { toFlatten } from '../../../utils/array';
 
-import { getItems, getItemsByPage, getFilter, getOptions, getPage, getSelectedBooks } from './selectors';
+import { getItems, getItemsByPage, getFilter, getOptions, getPage } from './selectors';
+import { getSelectedBooks } from '../../selection/selectors';
 
 import { loadBookData, loadUnitData } from '../../book/sagas';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';

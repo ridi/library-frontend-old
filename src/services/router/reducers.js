@@ -1,4 +1,5 @@
-import { SET_LOCATION, COMMIT_LOCATION, ROLLBACK_LOCATION } from './actions';
+import produce from 'immer';
+import { COMMIT_LOCATION, ROLLBACK_LOCATION, SET_LOCATION } from './actions';
 
 const initialState = {
   beforeLocation: null,
@@ -7,26 +8,22 @@ const initialState = {
   },
 };
 
-const routerReducer = (state = initialState, action) => {
+const routerReducer = produce((draft, action) => {
   switch (action.type) {
     case SET_LOCATION:
-      return {
-        beforeLocation: state.location,
-        location: action.payload.location,
-      };
+      draft.beforeLocation = draft.location;
+      draft.location = action.payload.location;
+      break;
     case COMMIT_LOCATION:
-      return {
-        ...state,
-        beforeLocation: null,
-      };
+      draft.beforeLocation = null;
+      break;
     case ROLLBACK_LOCATION:
-      return {
-        beforeLocation: null,
-        location: state.beforeLocation,
-      };
+      draft.beforeLocation = null;
+      draft.location = draft.beforeLocation;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default routerReducer;

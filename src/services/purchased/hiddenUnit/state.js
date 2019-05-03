@@ -2,7 +2,6 @@ export const initialState = {
   unitId: null,
   data: {},
   primaryItems: {},
-  selectedBooks: {},
   isFetchingBook: false,
 };
 
