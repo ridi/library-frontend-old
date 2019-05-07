@@ -4,6 +4,7 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import * as styles from '../../styles/books';
@@ -15,6 +16,9 @@ import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import LandscapeBook from '../Skeleton/SkeletonBooks/LandscapeBook';
 import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 import { Disabled } from './Disabled';
+
+import { toggleBook } from '../../services/selection/actions';
+import { getSelectedBooks } from '../../services/selection/selectors';
 
 const toProps = ({
   bookId,
@@ -85,7 +89,18 @@ const toProps = ({
   return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);
 };
 
-export const Books = props => {
+const mapStateToProps = state => ({
+  selectedBooks: getSelectedBooks(state),
+});
+
+const mapDispatchToProps = {
+  onSelectedChange: toggleBook,
+};
+
+export const Books = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(props => {
   const isLoaded = true;
   const {
     libraryBookDTO,
@@ -179,4 +194,4 @@ export const Books = props => {
       }}
     </BooksWrapper>
   );
-};
+});

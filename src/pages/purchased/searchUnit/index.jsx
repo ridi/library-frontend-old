@@ -12,7 +12,7 @@ import {
   selectAllBooks,
   setUnitId,
 } from '../../../services/purchased/searchUnit/actions';
-import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { clearSelectedBooks } from '../../../services/selection/actions';
 import {
   getIsFetchingBook,
   getItemsByPage,
@@ -21,7 +21,6 @@ import {
   getUnitId,
   getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
-import { getSelectedBooks } from '../../../services/selection/selectors';
 import { toFlatten } from '../../../utils/array';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 import UnitPageTemplate from '../../base/UnitPageTemplate';
@@ -49,7 +48,6 @@ const mapStateToProps = state => {
   const bookDescription = getBookDescription(state, primaryBookId);
   const bookStarRating = getBookStarRating(state, primaryBookId);
 
-  const selectedBooks = getSelectedBooks(state);
   const totalCount = getTotalCount(state);
 
   const isFetchingBook = getIsFetchingBook(state);
@@ -68,7 +66,6 @@ const mapStateToProps = state => {
     bookDescription,
     bookStarRating,
     totalCount,
-    selectedBooks,
     isFetchingBook,
 
     searchPageInfo,
@@ -80,7 +77,6 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

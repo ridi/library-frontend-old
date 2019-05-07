@@ -7,6 +7,7 @@ import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getLocationHref } from '../services/router/selectors';
+import { getTotalSelectedCount } from '../services/selection/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
 import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
@@ -56,8 +57,7 @@ class SeriesList extends React.Component {
   };
 
   makeEditingBarProps() {
-    const { items, selectedBooks, onClickSelectAllBooks, onClickUnselectAllBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.filter(item => item.purchased).length;
 
     return {
@@ -128,8 +128,6 @@ class SeriesList extends React.Component {
       primaryItem,
       items,
       books,
-      selectedBooks,
-      onSelectedChange,
       isFetching,
       unit,
       linkWebviewer,
@@ -172,10 +170,8 @@ class SeriesList extends React.Component {
       <Books
         libraryBookDTO={items}
         platformBookDTO={books}
-        selectedBooks={selectedBooks}
         isSelectMode={isEditing}
         viewType={ViewType.LANDSCAPE}
-        onSelectedChange={onSelectedChange}
         linkBuilder={linkBuilder(linkWebviewer)}
         isSeriesView={UnitType.isSeries(unit.type)}
       />
@@ -212,6 +208,7 @@ class SeriesList extends React.Component {
 
 const mapStateToProps = state => ({
   locationHref: getLocationHref(state),
+  totalSelectedCount: getTotalSelectedCount(state),
 });
 
 const mapDispatchToProps = {};

@@ -24,9 +24,9 @@ import {
   loadItems,
   selectAllBooks,
 } from '../../../services/purchased/search/actions';
-import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { clearSelectedBooks } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
-import { getSelectedBooks } from '../../../services/selection/selectors';
 import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -78,8 +78,7 @@ class Search extends React.Component {
   };
 
   makeEditingBarProps() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
@@ -92,8 +91,8 @@ class Search extends React.Component {
   }
 
   makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
+    const { totalSelectedCount } = this.props;
+    const disable = totalSelectedCount === 0;
 
     return {
       buttonProps: [
@@ -131,13 +130,10 @@ class Search extends React.Component {
       books: platformBookDTO,
       units,
       recentlyUpdatedMap,
-      selectedBooks,
-      dispatchToggleSelectBook,
       isFetchingBooks,
       viewType,
       pageInfo: { keyword },
     } = this.props;
-    const onSelectedChange = dispatchToggleSelectBook;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
@@ -168,9 +164,7 @@ class Search extends React.Component {
             libraryBookDTO,
             platformBookDTO,
             units,
-            selectedBooks,
             isSelectMode,
-            onSelectedChange,
             viewType,
             linkBuilder: linkBuilder(keyword),
           }}
@@ -259,7 +253,7 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
   const books = getBooks(state, toFlatten(items, 'b_id'));
   const units = getUnits(state, toFlatten(items, 'unit_id'));
-  const selectedBooks = getSelectedBooks(state);
+  const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
   const lastBookIds = toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true);
@@ -271,7 +265,7 @@ const mapStateToProps = state => {
     books,
     units,
     recentlyUpdatedMap,
-    selectedBooks,
+    totalSelectedCount,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,
     isError: state.ui.isError,
@@ -283,7 +277,6 @@ const mapDispatchToProps = {
   dispatchChangeSearchKeyword: changeSearchKeyword,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
