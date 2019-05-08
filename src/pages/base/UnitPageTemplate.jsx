@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
+import { connect } from 'react-redux';
 import BookDownLoader from '../../components/BookDownLoader';
 import UnitDetailView from '../../components/UnitDetailView';
 import { UnitType } from '../../constants/unitType';
@@ -11,7 +12,9 @@ import { OrderOptions } from '../../constants/orderOptions';
 import SeriesList from '../../components/SeriesList';
 import { BookError } from '../../components/Error';
 
-export default class UnitPageTemplate extends React.Component {
+import { getTotalSelectedCount } from '../../services/selection/selectors';
+
+class UnitPageTemplate extends React.Component {
   handleOnClickHide = () => {
     const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
@@ -27,8 +30,8 @@ export default class UnitPageTemplate extends React.Component {
   };
 
   makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
+    const { isSelected } = this.props;
+    const disable = !isSelected;
     return {
       buttonProps: [
         {
@@ -95,8 +98,6 @@ export default class UnitPageTemplate extends React.Component {
       primaryItem,
       items,
       books,
-      selectedBooks,
-      dispatchToggleSelectBook,
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
@@ -121,8 +122,6 @@ export default class UnitPageTemplate extends React.Component {
         books={books}
         unit={unit}
         linkWebviewer
-        selectedBooks={selectedBooks}
-        onSelectedChange={dispatchToggleSelectBook}
         onClickSelectAllBooks={dispatchSelectAllBooks}
         onClickUnselectAllBooks={dispatchClearSelectedBooks}
       />
@@ -154,3 +153,9 @@ export default class UnitPageTemplate extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  isSelected: getTotalSelectedCount(state) !== 0,
+});
+
+export default connect(mapStateToProps)(UnitPageTemplate);

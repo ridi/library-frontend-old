@@ -14,9 +14,9 @@ import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
-import { clearSelectedBooks, toggleBook } from '../../services/selection/actions';
+import { clearSelectedBooks } from '../../services/selection/actions';
+import { getTotalSelectedCount } from '../../services/selection/selectors';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
-import { getSelectedBooks } from '../../services/selection/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
 import Footer from '../base/Footer';
@@ -57,8 +57,7 @@ class SerialPreference extends React.Component {
   };
 
   makeEditingBarProps() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
@@ -71,8 +70,8 @@ class SerialPreference extends React.Component {
   }
 
   makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
+    const { totalSelectedCount } = this.props;
+    const disable = totalSelectedCount === 0;
 
     return {
       buttonProps: [
@@ -100,9 +99,7 @@ class SerialPreference extends React.Component {
 
   renderBooks() {
     const { isEditing: isSelectMode } = this.state;
-    const { items, toUnitIdMap, books: platformBookDTO, selectedBooks, dispatchToggleSelectBook, isFetchingBooks, viewType } = this.props;
-
-    const onSelectedChange = dispatchToggleSelectBook;
+    const { items, toUnitIdMap, books: platformBookDTO, isFetchingBooks, viewType } = this.props;
 
     const showSkeleton = isFetchingBooks && items.length === 0;
 
@@ -114,9 +111,7 @@ class SerialPreference extends React.Component {
           items={items}
           toUnitIdMap={toUnitIdMap}
           platformBookDTO={platformBookDTO}
-          selectedBooks={selectedBooks}
           isSelectMode={isSelectMode}
-          onSelectedChange={onSelectedChange}
           viewType={viewType}
         />
         {this.renderPaginator()}
@@ -182,7 +177,7 @@ const mapStateToProps = state => {
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
   const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
-  const selectedBooks = getSelectedBooks(state);
+  const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
@@ -191,7 +186,7 @@ const mapStateToProps = state => {
     toUnitIdMap,
     books,
     totalCount,
-    selectedBooks,
+    totalSelectedCount,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,
   };
@@ -200,7 +195,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleBook,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 

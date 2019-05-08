@@ -14,7 +14,8 @@ import {
   setUnitId,
   unhideSelectedBooks,
 } from '../../../services/purchased/hiddenUnit/actions';
-import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { clearSelectedBooks } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
   getIsFetchingBook,
   getItemsByPage,
@@ -23,7 +24,6 @@ import {
   getUnitId,
   getPrimaryItem,
 } from '../../../services/purchased/hiddenUnit/selectors';
-import { getSelectedBooks } from '../../../services/selection/selectors';
 import { toFlatten } from '../../../utils/array';
 import Responsive from '../../base/Responsive';
 import TitleBar from '../../../components/TitleBar';
@@ -70,8 +70,8 @@ class HiddenUnit extends React.Component {
   };
 
   makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
+    const { isSelected } = this.props;
+    const disable = !isSelected;
 
     return {
       buttonProps: [
@@ -138,8 +138,6 @@ class HiddenUnit extends React.Component {
       items,
       books,
       unit,
-      selectedBooks,
-      dispatchToggleSelectBook,
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
@@ -162,8 +160,6 @@ class HiddenUnit extends React.Component {
         items={items}
         books={books}
         unit={unit}
-        selectedBooks={selectedBooks}
-        onSelectedChange={dispatchToggleSelectBook}
         onClickSelectAllBooks={dispatchSelectAllBooks}
         onClickUnselectAllBooks={dispatchClearSelectedBooks}
       />
@@ -209,7 +205,7 @@ const mapStateToProps = state => {
   const bookStarRating = getBookStarRating(state, primaryBookId);
 
   const totalCount = getTotalCount(state);
-  const selectedBooks = getSelectedBooks(state);
+  const isSelected = getTotalSelectedCount(state) !== 0;
   const isFetchingBook = getIsFetchingBook(state);
 
   const hiddenPageInfo = getHiddenPageInfo(state);
@@ -224,7 +220,7 @@ const mapStateToProps = state => {
     bookDescription,
     bookStarRating,
     totalCount,
-    selectedBooks,
+    isSelected,
     isFetchingBook,
 
     hiddenPageInfo,
@@ -238,7 +234,6 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleBook,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

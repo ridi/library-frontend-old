@@ -18,7 +18,8 @@ import { OrderOptions } from '../../../constants/orderOptions';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import { clearSelectedBooks, toggleBook } from '../../../services/selection/actions';
+import { clearSelectedBooks } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
   getFilterOptions,
   getIsFetchingBooks,
@@ -31,7 +32,6 @@ import {
   getFilter,
   getTotalPages,
 } from '../../../services/purchased/main/selectors';
-import { getSelectedBooks } from '../../../services/selection/selectors';
 import { Duration, ToastStyle } from '../../../services/toast/constants';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
@@ -89,8 +89,7 @@ class Main extends React.PureComponent {
   };
 
   makeEditingBarProps() {
-    const { items, selectedBooks, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const totalSelectedCount = Object.keys(selectedBooks).length;
+    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
@@ -103,8 +102,8 @@ class Main extends React.PureComponent {
   }
 
   makeActionBarProps() {
-    const { selectedBooks } = this.props;
-    const disable = Object.keys(selectedBooks).length === 0;
+    const { totalSelectedCount } = this.props;
+    const disable = totalSelectedCount === 0;
 
     return {
       buttonProps: [
@@ -172,17 +171,7 @@ class Main extends React.PureComponent {
     }
 
     const { isEditing: isSelectMode } = this.state;
-    const {
-      items: libraryBookDTO,
-      books: platformBookDTO,
-      units,
-      recentlyUpdatedMap,
-      selectedBooks,
-      dispatchToggleSelectBook,
-      viewType,
-    } = this.props;
-
-    const onSelectedChange = dispatchToggleSelectBook;
+    const { items: libraryBookDTO, books: platformBookDTO, units, recentlyUpdatedMap, viewType } = this.props;
 
     return (
       <>
@@ -191,9 +180,7 @@ class Main extends React.PureComponent {
             libraryBookDTO,
             platformBookDTO,
             units,
-            selectedBooks,
             isSelectMode,
-            onSelectedChange,
             viewType,
             linkBuilder: this.linkBuilder,
             recentlyUpdatedMap,
@@ -283,7 +270,7 @@ const mapStateToProps = state => {
   const books = getBooksByPage(state);
   const unitIds = getUnitIdsByPage(state);
   const units = getUnits(state, unitIds);
-  const selectedBooks = getSelectedBooks(state);
+  const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
   const lastBookIds = getLastBookIdsByPage(state);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
@@ -307,7 +294,7 @@ const mapStateToProps = state => {
     books,
     units,
     recentlyUpdatedMap,
-    selectedBooks,
+    totalSelectedCount,
     listInstruction,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
@@ -318,7 +305,6 @@ const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedBooks,
-  dispatchToggleSelectBook: toggleBook,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
