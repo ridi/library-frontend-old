@@ -15,6 +15,7 @@ import { OrderOptions } from '../../constants/orderOptions';
 import SeriesList from '../../components/SeriesList';
 import { BookError } from '../../components/Error';
 
+import { getBook } from '../../services/book/selectors';
 import * as featureSelectors from '../../services/feature/selectors';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
 import * as shelfActions from '../../services/shelf/actions';
@@ -153,7 +154,7 @@ class UnitPageTemplate extends React.Component {
   }
 
   renderDetailView() {
-    const { unit, primaryBookId, primaryItem, items, books, bookDescription, bookStarRating } = this.props;
+    const { unit, primaryBookId, primaryItem, items, bookDescription, bookStarRating } = this.props;
 
     return (
       <UnitDetailView
@@ -161,7 +162,6 @@ class UnitPageTemplate extends React.Component {
         primaryBookId={primaryBookId}
         primaryItem={primaryItem}
         items={items}
-        books={books}
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable
@@ -173,22 +173,21 @@ class UnitPageTemplate extends React.Component {
   renderSeriesList() {
     const {
       unit,
-      primaryBookId,
+      primaryBook,
       pageInfo: { order },
       pageProps,
       isFetchingBook,
       primaryItem,
       items,
-      books,
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
     const { isEditing } = this.state;
-    if (!books[primaryBookId]) {
+    if (!primaryBook) {
       return null;
     }
 
-    const bookUnitOfCount = books[primaryBookId].series ? books[primaryBookId].series.property.unit : null;
+    const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;
     const orderOptions = UnitType.isSeries(unit.type)
       ? OrderOptions.toSeriesList(bookUnitOfCount)
       : OrderOptions.toShelfList(bookUnitOfCount);
@@ -204,7 +203,6 @@ class UnitPageTemplate extends React.Component {
         onEditingChange={this.handleEditingChange}
         primaryItem={primaryItem}
         items={items}
-        books={books}
         unit={unit}
         linkWebviewer
         onClickSelectAllBooks={dispatchSelectAllBooks}
@@ -251,9 +249,10 @@ class UnitPageTemplate extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
   isSelected: getTotalSelectedCount(state) !== 0,
   isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
+  primaryBook: getBook(state, props.primaryBookId),
 });
 
 const mapDispatchToProps = {

@@ -15,7 +15,7 @@ import TitleBar from '../../../components/TitleBar';
 import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
-import { getBooks, getUnits } from '../../../services/book/selectors';
+import { getUnits } from '../../../services/book/selectors';
 import { showConfirm } from '../../../services/confirm/actions';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
@@ -145,7 +145,7 @@ class Hidden extends React.Component {
 
   renderBooks() {
     const { isEditing: isSelectMode } = this.state;
-    const { items: libraryBookDTO, books: platformBookDTO, units, isFetchingBooks, viewType } = this.props;
+    const { items: libraryBookDTO, units, isFetchingBooks, viewType } = this.props;
     const linkBuilder = () => libraryBookData => {
       const linkProps = makeLinkProps(
         {
@@ -170,7 +170,6 @@ class Hidden extends React.Component {
         <Books
           {...{
             libraryBookDTO,
-            platformBookDTO,
             units,
             isSelectMode,
             viewType,
@@ -226,7 +225,6 @@ class Hidden extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
-  const books = getBooks(state, toFlatten(items, 'b_id'));
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalCount = getTotalCount(state);
   const totalSelectedCount = getTotalSelectedCount(state);
@@ -238,7 +236,6 @@ const mapStateToProps = state => {
   return {
     pageInfo,
     items,
-    books,
     units,
     totalCount,
     totalSelectedCount,

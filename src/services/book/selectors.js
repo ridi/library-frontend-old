@@ -5,6 +5,10 @@ import { makeUnitOrderKey } from './actions';
 
 const getBookState = state => state.books;
 
+export const getBook = createCachedSelector(state => state.books.books, (state, bookId) => bookId, (books, bookId) => books.get(bookId))(
+  (state, bookId) => bookId,
+);
+
 export const getBooks = createCachedSelector(
   state => state.books.books,
   (state, bookIds) => bookIds,

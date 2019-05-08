@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import { URLMap, PageType } from '../../../constants/urls';
-import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
+import { getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import {
   downloadSelectedBooks,
@@ -21,7 +21,6 @@ import {
   getItemsByPage,
   getPrimaryItem,
 } from '../../../services/purchased/mainUnit/selectors';
-import { toFlatten } from '../../../utils/array';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 import UnitPageTemplate from '../../base/UnitPageTemplate';
 
@@ -44,7 +43,6 @@ const mapStateToProps = state => {
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
-  const books = getBooks(state, [...toFlatten(items, 'b_id'), primaryBookId]);
   const bookDescription = getBookDescription(state, primaryBookId);
   const bookStarRating = getBookStarRating(state, primaryBookId);
 
@@ -61,7 +59,6 @@ const mapStateToProps = state => {
     unit,
     primaryBookId,
     primaryItem,
-    books,
     bookDescription,
     bookStarRating,
     totalCount,
