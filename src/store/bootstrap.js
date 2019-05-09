@@ -6,28 +6,10 @@ import { setMaintenance } from '../services/maintenance/actions';
 import { getMaintenanceStatus } from '../services/maintenance/requests';
 import { locationFromUrl } from '../services/router/utils';
 import { locationChange } from '../services/tracking/actions';
-import LRUCache from '../utils/lru';
 import settings from '../utils/settings';
 
 const beforeCreatingStore = (initialState, context) => {
-  const newInitialState = {
-    ...initialState,
-    books: {
-      units: new LRUCache(200000),
-      bookDescriptions: new LRUCache(200000),
-      bookStarRatings: new LRUCache(200000),
-      books: new LRUCache(200000),
-      unitOrders: new LRUCache(200000),
-    },
-  };
-
-  if (initialState.books) {
-    newInitialState.books.books.assign(initialState.books.books);
-    newInitialState.books.bookDescriptions.assign(initialState.books.bookDescriptions);
-    newInitialState.books.bookStarRatings.assign(initialState.books.bookStarRatings);
-    newInitialState.books.units.assign(initialState.books.units);
-    newInitialState.books.unitOrders.assign(initialState.books.unitOrders);
-  }
+  const newInitialState = { ...initialState };
 
   if (context.isServer) {
     newInitialState.router = {

@@ -5,7 +5,7 @@ import { makeUnitOrderKey } from './actions';
 
 const getBookState = state => state.books;
 
-export const getBook = createCachedSelector(state => state.books.books, (state, bookId) => bookId, (books, bookId) => books.get(bookId))(
+export const getBook = createCachedSelector(state => state.books.books, (state, bookId) => bookId, (books, bookId) => books[bookId])(
   (state, bookId) => bookId,
 );
 
@@ -14,7 +14,7 @@ export const getBooks = createCachedSelector(
   (state, bookIds) => bookIds,
   (books, bookIds) =>
     bookIds.reduce((obj, bookId) => {
-      obj[bookId] = books.get(bookId);
+      obj[bookId] = books[bookId];
       return obj;
     }, {}),
 )((state, bookIds) => [...bookIds].sort().join(','));
@@ -24,7 +24,7 @@ export const getBookDescriptions = (state, bookIds) =>
     getBookState,
     bookState =>
       bookIds.reduce((previous, bookId) => {
-        previous[bookId] = bookState.bookDescriptions.get(bookId);
+        previous[bookId] = bookState.bookDescriptions[bookId];
         return previous;
       }, {}),
   )(state);
@@ -34,7 +34,7 @@ export const getBookStarRatings = (state, bookIds) =>
     getBookState,
     bookState =>
       bookIds.reduce((previous, bookId) => {
-        previous[bookId] = bookState.bookStarRatings.get(bookId);
+        previous[bookId] = bookState.bookStarRatings[bookId];
         return previous;
       }, {}),
   )(state);
@@ -42,7 +42,7 @@ export const getBookStarRatings = (state, bookIds) =>
 export const getUnit = (state, unitId) =>
   createSelector(
     getBookState,
-    bookState => bookState.units.get(unitId) || EmptyUnit,
+    bookState => bookState.units[unitId] || EmptyUnit,
   )(state);
 
 export const getUnits = createCachedSelector(
@@ -50,7 +50,7 @@ export const getUnits = createCachedSelector(
   (state, unitIds) => unitIds,
   (units, unitIds) =>
     unitIds.reduce((obj, unitId) => {
-      obj[unitId] = units.get(unitId);
+      obj[unitId] = units[unitId];
       return obj;
     }, {}),
 )((state, unitIds) => [...unitIds].sort().join(','));
@@ -58,21 +58,21 @@ export const getUnits = createCachedSelector(
 export const getUnitOrders = (state, unitId, orderType, orderBy, page) =>
   createSelector(
     getBookState,
-    bookState => bookState.unitOrders.get(makeUnitOrderKey(unitId, orderType, orderBy, page)),
+    bookState => bookState.unitOrders[makeUnitOrderKey(unitId, orderType, orderBy, page)],
   )(state);
 
 export const getBookDescription = (state, bookId) =>
   createSelector(
     getBookState,
     bookState => {
-      const book = bookState.books.get(bookId);
+      const book = bookState.books[bookId];
       const id = book?.series?.id || bookId;
-      return bookState.bookDescriptions.get(id);
+      return bookState.bookDescriptions[id];
     },
   )(state);
 
 export const getBookStarRating = (state, bookId) =>
   createSelector(
     getBookState,
-    bookState => bookState.bookStarRatings.get(bookId),
+    bookState => bookState.bookStarRatings[bookId],
   )(state);

@@ -41,21 +41,11 @@ function filterTTLObj(itemIds, existItems) {
   // Step 3. Fetch ttl item data
   // Step 4. Set ttl item data
   const criterion = getCriterion();
-  return itemIds.reduce((previous, itemId) => {
-    const item = existItems.find(itemId);
-
-    if (!item) {
-      // 없거나
-      return [...previous, itemId];
-    }
-
-    if (item.value.ttl <= criterion) {
-      // TTL이 만료되었거나
-      return [...previous, itemId];
-    }
-
-    return previous;
-  }, []);
+  return itemIds.filter(itemId => {
+    const item = existItems[itemId];
+    // 없거나 TTL이 만료된 경우
+    return !item || item.ttl <= criterion;
+  });
 }
 
 export function* loadBookData(bookIds) {
