@@ -51,7 +51,7 @@ const afterCreatingStore = async (store, context) => {
     if (!maintenanceStatue.isShow) {
       await store.dispatch(loadActualPage());
 
-      // TODO: LRU버그로 인해 주석처리
+      // TODO: 되살릴 타이밍 잡기 (LRU)
       // await store.dispatch(loadBookDataFromStorage());
       await store.dispatch(startAccountTracker());
 
