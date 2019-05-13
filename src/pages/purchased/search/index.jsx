@@ -13,6 +13,7 @@ import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
+import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import { getBooks, getUnits } from '../../../services/book/selectors';
@@ -24,9 +25,9 @@ import {
   loadItems,
   selectAllBooks,
 } from '../../../services/purchased/search/actions';
+import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import { clearSelectedBooks } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
-import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -79,7 +80,7 @@ class Search extends React.Component {
 
   makeEditingBarProps() {
     const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isShelf(item.unit_type)).length;
 
     return {
       totalSelectedCount,

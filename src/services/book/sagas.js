@@ -1,21 +1,20 @@
-import { all, call, put, select, takeEvery, fork } from 'redux-saga/effects';
-
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { toFlatten } from '../../utils/array';
+import Storage, { StorageKey } from '../../utils/storage';
+import { getCriterion } from '../../utils/ttl';
+import { showToast } from '../toast/actions';
 import {
   LOAD_BOOK_DATA_FROM_STORAGE,
   setBookData,
   setBookDataFromStorage,
   setBookDescriptions,
-  setUnitData,
   setBookStarRatings,
+  setUnitData,
   setUnitOrders,
+  SHOW_SHELF_BOOK_ALERT_TOAST,
 } from './actions';
-
-import { fetchBookData, fetchUnitData, fetchBookDescriptions, fetchStarRatings, fetchUnitOrders } from './requests';
-
-import Storage, { StorageKey } from '../../utils/storage';
-import { getCriterion } from '../../utils/ttl';
+import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
 import { getBooks } from './selectors';
-import { toFlatten } from '../../utils/array';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -124,6 +123,13 @@ export function* loadUnitOrders(unitId, orderType, orderBy, page) {
   yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
 }
 
+export function* showShelfBookAlertToast() {
+  yield put(showToast('콜렉션 도서는 선택할 수 없습니다 ㅠㅠ'));
+}
+
 export default function* bookRootSaga() {
-  yield all([takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage)]);
+  yield all([
+    takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
+    takeEvery(SHOW_SHELF_BOOK_ALERT_TOAST, showShelfBookAlertToast),
+  ]);
 }

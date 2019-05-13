@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -152,7 +153,7 @@ function* downloadSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items, 'b_id');
+  const bookIds = toFlatten(items.filter(item => !UnitType.isShelf(item.unit_type)), 'b_id');
   yield put(selectBooks(bookIds));
 }
 

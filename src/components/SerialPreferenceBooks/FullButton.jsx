@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 
-const landscapeFullButtonStyle = {
+const fullButtonStyle = {
   display: 'block',
   position: 'absolute',
   left: 0,
@@ -20,6 +20,6 @@ const landscapeFullButtonStyle = {
   },
 };
 
-const LandscapeFullButton = ({ thumbnailLink }) => <div css={landscapeFullButtonStyle}>{thumbnailLink}</div>;
+const FullButton = ({ children }) => <div css={fullButtonStyle}>{children}</div>;
 
-export default LandscapeFullButton;
+export default FullButton;
