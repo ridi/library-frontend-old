@@ -13,7 +13,7 @@ import { isExpiredTTL } from '../../utils/ttl';
 const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
 const compareWithTTL = (oldValue, newValue) => oldValue.ttl < newValue.ttl;
 
-const THRESHOLD = 1000;
+const THRESHOLD = 200000;
 const initialState = {
   books: {},
   bookDescriptions: {},
