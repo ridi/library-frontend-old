@@ -15,6 +15,7 @@ import {
 } from './actions';
 import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
 import { getBooks } from './selectors';
+import { ToastStyle, Duration } from '../toast/constants';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.
@@ -124,7 +125,7 @@ export function* loadUnitOrders(unitId, orderType, orderBy, page) {
 }
 
 export function* showShelfBookAlertToast() {
-  yield put(showToast('콜렉션 도서는 선택할 수 없습니다 ㅠㅠ'));
+  yield put(showToast('세트 도서는 개별 선택 후 편집 가능합니다.', '', '', '', Duration.NORMAL, ToastStyle.BLUE));
 }
 
 export default function* bookRootSaga() {
