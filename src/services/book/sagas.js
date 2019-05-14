@@ -125,7 +125,7 @@ export function* loadUnitOrders(unitId, orderType, orderBy, page) {
 }
 
 export function* showShelfBookAlertToast() {
-  yield put(showToast('세트 도서는 개별 선택 후 편집 가능합니다.', '', '', '', Duration.NORMAL, ToastStyle.BLUE));
+  yield put(showToast('해당 도서는 상세페이지에서 선택 가능합니다.', '', '', '', Duration.NORMAL, ToastStyle.BLUE));
 }
 
 export default function* bookRootSaga() {
