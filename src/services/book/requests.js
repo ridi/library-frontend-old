@@ -1,3 +1,4 @@
+import { captureMessage } from '@sentry/browser';
 import { put } from 'redux-saga/effects';
 import { getAPI } from '../../api/actions';
 
@@ -43,6 +44,17 @@ const _reduceBookStarRatings = bookStarRatings =>
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
+
+  const idSet = new Set(response.data.map(book => book.id));
+  for (const bookId of bookIds) {
+    if (!idSet.has(bookId)) {
+      console.error('Book requested but does not exist:', bookId);
+      captureMessage('Book requested but does not exist', {
+        extra: { bookId },
+      });
+    }
+  }
+
   return attatchTTL(_reduceBooks(response.data));
 }
 
