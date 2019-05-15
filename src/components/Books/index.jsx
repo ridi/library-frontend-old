@@ -19,6 +19,7 @@ import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 import { Disabled } from './Disabled';
 import EmptyLandscapeBook from './EmptyLandscapeBook';
 import FullButton from './FullButton';
+import { ShelfBookAlertButton } from './ShelfBookAlertButton';
 
 const refineBookData = ({
   libraryBookData,
@@ -136,7 +137,7 @@ export const Books = connect(
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
-  const handleShelfBookSelectButton = () => {
+  const handleShelfBookAlert = () => {
     dispatchShowShelfBookAlertToast();
   };
   useEffect(
@@ -187,32 +188,14 @@ export const Books = connect(
         return viewType === ViewType.PORTRAIT ? (
           <div key={bookId} className={className} css={styles.portrait}>
             <Book.PortraitBook {...libraryBookProps} />
-            {isSelectMode && isShelfBook && (
-              <>
-                <Disabled />
-                <FullButton>
-                  <button type="button" onClick={handleShelfBookSelectButton}>
-                    콜렉션 도서 선택 안내
-                  </button>
-                </FullButton>
-              </>
-            )}
+            {isSelectMode && isShelfBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         ) : (
           <div key={bookId} className={className} css={styles.landscape}>
             <Book.LandscapeBook {...libraryBookProps} />
             {isSelectMode && !isPurchasedBook && <Disabled />}
             {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            {isSelectMode && isShelfBook && (
-              <>
-                <Disabled />
-                <FullButton>
-                  <button type="button" onClick={handleShelfBookSelectButton}>
-                    콜렉션 도서 선택 버튼!!
-                  </button>
-                </FullButton>
-              </>
-            )}
+            {isSelectMode && isShelfBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         );
       }}
