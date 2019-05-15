@@ -4,9 +4,11 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
-import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
+import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
+import { getLocationHref } from '../../services/router/selectors';
+import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import Star from '../../svgs/Star.svg';
@@ -15,10 +17,6 @@ import { thousandsSeperator } from '../../utils/number';
 import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
-
-import { getLocationHref } from '../../services/router/selectors';
-import { getReadLatestData, getFetchingReadLatest } from '../../services/purchased/common/selectors';
-import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 
 const LINE_HEIGHT = 23;
 const LINE = 6;
@@ -188,34 +186,6 @@ class UnitDetailView extends React.Component {
     );
   }
 
-  renderDrmFreeDownloadButton() {
-    const { unit, book } = this.props;
-
-    if (!this.isPurchased) {
-      return null;
-    }
-
-    if (!UnitType.isBook(unit.type)) {
-      return null;
-    }
-
-    if (!book.file.is_drm_free) {
-      return null;
-    }
-
-    return (
-      <button
-        type="button"
-        css={styles.drmFreeDownloadButton}
-        onClick={() => {
-          window.location.href = `${config.STORE_API_BASE_URL}/api/user-books/${book.id}/raw-download`;
-        }}
-      >
-        EPUB 파일 다운로드
-      </button>
-    );
-  }
-
   renderLink() {
     const { book, primaryItem } = this.props;
     const href = this.isPurchased && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
@@ -279,7 +249,6 @@ class UnitDetailView extends React.Component {
             {this.renderSummary()}
             {this.renderReadLatestButton()}
             {this.renderDownloadButton()}
-            {this.renderDrmFreeDownloadButton()}
           </div>
         </section>
 

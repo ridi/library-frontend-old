@@ -86,10 +86,6 @@ export default class BookMetaData {
       infos.push(`총 ${this.unitData.total_count}${unitOfCount}`);
     }
 
-    if (file && file.is_drm_free) {
-      infos.push('DRM Free');
-    }
-
     return infos;
   }
 }
