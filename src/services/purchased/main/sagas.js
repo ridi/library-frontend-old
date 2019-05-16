@@ -121,11 +121,11 @@ function* hideSelectedBooks() {
 
   yield all([
     put(
-      showToast(
-        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
-        '숨긴 도서 목록 보기',
-        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
-      ),
+      showToast({
+        message: isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+        linkName: '숨긴 도서 목록 보기',
+        linkProps: makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+      }),
     ),
     put(setFullScreenLoading(false)),
   ]);

@@ -111,17 +111,17 @@ export function* hideAllExpiredBooks() {
 
     yield all([
       put(
-        showToast(
-          isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
-          '숨긴 도서 목록 보기',
-          makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
-        ),
+        showToast({
+          message: isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+          linkName: '숨긴 도서 목록 보기',
+          linkProps: makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+        }),
       ),
       put(setFullScreenLoading(false)),
     ]);
   } catch (e) {
     if (e instanceof NotFoundExpiredBooksError) {
-      yield all([put(showToast('만료된 도서가 없습니다.')), put(setFullScreenLoading(false))]);
+      yield all([put(showToast({ message: '만료된 도서가 없습니다.' })), put(setFullScreenLoading(false))]);
       return;
     }
 
@@ -150,6 +150,6 @@ export function* confirmHideAllExpiredBooks() {
     const action = yield take(confirmChannel);
     if (action.type === HIDE_ALL_EXPIRED_BOOKS) yield call(hideAllExpiredBooks);
   } else {
-    yield put(showToast('만료된 도서가 없습니다.'));
+    yield put(showToast({ message: '만료된 도서가 없습니다.' }));
   }
 }

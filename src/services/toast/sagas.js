@@ -24,8 +24,8 @@ function* showToast(action) {
   yield put(cancelClose());
   yield call(closeToast);
 
-  const { message, linkName, linkProps, outLink, duration, toastStyle } = action.payload;
-  yield put(setToast(message, linkName, linkProps, outLink, duration, toastStyle));
+  const { duration } = action.payload;
+  yield put(setToast({ ...action.payload }));
   yield call(_delayClose, duration);
 }
 

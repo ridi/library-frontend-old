@@ -89,7 +89,7 @@ class Toaster extends React.Component {
       <Transition in={toast && toast.isShow} timeout={Duration} unmountOnExit>
         {state =>
           toast ? (
-            <div css={styles.toastWrapper}>
+            <div css={[styles.toastWrapper, toast.withBottomFixedButton && styles.withBottomFixedButton]}>
               <div
                 css={[styles.toast, styles.toggleAnimation(Duration)]}
                 onMouseOver={this.onMouseOver}
