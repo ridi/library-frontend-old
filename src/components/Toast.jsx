@@ -26,7 +26,14 @@ class Toast extends React.Component {
     const _val = settings.get(name);
     if (!_val) {
       settings.set(name, true, { path: '/', expires });
-      dispatchShowToast(message, linkName, linkProps, outLink, duration, toastStyle);
+      dispatchShowToast({
+        message,
+        linkName,
+        linkProps,
+        outLink,
+        duration,
+        toastStyle,
+      });
     }
   }
 
