@@ -3,6 +3,10 @@ export class UnitType {
     return 'book';
   }
 
+  static get COLLECTION() {
+    return 'collection';
+  }
+
   static get SERIES() {
     return 'series';
   }
@@ -13,6 +17,10 @@ export class UnitType {
 
   static isBook(unitType) {
     return unitType === this.BOOK;
+  }
+
+  static isCollection(unitType) {
+    return unitType === this.COLLECTION;
   }
 
   static isSeries(unitType) {

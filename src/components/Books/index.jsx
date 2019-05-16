@@ -52,7 +52,7 @@ const refineBookData = ({
   const isExpired = !isRidiselect && expireDate && isAfter(new Date(), expireDate);
   const isNotAvailable = expireDate ? isAfter(new Date(), expireDate) : false;
   const isPurchasedBook = !!purchaseDate;
-  const isShelfBook = unitType && UnitType.isShelf(unitType);
+  const isShelfBook = unitType && (UnitType.isShelf(unitType) || UnitType.isCollection(unitType));
   const isUnitBook = unitType && !UnitType.isBook(unitType);
   const unit = units && units[unitId] ? units[unitId] : null;
 
