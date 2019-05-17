@@ -10,6 +10,8 @@ export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
 
 export const ADD_SHELF = 'ADD_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
+export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
+export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
 export const BEGIN_OPERATION = 'BEGIN_OPERATION';
 export const END_OPERATION = 'END_OPERATION';
@@ -100,6 +102,22 @@ export const deleteShelf = ({ uuid }) => ({
   type: DELETE_SHELF,
   payload: {
     uuid,
+  },
+});
+
+export const addShelfItem = ({ uuid, units }) => ({
+  type: ADD_SHELF_ITEM,
+  payload: {
+    uuid,
+    units,
+  },
+});
+
+export const deleteShelfItem = ({ uuid, units }) => ({
+  type: DELETE_SHELF_ITEM,
+  payload: {
+    uuid,
+    units,
   },
 });
 

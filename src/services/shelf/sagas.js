@@ -109,11 +109,37 @@ function* deleteShelf({ payload }) {
   // 책장 삭제 에러는 무시함
 }
 
+function* addShelfItem({ payload }) {
+  const { uuid, units } = payload;
+  const ops = units.map(({ unitId, bookIds }) => ({
+    type: OperationType.ADD_SHELF_ITEM,
+    uuid,
+    unitId,
+    bookIds,
+  }));
+  yield call(performOperation, ops);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+}
+
+function* deleteShelfItem({ payload }) {
+  const { uuid, units } = payload;
+  const ops = units.map(({ unitId, bookIds }) => ({
+    type: OperationType.DELETE_SHELF_ITEM,
+    uuid,
+    unitId,
+    bookIds,
+  }));
+  yield call(performOperation, ops);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+}
+
 export default function* shelfRootSaga() {
   yield all([
     takeEvery(actions.LOAD_SHELVES, loadShelves),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
+    takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
+    takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
   ]);
 }
