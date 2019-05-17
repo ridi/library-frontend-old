@@ -1,6 +1,8 @@
 import produce from 'immer';
 
 import {
+  BEGIN_OPERATION,
+  END_OPERATION,
   LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_BOOKS,
   LOAD_SHELF_COUNT,
@@ -49,6 +51,7 @@ import {
  * }
  * */
 const initialState = {
+  syncStatus: {},
   shelfCount: null,
   shelves: {},
   shelf: {},
@@ -64,6 +67,16 @@ const makeBaseShelfData = uuid => ({
 
 const shelfReducer = produce((draft, action) => {
   switch (action.type) {
+    case BEGIN_OPERATION: {
+      const { revision } = action.payload;
+      draft.syncStatus[revision] = 'in-progress';
+      break;
+    }
+    case END_OPERATION: {
+      const { revision, hasError } = action.payload;
+      draft.syncStatus[revision] = hasError ? 'error' : 'done';
+      break;
+    }
     case LOAD_SHELVES: {
       const { orderBy, orderDirection, page } = action.payload;
       const key = `${orderBy}_${orderDirection}_${page}`;
