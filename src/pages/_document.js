@@ -1,12 +1,14 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { extractCritical } from 'emotion-server';
+import { initializeApi } from '../api';
 import config from '../config';
 import { URLMap } from '../constants/urls';
 import Favicon from './base/Favicon';
 import Metadata from './base/Metadata';
 
 export default class MyDocument extends Document {
-  static getInitialProps({ renderPage }) {
+  static getInitialProps({ renderPage, req }) {
+    initializeApi(req);
     const page = renderPage();
     const styles = extractCritical(page.html);
 
