@@ -68,3 +68,15 @@ export const getShelfBooks = createCachedSelector(
     return target.books[`${orderBy}_${orderDirection}_${page}`] || { loading: false, items: null };
   },
 )((_, uuid) => uuid);
+
+// getIsSyncInProgress(state: State): boolean
+export const getIsSyncInProgress = createSelector(
+  state => state.shelf.syncStatus,
+  syncStatus => Object.values(syncStatus).some(status => status === 'in-progress'),
+);
+
+// getIsSyncHasError(state: State): boolean
+export const getIsSyncHasError = createSelector(
+  state => state.shelf.syncStatus,
+  syncStatus => Object.values(syncStatus).some(status => status === 'error'),
+);
