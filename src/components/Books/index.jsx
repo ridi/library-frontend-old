@@ -52,7 +52,7 @@ const refineBookData = ({
   const isExpired = !isRidiselect && expireDate && isAfter(new Date(), expireDate);
   const isNotAvailable = expireDate ? isAfter(new Date(), expireDate) : false;
   const isPurchasedBook = !!purchaseDate;
-  const isShelfBook = unitType && (UnitType.isShelf(unitType) || UnitType.isCollection(unitType));
+  const isCollectionBook = unitType && UnitType.isCollection(unitType);
   const isUnitBook = unitType && !UnitType.isBook(unitType);
   const unit = units && units[unitId] ? units[unitId] : null;
 
@@ -79,7 +79,7 @@ const refineBookData = ({
     notAvailable: isNotAvailable,
     updateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook && !isShelfBook,
+    selectMode: isSelectMode && isPurchasedBook && !isCollectionBook,
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
@@ -100,7 +100,7 @@ const refineBookData = ({
 
   return {
     isPurchasedBook,
-    isShelfBook,
+    isCollectionBook,
     libraryBookProps: merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
     thumbnailLink,
   };
@@ -171,7 +171,7 @@ export const Books = connect(
         }
 
         const isSelected = !!selectedBooks[bookId];
-        const { isPurchasedBook, isShelfBook, libraryBookProps, thumbnailLink } = refineBookData({
+        const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
           libraryBookData,
           platformBookData,
           units,
@@ -188,14 +188,14 @@ export const Books = connect(
         return viewType === ViewType.PORTRAIT ? (
           <div key={bookId} className={className} css={styles.portrait}>
             <Book.PortraitBook {...libraryBookProps} />
-            {isSelectMode && isShelfBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         ) : (
           <div key={bookId} className={className} css={styles.landscape}>
             <Book.LandscapeBook {...libraryBookProps} />
             {isSelectMode && !isPurchasedBook && <Disabled />}
             {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            {isSelectMode && isShelfBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         );
       }}

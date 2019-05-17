@@ -20,14 +20,10 @@ export class UnitType {
   }
 
   static isCollection(unitType) {
-    return unitType === this.COLLECTION;
+    return unitType === this.SHELF || unitType === this.COLLECTION;
   }
 
   static isSeries(unitType) {
     return unitType === this.SERIES;
-  }
-
-  static isShelf(unitType) {
-    return unitType === this.SHELF;
   }
 }

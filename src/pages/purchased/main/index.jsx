@@ -89,7 +89,7 @@ class Main extends React.PureComponent {
 
   makeEditingBarProps() {
     const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isShelf(item.unit_type)).length;
+    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isCollection(item.unit_type)).length;
 
     return {
       totalSelectedCount,

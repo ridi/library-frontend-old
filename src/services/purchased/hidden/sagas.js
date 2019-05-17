@@ -148,7 +148,7 @@ function* deleteSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items.filter(item => !UnitType.isShelf(item.unit_type)), 'b_id');
+  const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
   yield put(selectBooks(bookIds));
 }
 
