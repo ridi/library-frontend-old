@@ -5,6 +5,7 @@ import * as actions from './actions';
 import * as requests from './requests';
 
 const COUNT_PER_PAGE = 20;
+const BOOK_COUNT_PER_PAGE = 48;
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -30,6 +31,14 @@ function* loadShelves({ payload }) {
 function* loadShelfCount() {
   const count = yield call(requests.fetchShelfCount);
   yield put(actions.setShelfCount(count));
+}
+
+function* loadShelfBooks({ payload }) {
+  const { uuid, orderBy, orderDirection, page } = payload;
+  const offset = (page - 1) * BOOK_COUNT_PER_PAGE;
+  const limit = BOOK_COUNT_PER_PAGE;
+  const items = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
+  yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
 }
 
 function* performOperation(ops) {
@@ -133,10 +142,11 @@ function* deleteShelfItem({ payload }) {
   // TODO: forbidden인 경우 내 책장이 아닌 것
 }
 
-export default function* shelfRootSaga() {
+export default function* shelfRootSaga(isServer) {
   yield all([
     takeEvery(actions.LOAD_SHELVES, loadShelves),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
+    takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),

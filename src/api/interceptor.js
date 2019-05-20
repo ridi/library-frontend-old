@@ -68,20 +68,22 @@ export const authorizationInterceptor = {
         .catch(err => {
           // Token Refresh를 시도했는데 실패 했으면 로그인페이지로 이동한다.
           // 로그인 페이지에서는 진행하지 않는다.
-          if (!err.response) {
+          if (err.response) {
+            if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
+              if (!URLMap.login.regex.exec(window.location.pathname)) {
+                // 로직을 끊고 가기 위해 location 에 바로 주입한다.
+                // Router 를 사용하면 시점이 꼬이게 된다.
+                const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
+                window.location.href = makeLibraryLoginURI(URLMap.login.as, next);
+                return null;
+              }
+            }
+          } else if (err.request) {
             // 네트워크 에러가 하나로 묶이도록 fingerprint 수정
             Sentry.withScope(scope => {
               scope.setFingerprint(['network-error']);
               Sentry.captureException(err);
             });
-          } else if (err.response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
-            if (!URLMap.login.regex.exec(window.location.pathname)) {
-              // 로직을 끊고 가기 위해 location 에 바로 주입한다.
-              // Router 를 사용하면 시점이 꼬이게 된다.
-              const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
-              window.location.href = makeLibraryLoginURI(URLMap.login.as, next);
-              return null;
-            }
           } else {
             Sentry.captureException(err);
           }

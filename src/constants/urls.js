@@ -16,6 +16,7 @@ export const PageType = {
   HIDDEN_UNIT: 'hiddenUnit',
   SERIAL_PREFERENCE: 'serialPreference',
   SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
+  SHELF_DETAIL: 'shelfDetail',
   NOT_FOUND: 'notFound',
 };
 
@@ -39,6 +40,7 @@ export const URLMap = {
     href: '/purchased/mainUnit',
     as: ({ unitId }) => `/books/${unitId}/`,
     regex: /^\/books\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.SEARCH]: {
     href: '/purchased/search',
@@ -49,6 +51,7 @@ export const URLMap = {
     href: '/purchased/searchUnit',
     as: ({ unitId }) => `/books/search/${unitId}`,
     regex: /^\/books\/search\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.HIDDEN]: {
     href: '/purchased/hidden',
@@ -59,6 +62,7 @@ export const URLMap = {
     href: '/purchased/hiddenUnit',
     as: ({ unitId }) => `/books/hidden/${unitId}`,
     regex: /^\/books\/hidden\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.SERIAL_PREFERENCE]: {
     href: '/serialPreference',
@@ -69,6 +73,13 @@ export const URLMap = {
     href: '/serialPreferenceUnit',
     as: ({ unitId }) => `/serial-preferences/${unitId}/`,
     regex: /^\/serial-preferences\/(\d+)\/?$/,
+    keys: ['unitId'],
+  },
+  [PageType.SHELF_DETAIL]: {
+    href: '/shelf/detail',
+    as: ({ uuid }) => `/shelf/${uuid}`,
+    regex: /^\/shelf\/([0-9a-f-]+)\/?$/,
+    keys: ['uuid'],
   },
   [PageType.NOT_FOUND]: {
     href: '/errors/notFound',
@@ -105,7 +116,7 @@ export const toURLMap = pathname => {
     if (result) {
       if (typeof urlInfo.as === 'function') {
         const query = {
-          unitId: result[1],
+          [urlInfo.keys[0]]: result[1],
         };
         return {
           href: { pathname: urlInfo.href, query },

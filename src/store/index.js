@@ -27,7 +27,7 @@ const makeStore = (initialState, context) => {
   const store = createStore(rootReducer, initialState, composeEnhancer(applyMiddleware(...middlewares)));
 
   store.runSagaTask = () => {
-    store.sagaTask = sagaMiddleware.run(rootSaga);
+    store.sagaTask = sagaMiddleware.run(rootSaga, context.isServer);
   };
   store.runSagaTask();
 

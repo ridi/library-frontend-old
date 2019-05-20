@@ -120,6 +120,7 @@ export const Books = connect(
   const isLoaded = true;
   const {
     libraryBookDTO,
+    bookIds,
     platformBookDTO,
     units,
     selectedBooks,
@@ -145,14 +146,24 @@ export const Books = connect(
     [isLoaded],
   );
 
+  // TODO: compat
+  let finalBookIds = [];
+  let libraryBookMap = new Map();
+  if (libraryBookDTO != null) {
+    finalBookIds = libraryBookDTO.map(book => book.b_id);
+    libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
+  }
+  if (finalBookIds.length === 0) {
+    finalBookIds = bookIds;
+  }
   return (
     <BooksWrapper
       viewType={viewType}
-      books={libraryBookDTO}
-      renderBook={({ book: libraryBookData, className }) => {
-        const { b_id: bookId } = libraryBookData;
+      books={finalBookIds}
+      renderBook={({ book: bookId, className }) => {
+        const libraryBookData = libraryBookMap.get(bookId);
         const platformBookData = platformBookDTO[bookId];
-        if (!platformBookData) {
+        if (!libraryBookData || !platformBookData) {
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className={className} css={styles.portrait}>
               <PortraitBook />
@@ -193,7 +204,7 @@ export const Books = connect(
       }}
     >
       {({ books }) => {
-        const libraryBooksCount = libraryBookDTO.length;
+        const libraryBooksCount = finalBookIds.length;
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (
