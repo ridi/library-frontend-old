@@ -96,7 +96,7 @@ function* addShelf({ payload }) {
   while (true) {
     const uuid = uuidv4();
     const results = yield call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]);
-    if (results[0].status === OperationStatus.DONE) {
+    if (results[0].result === OperationStatus.DONE) {
       break;
     }
     // 실패한 경우 uuid를 바꾸어 재시도

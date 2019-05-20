@@ -6,7 +6,8 @@ let api = null;
 export const initializeApi = req => {
   if (req != null) {
     const { token } = req;
-    return new API(false, { Cookie: `ridi-at=${token};` });
+    api = new API(false, { Cookie: `ridi-at=${token};` });
+    return api;
   }
 
   const withCredentials = true;
