@@ -4,6 +4,7 @@ import withReduxSaga from 'next-redux-saga';
 import { hydrate, cache } from 'emotion';
 import { CacheProvider } from '@emotion/core';
 
+import { initializeApi } from '../api';
 import injectStore from '../store';
 import flow from '../utils/flow';
 import { initializeSentry } from '../utils/sentry';
@@ -15,6 +16,7 @@ import Prefetch from '../components/Prefetch';
 
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
+    initializeApi(ctx.req);
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };
   }
