@@ -37,8 +37,8 @@ function* loadShelfBooks({ payload }) {
   const { uuid, orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * BOOK_COUNT_PER_PAGE;
   const limit = BOOK_COUNT_PER_PAGE;
-  const items = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
-  yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
+  const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
+  yield all([put(actions.setShelfInfo(shelfInfo)), put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }))]);
 }
 
 function* performOperation(ops) {

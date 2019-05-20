@@ -4,6 +4,7 @@ export const LOAD_SHELF_BOOKS = 'LOAD_SHELF_BOOKS';
 export const LOAD_SHELF_BOOK_COUNT = 'LOAD_SHELF_BOOK_COUNT';
 
 export const SET_SHELVES = 'SET_SHELVES';
+export const SET_SHELF_INFO = 'SET_SHELF_INFO';
 export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
@@ -58,6 +59,15 @@ export const setShelves = ({ orderBy, orderDirection, page, items }) => ({
     orderDirection,
     page,
     items,
+  },
+});
+
+export const setShelfInfo = ({ id, uuid, name }) => ({
+  type: SET_SHELF_INFO,
+  payload: {
+    id,
+    uuid,
+    name,
   },
 });
 

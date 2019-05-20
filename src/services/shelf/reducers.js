@@ -10,6 +10,7 @@ import {
   SET_SHELF_BOOK_COUNT,
   SET_SHELF_BOOKS,
   SET_SHELF_COUNT,
+  SET_SHELF_INFO,
   SET_SHELVES,
 } from './actions';
 
@@ -102,6 +103,15 @@ const shelfReducer = produce((draft, action) => {
         draft.shelf[uuid].id = id;
         draft.shelf[uuid].name = name;
       }
+      break;
+    }
+    case SET_SHELF_INFO: {
+      const { id, uuid, name } = action.payload;
+      if (draft.shelf[uuid] == null) {
+        draft.shelf[uuid] = makeBaseShelfData(uuid);
+      }
+      draft.shelf[uuid].id = id;
+      draft.shelf[uuid].name = name;
       break;
     }
     case LOAD_SHELF_COUNT:
