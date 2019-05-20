@@ -138,7 +138,7 @@ const shelfReducer = produce((draft, action) => {
       break;
     }
     case LOAD_SHELF_BOOK_COUNT: {
-      const { uuid } = action.payload;
+      const uuid = action.payload;
       if (draft.shelf[uuid] == null) {
         draft.shelf[uuid] = makeBaseShelfData(uuid);
       }

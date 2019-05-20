@@ -50,7 +50,10 @@ export const getShelfBookCount = createCachedSelector(
  *     orderDirection: string;
  *     page: number;
  *   },
- * ): { loading: boolean; items: Array<string> | null }
+ * ): {
+ *   loading: boolean;
+ *   items: Array<{ bookIds: Array<string>; unitId: number }> | null;
+ * }
  *
  * loading: false, items: null이면 로드 필요
  * */
