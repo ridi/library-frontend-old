@@ -1,0 +1,140 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.9
+commands:
+  install:
+    description: Install Dependencies
+    steps:
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+    working_directory: ~/project
+    parameters:
+      ENVIRONMENT:
+        type: string
+        default: production
+    steps:
+      - checkout
+      - install
+      - run:
+          name: Build next.js application
+          command: yarn build
+      - run:
+          name: Export outputs
+          command: yarn export
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  deploy:
+    working_directory: ~/project
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - attach_workspace:
+          at: .
+      # dev
+      - when:
+          condition: true 
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: 's3://ridi-library-dev-test'
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+                arguments: |
+                  --acl public-read \
+                  --cache-control "max-age=31536000"
+      # staging
+      - when:
+          condition: false
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: 's3://ridi-library-prod'
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+                arguments: |
+                  --acl public-read \
+                  --cache-control "max-age=31536000" \
+                  --exclude "index.html" \
+                  --exclude "*.map"
+            - aws-s3/copy:
+                from: 's3://ridi-library-prod/staging.html'
+                to: 's3://ridi-library-prod/staging.html'
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+                arguments: |
+                  --acl public-read \
+                  --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+      # prod
+      - when:
+          condition: false
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: 's3://ridi-library-prod'
+                arguments: |
+                  --acl public-read \
+                  --cache-control "max-age=31536000" \
+                  --exclude "*.html" \
+                  --exclude "*.map"
+            - aws-s3/copy:
+                from: 'dist/index.html'
+                to: 's3://ridi-library-prod/index.html'
+                arguments: |
+                  --acl public-read \
+                  --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          name: build-dev
+          filters:
+            branches:
+              only:
+                - master
+                - add-circle-ci
+          ENVIRONMENT: development
+      - build:
+          name: build-prod
+          filters:
+            branches:
+              only:
+                - master
+                - release
+      - deploy:
+          requires:
+            - build-dev
+          filters:
+            branches:
+              only:
+                - master
+                - add-circle-ci
+      - deploy:
+          requires:
+            - build-prod
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build-prod
+          filters:
+            branches:
+              only:
+                - release
