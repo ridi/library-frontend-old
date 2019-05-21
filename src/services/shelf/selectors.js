@@ -72,6 +72,31 @@ export const getShelfBooks = createCachedSelector(
   },
 )((_, uuid) => uuid);
 
+export const getIsShelfLoading = createCachedSelector(getShelfBooks, ({ loading }) => loading)((_, uuid) => uuid);
+
+export const getShelfItems = createCachedSelector(getShelfBooks, ({ items }) => items)((_, uuid) => uuid);
+
+export const getBookIds = createCachedSelector(getShelfItems, items => (items == null ? [] : items.map(item => item.bookIds[0])))(
+  (_, uuid) => uuid,
+);
+
+export const getLibraryBooks = createCachedSelector(
+  state => state.shelf.libraryBooks,
+  getShelfItems,
+  (libraryBooks, items) =>
+    items &&
+    items.map(
+      item =>
+        libraryBooks[item.bookIds[0]] || {
+          unit_count: item.bookIds.length,
+          is_ridiselect: false,
+          b_id: item.bookIds[0],
+          purchase_date: new Date(0),
+          unit_id: item.unitId,
+        },
+    ),
+)((_, uuid) => uuid);
+
 // getIsSyncInProgress(state: State): boolean
 export const getIsSyncInProgress = createSelector(
   state => state.shelf.syncStatus,

@@ -1,5 +1,6 @@
 import { captureMessage } from '@sentry/browser';
 import { put } from 'redux-saga/effects';
+import { getApi } from '../../api';
 import { getAPI } from '../../api/actions';
 
 import config from '../../config';
@@ -110,5 +111,14 @@ export function* fetchUnitIdMap(bookIds) {
 
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books/units/ids', null, config.LIBRARY_API_BASE_URL), data);
+  return response.data;
+}
+
+export async function fetchLibraryBookData(bookIds) {
+  const options = {
+    b_ids: bookIds,
+  };
+  const api = getApi();
+  const response = await api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
   return response.data;
 }

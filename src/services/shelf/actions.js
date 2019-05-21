@@ -9,6 +9,8 @@ export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
 
+export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
+
 export const ADD_SHELF = 'ADD_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
@@ -98,6 +100,13 @@ export const setShelfBookCount = ({ uuid, count }) => ({
   payload: {
     uuid,
     count,
+  },
+});
+
+export const setLibraryBooks = books => ({
+  type: SET_LIBRARY_BOOKS,
+  payload: {
+    books,
   },
 });
 

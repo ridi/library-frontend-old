@@ -3,7 +3,6 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -78,42 +77,24 @@ ShelfDetail.getInitialProps = async ({ query, store }) => {
   };
 };
 
-function mapStateToPropsFactory() {
-  const selectLibraryBooks = createSelector(
-    items => items,
-    items =>
-      items &&
-      items.map(item => ({
-        unit_count: item.bookIds.length,
-        is_ridiselect: false,
-        b_id: item.bookIds[0],
-        purchase_date: new Date(0),
-        unit_id: item.unitId,
-      })),
-  );
+function mapStateToProps(state, props) {
+  const { uuid, page, orderBy, orderDirection } = props;
+  const name = selectors.getShelfName(state, uuid);
+  const bookCount = selectors.getShelfBookCount(state, uuid);
 
-  const selectBookIds = createSelector(
-    items => items,
-    items => (items == null ? [] : items.map(item => item.bookIds[0])),
-  );
-
-  return function mapStateToProps(state, props) {
-    const { uuid, page, orderBy, orderDirection } = props;
-    const name = selectors.getShelfName(state, uuid);
-    const bookCount = selectors.getShelfBookCount(state, uuid);
-    const { loading: booksLoading, items } = selectors.getShelfBooks(state, uuid, { orderBy, orderDirection, page });
-    const libraryBooks = selectLibraryBooks(items);
-    const bookIds = selectBookIds(items);
-    const platformBooks = bookSelectors.getBooks(state, bookIds);
-    return {
-      bookCount,
-      booksLoading,
-      items,
-      libraryBooks,
-      name,
-      platformBooks,
-    };
+  const pageOptions = { orderBy, orderDirection, page };
+  const { loading: booksLoading, items } = selectors.getShelfBooks(state, uuid, pageOptions);
+  const libraryBooks = selectors.getLibraryBooks(state, uuid, pageOptions);
+  const bookIds = selectors.getBookIds(state, uuid, pageOptions);
+  const platformBooks = bookSelectors.getBooks(state, bookIds);
+  return {
+    bookCount,
+    booksLoading,
+    items,
+    libraryBooks,
+    name,
+    platformBooks,
   };
 }
 
-export default connect(mapStateToPropsFactory)(ShelfDetail);
+export default connect(mapStateToProps)(ShelfDetail);
