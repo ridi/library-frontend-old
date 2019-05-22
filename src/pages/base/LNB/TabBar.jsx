@@ -1,13 +1,12 @@
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
-
+import { jsx } from '@emotion/core';
 import { TabBar as LNBTabBar, TabLinkItem } from '../../../components/TabBar';
-import Responsive from '../Responsive';
-
 import { URLMap } from '../../../constants/urls';
+import Responsive from '../Responsive';
 
 export const TabMenuTypes = {
   ALL_BOOKS: 'ALL BOOKS',
+  SHELVES: 'SHELVES',
   SERIAL_PREFERENCE: 'SERIAL_PREFERENCE',
   SHELF_LIST: 'SHELF_LIST',
 };
@@ -27,6 +26,14 @@ const TabMenus = [
     linkInfo: {
       href: URLMap.main.href,
       as: URLMap.main.as,
+    },
+  },
+  {
+    type: TabMenuTypes.SHELVES,
+    name: '책장 목록',
+    linkInfo: {
+      href: URLMap.shelves.href,
+      as: URLMap.shelves.as,
     },
   },
   {
