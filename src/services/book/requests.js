@@ -1,6 +1,6 @@
 import { captureMessage } from '@sentry/browser';
 import { put } from 'redux-saga/effects';
-import { getApi } from '../../api';
+import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
 
 import config from '../../config';
@@ -118,13 +118,13 @@ export async function fetchLibraryBookData(bookIds) {
   const options = {
     b_ids: bookIds,
   };
-  const api = getApi();
+  const api = getApiSingleton();
   const response = await api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
   return response.data;
 }
 
 export async function fetchLibraryUnitData(unitIds) {
-  const api = getApi();
+  const api = getApiSingleton();
   const promises = unitIds.map(async unitId => {
     const [detailResponse, countResponse] = await Promise.all([
       api.get(makeURI(`/items/search/${unitId}/`, { offset: 0, limit: 1 }, config.LIBRARY_API_BASE_URL)),
