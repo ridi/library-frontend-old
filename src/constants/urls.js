@@ -14,6 +14,7 @@ export const PageType = {
   SEARCH_UNIT: 'searchUnit',
   HIDDEN: 'hidden',
   HIDDEN_UNIT: 'hiddenUnit',
+  SHELVES: 'shelves',
   SERIAL_PREFERENCE: 'serialPreference',
   SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
   SHELF_DETAIL: 'shelfDetail',
@@ -63,6 +64,11 @@ export const URLMap = {
     as: ({ unitId }) => `/books/hidden/${unitId}`,
     regex: /^\/books\/hidden\/(\d+)\/?$/,
     keys: ['unitId'],
+  },
+  [PageType.SHELVES]: {
+    href: '/shelves',
+    as: '/shelves',
+    regex: /^\/shelves\/?$/,
   },
   [PageType.SERIAL_PREFERENCE]: {
     href: '/serialPreference',
