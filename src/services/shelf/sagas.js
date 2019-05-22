@@ -55,24 +55,11 @@ function* loadShelfBooks(isServer, { payload }) {
   try {
     const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
     yield put(actions.setShelfInfo(shelfInfo));
-    const bookCountMap = new Map(items.map(item => [item.bookIds[0], item.bookIds.length]));
-    const bookIds = [...bookCountMap.keys()];
-    const [libraryBooks] = yield all([call(bookRequests.fetchLibraryBookData, bookIds), call(bookSagas.loadBookData, bookIds)]);
-    const processedLibraryBooks = libraryBooks.items.map(book => ({
-      unit_count: bookCountMap.get(book.b_id) || 1,
-      remain_time: book.remain_time,
-      expire_date: book.expire_date,
-      is_ridiselect: book.service_type === ServiceType.RIDISELECT,
-      unit_type: book.display_type,
-      unit_title: book.display_title,
-      b_id: book.b_id,
-      purchase_date: book.purchase_date,
-      unit_id: book.display_unit_id,
-    }));
-    yield all([
-      put(actions.setLibraryBooks(processedLibraryBooks)),
-      put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items })),
-    ]);
+    const libraryBooks = yield call(bookRequests.fetchLibraryUnitData, items.map(item => item.unitId));
+    yield put(actions.setLibraryBooks(libraryBooks));
+    const bookIds = libraryBooks.map(book => book.b_id);
+    yield call(bookSagas.loadBookData, bookIds);
+    yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;

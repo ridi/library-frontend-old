@@ -122,3 +122,27 @@ export async function fetchLibraryBookData(bookIds) {
   const response = await api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
   return response.data;
 }
+
+export async function fetchLibraryUnitData(unitIds) {
+  const api = getApi();
+  const promises = unitIds.map(async unitId => {
+    const [detailResponse, countResponse] = await Promise.all([
+      api.get(makeURI(`/items/search/${unitId}/`, { offset: 0, limit: 1 }, config.LIBRARY_API_BASE_URL)),
+      api.get(makeURI(`/items/search/${unitId}/count/`, {}, config.LIBRARY_API_BASE_URL)),
+    ]);
+    const unitDetail = detailResponse.data.unit;
+    const bookDetail = detailResponse.data.items[0];
+    return {
+      unit_count: countResponse.data.item_total_count,
+      remain_time: bookDetail.remain_time,
+      expire_date: bookDetail.expire_date,
+      is_ridiselect: bookDetail.is_ridiselect,
+      unit_type: unitDetail.type,
+      unit_title: unitDetail.title,
+      b_id: bookDetail.b_id,
+      purchase_date: bookDetail.purchase_date,
+      unit_id: unitDetail.id,
+    };
+  });
+  return Promise.all(promises);
+}
