@@ -61,13 +61,14 @@ function filterTTLObj(itemIds, existItems) {
 export function* loadBookData(bookIds) {
   const existBooks = yield select(state => state.books.books);
   const filteredBookIds = filterTTLObj(bookIds, existBooks);
-  const bookIdsWithoutEmptyString = filteredBookIds.filter(bookId => bookId !== '');
+  // 빈 문자열, null, undefined 등의 값을 걸러냄
+  const bookIdsWithoutInvalidValue = filteredBookIds.filter(Boolean);
 
-  if (bookIdsWithoutEmptyString.length === 0) {
+  if (bookIdsWithoutInvalidValue.length === 0) {
     return;
   }
 
-  const books = yield call(fetchBookData, bookIdsWithoutEmptyString);
+  const books = yield call(fetchBookData, bookIdsWithoutInvalidValue);
   yield put(setBookData(books));
 
   // TODO: LRU버그로 인해 주석처리
