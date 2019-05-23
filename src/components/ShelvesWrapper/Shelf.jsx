@@ -6,6 +6,7 @@ import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { makeLinkProps } from '../../utils/uri';
 import { ShelfEditButton } from './ShelfEditButton';
 import { shelfStyles } from './styles/shelf';
+import { ShelfSelectButton } from './ShelfSelectButton';
 
 export const Shelf = props => {
   const THUMBNAIL_TOTAL_COUNT = 3;
@@ -17,7 +18,7 @@ export const Shelf = props => {
       <ul css={shelfStyles.thumbnails}>
         {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
           const thumbnailUrl = thumbnails[index];
-          const key = `shelves-${uuid}-thumbnail${index}-${thumbnailUrl}`;
+          const key = `shelf-${uuid}-thumbnail${index}-${thumbnailUrl}`;
           return (
             <li css={shelfStyles.thumbnail} key={key}>
               {thumbnailUrl ? <img src={thumbnailUrl} alt={`${name} 대표 이미지`} /> : <p>비었음</p>}
@@ -27,7 +28,7 @@ export const Shelf = props => {
       </ul>
       <div css={shelfStyles.infoWrapper}>
         <div css={shelfStyles.nameWrapper}>
-          <h1 css={shelfStyles.name}>책장명 {name}</h1>
+          <h1 css={shelfStyles.name}>{name}</h1>
         </div>
         <div css={shelfStyles.countWrapper}>
           <p css={shelfStyles.count}>
@@ -40,8 +41,7 @@ export const Shelf = props => {
         <a css={shelfStyles.link}>{name} 바로가기</a>
       </Link>
       <ShelfEditButton editable />
-      <div />
-      {selectMode && <div>선택모드 활성화</div>}
+      <ShelfSelectButton selectMode />
     </article>
   );
 };

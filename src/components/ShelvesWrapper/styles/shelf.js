@@ -198,4 +198,39 @@ export const shelfStyles = {
       background: #f3f4f5;
     }
   `,
+  selectWrapper: css`
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  `,
+  selectLabel: css`
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  `,
+  selectIconWrapper: css`
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 40px;
+    overflow: hidden;
+  `,
+  selectIcon: css`
+    fill: white;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    &.active {
+      background: rgb(31, 140, 230);
+    }
+  `,
 };
