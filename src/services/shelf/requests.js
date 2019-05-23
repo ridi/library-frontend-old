@@ -18,6 +18,24 @@ export async function fetchShelfCount() {
   return response.data.count;
 }
 
+export async function fetchShelfBooks({ uuid, offset, limit }) {
+  const api = getApi();
+  const response = await api.get(makeURI(`/shelves/${uuid}/`, { offset, limit }, config.LIBRARY_API_BASE_URL));
+  const items = response.data.items.map(item => ({
+    bookIds: item.b_ids,
+    unitId: item.unit_id,
+  }));
+  const shelfInfo = {
+    id: response.data.shelf.id,
+    uuid: response.data.shelf.shelf_uuid,
+    name: response.data.shelf.name,
+  };
+  return {
+    items,
+    shelfInfo,
+  };
+}
+
 export async function createOperation(ops) {
   const api = getApi();
   const payload = {

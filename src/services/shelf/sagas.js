@@ -1,10 +1,14 @@
 import { all, call, put, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
+import { ServiceType } from '../../constants/serviceType';
+import * as bookRequests from '../book/requests';
+import * as bookSagas from '../book/sagas';
 import * as actions from './actions';
 import * as requests from './requests';
 
 const COUNT_PER_PAGE = 20;
+const BOOK_COUNT_PER_PAGE = 48;
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -19,17 +23,48 @@ const OperationStatus = {
   FORBIDDEN: 'forbidden',
 };
 
-function* loadShelves({ payload }) {
+function* loadShelves(isServer, { payload }) {
   const { orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * COUNT_PER_PAGE;
   const limit = COUNT_PER_PAGE;
-  const items = yield call(requests.fetchShelves, { offset, limit });
-  yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
+  try {
+    const items = yield call(requests.fetchShelves, { offset, limit });
+    yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
 }
 
-function* loadShelfCount() {
-  const count = yield call(requests.fetchShelfCount);
-  yield put(actions.setShelfCount(count));
+function* loadShelfCount(isServer) {
+  try {
+    const count = yield call(requests.fetchShelfCount);
+    yield put(actions.setShelfCount(count));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
+}
+
+function* loadShelfBooks(isServer, { payload }) {
+  const { uuid, orderBy, orderDirection, page } = payload;
+  const offset = (page - 1) * BOOK_COUNT_PER_PAGE;
+  const limit = BOOK_COUNT_PER_PAGE;
+  try {
+    const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
+    yield put(actions.setShelfInfo(shelfInfo));
+    const libraryBooks = yield call(bookRequests.fetchLibraryUnitData, items.map(item => item.unitId));
+    yield put(actions.setLibraryBooks(libraryBooks));
+    const bookIds = libraryBooks.map(book => book.b_id);
+    yield call(bookSagas.loadBookData, bookIds);
+    yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
 }
 
 function* performOperation(ops) {
@@ -109,11 +144,38 @@ function* deleteShelf({ payload }) {
   // 책장 삭제 에러는 무시함
 }
 
-export default function* shelfRootSaga() {
+function* addShelfItem({ payload }) {
+  const { uuid, units } = payload;
+  const ops = units.map(({ unitId, bookIds }) => ({
+    type: OperationType.ADD_SHELF_ITEM,
+    uuid,
+    unitId,
+    bookIds,
+  }));
+  yield call(performOperation, ops);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+}
+
+function* deleteShelfItem({ payload }) {
+  const { uuid, units } = payload;
+  const ops = units.map(({ unitId, bookIds }) => ({
+    type: OperationType.DELETE_SHELF_ITEM,
+    uuid,
+    unitId,
+    bookIds,
+  }));
+  yield call(performOperation, ops);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+}
+
+export default function* shelfRootSaga(isServer) {
   yield all([
-    takeEvery(actions.LOAD_SHELVES, loadShelves),
-    takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
+    takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
+    takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount, isServer),
+    takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
+    takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
+    takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
   ]);
 }

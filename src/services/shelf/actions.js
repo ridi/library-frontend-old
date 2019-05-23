@@ -4,12 +4,17 @@ export const LOAD_SHELF_BOOKS = 'LOAD_SHELF_BOOKS';
 export const LOAD_SHELF_BOOK_COUNT = 'LOAD_SHELF_BOOK_COUNT';
 
 export const SET_SHELVES = 'SET_SHELVES';
+export const SET_SHELF_INFO = 'SET_SHELF_INFO';
 export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
 
+export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
+
 export const ADD_SHELF = 'ADD_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
+export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
+export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
 export const BEGIN_OPERATION = 'BEGIN_OPERATION';
 export const END_OPERATION = 'END_OPERATION';
@@ -59,6 +64,15 @@ export const setShelves = ({ orderBy, orderDirection, page, items }) => ({
   },
 });
 
+export const setShelfInfo = ({ id, uuid, name }) => ({
+  type: SET_SHELF_INFO,
+  payload: {
+    id,
+    uuid,
+    name,
+  },
+});
+
 export const setShelfCount = count => ({
   type: SET_SHELF_COUNT,
   payload: count,
@@ -89,6 +103,13 @@ export const setShelfBookCount = ({ uuid, count }) => ({
   },
 });
 
+export const setLibraryBooks = books => ({
+  type: SET_LIBRARY_BOOKS,
+  payload: {
+    books,
+  },
+});
+
 export const addShelf = ({ name }) => ({
   type: ADD_SHELF,
   payload: {
@@ -100,6 +121,22 @@ export const deleteShelf = ({ uuid }) => ({
   type: DELETE_SHELF,
   payload: {
     uuid,
+  },
+});
+
+export const addShelfItem = ({ uuid, units }) => ({
+  type: ADD_SHELF_ITEM,
+  payload: {
+    uuid,
+    units,
+  },
+});
+
+export const deleteShelfItem = ({ uuid, units }) => ({
+  type: DELETE_SHELF_ITEM,
+  payload: {
+    uuid,
+    units,
   },
 });
 
