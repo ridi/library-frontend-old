@@ -38,7 +38,7 @@ commands:
         default: PROD_AWS_SECRET_ACCESS_KEY
     steps:
       - attach_workspace:
-          at: out
+          at: .
       - aws-s3/sync:
           from: out
           to: <<parameters.to>>
