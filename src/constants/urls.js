@@ -65,11 +65,6 @@ export const URLMap = {
     regex: /^\/books\/hidden\/(\d+)\/?$/,
     keys: ['unitId'],
   },
-  [PageType.SHELVES]: {
-    href: '/shelves',
-    as: '/shelves',
-    regex: /^\/shelves\/?$/,
-  },
   [PageType.SERIAL_PREFERENCE]: {
     href: '/serialPreference',
     as: '/serial-preferences',
@@ -81,8 +76,13 @@ export const URLMap = {
     regex: /^\/serial-preferences\/(\d+)\/?$/,
     keys: ['unitId'],
   },
+  [PageType.SHELVES]: {
+    href: '/shelves/list',
+    as: '/shelves',
+    regex: /^\/shelves\/?$/,
+  },
   [PageType.SHELF_DETAIL]: {
-    href: '/shelf/detail',
+    href: '/shelves/detail',
     as: ({ uuid }) => `/shelf/${uuid}`,
     regex: /^\/shelf\/([0-9a-f-]+)\/?$/,
     keys: ['uuid'],

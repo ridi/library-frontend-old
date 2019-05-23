@@ -3,8 +3,8 @@ import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
-import { TabBar, TabMenuTypes } from '../base/LNB';
-import ShelvesWrapper from '../../components/ShelvesWrapper';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
+import ShelvesWrapper from '../../../components/ShelvesWrapper';
 
 class Shelves extends React.Component {
   render() {
