@@ -120,6 +120,7 @@ export const shelfStyles = {
     ${ResponsiveCountWrapper}
   `,
   count: css`
+    position: relative;
     display: inline-block;
     padding: 0 14px 0 10px;
     border: solid 1px #808991;
@@ -129,6 +130,16 @@ export const shelfStyles = {
     font-size: 12px;
     font-weight: 600;
     color: #808991;
+  `,
+  countArrowIcon: css`
+    display: block;
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    margin-top: -3px;
+    width: 3px;
+    height: 6px;
+    fill: #808991;
   `,
   link: css`
     display: block;
