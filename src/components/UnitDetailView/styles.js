@@ -155,6 +155,7 @@ export const bookDescriptionExpend = {
 export const bookDescription = {
   wordWrap: 'break-word',
   wordBreak: 'break-all',
+  fontSize: '15px',
   ':lang(ko)': {
     wordBreak: 'keep-all',
   },

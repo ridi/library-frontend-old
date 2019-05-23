@@ -14,6 +14,7 @@ const APP_ROUTES = [
   { page: 'purchased/searchUnit', pattern: '/books/search/:unit_id' },
   { page: 'purchased/mainUnit', pattern: '/books/:unit_id' },
   { page: 'shelf/detail', pattern: '/shelf/:uuid' },
+  { page: 'shelves', pattern: '/shelves' },
   { page: 'errors/notFound', pattern: '/errors/not-found' },
 ];
 
