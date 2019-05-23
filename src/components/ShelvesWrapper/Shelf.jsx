@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 import { PageType, URLMap } from '../../constants/urls';
+import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { makeLinkProps } from '../../utils/uri';
 import { ShelfEditButton } from './ShelfEditButton';
 import { shelfStyles } from './styles/shelf';
@@ -29,13 +30,17 @@ export const Shelf = props => {
           <h1 css={shelfStyles.name}>책장명 {name}</h1>
         </div>
         <div css={shelfStyles.countWrapper}>
-          <p css={shelfStyles.count}>총 {totalCount || 0}권</p>
+          <p css={shelfStyles.count}>
+            총 {totalCount || 0}권
+            <ArrowTriangleRight css={shelfStyles.countArrowIcon} />
+          </p>
         </div>
       </div>
       <Link prefetch {...makeLinkProps(href, as, { uuid })}>
         <a css={shelfStyles.link}>{name} 바로가기</a>
       </Link>
       <ShelfEditButton editable />
+      <div />
       {selectMode && <div>선택모드 활성화</div>}
     </article>
   );
