@@ -52,6 +52,7 @@ commands:
           aws-access-key-id: <<parameters.access_key_id>>
           aws-secret-access-key: <<parameters.secret_access_key>>
           arguments: |
+            --metadata-directive REPLACE \
             --acl public-read \
             --cache-control "max-age=0,no-cache,no-store,must-revalidate"
 executors:
