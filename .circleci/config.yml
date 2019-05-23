@@ -8,13 +8,15 @@ commands:
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
       - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
   s3-deploy:
@@ -36,7 +38,7 @@ commands:
         default: PROD_AWS_SECRET_ACCESS_KEY
     steps:
       - attach_workspace:
-          at: .
+          at: out
       - aws-s3/sync:
           from: out
           to: <<parameters.to>>
@@ -83,7 +85,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - out
   deploy-dev:
     executor: deploy-executor
     steps:
