@@ -1,5 +1,6 @@
 import { captureMessage } from '@sentry/browser';
 import { put } from 'redux-saga/effects';
+import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
 
 import config from '../../config';
@@ -111,4 +112,37 @@ export function* fetchUnitIdMap(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books/units/ids', null, config.LIBRARY_API_BASE_URL), data);
   return response.data;
+}
+
+export async function fetchLibraryBookData(bookIds) {
+  const options = {
+    b_ids: bookIds,
+  };
+  const api = getApiSingleton();
+  const response = await api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
+  return response.data;
+}
+
+export async function fetchLibraryUnitData(unitIds) {
+  const api = getApiSingleton();
+  const promises = unitIds.map(async unitId => {
+    const [detailResponse, countResponse] = await Promise.all([
+      api.get(makeURI(`/items/search/${unitId}/`, { offset: 0, limit: 1 }, config.LIBRARY_API_BASE_URL)),
+      api.get(makeURI(`/items/search/${unitId}/count/`, {}, config.LIBRARY_API_BASE_URL)),
+    ]);
+    const unitDetail = detailResponse.data.unit;
+    const bookDetail = detailResponse.data.items[0];
+    return {
+      unit_count: countResponse.data.item_total_count,
+      remain_time: bookDetail.remain_time,
+      expire_date: bookDetail.expire_date,
+      is_ridiselect: bookDetail.is_ridiselect,
+      unit_type: unitDetail.type,
+      unit_title: unitDetail.title,
+      b_id: bookDetail.b_id,
+      purchase_date: bookDetail.purchase_date,
+      unit_id: unitDetail.id,
+    };
+  });
+  return Promise.all(promises);
 }

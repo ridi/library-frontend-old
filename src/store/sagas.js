@@ -16,7 +16,7 @@ import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
 import trackingRootSaga from '../services/tracking/sagas';
 
-export default function* rootSaga() {
+export default function* rootSaga(isServer) {
   yield all([
     commonRootSaga(),
     accountRootSaga(),
@@ -30,7 +30,7 @@ export default function* rootSaga() {
     purchasedHiddenSaga(),
     purchaseHiddenUnitRootSaga(),
     serialPreferenceRootSaga(),
-    shelfRootSaga(),
+    shelfRootSaga(isServer),
     toastRootSaga(),
     trackingRootSaga(),
     bookDownloadRootSaga(),

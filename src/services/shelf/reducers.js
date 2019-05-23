@@ -7,9 +7,11 @@ import {
   LOAD_SHELF_BOOKS,
   LOAD_SHELF_COUNT,
   LOAD_SHELVES,
+  SET_LIBRARY_BOOKS,
   SET_SHELF_BOOK_COUNT,
   SET_SHELF_BOOKS,
   SET_SHELF_COUNT,
+  SET_SHELF_INFO,
   SET_SHELVES,
 } from './actions';
 
@@ -48,6 +50,8 @@ import {
  *       },
  *     },
  *   },
+ *   libraryBooks: {
+ *   },
  * }
  * */
 const initialState = {
@@ -55,6 +59,7 @@ const initialState = {
   shelfCount: null,
   shelves: {},
   shelf: {},
+  libraryBooks: {},
 };
 
 const makeBaseShelfData = uuid => ({
@@ -104,6 +109,15 @@ const shelfReducer = produce((draft, action) => {
       }
       break;
     }
+    case SET_SHELF_INFO: {
+      const { id, uuid, name } = action.payload;
+      if (draft.shelf[uuid] == null) {
+        draft.shelf[uuid] = makeBaseShelfData(uuid);
+      }
+      draft.shelf[uuid].id = id;
+      draft.shelf[uuid].name = name;
+      break;
+    }
     case LOAD_SHELF_COUNT:
       draft.shelfCount = null;
       break;
@@ -151,6 +165,13 @@ const shelfReducer = produce((draft, action) => {
         draft.shelf[uuid] = makeBaseShelfData(uuid);
       }
       draft.shelf[uuid].bookCount = count;
+      break;
+    }
+    case SET_LIBRARY_BOOKS: {
+      const { books } = action.payload;
+      for (const book of books) {
+        draft.libraryBooks[book.b_id] = book;
+      }
       break;
     }
     default:
