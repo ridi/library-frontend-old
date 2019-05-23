@@ -65,7 +65,7 @@ executors:
 jobs:
   build:
     docker:
-      - image: circleci/node
+      - image: circleci/node:lts
     working_directory: ~/project
     parameters:
       ENVIRONMENT:
