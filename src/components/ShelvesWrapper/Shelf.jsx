@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
-import { URLMap, PageType } from '../../constants/urls';
+import { PageType, URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
+import { ShelfEditButton } from './ShelfEditButton';
 import { shelfStyles } from './styles/shelf';
-import { ShelfEditButton } from './Edit';
 
 export const Shelf = props => {
   const THUMBNAIL_TOTAL_COUNT = 3;
