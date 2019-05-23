@@ -21,7 +21,11 @@ export const Shelf = props => {
           const key = `shelf-${uuid}-thumbnail${index}-${thumbnailUrl}`;
           return (
             <li css={shelfStyles.thumbnail} key={key}>
-              {thumbnailUrl ? <img src={thumbnailUrl} alt={`${name} 대표 이미지`} /> : <p>비었음</p>}
+              {thumbnailUrl ? (
+                <img src={thumbnailUrl} alt={`${name} 대표 이미지`} />
+              ) : (
+                <span className="a11y">책장 구성도서 썸네일 영역</span>
+              )}
             </li>
           );
         })}
@@ -38,7 +42,9 @@ export const Shelf = props => {
         </div>
       </div>
       <Link prefetch {...makeLinkProps(href, as, { uuid })}>
-        <a css={shelfStyles.link}>{name} 바로가기</a>
+        <a css={shelfStyles.link}>
+          <span className="a11y">{name} 바로가기</span>
+        </a>
       </Link>
       <ShelfEditButton editable />
       <ShelfSelectButton selectMode />
