@@ -60,8 +60,8 @@ const ResponsiveEditWrapper = `
   ${MQ(
     [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
     `
-    right: 5px;
-    bottom: 9px;
+      right: 5px;
+      bottom: 9px;
     `,
   )}
   ${MQ(

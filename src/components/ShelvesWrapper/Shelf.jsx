@@ -1,54 +1,20 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React, { useState } from 'react';
 import Link from 'next/link';
 import { URLMap, PageType } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import { shelfStyles } from './styles/shelf';
-import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
-import IconButton from '../IconButton';
+import { ShelfEditButton } from './Edit';
 
 export const Shelf = props => {
-  const [editModalActive, setEditModalActive] = useState(false);
-
   const THUMBNAIL_TOTAL_COUNT = 3;
   const { id: uuid, name, totalCount, thumbnails, selectMode } = props;
   const { href, as } = URLMap[PageType.SHELVES]; // TODO : 책장 상세로 바꿔야함
-  thumbnails.length = THUMBNAIL_TOTAL_COUNT;
-
-  const EditButton = editable =>
-    editable ? (
-      <div css={shelfStyles.editWrapper} className={editModalActive ? 'active' : ''}>
-        <IconButton
-          css={shelfStyles.editButton}
-          onClick={() => {
-            setEditModalActive(!editModalActive);
-          }}
-          a11y="편집"
-        >
-          <ThreeDotsVertical css={shelfStyles.editButtonIcon} />
-        </IconButton>
-        <div css={shelfStyles.editModalWrapper}>
-          <ul css={shelfStyles.editModal}>
-            <li>
-              <button type="button" css={shelfStyles.editModalButton}>
-                책장 이름 변경
-              </button>
-            </li>
-            <li>
-              <button type="button" css={shelfStyles.editModalButton}>
-                책장 삭제
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    ) : null;
 
   return (
     <article css={shelfStyles.wrapper}>
       <ul css={shelfStyles.thumbnails}>
-        {Array.from(thumbnails.keys()).map(index => {
+        {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
           const thumbnailUrl = thumbnails[index];
           const key = `shelves-${uuid}-thumbnail${index}-${thumbnailUrl}`;
           return (
@@ -69,7 +35,7 @@ export const Shelf = props => {
       <Link prefetch {...makeLinkProps(href, as, { uuid })}>
         <a css={shelfStyles.link}>{name} 바로가기</a>
       </Link>
-      <EditButton editable />
+      <ShelfEditButton editable />
       {selectMode && <div>선택모드 활성화</div>}
     </article>
   );
