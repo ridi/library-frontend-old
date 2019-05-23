@@ -17,6 +17,48 @@ commands:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+  s3-deploy:
+    description: Deploy to S3 bucket
+    parameters:
+      to:
+        type: string
+      exclude_params:
+        type: string
+        default: ''
+      index:
+        type: string
+        default: 'index.html'
+      access_key_id:
+        type: env_var_name
+        default: PROD_AWS_ACCESS_KEY_ID
+      secret_access_key:
+        type: env_var_name
+        default: PROD_AWS_SECRET_ACCESS_KEY
+    steps:
+      - attach_workspace:
+          at: .
+      - aws-s3/sync:
+          from: out
+          to: <<parameters.to>>
+          aws-access-key-id: <<parameters.access_key_id>>
+          aws-secret-access-key: <<parameters.secret_access_key>>
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=31536000" \
+            <<parameters.exclude_params>>
+      - aws-s3/copy:
+          from: '<<parameters.to>>/index.html'
+          to: '<<parameters.to>>/index.html'
+          aws-access-key-id: <<parameters.access_key_id>>
+          aws-secret-access-key: <<parameters.secret_access_key>>
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+executors:
+  deploy-executor:
+    docker:
+      - image: circleci/python:2.7
+    working_directory: ~/project
 jobs:
   build:
     docker:
@@ -32,6 +74,8 @@ jobs:
       - run:
           name: Build next.js application
           command: yarn build
+          environment:
+            ENVIRONMENT: ENVIRONMENT
       - run:
           name: Export outputs
           command: yarn export
@@ -39,65 +83,31 @@ jobs:
           root: .
           paths:
             - .
-  deploy:
-    working_directory: ~/project
-    docker:
-      - image: circleci/python:2.7
+  deploy-dev:
+    executor: deploy-executor
     steps:
-      - attach_workspace:
-          at: .
-      # dev
-      - when:
-          condition: true 
-          steps:
-            - aws-s3/sync:
-                from: out
-                to: 's3://ridi-library-dev-test'
-                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
-                arguments: |
-                  --acl public-read \
-                  --cache-control "max-age=31536000"
-      # staging
-      - when:
-          condition: false
-          steps:
-            - aws-s3/sync:
-                from: out
-                to: 's3://ridi-library-prod'
-                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-                arguments: |
-                  --acl public-read \
-                  --cache-control "max-age=31536000" \
-                  --exclude "index.html" \
-                  --exclude "*.map"
-            - aws-s3/copy:
-                from: 's3://ridi-library-prod/staging.html'
-                to: 's3://ridi-library-prod/staging.html'
-                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-                arguments: |
-                  --acl public-read \
-                  --cache-control "max-age=0,no-cache,no-store,must-revalidate"
-      # prod
-      - when:
-          condition: false
-          steps:
-            - aws-s3/sync:
-                from: out
-                to: 's3://ridi-library-prod'
-                arguments: |
-                  --acl public-read \
-                  --cache-control "max-age=31536000" \
-                  --exclude "*.html" \
-                  --exclude "*.map"
-            - aws-s3/copy:
-                from: 'dist/index.html'
-                to: 's3://ridi-library-prod/index.html'
-                arguments: |
-                  --acl public-read \
-                  --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+      - s3-deploy:
+          to: 's3://ridi-library-dev-test'
+          exclude_params: --exclude "staging.html"
+          access_key_id: DEV_AWS_ACCESS_KEY_ID
+          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
+  deploy-stage:
+    executor: deploy-executor
+    steps:
+      - s3-deploy:
+          to: 's3://ridi-library-dev-test'
+          exclude_params: --exclude "index.html" --exclude "*.map"
+          index: "staging.html"
+          access_key_id: DEV_AWS_ACCESS_KEY_ID
+          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
+  deploy-prod:
+    executor: deploy-executor
+    steps:
+      - s3-deploy:
+          to: 's3://ridi-library-dev-test'
+          exclude_params: --exclude "staging.html" --exclude "*.map"
+          access_key_id: DEV_AWS_ACCESS_KEY_ID
+          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
 workflows:
   version: 2
   build-deploy:
@@ -117,7 +127,7 @@ workflows:
               only:
                 - master
                 - release
-      - deploy:
+      - deploy-dev:
           requires:
             - build-dev
           filters:
@@ -125,16 +135,15 @@ workflows:
               only:
                 - master
                 - add-circle-ci
-      - deploy:
+      - deploy-stage:
           requires:
             - build-prod
           filters:
             branches:
               only: master
-      - deploy:
+      - deploy-prod:
           requires:
             - build-prod
           filters:
             branches:
-              only:
-                - release
+              only: release
