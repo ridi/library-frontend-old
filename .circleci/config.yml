@@ -19,56 +19,19 @@ commands:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-  s3-deploy:
-    description: Deploy to S3 bucket
-    parameters:
-      to:
-        type: string
-      exclude_params:
-        type: string
-        default: ''
-      index:
-        type: string
-        default: 'index.html'
-      access_key_id:
-        type: env_var_name
-        default: PROD_AWS_ACCESS_KEY_ID
-      secret_access_key:
-        type: env_var_name
-        default: PROD_AWS_SECRET_ACCESS_KEY
-    steps:
-      - attach_workspace:
-          at: .
-      - aws-s3/sync:
-          from: out
-          to: <<parameters.to>>
-          aws-access-key-id: <<parameters.access_key_id>>
-          aws-secret-access-key: <<parameters.secret_access_key>>
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=31536000" \
-            <<parameters.exclude_params>>
-      - aws-s3/copy:
-          from: '<<parameters.to>>/index.html'
-          to: '<<parameters.to>>/index.html'
-          aws-access-key-id: <<parameters.access_key_id>>
-          aws-secret-access-key: <<parameters.secret_access_key>>
-          arguments: |
-            --metadata-directive REPLACE \
-            --acl public-read \
-            --cache-control "max-age=0,no-cache,no-store,must-revalidate"
-executors:
-  deploy-executor:
-    docker:
-      - image: circleci/python:2.7
-    working_directory: ~/project
+dev_aws: &dev_aws
+  aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+  aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+prod_aws: &prod_aws
+  aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+  aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
 jobs:
   build:
     docker:
       - image: circleci/node:lts
-    working_directory: ~/project
+    working_directory: ~/library-frontend
     parameters:
-      ENVIRONMENT:
+      env:
         type: string
         default: production
     steps:
@@ -76,77 +39,115 @@ jobs:
       - install
       - run:
           name: Build next.js application
-          command: yarn build
+          command: NODE_ENV=<<parameters.env>> yarn build
           environment:
-            ENVIRONMENT: ENVIRONMENT
+            SENTRY_RELEASE_VERSION: ${CIRCLE_SHA1}
       - run:
           name: Export outputs
-          command: yarn export
+          command: NODE_ENV=<<parameters.env>> yarn export
       - persist_to_workspace:
           root: .
           paths:
             - out
-  deploy-dev:
-    executor: deploy-executor
+  deploy:
+    docker:
+      - image: circleci/python
+    working_directory: ~/library-frontend
+    parameters:
+      dev:
+        type: boolean
+        default: false
+      stage:
+        type: boolean
+        default: false
+      prod:
+        type: boolean
+        default: false
+    environment:
+      S3_RELEASE_PARAMS: "--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate"
+      S3_ASSETS_PARAMS: "--cache-control public,max-age=31536000"
     steps:
-      - s3-deploy:
-          to: 's3://ridi-library-dev-test'
-          exclude_params: --exclude "staging.html"
-          access_key_id: DEV_AWS_ACCESS_KEY_ID
-          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
-  deploy-stage:
-    executor: deploy-executor
-    steps:
-      - s3-deploy:
-          to: 's3://ridi-library-dev-test'
-          exclude_params: --exclude "index.html" --exclude "*.map"
-          index: "staging.html"
-          access_key_id: DEV_AWS_ACCESS_KEY_ID
-          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
-  deploy-prod:
-    executor: deploy-executor
-    steps:
-      - s3-deploy:
-          to: 's3://ridi-library-dev-test'
-          exclude_params: --exclude "staging.html" --exclude "*.map"
-          access_key_id: DEV_AWS_ACCESS_KEY_ID
-          secret_access_key: DEV_AWS_SECRET_ACCESS_KEY
+      - attach_workspace:
+          at: .
+      - when:
+          condition: <<parameters.dev>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: s3://ridi-library-dev-test/dev
+                <<: *dev_aws
+                arguments: ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: 's3://ridi-library-dev-test/dev/index.html'
+                to: 's3://ridi-library-dev-test/dev/index.html'
+                <<: *dev_aws
+                arguments: ${S3_RELEASE_PARAMS}
+      - when:
+          condition: <<parameters.stage>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: s3://ridi-library-dev-test/prod
+                <<: *dev_aws
+                arguments: --exclude "index.html" --exclude "*.map" ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: out/index.html
+                to: 's3://ridi-library-dev-test/prod/staging.html'
+                <<: *dev_aws
+                arguments: ${S3_RELEASE_PARAMS}
+      - when:
+          condition: <<parameters.prod>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: s3://ridi-library-dev-test/prod
+                <<: *dev_aws
+                arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: 's3://ridi-library-dev-test/prod/index.html'
+                to: 's3://ridi-library-dev-test/prod/index.html'
+                <<: *dev_aws
+                arguments: ${S3_RELEASE_PARAMS}
 workflows:
   version: 2
-  build-deploy:
+  deploy-dev:
     jobs:
       - build:
           name: build-dev
-          filters:
+          filters: &master_only
             branches:
               only:
                 - master
                 - add-circle-ci
-          ENVIRONMENT: development
-      - build:
-          name: build-prod
-          filters:
-            branches:
-              only:
-                - master
-                - release
-      - deploy-dev:
+          env: development
+      - deploy:
+          name: deploy-dev
           requires:
             - build-dev
-          filters:
-            branches:
-              only:
-                - master
-                - add-circle-ci
-      - deploy-stage:
+          filters: *master_only
+          dev: true
+  deploy-stage:
+    jobs:
+      - build:
+          name: build-stage
+          filters: *master_only
+          env: staging
+      - deploy:
+          name: deploy-stage
           requires:
-            - build-prod
-          filters:
-            branches:
-              only: master
-      - deploy-prod:
-          requires:
-            - build-prod
-          filters:
+            - build-stage
+          filters: *master_only
+          stage: true
+  deploy-prod:
+    jobs:
+      - build:
+          name: build-prod
+          filters: &release_only
             branches:
               only: release
+      - deploy:
+          name: deploy-prod
+          requires:
+            - build-prod
+          filters: *release_only
+          prod: true
