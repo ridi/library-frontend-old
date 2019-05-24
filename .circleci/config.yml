@@ -116,7 +116,6 @@ jobs:
                 name: Set environment variables
                 command: |
                   echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
-                  echo "export TIMESTAMP=$(date '+%s')" >> $BASH_ENV
             - slack/notify:
                 color: good
                 title: $COMMIT_MESSAGE
