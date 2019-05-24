@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
+import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -9,10 +10,12 @@ import Editable from '../../../components/Editable';
 import FlexBar from '../../../components/FlexBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
+import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 
 const shelfBar = {
@@ -23,11 +26,31 @@ const shelfBar = {
 };
 
 function ShelfDetail(props) {
-  const linkBuilder = React.useCallback(() => null, []);
+  const { uuid } = props;
+
+  const linkBuilder = React.useCallback(
+    libraryBook => {
+      const unitId = libraryBook.unit_id;
+      const linkProps = makeLinkProps(
+        {
+          pathname: URLMap.shelfUnit.href,
+          query: { uuid, unitId },
+        },
+        URLMap.shelfUnit.as({ uuid, unitId }),
+        {},
+      );
+      return (
+        <Link prefetch {...linkProps}>
+          <a>더보기</a>
+        </Link>
+      );
+    },
+    [uuid],
+  );
 
   function renderShelfBar() {
     const { name } = props;
-    const left = <Title title={name} showCount={false} href="" as="/shelves" query={{}} />;
+    const left = <Title title={name} showCount={false} href="/shelves/list" as="/shelves" query={{}} />;
     return <FlexBar css={shelfBar} flexLeft={left} />;
   }
 
