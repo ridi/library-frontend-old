@@ -33,12 +33,12 @@ jobs:
       - install
       - run:
           name: Build next.js application
-          command: NODE_ENV=<<parameters.env>> yarn build
           environment:
             SENTRY_RELEASE_VERSION: ${CIRCLE_SHA1}
-      - run:
-          name: Export outputs
-          command: NODE_ENV=<<parameters.env>> yarn export
+            NODE_ENV: <<parameters.env>>
+          command: |
+            yarn build
+            yarn export
       - persist_to_workspace:
           root: .
           paths:
