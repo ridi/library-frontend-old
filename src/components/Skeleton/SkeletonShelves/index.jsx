@@ -1,4 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import { skeletonShelvesStyle } from './styles';
 
-export const SkeletonShelves = () => <div>책장 스켈레톤</div>;
+const SKELETON_TOTAL_COUNT = 20;
+export const SkeletonShelves = () =>
+  Array.from({ length: SKELETON_TOTAL_COUNT }, (_, index) => (
+    <div key={`SkeletonShelves-${index}`} css={skeletonShelvesStyle}>
+      Now Loading
+    </div>
+  ));

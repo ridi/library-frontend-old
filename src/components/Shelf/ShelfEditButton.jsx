@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import { useState } from 'react';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
-import { shelfStyles } from './styles/shelf';
+import { shelfStyles } from './styles';
 
 export const ShelfEditButton = editable => {
   const [modalActive, setModalActive] = useState(false);

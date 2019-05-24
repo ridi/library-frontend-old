@@ -1,37 +1,40 @@
 import { css } from '@emotion/core';
-import { MQ, Responsive } from '../../../styles/responsive';
+import { MQ, Responsive } from '../../styles/responsive';
 
-const responsiveWrapper = `
+export const responsiveWrapper = `
   ${MQ(
     [Responsive.XSmall],
     `
       width: 136px;
+      min-height: 130px;
     `,
   )}
   ${MQ(
     [Responsive.Small, Responsive.Medium],
     `
       width: 156px;
+      min-height: 140px;
     `,
   )}
   ${MQ(
     [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       width: 220px;
+      min-height: 197px;
     `,
   )}
 `;
 
 const responsiveNameWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       padding: 8px 7px;
       font-size: 15px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       padding: 14px 11px;
       font-size: 17px;
@@ -41,14 +44,14 @@ const responsiveNameWrapper = `
 
 const ResponsiveCountWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       padding: 1px 7px 11px 7px;
       font-size: 15px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       padding: 10px 11px 15px 11px;
       font-size: 17px;
@@ -58,14 +61,14 @@ const ResponsiveCountWrapper = `
 
 const ResponsiveEditWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       right: 5px;
       bottom: 9px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       right: 9px;
       bottom: 13px;

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { useState } from 'react';
-import { shelfStyles } from './styles/shelf';
+import { shelfStyles } from './styles';
 import CheckCircle from '../../svgs/CheckCircle.svg';
 
 export const ShelfSelectButton = ({ id, selectMode }) => {

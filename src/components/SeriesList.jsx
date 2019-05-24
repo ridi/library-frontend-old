@@ -12,7 +12,7 @@ import BookOutline from '../svgs/BookOutline.svg';
 import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
-import EmptyBookList from './EmptyBookList';
+import Empty from './Empty';
 import HorizontalRuler from './HorizontalRuler';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
@@ -106,7 +106,7 @@ class SeriesList extends React.Component {
     );
   }
 
-  getEmptyBookListMessage(defaultMessage) {
+  getEmptyMessage(defaultMessage) {
     const { currentOrder } = this.props;
 
     if (!currentOrder) {
@@ -142,7 +142,7 @@ class SeriesList extends React.Component {
 
     // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
     if (!isFetching && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage(message)} />;
+      return <Empty IconComponent={BookOutline} message={this.getEmptyMessage(message)} />;
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {

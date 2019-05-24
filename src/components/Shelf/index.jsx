@@ -5,12 +5,12 @@ import { PageType, URLMap } from '../../constants/urls';
 import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { makeLinkProps } from '../../utils/uri';
 import { ShelfEditButton } from './ShelfEditButton';
-import { shelfStyles } from './styles/shelf';
 import { ShelfSelectButton } from './ShelfSelectButton';
+import { shelfStyles } from './styles';
 
 export const Shelf = props => {
   const THUMBNAIL_TOTAL_COUNT = 3;
-  const { id: uuid, name, totalCount, thumbnails, selectMode } = props;
+  const { id: uuid, name, totalCount, thumbnails, editable, selectMode } = props;
   const { href, as } = URLMap[PageType.SHELVES]; // TODO : 책장 상세로 바꿔야함
 
   return (
@@ -46,8 +46,8 @@ export const Shelf = props => {
           <span className="a11y">{name} 바로가기</span>
         </a>
       </Link>
-      <ShelfEditButton editable />
-      <ShelfSelectButton selectMode />
+      <ShelfEditButton editable={editable} />
+      <ShelfSelectButton selectMode={selectMode} />
     </article>
   );
 };
