@@ -1,0 +1,166 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.9
+  slack: circleci/slack@2.5.1
+commands:
+  install:
+    steps:
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+  sentry_upload:
+    steps:
+      - run:
+          command: curl -sL https://sentry.io/get-cli/ | bash
+      - run:
+          command: |
+            sentry-cli releases new ${CIRCLE_SHA1}
+            sentry-cli releases files ${CIRCLE_SHA1} upload-sourcemaps ${CIRCLE_WORKING_DIRECTORY}/out
+            sentry-cli releases finalize ${CIRCLE_SHA1}
+          environment:
+            SENTRY_LOG_LEVEL: debug
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/library-frontend
+    parameters:
+      env:
+        type: string
+        default: production
+    steps:
+      - checkout
+      - install
+      - run:
+          name: Build next.js application
+          environment:
+            SENTRY_RELEASE_VERSION: ${CIRCLE_SHA1}
+            NODE_ENV: <<parameters.env>>
+          command: |
+            yarn build
+            yarn export
+      - persist_to_workspace:
+          root: .
+          paths:
+            - out
+  deploy:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/library-frontend
+    parameters:
+      dev:
+        type: boolean
+        default: false
+      stage:
+        type: boolean
+        default: false
+      prod:
+        type: boolean
+        default: false
+    environment:
+      S3_RELEASE_PARAMS: "--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate"
+      S3_ASSETS_PARAMS: "--cache-control public,max-age=31536000"
+    steps:
+      - attach_workspace:
+          at: .
+      - when:
+          condition: <<parameters.dev>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: ${S3_BUCKET_DEV}
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+                arguments: ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_DEV}/index.html
+                to: ${S3_BUCKET_DEV}/index.html
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+                arguments: ${S3_RELEASE_PARAMS}
+      - when:
+          condition: <<parameters.stage>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: ${S3_BUCKET_PROD}/staging
+                arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_PROD}/staging/index.html
+                to: ${S3_BUCKET_PROD}/staging/index.html
+                arguments: ${S3_RELEASE_PARAMS}
+      - when:
+          condition: <<parameters.prod>>
+          steps:
+            - aws-s3/sync:
+                from: out
+                to: ${S3_BUCKET_PROD}
+                arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_PROD}/index.html
+                to: ${S3_BUCKET_PROD}/index.html
+                arguments: ${S3_RELEASE_PARAMS}
+            - sentry_upload
+            - run:
+                name: Set environment variables
+                command: |
+                  echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+            - slack/notify:
+                color: good
+                title: $COMMIT_MESSAGE
+                title_link: $CIRCLE_COMPARE_URL
+                include_project_field: false
+                include_job_number_field: false
+workflows:
+  version: 2
+  deploy-dev:
+    jobs:
+      - build:
+          name: build-dev
+          filters: &master_only
+            branches:
+              only:
+                - master
+          env: development
+      - deploy:
+          name: deploy-dev
+          requires:
+            - build-dev
+          filters: *master_only
+          dev: true
+  deploy-stage:
+    jobs:
+      - build:
+          name: build-stage
+          filters: *master_only
+          env: staging
+      - deploy:
+          name: deploy-stage
+          requires:
+            - build-stage
+          filters: *master_only
+          stage: true
+  deploy-prod:
+    jobs:
+      - build:
+          name: build-prod
+          filters: &release_only
+            branches:
+              only: release
+      - deploy:
+          name: deploy-prod
+          requires:
+            - build-prod
+          filters: *release_only
+          prod: true
