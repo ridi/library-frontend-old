@@ -93,7 +93,7 @@ export const shelfStyles = {
     background: #e6e8eb;
     border-left: 1px solid #d1d5d9;
     flex: 1;
-    &:first-child {
+    &:first-of-type {
       border-left: 0;
     }
     img {
