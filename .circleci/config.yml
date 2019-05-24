@@ -1,9 +1,9 @@
 version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.9
+  slack: circleci/slack@2.5.1
 commands:
   install:
-    description: Install Dependencies
     steps:
       - restore_cache:
           name: Restore Yarn Package Cache
@@ -19,6 +19,17 @@ commands:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+  sentry_upload:
+    steps:
+      - run:
+          command: curl -sL https://sentry.io/get-cli/ | bash
+      - run:
+          command: |
+            sentry-cli releases new ${CIRCLE_SHA1}
+            sentry-cli releases files ${CIRCLE_SHA1} upload-sourcemaps ${CIRCLE_WORKING_DIRECTORY}/out
+            sentry-cli releases finalize ${CIRCLE_SHA1}
+          environment:
+            SENTRY_LOG_LEVEL: debug
 jobs:
   build:
     docker:
@@ -58,8 +69,6 @@ jobs:
         type: boolean
         default: false
     environment:
-      S3_BUCKET_DEV: s3://ridi-library-dev
-      S3_BUCKET_PROD: s3://ridi-library-prod
       S3_RELEASE_PARAMS: "--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate"
       S3_ASSETS_PARAMS: "--cache-control public,max-age=31536000"
     steps:
@@ -102,6 +111,20 @@ jobs:
                 from: ${S3_BUCKET_PROD}/index.html
                 to: ${S3_BUCKET_PROD}/index.html
                 arguments: ${S3_RELEASE_PARAMS}
+            - sentry_upload
+            - run:
+                name: Set environment variables
+                command: |
+                  echo "export COMMIT_TITLE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+                  echo "export TIMESTAMP=$(date '+%s')" >> $BASH_ENV
+            - slack/notify:
+                color: good
+                title: $COMMIT_TITLE
+                title_link: $CIRCLE_COMPARE_URL
+                ts: $TIMESTAMP
+                include_project_field: false
+                include_job_number_field: false
+                include_visit_job_action: false
 workflows:
   version: 2
   deploy-dev:
@@ -112,7 +135,6 @@ workflows:
             branches:
               only:
                 - master
-                - add-circle-ci
           env: development
       - deploy:
           name: deploy-dev
