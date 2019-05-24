@@ -10,9 +10,12 @@ import Editable from '../../../components/Editable';
 import FlexBar from '../../../components/FlexBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
+import * as Tools from '../../../components/Tool';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
+import * as selectionActions from '../../../services/selection/actions';
+import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
 import { makeLinkProps } from '../../../utils/uri';
@@ -25,8 +28,25 @@ const shelfBar = {
   marginTop: -1,
 };
 
+const toolsWrapper = {
+  flex: 'auto',
+  justifyContent: 'flex-end',
+  display: 'flex',
+  alignItems: 'center',
+  paddingLeft: 2,
+  whiteSpace: 'nowrap',
+};
+
 function ShelfDetail(props) {
-  const { uuid } = props;
+  const { bookIds, clearSelectedBooks, selectBooks, totalSelectedCount, uuid } = props;
+  const visibleBookCount = bookIds.length;
+
+  const [isEditing, setIsEditing] = React.useState(false);
+  const toggleEditingMode = React.useCallback(() => {
+    clearSelectedBooks();
+    setIsEditing(value => !value);
+  }, []);
+  const selectAllBooks = React.useCallback(() => selectBooks(bookIds), [bookIds]);
 
   const linkBuilder = React.useCallback(
     libraryBook => {
@@ -51,7 +71,12 @@ function ShelfDetail(props) {
   function renderShelfBar() {
     const { name } = props;
     const left = <Title title={name} showCount={false} href="/shelves/list" as="/shelves" query={{}} />;
-    return <FlexBar css={shelfBar} flexLeft={left} />;
+    const right = (
+      <div css={toolsWrapper}>
+        <Tools.Editing toggleEditingMode={toggleEditingMode} />
+      </div>
+    );
+    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
   function renderMain() {
@@ -64,7 +89,7 @@ function ShelfDetail(props) {
         <Books
           libraryBookDTO={libraryBooks}
           platformBookDTO={platformBooks}
-          isSelectMode={false}
+          isSelectMode={isEditing}
           viewType={ViewType.PORTRAIT}
           linkBuilder={linkBuilder}
         />
@@ -73,12 +98,30 @@ function ShelfDetail(props) {
     return <ResponsiveBooks>{books}</ResponsiveBooks>;
   }
 
+  const editingBarProps = {
+    totalSelectedCount,
+    isSelectedAllBooks: totalSelectedCount === visibleBookCount,
+    onClickSelectAllBooks: selectAllBooks,
+    onClickUnselectAllBooks: clearSelectedBooks,
+    onClickSuccessButton: toggleEditingMode,
+  };
+
+  const actionBarProps = {
+    buttonProps: [],
+  };
+
   return (
     <>
       <Head>
         <title>{props.name} - 내 서재</title>
       </Head>
-      <Editable allowFixed isEditing={false} nonEditBar={renderShelfBar()} editingBarProps={{}} actionBarProps={{}}>
+      <Editable
+        allowFixed
+        isEditing={isEditing}
+        nonEditBar={renderShelfBar()}
+        editingBarProps={editingBarProps}
+        actionBarProps={actionBarProps}
+      >
         <main>{renderMain()}</main>
       </Editable>
     </>
@@ -106,18 +149,29 @@ function mapStateToProps(state, props) {
   const bookCount = selectors.getShelfBookCount(state, uuid);
 
   const pageOptions = { orderBy, orderDirection, page };
-  const { loading: booksLoading, items } = selectors.getShelfBooks(state, uuid, pageOptions);
+  const { loading: booksLoading } = selectors.getShelfBooks(state, uuid, pageOptions);
   const libraryBooks = selectors.getLibraryBooks(state, uuid, pageOptions);
   const bookIds = selectors.getBookIds(state, uuid, pageOptions);
   const platformBooks = bookSelectors.getBooks(state, bookIds);
+
+  const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   return {
     bookCount,
+    bookIds,
     booksLoading,
-    items,
     libraryBooks,
     name,
     platformBooks,
+    totalSelectedCount,
   };
 }
 
-export default connect(mapStateToProps)(ShelfDetail);
+const mapDispatchToProps = {
+  clearSelectedBooks: selectionActions.clearSelectedBooks,
+  selectBooks: selectionActions.selectBooks,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ShelfDetail);
