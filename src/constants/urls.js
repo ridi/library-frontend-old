@@ -18,6 +18,7 @@ export const PageType = {
   SERIAL_PREFERENCE: 'serialPreference',
   SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
   SHELF_DETAIL: 'shelfDetail',
+  SHELF_UNIT: 'shelfUnit',
   NOT_FOUND: 'notFound',
 };
 
@@ -87,6 +88,12 @@ export const URLMap = {
     regex: /^\/shelf\/([0-9a-f-]+)\/?$/,
     keys: ['uuid'],
   },
+  [PageType.SHELF_UNIT]: {
+    href: '/purchased/searchUnit',
+    as: ({ uuid, unitId }) => `/shelf/${uuid}/${unitId}`,
+    regex: /^\/shelf\/([0-9a-f-]+)\/(\d+)\/?$/,
+    keys: ['uuid', 'unitId'],
+  },
   [PageType.NOT_FOUND]: {
     href: '/errors/notFound',
     as: '/errors/not-found',
@@ -121,9 +128,10 @@ export const toURLMap = pathname => {
 
     if (result) {
       if (typeof urlInfo.as === 'function') {
-        const query = {
-          [urlInfo.keys[0]]: result[1],
-        };
+        const query = {};
+        urlInfo.keys.forEach((key, idx) => {
+          query[key] = result[idx + 1];
+        });
         return {
           href: { pathname: urlInfo.href, query },
           as: { pathname: urlInfo.as(query) },

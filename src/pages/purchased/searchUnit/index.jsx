@@ -30,6 +30,9 @@ class searchUnit extends React.Component {
     await store.dispatch(setUnitId(query.unit_id));
     await store.dispatch(clearSelectedBooks());
     await store.dispatch(loadItems());
+    return {
+      uuid: query.uuid,
+    };
   }
 
   render() {
@@ -96,11 +99,21 @@ const mergeProps = (state, actions, props) => {
     query: { orderType, orderBy },
   };
 
-  const backPageProps = {
-    href: URLMap[PageType.SEARCH].href,
-    as: URLMap[PageType.SEARCH].as,
-    query: { keyword, page: searchPageInfo.currentPage },
-  };
+  let backPageProps;
+  if (props.uuid) {
+    const { uuid } = props;
+    backPageProps = {
+      href: { pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } },
+      as: URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+      query: {},
+    };
+  } else {
+    backPageProps = {
+      href: URLMap[PageType.SEARCH].href,
+      as: URLMap[PageType.SEARCH].as,
+      query: { keyword, page: searchPageInfo.currentPage },
+    };
+  }
 
   return {
     ...state,
