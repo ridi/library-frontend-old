@@ -19,12 +19,6 @@ commands:
           key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-dev_aws: &dev_aws
-  aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
-  aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
-prod_aws: &prod_aws
-  aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-  aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
 jobs:
   build:
     docker:
@@ -64,6 +58,8 @@ jobs:
         type: boolean
         default: false
     environment:
+      S3_BUCKET_DEV: s3://ridi-library-dev
+      S3_BUCKET_PROD: s3://ridi-library-prod
       S3_RELEASE_PARAMS: "--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate"
       S3_ASSETS_PARAMS: "--cache-control public,max-age=31536000"
     steps:
@@ -74,39 +70,37 @@ jobs:
           steps:
             - aws-s3/sync:
                 from: out
-                to: s3://ridi-library-dev-test/dev
-                <<: *dev_aws
+                to: ${S3_BUCKET_DEV}
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: s3://ridi-library-dev-test/dev/index.html
-                to: s3://ridi-library-dev-test/dev/index.html
-                <<: *dev_aws
+                from: ${S3_BUCKET_DEV}/index.html
+                to: ${S3_BUCKET_DEV}/index.html
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.stage>>
           steps:
             - aws-s3/sync:
                 from: out
-                to: s3://ridi-library-dev-test/prod
-                <<: *dev_aws
+                to: ${S3_BUCKET_PROD}
                 arguments: --exclude "index.html" --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: out/index.html
-                to: s3://ridi-library-dev-test/prod/staging.html
-                <<: *dev_aws
+                to: ${S3_BUCKET_PROD}/staging.html
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.prod>>
           steps:
             - aws-s3/sync:
                 from: out
-                to: s3://ridi-library-dev-test/prod
-                <<: *dev_aws
+                to: ${S3_BUCKET_PROD}
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: s3://ridi-library-dev-test/prod/index.html
-                to: s3://ridi-library-dev-test/prod/index.html
-                <<: *dev_aws
+                from: ${S3_BUCKET_PROD}/index.html
+                to: ${S3_BUCKET_PROD}/index.html
                 arguments: ${S3_RELEASE_PARAMS}
 workflows:
   version: 2
