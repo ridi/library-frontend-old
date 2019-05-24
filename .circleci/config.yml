@@ -94,11 +94,11 @@ jobs:
           steps:
             - aws-s3/sync:
                 from: out
-                to: ${S3_BUCKET_PROD}
-                arguments: --exclude "index.html" --exclude "*.map" ${S3_ASSETS_PARAMS}
+                to: ${S3_BUCKET_PROD}/staging
+                arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: out/index.html
-                to: ${S3_BUCKET_PROD}/staging.html
+                from: ${S3_BUCKET_PROD}/staging/index.html
+                to: ${S3_BUCKET_PROD}/staging/index.html
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.prod>>
