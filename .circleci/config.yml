@@ -78,8 +78,8 @@ jobs:
                 <<: *dev_aws
                 arguments: ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: 's3://ridi-library-dev-test/dev/index.html'
-                to: 's3://ridi-library-dev-test/dev/index.html'
+                from: s3://ridi-library-dev-test/dev/index.html
+                to: s3://ridi-library-dev-test/dev/index.html
                 <<: *dev_aws
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
@@ -92,7 +92,7 @@ jobs:
                 arguments: --exclude "index.html" --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: out/index.html
-                to: 's3://ridi-library-dev-test/prod/staging.html'
+                to: s3://ridi-library-dev-test/prod/staging.html
                 <<: *dev_aws
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
@@ -104,8 +104,8 @@ jobs:
                 <<: *dev_aws
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: 's3://ridi-library-dev-test/prod/index.html'
-                to: 's3://ridi-library-dev-test/prod/index.html'
+                from: s3://ridi-library-dev-test/prod/index.html
+                to: s3://ridi-library-dev-test/prod/index.html
                 <<: *dev_aws
                 arguments: ${S3_RELEASE_PARAMS}
 workflows:
