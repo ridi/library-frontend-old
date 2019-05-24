@@ -56,7 +56,7 @@ jobs:
             - out
   deploy:
     docker:
-      - image: circleci/python
+      - image: circleci/python:3.7
     working_directory: ~/library-frontend
     parameters:
       dev:
@@ -115,16 +115,14 @@ jobs:
             - run:
                 name: Set environment variables
                 command: |
-                  echo "export COMMIT_TITLE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+                  echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
                   echo "export TIMESTAMP=$(date '+%s')" >> $BASH_ENV
             - slack/notify:
                 color: good
-                title: $COMMIT_TITLE
+                title: $COMMIT_MESSAGE
                 title_link: $CIRCLE_COMPARE_URL
-                ts: $TIMESTAMP
                 include_project_field: false
                 include_job_number_field: false
-                include_visit_job_action: false
 workflows:
   version: 2
   deploy-dev:
