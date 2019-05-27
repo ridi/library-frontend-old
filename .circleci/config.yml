@@ -89,6 +89,14 @@ jobs:
                 aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
+            - run:
+                name: Set environment variables
+                command: |
+                  echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+            - slack/notify:
+                color: good
+                message: $COMMIT_MESSAGE
+                webhook: $SLACK_WEBHOOK_DEV
       - when:
           condition: <<parameters.stage>>
           steps:
