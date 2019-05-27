@@ -61,13 +61,14 @@ function filterTTLObj(itemIds, existItems) {
 export function* loadBookData(bookIds) {
   const existBooks = yield select(state => state.books.books);
   const filteredBookIds = filterTTLObj(bookIds, existBooks);
-  const bookIdsWithoutEmptyString = filteredBookIds.filter(bookId => bookId !== '');
+  // 빈 문자열, null, undefined 등의 값을 걸러냄
+  const bookIdsWithoutInvalidValue = filteredBookIds.filter(Boolean);
 
-  if (bookIdsWithoutEmptyString.length === 0) {
+  if (bookIdsWithoutInvalidValue.length === 0) {
     return;
   }
 
-  const books = yield call(fetchBookData, bookIdsWithoutEmptyString);
+  const books = yield call(fetchBookData, bookIdsWithoutInvalidValue);
   yield put(setBookData(books));
 
   // TODO: LRU버그로 인해 주석처리
@@ -85,25 +86,29 @@ export function* loadBookDescriptions(bookIds) {
   // Book description 은 데이터 양이 많고, 상세 페이지 가야 필요한 데이터이기 때문에 storage 에 persist 하지 않는다.
   const existBookDescriptions = yield select(state => state.books.bookDescriptions);
   const filteredBookIds = filterTTLObj([...bookIds, ...bookSeriesIds], existBookDescriptions);
+  // 빈 문자열, null, undefined 등의 값을 걸러냄
+  const bookIdsWithoutInvalidValue = filteredBookIds.filter(Boolean);
 
-  if (filteredBookIds.length === 0) {
+  if (bookIdsWithoutInvalidValue.length === 0) {
     return;
   }
 
   // Step 3. 데이터 요청
-  const bookDescriptions = yield call(fetchBookDescriptions, filteredBookIds);
+  const bookDescriptions = yield call(fetchBookDescriptions, bookIdsWithoutInvalidValue);
   yield put(setBookDescriptions(bookDescriptions));
 }
 
 export function* loadBookStarRatings(bookIds) {
   const existStartRatings = yield select(state => state.books.bookStarRatings);
   const filteredBookIds = filterTTLObj(bookIds, existStartRatings);
+  // 빈 문자열, null, undefined 등의 값을 걸러냄
+  const bookIdsWithoutInvalidValue = filteredBookIds.filter(Boolean);
 
-  if (filteredBookIds.length === 0) {
+  if (bookIdsWithoutInvalidValue.length === 0) {
     return;
   }
 
-  const starRatings = yield call(fetchStarRatings, filteredBookIds);
+  const starRatings = yield call(fetchStarRatings, bookIdsWithoutInvalidValue);
   yield put(setBookStarRatings(starRatings));
 }
 
