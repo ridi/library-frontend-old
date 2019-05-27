@@ -30,6 +30,8 @@ commands:
             sentry-cli releases finalize ${CIRCLE_SHA1}
           environment:
             SENTRY_LOG_LEVEL: debug
+            SENTRY_ORG: ridi
+            SENTRY_PROJECT: library-web
 jobs:
   build:
     docker:
@@ -69,8 +71,8 @@ jobs:
         type: boolean
         default: false
     environment:
-      S3_RELEASE_PARAMS: "--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate"
-      S3_ASSETS_PARAMS: "--cache-control public,max-age=31536000"
+      S3_RELEASE_PARAMS: '--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate'
+      S3_ASSETS_PARAMS: '--cache-control public,max-age=31536000'
     steps:
       - attach_workspace:
           at: .
