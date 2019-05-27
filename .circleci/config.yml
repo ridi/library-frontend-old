@@ -72,6 +72,7 @@ jobs:
       S3_RELEASE_PARAMS: '--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate'
       S3_ASSETS_PARAMS: '--cache-control public,max-age=31536000'
     steps:
+      - checkout
       - attach_workspace:
           at: .
       - when:
