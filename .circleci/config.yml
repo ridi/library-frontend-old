@@ -89,16 +89,28 @@ jobs:
                 aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
+            - run:
+                name: Set environment variables
+                command: |
+                  echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+            - slack/notify:
+                color: good
+                message: $COMMIT_MESSAGE
+                webhook: $SLACK_WEBHOOK_DEV
       - when:
           condition: <<parameters.stage>>
           steps:
             - aws-s3/sync:
                 from: out
-                to: ${S3_BUCKET_PROD}/staging
+                to: ${S3_BUCKET_PROD}/staging/
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/staging/index.html
                 to: ${S3_BUCKET_PROD}/staging/index.html
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.prod>>
@@ -106,10 +118,14 @@ jobs:
             - aws-s3/sync:
                 from: out
                 to: ${S3_BUCKET_PROD}
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/index.html
                 to: ${S3_BUCKET_PROD}/index.html
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - sentry_upload
             - run:
@@ -131,6 +147,7 @@ workflows:
             branches:
               only:
                 - master
+                - /circleci\/.*/
           env: development
       - deploy:
           name: deploy-dev
