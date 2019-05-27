@@ -123,7 +123,15 @@ jobs:
                   aws configure set region $AWS_REGION \
                   --profile default
             - run:
-                name: Debugging
+                name: Debugging 1
+                command: |
+                  aws sts get-caller-identity
+            - run:
+                name: Debugging 1 (--debug)
+                command: |
+                  aws sts get-caller-identity --debug
+            - run:
+                name: Debugging 2
                 command: |
                   aws s3 ls s3://ridi-select-dev
                   aws s3 ls s3://ridi-library-dev
