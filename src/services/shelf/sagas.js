@@ -3,7 +3,7 @@ import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
-import * as bookSelectors from '../book/selectors';
+import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as actions from './actions';
 import * as requests from './requests';
@@ -170,7 +170,7 @@ function* deleteShelfItem({ payload }) {
 }
 
 function* removeSelectedFromShelf({ payload }) {
-  const { uuid } = payload;
+  const { uuid, pageOptions } = payload;
   const bookIds = Object.entries(yield select(selectionSelectors.getSelectedBooks))
     .filter(([, checked]) => checked)
     .map(([bookId]) => bookId);
@@ -180,7 +180,9 @@ function* removeSelectedFromShelf({ payload }) {
     const unitId = bookToUnit[bookId];
     return itemMap[unitId];
   });
-  yield put(actions.deleteShelfItem({ uuid, units }));
+  yield all([put(actions.invalidateShelfPage(uuid, pageOptions)), put(selectionActions.clearSelectedBooks())]);
+  yield call(deleteShelfItem, { payload: { uuid, units } });
+  yield put(actions.loadShelfBooks(uuid, pageOptions));
 }
 
 export default function* shelfRootSaga(isServer) {

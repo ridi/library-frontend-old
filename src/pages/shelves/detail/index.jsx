@@ -39,7 +39,18 @@ const toolsWrapper = {
 };
 
 function ShelfDetail(props) {
-  const { bookIds, clearSelectedBooks, removeSelectedFromShelf, selectBooks, showConfirm, totalSelectedCount, uuid } = props;
+  const {
+    bookIds,
+    clearSelectedBooks,
+    orderBy,
+    orderDirection,
+    page,
+    removeSelectedFromShelf,
+    selectBooks,
+    showConfirm,
+    totalSelectedCount,
+    uuid,
+  } = props;
   const visibleBookCount = bookIds.length;
 
   const [isEditing, setIsEditing] = React.useState(false);
@@ -48,10 +59,12 @@ function ShelfDetail(props) {
     setIsEditing(value => !value);
   }, []);
   const selectAllBooks = React.useCallback(() => selectBooks(bookIds), [bookIds]);
-  const confirmRemove = React.useCallback(() => {
-    removeSelectedFromShelf({ uuid });
-    // TODO: block until sync
-  }, []);
+  const confirmRemove = React.useCallback(
+    () => {
+      removeSelectedFromShelf({ uuid, pageOptions: { orderBy, orderDirection, page } });
+    },
+    [uuid, orderBy, orderDirection, page],
+  );
   const showRemoveConfirm = React.useCallback(() => {
     showConfirm('책장에서 책을 삭제하시겠습니까?', '책장에서 삭제해도 다시 추가할 수 있습니다.', '삭제', confirmRemove);
   }, []);

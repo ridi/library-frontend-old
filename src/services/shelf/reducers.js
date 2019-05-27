@@ -3,6 +3,7 @@ import produce from 'immer';
 import {
   BEGIN_OPERATION,
   END_OPERATION,
+  INVALIDATE_SHELF_PAGE,
   LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_BOOKS,
   LOAD_SHELF_COUNT,
@@ -176,6 +177,18 @@ const shelfReducer = produce((draft, action) => {
         draft.shelf[uuid] = makeBaseShelfData(uuid);
       }
       draft.shelf[uuid].bookCount = count;
+      break;
+    }
+    case INVALIDATE_SHELF_PAGE: {
+      const { uuid, orderBy, orderDirection, page } = action.payload;
+      const key = `${orderBy}_${orderDirection}_${page}`;
+      if (draft.shelf[uuid] == null) {
+        draft.shelf[uuid] = makeBaseShelfData(uuid);
+      }
+      draft.shelf[uuid].books[key] = {
+        loading: true,
+        items: null,
+      };
       break;
     }
     case SET_LIBRARY_BOOKS: {
