@@ -71,80 +71,23 @@ jobs:
     environment:
       S3_RELEASE_PARAMS: '--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate'
       S3_ASSETS_PARAMS: '--cache-control public,max-age=31536000'
-      AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
     steps:
       - attach_workspace:
           at: .
       - when:
           condition: <<parameters.dev>>
           steps:
-            # debug
-            - run:
-                name: Install AWS CLI
-                command: |
-                  export PIP=$(which pip pip3 | head -1)
-                  if [[ -n $PIP ]]; then
-                    if which sudo > /dev/null; then
-                      sudo $PIP install awscli --upgrade
-                    else
-                      # This installs the AWS CLI to ~/.local/bin. Make sure that ~/.local/bin is in your $PATH.
-                      $PIP install awscli --upgrade --user
-                    fi
-                  elif [[ $(which unzip curl | wc -l) -eq 2 ]]; then
-                    cd
-                    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-                    unzip awscli-bundle.zip
-                    if which sudo > /dev/null; then
-                      sudo ~/awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-                    else
-                      # This installs the AWS CLI to the default location (~/.local/lib/aws) and create a symbolic link (symlink) at ~/bin/aws. Make sure that ~/bin is in your $PATH.
-                      awscli-bundle/install -b ~/bin/aws
-                    fi
-                    rm -rf awscli-bundle*
-                    cd -
-                  else
-                    echo "Unable to install AWS CLI. Please install pip."
-                    exit 1
-                  fi
-            - run:
-                name: Configure AWS Access Key ID
-                command: |
-                  aws configure set aws_access_key_id \
-                  $DEV_AWS_ACCESS_KEY_ID \
-                  --profile default
-            - run:
-                name: Configure AWS Secret Access Key
-                command: |
-                  aws configure set aws_secret_access_key \
-                  $DEV_AWS_SECRET_ACCESS_KEY \
-                  --profile default
-            - run:
-                name: Configure AWS default region
-                command: |
-                  aws configure set region $AWS_REGION \
-                  --profile default
-            - run:
-                name: Debugging 1
-                command: |
-                  aws sts get-caller-identity
-            - run:
-                name: Debugging 1 (--debug)
-                command: |
-                  aws sts get-caller-identity --debug
-            - run:
-                name: Debugging 2
-                command: |
-                  aws s3 ls s3://ridi-select-dev
-                  aws s3 ls s3://ridi-library-dev
-            # debug
             - aws-s3/sync:
                 from: out
                 to: ${S3_BUCKET_DEV}
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_DEV}/index.html
                 to: ${S3_BUCKET_DEV}/index.html
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - run:
                 name: Set environment variables
@@ -160,10 +103,14 @@ jobs:
             - aws-s3/sync:
                 from: out
                 to: ${S3_BUCKET_PROD}/staging/
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/staging/index.html
                 to: ${S3_BUCKET_PROD}/staging/index.html
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.prod>>
@@ -171,10 +118,14 @@ jobs:
             - aws-s3/sync:
                 from: out
                 to: ${S3_BUCKET_PROD}
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/index.html
                 to: ${S3_BUCKET_PROD}/index.html
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - sentry_upload
             - run:
