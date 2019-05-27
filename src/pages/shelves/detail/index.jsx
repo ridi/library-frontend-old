@@ -14,6 +14,7 @@ import * as Tools from '../../../components/Tool';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
+import * as confirmActions from '../../../services/confirm/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
@@ -38,7 +39,7 @@ const toolsWrapper = {
 };
 
 function ShelfDetail(props) {
-  const { bookIds, clearSelectedBooks, selectBooks, totalSelectedCount, uuid } = props;
+  const { bookIds, clearSelectedBooks, removeSelectedFromShelf, selectBooks, showConfirm, totalSelectedCount, uuid } = props;
   const visibleBookCount = bookIds.length;
 
   const [isEditing, setIsEditing] = React.useState(false);
@@ -47,6 +48,13 @@ function ShelfDetail(props) {
     setIsEditing(value => !value);
   }, []);
   const selectAllBooks = React.useCallback(() => selectBooks(bookIds), [bookIds]);
+  const confirmRemove = React.useCallback(() => {
+    removeSelectedFromShelf({ uuid });
+    // TODO: block until sync
+  }, []);
+  const showRemoveConfirm = React.useCallback(() => {
+    showConfirm('책장에서 책을 삭제하시겠습니까?', '책장에서 삭제해도 다시 추가할 수 있습니다.', '삭제', confirmRemove);
+  }, []);
 
   const linkBuilder = React.useCallback(
     libraryBook => {
@@ -107,7 +115,18 @@ function ShelfDetail(props) {
   };
 
   const actionBarProps = {
-    buttonProps: [],
+    buttonProps: [
+      {
+        name: '책장에서 삭제',
+        onClick: showRemoveConfirm,
+        disable: totalSelectedCount === 0,
+      },
+      {
+        name: '다운로드',
+        onClick() {},
+        disable: totalSelectedCount === 0,
+      },
+    ],
   };
 
   return (
@@ -168,7 +187,9 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedBooks: selectionActions.clearSelectedBooks,
+  removeSelectedFromShelf: actions.removeSelectedFromShelf,
   selectBooks: selectionActions.selectBooks,
+  showConfirm: confirmActions.showConfirm,
 };
 
 export default connect(

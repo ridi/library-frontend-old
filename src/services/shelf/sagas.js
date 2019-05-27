@@ -1,9 +1,10 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
-import { ServiceType } from '../../constants/serviceType';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
+import * as bookSelectors from '../book/selectors';
+import * as selectionSelectors from '../selection/selectors';
 import * as actions from './actions';
 import * as requests from './requests';
 
@@ -168,6 +169,20 @@ function* deleteShelfItem({ payload }) {
   // TODO: forbidden인 경우 내 책장이 아닌 것
 }
 
+function* removeSelectedFromShelf({ payload }) {
+  const { uuid } = payload;
+  const bookIds = Object.entries(yield select(selectionSelectors.getSelectedBooks))
+    .filter(([, checked]) => checked)
+    .map(([bookId]) => bookId);
+  const bookToUnit = yield select(state => state.shelf.bookToUnit);
+  const itemMap = yield select(state => state.shelf.itemMap);
+  const units = bookIds.map(bookId => {
+    const unitId = bookToUnit[bookId];
+    return itemMap[unitId];
+  });
+  yield put(actions.deleteShelfItem({ uuid, units }));
+}
+
 export default function* shelfRootSaga(isServer) {
   yield all([
     takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
@@ -177,5 +192,6 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
     takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
+    takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
   ]);
 }
