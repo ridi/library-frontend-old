@@ -62,7 +62,8 @@ export const getBookDescription = (state, bookId) =>
     getBookState,
     bookState => {
       const book = bookState.books.get(bookId);
-      return book && book.series ? bookState.bookDescriptions.get(book.series.id) : bookState.bookDescriptions.get(bookId);
+      const id = book?.series?.id || bookId;
+      return bookState.bookDescriptions.get(id);
     },
   )(state);
 
