@@ -71,6 +71,8 @@ jobs:
     environment:
       S3_RELEASE_PARAMS: '--metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate'
       S3_ASSETS_PARAMS: '--cache-control public,max-age=31536000'
+      AWS_ACCESS_KEY_ID: $DEV_AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $DEV_AWS_SECRET_ACCESS_KEY
     steps:
       - attach_workspace:
           at: .
@@ -139,14 +141,10 @@ jobs:
             - aws-s3/sync:
                 from: out
                 to: ${S3_BUCKET_DEV}
-                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
                 from: ${S3_BUCKET_DEV}/index.html
                 to: ${S3_BUCKET_DEV}/index.html
-                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - run:
                 name: Set environment variables
