@@ -92,7 +92,7 @@ jobs:
             - run:
                 name: Set environment variables
                 command: |
-                  echo "export COMMIT_MESSAGE=$(git show -s --format=%s -n1 ${CIRCLE_SHA1})" >> $BASH_ENV
+                  echo "export COMMIT_MESSAGE=`git show -s --format=%s -n1 ${CIRCLE_SHA1}`" >> $BASH_ENV
             - slack/notify:
                 color: good
                 message: $COMMIT_MESSAGE
