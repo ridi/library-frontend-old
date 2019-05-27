@@ -76,7 +76,7 @@ jobs:
       - run:
           name: Set environment variables
           command: |
-            echo "export GIT_COMMIT_MESSAGE=`git show -s --format=%s -n1 $CIRCLE_SHA1`" >> $BASH_ENV
+            echo "export GIT_COMMIT_MESSAGE=\"`git show -s --format=%s -n1 $CIRCLE_SHA1`\"" >> $BASH_ENV
       - attach_workspace:
           at: .
       - when:
