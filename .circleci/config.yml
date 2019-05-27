@@ -139,7 +139,7 @@ workflows:
             branches:
               only:
                 - master
-                - /circleci\/*/
+                - /circleci\/.*/
           env: development
       - deploy:
           name: deploy-dev
