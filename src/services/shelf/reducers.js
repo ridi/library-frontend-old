@@ -3,6 +3,7 @@ import produce from 'immer';
 import {
   BEGIN_OPERATION,
   END_OPERATION,
+  INVALIDATE_SHELF_PAGE,
   LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_BOOKS,
   LOAD_SHELF_COUNT,
@@ -35,20 +36,26 @@ import {
  *       books: {
  *         releasedAt_desc_1: {
  *           loading: false,
- *           items: [
- *             { bookIds: ['1'], unitId: 123 },
- *             { bookIds: ['2'], unitId: 456 },
- *           ],
+ *           items: [123, 456],
  *         },
  *         releasedAt_desc_2: {
  *           loading: false,
- *           items: [
- *             { bookIds: ['3'], unitId: 12 },
- *             { bookIds: ['4'], unitId: 34 },
- *           ],
+ *           items: [12, 34],
  *         },
  *       },
  *     },
+ *   },
+ *   itemMap: {
+ *     '12': { bookIds: ['3'], unitId: 12 },
+ *     '123': { bookIds: ['1'], unitId: 123 },
+ *     '34': { bookIds: ['4'], unitId: 34 },
+ *     '456': { bookIds: ['2'], unitId: 456 },
+ *   },
+ *   bookToUnit: {
+ *     '1': 123,
+ *     '2': 456,
+ *     '3': 12,
+ *     '4': 34,
  *   },
  *   libraryBooks: {
  *   },
@@ -59,6 +66,8 @@ const initialState = {
   shelfCount: null,
   shelves: {},
   shelf: {},
+  itemMap: {},
+  bookToUnit: {},
   libraryBooks: {},
 };
 
@@ -147,8 +156,11 @@ const shelfReducer = produce((draft, action) => {
       }
       draft.shelf[uuid].books[`${orderBy}_${orderDirection}_${page}`] = {
         loading: false,
-        items,
+        items: items.map(({ unitId }) => unitId),
       };
+      for (const { bookIds, unitId } of items) {
+        draft.itemMap[unitId] = { bookIds, unitId };
+      }
       break;
     }
     case LOAD_SHELF_BOOK_COUNT: {
@@ -167,10 +179,23 @@ const shelfReducer = produce((draft, action) => {
       draft.shelf[uuid].bookCount = count;
       break;
     }
+    case INVALIDATE_SHELF_PAGE: {
+      const { uuid, orderBy, orderDirection, page } = action.payload;
+      const key = `${orderBy}_${orderDirection}_${page}`;
+      if (draft.shelf[uuid] == null) {
+        draft.shelf[uuid] = makeBaseShelfData(uuid);
+      }
+      draft.shelf[uuid].books[key] = {
+        loading: true,
+        items: null,
+      };
+      break;
+    }
     case SET_LIBRARY_BOOKS: {
       const { books } = action.payload;
       for (const book of books) {
-        draft.libraryBooks[book.b_id] = book;
+        draft.libraryBooks[book.unit_id] = book;
+        draft.bookToUnit[book.b_id] = book.unit_id;
       }
       break;
     }
