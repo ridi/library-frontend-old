@@ -1,37 +1,40 @@
 import { css } from '@emotion/core';
-import { MQ, Responsive } from '../../../styles/responsive';
+import { MQ, Responsive } from '../../styles/responsive';
 
-const responsiveWrapper = `
+export const responsiveWrapper = `
   ${MQ(
     [Responsive.XSmall],
     `
       width: 136px;
+      min-height: 130px;
     `,
   )}
   ${MQ(
     [Responsive.Small, Responsive.Medium],
     `
       width: 156px;
+      min-height: 140px;
     `,
   )}
   ${MQ(
     [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       width: 220px;
+      min-height: 197px;
     `,
   )}
 `;
 
 const responsiveNameWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       padding: 8px 7px;
       font-size: 15px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       padding: 14px 11px;
       font-size: 17px;
@@ -41,14 +44,14 @@ const responsiveNameWrapper = `
 
 const ResponsiveCountWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       padding: 1px 7px 11px 7px;
       font-size: 15px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       padding: 10px 11px 15px 11px;
       font-size: 17px;
@@ -58,14 +61,14 @@ const ResponsiveCountWrapper = `
 
 const ResponsiveEditWrapper = `
   ${MQ(
-    [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large],
+    [Responsive.XSmall, Responsive.Small, Responsive.Medium],
     `
       right: 5px;
       bottom: 9px;
     `,
   )}
   ${MQ(
-    [Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
+    [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
       right: 9px;
       bottom: 13px;
@@ -90,7 +93,7 @@ export const shelfStyles = {
     background: #e6e8eb;
     border-left: 1px solid #d1d5d9;
     flex: 1;
-    &:first-child {
+    &:first-of-type {
       border-left: 0;
     }
     img {
@@ -196,6 +199,41 @@ export const shelfStyles = {
     text-align: left;
     &:hover {
       background: #f3f4f5;
+    }
+  `,
+  selectWrapper: css`
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  `,
+  selectLabel: css`
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  `,
+  selectIconWrapper: css`
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 40px;
+    overflow: hidden;
+  `,
+  selectIcon: css`
+    fill: white;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    &.active {
+      background: rgb(31, 140, 230);
     }
   `,
 };
