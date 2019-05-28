@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
-import EmptyBookList from '../../../components/EmptyBookList';
+import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
@@ -185,7 +185,7 @@ class Hidden extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
+      return <Empty IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
     }
 
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;

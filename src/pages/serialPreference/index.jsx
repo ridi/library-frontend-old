@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
-import EmptyBookList from '../../components/EmptyBookList';
+import Empty from '../../components/Empty';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
 import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
@@ -123,7 +123,7 @@ class SerialPreference extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
+      return <Empty IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
     }
 
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;

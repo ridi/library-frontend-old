@@ -8,7 +8,7 @@ import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
-import EmptyBookList from '../../../components/EmptyBookList';
+import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
@@ -204,7 +204,7 @@ class Search extends React.Component {
         message = '검색어를 입력해주세요.';
       }
 
-      return <EmptyBookList IconComponent={SearchIcon} iconWidth={38} message={message} />;
+      return <Empty IconComponent={SearchIcon} iconWidth={38} message={message} />;
     }
 
     return (
