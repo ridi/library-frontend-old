@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
+import Empty from '../../../components/Empty';
 import FlexBar from '../../../components/FlexBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
@@ -19,6 +20,7 @@ import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 
@@ -102,7 +104,7 @@ function ShelfDetail(props) {
 
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
-    let books = null;
+    let books;
     if (libraryBooks == null || (libraryBooks.length === 0 && booksLoading)) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
@@ -115,6 +117,8 @@ function ShelfDetail(props) {
           linkBuilder={linkBuilder}
         />
       );
+    } else {
+      return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;
     }
     return <ResponsiveBooks>{books}</ResponsiveBooks>;
   }
