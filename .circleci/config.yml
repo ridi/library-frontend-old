@@ -120,8 +120,8 @@ jobs:
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - aws-s3/copy:
-                from: ${S3_BUCKET_DEV}/staging/static/maintenance.json
-                to: ${S3_BUCKET_DEV}/staging/static/maintenance.json
+                from: ${S3_BUCKET_PROD}/staging/static/maintenance.json
+                to: ${S3_BUCKET_PROD}/staging/static/maintenance.json
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
@@ -141,8 +141,8 @@ jobs:
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
             - aws-s3/copy:
-                from: ${S3_BUCKET_DEV}/static/maintenance.json
-                to: ${S3_BUCKET_DEV}/static/maintenance.json
+                from: ${S3_BUCKET_PROD}/static/maintenance.json
+                to: ${S3_BUCKET_PROD}/static/maintenance.json
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
