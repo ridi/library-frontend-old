@@ -94,6 +94,12 @@ jobs:
                 aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_DEV}/static/maintenance.json
+                to: ${S3_BUCKET_DEV}/static/maintenance.json
+                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+                arguments: ${S3_RELEASE_PARAMS}
             - slack/notify:
                 color: good
                 message: $GIT_COMMIT_MESSAGE
@@ -113,6 +119,12 @@ jobs:
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_DEV}/staging/static/maintenance.json
+                to: ${S3_BUCKET_DEV}/staging/static/maintenance.json
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+                arguments: ${S3_RELEASE_PARAMS}
       - when:
           condition: <<parameters.prod>>
           steps:
@@ -125,6 +137,12 @@ jobs:
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/index.html
                 to: ${S3_BUCKET_PROD}/index.html
+                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+                arguments: ${S3_RELEASE_PARAMS}
+            - aws-s3/copy:
+                from: ${S3_BUCKET_DEV}/static/maintenance.json
+                to: ${S3_BUCKET_DEV}/static/maintenance.json
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
