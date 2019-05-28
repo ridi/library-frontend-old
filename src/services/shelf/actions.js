@@ -2,6 +2,7 @@ export const LOAD_SHELVES = 'LOAD_SHELVES';
 export const LOAD_SHELF_COUNT = 'LOAD_SHELF_COUNT';
 export const LOAD_SHELF_BOOKS = 'LOAD_SHELF_BOOKS';
 export const LOAD_SHELF_BOOK_COUNT = 'LOAD_SHELF_BOOK_COUNT';
+export const INVALIDATE_SHELF_PAGE = 'INVALIDATE_SHELF_PAGE';
 
 export const SET_SHELVES = 'SET_SHELVES';
 export const SET_SHELF_INFO = 'SET_SHELF_INFO';
@@ -15,6 +16,8 @@ export const ADD_SHELF = 'ADD_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
 export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
+
+export const REMOVE_SELECTED_FROM_SHELF = 'REMOVE_SELECTED_FROM_SHELF';
 
 export const BEGIN_OPERATION = 'BEGIN_OPERATION';
 export const END_OPERATION = 'END_OPERATION';
@@ -45,6 +48,17 @@ export const loadShelfBooks = (uuid, { orderBy, orderDirection, page }) => ({
 export const loadShelfBookCount = uuid => ({
   type: LOAD_SHELF_BOOK_COUNT,
   payload: uuid,
+});
+
+// 로딩 중 표시만 띄울 수 있게 하기 위함
+export const invalidateShelfPage = (uuid, { orderBy, orderDirection, page }) => ({
+  type: INVALIDATE_SHELF_PAGE,
+  payload: {
+    uuid,
+    orderBy,
+    orderDirection,
+    page,
+  },
 });
 
 /*
@@ -137,6 +151,14 @@ export const deleteShelfItem = ({ uuid, units }) => ({
   payload: {
     uuid,
     units,
+  },
+});
+
+export const removeSelectedFromShelf = ({ uuid, pageOptions }) => ({
+  type: REMOVE_SELECTED_FROM_SHELF,
+  payload: {
+    uuid,
+    pageOptions,
   },
 });
 

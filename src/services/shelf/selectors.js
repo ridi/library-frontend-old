@@ -52,7 +52,7 @@ export const getShelfBookCount = createCachedSelector(
  *   },
  * ): {
  *   loading: boolean;
- *   items: Array<{ bookIds: Array<string>; unitId: number }> | null;
+ *   items: Array<number> | null;
  * }
  *
  * loading: false, items: null이면 로드 필요
@@ -76,23 +76,24 @@ export const getIsShelfLoading = createCachedSelector(getShelfBooks, ({ loading 
 
 export const getShelfItems = createCachedSelector(getShelfBooks, ({ items }) => items)((_, uuid) => uuid);
 
-export const getBookIds = createCachedSelector(getShelfItems, items => (items == null ? [] : items.map(item => item.bookIds[0])))(
-  (_, uuid) => uuid,
-);
+export const getBookIds = createCachedSelector(state => state.shelf.libraryBooks, getShelfItems, (libraryBooks, items) =>
+  items == null ? [] : items.map(item => libraryBooks[item]?.b_id),
+)((_, uuid) => uuid);
 
 export const getLibraryBooks = createCachedSelector(
   state => state.shelf.libraryBooks,
+  state => state.shelf.itemMap,
   getShelfItems,
-  (libraryBooks, items) =>
+  (libraryBooks, itemMap, items) =>
     items &&
     items.map(
-      item =>
-        libraryBooks[item.bookIds[0]] || {
-          unit_count: item.bookIds.length,
+      unitId =>
+        libraryBooks[unitId] || {
+          unit_count: itemMap[unitId].bookIds.length,
           is_ridiselect: false,
-          b_id: item.bookIds[0],
+          b_id: itemMap[unitId].bookIds[0],
           purchase_date: new Date(0),
-          unit_id: item.unitId,
+          unit_id: unitId,
         },
     ),
 )((_, uuid) => uuid);
