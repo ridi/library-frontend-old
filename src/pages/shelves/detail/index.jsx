@@ -15,6 +15,7 @@ import * as Tools from '../../../components/Tool';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
+import * as bookDownloadActions from '../../../services/bookDownload/actions';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
@@ -44,6 +45,7 @@ function ShelfDetail(props) {
   const {
     bookIds,
     clearSelectedBooks,
+    downloadSelectedBooks,
     orderBy,
     orderDirection,
     page,
@@ -69,6 +71,11 @@ function ShelfDetail(props) {
   );
   const showRemoveConfirm = React.useCallback(() => {
     showConfirm('책장에서 책을 삭제하시겠습니까?', '책장에서 삭제해도 다시 추가할 수 있습니다.', '삭제', confirmRemove);
+  }, []);
+  const downloadBooks = React.useCallback(() => {
+    downloadSelectedBooks();
+    clearSelectedBooks();
+    setIsEditing(false);
   }, []);
 
   const linkBuilder = React.useCallback(
@@ -140,7 +147,7 @@ function ShelfDetail(props) {
       },
       {
         name: '다운로드',
-        onClick() {},
+        onClick: downloadBooks,
         disable: totalSelectedCount === 0,
       },
     ],
@@ -204,6 +211,7 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedBooks: selectionActions.clearSelectedBooks,
+  downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   selectBooks: selectionActions.selectBooks,
   showConfirm: confirmActions.showConfirm,

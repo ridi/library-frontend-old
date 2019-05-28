@@ -1,16 +1,17 @@
-import { call, put, all, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderBy, OrderType } from '../../constants/orderOptions';
 import { delay } from '../../utils/delay';
-
-import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
-import { getBookIdsByUnitIds } from '../common/sagas';
+import { convertUriToAndroidIntentUri } from '../../utils/uri';
 
+import { getBookIdsByUnitIds } from '../common/sagas';
+import * as selectionSelectors from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { Duration, ToastStyle } from '../toast/constants';
-import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, setBookDownloadSrc } from './actions';
-import { DownloadError } from './errors';
 
+import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, setBookDownloadSrc } from './actions';
+import { DownloadError } from './errors';
 import { triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
@@ -82,11 +83,19 @@ export function* downloadBookActionAdaptor(action) {
   yield call(downloadBooks, action.payload.bookIds);
 }
 
+function* downloadSelectedBooksActionAdaptor() {
+  const bookIds = yield select(selectionSelectors.getSelectedBookIds);
+  yield call(downloadBooks, bookIds);
+}
+
 export function* downloadBooksByUnitIdsActionAdaptor(action) {
   yield call(downloadBooksByUnitIds, action.payload.unitIds);
 }
 
 export default function* commonRootSaga() {
-  yield all([takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor)]);
-  yield all([takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor)]);
+  yield all([
+    takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor),
+    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooksActionAdaptor),
+    takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor),
+  ]);
 }
