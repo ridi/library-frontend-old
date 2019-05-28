@@ -1,0 +1,62 @@
+pull_request_rules:
+  - name: automatic merge when CI passes and reviews
+    conditions:
+      - base=master
+      - "#approved-reviews-by>=1"
+      - "#review-requested=0"
+      - "#changes-requested-reviews-by=0"
+      - "#commented-reviews-by=0"
+      - "status-success=WIP"
+    actions:
+      merge:
+        method: merge
+        strict: smart
+        strict_method: rebase
+      delete_head_branch:
+
+  - name: add label to hotfix branch
+    conditions:
+      - base=master
+      - head~=^hotfix/
+    actions:
+      label:
+        add:
+          - hotfix
+
+  - name: backport patches to release branch
+    conditions:
+      - base=master
+      - label=hotfix
+    actions:
+      backport:
+        branches:
+          - release
+  
+  - name: automatic merge for backport
+    conditions:
+      - base=release
+      - -head=master
+      - "#approved-reviews-by>=1"
+    actions:
+      merge:
+        method: merge
+        strict: true
+        strict_method: rebase
+      delete_head_branch:
+
+  - name: deploy new release
+    conditions:
+      - base=release
+      - head=master
+      - "#approved-reviews-by>=1"
+      - "#review-requested=0"
+      - "#changes-requested-reviews-by=0"
+      - "#commented-reviews-by=0"
+    actions:
+      merge: {}
+
+  - name: delete head branch when closed
+    conditions:
+      - closed
+    actions:
+      delete_head_branch:
