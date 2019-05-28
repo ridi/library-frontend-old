@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
-import EmptyBookList from '../../../components/EmptyBookList';
+import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
@@ -190,7 +190,7 @@ class Main extends React.PureComponent {
     );
   }
 
-  getEmptyBookListMessage() {
+  getEmptyMessage() {
     const { orderType, orderBy } = this.props;
     const order = OrderOptions.toKey(orderType, orderBy);
 
@@ -208,7 +208,7 @@ class Main extends React.PureComponent {
     const { listInstruction } = this.props;
 
     if (listInstruction === ListInstructions.EMPTY) {
-      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage()} />;
+      return <Empty IconComponent={BookOutline} message={this.getEmptyMessage()} />;
     }
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
