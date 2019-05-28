@@ -136,11 +136,11 @@ function* unhideSelectedBooks() {
 
   yield all([
     put(
-      showToast(
-        isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
-        '내 서재 바로가기',
-        makeLinkProps(URLMap.main.href, URLMap.main.as),
-      ),
+      showToast({
+        message: isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
+        linkName: '내 서재 바로가기',
+        linkProps: makeLinkProps(URLMap.main.href, URLMap.main.as),
+      }),
     ),
     put(setFullScreenLoading(false)),
   ]);
@@ -174,7 +174,7 @@ function* deleteSelectedBooks() {
     yield call(loadItems);
   }
 
-  yield all([put(showToast(isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+  yield all([put(showToast({ message: isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.' })), put(setFullScreenLoading(false))]);
 }
 
 function* selectAllBooks() {

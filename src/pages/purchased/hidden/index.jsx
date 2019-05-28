@@ -12,18 +12,19 @@ import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
+import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnits } from '../../../services/book/selectors';
+import { showConfirm } from '../../../services/confirm/actions';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
-import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount } from '../../../services/purchased/hidden/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import { clearSelectedBooks } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
-import { showConfirm } from '../../../services/confirm/actions';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
@@ -81,7 +82,7 @@ class Hidden extends React.Component {
 
   makeEditingBarProps() {
     const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isCollection(item.unit_type)).length;
 
     return {
       totalSelectedCount,

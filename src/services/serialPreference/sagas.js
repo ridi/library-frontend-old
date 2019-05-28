@@ -73,7 +73,7 @@ function* deleteSelectedBooks() {
     yield put(setFullScreenLoading(false));
   }
 
-  yield all([put(showToast('선호작품에서 삭제되었습니다.')), call(loadItems)]);
+  yield all([put(showToast({ message: '선호작품에서 삭제되었습니다.' })), call(loadItems)]);
 }
 
 function* selectAllBooks() {

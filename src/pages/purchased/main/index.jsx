@@ -4,41 +4,40 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Books } from '../../../components/Books';
 import BookDownLoader from '../../../components/BookDownLoader';
+import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import EmptyBookList from '../../../components/EmptyBookList';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import Toast from '../../../components/Toast';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
+import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
-import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
+  getBooksByPage,
+  getFilter,
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
-  getBooksByPage,
-  getUnitIdsByPage,
   getLastBookIdsByPage,
-  getPage,
   getOrder,
-  getFilter,
+  getPage,
   getTotalPages,
+  getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
-import { Duration, ToastStyle } from '../../../services/toast/constants';
+import { clearSelectedBooks } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
-import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
 class Main extends React.PureComponent {
   static async getInitialProps({ query, req, store }) {
@@ -90,7 +89,7 @@ class Main extends React.PureComponent {
 
   makeEditingBarProps() {
     const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isCollection(item.unit_type)).length;
 
     return {
       totalSelectedCount,

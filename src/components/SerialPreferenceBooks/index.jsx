@@ -16,7 +16,7 @@ import { EmptySeries } from '../../utils/dataObject';
 import { notifyMessage } from '../../utils/sentry';
 import { makeWebViewerURI } from '../../utils/uri';
 import BooksWrapper from '../BooksWrapper';
-import LandscapeFullButton from './LandscapeFullButton';
+import FullButton from './FullButton';
 import * as serialPreferenceStyles from './styles';
 
 const toProps = ({
@@ -131,7 +131,7 @@ class SerialPreferenceBooks extends React.Component {
           return (
             <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
               <Book.LandscapeBook {...libraryBookProps} />
-              {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+              {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
             </div>
           );
         }}

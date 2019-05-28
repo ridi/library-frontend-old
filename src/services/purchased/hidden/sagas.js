@@ -1,32 +1,31 @@
 import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-
+import { UnitType } from '../../../constants/unitType';
+import { URLMap } from '../../../constants/urls';
+import { toFlatten } from '../../../utils/array';
+import { makeLinkProps } from '../../../utils/uri';
+import { loadBookData, loadUnitData } from '../../book/sagas';
+import { MakeBookIdsError } from '../../common/errors';
+import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
+import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
+import { showDialog } from '../../dialog/actions';
+import { getQuery } from '../../router/selectors';
+import { selectBooks } from '../../selection/actions';
+import { getSelectedBooks } from '../../selection/selectors';
+import { showToast } from '../../toast/actions';
+import { setError, setFullScreenLoading } from '../../ui/actions';
 import {
+  DELETE_SELECTED_HIDDEN_BOOKS,
   LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
-  UNHIDE_SELECTED_HIDDEN_BOOKS,
-  DELETE_SELECTED_HIDDEN_BOOKS,
+  setHiddenIsFetchingBooks,
   setItems,
   setPage,
   setTotalCount,
-  setHiddenIsFetchingBooks,
+  UNHIDE_SELECTED_HIDDEN_BOOKS,
 } from './actions';
-import { getQuery } from '../../router/selectors';
-import { loadBookData, loadUnitData } from '../../book/sagas';
 import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
-import { toFlatten } from '../../../utils/array';
-import { getOptions, getItems, getItemsByPage } from './selectors';
-import { getSelectedBooks } from '../../selection/selectors';
-
-import { getRevision, requestUnhide, requestCheckQueueStatus, requestDelete } from '../../common/requests';
-import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
-import { selectBooks } from '../../selection/actions';
-import { showToast } from '../../toast/actions';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { makeLinkProps } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { showDialog } from '../../dialog/actions';
-import { MakeBookIdsError } from '../../common/errors';
+import { getItems, getItemsByPage, getOptions } from './selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -104,11 +103,11 @@ function* unhideSelectedBooks() {
   }
   yield all([
     put(
-      showToast(
-        isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
-        '내 서재 바로가기',
-        makeLinkProps(URLMap.main.href, URLMap.main.as),
-      ),
+      showToast({
+        message: isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
+        linkName: '내 서재 바로가기',
+        linkProps: makeLinkProps(URLMap.main.href, URLMap.main.as),
+      }),
     ),
     put(setFullScreenLoading(false)),
   ]);
@@ -144,12 +143,12 @@ function* deleteSelectedBooks() {
     yield call(loadItems);
   }
 
-  yield all([put(showToast(isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.')), put(setFullScreenLoading(false))]);
+  yield all([put(showToast({ message: isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.' })), put(setFullScreenLoading(false))]);
 }
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items, 'b_id');
+  const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
   yield put(selectBooks(bookIds));
 }
 

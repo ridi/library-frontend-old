@@ -45,7 +45,15 @@ function* _showViewerGuildLink(isIos, isAndroid) {
   // eslint-disable-next-line no-nested-ternary
   const link = isIos ? appStoreLink : isAndroid ? playStoreLink : helpLink;
 
-  yield put(showToast(message, linkName, null, link, Duration.VERY_LONG, ToastStyle.BLUE));
+  yield put(
+    showToast({
+      message,
+      linkName,
+      outLink: link,
+      duration: Duration.VERY_LONG,
+      toastStyle: ToastStyle.BLUE,
+    }),
+  );
 }
 
 export function* _download(bookIds, url) {
@@ -64,11 +72,11 @@ export function* _download(bookIds, url) {
 
 export function* downloadBooks(bookIds) {
   const triggerResponse = yield call(triggerDownload, bookIds);
-
-  if (triggerResponse.result) {
-    yield call(_download, triggerResponse.b_ids, triggerResponse.url);
+  const { result: responseResult, b_ids: downloadableBookIds, url: downloadUrl, message } = triggerResponse;
+  if (responseResult) {
+    yield call(_download, downloadableBookIds, downloadUrl);
   } else {
-    yield put(showToast(triggerResponse.message));
+    yield put(showToast({ message }));
   }
 }
 

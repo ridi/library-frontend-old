@@ -1,34 +1,31 @@
 import Router from 'next/router';
-import { all, fork, call, put, select, takeEvery } from 'redux-saga/effects';
-
+import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { OrderOptions } from '../../../constants/orderOptions';
+import { UnitType } from '../../../constants/unitType';
+import { URLMap } from '../../../constants/urls';
+import { toFlatten } from '../../../utils/array';
+import { makeLinkProps } from '../../../utils/uri';
+import { loadBookData, loadUnitData } from '../../book/sagas';
+import { downloadBooks } from '../../bookDownload/sagas';
+import { MakeBookIdsError } from '../../common/errors';
+import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
+import { getBookIdsByItems } from '../../common/sagas';
+import { showDialog } from '../../dialog/actions';
+import { selectBooks } from '../../selection/actions';
+import { getSelectedBooks } from '../../selection/selectors';
+import { showToast } from '../../toast/actions';
+import { setError, setFullScreenLoading } from '../../ui/actions';
+import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
 import {
   DOWNLOAD_SELECTED_MAIN_BOOKS,
   HIDE_SELECTED_MAIN_BOOKS,
   LOAD_MAIN_ITEMS,
   SELECT_ALL_MAIN_BOOKS,
-  updateItems,
   setIsFetchingBooks,
+  updateItems,
 } from './actions';
-import { selectBooks } from '../../selection/actions';
-import { showToast } from '../../toast/actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
-
-import { OrderOptions } from '../../../constants/orderOptions';
-import { toFlatten } from '../../../utils/array';
-
-import { getItems, getItemsByPage, getFilter, getOptions, getPage } from './selectors';
-import { getSelectedBooks } from '../../selection/selectors';
-
-import { loadBookData, loadUnitData } from '../../book/sagas';
-import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
-import { getBookIdsByItems } from '../../common/sagas';
-import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
-import { downloadBooks } from '../../bookDownload/sagas';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { makeLinkProps } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { MakeBookIdsError } from '../../common/errors';
-import { showDialog } from '../../dialog/actions';
+import { getFilter, getItems, getItemsByPage, getOptions, getPage } from './selectors';
 
 function moveToFirstPage(payload) {
   const linkProps = makeLinkProps({ pathname: URLMap.main.href }, URLMap.main.as, {
@@ -124,11 +121,11 @@ function* hideSelectedBooks() {
 
   yield all([
     put(
-      showToast(
-        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
-        '숨긴 도서 목록 보기',
-        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
-      ),
+      showToast({
+        message: isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+        linkName: '숨긴 도서 목록 보기',
+        linkProps: makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+      }),
     ),
     put(setFullScreenLoading(false)),
   ]);
@@ -155,7 +152,7 @@ function* downloadSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items, 'b_id');
+  const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
   yield put(selectBooks(bookIds));
 }
 

@@ -17,6 +17,12 @@ export const toastWrapper = {
   }),
 };
 
+export const withBottomFixedButton = {
+  ...MQ(isNarrowWrapper, {
+    bottom: 60,
+  }),
+};
+
 export const toast = {
   position: 'absolute',
   left: '50%',
