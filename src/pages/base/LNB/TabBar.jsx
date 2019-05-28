@@ -30,7 +30,7 @@ const TabMenus = [
   },
   {
     type: TabMenuTypes.SHELVES,
-    name: '책장 목록',
+    name: '책장',
     linkInfo: {
       href: URLMap.shelves.href,
       as: URLMap.shelves.as,
