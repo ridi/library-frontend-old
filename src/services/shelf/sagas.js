@@ -180,6 +180,7 @@ function* removeSelectedFromShelf({ payload }) {
     const unitId = bookToUnit[bookId];
     return itemMap[unitId];
   });
+  // invalidateShelfPage: 스켈레톤 강제로 띄우기 위한 action. 스피너로 대체하면 빼도 됨
   yield all([put(actions.invalidateShelfPage(uuid, pageOptions)), put(selectionActions.clearSelectedBooks())]);
   yield call(deleteShelfItem, { payload: { uuid, units } });
   yield put(actions.loadShelfBooks(uuid, pageOptions));
