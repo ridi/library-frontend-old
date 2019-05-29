@@ -10,6 +10,7 @@ import flow from '../utils/flow';
 import { initializeSentry } from '../utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from '../utils/tabFocus';
 
+import { checkAllFeatures } from '../services/feature/actions';
 import createConnectedRouterWrapper from '../services/router/routerWrapper';
 import Layout from './base/Layout';
 import Prefetch from '../components/Prefetch';
@@ -17,6 +18,7 @@ import Prefetch from '../components/Prefetch';
 class LibraryApp extends App {
   static async getInitialProps({ Component, ctx }) {
     initializeApi(ctx.req);
+    await ctx.store.dispatch(checkAllFeatures());
     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
     return { pageProps };
   }
