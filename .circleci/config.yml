@@ -77,7 +77,7 @@ jobs:
           name: Set environment variables
           command: |
             export SUBJECT="`git show -s --format=%s -n1 $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
-            export MESSAGE="`git show -s --format=%b $CIRCLE_SHA1 | sed "s/./>&/1; s/'/\\\\\'/g"`"
+            export MESSAGE="`git show -s --format=%b $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
             echo "export GIT_COMMIT_SUBJECT=$'$(echo "$SUBJECT")'" >> $BASH_ENV
             echo "export GIT_COMMIT_MESSAGE=$'$(echo "$MESSAGE")'" >> $BASH_ENV
             echo "export GITHUB_COMMIT_URL=\"https://github.com/ridi/library-frontend/commit/$CIRCLE_SHA1\"" >> $BASH_ENV
@@ -172,7 +172,6 @@ workflows:
             branches:
               only:
                 - master
-                - /circleci\/.*/
           env: development
       - deploy:
           name: deploy-dev
