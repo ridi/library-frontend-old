@@ -47,7 +47,9 @@ export const loadShelfBooks = (uuid, { orderBy, orderDirection, page }) => ({
 
 export const loadShelfBookCount = uuid => ({
   type: LOAD_SHELF_BOOK_COUNT,
-  payload: uuid,
+  payload: {
+    uuid,
+  },
 });
 
 // 로딩 중 표시만 띄울 수 있게 하기 위함

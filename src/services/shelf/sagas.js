@@ -68,6 +68,18 @@ function* loadShelfBooks(isServer, { payload }) {
   }
 }
 
+function* loadShelfBookCount(isServer, { payload }) {
+  const { uuid } = payload;
+  try {
+    const count = yield call(requests.fetchShelfBookCount, { uuid });
+    yield put(actions.setShelfBookCount({ uuid, count }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
+}
+
 function* performOperation(ops) {
   if (ops.length === 0) {
     return [];
@@ -155,6 +167,7 @@ function* addShelfItem({ payload }) {
   }));
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(actions.loadShelfBookCount(uuid));
 }
 
 function* deleteShelfItem({ payload }) {
@@ -167,6 +180,7 @@ function* deleteShelfItem({ payload }) {
   }));
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(actions.loadShelfBookCount(uuid));
 }
 
 function* removeSelectedFromShelf({ payload }) {
@@ -191,6 +205,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount, isServer),
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
+    takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),

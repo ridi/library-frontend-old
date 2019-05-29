@@ -99,8 +99,10 @@ function ShelfDetail(props) {
   );
 
   function renderShelfBar() {
-    const { name } = props;
-    const left = <Title title={name} showCount={false} href="/shelves/list" as="/shelves" query={{}} />;
+    const { name, totalBookCount } = props;
+    const left = (
+      <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
+    );
     const right = (
       <div css={toolsWrapper}>
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
@@ -189,7 +191,7 @@ ShelfDetail.getInitialProps = async ({ query, store }) => {
 function mapStateToProps(state, props) {
   const { uuid, page, orderBy, orderDirection } = props;
   const name = selectors.getShelfName(state, uuid);
-  const bookCount = selectors.getShelfBookCount(state, uuid);
+  const totalBookCount = selectors.getShelfBookCount(state, uuid);
 
   const pageOptions = { orderBy, orderDirection, page };
   const { loading: booksLoading } = selectors.getShelfBooks(state, uuid, pageOptions);
@@ -199,12 +201,12 @@ function mapStateToProps(state, props) {
 
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   return {
-    bookCount,
     bookIds,
     booksLoading,
     libraryBooks,
     name,
     platformBooks,
+    totalBookCount,
     totalSelectedCount,
   };
 }

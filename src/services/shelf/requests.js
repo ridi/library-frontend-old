@@ -37,6 +37,12 @@ export async function fetchShelfBooks({ uuid, offset, limit }) {
   };
 }
 
+export async function fetchShelfBookCount({ uuid }) {
+  const api = getApi();
+  const response = await api.get(makeURI(`/shelves/${uuid}/count/`, {}, config.LIBRARY_API_BASE_URL));
+  return response.data.count;
+}
+
 export async function createOperation(ops) {
   const api = getApi();
   const payload = {
