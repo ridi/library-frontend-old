@@ -3,12 +3,12 @@ import * as featureIds from '../../constants/featureIds';
 import * as actions from './actions';
 import * as requests from './requests';
 
-function* checkFeature(id) {
+function* checkFeature(featureId) {
   try {
-    const result = yield call(requests.fetchIsFeatureEnabled, id);
-    yield put(actions.setFeature(id, result));
+    const result = yield call(requests.fetchIsFeatureEnabled, featureId);
+    yield put(actions.setFeature(featureId, result));
   } catch (_) {
-    yield put(actions.setFeature(id, false));
+    yield put(actions.setFeature(featureId, false));
   }
 }
 

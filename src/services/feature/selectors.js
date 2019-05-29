@@ -1,5 +1,7 @@
 import createCachedSelector from 're-reselect';
 
-export const getIsFeatureEnabled = createCachedSelector(state => state.feature, (_, id) => id, (feature, id) => Boolean(feature[id]))(
-  (_, id) => id,
-);
+export const getIsFeatureEnabled = createCachedSelector(
+  state => state.feature,
+  (_, featureId) => featureId,
+  (featureState, featureId) => Boolean(featureState[featureId]),
+)((_, id) => id);
