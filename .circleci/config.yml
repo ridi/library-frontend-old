@@ -76,7 +76,11 @@ jobs:
       - run:
           name: Set environment variables
           command: |
-            echo "export GIT_COMMIT_MESSAGE=\"`git show -s --format=%s -n1 $CIRCLE_SHA1`\"" >> $BASH_ENV
+            export SUBJECT="`git show -s --format=%s -n1 $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
+            export MESSAGE="`git show -s --format=%b $CIRCLE_SHA1 | sed "s/./>&/1; s/'/\\\\\'/g"`"
+            echo "export GIT_COMMIT_SUBJECT=$'$(echo "$SUBJECT")'" >> $BASH_ENV
+            echo "export GIT_COMMIT_MESSAGE=$'$(echo "$MESSAGE")'" >> $BASH_ENV
+            echo "export GITHUB_COMMIT_URL=\"https://github.com/ridi/library-frontend/commit/$CIRCLE_SHA1\"" >> $BASH_ENV
       - attach_workspace:
           at: .
       - when:
@@ -103,6 +107,10 @@ jobs:
             - slack/notify:
                 color: good
                 message: $GIT_COMMIT_MESSAGE
+                title: $GIT_COMMIT_SUBJECT
+                title_link: $GITHUB_COMMIT_URL
+                include_project_field: false
+                include_job_number_field: false
                 webhook: $SLACK_WEBHOOK_DEV
       - when:
           condition: <<parameters.stage>>
@@ -150,6 +158,8 @@ jobs:
             - slack/notify:
                 color: good
                 message: $GIT_COMMIT_MESSAGE
+                title: $GIT_COMMIT_SUBJECT
+                title_link: $GITHUB_COMMIT_URL
                 include_project_field: false
                 include_job_number_field: false
 workflows:
