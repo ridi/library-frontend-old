@@ -12,6 +12,8 @@ import FlexBar from '../../../components/FlexBar';
 import { Editing } from '../../../components/Tool';
 import Editable from '../../../components/Editable';
 import Responsive from '../../base/Responsive';
+import * as actions from '../../../services/shelf/actions';
+import * as selectors from '../../../services/shelf/selectors';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -20,12 +22,24 @@ const toolBar = css`
 `;
 
 class ShelvesList extends React.Component {
+  static async getInitialProps({ query, store }) {
+    const page = parseInt(query.page, 10) || 1;
+    const orderBy = '';
+    const orderDirection = '';
+    store.dispatch(actions.loadShelves({ orderBy, orderDirection, page }));
+    return {
+      page,
+      orderBy,
+      orderDirection,
+    };
+  }
+
   renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={<Editing />} />;
 
   renderMain() {
-    const { shelves } = this.props;
-    if (shelves == null) return <SkeletonShelves />;
-    return shelves.length > 0 ? <Shelves shelves={shelves} /> : <EmptyShelves />;
+    const { loading: isLoading, items: shelfIds } = this.props.shelves;
+    if (isLoading) return <SkeletonShelves />;
+    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} /> : <EmptyShelves />;
   }
 
   render() {
@@ -46,67 +60,11 @@ class ShelvesList extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log(state);
-  return {
-    shelves: [
-      {
-        id: '000000',
-        name: 'NNyamm 기본 책장1',
-        totalCount: 1782,
-        thumbnails: [
-          '//misc.ridibooks.com/cover/1811142372/xxlarge',
-          '//misc.ridibooks.com/cover/425108841/xxlarge',
-          // '//misc.ridibooks.com/cover/2057072518/xxlarge',
-        ],
-        selectMode: false,
-      },
-      {
-        id: '111111',
-        name: 'NNyamm 기본 책장',
-        totalCount: 12,
-        thumbnails: [
-          '//misc.ridibooks.com/cover/1811142372/xxlarge',
-          '//misc.ridibooks.com/cover/425108841/xxlarge',
-          '//misc.ridibooks.com/cover/2057072518/xxlarge',
-        ],
-        selectMode: false,
-      },
-      {
-        id: '000002',
-        name: 'NNyamm 기본 책장1',
-        totalCount: 1782,
-        thumbnails: [
-          '//misc.ridibooks.com/cover/1811142372/xxlarge',
-          '//misc.ridibooks.com/cover/425108841/xxlarge',
-          // '//misc.ridibooks.com/cover/2057072518/xxlarge',
-        ],
-        selectMode: false,
-      },
-      {
-        id: '111113',
-        name: 'NNyamm 기본 책장',
-        totalCount: 12,
-        thumbnails: [
-          '//misc.ridibooks.com/cover/1811142372/xxlarge',
-          '//misc.ridibooks.com/cover/425108841/xxlarge',
-          '//misc.ridibooks.com/cover/2057072518/xxlarge',
-        ],
-        selectMode: false,
-      },
-      {
-        id: '111114',
-        name: 'NNyamm 기본 책장',
-        totalCount: 12,
-        thumbnails: [
-          '//misc.ridibooks.com/cover/1811142372/xxlarge',
-          '//misc.ridibooks.com/cover/425108841/xxlarge',
-          '//misc.ridibooks.com/cover/2057072518/xxlarge',
-        ],
-        selectMode: false,
-      },
-    ],
-  };
+const mapStateToProps = (state, props) => {
+  const { orderBy, orderDirection, page } = props;
+  const pageOptions = { orderBy, orderDirection, page };
+  const shelves = selectors.getShelves(state, pageOptions);
+  return { shelves };
 };
 
 const mapDispatchToProps = {
