@@ -1,30 +1,31 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
-import { PageType, URLMap } from '../../constants/urls';
+import { connect } from 'react-redux';
+import * as selectors from '../../services/shelf/selectors';
 import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
-import { makeLinkProps } from '../../utils/uri';
+import { ShelfDetailLink } from './ShelfDetailLink';
 import { ShelfEditButton } from './ShelfEditButton';
 import { ShelfSelectButton } from './ShelfSelectButton';
 import { shelfStyles } from './styles';
 
-export const Shelf = props => {
+const Shelf = props => {
   const THUMBNAIL_TOTAL_COUNT = 3;
-  const { id: uuid, name, totalCount, thumbnails, editable, selectMode } = props;
-  const { href, as } = URLMap[PageType.SHELVES]; // TODO : 책장 상세로 바꿔야함
-
+  const { uuid, name, totalCount, thumbnailIds, editable, selectMode } = props;
   return (
     <article css={shelfStyles.wrapper}>
       <ul css={shelfStyles.thumbnails}>
         {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
-          const thumbnailUrl = thumbnails[index];
-          const key = `shelf-${uuid}-thumbnail${index}-${thumbnailUrl}`;
+          const thumbnailUrl = thumbnailIds[index] ? `//misc.ridibooks.com/cover/${thumbnailIds[index]}/xxlarge` : '';
+          const hasThumbnail = thumbnailUrl.length > 0;
+          const key = hasThumbnail ? thumbnailUrl : `empty${index}`;
           return (
             <li css={shelfStyles.thumbnail} key={key}>
-              {thumbnailUrl ? (
-                <img src={thumbnailUrl} alt={`${name} 대표 이미지`} />
+              {hasThumbnail ? (
+                <img className="thumbnailImage" css={shelfStyles.thumbnailImage} src={thumbnailUrl} alt={`${name} 대표 이미지`} />
               ) : (
-                <span className="a11y">책장 구성도서 썸네일 영역</span>
+                <div className="thumbnailImage" css={shelfStyles.thumbnailImage}>
+                  <span className="a11y">책장 구성도서 썸네일 영역</span>
+                </div>
               )}
             </li>
           );
@@ -41,13 +42,30 @@ export const Shelf = props => {
           </p>
         </div>
       </div>
-      <Link prefetch {...makeLinkProps(href, as, { uuid })}>
-        <a css={shelfStyles.link}>
-          <span className="a11y">{name} 바로가기</span>
-        </a>
-      </Link>
+      <ShelfDetailLink uuid={uuid} name={name} />
       <ShelfEditButton editable={editable} />
       <ShelfSelectButton selectMode={selectMode} />
     </article>
   );
 };
+
+const mapStateToProps = (state, props) => {
+  const { uuid } = props;
+  const name = selectors.getShelfName(state, uuid);
+  const thumbnailIds = selectors.getShelfThumbnailIds(state, uuid);
+  const totalCount = selectors.getShelfBookCount(state, uuid);
+  return {
+    name,
+    thumbnailIds,
+    totalCount,
+    editable: false,
+    selectMode: false,
+  };
+};
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Shelf);

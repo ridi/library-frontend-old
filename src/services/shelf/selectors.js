@@ -33,6 +33,14 @@ export const getShelfName = createCachedSelector(
   (shelf, uuid) => (shelf[uuid] == null ? null : shelf[uuid].name),
 )((_, uuid) => uuid);
 
+// getShelfThumbnailIds(state: State, uuid: string): array | null
+// 로드 중이거나 책장이 없으면 null
+export const getShelfThumbnailIds = createCachedSelector(
+  state => state.shelf.shelf,
+  (_, uuid) => uuid,
+  (shelf, uuid) => (shelf[uuid] == null ? null : shelf[uuid].thumbnailIds),
+)((_, uuid) => uuid);
+
 // getShelfBookCount(state: State, uuid: string): number | null
 // 로드 중이거나 책장이 없으면 null
 export const getShelfBookCount = createCachedSelector(
