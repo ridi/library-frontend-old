@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import Link from 'next/link';
+import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -60,6 +61,7 @@ function ShelfDetail(props) {
     uuid,
   } = props;
   const visibleBookCount = bookIds.length;
+  const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
   const [isEditing, setIsEditing] = React.useState(false);
   const toggleEditingMode = React.useCallback(() => {
@@ -102,6 +104,28 @@ function ShelfDetail(props) {
     [uuid],
   );
 
+  React.useEffect(
+    () => {
+      const newPage = Math.max(Math.min(page, totalPages), 1);
+      if (page !== newPage) {
+        const linkProps = makeLinkProps(
+          {
+            pathname: URLMap.shelfDetail.href,
+            query: { uuid },
+          },
+          URLMap.shelfDetail.as({ uuid }),
+          {
+            orderBy,
+            orderDirection,
+            page: newPage,
+          },
+        );
+        Router.replace(linkProps.href, linkProps.as);
+      }
+    },
+    [page, totalPages],
+  );
+
   function renderShelfBar() {
     const { name } = props;
     const left = (
@@ -116,10 +140,9 @@ function ShelfDetail(props) {
   }
 
   function renderPaginator() {
-    if (totalBookCount == null) {
+    if (totalPages == null) {
       return null;
     }
-    const totalPages = paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
     return (
       <ResponsivePaginator
         currentPage={page}
@@ -134,7 +157,7 @@ function ShelfDetail(props) {
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
     let books;
-    if (libraryBooks == null || (libraryBooks.length === 0 && booksLoading)) {
+    if (totalPages == null || libraryBooks == null || (libraryBooks.length === 0 && booksLoading) || page > totalPages) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
       books = (
