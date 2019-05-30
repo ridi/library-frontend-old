@@ -16,10 +16,11 @@ const Shelf = props => {
       <ul css={shelfStyles.thumbnails}>
         {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
           const thumbnailUrl = thumbnailIds[index] ? `//misc.ridibooks.com/cover/${thumbnailIds[index]}/xxlarge` : '';
-          const key = `shelf-${uuid}-thumbnail${index}-${thumbnailUrl}`;
+          const hasThumbnail = thumbnailUrl.length > 0;
+          const key = hasThumbnail ? thumbnailUrl : `empty${index}`;
           return (
             <li css={shelfStyles.thumbnail} key={key}>
-              {thumbnailUrl.length > 0 ? (
+              {hasThumbnail ? (
                 <img className="thumbnailImage" css={shelfStyles.thumbnailImage} src={thumbnailUrl} alt={`${name} 대표 이미지`} />
               ) : (
                 <div className="thumbnailImage" css={shelfStyles.thumbnailImage}>

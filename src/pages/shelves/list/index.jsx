@@ -38,7 +38,7 @@ class ShelvesList extends React.Component {
 
   renderMain() {
     const { loading: isLoading, items: shelfIds } = this.props.shelves;
-    if (isLoading) return <SkeletonShelves />;
+    if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
     return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} /> : <EmptyShelves />;
   }
 
