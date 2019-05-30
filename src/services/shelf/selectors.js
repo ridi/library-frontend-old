@@ -106,6 +106,8 @@ export const getLibraryBooks = createCachedSelector(
     ),
 )((_, uuid) => uuid);
 
+export const getDetailPageOptions = state => state.shelf.detailPageOptions;
+
 // getIsSyncInProgress(state: State): boolean
 export const getIsSyncInProgress = createSelector(
   state => state.shelf.syncStatus,

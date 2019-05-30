@@ -201,13 +201,13 @@ ShelfDetail.getInitialProps = async ({ query, store }) => {
   const page = parseInt(query.page, 10) || 1;
   const orderBy = '';
   const orderDirection = '';
-  store.dispatch(actions.loadShelfBooks(uuid, { orderBy, orderDirection, page }));
+  const pageOptions = { orderBy, orderDirection, page };
+  store.dispatch(actions.setDetailPageOptions(pageOptions));
+  store.dispatch(actions.loadShelfBooks(uuid, pageOptions));
   store.dispatch(actions.loadShelfBookCount(uuid));
   return {
     uuid,
-    page,
-    orderBy,
-    orderDirection,
+    ...pageOptions,
   };
 };
 
