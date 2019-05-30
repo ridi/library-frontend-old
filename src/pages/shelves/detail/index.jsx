@@ -9,9 +9,11 @@ import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import FlexBar from '../../../components/FlexBar';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
 import * as Tools from '../../../components/Tool';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
@@ -22,6 +24,7 @@ import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
+import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 
@@ -52,6 +55,7 @@ function ShelfDetail(props) {
     removeSelectedFromShelf,
     selectBooks,
     showConfirm,
+    totalBookCount,
     totalSelectedCount,
     uuid,
   } = props;
@@ -99,7 +103,7 @@ function ShelfDetail(props) {
   );
 
   function renderShelfBar() {
-    const { name, totalBookCount } = props;
+    const { name } = props;
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
@@ -111,6 +115,22 @@ function ShelfDetail(props) {
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
+  function renderPaginator() {
+    if (totalBookCount == null) {
+      return null;
+    }
+    const totalPages = paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
+    return (
+      <ResponsivePaginator
+        currentPage={page}
+        totalPages={totalPages}
+        href={{ pathname: URLMap.shelfDetail.href, query: { uuid } }}
+        as={URLMap.shelfDetail.as({ uuid })}
+        query={{ orderBy, orderDirection }}
+      />
+    );
+  }
+
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
     let books;
@@ -118,13 +138,16 @@ function ShelfDetail(props) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
       books = (
-        <Books
-          libraryBookDTO={libraryBooks}
-          platformBookDTO={platformBooks}
-          isSelectMode={isEditing}
-          viewType={ViewType.PORTRAIT}
-          linkBuilder={linkBuilder}
-        />
+        <>
+          <Books
+            libraryBookDTO={libraryBooks}
+            platformBookDTO={platformBooks}
+            isSelectMode={isEditing}
+            viewType={ViewType.PORTRAIT}
+            linkBuilder={linkBuilder}
+          />
+          {renderPaginator()}
+        </>
       );
     } else {
       return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;

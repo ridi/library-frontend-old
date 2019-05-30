@@ -123,15 +123,21 @@ export async function fetchLibraryBookData(bookIds) {
   return response.data;
 }
 
-export async function fetchLibraryUnitData(unitIds) {
+export async function fetchLibraryUnitData(units) {
   const api = getApiSingleton();
-  const promises = unitIds.map(async unitId => {
+  const promises = units.map(async ({ unitId, fallbackBookId }) => {
     const [detailResponse, countResponse] = await Promise.all([
       api.get(makeURI(`/items/search/${unitId}/`, { offset: 0, limit: 1 }, config.LIBRARY_API_BASE_URL)),
       api.get(makeURI(`/items/search/${unitId}/count/`, {}, config.LIBRARY_API_BASE_URL)),
     ]);
     const unitDetail = detailResponse.data.unit;
-    const bookDetail = detailResponse.data.items[0];
+    const bookDetail = detailResponse.data.items[0] || {
+      remain_time: '',
+      expire_date: '9999-12-31T23:59:59+09:00',
+      is_ridiselect: false,
+      b_id: fallbackBookId || '',
+      purchase_date: new Date(0).toISOString(),
+    };
     return {
       unit_count: countResponse.data.item_total_count,
       remain_time: bookDetail.remain_time,
@@ -144,5 +150,5 @@ export async function fetchLibraryUnitData(unitIds) {
       unit_id: unitDetail.id,
     };
   });
-  return Promise.all(promises);
+  return (await Promise.all(promises)).filter(item => item != null);
 }
