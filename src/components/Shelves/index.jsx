@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { ShelvesWrapper } from '../ShelvesWrapper';
-import { Shelf } from '../Shelf';
+import Shelf from '../Shelf';
 
-export const Shelves = ({ shelves }) => (
+export const Shelves = ({ shelfIds }) => (
   <ShelvesWrapper>
-    {shelves.map(shelf => (
-      <div key={shelf.id} className="shelf">
-        <Shelf {...shelf} />
+    {shelfIds.map(uuid => (
+      <div key={uuid} className="shelf">
+        <Shelf uuid={uuid} />
       </div>
     ))}
   </ShelvesWrapper>

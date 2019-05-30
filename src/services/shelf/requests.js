@@ -4,11 +4,12 @@ import { makeURI } from '../../utils/uri';
 
 export async function fetchShelves({ offset, limit }) {
   const api = getApi();
-  const response = await api.get(makeURI('/shelves/', { offset, limit }, config.LIBRARY_API_BASE_URL));
+  const response = await api.get(makeURI('/shelves/', { offset, limit, need_three_items: true }, config.LIBRARY_API_BASE_URL));
   return response.data.items.map(item => ({
     id: item.id,
     uuid: item.shelf_uuid,
     name: item.name,
+    thumbnails: item.items,
   }));
 }
 

@@ -60,13 +60,13 @@ export const shelfStyles = {
     background: #e6e8eb;
     border-left: 1px solid #d1d5d9;
     flex: 1;
+    line-height: 0;
     &:first-of-type {
       border-left: 0;
     }
-    img {
-      width: 100%;
-      height: 100%;
-    }
+  `,
+  thumbnailImage: css`
+    width: 100%;
   `,
   infoWrapper: css`
     background: white;
