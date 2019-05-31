@@ -139,6 +139,20 @@ export const shelfStyles = {
     height: 13px;
     fill: #9ea7ad;
   `,
+  editModalCloseButton: css`
+    display: block;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    .active & {
+      position: fixed;
+      z-index: 50;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+    }
+  `,
   editModalWrapper: css`
     position: absolute;
     z-index: 100;

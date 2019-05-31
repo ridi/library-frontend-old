@@ -19,6 +19,15 @@ export const ShelfEditButton = editable => {
       >
         <ThreeDotsVertical css={shelfStyles.editButtonIcon} />
       </IconButton>
+      <button
+        type="button"
+        onClick={() => {
+          setModalActive(prevActive => !prevActive);
+        }}
+        css={shelfStyles.editModalCloseButton}
+      >
+        <span className="a11y">책장 편집 모달 닫기 버튼</span>
+      </button>
       <div css={shelfStyles.editModalWrapper}>
         <ul css={shelfStyles.editModal}>
           <li>
