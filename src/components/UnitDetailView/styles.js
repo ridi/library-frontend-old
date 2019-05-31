@@ -143,10 +143,6 @@ export const bookDescriptionFolded = (line, lineHeight) => ({
   maxHeight: line * lineHeight,
   WebkitLineClamp: line,
 });
-export const bookDescriptionExpended = {
-  maxHeight: 'inherit',
-  WebkitLineClamp: ['inherit', 'unset'],
-};
 export const bookDescriptionExpend = {
   textAlign: 'right',
   marginTop: 10,
