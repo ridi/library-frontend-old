@@ -6,6 +6,7 @@ import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
@@ -43,6 +44,10 @@ const toolsWrapper = {
   alignItems: 'center',
   paddingLeft: 2,
   whiteSpace: 'nowrap',
+};
+
+const paddingForPagination = {
+  paddingBottom: ACTION_BAR_HEIGHT,
 };
 
 function ShelfDetail(props) {
@@ -175,7 +180,11 @@ function ShelfDetail(props) {
     } else {
       return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;
     }
-    return <ResponsiveBooks>{books}</ResponsiveBooks>;
+    return (
+      <div css={paddingForPagination}>
+        <ResponsiveBooks>{books}</ResponsiveBooks>
+      </div>
+    );
   }
 
   const editingBarProps = {
