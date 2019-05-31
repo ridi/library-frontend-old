@@ -31,14 +31,16 @@ const environmentBandStyle = environment => {
 
 export const Environment = () => {
   const { ENVIRONMENT: environmentTitle } = config;
-  const isStaging = environmentTitle === ENV.STAGING;
-  const isTestEnv = environmentTitle === ENV.LOCAL || environmentTitle === ENV.DEV || isStaging;
-  if (!isTestEnv) return null;
-  return isStaging ? (
-    <a css={environmentBandStyle(environmentTitle)} href={`${config.BASE_URL}/production`}>
-      {environmentTitle}
-    </a>
-  ) : (
-    <p css={environmentBandStyle(environmentTitle)}>{environmentTitle}</p>
-  );
+  switch (environmentTitle) {
+    case ENV.LOCAL || ENV.DEV:
+      return <p css={environmentBandStyle(environmentTitle)}>{environmentTitle}</p>;
+    case ENV.STAGING:
+      return (
+        <a css={environmentBandStyle(environmentTitle)} href={`${config.BASE_URL}/production`}>
+          {environmentTitle}
+        </a>
+      );
+    default:
+      return null;
+  }
 };
