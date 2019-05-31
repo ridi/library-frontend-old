@@ -2,16 +2,20 @@
 import { jsx } from '@emotion/core';
 import Head from 'next/head';
 import Link from 'next/link';
+import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import FlexBar from '../../../components/FlexBar';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
 import * as Tools from '../../../components/Tool';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
@@ -22,6 +26,7 @@ import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
+import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 
@@ -41,6 +46,10 @@ const toolsWrapper = {
   whiteSpace: 'nowrap',
 };
 
+const paddingForPagination = {
+  paddingBottom: ACTION_BAR_HEIGHT,
+};
+
 function ShelfDetail(props) {
   const {
     bookIds,
@@ -52,10 +61,12 @@ function ShelfDetail(props) {
     removeSelectedFromShelf,
     selectBooks,
     showConfirm,
+    totalBookCount,
     totalSelectedCount,
     uuid,
   } = props;
   const visibleBookCount = bookIds.length;
+  const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
   const [isEditing, setIsEditing] = React.useState(false);
   const toggleEditingMode = React.useCallback(() => {
@@ -98,9 +109,33 @@ function ShelfDetail(props) {
     [uuid],
   );
 
+  React.useEffect(
+    () => {
+      const newPage = Math.max(Math.min(page, totalPages), 1);
+      if (page !== newPage) {
+        const linkProps = makeLinkProps(
+          {
+            pathname: URLMap.shelfDetail.href,
+            query: { uuid },
+          },
+          URLMap.shelfDetail.as({ uuid }),
+          {
+            orderBy,
+            orderDirection,
+            page: newPage,
+          },
+        );
+        Router.replace(linkProps.href, linkProps.as);
+      }
+    },
+    [page, totalPages],
+  );
+
   function renderShelfBar() {
     const { name } = props;
-    const left = <Title title={name} showCount={false} href="/shelves/list" as="/shelves" query={{}} />;
+    const left = (
+      <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
+    );
     const right = (
       <div css={toolsWrapper}>
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
@@ -109,25 +144,47 @@ function ShelfDetail(props) {
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
+  function renderPaginator() {
+    if (totalPages == null) {
+      return null;
+    }
+    return (
+      <ResponsivePaginator
+        currentPage={page}
+        totalPages={totalPages}
+        href={{ pathname: URLMap.shelfDetail.href, query: { uuid } }}
+        as={URLMap.shelfDetail.as({ uuid })}
+        query={{ orderBy, orderDirection }}
+      />
+    );
+  }
+
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
     let books;
-    if (libraryBooks == null || (libraryBooks.length === 0 && booksLoading)) {
+    if (totalPages == null || libraryBooks == null || (libraryBooks.length === 0 && booksLoading) || page > totalPages) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
       books = (
-        <Books
-          libraryBookDTO={libraryBooks}
-          platformBookDTO={platformBooks}
-          isSelectMode={isEditing}
-          viewType={ViewType.PORTRAIT}
-          linkBuilder={linkBuilder}
-        />
+        <>
+          <Books
+            libraryBookDTO={libraryBooks}
+            platformBookDTO={platformBooks}
+            isSelectMode={isEditing}
+            viewType={ViewType.PORTRAIT}
+            linkBuilder={linkBuilder}
+          />
+          {renderPaginator()}
+        </>
       );
     } else {
       return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;
     }
-    return <ResponsiveBooks>{books}</ResponsiveBooks>;
+    return (
+      <div css={paddingForPagination}>
+        <ResponsiveBooks>{books}</ResponsiveBooks>
+      </div>
+    );
   }
 
   const editingBarProps = {
@@ -176,20 +233,20 @@ ShelfDetail.getInitialProps = async ({ query, store }) => {
   const page = parseInt(query.page, 10) || 1;
   const orderBy = '';
   const orderDirection = '';
-  store.dispatch(actions.loadShelfBooks(uuid, { orderBy, orderDirection, page }));
+  const pageOptions = { orderBy, orderDirection, page };
+  store.dispatch(actions.setDetailPageOptions(pageOptions));
+  store.dispatch(actions.loadShelfBooks(uuid, pageOptions));
   store.dispatch(actions.loadShelfBookCount(uuid));
   return {
     uuid,
-    page,
-    orderBy,
-    orderDirection,
+    ...pageOptions,
   };
 };
 
 function mapStateToProps(state, props) {
   const { uuid, page, orderBy, orderDirection } = props;
   const name = selectors.getShelfName(state, uuid);
-  const bookCount = selectors.getShelfBookCount(state, uuid);
+  const totalBookCount = selectors.getShelfBookCount(state, uuid);
 
   const pageOptions = { orderBy, orderDirection, page };
   const { loading: booksLoading } = selectors.getShelfBooks(state, uuid, pageOptions);
@@ -199,12 +256,12 @@ function mapStateToProps(state, props) {
 
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   return {
-    bookCount,
     bookIds,
     booksLoading,
     libraryBooks,
     name,
     platformBooks,
+    totalBookCount,
     totalSelectedCount,
   };
 }

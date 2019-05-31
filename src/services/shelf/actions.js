@@ -9,6 +9,7 @@ export const SET_SHELF_INFO = 'SET_SHELF_INFO';
 export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
+export const SET_SHELF_DETAIL_PAGE_OPTIONS = 'SET_SHELF_DETAIL_PAGE_OPTIONS';
 
 export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
 
@@ -47,7 +48,9 @@ export const loadShelfBooks = (uuid, { orderBy, orderDirection, page }) => ({
 
 export const loadShelfBookCount = uuid => ({
   type: LOAD_SHELF_BOOK_COUNT,
-  payload: uuid,
+  payload: {
+    uuid,
+  },
 });
 
 // 로딩 중 표시만 띄울 수 있게 하기 위함
@@ -121,6 +124,15 @@ export const setLibraryBooks = books => ({
   type: SET_LIBRARY_BOOKS,
   payload: {
     books,
+  },
+});
+
+export const setDetailPageOptions = ({ orderBy, orderDirection, page }) => ({
+  type: SET_SHELF_DETAIL_PAGE_OPTIONS,
+  payload: {
+    orderBy,
+    orderDirection,
+    page,
   },
 });
 
