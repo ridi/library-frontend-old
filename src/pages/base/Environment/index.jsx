@@ -33,7 +33,6 @@ export const Environment = () => {
   const { ENVIRONMENT: environmentTitle } = config;
   switch (environmentTitle) {
     case ENV.LOCAL:
-      return <p css={environmentBandStyle(environmentTitle)}>{environmentTitle}</p>;
     case ENV.DEV:
       return <p css={environmentBandStyle(environmentTitle)}>{environmentTitle}</p>;
     case ENV.STAGING:
