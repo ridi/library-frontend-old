@@ -113,12 +113,7 @@ class UnitDetailView extends React.Component {
     return (
       <div css={styles.description}>
         <div css={styles.descriptionTitle}>책 소개</div>
-        <div
-          css={[
-            styles.bookDescriptionBody(LINE_HEIGHT),
-            isExpanded ? styles.bookDescriptionExpended : styles.bookDescriptionFolded(LINE, LINE_HEIGHT),
-          ]}
-        >
+        <div css={[styles.bookDescriptionBody(LINE_HEIGHT), !isExpanded && styles.bookDescriptionFolded(LINE, LINE_HEIGHT)]}>
           <p
             css={styles.bookDescription}
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
