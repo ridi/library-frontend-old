@@ -13,6 +13,7 @@ import {
   setUnitId,
 } from '../../../services/purchased/searchUnit/actions';
 import { clearSelectedBooks } from '../../../services/selection/actions';
+import * as shelfSelectors from '../../../services/shelf/selectors';
 import {
   getIsFetchingBook,
   getItemsByPage,
@@ -57,6 +58,7 @@ const mapStateToProps = state => {
 
   const pageInfo = getPageInfo(state);
   const searchPageInfo = getSearchPageInfo(state);
+  const shelfPageOptions = shelfSelectors.getDetailPageOptions(state);
 
   return {
     pageInfo,
@@ -72,6 +74,7 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     searchPageInfo,
+    shelfPageOptions,
     isError: state.ui.isError,
   };
 };
@@ -89,6 +92,7 @@ const mergeProps = (state, actions, props) => {
     unitId,
     pageInfo: { keyword, currentPage, totalPages, orderType, orderBy },
     searchPageInfo,
+    shelfPageOptions,
   } = state;
 
   const pageProps = {
@@ -105,7 +109,7 @@ const mergeProps = (state, actions, props) => {
     backPageProps = {
       href: { pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } },
       as: URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-      query: {},
+      query: shelfPageOptions,
     };
   } else {
     backPageProps = {

@@ -1,15 +1,13 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as actions from './actions';
 import * as requests from './requests';
-
-const COUNT_PER_PAGE = 20;
-const BOOK_COUNT_PER_PAGE = 48;
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -26,8 +24,8 @@ const OperationStatus = {
 
 function* loadShelves(isServer, { payload }) {
   const { orderBy, orderDirection, page } = payload;
-  const offset = (page - 1) * COUNT_PER_PAGE;
-  const limit = COUNT_PER_PAGE;
+  const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
+  const limit = SHELVES_LIMIT_PER_PAGE;
   try {
     const items = yield call(requests.fetchShelves, { offset, limit });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
@@ -51,16 +49,31 @@ function* loadShelfCount(isServer) {
 
 function* loadShelfBooks(isServer, { payload }) {
   const { uuid, orderBy, orderDirection, page } = payload;
-  const offset = (page - 1) * BOOK_COUNT_PER_PAGE;
-  const limit = BOOK_COUNT_PER_PAGE;
+  const offset = (page - 1) * LIBRARY_ITEMS_LIMIT_PER_PAGE;
+  const limit = LIBRARY_ITEMS_LIMIT_PER_PAGE;
   try {
     const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
     yield put(actions.setShelfInfo(shelfInfo));
-    const libraryBooks = yield call(bookRequests.fetchLibraryUnitData, items.map(item => item.unitId));
+    const libraryBooks = yield call(
+      bookRequests.fetchLibraryUnitData,
+      items.map(item => ({ unitId: item.unitId, fallbackBookId: item.bookIds[0] })),
+    );
     yield put(actions.setLibraryBooks(libraryBooks));
     const bookIds = libraryBooks.map(book => book.b_id);
     yield call(bookSagas.loadBookData, bookIds);
     yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
+}
+
+function* loadShelfBookCount(isServer, { payload }) {
+  const { uuid } = payload;
+  try {
+    const count = yield call(requests.fetchShelfBookCount, { uuid });
+    yield put(actions.setShelfBookCount({ uuid, count }));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
@@ -155,6 +168,7 @@ function* addShelfItem({ payload }) {
   }));
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(actions.loadShelfBookCount(uuid));
 }
 
 function* deleteShelfItem({ payload }) {
@@ -167,6 +181,7 @@ function* deleteShelfItem({ payload }) {
   }));
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(actions.loadShelfBookCount(uuid));
 }
 
 function* removeSelectedFromShelf({ payload }) {
@@ -191,6 +206,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount, isServer),
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
+    takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
