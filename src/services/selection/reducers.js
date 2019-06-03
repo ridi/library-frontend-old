@@ -1,24 +1,24 @@
 import produce from 'immer';
 
-import { SELECT_BOOKS, TOGGLE_BOOK, CLEAR_SELECTED_BOOKS } from './actions';
+import { SELECT_ITEMS, TOGGLE_ITEM, CLEAR_SELECTED_ITEMS } from './actions';
 
 const initialState = {};
 
 const selectionReducer = produce((draft, action) => {
   switch (action.type) {
-    case SELECT_BOOKS:
-      return action.payload.reduce((previous, bookId) => {
-        previous[bookId] = 1;
+    case SELECT_ITEMS:
+      return action.payload.reduce((previous, id) => {
+        previous[id] = 1;
         return previous;
       }, {});
-    case TOGGLE_BOOK:
+    case TOGGLE_ITEM:
       if (draft[action.payload]) {
         delete draft[action.payload];
       } else {
         draft[action.payload] = true;
       }
       break;
-    case CLEAR_SELECTED_BOOKS:
+    case CLEAR_SELECTED_ITEMS:
       if (Object.keys(draft).length !== 0) {
         return {};
       }

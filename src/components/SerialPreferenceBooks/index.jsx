@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import config from '../../config';
 import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
-import { toggleBook } from '../../services/selection/actions';
-import { getSelectedBooks } from '../../services/selection/selectors';
+import { toggleItem } from '../../services/selection/actions';
+import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import BookMetaData from '../../utils/bookMetaData';
@@ -142,11 +142,11 @@ class SerialPreferenceBooks extends React.Component {
 
 const mapStateToProps = state => ({
   locationHref: getLocationHref(state),
-  selectedBooks: getSelectedBooks(state),
+  selectedBooks: getSelectedItems(state),
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleBook,
+  onSelectedChange: toggleItem,
 };
 
 export default connect(

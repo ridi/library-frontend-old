@@ -14,7 +14,7 @@ import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
-import { clearSelectedBooks } from '../../services/selection/actions';
+import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
@@ -25,7 +25,7 @@ import { ResponsiveBooks } from '../base/Responsive';
 
 class SerialPreference extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -194,7 +194,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 

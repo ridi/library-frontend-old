@@ -21,8 +21,8 @@ import {
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
 import { getItemsByPage, getOptions } from './selectors';
-import { selectBooks } from '../selection/actions';
-import { getSelectedBooks } from '../selection/selectors';
+import { selectItems } from '../selection/actions';
+import { getSelectedItems } from '../selection/selectors';
 import { fetchUnitIdMap } from '../book/requests';
 
 function* persistPageOptionsFromQueries() {
@@ -61,7 +61,7 @@ function* loadItems() {
 
 function* deleteSelectedBooks() {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
   const bookSeriesIds = Object.keys(selectedBooks);
 
   try {
@@ -79,7 +79,7 @@ function* deleteSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items, 'series_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* serialPreferenceRootSaga() {

@@ -31,7 +31,7 @@ import {
   getTotalPages,
   getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
@@ -48,7 +48,7 @@ class Main extends React.PureComponent {
     const categoryFilter = parseInt(query.filter, 10) || null;
 
     const params = { currentPage, orderType, orderBy, categoryFilter };
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems(params, isServer));
   }
 
@@ -303,7 +303,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

@@ -12,7 +12,7 @@ import {
   selectAllBooks,
   setUnitId,
 } from '../../../services/purchased/mainUnit/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import {
   getIsFetchingBook,
   getPageInfo,
@@ -28,7 +28,7 @@ import UnitPageTemplate from '../../base/UnitPageTemplate';
 class MainUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -77,7 +77,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
@@ -94,7 +94,7 @@ const mergeProps = (state, actions, props) => {
     totalPages,
     href: { pathname: URLMap[PageType.MAIN_UNIT].href, query: { unitId } },
     as: URLMap[PageType.MAIN_UNIT].as({ unitId }),
-    query: { orderType: orderType, orderBy: orderBy },
+    query: { orderType, orderBy },
   };
 
   const backPageProps = {
