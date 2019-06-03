@@ -26,9 +26,6 @@ const seriesListStyle = {
 class SeriesList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isEditing: false,
-    };
     this.seriesListRef = React.createRef();
   }
 
@@ -52,12 +49,12 @@ class SeriesList extends React.Component {
   }
 
   toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing });
+    const { isEditing, onEditingChange } = this.props;
+    onEditingChange && onEditingChange(!isEditing);
   };
 
   makeEditingBarProps() {
-    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks } = this.props;
+    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks, onEditingChange } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.filter(item => item.purchased).length;
 
     return {
@@ -67,24 +64,8 @@ class SeriesList extends React.Component {
       onClickUnselectAllBooks,
       onClickSuccessButton: () => {
         onClickUnselectAllBooks();
-        this.setState({ isEditing: false });
+        onEditingChange(false);
       },
-    };
-  }
-
-  wrapActionBarProps() {
-    const { actionBarProps } = this.props;
-
-    const _wrapOnClick = onClick => () => {
-      onClick();
-      this.setState({ isEditing: false });
-    };
-
-    return {
-      buttonProps: actionBarProps.buttonProps.map(buttonProp => ({
-        ...buttonProp,
-        onClick: _wrapOnClick(buttonProp.onClick),
-      })),
     };
   }
 
@@ -123,10 +104,10 @@ class SeriesList extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
     const {
       primaryItem,
       items,
+      isEditing,
       books,
       isFetching,
       unit,
@@ -186,7 +167,7 @@ class SeriesList extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
+    const { actionBarProps, isEditing } = this.props;
 
     return (
       <div css={seriesListStyle} ref={this.seriesListRef}>
@@ -196,7 +177,7 @@ class SeriesList extends React.Component {
           isEditing={isEditing}
           nonEditBar={this.renderSeriesToolBar()}
           editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.wrapActionBarProps()}
+          actionBarProps={actionBarProps}
         >
           <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
           {this.renderPaginator()}
