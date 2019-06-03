@@ -190,6 +190,7 @@ export const shelfStyles = {
     top: 0;
     width: 100%;
     height: 100%;
+    border-radius: 3px;
     background-color: rgba(0, 0, 0, 0.4);
   `,
   selectLabel: css`
