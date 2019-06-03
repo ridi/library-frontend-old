@@ -7,6 +7,7 @@ import BookDownLoader from '../../components/BookDownLoader';
 import UnitDetailView from '../../components/UnitDetailView';
 import { UnitType } from '../../constants/unitType';
 import Responsive from './Responsive';
+import { ButtonType } from '../../components/ActionBar/constants';
 import TitleBar from '../../components/TitleBar';
 import { OrderOptions } from '../../constants/orderOptions';
 import SeriesList from '../../components/SeriesList';
@@ -38,6 +39,9 @@ class UnitPageTemplate extends React.Component {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
           disable,
+        },
+        {
+          type: ButtonType.SPACER,
         },
         {
           name: '선택 다운로드',

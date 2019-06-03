@@ -106,6 +106,9 @@ class Hidden extends React.Component {
           disable,
         },
         {
+          type: ButtonType.SPACER,
+        },
+        {
           name: '선택 숨김 해제',
           onClick: this.handleOnClickUnhide,
           disable,

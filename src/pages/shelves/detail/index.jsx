@@ -6,6 +6,7 @@ import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { ButtonType } from '../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -201,6 +202,9 @@ function ShelfDetail(props) {
         name: '책장에서 삭제',
         onClick: showRemoveConfirm,
         disable: totalSelectedCount === 0,
+      },
+      {
+        type: ButtonType.SPACER,
       },
       {
         name: '다운로드',

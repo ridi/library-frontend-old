@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import { ButtonType } from '../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
@@ -101,6 +102,9 @@ class Search extends React.Component {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
           disable,
+        },
+        {
+          type: ButtonType.SPACER,
         },
         {
           name: '선택 다운로드',
