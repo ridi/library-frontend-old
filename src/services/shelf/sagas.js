@@ -6,6 +6,7 @@ import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
+import * as toastActions from '../toast/actions';
 import * as actions from './actions';
 import * as requests from './requests';
 
@@ -196,7 +197,16 @@ function* removeSelectedFromShelf({ payload }) {
     return itemMap[unitId];
   });
   // invalidateShelfPage: 스켈레톤 강제로 띄우기 위한 action. 스피너로 대체하면 빼도 됨
-  yield all([put(actions.invalidateShelfPage(uuid, pageOptions)), put(selectionActions.clearSelectedBooks())]);
+  yield all([
+    put(actions.invalidateShelfPage(uuid, pageOptions)),
+    put(
+      toastActions.showToast({
+        message: `${bookIds.length}권을 책장에서 삭제했습니다.`,
+        withBottomFixedButton: true,
+      }),
+    ),
+    put(selectionActions.clearSelectedBooks()),
+  ]);
   yield call(deleteShelfItem, { payload: { uuid, units } });
   yield put(actions.loadShelfBooks(uuid, pageOptions));
 }
