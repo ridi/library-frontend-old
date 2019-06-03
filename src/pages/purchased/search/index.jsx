@@ -84,9 +84,9 @@ class Search extends React.Component {
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }

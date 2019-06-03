@@ -189,9 +189,9 @@ function ShelfDetail(props) {
 
   const editingBarProps = {
     totalSelectedCount,
-    isSelectedAllBooks: totalSelectedCount === visibleBookCount,
-    onClickSelectAllBooks: selectAllBooks,
-    onClickUnselectAllBooks: clearSelectedBooks,
+    isSelectedAllItem: totalSelectedCount === visibleBookCount,
+    onClickSelectAllItem: selectAllBooks,
+    onClickUnselectAllItem: clearSelectedBooks,
     onClickSuccessButton: toggleEditingMode,
   };
 

@@ -93,9 +93,9 @@ class Main extends React.PureComponent {
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }
