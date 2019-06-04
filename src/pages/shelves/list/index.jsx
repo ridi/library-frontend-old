@@ -3,17 +3,20 @@ import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
+import Editable from '../../../components/Editable';
 import { EmptyShelves } from '../../../components/Empty/EmptyShelves';
+import FlexBar from '../../../components/FlexBar';
 import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
-import Footer from '../../base/Footer';
-import { TabBar, TabMenuTypes } from '../../base/LNB';
-import FlexBar from '../../../components/FlexBar';
 import { Editing } from '../../../components/Tool';
-import Editable from '../../../components/Editable';
-import Responsive from '../../base/Responsive';
+import * as confirmActions from '../../../services/confirm/actions';
+import * as selectionActions from '../../../services/selection/actions';
+import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import Footer from '../../base/Footer';
+import { TabBar, TabMenuTypes } from '../../base/LNB';
+import Responsive from '../../base/Responsive';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -21,54 +24,95 @@ const toolBar = css`
   background-color: #f3f4f5;
 `;
 
-class ShelvesList extends React.Component {
-  static async getInitialProps({ query, store }) {
-    const page = parseInt(query.page, 10) || 1;
-    const orderBy = '';
-    const orderDirection = '';
-    store.dispatch(actions.loadShelves({ orderBy, orderDirection, page }));
-    return {
-      page,
-      orderBy,
-      orderDirection,
-    };
-  }
+const ShelvesList = props => {
+  const { shelves, totalSelectedCount, selectShelf, clearSelectedShelves, selectedShelves, showConfirm } = props;
+  const [selectMode, setSelectMode] = React.useState(false);
+  const toggleSelectMode = React.useCallback(() => {
+    clearSelectedShelves();
+    setSelectMode(isSelectMode => !isSelectMode);
+  }, []);
 
-  renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={<Editing />} />;
+  const visibleShelvesCount = shelves.items.length;
+  const selectAllShelf = React.useCallback(() => selectShelf(shelves.items), [shelves.items]);
+  const editingBarProps = {
+    totalSelectedCount,
+    isSelectedAllItem: totalSelectedCount === visibleShelvesCount,
+    onClickSelectAllItem: selectAllShelf,
+    onClickUnselectAllItem: clearSelectedShelves,
+    onClickSuccessButton: toggleSelectMode,
+    countUnit: '개',
+  };
 
-  renderMain() {
-    const { loading: isLoading, items: shelfIds } = this.props.shelves;
+  const showRemoveConfirm = () => {
+    showConfirm('책장을 삭제하겠습니까?', '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.', '삭제', () => {
+      console.log(selectedShelves);
+    });
+  };
+
+  const actionBarProps = {
+    buttonProps: [
+      {
+        name: '삭제',
+        onClick: showRemoveConfirm,
+        disable: totalSelectedCount === 0,
+      },
+    ],
+  };
+  const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={<Editing toggleEditingMode={toggleSelectMode} />} />;
+
+  const renderMain = () => {
+    const { loading: isLoading, items: shelfIds } = shelves;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
-    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} /> : <EmptyShelves />;
-  }
+    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} selectMode={selectMode} editable /> : <EmptyShelves />;
+  };
 
-  render() {
-    return (
-      <>
-        <Head>
-          <title>책장 - 내 서재</title>
-        </Head>
-        <TabBar activeMenu={TabMenuTypes.SHELVES} />
-        <Editable allowFixed isEditing={false} nonEditBar={this.renderToolBar()} editingBarProps={{}} actionBarProps={{}}>
-          <main>
-            <Responsive>{this.renderMain()}</Responsive>
-          </main>
-        </Editable>
-        <Footer />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Head>
+        <title>책장 - 내 서재</title>
+      </Head>
+      <TabBar activeMenu={TabMenuTypes.SHELVES} />
+      <Editable
+        allowFixed
+        isEditing={selectMode}
+        nonEditBar={renderToolBar()}
+        editingBarProps={editingBarProps}
+        actionBarProps={actionBarProps}
+      >
+        <main>
+          <Responsive>{renderMain()}</Responsive>
+        </main>
+      </Editable>
+      <Footer />
+    </>
+  );
+};
+
+ShelvesList.getInitialProps = async ({ query, store }) => {
+  const page = parseInt(query.page, 10) || 1;
+  const orderBy = '';
+  const orderDirection = '';
+  store.dispatch(actions.loadShelves({ orderBy, orderDirection, page }));
+  return {
+    page,
+    orderBy,
+    orderDirection,
+  };
+};
 
 const mapStateToProps = (state, props) => {
   const { orderBy, orderDirection, page } = props;
   const pageOptions = { orderBy, orderDirection, page };
   const shelves = selectors.getShelves(state, pageOptions);
-  return { shelves };
+  const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
+  const selectedShelves = selectionSelectors.getSelectedItems(state);
+  return { shelves, totalSelectedCount, selectedShelves };
 };
 
 const mapDispatchToProps = {
-  // dispatchSelectAllBooks: selectAllBooks,
+  clearSelectedShelves: selectionActions.clearSelectedItems,
+  selectShelf: selectionActions.selectItems,
+  showConfirm: confirmActions.showConfirm,
 };
 
 export default connect(

@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { showShelfBookAlertToast } from '../../services/book/actions';
-import { toggleBook } from '../../services/selection/actions';
-import { getSelectedBooks } from '../../services/selection/selectors';
+import { toggleItem } from '../../services/selection/actions';
+import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
 import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import BookMetaData from '../../utils/bookMetaData';
@@ -107,11 +107,11 @@ const refineBookData = ({
 };
 
 const mapStateToProps = state => ({
-  selectedBooks: getSelectedBooks(state),
+  selectedBooks: getSelectedItems(state),
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleBook,
+  onSelectedChange: toggleItem,
   dispatchShowShelfBookAlertToast: showShelfBookAlertToast,
 };
 

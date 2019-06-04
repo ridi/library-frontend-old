@@ -14,7 +14,7 @@ import {
   setUnitId,
   unhideSelectedBooks,
 } from '../../../services/purchased/hiddenUnit/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
   getIsFetchingBook,
@@ -37,7 +37,7 @@ import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -233,7 +233,7 @@ const mapDispatchToProps = {
   dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

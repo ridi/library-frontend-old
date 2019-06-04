@@ -62,9 +62,9 @@ class SeriesList extends React.Component {
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks,
-      onClickUnselectAllBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: onClickSelectAllBooks,
+      onClickUnselectAllItem: onClickUnselectAllBooks,
       onClickSuccessButton: () => {
         onClickUnselectAllBooks();
         this.setState({ isEditing: false });

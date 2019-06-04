@@ -19,10 +19,10 @@ import { getOptions, getUnitId, getItemsByPage, getPrimaryItem } from './selecto
 
 import { toFlatten } from '../../../utils/array';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
-import { selectBooks } from '../../selection/actions';
+import { selectItems } from '../../selection/actions';
 import { showToast } from '../../toast/actions';
 import { getQuery } from '../../router/selectors';
-import { getSelectedBooks } from '../../selection/selectors';
+import { getSelectedItems } from '../../selection/selectors';
 import { isExpiredTTL } from '../../../utils/ttl';
 import { setFullScreenLoading, setError } from '../../ui/actions';
 import { makeLinkProps } from '../../../utils/uri';
@@ -107,7 +107,7 @@ function* loadItems() {
 
 function* unhideSelectedBooks() {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
   const bookIds = Object.keys(selectedBooks);
@@ -148,7 +148,7 @@ function* unhideSelectedBooks() {
 
 function* deleteSelectedBooks() {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
   const bookIds = Object.keys(selectedBooks);
@@ -180,7 +180,7 @@ function* deleteSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchaseHiddenUnitRootSaga() {

@@ -19,7 +19,7 @@ import { showConfirm } from '../../../services/confirm/actions';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount } from '../../../services/purchased/hidden/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
@@ -28,7 +28,7 @@ import { ResponsiveBooks } from '../../base/Responsive';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -86,9 +86,9 @@ class Hidden extends React.Component {
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }
@@ -244,7 +244,7 @@ const mapDispatchToProps = {
   dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
