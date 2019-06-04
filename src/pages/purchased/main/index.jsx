@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import { ButtonType } from '../../../components/ActionBar/constants';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -11,12 +12,15 @@ import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
+import SelectShelfModal from '../../../components/SelectShelfModal';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
+import * as featureIds from '../../../constants/featureIds';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
+import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
@@ -57,6 +61,7 @@ class Main extends React.PureComponent {
 
     this.state = {
       isEditing: false,
+      showShelves: false,
     };
   }
 
@@ -87,6 +92,14 @@ class Main extends React.PureComponent {
     this.setState({ isEditing: false });
   };
 
+  handleAddToShelf = () => {
+    this.setState({ showShelves: true });
+  };
+
+  handleShelfBackClick = () => {
+    this.setState({ showShelves: false });
+  };
+
   makeEditingBarProps() {
     const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isCollection(item.unit_type)).length;
@@ -101,23 +114,50 @@ class Main extends React.PureComponent {
   }
 
   makeActionBarProps() {
-    const { totalSelectedCount } = this.props;
+    const { isSyncShelfEnabled, totalSelectedCount } = this.props;
     const disable = totalSelectedCount === 0;
 
-    return {
-      buttonProps: [
+    let buttonProps;
+    if (isSyncShelfEnabled) {
+      buttonProps = [
+        {
+          name: '숨기기',
+          onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '책장에 추가',
+          onClick: this.handleAddToShelf,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '다운로드',
+          onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ];
+    } else {
+      buttonProps = [
         {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
           disable,
         },
         {
+          type: ButtonType.SPACER,
+        },
+        {
           name: '선택 다운로드',
           onClick: this.handleOnClickDownload,
           disable,
         },
-      ],
-    };
+      ];
+    }
+
+    return { buttonProps };
   }
 
   renderSearchBar() {
@@ -233,8 +273,19 @@ class Main extends React.PureComponent {
   };
 
   render() {
-    const { isEditing } = this.state;
+    const { isEditing, showShelves } = this.state;
     const { isError } = this.props;
+
+    if (showShelves) {
+      return (
+        <>
+          <Head>
+            <title>모든 책 - 내 서재</title>
+          </Head>
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} />
+        </>
+      );
+    }
 
     return (
       <>
@@ -273,6 +324,7 @@ const mapStateToProps = state => {
   const isFetchingBooks = getIsFetchingBooks(state);
   const lastBookIds = getLastBookIdsByPage(state);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   let listInstruction;
   if (items.length !== 0) {
@@ -297,6 +349,7 @@ const mapStateToProps = state => {
     listInstruction,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
+    isSyncShelfEnabled,
   };
 };
 

@@ -76,6 +76,9 @@ class SerialPreference extends React.Component {
     return {
       buttonProps: [
         {
+          type: ButtonType.SPACER,
+        },
+        {
           name: '선택 삭제',
           type: ButtonType.DANGER,
           onClick: this.handleOnClickDelete,

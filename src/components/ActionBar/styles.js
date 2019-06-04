@@ -25,17 +25,17 @@ export const actionButton = disable => {
       }
     : {};
   return {
-    flex: 'auto',
     fontSize: 15,
     lineHeight: '1.2em',
     textAlign: 'center',
     height: 50,
+    padding: '0 8px',
     ...disabledStyle,
     '&:first-of-type': {
-      textAlign: 'left',
+      paddingLeft: 0,
     },
     '&:last-of-type': {
-      textAlign: 'right',
+      paddingRight: 0,
     },
   };
 };
@@ -45,6 +45,10 @@ export const actionButtonType = type => {
     case ButtonType.DANGER:
       return {
         color: '#e64938',
+      };
+    case ButtonType.SPACER:
+      return {
+        flex: '1',
       };
     case ButtonType.NORMAL:
     default:
