@@ -92,7 +92,7 @@ export function* downloadBookActionAdaptor(action) {
 }
 
 function* downloadSelectedBooksActionAdaptor() {
-  const bookIds = yield select(selectionSelectors.getSelectedItemsId);
+  const bookIds = yield select(selectionSelectors.getSelectedItemIds);
   yield call(downloadBooks, bookIds);
 }
 

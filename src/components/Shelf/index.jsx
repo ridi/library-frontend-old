@@ -46,11 +46,4 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-const mapDispatchToProps = {
-  onSelectedChange: toggleItem,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Shelf);
+export default connect(mapStateToProps)(Shelf);
