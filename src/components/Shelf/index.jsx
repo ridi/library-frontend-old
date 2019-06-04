@@ -7,30 +7,15 @@ import { ShelfDetailLink } from './ShelfDetailLink';
 import { ShelfEditButton } from './ShelfEditButton';
 import { ShelfSelectButton } from './ShelfSelectButton';
 import { shelfStyles } from './styles';
+import { ShelfThumbnails } from './ShelfThumbnail';
+import { toggleItem } from '../../services/selection/actions';
 
 const Shelf = props => {
-  const THUMBNAIL_TOTAL_COUNT = 3;
   const { uuid, name, totalCount, thumbnailIds, editable, selectMode } = props;
+
   return (
     <article css={shelfStyles.wrapper}>
-      <ul css={shelfStyles.thumbnails}>
-        {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
-          const thumbnailUrl = thumbnailIds[index] ? `//misc.ridibooks.com/cover/${thumbnailIds[index]}/xxlarge` : '';
-          const hasThumbnail = thumbnailUrl.length > 0;
-          const key = hasThumbnail ? thumbnailUrl : `empty${index}`;
-          return (
-            <li css={shelfStyles.thumbnail} key={key}>
-              {hasThumbnail ? (
-                <img className="thumbnailImage" css={shelfStyles.thumbnailImage} src={thumbnailUrl} alt={`${name} 대표 이미지`} />
-              ) : (
-                <div className="thumbnailImage" css={shelfStyles.thumbnailImage}>
-                  <span className="a11y">책장 구성도서 썸네일 영역</span>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      <ShelfThumbnails thumbnailIds={thumbnailIds} shelfName={name} />
       <div css={shelfStyles.infoWrapper}>
         <div css={shelfStyles.nameWrapper}>
           <h1 css={shelfStyles.name}>{name}</h1>
@@ -43,8 +28,8 @@ const Shelf = props => {
         </div>
       </div>
       <ShelfDetailLink uuid={uuid} name={name} />
-      <ShelfEditButton editable={editable} />
-      <ShelfSelectButton selectMode={selectMode} />
+      <ShelfEditButton uuid={uuid} editable={editable} />
+      <ShelfSelectButton uuid={uuid} isActive={selectMode} />
     </article>
   );
 };
@@ -58,14 +43,7 @@ const mapStateToProps = (state, props) => {
     name,
     thumbnailIds,
     totalCount,
-    editable: false,
-    selectMode: false,
   };
 };
 
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Shelf);
+export default connect(mapStateToProps)(Shelf);

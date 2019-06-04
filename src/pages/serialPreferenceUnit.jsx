@@ -6,7 +6,7 @@ import { URLMap, PageType } from '../constants/urls';
 import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../services/book/selectors';
 import { getPageInfo as getSerialPrefPageInfo } from '../services/serialPreference/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks, setUnitId } from '../services/purchased/mainUnit/actions';
-import { clearSelectedBooks } from '../services/selection/actions';
+import { clearSelectedItems } from '../services/selection/actions';
 import {
   getIsFetchingBook,
   getPageInfo,
@@ -22,7 +22,7 @@ import UnitPageTemplate from './base/UnitPageTemplate';
 class SerialPreferenceUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -71,7 +71,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

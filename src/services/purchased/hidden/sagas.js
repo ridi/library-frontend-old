@@ -10,8 +10,8 @@ import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } fr
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
 import { getQuery } from '../../router/selectors';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import {
@@ -74,7 +74,7 @@ function* loadItems() {
 function* unhideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
 
@@ -116,7 +116,7 @@ function* unhideSelectedBooks() {
 function* deleteSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
@@ -149,7 +149,7 @@ function* deleteSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchasedHiddenSaga() {

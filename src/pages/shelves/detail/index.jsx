@@ -189,9 +189,9 @@ function ShelfDetail(props) {
 
   const editingBarProps = {
     totalSelectedCount,
-    isSelectedAllBooks: totalSelectedCount === visibleBookCount,
-    onClickSelectAllBooks: selectAllBooks,
-    onClickUnselectAllBooks: clearSelectedBooks,
+    isSelectedAllItem: totalSelectedCount === visibleBookCount,
+    onClickSelectAllItem: selectAllBooks,
+    onClickUnselectAllItem: clearSelectedBooks,
     onClickSuccessButton: toggleEditingMode,
   };
 
@@ -267,10 +267,10 @@ function mapStateToProps(state, props) {
 }
 
 const mapDispatchToProps = {
-  clearSelectedBooks: selectionActions.clearSelectedBooks,
+  clearSelectedBooks: selectionActions.clearSelectedItems,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
-  selectBooks: selectionActions.selectBooks,
+  selectBooks: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
 };
 

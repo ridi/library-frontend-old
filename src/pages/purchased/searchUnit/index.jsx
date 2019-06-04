@@ -12,7 +12,7 @@ import {
   selectAllBooks,
   setUnitId,
 } from '../../../services/purchased/searchUnit/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import * as shelfSelectors from '../../../services/shelf/selectors';
 import {
   getIsFetchingBook,
@@ -29,7 +29,7 @@ import UnitPageTemplate from '../../base/UnitPageTemplate';
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
     return {
       uuid: query.uuid,
@@ -82,7 +82,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };

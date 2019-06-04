@@ -11,8 +11,8 @@ import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
@@ -86,7 +86,7 @@ function* loadMainItems(action) {
 function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = OrderOptions.parse(order);
@@ -133,7 +133,7 @@ function* hideSelectedBooks() {
 
 function* downloadSelectedBooks() {
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = OrderOptions.parse(order);
@@ -153,7 +153,7 @@ function* downloadSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchaseMainRootSaga() {

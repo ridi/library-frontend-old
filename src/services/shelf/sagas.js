@@ -187,7 +187,7 @@ function* deleteShelfItem({ payload }) {
 
 function* removeSelectedFromShelf({ payload }) {
   const { uuid, pageOptions } = payload;
-  const bookIds = Object.entries(yield select(selectionSelectors.getSelectedBooks))
+  const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
     .filter(([, checked]) => checked)
     .map(([bookId]) => bookId);
   const bookToUnit = yield select(state => state.shelf.bookToUnit);
@@ -205,7 +205,7 @@ function* removeSelectedFromShelf({ payload }) {
         withBottomFixedButton: true,
       }),
     ),
-    put(selectionActions.clearSelectedBooks()),
+    put(selectionActions.clearSelectedItems()),
   ]);
   yield call(deleteShelfItem, { payload: { uuid, units } });
   yield put(actions.loadShelfBooks(uuid, pageOptions));
