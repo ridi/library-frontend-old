@@ -141,7 +141,7 @@ function* performOperation(ops) {
   }));
 }
 
-function* addShelf({ payload }) {
+export function* addShelf({ payload }) {
   const { name } = payload;
   while (true) {
     const uuid = uuidv4();
@@ -153,13 +153,13 @@ function* addShelf({ payload }) {
   }
 }
 
-function* deleteShelf({ payload }) {
+export function* deleteShelf({ payload }) {
   const { uuid } = payload;
   yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
   // 책장 삭제 에러는 무시함
 }
 
-function* addShelfItem({ payload }) {
+export function* addShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
     type: OperationType.ADD_SHELF_ITEM,
@@ -172,7 +172,7 @@ function* addShelfItem({ payload }) {
   yield put(actions.loadShelfBookCount(uuid));
 }
 
-function* deleteShelfItem({ payload }) {
+export function* deleteShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
     type: OperationType.DELETE_SHELF_ITEM,

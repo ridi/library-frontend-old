@@ -22,7 +22,13 @@ import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
-import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
+import {
+  addSelectedToShelf,
+  downloadSelectedBooks,
+  hideSelectedBooks,
+  loadItems,
+  selectAllBooks,
+} from '../../../services/purchased/main/actions';
 import {
   getBooksByPage,
   getFilter,
@@ -98,6 +104,12 @@ class Main extends React.PureComponent {
 
   handleShelfBackClick = () => {
     this.setState({ showShelves: false });
+  };
+
+  handleShelfSelect = uuid => {
+    this.setState({ isEditing: false, showShelves: false });
+    this.props.dispatchAddSelectedToShelf(uuid);
+    this.props.dispatchClearSelectedBooks();
   };
 
   makeEditingBarProps() {
@@ -282,7 +294,7 @@ class Main extends React.PureComponent {
           <Head>
             <title>모든 책 - 내 서재</title>
           </Head>
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} />
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
         </>
       );
     }
@@ -359,6 +371,7 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchAddSelectedToShelf: addSelectedToShelf,
 };
 
 export default connect(

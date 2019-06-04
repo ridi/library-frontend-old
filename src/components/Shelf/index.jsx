@@ -8,10 +8,13 @@ import { ShelfEditButton } from './ShelfEditButton';
 import { ShelfSelectButton } from './ShelfSelectButton';
 import { shelfStyles } from './styles';
 import { ShelfThumbnails } from './ShelfThumbnail';
-import { toggleItem } from '../../services/selection/actions';
+
+function defaultRenderLink({ uuid, name }) {
+  return <ShelfDetailLink uuid={uuid} name={name} />;
+}
 
 const Shelf = props => {
-  const { uuid, name, totalCount, thumbnailIds, editable, selectMode } = props;
+  const { uuid, name, totalCount, thumbnailIds, editable, renderLink = defaultRenderLink, selectMode } = props;
 
   return (
     <article css={shelfStyles.wrapper}>
@@ -27,7 +30,7 @@ const Shelf = props => {
           </p>
         </div>
       </div>
-      <ShelfDetailLink uuid={uuid} name={name} />
+      {renderLink({ uuid, name })}
       <ShelfEditButton uuid={uuid} editable={editable} />
       <ShelfSelectButton uuid={uuid} isActive={selectMode} />
     </article>
