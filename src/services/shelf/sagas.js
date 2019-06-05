@@ -1,4 +1,4 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
@@ -85,35 +85,7 @@ function* loadShelfBookCount(isServer, { payload }) {
   }
 }
 
-function* performOperation(ops) {
-  if (ops.length === 0) {
-    return [];
-  }
-
-  const revision = Math.floor(Date.now() / 1000);
-  const opsWithRevision = ops.map(op => ({ ...op, revision }));
-  yield put(actions.beginOperation({ revision }));
-
-  let opIds = [];
-  while (true) {
-    try {
-      opIds = yield call(requests.createOperation, opsWithRevision);
-      break;
-    } catch (err) {
-      if (err.response) {
-        yield put(actions.endOperation({ revision, hasError: true }));
-
-        const { status } = err.response;
-        if (status === 403) {
-          return ops.map(() => ({ id: null, result: OperationStatus.FORBIDDEN }));
-        }
-        // TODO: 던지지 말고 처리?
-        throw err;
-      }
-      // 네트워크 에러 등, 재시도
-    }
-  }
-
+function* waitForOperation(revision, opIds) {
   const results = {};
   let pendingIds = opIds;
   yield delay(100);
@@ -142,6 +114,42 @@ function* performOperation(ops) {
     id,
     result: results[id],
   }));
+}
+
+function* createOperation(ops) {
+  if (ops.length === 0) {
+    return [];
+  }
+
+  const revision = Math.floor(Date.now() / 1000);
+  const opsWithRevision = ops.map(op => ({ ...op, revision }));
+  yield put(actions.beginOperation({ revision }));
+
+  let opIds = [];
+  while (true) {
+    try {
+      opIds = yield call(requests.createOperation, opsWithRevision);
+      break;
+    } catch (err) {
+      if (err.response) {
+        yield put(actions.endOperation({ revision, hasError: true }));
+
+        const { status } = err.response;
+        if (status === 403) {
+          return ops.map(() => ({ id: null, result: OperationStatus.FORBIDDEN }));
+        }
+        // TODO: 던지지 말고 처리?
+        throw err;
+      }
+      // 네트워크 에러 등, 재시도
+    }
+  }
+
+  return yield fork(waitForOperation, revision, opIds);
+}
+
+function* performOperation(ops) {
+  return yield join(yield call(createOperation, ops));
 }
 
 function* addShelf({ payload }) {
