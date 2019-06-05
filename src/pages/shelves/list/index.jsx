@@ -17,6 +17,8 @@ import * as selectors from '../../../services/shelf/selectors';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import { Add } from '../../../components/Tool/Add';
+import * as promptActions from '../../../services/prompt/actions';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -24,15 +26,19 @@ const toolBar = css`
   background-color: #f3f4f5;
 `;
 
+const toolsWrapper = css`
+  display: flex;
+`;
+
 const ShelvesList = props => {
-  const { shelves, totalSelectedCount, selectShelf, clearSelectedShelves, selectedShelves, showConfirm } = props;
+  const { shelves, totalSelectedCount, selectShelf, clearSelectedShelves, selectedShelves, showConfirm, showPrompt } = props;
   const [selectMode, setSelectMode] = React.useState(false);
   const toggleSelectMode = React.useCallback(() => {
     clearSelectedShelves();
     setSelectMode(isSelectMode => !isSelectMode);
   }, []);
 
-  const visibleShelvesCount = shelves.items.length;
+  const visibleShelvesCount = shelves?.items?.length;
   const selectAllShelf = React.useCallback(() => selectShelf(shelves.items), [shelves.items]);
   const editingBarProps = {
     totalSelectedCount,
@@ -41,6 +47,17 @@ const ShelvesList = props => {
     onClickUnselectAllItem: clearSelectedShelves,
     onClickSuccessButton: toggleSelectMode,
     countUnit: '개',
+  };
+
+  const handleAddShelfButton = () => {
+    showPrompt({
+      title: '새 책장 추가',
+      message: '새 책장의 이름을 입력해주세요.',
+      emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+      onClickConfirmButton: shelfName => {
+        console.log(shelfName);
+      },
+    });
   };
 
   const showRemoveConfirm = () => {
@@ -58,7 +75,15 @@ const ShelvesList = props => {
       },
     ],
   };
-  const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={<Editing toggleEditingMode={toggleSelectMode} />} />;
+
+  const renderTools = () => (
+    <div css={toolsWrapper}>
+      <Add onClickAddButton={handleAddShelfButton} />
+      <Editing toggleEditingMode={toggleSelectMode} />
+    </div>
+  );
+
+  const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
 
   const renderMain = () => {
     const { loading: isLoading, items: shelfIds } = shelves;
@@ -113,6 +138,7 @@ const mapDispatchToProps = {
   clearSelectedShelves: selectionActions.clearSelectedItems,
   selectShelf: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
+  showPrompt: promptActions.showPrompt,
 };
 
 export default connect(
