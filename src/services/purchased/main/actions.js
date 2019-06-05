@@ -6,7 +6,6 @@ export const UPDATE_MAIN_OPTIONS = 'UPDATE_MAIN_OPTIONS';
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
-export const ADD_MAIN_SELECTED_TO_SHELF = 'ADD_MAIN_SELECTED_TO_SHELF';
 
 export const SET_IS_FETCHING_BOOKS = 'SET_IS_FETCHING_BOOKS';
 
@@ -38,13 +37,6 @@ export const hideSelectedBooks = () => ({
 
 export const downloadSelectedBooks = () => ({
   type: DOWNLOAD_SELECTED_MAIN_BOOKS,
-});
-
-export const addSelectedToShelf = uuid => ({
-  type: ADD_MAIN_SELECTED_TO_SHELF,
-  payload: {
-    uuid,
-  },
 });
 
 export const setIsFetchingBooks = isFetchingBooks => ({

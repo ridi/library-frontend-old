@@ -2,6 +2,8 @@ import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
+import { makeLinkProps } from '../../utils/uri';
+import { PageType, URLMap } from '../../constants/urls';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
@@ -9,6 +11,7 @@ import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
 import * as actions from './actions';
 import * as requests from './requests';
+import * as selectors from './selectors';
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -141,7 +144,7 @@ function* performOperation(ops) {
   }));
 }
 
-export function* addShelf({ payload }) {
+function* addShelf({ payload }) {
   const { name } = payload;
   while (true) {
     const uuid = uuidv4();
@@ -153,13 +156,13 @@ export function* addShelf({ payload }) {
   }
 }
 
-export function* deleteShelf({ payload }) {
+function* deleteShelf({ payload }) {
   const { uuid } = payload;
   yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
   // 책장 삭제 에러는 무시함
 }
 
-export function* addShelfItem({ payload }) {
+function* addShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
     type: OperationType.ADD_SHELF_ITEM,
@@ -172,7 +175,7 @@ export function* addShelfItem({ payload }) {
   yield put(actions.loadShelfBookCount(uuid));
 }
 
-export function* deleteShelfItem({ payload }) {
+function* deleteShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
     type: OperationType.DELETE_SHELF_ITEM,
@@ -183,6 +186,34 @@ export function* deleteShelfItem({ payload }) {
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(actions.loadShelfBookCount(uuid));
+}
+
+function* addSelectedToShelf({ payload }) {
+  const { uuid } = payload;
+  const selectedBooks = yield select(selectionSelectors.getSelectedItems);
+  const bookIds = Object.entries(selectedBooks)
+    .filter(([, selected]) => selected)
+    .map(([key]) => key);
+  const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
+  const units = libraryBookData.items.map(book => ({
+    unitId: book.search_unit_id,
+    bookIds: [book.b_id],
+  }));
+  const shelfName = yield select(selectors.getShelfName, uuid);
+  yield call(addShelfItem, { payload: { uuid, units } });
+  yield put(
+    toastActions.showToast({
+      message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
+      linkName: '책장 바로 보기',
+      linkProps: makeLinkProps(
+        {
+          pathname: URLMap[PageType.SHELF_DETAIL].href,
+          query: { uuid },
+        },
+        URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+      ),
+    }),
+  );
 }
 
 function* removeSelectedFromShelf({ payload }) {
@@ -221,6 +252,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
     takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
+    takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
   ]);
 }

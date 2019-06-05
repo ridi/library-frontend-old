@@ -22,13 +22,7 @@ import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
-import {
-  addSelectedToShelf,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  loadItems,
-  selectAllBooks,
-} from '../../../services/purchased/main/actions';
+import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
   getBooksByPage,
   getFilter,
@@ -43,6 +37,7 @@ import {
 } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
@@ -371,7 +366,7 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
-  dispatchAddSelectedToShelf: addSelectedToShelf,
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
 };
 
 export default connect(

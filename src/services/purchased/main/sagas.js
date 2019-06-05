@@ -2,7 +2,7 @@ import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
-import { PageType, URLMap } from '../../../constants/urls';
+import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { loadBookData, loadUnitData } from '../../book/sagas';
@@ -13,12 +13,17 @@ import { getBookIdsByItems } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
 import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
-import * as shelfSagas from '../../shelf/sagas';
-import * as shelfSelectors from '../../shelf/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
-import * as actions from './actions';
+import {
+  DOWNLOAD_SELECTED_MAIN_BOOKS,
+  HIDE_SELECTED_MAIN_BOOKS,
+  LOAD_MAIN_ITEMS,
+  SELECT_ALL_MAIN_BOOKS,
+  setIsFetchingBooks,
+  updateItems,
+} from './actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
 import { getFilter, getItems, getItemsByPage, getOptions, getPage } from './selectors';
 
@@ -60,7 +65,7 @@ function* loadMainItemsWithPayload(payload) {
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
     yield put(
-      actions.updateItems({
+      updateItems({
         items: itemResponse.items,
         unitTotalCount: countResponse.unit_total_count,
         itemTotalCount: countResponse.item_total_count,
@@ -71,7 +76,7 @@ function* loadMainItemsWithPayload(payload) {
   } catch (err) {
     yield put(setError(true));
   }
-  yield put(actions.setIsFetchingBooks(false));
+  yield put(setIsFetchingBooks(false));
 }
 
 function* loadMainItems(action) {
@@ -151,39 +156,11 @@ function* selectAllBooks() {
   yield put(selectItems(bookIds));
 }
 
-function* addSelectedToShelf({ payload }) {
-  const { uuid } = payload;
-  const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedItems);
-  const units = Object.entries(selectedBooks)
-    .filter(([, selected]) => selected)
-    .map(([key]) => ({
-      unitId: Number(items[key].unit_id),
-      bookIds: [key],
-    }));
-  const shelfName = yield select(shelfSelectors.getShelfName, uuid);
-  yield call(shelfSagas.addShelfItem, { payload: { uuid, units } });
-  yield put(
-    showToast({
-      message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
-      linkName: '책장 바로 보기',
-      linkProps: makeLinkProps(
-        {
-          pathname: URLMap[PageType.SHELF_DETAIL].href,
-          query: { uuid },
-        },
-        URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-      ),
-    }),
-  );
-}
-
 export default function* purchaseMainRootSaga() {
   yield all([
-    takeEvery(actions.LOAD_MAIN_ITEMS, loadMainItems),
-    takeEvery(actions.HIDE_SELECTED_MAIN_BOOKS, hideSelectedBooks),
-    takeEvery(actions.DOWNLOAD_SELECTED_MAIN_BOOKS, downloadSelectedBooks),
-    takeEvery(actions.SELECT_ALL_MAIN_BOOKS, selectAllBooks),
-    takeEvery(actions.ADD_MAIN_SELECTED_TO_SHELF, addSelectedToShelf),
+    takeEvery(LOAD_MAIN_ITEMS, loadMainItems),
+    takeEvery(HIDE_SELECTED_MAIN_BOOKS, hideSelectedBooks),
+    takeEvery(DOWNLOAD_SELECTED_MAIN_BOOKS, downloadSelectedBooks),
+    takeEvery(SELECT_ALL_MAIN_BOOKS, selectAllBooks),
   ]);
 }
