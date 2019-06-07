@@ -33,6 +33,9 @@ function* loadShelves(isServer, { payload }) {
   try {
     const items = yield call(requests.fetchShelves, { offset, limit });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
+    for (const { uuid } of items) {
+      yield fork(loadShelfBookCount, isServer, { payload: { uuid } });
+    }
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
