@@ -25,7 +25,8 @@ class Prompt extends React.Component {
     enableScroll();
   }
 
-  submit = () => {
+  submitPrompt = e => {
+    e.preventDefault();
     const { emptyInputAlertMessage, onClickCloseButton, onClickConfirmButton, dispatchShowToast } = this.props;
     const { promptInput: inputValue } = this.state;
     if (inputValue.length === 0) {
@@ -45,15 +46,11 @@ class Prompt extends React.Component {
     });
   };
 
-  handleKeyUp = e => {
-    if (e.key === 'Enter') this.submit();
-  };
-
   render() {
     const { onClickCloseButton, title, message, confirmLabel, placeHolder } = this.props;
     const { promptInput: inputValue } = this.state;
     return (
-      <article css={styles.promptWrapper}>
+      <form css={styles.promptWrapper} onSubmit={this.submitPrompt}>
         <div css={styles.prompt}>
           <div css={styles.promptHeader}>
             <h1 css={styles.promptTitle}>{title}</h1>
@@ -68,20 +65,19 @@ class Prompt extends React.Component {
               type="text"
               placeholder={placeHolder}
               onChange={this.handleChange}
-              onKeyUp={this.handleKeyUp}
               autoComplete="off"
               value={inputValue}
               autoFocus
             />
           </div>
           <div css={styles.promptFooter}>
-            <button type="button" css={styles.promptButton} onClick={this.submit}>
+            <button type="submit" css={styles.promptButton}>
               {confirmLabel || '확인'}
             </button>
             <div css={styles.clear} />
           </div>
         </div>
-      </article>
+      </form>
     );
   }
 }
