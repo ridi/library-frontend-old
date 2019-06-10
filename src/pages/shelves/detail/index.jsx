@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -30,6 +30,7 @@ import BookOutline from '../../../svgs/BookOutline.svg';
 import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
+import EditButton from './EditButton';
 
 const shelfBar = {
   backgroundColor: '#ffffff',
@@ -50,6 +51,12 @@ const toolsWrapper = {
 const paddingForPagination = {
   paddingBottom: ACTION_BAR_HEIGHT,
 };
+
+const toolBar = css`
+  border-bottom: 1px solid #d1d5d9;
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
+  background-color: #f3f4f5;
+`;
 
 function ShelfDetail(props) {
   const {
@@ -142,12 +149,17 @@ function ShelfDetail(props) {
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
+    const right = <EditButton />;
+    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+  }
+
+  function renderToolbar() {
     const right = (
       <div css={toolsWrapper}>
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
       </div>
     );
-    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+    return <FlexBar css={toolBar} flexRight={right} />;
   }
 
   function renderPaginator() {
@@ -224,10 +236,11 @@ function ShelfDetail(props) {
       <Head>
         <title>{props.name} - 내 서재</title>
       </Head>
+      {renderShelfBar()}
       <Editable
         allowFixed
         isEditing={isEditing}
-        nonEditBar={renderShelfBar()}
+        nonEditBar={renderToolbar()}
         editingBarProps={editingBarProps}
         actionBarProps={actionBarProps}
       >

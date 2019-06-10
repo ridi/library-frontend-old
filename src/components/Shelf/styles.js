@@ -28,17 +28,6 @@ const ResponsiveCountWrapper = responsiveMetaStyles(
   `,
 );
 
-const ResponsiveEditWrapper = responsiveMetaStyles(
-  `
-    right: 5px;
-    bottom: 9px;
-  `,
-  `
-    right: 9px;
-    bottom: 13px;
-  `,
-);
-
 export const shelfStyles = {
   wrapper: css`
     border: 1px solid #d1d5d9;
@@ -119,70 +108,6 @@ export const shelfStyles = {
     top: 0;
     width: 100%;
     height: 100%;
-  `,
-  editWrapper: css`
-    position: absolute;
-    right: -2px;
-    bottom: -2px;
-    ${ResponsiveEditWrapper}
-  `,
-  editButton: css`
-    width: 22px;
-    height: 22px;
-    border-radius: 2px;
-    .active & {
-      background-color: #f2f4f5;
-    }
-  `,
-  editButtonIcon: css`
-    width: 3px;
-    height: 13px;
-    fill: #9ea7ad;
-  `,
-  editModalCloseButton: css`
-    display: block;
-    overflow: hidden;
-    width: 0;
-    height: 0;
-    .active & {
-      position: fixed;
-      z-index: 50;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
-    }
-  `,
-  editModalWrapper: css`
-    position: absolute;
-    z-index: 100;
-    right: -8px;
-    top: 26px;
-    overflow: hidden;
-    max-height: 0;
-    .active & {
-      max-height: 100px;
-      overflow: inherit;
-    }
-  `,
-  editModal: css`
-    padding: 4px 0;
-    width: 140px;
-    border-radius: 4px;
-    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.28), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
-    background: rgba(255, 255, 255, 0.98);
-  `,
-  editModalButton: css`
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    font-size: 15px;
-    line-height: 19px;
-    color: #40474d;
-    text-align: left;
-    &:hover {
-      background: #f3f4f5;
-    }
   `,
   selectWrapper: css`
     position: absolute;
