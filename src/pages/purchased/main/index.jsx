@@ -37,6 +37,7 @@ import {
 } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
@@ -98,6 +99,12 @@ class Main extends React.PureComponent {
 
   handleShelfBackClick = () => {
     this.setState({ showShelves: false });
+  };
+
+  handleShelfSelect = uuid => {
+    this.setState({ isEditing: false, showShelves: false });
+    this.props.dispatchAddSelectedToShelf(uuid);
+    this.props.dispatchClearSelectedBooks();
   };
 
   makeEditingBarProps() {
@@ -282,7 +289,7 @@ class Main extends React.PureComponent {
           <Head>
             <title>모든 책 - 내 서재</title>
           </Head>
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} />
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
         </>
       );
     }
@@ -359,6 +366,7 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
 };
 
 export default connect(

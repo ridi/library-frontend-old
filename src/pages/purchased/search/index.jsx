@@ -32,6 +32,7 @@ import {
 import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as shelfActions from '../../../services/shelf/actions';
 import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -89,6 +90,12 @@ class Search extends React.Component {
 
   handleShelfBackClick = () => {
     this.setState({ showShelves: false });
+  };
+
+  handleShelfSelect = uuid => {
+    this.setState({ isEditing: false, showShelves: false });
+    this.props.dispatchAddSelectedToShelf(uuid);
+    this.props.dispatchClearSelectedBooks();
   };
 
   makeEditingBarProps() {
@@ -274,7 +281,7 @@ class Search extends React.Component {
           <Head>
             <title>{title}</title>
           </Head>
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} />
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
         </>
       );
     }
@@ -333,6 +340,7 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
 };
 
 export default connect(
