@@ -26,6 +26,18 @@ const OperationStatus = {
   FORBIDDEN: 'forbidden',
 };
 
+function* loadShelfBookCount(isServer, { payload }) {
+  const { uuid } = payload;
+  try {
+    const count = yield call(requests.fetchShelfBookCount, { uuid });
+    yield put(actions.setShelfBookCount({ uuid, count }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401 || !isServer) {
+      throw err;
+    }
+  }
+}
+
 function* loadShelves(isServer, { payload }) {
   const { orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
@@ -33,9 +45,7 @@ function* loadShelves(isServer, { payload }) {
   try {
     const items = yield call(requests.fetchShelves, { offset, limit });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
-    for (const { uuid } of items) {
-      yield fork(loadShelfBookCount, isServer, { payload: { uuid } });
-    }
+    yield all(items.map(({ uuid }) => call(loadShelfBookCount, isServer, { payload: { uuid } })));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
@@ -69,18 +79,6 @@ function* loadShelfBooks(isServer, { payload }) {
     const bookIds = libraryBooks.map(book => book.b_id);
     yield call(bookSagas.loadBookData, bookIds);
     yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
-  } catch (err) {
-    if (!err.response || err.response.status !== 401 || !isServer) {
-      throw err;
-    }
-  }
-}
-
-function* loadShelfBookCount(isServer, { payload }) {
-  const { uuid } = payload;
-  try {
-    const count = yield call(requests.fetchShelfBookCount, { uuid });
-    yield put(actions.setShelfBookCount({ uuid, count }));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
