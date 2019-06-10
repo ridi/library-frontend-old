@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import * as selectors from '../../services/shelf/selectors';
 import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { ShelfDetailLink } from './ShelfDetailLink';
-import { ShelfEditButton } from './ShelfEditButton';
 import { ShelfSelectButton } from './ShelfSelectButton';
 import { ShelfThumbnails } from './ShelfThumbnail';
 import { shelfStyles } from './styles';
@@ -14,7 +13,7 @@ function defaultRenderLink({ uuid, name }) {
 }
 
 const Shelf = props => {
-  const { uuid, name, totalCount, thumbnailIds, editable, renderLink = defaultRenderLink, selectMode } = props;
+  const { uuid, name, totalCount, thumbnailIds, renderLink = defaultRenderLink, selectMode } = props;
 
   return (
     <article css={shelfStyles.wrapper}>
@@ -31,7 +30,6 @@ const Shelf = props => {
         </div>
       </div>
       {renderLink({ uuid, name })}
-      <ShelfEditButton uuid={uuid} editable={editable} />
       <ShelfSelectButton uuid={uuid} isActive={selectMode} />
     </article>
   );

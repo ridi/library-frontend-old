@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -22,6 +22,7 @@ import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as bookDownloadActions from '../../../services/bookDownload/actions';
 import * as confirmActions from '../../../services/confirm/actions';
+import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
@@ -30,6 +31,7 @@ import BookOutline from '../../../svgs/BookOutline.svg';
 import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
+import EditButton from './EditButton';
 
 const shelfBar = {
   backgroundColor: '#ffffff',
@@ -51,17 +53,27 @@ const paddingForPagination = {
   paddingBottom: ACTION_BAR_HEIGHT,
 };
 
+const toolBar = css`
+  border-bottom: 1px solid #d1d5d9;
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
+  background-color: #f3f4f5;
+`;
+
 function ShelfDetail(props) {
   const {
     bookIds,
     clearSelectedBooks,
+    removeShelfFromDetail,
     downloadSelectedBooks,
+    name,
     orderBy,
     orderDirection,
     page,
     removeSelectedFromShelf,
+    renameShelf,
     selectBooks,
     showConfirm,
+    showPrompt,
     totalBookCount,
     totalSelectedCount,
     uuid,
@@ -94,6 +106,34 @@ function ShelfDetail(props) {
     clearSelectedBooks();
     setIsEditing(false);
   }, []);
+  const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
+  const showShelfRemoveConfirm = React.useCallback(() => {
+    showConfirm({
+      title: '책장을 삭제하겠습니까?',
+      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      confirmLabel: '삭제',
+      onClickConfirmButton: confirmShelfRemove,
+    });
+  }, []);
+  const confirmShelfRename = React.useCallback(
+    newName => {
+      renameShelf({ uuid, name: newName });
+    },
+    [uuid],
+  );
+  const showShelfRenamePrompt = React.useCallback(
+    () => {
+      showPrompt({
+        title: '책장 이름 변경',
+        message: '책장의 이름을 입력해주세요.',
+        confirmLabel: '확인',
+        initialValue: name,
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        onClickConfirmButton: confirmShelfRename,
+      });
+    },
+    [name],
+  );
 
   const linkBuilder = React.useCallback(
     libraryBook => {
@@ -138,16 +178,20 @@ function ShelfDetail(props) {
   );
 
   function renderShelfBar() {
-    const { name } = props;
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
+    const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
+    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+  }
+
+  function renderToolbar() {
     const right = (
       <div css={toolsWrapper}>
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
       </div>
     );
-    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+    return <FlexBar css={toolBar} flexRight={right} />;
   }
 
   function renderPaginator() {
@@ -168,7 +212,12 @@ function ShelfDetail(props) {
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
     let books;
-    if (totalPages == null || libraryBooks == null || (libraryBooks.length === 0 && booksLoading) || page > totalPages) {
+    if (
+      totalPages == null ||
+      libraryBooks == null ||
+      (libraryBooks.length === 0 && booksLoading) ||
+      (totalPages > 0 && page > totalPages)
+    ) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
       books = (
@@ -222,12 +271,13 @@ function ShelfDetail(props) {
   return (
     <>
       <Head>
-        <title>{props.name} - 내 서재</title>
+        <title>{name} - 내 서재</title>
       </Head>
+      {renderShelfBar()}
       <Editable
         allowFixed
         isEditing={isEditing}
-        nonEditBar={renderShelfBar()}
+        nonEditBar={renderToolbar()}
         editingBarProps={editingBarProps}
         actionBarProps={actionBarProps}
       >
@@ -277,10 +327,13 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedBooks: selectionActions.clearSelectedItems,
+  removeShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
+  renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
+  showPrompt: promptActions.showPrompt,
 };
 
 export default connect(

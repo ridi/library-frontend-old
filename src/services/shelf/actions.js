@@ -14,11 +14,13 @@ export const SET_SHELF_DETAIL_PAGE_OPTIONS = 'SET_SHELF_DETAIL_PAGE_OPTIONS';
 export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
 
 export const ADD_SHELF = 'ADD_SHELF';
+export const RENAME_SHELF = 'RENAME_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
 export const DELETE_SHELVES = 'DELETE_SHELVES';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
 export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
+export const DELETE_SHELF_FROM_DETAIL = 'DELETE_SHELF_FROM_DETAIL';
 export const ADD_SELECTED_TO_SHELF = 'ADD_SELECTED_TO_SHELF';
 export const REMOVE_SELECTED_FROM_SHELF = 'REMOVE_SELECTED_FROM_SHELF';
 
@@ -146,6 +148,14 @@ export const addShelf = ({ name, pageOptions }) => ({
   },
 });
 
+export const renameShelf = ({ uuid, name }) => ({
+  type: RENAME_SHELF,
+  payload: {
+    uuid,
+    name,
+  },
+});
+
 export const deleteShelf = ({ uuid }) => ({
   type: DELETE_SHELF,
   payload: {
@@ -174,6 +184,13 @@ export const deleteShelfItem = ({ uuid, units }) => ({
   payload: {
     uuid,
     units,
+  },
+});
+
+export const deleteShelfFromDetail = uuid => ({
+  type: DELETE_SHELF_FROM_DETAIL,
+  payload: {
+    uuid,
   },
 });
 

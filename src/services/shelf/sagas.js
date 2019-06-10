@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
@@ -9,7 +10,8 @@ import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
-import { setFullScreenLoading } from '../ui/actions';
+import { ToastStyle } from '../toast/constants';
+import * as uiActions from '../ui/actions';
 import * as actions from './actions';
 import * as requests from './requests';
 import * as selectors from './selectors';
@@ -156,7 +158,7 @@ function* performOperation(ops) {
 
 function* addShelf({ payload }) {
   const { name, pageOptions } = payload;
-  yield put(setFullScreenLoading(true));
+  yield put(uiActions.setFullScreenLoading(true));
   while (true) {
     const uuid = uuidv4();
     const results = yield call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]);
@@ -164,7 +166,22 @@ function* addShelf({ payload }) {
       break;
     }
   }
-  yield all([put(setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
+  yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
+}
+
+function* renameShelf({ payload }) {
+  const { uuid, name } = payload;
+  const [, results] = yield all([
+    put(uiActions.setFullScreenLoading(true)),
+    call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]),
+  ]);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(uiActions.setFullScreenLoading(false));
+  if (results[0].result === OperationStatus.DONE) {
+    yield all([put(actions.setShelfInfo({ uuid, name })), put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' }))]);
+  } else {
+    yield put(toastActions.showToast({ message: '책장 이름 변경에 실패했습니다.', toastStyle: ToastStyle.RED }));
+  }
 }
 
 function* deleteShelf({ payload }) {
@@ -179,9 +196,9 @@ function* deleteShelves({ payload }) {
     type: OperationType.DELETE_SHELF,
     uuid,
   }));
-  yield all([put(setFullScreenLoading(true)), put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
+  yield all([put(uiActions.setFullScreenLoading(true)), put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
   yield all([
-    put(setFullScreenLoading(false)),
+    put(uiActions.setFullScreenLoading(false)),
     put(
       toastActions.showToast({
         message: '책장 목록에서 삭제했습니다.',
@@ -216,6 +233,22 @@ function* deleteShelfItem({ payload }) {
   yield call(performOperation, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(actions.loadShelfBookCount(uuid));
+}
+
+function* deleteShelfFromDetail({ payload }) {
+  const { uuid } = payload;
+  yield put(uiActions.setFullScreenLoading(true));
+  yield call(deleteShelf, { payload: { uuid } });
+  Router.push(URLMap.shelves.href, URLMap.shelves.as);
+  yield all([
+    put(uiActions.setFullScreenLoading(false)),
+    put(
+      toastActions.showToast({
+        message: '책장을 삭제했습니다.',
+        withBottomFixedButton: true,
+      }),
+    ),
+  ]);
 }
 
 function* addSelectedToShelf({ payload }) {
@@ -279,10 +312,12 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
     takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
+    takeEvery(actions.RENAME_SHELF, renameShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.DELETE_SHELVES, deleteShelves),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
     takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
+    takeEvery(actions.DELETE_SHELF_FROM_DETAIL, deleteShelfFromDetail),
     takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
   ]);
