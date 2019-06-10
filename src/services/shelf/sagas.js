@@ -9,6 +9,7 @@ import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
+import { setFullScreenLoading } from '../ui/actions';
 import * as actions from './actions';
 import * as requests from './requests';
 import * as selectors from './selectors';
@@ -155,6 +156,7 @@ function* performOperation(ops) {
 
 function* addShelf({ payload }) {
   const { name, pageOptions } = payload;
+  yield put(setFullScreenLoading(true));
   while (true) {
     const uuid = uuidv4();
     const results = yield call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]);
@@ -163,7 +165,7 @@ function* addShelf({ payload }) {
     }
     // 실패한 경우 uuid를 바꾸어 재시도
   }
-  yield put(actions.loadShelves(pageOptions));
+  yield all([put(setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
 }
 
 function* deleteShelf({ payload }) {
@@ -172,8 +174,9 @@ function* deleteShelf({ payload }) {
     type: OperationType.DELETE_SHELF,
     uuid,
   }));
-  yield all([put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
+  yield all([put(setFullScreenLoading(true)), put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
   yield all([
+    put(setFullScreenLoading(false)),
     put(
       toastActions.showToast({
         message: '책장 목록에서 삭제했습니다.',
