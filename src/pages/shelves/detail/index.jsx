@@ -63,7 +63,7 @@ function ShelfDetail(props) {
   const {
     bookIds,
     clearSelectedBooks,
-    deleteShelfFromDetail,
+    removeShelfFromDetail,
     downloadSelectedBooks,
     name,
     orderBy,
@@ -106,13 +106,13 @@ function ShelfDetail(props) {
     clearSelectedBooks();
     setIsEditing(false);
   }, []);
-  const confirmShelfDelete = React.useCallback(() => deleteShelfFromDetail(uuid), [uuid]);
-  const showShelfDeleteConfirm = React.useCallback(() => {
+  const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
+  const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
       title: '책장을 삭제하겠습니까?',
       message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
-      onClickConfirmButton: confirmShelfDelete,
+      onClickConfirmButton: confirmShelfRemove,
     });
   }, []);
   const confirmShelfRename = React.useCallback(
@@ -181,7 +181,7 @@ function ShelfDetail(props) {
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
-    const right = <EditButton onDeleteClick={showShelfDeleteConfirm} onRenameClick={showShelfRenamePrompt} />;
+    const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
@@ -327,7 +327,7 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedBooks: selectionActions.clearSelectedItems,
-  deleteShelfFromDetail: actions.deleteShelfFromDetail,
+  removeShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   renameShelf: actions.renameShelf,

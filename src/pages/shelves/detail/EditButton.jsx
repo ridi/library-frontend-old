@@ -75,15 +75,15 @@ const modalButton = css`
   }
 `;
 
-export default function EditButton({ onDeleteClick, onRenameClick }) {
+export default function EditButton({ onRemoveClick, onRenameClick }) {
   const [modalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
-  const handleDeleteClick = React.useCallback(
+  const handleRemoveClick = React.useCallback(
     () => {
       setModalActive(false);
-      onDeleteClick && onDeleteClick();
+      onRemoveClick && onRemoveClick();
     },
-    [onDeleteClick],
+    [onRemoveClick],
   );
   const handleRenameClick = React.useCallback(
     () => {
@@ -109,7 +109,7 @@ export default function EditButton({ onDeleteClick, onRenameClick }) {
             </button>
           </li>
           <li>
-            <button type="button" css={modalButton} onClick={handleDeleteClick}>
+            <button type="button" css={modalButton} onClick={handleRemoveClick}>
               책장 삭제
             </button>
           </li>
