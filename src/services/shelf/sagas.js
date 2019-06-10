@@ -154,7 +154,7 @@ function* performOperation(ops) {
 }
 
 function* addShelf({ payload }) {
-  const { name } = payload;
+  const { name, pageOptions } = payload;
   while (true) {
     const uuid = uuidv4();
     const results = yield call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]);
@@ -163,11 +163,26 @@ function* addShelf({ payload }) {
     }
     // 실패한 경우 uuid를 바꾸어 재시도
   }
+  yield put(actions.loadShelves(pageOptions));
 }
 
 function* deleteShelf({ payload }) {
-  const { uuid } = payload;
-  yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
+  const { uuids, pageOptions } = payload;
+  const ops = uuids.map(uuid => ({
+    type: OperationType.DELETE_SHELF,
+    uuid,
+  }));
+  yield all([put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
+  yield all([
+    put(
+      toastActions.showToast({
+        message: '책장 목록에서 삭제했습니다.',
+        withBottomFixedButton: true,
+      }),
+    ),
+    put(actions.loadShelves(pageOptions)),
+  ]);
+
   // 책장 삭제 에러는 무시함
 }
 

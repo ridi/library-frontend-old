@@ -137,17 +137,19 @@ export const setDetailPageOptions = ({ orderBy, orderDirection, page }) => ({
   },
 });
 
-export const addShelf = ({ name }) => ({
+export const addShelf = ({ name, pageOptions }) => ({
   type: ADD_SHELF,
   payload: {
     name,
+    pageOptions,
   },
 });
 
-export const deleteShelf = ({ uuid }) => ({
+export const deleteShelf = ({ uuids, pageOptions }) => ({
   type: DELETE_SHELF,
   payload: {
-    uuid,
+    uuids,
+    pageOptions,
   },
 });
 
