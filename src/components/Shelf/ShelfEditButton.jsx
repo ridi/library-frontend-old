@@ -5,7 +5,7 @@ import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
 import { shelfStyles } from './styles';
 
-export const ShelfEditButton = editable => {
+export const ShelfEditButton = ({ editable }) => {
   const [modalActive, setModalActive] = useState(false);
 
   return editable ? (

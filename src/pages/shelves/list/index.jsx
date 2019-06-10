@@ -115,7 +115,7 @@ const ShelvesList = props => {
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
     return shelfIds.length > 0 ? (
       <>
-        <Shelves shelfIds={shelfIds} selectMode={selectMode} editable />
+        <Shelves shelfIds={shelfIds} selectMode={selectMode} />
         {renderPaginator()}
       </>
     ) : (
