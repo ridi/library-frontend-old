@@ -37,7 +37,7 @@ const toolsWrapper = css`
 const ShelvesList = props => {
   const {
     addShelf,
-    removeShelf,
+    removeShelves,
     shelves,
     totalShelfCount,
     totalSelectedCount,
@@ -77,13 +77,13 @@ const ShelvesList = props => {
     });
   };
 
-  const handleRemoveShelf = () => {
+  const handleRemoveShelves = () => {
     showConfirm({
       title: '책장을 삭제하겠습니까?',
       message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: () => {
-        removeShelf({ uuids: Object.keys(selectedShelves), pageOptions });
+        removeShelves({ uuids: Object.keys(selectedShelves), pageOptions });
       },
     });
   };
@@ -92,7 +92,7 @@ const ShelvesList = props => {
     buttonProps: [
       {
         name: '삭제',
-        onClick: handleRemoveShelf,
+        onClick: handleRemoveShelves,
         disable: totalSelectedCount === 0,
       },
     ],
@@ -180,7 +180,7 @@ const mapDispatchToProps = {
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
   addShelf: shelfActions.addShelf,
-  removeShelf: shelfActions.deleteShelf,
+  removeShelves: shelfActions.deleteShelves,
 };
 
 export default connect(

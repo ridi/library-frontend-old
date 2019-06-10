@@ -163,12 +163,17 @@ function* addShelf({ payload }) {
     if (results[0].result === OperationStatus.DONE) {
       break;
     }
-    // 실패한 경우 uuid를 바꾸어 재시도
   }
   yield all([put(setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
 }
 
 function* deleteShelf({ payload }) {
+  const { uuid } = payload;
+  yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
+  // 책장 삭제 에러는 무시함
+}
+
+function* deleteShelves({ payload }) {
   const { uuids, pageOptions } = payload;
   const ops = uuids.map(uuid => ({
     type: OperationType.DELETE_SHELF,
@@ -185,8 +190,6 @@ function* deleteShelf({ payload }) {
     ),
     put(actions.loadShelves(pageOptions)),
   ]);
-
-  // 책장 삭제 에러는 무시함
 }
 
 function* addShelfItem({ payload }) {
@@ -277,6 +280,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
+    takeEvery(actions.DELETE_SHELVES, deleteShelves),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
     takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
     takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
