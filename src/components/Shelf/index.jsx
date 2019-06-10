@@ -6,8 +6,8 @@ import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { ShelfDetailLink } from './ShelfDetailLink';
 import { ShelfEditButton } from './ShelfEditButton';
 import { ShelfSelectButton } from './ShelfSelectButton';
-import { shelfStyles } from './styles';
 import { ShelfThumbnails } from './ShelfThumbnail';
+import { shelfStyles } from './styles';
 
 function defaultRenderLink({ uuid, name }) {
   return <ShelfDetailLink uuid={uuid} name={name} />;
