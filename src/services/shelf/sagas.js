@@ -10,6 +10,7 @@ import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
+import { ToastStyle } from '../toast/constants';
 import * as uiActions from '../ui/actions';
 import * as actions from './actions';
 import * as requests from './requests';
@@ -168,6 +169,21 @@ function* addShelf({ payload }) {
   yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
 }
 
+function* renameShelf({ payload }) {
+  const { uuid, name } = payload;
+  const [, results] = yield all([
+    put(uiActions.setFullScreenLoading(true)),
+    call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]),
+  ]);
+  // TODO: forbidden인 경우 내 책장이 아닌 것
+  yield put(uiActions.setFullScreenLoading(false));
+  if (results[0].result === OperationStatus.DONE) {
+    yield all([put(actions.setShelfInfo({ uuid, name })), put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' }))]);
+  } else {
+    yield put(toastActions.showToast({ message: '책장 이름 변경에 실패했습니다.', toastStyle: ToastStyle.RED }));
+  }
+}
+
 function* deleteShelf({ payload }) {
   const { uuid } = payload;
   yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
@@ -296,6 +312,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
     takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
     takeEvery(actions.ADD_SHELF, addShelf),
+    takeEvery(actions.RENAME_SHELF, renameShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.DELETE_SHELVES, deleteShelves),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),

@@ -22,6 +22,7 @@ import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as bookDownloadActions from '../../../services/bookDownload/actions';
 import * as confirmActions from '../../../services/confirm/actions';
+import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
@@ -64,12 +65,15 @@ function ShelfDetail(props) {
     clearSelectedBooks,
     deleteShelfFromDetail,
     downloadSelectedBooks,
+    name,
     orderBy,
     orderDirection,
     page,
     removeSelectedFromShelf,
+    renameShelf,
     selectBooks,
     showConfirm,
+    showPrompt,
     totalBookCount,
     totalSelectedCount,
     uuid,
@@ -111,6 +115,25 @@ function ShelfDetail(props) {
       onClickConfirmButton: confirmShelfDelete,
     });
   }, []);
+  const confirmShelfRename = React.useCallback(
+    newName => {
+      renameShelf({ uuid, name: newName });
+    },
+    [uuid],
+  );
+  const showShelfRenamePrompt = React.useCallback(
+    () => {
+      showPrompt({
+        title: '책장 이름 변경',
+        message: '책장의 이름을 입력해주세요.',
+        confirmLabel: '확인',
+        initialValue: name,
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        onClickConfirmButton: confirmShelfRename,
+      });
+    },
+    [name],
+  );
 
   const linkBuilder = React.useCallback(
     libraryBook => {
@@ -155,11 +178,10 @@ function ShelfDetail(props) {
   );
 
   function renderShelfBar() {
-    const { name } = props;
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
-    const right = <EditButton onDeleteClick={showShelfDeleteConfirm} />;
+    const right = <EditButton onDeleteClick={showShelfDeleteConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
@@ -249,7 +271,7 @@ function ShelfDetail(props) {
   return (
     <>
       <Head>
-        <title>{props.name} - 내 서재</title>
+        <title>{name} - 내 서재</title>
       </Head>
       {renderShelfBar()}
       <Editable
@@ -308,8 +330,10 @@ const mapDispatchToProps = {
   deleteShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
+  renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
+  showPrompt: promptActions.showPrompt,
 };
 
 export default connect(
