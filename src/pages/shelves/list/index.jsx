@@ -17,7 +17,7 @@ import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
-import * as actions from '../../../services/shelf/actions';
+import * as shelfActions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
 import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
@@ -36,6 +36,8 @@ const toolsWrapper = css`
 
 const ShelvesList = props => {
   const {
+    addShelf,
+    removeShelves,
     shelves,
     totalShelfCount,
     totalSelectedCount,
@@ -44,9 +46,7 @@ const ShelvesList = props => {
     selectedShelves,
     showConfirm,
     showPrompt,
-    page,
-    orderBy,
-    orderDirection,
+    pageOptions,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
   const toggleSelectMode = React.useCallback(() => {
@@ -72,18 +72,18 @@ const ShelvesList = props => {
       message: '새 책장의 이름을 입력해주세요.',
       emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
       onClickConfirmButton: shelfName => {
-        console.log(shelfName);
+        addShelf({ name: shelfName, pageOptions });
       },
     });
   };
 
-  const handleRemoveShelf = () => {
+  const handleRemoveShelves = () => {
     showConfirm({
       title: '책장을 삭제하겠습니까?',
       message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: () => {
-        console.log(selectedShelves);
+        removeShelves({ uuids: Object.keys(selectedShelves), pageOptions });
       },
     });
   };
@@ -92,7 +92,7 @@ const ShelvesList = props => {
     buttonProps: [
       {
         name: '삭제',
-        onClick: handleRemoveShelf,
+        onClick: handleRemoveShelves,
         disable: totalSelectedCount === 0,
       },
     ],
@@ -106,15 +106,18 @@ const ShelvesList = props => {
   );
 
   const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
-  const renderPaginator = () => (
-    <ResponsivePaginator
-      currentPage={page}
-      totalPages={totalPages}
-      href={{ pathname: URLMap.shelves.href }}
-      as={URLMap.shelves.as}
-      query={{ orderBy, orderDirection }}
-    />
-  );
+  const renderPaginator = () => {
+    const { page, orderBy, orderDirection } = pageOptions;
+    return (
+      <ResponsivePaginator
+        currentPage={page}
+        totalPages={totalPages}
+        href={{ pathname: URLMap.shelves.href }}
+        as={URLMap.shelves.as}
+        query={{ orderBy, orderDirection }}
+      />
+    );
+  };
   const renderMain = () => {
     const { loading: isLoading, items: shelfIds } = shelves;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
@@ -155,16 +158,15 @@ ShelvesList.getInitialProps = async ({ query, store }) => {
   const orderBy = '';
   const orderDirection = '';
   const pageOptions = { orderBy, orderDirection, page };
-  store.dispatch(actions.loadShelves(pageOptions));
-  store.dispatch(actions.loadShelfCount());
+  store.dispatch(shelfActions.loadShelves(pageOptions));
+  store.dispatch(shelfActions.loadShelfCount());
   return {
-    ...pageOptions,
+    pageOptions,
   };
 };
 
 const mapStateToProps = (state, props) => {
-  const { orderBy, orderDirection, page } = props;
-  const pageOptions = { orderBy, orderDirection, page };
+  const { pageOptions } = props;
   const shelves = selectors.getShelves(state, pageOptions);
   const totalShelfCount = selectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
@@ -177,6 +179,8 @@ const mapDispatchToProps = {
   selectShelf: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
+  addShelf: shelfActions.addShelf,
+  removeShelves: shelfActions.deleteShelves,
 };
 
 export default connect(

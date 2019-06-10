@@ -15,6 +15,7 @@ export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
 
 export const ADD_SHELF = 'ADD_SHELF';
 export const DELETE_SHELF = 'DELETE_SHELF';
+export const DELETE_SHELVES = 'DELETE_SHELVES';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
 export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
@@ -137,10 +138,11 @@ export const setDetailPageOptions = ({ orderBy, orderDirection, page }) => ({
   },
 });
 
-export const addShelf = ({ name }) => ({
+export const addShelf = ({ name, pageOptions }) => ({
   type: ADD_SHELF,
   payload: {
     name,
+    pageOptions,
   },
 });
 
@@ -148,6 +150,14 @@ export const deleteShelf = ({ uuid }) => ({
   type: DELETE_SHELF,
   payload: {
     uuid,
+  },
+});
+
+export const deleteShelves = ({ uuids, pageOptions }) => ({
+  type: DELETE_SHELVES,
+  payload: {
+    uuids,
+    pageOptions,
   },
 });
 
