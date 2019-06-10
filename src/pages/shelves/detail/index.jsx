@@ -82,7 +82,12 @@ function ShelfDetail(props) {
     [uuid, orderBy, orderDirection, page],
   );
   const showRemoveConfirm = React.useCallback(() => {
-    showConfirm('책장에서 책을 삭제하시겠습니까?', '책장에서 삭제해도 다시 추가할 수 있습니다.', '삭제', confirmRemove);
+    showConfirm({
+      title: '책장에서 책을 삭제하시겠습니까?',
+      message: '책장에서 삭제해도 다시 추가할 수 있습니다.',
+      confirmLabel: '삭제',
+      onClickConfirmButton: confirmRemove,
+    });
   }, []);
   const downloadBooks = React.useCallback(() => {
     downloadSelectedBooks();

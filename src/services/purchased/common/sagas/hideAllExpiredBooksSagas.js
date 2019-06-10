@@ -141,10 +141,15 @@ export function* confirmHideAllExpiredBooks() {
 
   if (bookIds.length) {
     yield put(
-      showConfirm('만료 도서 모두 숨기기', '만료된 도서를 모두 숨기시겠습니까?', '숨기기', () => {
-        confirmChannel.put({
-          type: HIDE_ALL_EXPIRED_BOOKS,
-        });
+      showConfirm({
+        title: '만료 도서 모두 숨기기',
+        message: '만료된 도서를 모두 숨기시겠습니까?',
+        confirmLabel: '숨기기',
+        onClickConfirmButton: () => {
+          confirmChannel.put({
+            type: HIDE_ALL_EXPIRED_BOOKS,
+          });
+        },
       }),
     );
     const action = yield take(confirmChannel);

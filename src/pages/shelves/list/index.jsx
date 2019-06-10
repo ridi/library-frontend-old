@@ -66,7 +66,7 @@ const ShelvesList = props => {
     countUnit: '개',
   };
 
-  const handleAddShelfButton = () => {
+  const handleAddShelf = () => {
     showPrompt({
       title: '새 책장 추가',
       message: '새 책장의 이름을 입력해주세요.',
@@ -77,9 +77,14 @@ const ShelvesList = props => {
     });
   };
 
-  const showRemoveConfirm = () => {
-    showConfirm('책장을 삭제하겠습니까?', '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.', '삭제', () => {
-      console.log(selectedShelves);
+  const handleRemoveShelf = () => {
+    showConfirm({
+      title: '책장을 삭제하겠습니까?',
+      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      confirmLabel: '삭제',
+      onClickConfirmButton: () => {
+        console.log(selectedShelves);
+      },
     });
   };
 
@@ -87,7 +92,7 @@ const ShelvesList = props => {
     buttonProps: [
       {
         name: '삭제',
-        onClick: showRemoveConfirm,
+        onClick: handleRemoveShelf,
         disable: totalSelectedCount === 0,
       },
     ],
@@ -95,7 +100,7 @@ const ShelvesList = props => {
 
   const renderTools = () => (
     <div css={toolsWrapper}>
-      <Add onClickAddButton={handleAddShelfButton} />
+      <Add onClickAddButton={handleAddShelf} />
       <Editing toggleEditingMode={toggleSelectMode} />
     </div>
   );
