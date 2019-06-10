@@ -67,17 +67,19 @@ class Hidden extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    this.props.dispatchShowConfirm(
-      '영구 삭제',
-      <>
-        내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
-        <br />
-        <br />
-        그래도 삭제하시겠습니까?
-      </>,
-      '삭제',
-      this.deleteSelectedBooks,
-    );
+    this.props.dispatchShowConfirm({
+      title: '영구 삭제',
+      message: (
+        <>
+          내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+          <br />
+          <br />
+          그래도 삭제하시겠습니까?
+        </>
+      ),
+      confirmLabel: '삭제',
+      onClickConfirmButton: this.deleteSelectedBooks,
+    });
   };
 
   makeEditingBarProps() {
