@@ -62,6 +62,7 @@ function ShelfDetail(props) {
   const {
     bookIds,
     clearSelectedBooks,
+    deleteShelfFromDetail,
     downloadSelectedBooks,
     orderBy,
     orderDirection,
@@ -100,6 +101,15 @@ function ShelfDetail(props) {
     downloadSelectedBooks();
     clearSelectedBooks();
     setIsEditing(false);
+  }, []);
+  const confirmShelfDelete = React.useCallback(() => deleteShelfFromDetail(uuid), [uuid]);
+  const showShelfDeleteConfirm = React.useCallback(() => {
+    showConfirm({
+      title: '책장을 삭제하겠습니까?',
+      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      confirmLabel: '삭제',
+      onClickConfirmButton: confirmShelfDelete,
+    });
   }, []);
 
   const linkBuilder = React.useCallback(
@@ -149,7 +159,7 @@ function ShelfDetail(props) {
     const left = (
       <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
     );
-    const right = <EditButton />;
+    const right = <EditButton onDeleteClick={showShelfDeleteConfirm} />;
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
@@ -180,7 +190,12 @@ function ShelfDetail(props) {
   function renderMain() {
     const { booksLoading, libraryBooks, platformBooks } = props;
     let books;
-    if (totalPages == null || libraryBooks == null || (libraryBooks.length === 0 && booksLoading) || page > totalPages) {
+    if (
+      totalPages == null ||
+      libraryBooks == null ||
+      (libraryBooks.length === 0 && booksLoading) ||
+      (totalPages > 0 && page > totalPages)
+    ) {
       books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
     } else if (libraryBooks.length > 0) {
       books = (
@@ -290,6 +305,7 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedBooks: selectionActions.clearSelectedItems,
+  deleteShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   selectBooks: selectionActions.selectItems,

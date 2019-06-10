@@ -19,6 +19,7 @@ export const DELETE_SHELVES = 'DELETE_SHELVES';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
 export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
+export const DELETE_SHELF_FROM_DETAIL = 'DELETE_SHELF_FROM_DETAIL';
 export const ADD_SELECTED_TO_SHELF = 'ADD_SELECTED_TO_SHELF';
 export const REMOVE_SELECTED_FROM_SHELF = 'REMOVE_SELECTED_FROM_SHELF';
 
@@ -174,6 +175,13 @@ export const deleteShelfItem = ({ uuid, units }) => ({
   payload: {
     uuid,
     units,
+  },
+});
+
+export const deleteShelfFromDetail = uuid => ({
+  type: DELETE_SHELF_FROM_DETAIL,
+  payload: {
+    uuid,
   },
 });
 
