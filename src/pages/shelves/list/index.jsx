@@ -6,19 +6,23 @@ import { connect } from 'react-redux';
 import Editable from '../../../components/Editable';
 import { EmptyShelves } from '../../../components/Empty/EmptyShelves';
 import FlexBar from '../../../components/FlexBar';
+import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
 import { Editing } from '../../../components/Tool';
+import { Add } from '../../../components/Tool/Add';
+import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
+import { URLMap } from '../../../constants/urls';
 import * as confirmActions from '../../../services/confirm/actions';
+import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import { Add } from '../../../components/Tool/Add';
-import * as promptActions from '../../../services/prompt/actions';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -31,12 +35,25 @@ const toolsWrapper = css`
 `;
 
 const ShelvesList = props => {
-  const { shelves, totalSelectedCount, selectShelf, clearSelectedShelves, selectedShelves, showConfirm, showPrompt } = props;
+  const {
+    shelves,
+    totalShelfCount,
+    totalSelectedCount,
+    selectShelf,
+    clearSelectedShelves,
+    selectedShelves,
+    showConfirm,
+    showPrompt,
+    page,
+    orderBy,
+    orderDirection,
+  } = props;
   const [selectMode, setSelectMode] = React.useState(false);
   const toggleSelectMode = React.useCallback(() => {
     clearSelectedShelves();
     setSelectMode(isSelectMode => !isSelectMode);
   }, []);
+  const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
 
   const visibleShelvesCount = shelves?.items?.length;
   const selectAllShelf = React.useCallback(() => selectShelf(shelves.items), [shelves.items]);
@@ -84,11 +101,26 @@ const ShelvesList = props => {
   );
 
   const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
-
+  const renderPaginator = () => (
+    <ResponsivePaginator
+      currentPage={page}
+      totalPages={totalPages}
+      href={{ pathname: URLMap.shelves.href }}
+      as={URLMap.shelves.as}
+      query={{ orderBy, orderDirection }}
+    />
+  );
   const renderMain = () => {
     const { loading: isLoading, items: shelfIds } = shelves;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
-    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} selectMode={selectMode} editable /> : <EmptyShelves />;
+    return shelfIds.length > 0 ? (
+      <>
+        <Shelves shelfIds={shelfIds} selectMode={selectMode} />
+        {renderPaginator()}
+      </>
+    ) : (
+      <EmptyShelves />
+    );
   };
 
   return (
@@ -117,11 +149,11 @@ ShelvesList.getInitialProps = async ({ query, store }) => {
   const page = parseInt(query.page, 10) || 1;
   const orderBy = '';
   const orderDirection = '';
-  store.dispatch(actions.loadShelves({ orderBy, orderDirection, page }));
+  const pageOptions = { orderBy, orderDirection, page };
+  store.dispatch(actions.loadShelves(pageOptions));
+  store.dispatch(actions.loadShelfCount());
   return {
-    page,
-    orderBy,
-    orderDirection,
+    ...pageOptions,
   };
 };
 
@@ -129,9 +161,10 @@ const mapStateToProps = (state, props) => {
   const { orderBy, orderDirection, page } = props;
   const pageOptions = { orderBy, orderDirection, page };
   const shelves = selectors.getShelves(state, pageOptions);
+  const totalShelfCount = selectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
-  return { shelves, totalSelectedCount, selectedShelves };
+  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves };
 };
 
 const mapDispatchToProps = {
