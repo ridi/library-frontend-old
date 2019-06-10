@@ -7,6 +7,7 @@ import dialogReducer from '../services/dialog/reducers';
 import excelDownloadReducer from '../services/excelDownload/reducers';
 import featureReducer from '../services/feature/reducers';
 import maintenanceReducer from '../services/maintenance/reducers';
+import promptReducer from '../services/prompt/reducers';
 import purchasedCommonReducer from '../services/purchased/common/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
@@ -47,5 +48,6 @@ export default combineReducers({
   toast: toastReducer,
   confirm: confirmReducer,
   dialog: dialogReducer,
+  prompt: promptReducer,
   ui: uiReducer,
 });

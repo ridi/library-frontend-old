@@ -4,17 +4,29 @@ import { connect } from 'react-redux';
 import Confirm from '../../components/Confirm';
 import Dialog from '../../components/Dialog';
 import FullScreenLoading from '../../components/FullScreenLoading';
+import Maintenance from '../../components/Maintenance';
+import Prompt from '../../components/Prompt';
 import Toaster from '../../components/Toaster';
 import { closeConfirm } from '../../services/confirm/actions';
 import { closeDialog } from '../../services/dialog/actions';
+import { closePrompt } from '../../services/prompt/actions';
 import { Environment } from './Environment';
 import GNB from './GNB';
 import { globalStyles } from './styles';
-import Maintenance from '../../components/Maintenance';
 
 class Layout extends React.Component {
   render() {
-    const { children, showFullScreenLoading, confirm, dispatchCloseConfirm, dialog, dispatchCloseDialog, maintenance } = this.props;
+    const {
+      children,
+      showFullScreenLoading,
+      confirm,
+      dispatchCloseConfirm,
+      dialog,
+      dispatchCloseDialog,
+      prompt,
+      dispatchClosePrompt,
+      maintenance,
+    } = this.props;
     return (
       <>
         <Global styles={globalStyles} />
@@ -24,10 +36,11 @@ class Layout extends React.Component {
           <>
             <GNB />
             {children}
-            <Toaster />
             {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
             {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
+            {prompt ? <Prompt onClickCloseButton={() => dispatchClosePrompt()} {...prompt} /> : null}
             {showFullScreenLoading ? <FullScreenLoading /> : null}
+            <Toaster />
           </>
         )}
       </>
@@ -35,16 +48,21 @@ class Layout extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  showFullScreenLoading: state.ui.fullScreenLoading,
-  dialog: state.dialog,
-  confirm: state.confirm,
-  maintenance: state.maintenance,
-});
+const mapStateToProps = state => {
+  const { ui, dialog, confirm, maintenance, prompt } = state;
+  return {
+    showFullScreenLoading: ui.fullScreenLoading,
+    dialog,
+    confirm,
+    maintenance,
+    prompt,
+  };
+};
 
 const mapDispatchToProps = {
   dispatchCloseDialog: closeDialog,
   dispatchCloseConfirm: closeConfirm,
+  dispatchClosePrompt: closePrompt,
 };
 
 export default connect(

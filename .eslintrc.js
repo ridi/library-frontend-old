@@ -90,5 +90,6 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'allow',
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/mouse-events-have-key-events': 'off',
+    'jsx-a11y/no-autofocus': 'off',
   },
 };
