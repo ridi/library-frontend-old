@@ -1,7 +1,9 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
+import { makeLinkProps } from '../../utils/uri';
+import { PageType, URLMap } from '../../constants/urls';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
@@ -9,6 +11,7 @@ import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
 import * as actions from './actions';
 import * as requests from './requests';
+import * as selectors from './selectors';
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -82,35 +85,7 @@ function* loadShelfBookCount(isServer, { payload }) {
   }
 }
 
-function* performOperation(ops) {
-  if (ops.length === 0) {
-    return [];
-  }
-
-  const revision = Math.floor(Date.now() / 1000);
-  const opsWithRevision = ops.map(op => ({ ...op, revision }));
-  yield put(actions.beginOperation({ revision }));
-
-  let opIds = [];
-  while (true) {
-    try {
-      opIds = yield call(requests.createOperation, opsWithRevision);
-      break;
-    } catch (err) {
-      if (err.response) {
-        yield put(actions.endOperation({ revision, hasError: true }));
-
-        const { status } = err.response;
-        if (status === 403) {
-          return ops.map(() => ({ id: null, result: OperationStatus.FORBIDDEN }));
-        }
-        // TODO: 던지지 말고 처리?
-        throw err;
-      }
-      // 네트워크 에러 등, 재시도
-    }
-  }
-
+function* waitForOperation(revision, opIds) {
   const results = {};
   let pendingIds = opIds;
   yield delay(100);
@@ -139,6 +114,42 @@ function* performOperation(ops) {
     id,
     result: results[id],
   }));
+}
+
+function* createOperation(ops) {
+  if (ops.length === 0) {
+    return [];
+  }
+
+  const revision = Math.floor(Date.now() / 1000);
+  const opsWithRevision = ops.map(op => ({ ...op, revision }));
+  yield put(actions.beginOperation({ revision }));
+
+  let opIds = [];
+  while (true) {
+    try {
+      opIds = yield call(requests.createOperation, opsWithRevision);
+      break;
+    } catch (err) {
+      if (err.response) {
+        yield put(actions.endOperation({ revision, hasError: true }));
+
+        const { status } = err.response;
+        if (status === 403) {
+          return ops.map(() => ({ id: null, result: OperationStatus.FORBIDDEN }));
+        }
+        // TODO: 던지지 말고 처리?
+        throw err;
+      }
+      // 네트워크 에러 등, 재시도
+    }
+  }
+
+  return yield fork(waitForOperation, revision, opIds);
+}
+
+function* performOperation(ops) {
+  return yield join(yield call(createOperation, ops));
 }
 
 function* addShelf({ payload }) {
@@ -185,6 +196,34 @@ function* deleteShelfItem({ payload }) {
   yield put(actions.loadShelfBookCount(uuid));
 }
 
+function* addSelectedToShelf({ payload }) {
+  const { uuid } = payload;
+  const selectedBooks = yield select(selectionSelectors.getSelectedItems);
+  const bookIds = Object.entries(selectedBooks)
+    .filter(([, selected]) => selected)
+    .map(([key]) => key);
+  const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
+  const units = libraryBookData.items.map(book => ({
+    unitId: book.search_unit_id,
+    bookIds: [book.b_id],
+  }));
+  const shelfName = yield select(selectors.getShelfName, uuid);
+  yield call(addShelfItem, { payload: { uuid, units } });
+  yield put(
+    toastActions.showToast({
+      message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
+      linkName: '책장 바로 보기',
+      linkProps: makeLinkProps(
+        {
+          pathname: URLMap[PageType.SHELF_DETAIL].href,
+          query: { uuid },
+        },
+        URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+      ),
+    }),
+  );
+}
+
 function* removeSelectedFromShelf({ payload }) {
   const { uuid, pageOptions } = payload;
   const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
@@ -221,6 +260,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF, deleteShelf),
     takeEvery(actions.ADD_SHELF_ITEM, addShelfItem),
     takeEvery(actions.DELETE_SHELF_ITEM, deleteShelfItem),
+    takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
   ]);
 }

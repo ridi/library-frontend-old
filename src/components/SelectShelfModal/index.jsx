@@ -9,6 +9,7 @@ import * as shelfSelectors from '../../services/shelf/selectors';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
 import FlexBar from '../FlexBar';
+import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
 import { SkeletonShelves } from '../Skeleton/SkeletonShelves';
 import NavigationBar from './NavigationBar';
@@ -18,6 +19,16 @@ const toolBar = css`
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #f3f4f5;
 `;
+
+function SelectShelfLinkButton(props) {
+  const { onShelfSelect, uuid, name } = props;
+  const handleClick = React.useCallback(() => onShelfSelect(uuid), [uuid]);
+  return (
+    <button type="button" css={shelfStyles.link} onClick={handleClick}>
+      <span className="a11y">{name} 선택</span>
+    </button>
+  );
+}
 
 function SelectShelfModalInner(props) {
   const { loadShelves, orderBy, orderDirection, page } = props;
@@ -38,12 +49,17 @@ function SelectShelfModalInner(props) {
     );
   }
 
+  function renderLink({ uuid, name }) {
+    const { onShelfSelect } = props;
+    return <SelectShelfLinkButton uuid={uuid} name={name} onShelfSelect={onShelfSelect} />;
+  }
+
   function renderMain() {
     const {
       shelves: { loading: isLoading, items: shelfIds },
     } = props;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
-    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} /> : <EmptyShelves />;
+    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} renderLink={renderLink} /> : <EmptyShelves />;
   }
 
   return (
@@ -73,7 +89,7 @@ const SelectShelfModal = connect(
   mapDispatchToProps,
 )(SelectShelfModalInner);
 
-export default function SelectShelfModalContainer({ onBackClick }) {
+export default function SelectShelfModalContainer({ onBackClick, onShelfSelect }) {
   const [orderBy, setOrderBy] = React.useState('');
   const [orderDirection, setOrderDirection] = React.useState('');
   const [page, setPage] = React.useState(1);
@@ -87,6 +103,7 @@ export default function SelectShelfModalContainer({ onBackClick }) {
   const innerProps = {
     onBackClick,
     onPageOptionsChange: handlePageOptionsChange,
+    onShelfSelect,
     orderBy,
     orderDirection,
     page,

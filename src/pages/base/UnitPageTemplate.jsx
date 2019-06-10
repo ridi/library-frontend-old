@@ -17,6 +17,7 @@ import { BookError } from '../../components/Error';
 
 import * as featureSelectors from '../../services/feature/selectors';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
+import * as shelfActions from '../../services/shelf/actions';
 
 class UnitPageTemplate extends React.Component {
   constructor(props) {
@@ -53,6 +54,12 @@ class UnitPageTemplate extends React.Component {
   };
 
   handleEditingChange = isEditing => this.setState({ isEditing });
+
+  handleShelfSelect = uuid => {
+    this.setState({ isEditing: false, showShelves: false });
+    this.props.dispatchAddSelectedToShelf(uuid);
+    this.props.dispatchClearSelectedBooks();
+  };
 
   makeActionBarProps() {
     const { unit, isSelected, isSyncShelfEnabled } = this.props;
@@ -222,7 +229,7 @@ class UnitPageTemplate extends React.Component {
           <Head>
             <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
           </Head>
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} />
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
         </>
       );
     }
@@ -245,4 +252,11 @@ const mapStateToProps = state => ({
   isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
 });
 
-export default connect(mapStateToProps)(UnitPageTemplate);
+const mapDispatchToProps = {
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UnitPageTemplate);
