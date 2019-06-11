@@ -3,12 +3,16 @@ import { css, jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import Responsive from '../../pages/base/Responsive';
+import * as selectionSelectors from '../../services/selection/selectors';
 import * as shelfActions from '../../services/shelf/actions';
 import * as shelfSelectors from '../../services/shelf/selectors';
+import * as paginationUtils from '../../utils/pagination';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
 import FlexBar from '../FlexBar';
+import { ResponsivePaginatorWithHandler } from '../ResponsivePaginator';
 import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
 import { SkeletonShelves } from '../Skeleton/SkeletonShelves';
@@ -31,7 +35,9 @@ function SelectShelfLinkButton(props) {
 }
 
 function SelectShelfModalInner(props) {
-  const { loadShelves, orderBy, orderDirection, page } = props;
+  const { loadShelves, onPageOptionsChange, orderBy, orderDirection, page, shelves, totalShelfCount } = props;
+  const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
+  const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
   React.useEffect(
     () => {
       loadShelves({ orderBy, orderDirection, page });
@@ -54,12 +60,21 @@ function SelectShelfModalInner(props) {
     return <SelectShelfLinkButton uuid={uuid} name={name} onShelfSelect={onShelfSelect} />;
   }
 
+  function renderPaginator() {
+    return <ResponsivePaginatorWithHandler currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />;
+  }
+
   function renderMain() {
-    const {
-      shelves: { loading: isLoading, items: shelfIds },
-    } = props;
+    const { loading: isLoading, items: shelfIds } = shelves;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
-    return shelfIds.length > 0 ? <Shelves shelfIds={shelfIds} renderLink={renderLink} /> : <EmptyShelves />;
+    return shelfIds.length > 0 ? (
+      <>
+        <Shelves shelfIds={shelfIds} renderLink={renderLink} />
+        {renderPaginator()}
+      </>
+    ) : (
+      <EmptyShelves />
+    );
   }
 
   return (
@@ -77,7 +92,8 @@ function mapStateToProps(state, props) {
   const { orderBy, orderDirection, page } = props;
   const pageOptions = { orderBy, orderDirection, page };
   const shelves = shelfSelectors.getShelves(state, pageOptions);
-  return { shelves };
+  const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
+  return { shelves, totalSelectedCount };
 }
 
 const mapDispatchToProps = {
