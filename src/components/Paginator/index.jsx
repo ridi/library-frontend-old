@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import React from 'react';
-import Link from 'next/link';
 import { jsx } from '@emotion/core';
 
 import * as styles from './styles';
@@ -8,17 +7,24 @@ import NoneDashedArrowLeft from '../../svgs/NoneDashedArrowLeft.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import ThreeDotsHorizontal from '../../svgs/ThreeDotsHorizontal.svg';
 import { calcPageBlock, makePageRange } from '../../utils/pagination';
-import { makeLinkProps } from '../../utils/uri';
 
-export default class Paginator extends React.Component {
-  getLinkProps(page) {
-    const { href, as, query = {} } = this.props;
-    return makeLinkProps(href, as, { ...query, page });
+function NavigationButton(props) {
+  const { children, onPageChange, page, style } = props;
+  const handleClick = React.useCallback(() => onPageChange(page), [onPageChange, page]);
+  return (
+    <button type="button" css={[styles.pageButton, style]} onClick={handleClick}>
+      {children}
+    </button>
+  );
+}
+
+export default function Paginator(props) {
+  const { currentPage, needGoFirst, needGoLast, onPageChange, pageCount, style, totalPages } = props;
+  if (totalPages <= 1 || currentPage < 1 || currentPage > totalPages) {
+    return null;
   }
 
-  renderGoFirst() {
-    const { currentPage, pageCount } = this.props;
-
+  function renderGoFirst() {
     if (currentPage <= pageCount) {
       return null;
     }
@@ -26,9 +32,9 @@ export default class Paginator extends React.Component {
     return (
       <>
         <div css={styles.buttonWrapper}>
-          <Link prefetch {...this.getLinkProps(1)}>
-            <a css={[styles.pageButton, styles.textButton]}>처음</a>
-          </Link>
+          <NavigationButton style={styles.textButton} onPageChange={onPageChange} page={1}>
+            처음
+          </NavigationButton>
         </div>
         <span css={styles.paginatorDots}>
           <ThreeDotsHorizontal css={styles.dots} />
@@ -37,9 +43,7 @@ export default class Paginator extends React.Component {
     );
   }
 
-  renderGoLast() {
-    const { currentPage, totalPages, pageCount } = this.props;
-
+  function renderGoLast() {
     if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
     }
@@ -50,17 +54,15 @@ export default class Paginator extends React.Component {
           <ThreeDotsHorizontal css={styles.dots} />
         </span>
         <div css={styles.buttonWrapper}>
-          <Link prefetch {...this.getLinkProps(totalPages)}>
-            <a css={[styles.pageButton, styles.textButton]}>마지막</a>
-          </Link>
+          <NavigationButton style={styles.textButton} onPageChange={onPageChange} page={totalPages}>
+            마지막
+          </NavigationButton>
         </div>
       </>
     );
   }
 
-  renderGoPrev() {
-    const { currentPage, pageCount } = this.props;
-
+  function renderGoPrev() {
     // 첫 페이지와 같은 블록이면 노출하지 않는다.
     if (calcPageBlock(currentPage, pageCount) === calcPageBlock(1, pageCount)) {
       return null;
@@ -72,19 +74,15 @@ export default class Paginator extends React.Component {
 
     return (
       <div css={styles.buttonWrapper}>
-        <Link prefetch {...this.getLinkProps(firstPrevBlockPage)}>
-          <a css={styles.pageButton}>
-            <NoneDashedArrowLeft css={styles.pageItemIcon} />
-            <span className="a11y">이전 페이지</span>
-          </a>
-        </Link>
+        <NavigationButton onPageChange={onPageChange} page={firstPrevBlockPage}>
+          <NoneDashedArrowLeft css={styles.pageItemIcon} />
+          <span className="a11y">이전 페이지</span>
+        </NavigationButton>
       </div>
     );
   }
 
-  renderGoNext() {
-    const { currentPage, totalPages, pageCount } = this.props;
-
+  function renderGoNext() {
     // 마지막 페이지와 같은 블록이면 노출하지 않는다.
     if (calcPageBlock(currentPage, pageCount) === calcPageBlock(totalPages, pageCount)) {
       return null;
@@ -96,47 +94,37 @@ export default class Paginator extends React.Component {
 
     return (
       <div css={styles.buttonWrapper}>
-        <Link prefetch {...this.getLinkProps(firstNextBlockPage)}>
-          <a css={styles.pageButton}>
-            <NoneDashedArrowRight css={styles.pageItemIcon} />
-            <span className="a11y">다음 페이지</span>
-          </a>
-        </Link>
+        <NavigationButton onPageChange={onPageChange} page={firstNextBlockPage}>
+          <NoneDashedArrowRight css={styles.pageItemIcon} />
+          <span className="a11y">다음 페이지</span>
+        </NavigationButton>
       </div>
     );
   }
 
-  renderPageItems() {
-    const { currentPage, totalPages, pageCount } = this.props;
+  function renderPageItems() {
     const pageRange = makePageRange(currentPage, totalPages, pageCount);
 
     return (
       <ul css={styles.pageItems}>
         {pageRange.map(page => (
           <li key={page} css={styles.pageItem}>
-            <Link prefetch {...this.getLinkProps(page)}>
-              <a css={[styles.pageButton, currentPage === page && styles.pageButtonActive]}>{page}</a>
-            </Link>
+            <NavigationButton style={currentPage === page && styles.pageButtonActive} onPageChange={onPageChange} page={page}>
+              {page}
+            </NavigationButton>
           </li>
         ))}
       </ul>
     );
   }
 
-  render() {
-    const { currentPage, totalPages, style, needGoFirst, needGoLast } = this.props;
-    if (totalPages <= 1 || currentPage < 1 || currentPage > totalPages) {
-      return null;
-    }
-
-    return (
-      <div css={[styles.paginator, style]}>
-        {needGoFirst && this.renderGoFirst()}
-        {this.renderGoPrev()}
-        {this.renderPageItems()}
-        {this.renderGoNext()}
-        {needGoLast && this.renderGoLast()}
-      </div>
-    );
-  }
+  return (
+    <div css={[styles.paginator, style]}>
+      {needGoFirst && renderGoFirst()}
+      {renderGoPrev()}
+      {renderPageItems()}
+      {renderGoNext()}
+      {needGoLast && renderGoLast()}
+    </div>
+  );
 }
