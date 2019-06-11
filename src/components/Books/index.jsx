@@ -5,9 +5,11 @@ import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { showShelfBookAlertToast } from '../../services/book/actions';
+import * as featureSelectors from '../../services/feature/selectors';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
@@ -31,6 +33,7 @@ const refineBookData = ({
   viewType,
   linkBuilder,
   isSeriesView,
+  isSyncShelfEnabled,
   recentlyUpdatedMap,
   thumbnailWidth,
 }) => {
@@ -79,7 +82,7 @@ const refineBookData = ({
     notAvailable: isNotAvailable,
     updateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook && !isCollectionBook,
+    selectMode: isSelectMode && isPurchasedBook && !(isSyncShelfEnabled && isCollectionBook),
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
@@ -107,6 +110,7 @@ const refineBookData = ({
 };
 
 const mapStateToProps = state => ({
+  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
   selectedBooks: getSelectedItems(state),
 });
 
@@ -131,6 +135,7 @@ export const Books = connect(
     viewType,
     linkBuilder,
     isSeriesView,
+    isSyncShelfEnabled,
     recentlyUpdatedMap,
     dispatchShowShelfBookAlertToast,
   } = props;
@@ -192,6 +197,7 @@ export const Books = connect(
           viewType,
           linkBuilder,
           isSeriesView,
+          isSyncShelfEnabled,
           recentlyUpdatedMap,
           thumbnailWidth,
         });
@@ -199,14 +205,14 @@ export const Books = connect(
         return viewType === ViewType.PORTRAIT ? (
           <div key={bookId} className={className} css={styles.portrait}>
             <Book.PortraitBook {...libraryBookProps} />
-            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         ) : (
           <div key={bookId} className={className} css={styles.landscape}>
             <Book.LandscapeBook {...libraryBookProps} />
             {isSelectMode && !isPurchasedBook && <Disabled />}
             {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         );
       }}
