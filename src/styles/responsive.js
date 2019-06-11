@@ -35,44 +35,21 @@ export const getResponsiveBookSizeForBookList = screenWidth => {
   return bookSize;
 };
 
-export const MQ = (breakPoints, styles) => breakPoints.reduce((acc, breakPoint) => Object.assign(breakPoint(styles), acc), {});
+export const MQ = (breakPoints, styles) =>
+  typeof styles === 'string'
+    ? breakPoints.reduce((acc, breakPoint) => acc + breakPoint(styles), '')
+    : breakPoints.reduce((acc, breakPoint) => Object.assign(breakPoint(styles), acc), {});
+
+const stylesFactory = (_BP, styles) => (typeof styles === 'string' ? `${_BP} {${styles}}` : { [_BP]: { ...styles } });
 
 export const Responsive = {
-  XSmall: styles => ({
-    [BP.XSmall]: {
-      ...styles,
-    },
-  }),
-  Small: styles => ({
-    [BP.Small]: {
-      ...styles,
-    },
-  }),
-  Medium: styles => ({
-    [BP.Medium]: {
-      ...styles,
-    },
-  }),
-  Large: styles => ({
-    [BP.Large]: {
-      ...styles,
-    },
-  }),
-  XLarge: styles => ({
-    [BP.XLarge]: {
-      ...styles,
-    },
-  }),
-  XXLarge: styles => ({
-    [BP.XXLarge]: {
-      ...styles,
-    },
-  }),
-  Full: styles => ({
-    [BP.Full]: {
-      ...styles,
-    },
-  }),
+  XSmall: styles => stylesFactory(BP.XSmall, styles),
+  Small: styles => stylesFactory(BP.Small, styles),
+  Medium: styles => stylesFactory(BP.Medium, styles),
+  Large: styles => stylesFactory(BP.Large, styles),
+  XLarge: styles => stylesFactory(BP.XLarge, styles),
+  XXLarge: styles => stylesFactory(BP.XXLarge, styles),
+  Full: styles => stylesFactory(BP.Full, styles),
 };
 
 export const Hoverable = styles => ({

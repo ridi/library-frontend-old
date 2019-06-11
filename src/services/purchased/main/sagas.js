@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import * as featureIds from '../../../constants/featureIds';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
@@ -10,9 +11,10 @@ import { downloadBooks } from '../../bookDownload/sagas';
 import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
+import * as featureSelectors from '../../feature/selectors';
 import { showDialog } from '../../dialog/actions';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
@@ -86,7 +88,7 @@ function* loadMainItems(action) {
 function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = OrderOptions.parse(order);
@@ -133,7 +135,7 @@ function* hideSelectedBooks() {
 
 function* downloadSelectedBooks() {
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const { order } = yield select(getOptions);
   const { orderType, orderBy } = OrderOptions.parse(order);
@@ -152,8 +154,10 @@ function* downloadSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
-  yield put(selectBooks(bookIds));
+  const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
+  const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+  const bookIds = toFlatten(filteredItems, 'b_id');
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchaseMainRootSaga() {

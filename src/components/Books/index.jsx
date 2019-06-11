@@ -5,11 +5,13 @@ import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { showShelfBookAlertToast } from '../../services/book/actions';
-import { toggleBook } from '../../services/selection/actions';
-import { getSelectedBooks } from '../../services/selection/selectors';
+import * as featureSelectors from '../../services/feature/selectors';
+import { toggleItem } from '../../services/selection/actions';
+import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
 import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import BookMetaData from '../../utils/bookMetaData';
@@ -31,6 +33,7 @@ const refineBookData = ({
   viewType,
   linkBuilder,
   isSeriesView,
+  isSyncShelfEnabled,
   recentlyUpdatedMap,
   thumbnailWidth,
 }) => {
@@ -79,7 +82,7 @@ const refineBookData = ({
     notAvailable: isNotAvailable,
     updateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook && !isCollectionBook,
+    selectMode: isSelectMode && isPurchasedBook && !(isSyncShelfEnabled && isCollectionBook),
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
@@ -107,11 +110,12 @@ const refineBookData = ({
 };
 
 const mapStateToProps = state => ({
-  selectedBooks: getSelectedBooks(state),
+  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
+  selectedBooks: getSelectedItems(state),
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleBook,
+  onSelectedChange: toggleItem,
   dispatchShowShelfBookAlertToast: showShelfBookAlertToast,
 };
 
@@ -122,6 +126,7 @@ export const Books = connect(
   const isLoaded = true;
   const {
     libraryBookDTO,
+    bookIds,
     platformBookDTO,
     units,
     selectedBooks,
@@ -130,6 +135,7 @@ export const Books = connect(
     viewType,
     linkBuilder,
     isSeriesView,
+    isSyncShelfEnabled,
     recentlyUpdatedMap,
     dispatchShowShelfBookAlertToast,
   } = props;
@@ -151,14 +157,24 @@ export const Books = connect(
     [isLoaded],
   );
 
+  // TODO: compat
+  let finalBookIds = [];
+  let libraryBookMap = new Map();
+  if (libraryBookDTO != null) {
+    finalBookIds = libraryBookDTO.map(book => book.b_id);
+    libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
+  }
+  if (finalBookIds.length === 0) {
+    finalBookIds = bookIds;
+  }
   return (
     <BooksWrapper
       viewType={viewType}
-      books={libraryBookDTO}
-      renderBook={({ book: libraryBookData, className }) => {
-        const { b_id: bookId } = libraryBookData;
+      books={finalBookIds}
+      renderBook={({ book: bookId, className }) => {
+        const libraryBookData = libraryBookMap.get(bookId);
         const platformBookData = platformBookDTO[bookId];
-        if (!platformBookData) {
+        if (!libraryBookData || !platformBookData) {
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className={className} css={styles.portrait}>
               <PortraitBook />
@@ -181,6 +197,7 @@ export const Books = connect(
           viewType,
           linkBuilder,
           isSeriesView,
+          isSyncShelfEnabled,
           recentlyUpdatedMap,
           thumbnailWidth,
         });
@@ -188,20 +205,20 @@ export const Books = connect(
         return viewType === ViewType.PORTRAIT ? (
           <div key={bookId} className={className} css={styles.portrait}>
             <Book.PortraitBook {...libraryBookProps} />
-            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         ) : (
           <div key={bookId} className={className} css={styles.landscape}>
             <Book.LandscapeBook {...libraryBookProps} />
             {isSelectMode && !isPurchasedBook && <Disabled />}
             {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         );
       }}
     >
       {({ books }) => {
-        const libraryBooksCount = libraryBookDTO.length;
+        const libraryBooksCount = finalBookIds.length;
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (

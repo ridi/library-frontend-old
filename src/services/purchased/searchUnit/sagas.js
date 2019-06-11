@@ -36,8 +36,8 @@ import { fetchSearchUnitItems, fetchSearchUnitItemsTotalCount, getSearchUnitPrim
 import { getItemsByPage, getOptions, getPrimaryItem, getUnitId } from './selectors';
 import { fetchPrimaryBookId } from '../../book/requests';
 import { setPrimaryBookId } from '../common/actions';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -138,7 +138,7 @@ function* loadItems() {
 
 function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   let queueIds;
   try {
@@ -177,7 +177,7 @@ function* hideSelectedBooks() {
 }
 
 function* downloadSelectedBooks() {
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
   try {
     const bookIds = Object.keys(selectedBooks);
     yield call(downloadBooks, bookIds);
@@ -189,7 +189,7 @@ function* downloadSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchaseSearchUnitRootSaga() {

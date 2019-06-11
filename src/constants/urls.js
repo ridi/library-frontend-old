@@ -14,8 +14,11 @@ export const PageType = {
   SEARCH_UNIT: 'searchUnit',
   HIDDEN: 'hidden',
   HIDDEN_UNIT: 'hiddenUnit',
+  SHELVES: 'shelves',
   SERIAL_PREFERENCE: 'serialPreference',
   SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
+  SHELF_DETAIL: 'shelfDetail',
+  SHELF_UNIT: 'shelfUnit',
   NOT_FOUND: 'notFound',
 };
 
@@ -39,6 +42,7 @@ export const URLMap = {
     href: '/purchased/mainUnit',
     as: ({ unitId }) => `/books/${unitId}/`,
     regex: /^\/books\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.SEARCH]: {
     href: '/purchased/search',
@@ -49,6 +53,7 @@ export const URLMap = {
     href: '/purchased/searchUnit',
     as: ({ unitId }) => `/books/search/${unitId}`,
     regex: /^\/books\/search\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.HIDDEN]: {
     href: '/purchased/hidden',
@@ -59,6 +64,7 @@ export const URLMap = {
     href: '/purchased/hiddenUnit',
     as: ({ unitId }) => `/books/hidden/${unitId}`,
     regex: /^\/books\/hidden\/(\d+)\/?$/,
+    keys: ['unitId'],
   },
   [PageType.SERIAL_PREFERENCE]: {
     href: '/serialPreference',
@@ -69,6 +75,24 @@ export const URLMap = {
     href: '/serialPreferenceUnit',
     as: ({ unitId }) => `/serial-preferences/${unitId}/`,
     regex: /^\/serial-preferences\/(\d+)\/?$/,
+    keys: ['unitId'],
+  },
+  [PageType.SHELVES]: {
+    href: '/shelves/list',
+    as: '/shelves',
+    regex: /^\/shelves\/?$/,
+  },
+  [PageType.SHELF_DETAIL]: {
+    href: '/shelves/detail',
+    as: ({ uuid }) => `/shelf/${uuid}`,
+    regex: /^\/shelf\/([0-9a-f-]+)\/?$/,
+    keys: ['uuid'],
+  },
+  [PageType.SHELF_UNIT]: {
+    href: '/purchased/searchUnit',
+    as: ({ uuid, unitId }) => `/shelf/${uuid}/${unitId}`,
+    regex: /^\/shelf\/([0-9a-f-]+)\/(\d+)\/?$/,
+    keys: ['uuid', 'unitId'],
   },
   [PageType.NOT_FOUND]: {
     href: '/errors/notFound',
@@ -104,9 +128,10 @@ export const toURLMap = pathname => {
 
     if (result) {
       if (typeof urlInfo.as === 'function') {
-        const query = {
-          unitId: result[1],
-        };
+        const query = {};
+        urlInfo.keys.forEach((key, idx) => {
+          query[key] = result[idx + 1];
+        });
         return {
           href: { pathname: urlInfo.href, query },
           as: { pathname: urlInfo.as(query) },

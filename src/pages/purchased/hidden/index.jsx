@@ -7,19 +7,21 @@ import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
-import EmptyBookList from '../../../components/EmptyBookList';
+import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
+import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getBooks, getUnits } from '../../../services/book/selectors';
 import { showConfirm } from '../../../services/confirm/actions';
+import * as featureSelectors from '../../../services/feature/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount } from '../../../services/purchased/hidden/selectors';
 import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
@@ -28,7 +30,7 @@ import { ResponsiveBooks } from '../../base/Responsive';
 
 class Hidden extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -67,28 +69,31 @@ class Hidden extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    this.props.dispatchShowConfirm(
-      '영구 삭제',
-      <>
-        내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
-        <br />
-        <br />
-        그래도 삭제하시겠습니까?
-      </>,
-      '삭제',
-      this.deleteSelectedBooks,
-    );
+    this.props.dispatchShowConfirm({
+      title: '영구 삭제',
+      message: (
+        <>
+          내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+          <br />
+          <br />
+          그래도 삭제하시겠습니까?
+        </>
+      ),
+      confirmLabel: '삭제',
+      onClickConfirmButton: this.deleteSelectedBooks,
+    });
   };
 
   makeEditingBarProps() {
-    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.filter(item => !UnitType.isCollection(item.unit_type)).length;
+    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }
@@ -104,6 +109,9 @@ class Hidden extends React.Component {
           type: ButtonType.DANGER,
           onClick: this.handleOnClickDelete,
           disable,
+        },
+        {
+          type: ButtonType.SPACER,
         },
         {
           name: '선택 숨김 해제',
@@ -186,7 +194,7 @@ class Hidden extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
+      return <Empty IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
     }
 
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
@@ -225,6 +233,7 @@ const mapStateToProps = state => {
   const isFetchingBooks = getIsFetchingBooks(state);
 
   const mainPageInfo = getMainPageInfo(state);
+  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   return {
     pageInfo,
@@ -237,6 +246,7 @@ const mapStateToProps = state => {
     mainPageInfo,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
+    isSyncShelfEnabled,
   };
 };
 
@@ -244,7 +254,7 @@ const mapDispatchToProps = {
   dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

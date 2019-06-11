@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
@@ -9,9 +10,10 @@ import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
+import * as featureSelectors from '../../feature/selectors';
 import { getQuery } from '../../router/selectors';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import {
@@ -74,7 +76,7 @@ function* loadItems() {
 function* unhideSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
 
@@ -116,7 +118,7 @@ function* unhideSelectedBooks() {
 function* deleteSelectedBooks() {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   const revision = yield call(getRevision);
   const bookIds = yield call(getBookIdsByUnitIdsForHidden, items, Object.keys(selectedBooks));
@@ -148,8 +150,10 @@ function* deleteSelectedBooks() {
 
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
-  const bookIds = toFlatten(items.filter(item => !UnitType.isCollection(item.unit_type)), 'b_id');
-  yield put(selectBooks(bookIds));
+  const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
+  const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+  const bookIds = toFlatten(filteredItems, 'b_id');
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchasedHiddenSaga() {

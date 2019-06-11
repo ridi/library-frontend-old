@@ -1,21 +1,30 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import EditingBar from './EditingBar';
 import BottomActionBar from './BottomActionBar';
 
-const styles = {
-  fixed: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    zIndex: 9999,
+const fixed = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
 
-    '& + section': {
-      paddingTop: 46,
-    },
-  },
+  & + section {
+    padding-top: 46px;
+  }
+`;
+
+const double = css`
+  & + section {
+    padding-top: 92px;
+  }
+`;
+
+const styles = {
+  fixed,
+  double,
 };
 
 export default class Editable extends React.Component {
@@ -67,11 +76,11 @@ export default class Editable extends React.Component {
 
   render() {
     const { isFixed } = this.state;
-    const { children, nonEditBar, isEditing, editingBarProps, actionBarProps } = this.props;
+    const { children, doubleEditBar, nonEditBar, isEditing, editingBarProps, actionBarProps } = this.props;
 
     return (
       <>
-        <nav ref={this.navRef} css={isFixed ? styles.fixed : {}}>
+        <nav ref={this.navRef} css={[isFixed && styles.fixed, isFixed && doubleEditBar && styles.double]}>
           {isEditing ? <EditingBar {...editingBarProps} /> : nonEditBar}
         </nav>
         <section ref={this.sectionRef}>{children}</section>

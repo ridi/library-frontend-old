@@ -1,18 +1,15 @@
-import { put } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import { getAPI } from '../../../api/actions';
 import { HttpStatusCode } from '../../../api/constants';
 
 import config from '../../../config';
 import { makeURI } from '../../../utils/uri';
+import { fetchLibraryBookData } from '../../book/requests';
 import { NotFoundReadLatestError } from './errors';
 
+// TODO: compat
 export function* fetchItems(bookIds) {
-  const options = {
-    b_ids: bookIds,
-  };
-  const api = yield put(getAPI());
-  const response = yield api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
-  return response.data;
+  return yield call(fetchLibraryBookData, bookIds);
 }
 
 export function* fetchReadLatestBookId(seriesId) {
