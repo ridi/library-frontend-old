@@ -8,4 +8,5 @@ export const Duration = {
 export const ToastStyle = {
   GREEN: 'green',
   BLUE: 'blue',
+  RED: 'red',
 };
