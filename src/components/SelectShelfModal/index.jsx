@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import Responsive from '../../pages/base/Responsive';
+import * as promptActions from '../../services/prompt/actions';
 import * as shelfActions from '../../services/shelf/actions';
 import * as shelfSelectors from '../../services/shelf/selectors';
 import * as paginationUtils from '../../utils/pagination';
@@ -15,6 +16,7 @@ import { ResponsivePaginatorWithHandler } from '../ResponsivePaginator';
 import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
 import { SkeletonShelves } from '../Skeleton/SkeletonShelves';
+import * as Tool from '../Tool';
 import NavigationBar from './NavigationBar';
 
 const toolBar = css`
@@ -34,9 +36,33 @@ function SelectShelfLinkButton(props) {
 }
 
 function SelectShelfModalInner(props) {
-  const { loadShelfCount, loadShelves, onPageOptionsChange, orderBy, orderDirection, page, shelves, totalShelfCount } = props;
+  const {
+    addShelf,
+    loadShelfCount,
+    loadShelves,
+    onPageOptionsChange,
+    orderBy,
+    orderDirection,
+    page,
+    shelves,
+    showPrompt,
+    totalShelfCount,
+  } = props;
   const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
   const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
+  const handleAddShelf = React.useCallback(
+    () => {
+      showPrompt({
+        title: '새 책장 추가',
+        message: '새 책장의 이름을 입력해주세요.',
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        onClickConfirmButton: shelfName => {
+          addShelf({ name: shelfName, pageOptions: { orderBy, orderDirection, page } });
+        },
+      });
+    },
+    [orderBy, orderDirection, page],
+  );
 
   React.useEffect(() => {
     loadShelfCount();
@@ -51,10 +77,11 @@ function SelectShelfModalInner(props) {
 
   function renderToolBar() {
     const { onBackClick } = props;
+    const right = <Tool.Add onClickAddButton={handleAddShelf} />;
     return (
       <>
         <NavigationBar onBackClick={onBackClick} />
-        <FlexBar css={toolBar} />
+        <FlexBar css={toolBar} flexLeft={<div />} flexRight={right} />
       </>
     );
   }
@@ -103,6 +130,8 @@ function mapStateToProps(state, props) {
 const mapDispatchToProps = {
   loadShelfCount: shelfActions.loadShelfCount,
   loadShelves: shelfActions.loadShelves,
+  showPrompt: promptActions.showPrompt,
+  addShelf: shelfActions.addShelf,
 };
 
 const SelectShelfModal = connect(
