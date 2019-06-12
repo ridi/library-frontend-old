@@ -166,7 +166,7 @@ function* addShelf({ payload }) {
       break;
     }
   }
-  yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelves(pageOptions))]);
+  yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelves(pageOptions)), put(actions.loadShelfCount())]);
 }
 
 function* renameShelf({ payload }) {
@@ -206,6 +206,7 @@ function* deleteShelves({ payload }) {
       }),
     ),
     put(actions.loadShelves(pageOptions)),
+    put(actions.loadShelfCount()),
   ]);
 }
 

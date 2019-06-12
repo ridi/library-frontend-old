@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import Responsive from '../../pages/base/Responsive';
-import * as selectionSelectors from '../../services/selection/selectors';
 import * as shelfActions from '../../services/shelf/actions';
 import * as shelfSelectors from '../../services/shelf/selectors';
 import * as paginationUtils from '../../utils/pagination';
@@ -35,9 +34,14 @@ function SelectShelfLinkButton(props) {
 }
 
 function SelectShelfModalInner(props) {
-  const { loadShelves, onPageOptionsChange, orderBy, orderDirection, page, shelves, totalShelfCount } = props;
+  const { loadShelfCount, loadShelves, onPageOptionsChange, orderBy, orderDirection, page, shelves, totalShelfCount } = props;
   const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
   const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
+
+  React.useEffect(() => {
+    loadShelfCount();
+  }, []);
+
   React.useEffect(
     () => {
       loadShelves({ orderBy, orderDirection, page });
@@ -92,11 +96,12 @@ function mapStateToProps(state, props) {
   const { orderBy, orderDirection, page } = props;
   const pageOptions = { orderBy, orderDirection, page };
   const shelves = shelfSelectors.getShelves(state, pageOptions);
-  const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
-  return { shelves, totalSelectedCount };
+  const totalShelfCount = shelfSelectors.getShelfCount(state);
+  return { shelves, totalShelfCount };
 }
 
 const mapDispatchToProps = {
+  loadShelfCount: shelfActions.loadShelfCount,
   loadShelves: shelfActions.loadShelves,
 };
 
