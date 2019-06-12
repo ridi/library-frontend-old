@@ -37,6 +37,13 @@ export const shelfStyles = {
     box-sizing: border-box;
     width: inherit;
     min-height: inherit;
+    transition: transform ease 0.3s, box-shadow ease 0.3s;
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    &:hover {
+      transform: translate3d(0, -4px, 0);
+      box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.1);
+    }
   `,
   thumbnails: css`
     display: flex;
