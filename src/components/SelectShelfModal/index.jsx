@@ -2,12 +2,14 @@
 import { css, jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
+import { SHELVES_LIMIT } from '../../constants/shelves';
 import Responsive from '../../pages/base/Responsive';
 import * as promptActions from '../../services/prompt/actions';
 import * as shelfActions from '../../services/shelf/actions';
 import * as shelfSelectors from '../../services/shelf/selectors';
+import * as toastActions from '../../services/toast/actions';
+import { ToastStyle } from '../../services/toast/constants';
 import * as paginationUtils from '../../utils/pagination';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
@@ -46,22 +48,30 @@ function SelectShelfModalInner(props) {
     page,
     shelves,
     showPrompt,
+    showToast,
     totalShelfCount,
   } = props;
   const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
   const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
   const handleAddShelf = React.useCallback(
     () => {
-      showPrompt({
-        title: '새 책장 추가',
-        message: '새 책장의 이름을 입력해주세요.',
-        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-        onClickConfirmButton: shelfName => {
-          addShelf({ name: shelfName, pageOptions: { orderBy, orderDirection, page } });
-        },
-      });
+      if (totalShelfCount < SHELVES_LIMIT) {
+        showPrompt({
+          title: '새 책장 추가',
+          message: '새 책장의 이름을 입력해주세요.',
+          emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+          onClickConfirmButton: shelfName => {
+            addShelf({ name: shelfName, pageOptions: { orderBy, orderDirection, page } });
+          },
+        });
+      } else {
+        showToast({
+          message: '책장은 최대 100개까지 만들 수 있습니다.',
+          toastStyle: ToastStyle.RED,
+        });
+      }
     },
-    [orderBy, orderDirection, page],
+    [orderBy, orderDirection, page, totalShelfCount],
   );
 
   React.useEffect(() => {
@@ -131,6 +141,7 @@ const mapDispatchToProps = {
   loadShelfCount: shelfActions.loadShelfCount,
   loadShelves: shelfActions.loadShelves,
   showPrompt: promptActions.showPrompt,
+  showToast: toastActions.showToast,
   addShelf: shelfActions.addShelf,
 };
 

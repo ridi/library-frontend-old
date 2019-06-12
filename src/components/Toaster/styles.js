@@ -93,6 +93,8 @@ const toastStyleColor = toastStyle => {
   switch (toastStyle) {
     case ToastStyle.BLUE:
       return '#99d1ff';
+    case ToastStyle.RED:
+      return '#f88792';
     default:
       return '#5abf0d';
   }

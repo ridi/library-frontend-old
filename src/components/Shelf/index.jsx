@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import * as selectors from '../../services/shelf/selectors';
 import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
+import { thousandsSeperator } from '../../utils/number';
 import { ShelfDetailLink } from './ShelfDetailLink';
 import { ShelfSelectButton } from './ShelfSelectButton';
 import { ShelfThumbnails } from './ShelfThumbnail';
@@ -24,7 +25,7 @@ const Shelf = props => {
         </div>
         <div css={shelfStyles.countWrapper}>
           <p css={shelfStyles.count}>
-            총 {totalCount || 0}권
+            총 {totalCount ? thousandsSeperator(totalCount) : 0}권
             <ArrowTriangleRight css={shelfStyles.countArrowIcon} />
           </p>
         </div>

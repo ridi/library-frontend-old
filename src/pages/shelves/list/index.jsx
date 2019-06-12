@@ -12,6 +12,7 @@ import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
 import { Editing } from '../../../components/Tool';
 import { Add } from '../../../components/Tool/Add';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
+import { SHELVES_LIMIT } from '../../../constants/shelves';
 import { URLMap } from '../../../constants/urls';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
@@ -19,6 +20,8 @@ import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import * as toastActions from '../../../services/toast/actions';
+import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
@@ -46,6 +49,7 @@ const ShelvesList = props => {
     selectedShelves,
     showConfirm,
     showPrompt,
+    showToast,
     pageOptions,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
@@ -67,14 +71,21 @@ const ShelvesList = props => {
   };
 
   const handleAddShelf = () => {
-    showPrompt({
-      title: '새 책장 추가',
-      message: '새 책장의 이름을 입력해주세요.',
-      emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-      onClickConfirmButton: shelfName => {
-        addShelf({ name: shelfName, pageOptions });
-      },
-    });
+    if (totalShelfCount < SHELVES_LIMIT) {
+      showPrompt({
+        title: '새 책장 추가',
+        message: '새 책장의 이름을 입력해주세요.',
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        onClickConfirmButton: shelfName => {
+          addShelf({ name: shelfName, pageOptions });
+        },
+      });
+    } else {
+      showToast({
+        message: '책장은 최대 100개까지 만들 수 있습니다.',
+        toastStyle: ToastStyle.RED,
+      });
+    }
   };
 
   const handleRemoveShelves = () => {
@@ -179,6 +190,7 @@ const mapDispatchToProps = {
   selectShelf: selectionActions.selectItems,
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
+  showToast: toastActions.showToast,
   addShelf: shelfActions.addShelf,
   removeShelves: shelfActions.deleteShelves,
 };
