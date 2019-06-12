@@ -21,11 +21,11 @@ import * as selectionSelectors from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
+import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import { ToastStyle } from '../../../services/toast/constants';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;

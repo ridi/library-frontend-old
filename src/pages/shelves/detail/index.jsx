@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
-
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
