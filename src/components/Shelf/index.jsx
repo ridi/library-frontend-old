@@ -25,7 +25,7 @@ const Shelf = props => {
         </div>
         <div css={shelfStyles.countWrapper}>
           <p css={shelfStyles.count}>
-            총 {thousandsSeperator(totalCount) || 0}권
+            총 {totalCount ? thousandsSeperator(totalCount) : 0}권
             <ArrowTriangleRight css={shelfStyles.countArrowIcon} />
           </p>
         </div>
