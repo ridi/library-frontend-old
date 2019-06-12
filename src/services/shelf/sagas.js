@@ -253,31 +253,44 @@ function* deleteShelfFromDetail({ payload }) {
 }
 
 function* addSelectedToShelf({ payload }) {
-  const { uuid } = payload;
-  const selectedBooks = yield select(selectionSelectors.getSelectedItems);
-  const bookIds = Object.entries(selectedBooks)
-    .filter(([, selected]) => selected)
-    .map(([key]) => key);
-  const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
-  const units = libraryBookData.items.map(book => ({
-    unitId: book.search_unit_id,
-    bookIds: [book.b_id],
-  }));
-  const shelfName = yield select(selectors.getShelfName, uuid);
-  yield call(addShelfItem, { payload: { uuid, units } });
-  yield put(
-    toastActions.showToast({
-      message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
-      linkName: '책장 바로 보기',
-      linkProps: makeLinkProps(
-        {
-          pathname: URLMap[PageType.SHELF_DETAIL].href,
-          query: { uuid },
-        },
-        URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-      ),
-    }),
-  );
+  try {
+    yield put(uiActions.setFullScreenLoading(true));
+    const { uuid } = payload;
+    const selectedBooks = yield select(selectionSelectors.getSelectedItems);
+    const bookIds = Object.entries(selectedBooks)
+      .filter(([, selected]) => selected)
+      .map(([key]) => key);
+    const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
+    const units = libraryBookData.items.map(book => ({
+      unitId: book.search_unit_id,
+      bookIds: [book.b_id],
+    }));
+    const shelfName = yield select(selectors.getShelfName, uuid);
+    yield call(addShelfItem, { payload: { uuid, units } });
+    yield put(
+      toastActions.showToast({
+        message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
+        linkName: '책장 바로 보기',
+        linkProps: makeLinkProps(
+          {
+            pathname: URLMap[PageType.SHELF_DETAIL].href,
+            query: { uuid },
+          },
+          URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+        ),
+      }),
+    );
+  } catch (err) {
+    console.error(err);
+    yield put(
+      toastActions.showToast({
+        message: '책장에 추가하는 중 오류가 발생했습니다. 다시 시도해 주세요.',
+        toastStyle: ToastStyle.RED,
+      }),
+    );
+  } finally {
+    yield put(uiActions.setFullScreenLoading(false));
+  }
 }
 
 function* removeSelectedFromShelf({ payload }) {
