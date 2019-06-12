@@ -70,19 +70,8 @@ const ShelvesList = props => {
     countUnit: '개',
   };
 
-  const isTotlaCountUnderShelvesLimit = () => {
-    const isUnder = totalShelfCount < SHELVES_LIMIT;
-    if (!isUnder) {
-      showToast({
-        message: '책장은 최대 100개까지 만들 수 있습니다.',
-        toastStyle: ToastStyle.RED,
-      });
-    }
-    return isUnder;
-  };
-
   const handleAddShelf = () => {
-    if (isTotlaCountUnderShelvesLimit()) {
+    if (totalShelfCount < SHELVES_LIMIT) {
       showPrompt({
         title: '새 책장 추가',
         message: '새 책장의 이름을 입력해주세요.',
@@ -90,6 +79,11 @@ const ShelvesList = props => {
         onClickConfirmButton: shelfName => {
           addShelf({ name: shelfName, pageOptions });
         },
+      });
+    } else {
+      showToast({
+        message: '책장은 최대 100개까지 만들 수 있습니다.',
+        toastStyle: ToastStyle.RED,
       });
     }
   };
