@@ -3,6 +3,8 @@ import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effect
 import { delay } from 'redux-saga';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
+import { ITEMS_LIMIT_PER_SHELF } from '../../constants/shelves';
+import { thousandsSeperator } from '../../utils/number';
 import { makeLinkProps } from '../../utils/uri';
 import { PageType, URLMap } from '../../constants/urls';
 import * as bookRequests from '../book/requests';
@@ -253,9 +255,20 @@ function* deleteShelfFromDetail({ payload }) {
 }
 
 function* addSelectedToShelf({ payload }) {
+  yield put(uiActions.setFullScreenLoading(true));
+  const { onComplete, uuid } = payload;
   try {
-    yield put(uiActions.setFullScreenLoading(true));
-    const { uuid } = payload;
+    const count = yield call(requests.fetchShelfBookCount, { uuid });
+    if (count >= ITEMS_LIMIT_PER_SHELF) {
+      yield put(
+        toastActions.showToast({
+          message: `최대 ${thousandsSeperator(ITEMS_LIMIT_PER_SHELF)}권까지 추가할 수 있습니다.`,
+          toastStyle: ToastStyle.RED,
+        }),
+      );
+      return;
+    }
+
     const selectedBooks = yield select(selectionSelectors.getSelectedItems);
     const bookIds = Object.entries(selectedBooks)
       .filter(([, selected]) => selected)
@@ -280,6 +293,7 @@ function* addSelectedToShelf({ payload }) {
         ),
       }),
     );
+    onComplete && onComplete();
   } catch (err) {
     console.error(err);
     yield put(

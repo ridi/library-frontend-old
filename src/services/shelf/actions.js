@@ -194,9 +194,10 @@ export const deleteShelfFromDetail = uuid => ({
   },
 });
 
-export const addSelectedToShelf = uuid => ({
+export const addSelectedToShelf = ({ onComplete, uuid }) => ({
   type: ADD_SELECTED_TO_SHELF,
   payload: {
+    onComplete,
     uuid,
   },
 });

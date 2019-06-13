@@ -93,9 +93,13 @@ class Search extends React.Component {
   };
 
   handleShelfSelect = uuid => {
-    this.setState({ isEditing: false, showShelves: false });
-    this.props.dispatchAddSelectedToShelf(uuid);
-    this.props.dispatchClearSelectedBooks();
+    this.props.dispatchAddSelectedToShelf({
+      uuid,
+      onComplete: () => {
+        this.setState({ isEditing: false, showShelves: false });
+        this.props.dispatchClearSelectedBooks();
+      },
+    });
   };
 
   makeEditingBarProps() {
