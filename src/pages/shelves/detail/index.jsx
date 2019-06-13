@@ -16,7 +16,7 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
 import * as Tools from '../../../components/Tool';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-import { URLMap } from '../../../constants/urls';
+import { PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as bookDownloadActions from '../../../services/bookDownload/actions';
@@ -139,10 +139,10 @@ function ShelfDetail(props) {
       const unitId = libraryBook.unit_id;
       const linkProps = makeLinkProps(
         {
-          pathname: URLMap.shelfUnit.href,
+          pathname: URLMap[PageType.SHELF_UNIT].href,
           query: { uuid, unitId },
         },
-        URLMap.shelfUnit.as({ uuid, unitId }),
+        URLMap[PageType.SHELF_UNIT].as({ uuid, unitId }),
         {},
       );
       return (
@@ -160,10 +160,10 @@ function ShelfDetail(props) {
       if (page !== newPage) {
         const linkProps = makeLinkProps(
           {
-            pathname: URLMap.shelfDetail.href,
+            pathname: URLMap[PageType.SHELF_DETAIL].href,
             query: { uuid },
           },
-          URLMap.shelfDetail.as({ uuid }),
+          URLMap[PageType.SHELF_DETAIL].as({ uuid }),
           {
             orderBy,
             orderDirection,
@@ -177,8 +177,16 @@ function ShelfDetail(props) {
   );
 
   function renderShelfBar() {
+    const { shelfListPageOptions } = props;
     const left = (
-      <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} href="/shelves/list" as="/shelves" query={{}} />
+      <Title
+        title={name}
+        showCount={totalBookCount != null}
+        totalCount={totalBookCount}
+        href={URLMap[PageType.SHELVES].href}
+        as={URLMap[PageType.SHELVES].as}
+        query={shelfListPageOptions}
+      />
     );
     const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
@@ -201,8 +209,8 @@ function ShelfDetail(props) {
       <ResponsivePaginator
         currentPage={page}
         totalPages={totalPages}
-        href={{ pathname: URLMap.shelfDetail.href, query: { uuid } }}
-        as={URLMap.shelfDetail.as({ uuid })}
+        href={{ pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } }}
+        as={URLMap[PageType.SHELF_DETAIL].as({ uuid })}
         query={{ orderBy, orderDirection }}
       />
     );
@@ -313,12 +321,15 @@ function mapStateToProps(state, props) {
   const platformBooks = bookSelectors.getBooks(state, bookIds);
 
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
+
+  const shelfListPageOptions = selectors.getListPageOptions(state);
   return {
     bookIds,
     booksLoading,
     libraryBooks,
     name,
     platformBooks,
+    shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
   };
