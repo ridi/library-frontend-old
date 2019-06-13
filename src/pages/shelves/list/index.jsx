@@ -169,6 +169,7 @@ ShelvesList.getInitialProps = async ({ query, store }) => {
   const orderBy = '';
   const orderDirection = '';
   const pageOptions = { orderBy, orderDirection, page };
+  store.dispatch(shelfActions.setListPageOptions(pageOptions));
   store.dispatch(shelfActions.loadShelves(pageOptions));
   store.dispatch(shelfActions.loadShelfCount());
   return {
