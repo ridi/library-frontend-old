@@ -72,34 +72,33 @@ const ShelvesList = props => {
     countUnit: '개',
   };
 
-  const overShelvesLimit = () => {
-    loadShelves(pageOptions);
-    showToast({
-      message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
-      toastStyle: ToastStyle.RED,
+  const validateAddShelf = valid => {
+    validateShelvesLimit({
+      valid,
+      inValid: () => {
+        loadShelves(pageOptions);
+        showToast({
+          message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
+          toastStyle: ToastStyle.RED,
+        });
+      },
     });
   };
 
   const handleAddshelfConfirm = name => {
-    validateShelvesLimit({
-      valid: () => {
-        addShelf({ name, pageOptions });
-      },
-      inValid: overShelvesLimit,
+    validateAddShelf(() => {
+      addShelf({ name, pageOptions });
     });
   };
 
   const handleAddShelf = () => {
-    validateShelvesLimit({
-      valid: () => {
-        showPrompt({
-          title: '새 책장 추가',
-          message: '새 책장의 이름을 입력해주세요.',
-          emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-          onClickConfirmButton: handleAddshelfConfirm,
-        });
-      },
-      inValid: overShelvesLimit,
+    validateAddShelf(() => {
+      showPrompt({
+        title: '새 책장 추가',
+        message: '새 책장의 이름을 입력해주세요.',
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        onClickConfirmButton: handleAddshelfConfirm,
+      });
     });
   };
 
