@@ -29,9 +29,9 @@ class Prompt extends React.Component {
     e.preventDefault();
     const { emptyInputAlertMessage, onClickCloseButton, onClickConfirmButton, dispatchShowToast } = this.props;
     const { promptInput: inputValue } = this.state;
-    if (inputValue.length === 0) {
+    if (inputValue.replace(/\s/gi, '').length === 0) {
       dispatchShowToast({
-        message: emptyInputAlertMessage || '한 글자 이상 입력해주세요.', // TODO 기본 문구 디자인팀 확인 필요
+        message: emptyInputAlertMessage || '한 글자 이상 입력해주세요.',
         toastStyle: ToastStyle.BLUE,
       });
     } else {

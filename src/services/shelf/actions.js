@@ -21,6 +21,8 @@ export const DELETE_SHELVES = 'DELETE_SHELVES';
 export const ADD_SHELF_ITEM = 'ADD_SHELF_ITEM';
 export const DELETE_SHELF_ITEM = 'DELETE_SHELF_ITEM';
 
+export const VALIDATE_SHELVES_LIMIT = 'VALIDATE_SHELVES_LIMIT';
+
 export const DELETE_SHELF_FROM_DETAIL = 'DELETE_SHELF_FROM_DETAIL';
 export const ADD_SELECTED_TO_SHELF = 'ADD_SELECTED_TO_SHELF';
 export const REMOVE_SELECTED_FROM_SHELF = 'REMOVE_SELECTED_FROM_SHELF';
@@ -232,5 +234,13 @@ export const endOperation = ({ revision, hasError }) => ({
   payload: {
     revision,
     hasError,
+  },
+});
+
+export const validateShelvesLimit = ({ valid, inValid }) => ({
+  type: VALIDATE_SHELVES_LIMIT,
+  payload: {
+    valid,
+    inValid,
   },
 });

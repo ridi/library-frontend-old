@@ -1,12 +1,12 @@
 import Router from 'next/router';
-import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
+import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
-import { ITEMS_LIMIT_PER_SHELF } from '../../constants/shelves';
+import { ITEMS_LIMIT_PER_SHELF, SHELVES_LIMIT } from '../../constants/shelves';
+import { PageType, URLMap } from '../../constants/urls';
 import { thousandsSeperator } from '../../utils/number';
 import { makeLinkProps } from '../../utils/uri';
-import { PageType, URLMap } from '../../constants/urls';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as selectionActions from '../selection/actions';
@@ -156,6 +156,18 @@ function* createOperation(ops) {
 
 function* performOperation(ops) {
   return yield join(yield call(createOperation, ops));
+}
+
+function* validateShelvesLimit({ payload }) {
+  const { valid, inValid } = payload;
+  yield all([put(uiActions.setFullScreenLoading(true)), call(loadShelfCount, false)]);
+  yield put(uiActions.setFullScreenLoading(false));
+  const totalShelfCount = yield select(selectors.getShelfCount);
+  if (totalShelfCount < SHELVES_LIMIT) {
+    valid && valid();
+  } else {
+    inValid && inValid();
+  }
 }
 
 function* addShelf({ payload }) {
@@ -348,5 +360,6 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF_FROM_DETAIL, deleteShelfFromDetail),
     takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
+    takeEvery(actions.VALIDATE_SHELVES_LIMIT, validateShelvesLimit),
   ]);
 }

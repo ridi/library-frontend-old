@@ -51,6 +51,8 @@ const ShelvesList = props => {
     showPrompt,
     showToast,
     pageOptions,
+    loadShelves,
+    validateShelvesLimit,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
   const toggleSelectMode = React.useCallback(() => {
@@ -70,22 +72,35 @@ const ShelvesList = props => {
     countUnit: '개',
   };
 
+  const overShelvesLimit = () => {
+    loadShelves(pageOptions);
+    showToast({
+      message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
+      toastStyle: ToastStyle.RED,
+    });
+  };
+
+  const handleAddshelfConfirm = name => {
+    validateShelvesLimit({
+      valid: () => {
+        addShelf({ name, pageOptions });
+      },
+      inValid: overShelvesLimit,
+    });
+  };
+
   const handleAddShelf = () => {
-    if (totalShelfCount < SHELVES_LIMIT) {
-      showPrompt({
-        title: '새 책장 추가',
-        message: '새 책장의 이름을 입력해주세요.',
-        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-        onClickConfirmButton: shelfName => {
-          addShelf({ name: shelfName, pageOptions });
-        },
-      });
-    } else {
-      showToast({
-        message: '책장은 최대 100개까지 만들 수 있습니다.',
-        toastStyle: ToastStyle.RED,
-      });
-    }
+    validateShelvesLimit({
+      valid: () => {
+        showPrompt({
+          title: '새 책장 추가',
+          message: '새 책장의 이름을 입력해주세요.',
+          emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+          onClickConfirmButton: handleAddshelfConfirm,
+        });
+      },
+      inValid: overShelvesLimit,
+    });
   };
 
   const handleRemoveShelves = () => {
@@ -194,6 +209,8 @@ const mapDispatchToProps = {
   showToast: toastActions.showToast,
   addShelf: shelfActions.addShelf,
   removeShelves: shelfActions.deleteShelves,
+  loadShelves: shelfActions.loadShelves,
+  validateShelvesLimit: shelfActions.validateShelvesLimit,
 };
 
 export default connect(
