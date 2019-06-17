@@ -159,14 +159,14 @@ function* performOperation(ops) {
 }
 
 function* validateShelvesLimit({ payload }) {
-  const { valid, inValid } = payload;
+  const { onValid, onInvalid } = payload;
   yield all([put(uiActions.setFullScreenLoading(true)), call(loadShelfCount, false)]);
   yield put(uiActions.setFullScreenLoading(false));
   const totalShelfCount = yield select(selectors.getShelfCount);
   if (totalShelfCount < SHELVES_LIMIT) {
-    valid && valid();
+    onValid && onValid();
   } else {
-    inValid && inValid();
+    onInvalid && onInvalid();
   }
 }
 

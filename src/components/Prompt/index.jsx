@@ -28,15 +28,15 @@ class Prompt extends React.Component {
   submitPrompt = e => {
     e.preventDefault();
     const { emptyInputAlertMessage, onClickCloseButton, onClickConfirmButton, dispatchShowToast } = this.props;
-    const { promptInput: inputValue } = this.state;
-    if (inputValue.replace(/\s/gi, '').length === 0) {
+    const trimmedInputValue = this.state.promptInput.trim();
+    if (trimmedInputValue.length === 0) {
       dispatchShowToast({
         message: emptyInputAlertMessage || '한 글자 이상 입력해주세요.',
         toastStyle: ToastStyle.BLUE,
       });
     } else {
       onClickCloseButton();
-      onClickConfirmButton(inputValue);
+      onClickConfirmButton(trimmedInputValue);
     }
   };
 

@@ -237,10 +237,10 @@ export const endOperation = ({ revision, hasError }) => ({
   },
 });
 
-export const validateShelvesLimit = ({ valid, inValid }) => ({
+export const validateShelvesLimit = ({ onValid, onInvalid }) => ({
   type: VALIDATE_SHELVES_LIMIT,
   payload: {
-    valid,
-    inValid,
+    onValid,
+    onInvalid,
   },
 });

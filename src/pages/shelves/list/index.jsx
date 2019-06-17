@@ -72,10 +72,10 @@ const ShelvesList = props => {
     countUnit: '개',
   };
 
-  const validateAddShelf = valid => {
+  const validateAddShelf = onValid => {
     validateShelvesLimit({
-      valid,
-      inValid: () => {
+      onValid,
+      onInvalid: () => {
         loadShelves(pageOptions);
         showToast({
           message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
