@@ -13,6 +13,7 @@ import { OrderOptions } from '../../constants/orderOptions';
 const _reduceBooks = books =>
   books.map(book => ({
     id: book.id,
+    isDeleted: book.is_deleted,
     title: book.title,
     file: book.file,
     thumbnail: book.thumbnail,
