@@ -185,6 +185,7 @@ export const Books = connect(
             </div>
           );
         }
+        if (platformBookData.isDeleted) return null;
 
         const isSelected = !!selectedBooks[bookId];
         const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
