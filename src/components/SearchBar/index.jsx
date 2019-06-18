@@ -7,7 +7,7 @@ import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
 import { Editing, Filter, More } from '../Tool';
-import SearchBox from './SearchBox';
+import SearchBox from '../SearchBox';
 import * as styles from './styles';
 
 class SearchBar extends React.Component {
