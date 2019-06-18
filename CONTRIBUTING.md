@@ -1,10 +1,9 @@
 ## PR 기준
+
 - PR 전 이슈등록 필수
 - 허용 대상
-  - Feature - x
   - Bug fix - o
   - Refactoring - 수정 범위에 따른 선택적 허용
-
 
 좀더 명확한 PR 프로세스를 위해 Branch naming convention, Reviewer list 등 문서 업데이트 및 PR template 이 추가될 예정입니다.
 
