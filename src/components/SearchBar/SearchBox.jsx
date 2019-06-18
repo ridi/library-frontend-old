@@ -9,109 +9,86 @@ import * as styles from './styles';
 import { makeLinkProps } from '../../utils/uri';
 import { URLMap } from '../../constants/urls';
 
-export default class SearchBox extends React.Component {
-  constructor(props) {
-    super(props);
+export default function SearchBox({ isSearchPage, keyword, onBlur, onFocus, onKeywordChange, onSubmit }) {
+  const [isSearchBoxFocused, setSearchBoxFocused] = React.useState(false);
+  const inputRef = React.useRef();
+  const handleChange = React.useCallback(e => onKeywordChange(e.target.value), [onKeywordChange]);
+  const handleClear = React.useCallback(() => onKeywordChange(''), [onKeywordChange]);
+  const handleSubmit = React.useCallback(
+    e => {
+      e.preventDefault();
 
-    this.state = {
-      keyword: props.keyword || '',
-      isSearchBoxFocused: false,
-    };
+      if (keyword.trim() === '') {
+        return;
+      }
 
-    this.inputRef = React.createRef();
-  }
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const { onSubmit } = this.props;
-    const { keyword } = this.state;
-
-    if (!keyword.replace(/\s/g, '')) {
-      return;
+      onSubmit && onSubmit();
+    },
+    [keyword, onSubmit],
+  );
+  const handleFocus = React.useCallback(
+    e => {
+      onFocus && onFocus(e);
+      setSearchBoxFocused(true);
+    },
+    [onFocus],
+  );
+  const handleBlur = React.useCallback(
+    e => {
+      onBlur && onBlur(e);
+      setSearchBoxFocused(false);
+    },
+    [onFocus],
+  );
+  const handleKeyUp = React.useCallback(e => {
+    if (e.key === 'Esc' || e.key === 'Escape') {
+      inputRef.current.blur();
     }
+  }, []);
 
-    onSubmit(keyword);
-  };
-
-  handleChange = e => {
-    this.setState({
-      keyword: e.target.value,
-    });
-  };
-
-  handleOnKeyUp = e => {
-    const code = e.charCode || e.keyCode;
-    if (code === 27) {
-      this.inputRef.current.blur();
-    }
-  };
-
-  handleOnFocus = () => {
-    const { onFocus } = this.props;
-    onFocus && onFocus();
-    this.setState({ isSearchBoxFocused: true });
-  };
-
-  handleOnBlur = () => {
-    const { onBlur } = this.props;
-    onBlur && onBlur();
-    this.setState({ isSearchBoxFocused: false });
-  };
-
-  handleOnClickCancel = () => {
-    this.setState({ keyword: '' });
-  };
-
-  renderCancelButton() {
-    const { keyword, isSearchBoxFocused } = this.state;
-    const { isSearchPage } = this.props;
-
-    if (isSearchPage) {
-      return (
-        <Link prefetch {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
-          <a css={[styles.searchBoxClearButton, (isSearchBoxFocused || keyword) && styles.searchBoxClearButtonActive]}>
-            <Close css={styles.searchBoxClearIcon} />
-          </a>
-        </Link>
-      );
-    }
-
-    return (
+  function renderCancelButton() {
+    const handleCancel = isSearchPage ? undefined : handleClear;
+    const button = (
       <IconButton
         a11y="검색어 제거"
         css={[styles.searchBoxClearButton, (isSearchBoxFocused || keyword) && styles.searchBoxClearButtonActive]}
-        onClick={this.handleOnClickCancel}
+        onClick={handleCancel}
       >
         <Close css={styles.searchBoxClearIcon} />
       </IconButton>
     );
+
+    if (isSearchPage) {
+      return (
+        <Link prefetch {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
+          {button}
+        </Link>
+      );
+    }
+    return button;
   }
 
-  render() {
-    const { keyword, isSearchBoxFocused } = this.state;
-    return (
-      <form
-        css={[styles.searchBox, isSearchBoxFocused && styles.searchBoxFocused, keyword && styles.searchBoxKeywordAdded]}
-        onSubmit={this.handleSubmit}
-        action="."
-      >
-        <Search css={styles.searchBoxIcon} />
-        <input
-          ref={this.inputRef}
-          type="search"
-          name="search"
-          placeholder="모든 책 검색"
-          css={styles.searchBoxInput}
-          value={keyword}
-          onChange={this.handleChange}
-          onFocus={this.handleOnFocus}
-          onBlur={this.handleOnBlur}
-          onKeyUp={this.handleOnKeyUp}
-          autoComplete="off"
-        />
-        {this.renderCancelButton()}
-      </form>
-    );
-  }
+  return (
+    <form
+      css={[styles.searchBox, isSearchBoxFocused && styles.searchBoxFocused, keyword && styles.searchBoxKeywordAdded]}
+      onSubmit={handleSubmit}
+      action="."
+    >
+      <Search css={styles.searchBoxIcon} />
+      <input
+        ref={inputRef}
+        type="search"
+        name="search"
+        placeholder="모든 책 검색"
+        css={styles.searchBoxInput}
+        value={keyword}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyUp={handleKeyUp}
+        autoComplete="off"
+      />
+      {renderCancelButton()}
+    </form>
+  );
 }
