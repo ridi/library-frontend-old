@@ -149,6 +149,7 @@ export const Books = connect(
         }
         const isPurchasedBook = !!libraryBookData.purchase_date;
         const unit = units && units[libraryBookData.unit_id] ? units[libraryBookData.unit_id] : null;
+        if (platformBookData.isDeleted) return null;
 
         const isSelected = !!selectedBooks[bookId];
         const libraryBookProps = toProps({
