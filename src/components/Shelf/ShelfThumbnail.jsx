@@ -11,13 +11,13 @@ export const ShelfThumbnails = ({ thumbnailIds, shelfName }) => (
       const key = hasThumbnail ? thumbnailUrl : `empty${index}`;
       return (
         <li css={shelfStyles.thumbnail} key={key}>
-          {hasThumbnail ? (
-            <img className="thumbnailImage" css={shelfStyles.thumbnailImage} src={thumbnailUrl} alt={`${shelfName} 대표 이미지`} />
-          ) : (
-            <div className="thumbnailImage" css={shelfStyles.thumbnailImage}>
+          <div className="thumbnailImage" css={shelfStyles.thumbnailImage}>
+            {hasThumbnail ? (
+              <img css={shelfStyles.image} src={thumbnailUrl} alt={`${shelfName} 대표 이미지`} />
+            ) : (
               <span className="a11y">책장 구성도서 썸네일 영역</span>
-            </div>
-          )}
+            )}
+          </div>
         </li>
       );
     })}

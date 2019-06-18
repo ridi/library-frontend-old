@@ -62,7 +62,14 @@ export const shelfStyles = {
     }
   `,
   thumbnailImage: css`
+    position: relative;
     width: 100%;
+  `,
+  image: css`
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
   `,
   infoWrapper: css`
     background: white;
