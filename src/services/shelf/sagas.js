@@ -294,7 +294,7 @@ function* addSelectedToShelf({ payload }) {
     yield call(addShelfItem, { payload: { uuid, units } });
     yield put(
       toastActions.showToast({
-        message: `${units.length}권을 "${shelfName}" 책장에 추가했습니다.`,
+        message: `"${shelfName}" 책장에 추가했습니다.`,
         linkName: '책장 바로 보기',
         linkProps: makeLinkProps(
           {
@@ -335,7 +335,7 @@ function* removeSelectedFromShelf({ payload }) {
     put(actions.invalidateShelfPage(uuid, pageOptions)),
     put(
       toastActions.showToast({
-        message: `${bookIds.length}권을 책장에서 삭제했습니다.`,
+        message: '책장에서 삭제했습니다.',
         withBottomFixedButton: true,
       }),
     ),
