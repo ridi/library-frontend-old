@@ -22,7 +22,7 @@ const _reduceBooks = books =>
     series: book.series,
     setbook: book.setbook,
     support: {
-      web_viewer: book.support.web_viewer,
+      web_viewer: book.support && book.support.web_viewer,
     },
     // RSG Book Component에서 사용함
     categories: book.categories,
