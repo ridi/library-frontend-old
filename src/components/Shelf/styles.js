@@ -137,6 +137,10 @@ export const shelfStyles = {
     width: 100%;
     height: 100%;
     cursor: pointer;
+    input {
+      width: 0px;
+      height: 0px;
+    }
   `,
   selectIconWrapper: css`
     display: block;
