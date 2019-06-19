@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
+import { ButtonType } from '../../../components/ActionBar/constants';
 import Editable from '../../../components/Editable';
 import { EmptyShelves } from '../../../components/Empty/EmptyShelves';
 import FlexBar from '../../../components/FlexBar';
@@ -116,7 +117,11 @@ const ShelvesList = props => {
   const actionBarProps = {
     buttonProps: [
       {
+        type: ButtonType.SPACER,
+      },
+      {
         name: '삭제',
+        type: ButtonType.DANGER,
         onClick: handleRemoveShelves,
         disable: totalSelectedCount === 0,
       },
