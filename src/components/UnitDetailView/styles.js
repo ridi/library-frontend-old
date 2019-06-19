@@ -143,10 +143,6 @@ export const bookDescriptionFolded = (line, lineHeight) => ({
   maxHeight: line * lineHeight,
   WebkitLineClamp: line,
 });
-export const bookDescriptionExpended = {
-  maxHeight: 'inherit',
-  WebkitLineClamp: 'inherit',
-};
 export const bookDescriptionExpend = {
   textAlign: 'right',
   marginTop: 10,
@@ -155,6 +151,7 @@ export const bookDescriptionExpend = {
 export const bookDescription = {
   wordWrap: 'break-word',
   wordBreak: 'break-all',
+  fontSize: '15px',
   ':lang(ko)': {
     wordBreak: 'keep-all',
   },

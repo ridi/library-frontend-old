@@ -1,17 +1,17 @@
-export const SELECT_BOOKS = 'SELECT_BOOKS';
-export const TOGGLE_BOOK = 'TOGGLE_BOOK';
-export const CLEAR_SELECTED_BOOKS = 'CLEAR_SELECTED_BOOKS';
+export const SELECT_ITEMS = 'SELECT_ITEMS';
+export const TOGGLE_ITEM = 'TOGGLE_ITEM';
+export const CLEAR_SELECTED_ITEMS = 'CLEAR_SELECTED_ITEMS';
 
-export const selectBooks = bookIds => ({
-  type: SELECT_BOOKS,
-  payload: bookIds,
+export const selectItems = ids => ({
+  type: SELECT_ITEMS,
+  payload: ids,
 });
 
-export const toggleBook = bookId => ({
-  type: TOGGLE_BOOK,
-  payload: bookId,
+export const toggleItem = id => ({
+  type: TOGGLE_ITEM,
+  payload: id,
 });
 
-export const clearSelectedBooks = () => ({
-  type: CLEAR_SELECTED_BOOKS,
+export const clearSelectedItems = () => ({
+  type: CLEAR_SELECTED_ITEMS,
 });

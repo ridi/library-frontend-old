@@ -5,47 +5,61 @@ import { isAfter, subDays } from 'date-fns';
 import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
+import { showShelfBookAlertToast } from '../../services/book/actions';
+import * as featureSelectors from '../../services/feature/selectors';
+import { toggleItem } from '../../services/selection/actions';
+import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
+import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import BookMetaData from '../../utils/bookMetaData';
 import BooksWrapper from '../BooksWrapper';
-import EmptyLandscapeBook from './EmptyLandscapeBook';
-import LandscapeFullButton from './LandscapeFullButton';
-import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import LandscapeBook from '../Skeleton/SkeletonBooks/LandscapeBook';
 import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 import { Disabled } from './Disabled';
+import EmptyLandscapeBook from './EmptyLandscapeBook';
+import FullButton from './FullButton';
+import { ShelfBookAlertButton } from './ShelfBookAlertButton';
 
-import { toggleBook } from '../../services/selection/actions';
-import { getSelectedBooks } from '../../services/selection/selectors';
-
-const toProps = ({
-  bookId,
+const refineBookData = ({
   libraryBookData,
   platformBookData,
-  unit,
+  units,
   isSelectMode,
   isSelected,
   onSelectedChange,
   viewType,
   linkBuilder,
   isSeriesView,
+  isSyncShelfEnabled,
   recentlyUpdatedMap,
   thumbnailWidth,
-  isPurchasedBook,
 }) => {
+  const {
+    unit_count: bookCount,
+    remain_time: expiredAt,
+    expire_date: expireDate,
+    is_ridiselect: isRidiselect,
+    unit_type: unitType,
+    unit_title: unitTitle,
+    b_id: bookId,
+    purchase_date: purchaseDate,
+    unit_id: unitId,
+  } = libraryBookData;
   const bookMetaData = new BookMetaData(platformBookData);
-  const isAdultOnly = platformBookData.property.is_adult_only;
-  const isRidiselect = libraryBookData.is_ridiselect;
-  const isExpired = !isRidiselect && libraryBookData.expire_date && isAfter(new Date(), libraryBookData.expire_date);
-  const expiredAt = libraryBookData.remain_time;
-  const isUnitBook = libraryBookData.unit_type && !UnitType.isBook(libraryBookData.unit_type);
-  const bookCount = libraryBookData.unit_count;
-  const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
-  const isNotAvailable = libraryBookData.expire_date ? isAfter(new Date(), libraryBookData.expire_date) : false;
-  const isRidiselectSingleUnit = isRidiselect && isUnitBook && bookCount === 1;
 
+  const bookCountUnit = platformBookData.series?.property?.unit || Book.BookCountUnit.Single;
+  const isAdultOnly = platformBookData.property.is_adult_only;
+  const isExpired = !isRidiselect && expireDate && isAfter(new Date(), expireDate);
+  const isNotAvailable = expireDate ? isAfter(new Date(), expireDate) : false;
+  const isPurchasedBook = !!purchaseDate;
+  const isCollectionBook = unitType && UnitType.isCollection(unitType);
+  const isUnitBook = unitType && !UnitType.isBook(unitType);
+  const unit = units && units[unitId] ? units[unitId] : null;
+
+  const isRidiselectSingleUnit = isRidiselect && isUnitBook && bookCount === 1;
   let updateBadge = false;
   if (platformBookData.series) {
     if (isSeriesView) {
@@ -58,7 +72,7 @@ const toProps = ({
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
   const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
-  const title = unit ? unit.title : libraryBookData.unit_title || platformBookData.title.main;
+  const title = unit ? unit.title : unitTitle || platformBookData.title.main;
 
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
@@ -68,13 +82,14 @@ const toProps = ({
     notAvailable: isNotAvailable,
     updateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook,
+    selectMode: isSelectMode && isPurchasedBook && !(isSyncShelfEnabled && isCollectionBook),
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
     onSelectedChange: () => onSelectedChange(bookId),
     thumbnailLink,
   };
+
   const portraitBookProps = {
     thumbnailWidth,
     expiredAt,
@@ -86,15 +101,22 @@ const toProps = ({
     expiredAt,
   };
 
-  return merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps);
+  return {
+    isPurchasedBook,
+    isCollectionBook,
+    libraryBookProps: merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
+    thumbnailLink,
+  };
 };
 
 const mapStateToProps = state => ({
-  selectedBooks: getSelectedBooks(state),
+  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
+  selectedBooks: getSelectedItems(state),
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleBook,
+  onSelectedChange: toggleItem,
+  dispatchShowShelfBookAlertToast: showShelfBookAlertToast,
 };
 
 export const Books = connect(
@@ -104,6 +126,7 @@ export const Books = connect(
   const isLoaded = true;
   const {
     libraryBookDTO,
+    bookIds,
     platformBookDTO,
     units,
     selectedBooks,
@@ -112,11 +135,16 @@ export const Books = connect(
     viewType,
     linkBuilder,
     isSeriesView,
+    isSyncShelfEnabled,
     recentlyUpdatedMap,
+    dispatchShowShelfBookAlertToast,
   } = props;
   const [thumbnailWidth, setThumbnailWidth] = useState('100%');
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
+  };
+  const handleShelfBookAlert = () => {
+    dispatchShowShelfBookAlertToast();
   };
   useEffect(
     () => {
@@ -129,14 +157,24 @@ export const Books = connect(
     [isLoaded],
   );
 
+  // TODO: compat
+  let finalBookIds = [];
+  let libraryBookMap = new Map();
+  if (libraryBookDTO != null) {
+    finalBookIds = libraryBookDTO.map(book => book.b_id);
+    libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
+  }
+  if (finalBookIds.length === 0) {
+    finalBookIds = bookIds;
+  }
   return (
     <BooksWrapper
       viewType={viewType}
-      books={libraryBookDTO}
-      renderBook={({ book: libraryBookData, className }) => {
-        const bookId = libraryBookData.b_id;
+      books={finalBookIds}
+      renderBook={({ book: bookId, className }) => {
+        const libraryBookData = libraryBookMap.get(bookId);
         const platformBookData = platformBookDTO[bookId];
-        if (!platformBookData) {
+        if (!libraryBookData || !platformBookData) {
           return viewType === ViewType.PORTRAIT ? (
             <div key={bookId} className={className} css={styles.portrait}>
               <PortraitBook />
@@ -147,43 +185,41 @@ export const Books = connect(
             </div>
           );
         }
-        const isPurchasedBook = !!libraryBookData.purchase_date;
-        const unit = units && units[libraryBookData.unit_id] ? units[libraryBookData.unit_id] : null;
         if (platformBookData.isDeleted) return null;
 
         const isSelected = !!selectedBooks[bookId];
-        const libraryBookProps = toProps({
-          bookId,
+        const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
           libraryBookData,
           platformBookData,
-          unit,
+          units,
           isSelectMode,
           isSelected,
           onSelectedChange,
           viewType,
           linkBuilder,
           isSeriesView,
+          isSyncShelfEnabled,
           recentlyUpdatedMap,
           thumbnailWidth,
-          isPurchasedBook,
         });
-        const { thumbnailLink } = libraryBookProps;
 
         return viewType === ViewType.PORTRAIT ? (
           <div key={bookId} className={className} css={styles.portrait}>
             <Book.PortraitBook {...libraryBookProps} />
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         ) : (
           <div key={bookId} className={className} css={styles.landscape}>
             <Book.LandscapeBook {...libraryBookProps} />
             {isSelectMode && !isPurchasedBook && <Disabled />}
-            {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+            {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
+            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
           </div>
         );
       }}
     >
       {({ books }) => {
-        const libraryBooksCount = libraryBookDTO.length;
+        const libraryBooksCount = finalBookIds.length;
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (

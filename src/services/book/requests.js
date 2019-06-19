@@ -1,5 +1,6 @@
 import { captureMessage } from '@sentry/browser';
 import { put } from 'redux-saga/effects';
+import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
 
 import config from '../../config';
@@ -112,4 +113,49 @@ export function* fetchUnitIdMap(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books/units/ids', null, config.LIBRARY_API_BASE_URL), data);
   return response.data;
+}
+
+export async function fetchLibraryBookData(bookIds) {
+  const options = {
+    b_ids: bookIds,
+  };
+  const api = getApiSingleton();
+  const response = await api.post(makeURI(`/items`, {}, config.LIBRARY_API_BASE_URL), options);
+  return response.data;
+}
+
+export async function fetchLibraryUnitData(units) {
+  if (units.length === 0) {
+    return [];
+  }
+  const api = getApiSingleton();
+  const unitIds = units.map(({ unitId }) => unitId);
+  const itemResponse = await api.post(makeURI('/items/units/', {}, config.LIBRARY_API_BASE_URL), { unit_ids: unitIds });
+  const itemResponseMap = new Map(itemResponse.data.items.map(item => [String(item.unit_id), item]));
+  const unitsNeedFetch = units.filter(({ unitId }) => !itemResponseMap.has(String(unitId))).map(({ unitId }) => unitId);
+  let unitResponseMap = new Map();
+  if (unitsNeedFetch.length > 0) {
+    const unitResponse = await api.post(makeURI('/books/units/', {}, config.LIBRARY_API_BASE_URL), { unit_ids: unitsNeedFetch });
+    unitResponseMap = new Map(unitResponse.data.units.map(unit => [String(unit.id), unit]));
+  }
+
+  return units.map(({ unitId, fallbackBookId }) => {
+    const unitIdStr = String(unitId);
+    const bookDetail = itemResponseMap.get(unitIdStr);
+    if (bookDetail != null) {
+      return bookDetail;
+    }
+    const unit = unitResponseMap.get(unitIdStr);
+    return {
+      remain_time: '',
+      expire_date: '9999-12-31T23:59:59+09:00',
+      is_ridiselect: false,
+      b_id: fallbackBookId || '',
+      purchase_date: new Date(0).toISOString(),
+      unit_id: unitIdStr,
+      unit_type: unit.type,
+      unit_title: unit.title,
+      unit_count: unit.total_count,
+    };
+  });
 }

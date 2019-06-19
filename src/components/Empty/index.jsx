@@ -2,14 +2,14 @@
 import { jsx } from '@emotion/core';
 
 const styles = {
-  bookListIsEmpty: {
+  wrapper: {
     position: 'relative',
     color: '#40474d',
     width: '100%',
     height: '100%',
     minHeight: 400,
   },
-  in: {
+  contents: {
     width: 300,
     height: 100,
     display: 'inline-block',
@@ -27,11 +27,11 @@ const styles = {
   },
 };
 
-const EmptyBookList = ({ message, IconComponent, iconWidth = 30, iconHeight = 38 }) => {
+const Empty = ({ message, IconComponent, iconWidth = 30, iconHeight = 38 }) => {
   const iconSize = { width: iconWidth, height: iconHeight };
   return (
-    <div css={styles.bookListIsEmpty}>
-      <div css={styles.in}>
+    <div css={styles.wrapper}>
+      <div css={styles.contents}>
         {IconComponent && <IconComponent css={[styles.icon, iconSize]} />}
         <br />
         {message}
@@ -40,4 +40,4 @@ const EmptyBookList = ({ message, IconComponent, iconWidth = 30, iconHeight = 38
   );
 };
 
-export default EmptyBookList;
+export default Empty;

@@ -1,16 +1,17 @@
-import { call, put, all, takeEvery } from 'redux-saga/effects';
+import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderBy, OrderType } from '../../constants/orderOptions';
 import { delay } from '../../utils/delay';
-
-import { convertUriToAndroidIntentUri } from '../../utils/uri';
 import { getDeviceInfo } from '../../utils/device';
-import { getBookIdsByUnitIds } from '../common/sagas';
+import { convertUriToAndroidIntentUri } from '../../utils/uri';
 
+import { getBookIdsByUnitIds } from '../common/sagas';
+import * as selectionSelectors from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { Duration, ToastStyle } from '../toast/constants';
-import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, setBookDownloadSrc } from './actions';
-import { DownloadError } from './errors';
 
+import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, setBookDownloadSrc } from './actions';
+import { DownloadError } from './errors';
 import { triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
@@ -45,7 +46,15 @@ function* _showViewerGuildLink(isIos, isAndroid) {
   // eslint-disable-next-line no-nested-ternary
   const link = isIos ? appStoreLink : isAndroid ? playStoreLink : helpLink;
 
-  yield put(showToast(message, linkName, null, link, Duration.VERY_LONG, ToastStyle.BLUE));
+  yield put(
+    showToast({
+      message,
+      linkName,
+      outLink: link,
+      duration: Duration.VERY_LONG,
+      toastStyle: ToastStyle.BLUE,
+    }),
+  );
 }
 
 export function* _download(bookIds, url) {
@@ -64,11 +73,11 @@ export function* _download(bookIds, url) {
 
 export function* downloadBooks(bookIds) {
   const triggerResponse = yield call(triggerDownload, bookIds);
-
-  if (triggerResponse.result) {
-    yield call(_download, triggerResponse.b_ids, triggerResponse.url);
+  const { result: responseResult, b_ids: downloadableBookIds, url: downloadUrl, message } = triggerResponse;
+  if (responseResult) {
+    yield call(_download, downloadableBookIds, downloadUrl);
   } else {
-    yield put(showToast(triggerResponse.message));
+    yield put(showToast({ message }));
   }
 }
 
@@ -82,11 +91,19 @@ export function* downloadBookActionAdaptor(action) {
   yield call(downloadBooks, action.payload.bookIds);
 }
 
+function* downloadSelectedBooksActionAdaptor() {
+  const bookIds = yield select(selectionSelectors.getSelectedItemIds);
+  yield call(downloadBooks, bookIds);
+}
+
 export function* downloadBooksByUnitIdsActionAdaptor(action) {
   yield call(downloadBooksByUnitIds, action.payload.unitIds);
 }
 
 export default function* commonRootSaga() {
-  yield all([takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor)]);
-  yield all([takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor)]);
+  yield all([
+    takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor),
+    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooksActionAdaptor),
+    takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor),
+  ]);
 }

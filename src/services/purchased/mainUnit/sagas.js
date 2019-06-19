@@ -35,8 +35,8 @@ import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryIte
 import { getItemsByPage, getOptions, getPrimaryItem, getUnitId } from './selectors';
 import { fetchPrimaryBookId } from '../../book/requests';
 import { setPrimaryBookId } from '../common/actions';
-import { selectBooks } from '../../selection/actions';
-import { getSelectedBooks } from '../../selection/selectors';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);
@@ -137,7 +137,7 @@ function* loadItems() {
 
 function* hideSelectedBooks() {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   let queueIds;
   try {
@@ -164,18 +164,18 @@ function* hideSelectedBooks() {
   }
   yield all([
     put(
-      showToast(
-        isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
-        '숨긴 도서 목록 보기',
-        makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
-      ),
+      showToast({
+        message: isFinish ? '내 서재에서 숨겼습니다.' : '내 서재에서 숨겼습니다. 잠시후 반영 됩니다.',
+        linkName: '숨긴 도서 목록 보기',
+        linkProps: makeLinkProps(URLMap.hidden.href, URLMap.hidden.as),
+      }),
     ),
     put(setFullScreenLoading(false)),
   ]);
 }
 
 function* downloadSelectedBooks() {
-  const selectedBooks = yield select(getSelectedBooks);
+  const selectedBooks = yield select(getSelectedItems);
 
   try {
     const bookIds = Object.keys(selectedBooks);
@@ -188,7 +188,7 @@ function* downloadSelectedBooks() {
 function* selectAllBooks() {
   const items = yield select(getItemsByPage);
   const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
-  yield put(selectBooks(bookIds));
+  yield put(selectItems(bookIds));
 }
 
 export default function* purchaseMainUnitRootSaga() {

@@ -1,15 +1,23 @@
 import { createSelector } from 'reselect';
 import createCachedSelector from 're-reselect';
 
-export const getSelectedBooks = state => state.selection;
+export const getSelectedItems = state => state.selection;
 
-export const getIsBookSelected = createCachedSelector(
-  getSelectedBooks,
-  (state, bookId) => bookId,
-  (selection, bookId) => Boolean(selection[bookId]),
-)((state, bookId) => bookId);
+export const getSelectedItemIds = createSelector(
+  getSelectedItems,
+  selection =>
+    Object.entries(selection)
+      .filter(([, value]) => value)
+      .map(([itemId]) => itemId),
+);
+
+export const getIsItemSelected = createCachedSelector(
+  getSelectedItems,
+  (state, itemId) => itemId,
+  (selection, itemId) => Boolean(selection[itemId]),
+)((state, itemId) => itemId);
 
 export const getTotalSelectedCount = createSelector(
-  getSelectedBooks,
-  books => Object.values(books).filter(x => x).length,
+  getSelectedItems,
+  items => Object.values(items).filter(x => x).length,
 );

@@ -50,6 +50,7 @@ export const booksWrapper = (viewType, additionalPadding) => {
 export const portrait = {
   display: 'flex',
   alignItems: 'flex-end',
+  position: 'relative',
 
   '.PortraitBook': {
     width: '100%',

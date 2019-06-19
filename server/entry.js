@@ -1,4 +1,6 @@
 const path = require('path');
+const url = require('url');
+const axios = require('axios');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const next = require('next');
@@ -14,7 +16,34 @@ const app = next({
 // next가 로드된 후 불러와야함
 const routes = require('./routes');
 
-const handle = routes.getRequestHandler(app);
+const handle = routes.getRequestHandler(app, async ({ req, res, route, query }) => {
+  const token = req.cookies['ridi-at'];
+  if (route.page !== '/login') {
+    let needRefresh = false;
+    if (token == null) {
+      needRefresh = true;
+    } else {
+      try {
+        await axios.get('/accounts/me/', {
+          baseURL: nextConfig.publicRuntimeConfig.ACCOUNT_BASE_URL,
+          headers: {
+            Cookie: `ridi-at=${token};`,
+          },
+        });
+      } catch (err) {
+        needRefresh = true;
+      }
+    }
+    if (needRefresh) {
+      const search = new url.URLSearchParams({ next: req.url });
+      const location = `/login?${search}`;
+      res.redirect(location);
+      return;
+    }
+  }
+  req.token = token;
+  app.render(req, res, route.page, query);
+});
 
 app
   .prepare()
@@ -30,11 +59,6 @@ app
 
     const ssrRouter = express.Router();
     ssrRouter.use(cookieParser());
-    ssrRouter.use((req, _, _next) => {
-      const token = req.cookies['ridi-at'];
-      req.token = token;
-      _next();
-    });
     ssrRouter.get('*', (req, res) => handle(req, res));
     server.use('/', ssrRouter);
 

@@ -12,7 +12,7 @@ import BookOutline from '../svgs/BookOutline.svg';
 import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
 import { Books } from './Books';
 import Editable from './Editable';
-import EmptyBookList from './EmptyBookList';
+import Empty from './Empty';
 import HorizontalRuler from './HorizontalRuler';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
@@ -26,9 +26,6 @@ const seriesListStyle = {
 class SeriesList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isEditing: false,
-    };
     this.seriesListRef = React.createRef();
   }
 
@@ -52,39 +49,23 @@ class SeriesList extends React.Component {
   }
 
   toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing });
+    const { isEditing, onEditingChange } = this.props;
+    onEditingChange && onEditingChange(!isEditing);
   };
 
   makeEditingBarProps() {
-    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks } = this.props;
+    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks, onEditingChange } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.filter(item => item.purchased).length;
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks,
-      onClickUnselectAllBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: onClickSelectAllBooks,
+      onClickUnselectAllItem: onClickUnselectAllBooks,
       onClickSuccessButton: () => {
         onClickUnselectAllBooks();
-        this.setState({ isEditing: false });
+        onEditingChange(false);
       },
-    };
-  }
-
-  wrapActionBarProps() {
-    const { actionBarProps } = this.props;
-
-    const _wrapOnClick = onClick => () => {
-      onClick();
-      this.setState({ isEditing: false });
-    };
-
-    return {
-      buttonProps: actionBarProps.buttonProps.map(buttonProp => ({
-        ...buttonProp,
-        onClick: _wrapOnClick(buttonProp.onClick),
-      })),
     };
   }
 
@@ -106,7 +87,7 @@ class SeriesList extends React.Component {
     );
   }
 
-  getEmptyBookListMessage(defaultMessage) {
+  getEmptyMessage(defaultMessage) {
     const { currentOrder } = this.props;
 
     if (!currentOrder) {
@@ -123,10 +104,10 @@ class SeriesList extends React.Component {
   }
 
   renderBooks() {
-    const { isEditing } = this.state;
     const {
       primaryItem,
       items,
+      isEditing,
       books,
       isFetching,
       unit,
@@ -142,7 +123,7 @@ class SeriesList extends React.Component {
 
     // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
     if (!isFetching && items.length === 0) {
-      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage(message)} />;
+      return <Empty IconComponent={BookOutline} message={this.getEmptyMessage(message)} />;
     }
 
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
@@ -186,7 +167,7 @@ class SeriesList extends React.Component {
   }
 
   render() {
-    const { isEditing } = this.state;
+    const { actionBarProps, isEditing } = this.props;
 
     return (
       <div css={seriesListStyle} ref={this.seriesListRef}>
@@ -196,7 +177,7 @@ class SeriesList extends React.Component {
           isEditing={isEditing}
           nonEditBar={this.renderSeriesToolBar()}
           editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.wrapActionBarProps()}
+          actionBarProps={actionBarProps}
         >
           <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
           {this.renderPaginator()}

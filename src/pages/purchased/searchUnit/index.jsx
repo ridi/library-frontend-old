@@ -12,7 +12,8 @@ import {
   selectAllBooks,
   setUnitId,
 } from '../../../services/purchased/searchUnit/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
+import * as shelfSelectors from '../../../services/shelf/selectors';
 import {
   getIsFetchingBook,
   getItemsByPage,
@@ -28,8 +29,11 @@ import UnitPageTemplate from '../../base/UnitPageTemplate';
 class searchUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
+    return {
+      uuid: query.uuid,
+    };
   }
 
   render() {
@@ -54,6 +58,7 @@ const mapStateToProps = state => {
 
   const pageInfo = getPageInfo(state);
   const searchPageInfo = getSearchPageInfo(state);
+  const shelfPageOptions = shelfSelectors.getDetailPageOptions(state);
 
   return {
     pageInfo,
@@ -69,6 +74,7 @@ const mapStateToProps = state => {
     isFetchingBook,
 
     searchPageInfo,
+    shelfPageOptions,
     isError: state.ui.isError,
   };
 };
@@ -76,7 +82,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
@@ -86,6 +92,7 @@ const mergeProps = (state, actions, props) => {
     unitId,
     pageInfo: { keyword, currentPage, totalPages, orderType, orderBy },
     searchPageInfo,
+    shelfPageOptions,
   } = state;
 
   const pageProps = {
@@ -96,11 +103,21 @@ const mergeProps = (state, actions, props) => {
     query: { orderType, orderBy },
   };
 
-  const backPageProps = {
-    href: URLMap[PageType.SEARCH].href,
-    as: URLMap[PageType.SEARCH].as,
-    query: { keyword, page: searchPageInfo.currentPage },
-  };
+  let backPageProps;
+  if (props.uuid) {
+    const { uuid } = props;
+    backPageProps = {
+      href: { pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } },
+      as: URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+      query: shelfPageOptions,
+    };
+  } else {
+    backPageProps = {
+      href: URLMap[PageType.SEARCH].href,
+      as: URLMap[PageType.SEARCH].as,
+      query: { keyword, page: searchPageInfo.currentPage },
+    };
+  }
 
   return {
     ...state,

@@ -4,41 +4,45 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Books } from '../../../components/Books';
+import { ButtonType } from '../../../components/ActionBar/constants';
 import BookDownLoader from '../../../components/BookDownLoader';
+import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
-import EmptyBookList from '../../../components/EmptyBookList';
+import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
+import SelectShelfModal from '../../../components/SelectShelfModal';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import Toast from '../../../components/Toast';
+import * as featureIds from '../../../constants/featureIds';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
+import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
+import * as featureSelectors from '../../../services/feature/selectors';
+import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
-import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
+  getBooksByPage,
+  getFilter,
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
-  getBooksByPage,
-  getUnitIdsByPage,
   getLastBookIdsByPage,
-  getPage,
   getOrder,
-  getFilter,
+  getPage,
   getTotalPages,
+  getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
-import { Duration, ToastStyle } from '../../../services/toast/constants';
+import { clearSelectedItems } from '../../../services/selection/actions';
+import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
-import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 
 class Main extends React.PureComponent {
   static async getInitialProps({ query, req, store }) {
@@ -49,7 +53,7 @@ class Main extends React.PureComponent {
     const categoryFilter = parseInt(query.filter, 10) || null;
 
     const params = { currentPage, orderType, orderBy, categoryFilter };
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems(params, isServer));
   }
 
@@ -58,6 +62,7 @@ class Main extends React.PureComponent {
 
     this.state = {
       isEditing: false,
+      showShelves: false,
     };
   }
 
@@ -88,37 +93,83 @@ class Main extends React.PureComponent {
     this.setState({ isEditing: false });
   };
 
+  handleAddToShelf = () => {
+    this.setState({ showShelves: true });
+  };
+
+  handleShelfBackClick = () => {
+    this.setState({ showShelves: false });
+  };
+
+  handleShelfSelect = uuid => {
+    this.props.dispatchAddSelectedToShelf({
+      uuid,
+      onComplete: () => {
+        this.setState({ isEditing: false, showShelves: false });
+        this.props.dispatchClearSelectedBooks();
+      },
+    });
+  };
+
   makeEditingBarProps() {
-    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }
 
   makeActionBarProps() {
-    const { totalSelectedCount } = this.props;
+    const { isSyncShelfEnabled, totalSelectedCount } = this.props;
     const disable = totalSelectedCount === 0;
 
-    return {
-      buttonProps: [
+    let buttonProps;
+    if (isSyncShelfEnabled) {
+      buttonProps = [
+        {
+          name: '숨기기',
+          onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '책장에 추가',
+          onClick: this.handleAddToShelf,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '다운로드',
+          onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ];
+    } else {
+      buttonProps = [
         {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
           disable,
         },
         {
+          type: ButtonType.SPACER,
+        },
+        {
           name: '선택 다운로드',
           onClick: this.handleOnClickDownload,
           disable,
         },
-      ],
-    };
+      ];
+    }
+
+    return { buttonProps };
   }
 
   renderSearchBar() {
@@ -191,7 +242,7 @@ class Main extends React.PureComponent {
     );
   }
 
-  getEmptyBookListMessage() {
+  getEmptyMessage() {
     const { orderType, orderBy } = this.props;
     const order = OrderOptions.toKey(orderType, orderBy);
 
@@ -209,7 +260,7 @@ class Main extends React.PureComponent {
     const { listInstruction } = this.props;
 
     if (listInstruction === ListInstructions.EMPTY) {
-      return <EmptyBookList IconComponent={BookOutline} message={this.getEmptyBookListMessage()} />;
+      return <Empty IconComponent={BookOutline} message={this.getEmptyMessage()} />;
     }
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
@@ -234,8 +285,19 @@ class Main extends React.PureComponent {
   };
 
   render() {
-    const { isEditing } = this.state;
+    const { isEditing, showShelves } = this.state;
     const { isError } = this.props;
+
+    if (showShelves) {
+      return (
+        <>
+          <Head>
+            <title>모든 책 - 내 서재</title>
+          </Head>
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
+        </>
+      );
+    }
 
     return (
       <>
@@ -274,6 +336,7 @@ const mapStateToProps = state => {
   const isFetchingBooks = getIsFetchingBooks(state);
   const lastBookIds = getLastBookIdsByPage(state);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
+  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   let listInstruction;
   if (items.length !== 0) {
@@ -298,15 +361,17 @@ const mapStateToProps = state => {
     listInstruction,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
+    isSyncShelfEnabled,
   };
 };
 
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
 };
 
 export default connect(

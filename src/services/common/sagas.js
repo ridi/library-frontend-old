@@ -90,14 +90,13 @@ function* loadActualPage() {
     } else {
       Router.replace(URLMap.index.href, URLMap.index.as);
     }
-
-    return;
   }
 
   // Step 5. 로그인이 되어있고, 로그인 페이지로 접근하는게 아닌 상태일때 원래 페이지를 로드한다.
+  // TODO: SSR로 전환하면 이 줄 지울 것
   Router.replace(currentLinkProps.href, currentLinkProps.as);
 }
 
 export default function* commonRootSaga() {
-  yield all([loadActualPage()]);
+  yield all([call(loadActualPage)]);
 }

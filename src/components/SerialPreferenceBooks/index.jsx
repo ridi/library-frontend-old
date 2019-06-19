@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 import config from '../../config';
 import Genre from '../../constants/category';
 import { getLocationHref } from '../../services/router/selectors';
-import { toggleBook } from '../../services/selection/actions';
-import { getSelectedBooks } from '../../services/selection/selectors';
+import { toggleItem } from '../../services/selection/actions';
+import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import BookMetaData from '../../utils/bookMetaData';
@@ -16,7 +16,7 @@ import { EmptySeries } from '../../utils/dataObject';
 import { notifyMessage } from '../../utils/sentry';
 import { makeWebViewerURI } from '../../utils/uri';
 import BooksWrapper from '../BooksWrapper';
-import LandscapeFullButton from './LandscapeFullButton';
+import FullButton from './FullButton';
 import * as serialPreferenceStyles from './styles';
 
 const toProps = ({
@@ -131,7 +131,7 @@ class SerialPreferenceBooks extends React.Component {
           return (
             <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
               <Book.LandscapeBook {...libraryBookProps} />
-              {!isSelectMode && thumbnailLink && <LandscapeFullButton thumbnailLink={thumbnailLink} />}
+              {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
             </div>
           );
         }}
@@ -142,11 +142,11 @@ class SerialPreferenceBooks extends React.Component {
 
 const mapStateToProps = state => ({
   locationHref: getLocationHref(state),
-  selectedBooks: getSelectedBooks(state),
+  selectedBooks: getSelectedItems(state),
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleBook,
+  onSelectedChange: toggleItem,
 };
 
 export default connect(

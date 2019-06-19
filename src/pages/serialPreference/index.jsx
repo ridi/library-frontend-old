@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
-import EmptyBookList from '../../components/EmptyBookList';
+import Empty from '../../components/Empty';
 import ResponsivePaginator from '../../components/ResponsivePaginator';
 import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
@@ -14,7 +14,7 @@ import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
-import { clearSelectedBooks } from '../../services/selection/actions';
+import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
@@ -25,7 +25,7 @@ import { ResponsiveBooks } from '../base/Responsive';
 
 class SerialPreference extends React.Component {
   static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
   }
 
@@ -62,9 +62,9 @@ class SerialPreference extends React.Component {
 
     return {
       totalSelectedCount,
-      isSelectedAllBooks,
-      onClickSelectAllBooks: dispatchSelectAllBooks,
-      onClickUnselectAllBooks: dispatchClearSelectedBooks,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
   }
@@ -75,6 +75,9 @@ class SerialPreference extends React.Component {
 
     return {
       buttonProps: [
+        {
+          type: ButtonType.SPACER,
+        },
         {
           name: '선택 삭제',
           type: ButtonType.DANGER,
@@ -123,7 +126,7 @@ class SerialPreference extends React.Component {
     const { items, isFetchingBooks } = this.props;
 
     if (!isFetchingBooks && items.length === 0) {
-      return <EmptyBookList IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
+      return <Empty IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
     }
 
     return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
@@ -194,7 +197,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 

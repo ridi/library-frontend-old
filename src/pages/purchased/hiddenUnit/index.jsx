@@ -14,7 +14,7 @@ import {
   setUnitId,
   unhideSelectedBooks,
 } from '../../../services/purchased/hiddenUnit/actions';
-import { clearSelectedBooks } from '../../../services/selection/actions';
+import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import {
   getIsFetchingBook,
@@ -37,8 +37,16 @@ import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 class HiddenUnit extends React.Component {
   static async getInitialProps({ store, query }) {
     await store.dispatch(setUnitId(query.unit_id));
-    await store.dispatch(clearSelectedBooks());
+    await store.dispatch(clearSelectedItems());
     await store.dispatch(loadItems());
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isEditing: false,
+    };
   }
 
   handleOnClickUnhide = () => {
@@ -46,6 +54,7 @@ class HiddenUnit extends React.Component {
 
     dispatchUnhideSelectedBooks();
     dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
   };
 
   deleteSelectedBooks = () => {
@@ -53,21 +62,26 @@ class HiddenUnit extends React.Component {
 
     dispatchDeleteSelectedBooks();
     dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
   };
 
   handleOnClickDelete = () => {
-    this.props.dispatchShowConfirm(
-      '영구 삭제',
-      <>
-        내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
-        <br />
-        <br />
-        그래도 삭제하시겠습니까?
-      </>,
-      '삭제',
-      this.deleteSelectedBooks,
-    );
+    this.props.dispatchShowConfirm({
+      title: '영구 삭제',
+      message: (
+        <>
+          내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+          <br />
+          <br />
+          그래도 삭제하시겠습니까?
+        </>
+      ),
+      confirmLabel: '삭제',
+      onClickConfirmButton: this.deleteSelectedBooks,
+    });
   };
+
+  handleEditingChange = isEditing => this.setState({ isEditing });
 
   makeActionBarProps() {
     const { isSelected } = this.props;
@@ -80,6 +94,9 @@ class HiddenUnit extends React.Component {
           type: ButtonType.DANGER,
           onClick: this.handleOnClickDelete,
           disable,
+        },
+        {
+          type: ButtonType.SPACER,
         },
         {
           name: '선택 숨김 해제',
@@ -141,6 +158,7 @@ class HiddenUnit extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
+    const { isEditing } = this.state;
 
     if (!books[primaryBookId]) {
       return null;
@@ -157,6 +175,8 @@ class HiddenUnit extends React.Component {
         actionBarProps={this.makeActionBarProps()}
         emptyProps={{ icon: 'book_5', message: '숨긴 도서가 없습니다.' }}
         isFetching={isFetchingBook}
+        isEditing={isEditing}
+        onEditingChange={this.handleEditingChange}
         items={items}
         books={books}
         unit={unit}
@@ -233,7 +253,7 @@ const mapDispatchToProps = {
   dispatchShowConfirm: showConfirm,
   dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedBooks,
+  dispatchClearSelectedBooks: clearSelectedItems,
   dispatchUnhideSelectedBooks: unhideSelectedBooks,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };

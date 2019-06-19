@@ -5,21 +5,36 @@ import React from 'react';
 import { connect } from 'react-redux';
 import BookDownLoader from '../../components/BookDownLoader';
 import UnitDetailView from '../../components/UnitDetailView';
+import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import Responsive from './Responsive';
+import { ButtonType } from '../../components/ActionBar/constants';
+import SelectShelfModal from '../../components/SelectShelfModal';
 import TitleBar from '../../components/TitleBar';
 import { OrderOptions } from '../../constants/orderOptions';
 import SeriesList from '../../components/SeriesList';
 import { BookError } from '../../components/Error';
 
+import * as featureSelectors from '../../services/feature/selectors';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
+import * as shelfActions from '../../services/shelf/actions';
 
 class UnitPageTemplate extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isEditing: false,
+      showShelves: false,
+    };
+  }
+
   handleOnClickHide = () => {
     const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
     dispatchHideSelectedBooks();
     dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
   };
 
   handleOnClickDownload = () => {
@@ -27,25 +42,92 @@ class UnitPageTemplate extends React.Component {
 
     dispatchDownloadSelectedBooks();
     dispatchClearSelectedBooks();
+    this.setState({ isEditing: false });
+  };
+
+  handleAddToShelf = () => {
+    this.setState({ showShelves: true });
+  };
+
+  handleShelfBackClick = () => {
+    this.setState({ showShelves: false });
+  };
+
+  handleEditingChange = isEditing => this.setState({ isEditing });
+
+  handleShelfSelect = uuid => {
+    this.props.dispatchAddSelectedToShelf({
+      uuid,
+      onComplete: () => {
+        this.setState({ isEditing: false, showShelves: false });
+        this.props.dispatchClearSelectedBooks();
+      },
+    });
   };
 
   makeActionBarProps() {
-    const { isSelected } = this.props;
+    const { unit, isSelected, isSyncShelfEnabled } = this.props;
     const disable = !isSelected;
-    return {
-      buttonProps: [
+
+    let buttonProps;
+    if (isSyncShelfEnabled) {
+      if (UnitType.isCollection(unit.type)) {
+        buttonProps = [
+          {
+            name: '숨기기',
+            onClick: this.handleOnClickHide,
+            disable,
+          },
+          {
+            name: '책장에 추가',
+            onClick: this.handleAddToShelf,
+            disable,
+          },
+          {
+            type: ButtonType.SPACER,
+          },
+          {
+            name: '다운로드',
+            onClick: this.handleOnClickDownload,
+            disable,
+          },
+        ];
+      } else {
+        buttonProps = [
+          {
+            name: '숨기기',
+            onClick: this.handleOnClickHide,
+            disable,
+          },
+          {
+            type: ButtonType.SPACER,
+          },
+          {
+            name: '다운로드',
+            onClick: this.handleOnClickDownload,
+            disable,
+          },
+        ];
+      }
+    } else {
+      buttonProps = [
         {
           name: '선택 숨기기',
           onClick: this.handleOnClickHide,
           disable,
         },
         {
+          type: ButtonType.SPACER,
+        },
+        {
           name: '선택 다운로드',
           onClick: this.handleOnClickDownload,
           disable,
         },
-      ],
-    };
+      ];
+    }
+
+    return { buttonProps };
   }
 
   renderTitleBar() {
@@ -101,6 +183,7 @@ class UnitPageTemplate extends React.Component {
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
+    const { isEditing } = this.state;
     if (!books[primaryBookId]) {
       return null;
     }
@@ -117,6 +200,8 @@ class UnitPageTemplate extends React.Component {
         currentOrder={order}
         orderOptions={orderOptions}
         isFetching={isFetchingBook}
+        isEditing={isEditing}
+        onEditingChange={this.handleEditingChange}
         primaryItem={primaryItem}
         items={items}
         books={books}
@@ -140,6 +225,18 @@ class UnitPageTemplate extends React.Component {
 
   render() {
     const { unit, isError, dispatchLoadItems } = this.props;
+    const { showShelves } = this.state;
+
+    if (showShelves) {
+      return (
+        <>
+          <Head>
+            <title>{unit.title ? `${unit.title} - ` : ''}내 서재</title>
+          </Head>
+          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
+        </>
+      );
+    }
 
     return (
       <>
@@ -156,6 +253,14 @@ class UnitPageTemplate extends React.Component {
 
 const mapStateToProps = state => ({
   isSelected: getTotalSelectedCount(state) !== 0,
+  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
 });
 
-export default connect(mapStateToProps)(UnitPageTemplate);
+const mapDispatchToProps = {
+  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UnitPageTemplate);
