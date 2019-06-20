@@ -28,10 +28,14 @@ const ResponsiveCountWrapper = responsiveMetaStyles(
   `,
 );
 
+const WrapperBorderRadius = 4;
+const WrapperBorderWidth = 1;
+const InnerBorderRadius = WrapperBorderRadius - WrapperBorderWidth;
+
 export const shelfStyles = {
   wrapper: css`
-    border: 1px solid #d1d5d9;
-    border-radius: 4px;
+    border: ${WrapperBorderWidth}px solid #d1d5d9;
+    border-radius: ${WrapperBorderRadius}px;
     background: white;
     position: relative;
     box-sizing: border-box;
@@ -49,7 +53,7 @@ export const shelfStyles = {
     display: flex;
     flex-flow: row nowrap;
     border-bottom: 1px solid #d1d5d9;
-    border-radius: 4px 4px 0 0;
+    border-radius: ${InnerBorderRadius}px ${InnerBorderRadius}px 0 0;
     overflow: hidden;
   `,
   thumbnail: css`
@@ -73,7 +77,7 @@ export const shelfStyles = {
   `,
   infoWrapper: css`
     background: white;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 ${InnerBorderRadius}px ${InnerBorderRadius}px;
   `,
   nameWrapper: css`
     ${responsiveNameWrapper}
