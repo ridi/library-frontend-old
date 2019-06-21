@@ -4,7 +4,9 @@ import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { showToast } from '../toast/actions';
 import {
+  LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
+  LOAD_UNIT_DATA,
   setBookData,
   setBookDataFromStorage,
   setBookDescriptions,
@@ -65,6 +67,10 @@ export function* loadBookData(bookIds) {
   // yield fork(persistBookDataToStorage);
 }
 
+function* loadBookDataFromAction({ payload: { bookIds } }) {
+  yield* loadBookData(bookIds);
+}
+
 export function* loadBookDescriptions(bookIds) {
   // Step 1. 시리즈도서인 경우 시리즈 ID 추출
   // 시리즈 도서의 경우 Description 을 시리즈 대표 도서로 노출해야 한다.
@@ -114,6 +120,10 @@ export function* loadUnitData(unitIds) {
   yield put(setUnitData(units));
 }
 
+function* loadUnitDataFromAction({ payload: { unitIds } }) {
+  yield* loadUnitData(unitIds);
+}
+
 export function* loadUnitOrders(unitId, orderType, orderBy, page) {
   const unitOrders = yield call(fetchUnitOrders, unitId, orderType, orderBy, page);
   yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
@@ -133,5 +143,7 @@ export default function* bookRootSaga() {
   yield all([
     takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
     takeEvery(SHOW_SHELF_BOOK_ALERT_TOAST, showShelfBookAlertToast),
+    takeEvery(LOAD_BOOK_DATA, loadBookDataFromAction),
+    takeEvery(LOAD_UNIT_DATA, loadUnitDataFromAction),
   ]);
 }

@@ -268,7 +268,7 @@ function* deleteShelfFromDetail({ payload }) {
 
 function* addSelectedToShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
-  const { onComplete, uuid } = payload;
+  const { isFromShelf, onComplete, pageOptions, uuid } = payload;
   try {
     const count = yield call(requests.fetchShelfBookCount, { uuid });
     if (count >= ITEMS_LIMIT_PER_SHELF) {
@@ -292,19 +292,30 @@ function* addSelectedToShelf({ payload }) {
     }));
     const shelfName = yield select(selectors.getShelfName, uuid);
     yield call(addShelfItem, { payload: { uuid, units } });
-    yield put(
-      toastActions.showToast({
-        message: `"${shelfName}" 책장에 추가했습니다.`,
-        linkName: '책장 바로 보기',
-        linkProps: makeLinkProps(
-          {
-            pathname: URLMap[PageType.SHELF_DETAIL].href,
-            query: { uuid },
-          },
-          URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-        ),
-      }),
-    );
+    if (pageOptions != null) {
+      yield call(loadShelfBooks, false, { payload: { uuid, ...pageOptions } });
+    }
+    if (isFromShelf) {
+      yield put(
+        toastActions.showToast({
+          message: '책장에 추가했습니다.',
+        }),
+      );
+    } else {
+      yield put(
+        toastActions.showToast({
+          message: `"${shelfName}" 책장에 추가했습니다.`,
+          linkName: '책장 바로 보기',
+          linkProps: makeLinkProps(
+            {
+              pathname: URLMap[PageType.SHELF_DETAIL].href,
+              query: { uuid },
+            },
+            URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+          ),
+        }),
+      );
+    }
     onComplete && onComplete();
   } catch (err) {
     console.error(err);

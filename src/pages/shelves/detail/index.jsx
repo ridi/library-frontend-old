@@ -61,6 +61,7 @@ const toolBar = css`
 
 function ShelfDetail(props) {
   const {
+    addSelectedToShelf,
     bookIds,
     clearSelectedBooks,
     removeShelfFromDetail,
@@ -136,6 +137,20 @@ function ShelfDetail(props) {
       });
     },
     [name],
+  );
+  const handleAddSelected = React.useCallback(
+    targetUuid => {
+      addSelectedToShelf({
+        isFromShelf: true,
+        uuid: targetUuid,
+        pageOptions: { orderBy, orderDirection, page },
+        onComplete() {
+          clearSelectedBooks();
+          setIsAdding(false);
+        },
+      });
+    },
+    [orderBy, orderDirection, page],
   );
 
   const linkBuilder = React.useCallback(
@@ -260,7 +275,7 @@ function ShelfDetail(props) {
         <Head>
           <title>{name} - 내 서재</title>
         </Head>
-        <SearchView shelfTitle={name} onBackClick={handleAddBackClick} />
+        <SearchView onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
       </>
     );
   }
@@ -352,6 +367,7 @@ function mapStateToProps(state, props) {
 }
 
 const mapDispatchToProps = {
+  addSelectedToShelf: actions.addSelectedToShelf,
   clearSelectedBooks: selectionActions.clearSelectedItems,
   removeShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,

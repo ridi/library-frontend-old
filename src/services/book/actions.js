@@ -9,6 +9,9 @@ export const LOAD_BOOK_DATA_FROM_STORAGE = 'LOAD_BOOK_DATA_FROM_STORAGE';
 
 export const SHOW_SHELF_BOOK_ALERT_TOAST = 'SHOW_SHELF_BOOK_ALERT_TOAST';
 
+export const LOAD_BOOK_DATA = 'LOAD_BOOK_DATA';
+export const LOAD_UNIT_DATA = 'LOAD_UNIT_DATA';
+
 export const makeUnitOrderKey = (unitId, orderType, orderBy, page) => `${unitId}-${orderType}-${orderBy}-${page}`;
 
 export const setBookData = books => ({
@@ -64,4 +67,18 @@ export const loadBookDataFromStorage = () => ({
 
 export const showShelfBookAlertToast = () => ({
   type: SHOW_SHELF_BOOK_ALERT_TOAST,
+});
+
+export const loadBookData = bookIds => ({
+  type: LOAD_BOOK_DATA,
+  payload: {
+    bookIds,
+  },
+});
+
+export const loadUnitData = unitIds => ({
+  type: LOAD_UNIT_DATA,
+  payload: {
+    unitIds,
+  },
 });

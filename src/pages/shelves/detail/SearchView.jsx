@@ -1,14 +1,28 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import BottomActionBar from '../../../components/BottomActionBar';
 import { ButtonType } from '../../../components/ActionBar/constants';
+import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
+import Empty from '../../../components/Empty';
 import FixedToolbarView from '../../../components/FixedToolbarView';
 import FlexBar from '../../../components/FlexBar';
+import { ResponsivePaginatorWithHandler } from '../../../components/ResponsivePaginator';
 import SearchBox from '../../../components/SearchBox';
+import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import ViewType from '../../../constants/viewType';
+import * as searchRequests from '../../../services/purchased/search/requests';
+import * as selectionActions from '../../../services/selection/actions';
+import * as selectionSelectors from '../../../services/selection/selectors';
+import * as shelfSelectors from '../../../services/shelf/selectors';
 import ArrowLeft from '../../../svgs/ArrowLeft.svg';
-import Responsive from '../../base/Responsive';
+import SearchIcon from '../../../svgs/Search.svg';
+import * as paginationUtils from '../../../utils/pagination';
+import Responsive, { ResponsiveBooks } from '../../base/Responsive';
+import SearchBooks from './SearchBooks';
 
 const navigationBarStyles = {
   wrapper: css`
@@ -61,6 +75,12 @@ const searchBarStyles = {
   `,
 };
 
+const mainStyles = {
+  paddingForPagination: css`
+    padding-bottom: ${ACTION_BAR_HEIGHT}px;
+  `,
+};
+
 function NavigationBar({ shelfTitle, onBackClick }) {
   return (
     <Responsive css={navigationBarStyles.wrapper}>
@@ -105,18 +125,72 @@ function SearchBar({ isSearching, keyword, onClear, onConfirm, onKeywordChange }
   return <FlexBar css={searchBarStyles.bar} flexLeft={left} flexRight={right} />;
 }
 
-export default function SearchView({ shelfTitle, onBackClick }) {
+function SearchView({ clearSelectedItems, isSelected, onAddSelected, onBackClick, shelfTitle, uuid }) {
   const [keyword, setKeyword] = React.useState('');
   const [isSearching, setSearching] = React.useState(false);
+  const [searchItems, setSearchItems] = React.useState(null);
+  const searchItemRequestId = React.useRef(0);
+  const [totalItemCount, setTotalItemCount] = React.useState(null);
+  const totalItemCountRequestId = React.useRef(0);
+  const [page, setPage] = React.useState(1);
+  const totalPages = totalItemCount == null ? null : paginationUtils.calcPage(totalItemCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
-  const handleSearchClear = React.useCallback(() => setSearching(false), []);
+  const handleSearchClear = React.useCallback(() => {
+    setSearching(false);
+    setSearchItems(null);
+    setTotalItemCount(null);
+    clearSelectedItems();
+  }, []);
   const handleSearchConfirm = React.useCallback(
-    () => {
-      setSearching(keyword !== '');
-      // TODO: 검색
+    async () => {
+      const newSearching = keyword !== '';
+      const newPage = 1;
+      setSearching(newSearching);
+      setSearchItems(null);
+      setTotalItemCount(null);
+      setPage(newPage);
+      clearSelectedItems();
+
+      searchItemRequestId.current += 1;
+      totalItemCountRequestId.current += 1;
+
+      if (!newSearching) {
+        return;
+      }
+
+      const searchItemRid = searchItemRequestId.current;
+      const totalItemCountRid = totalItemCountRequestId.current;
+      await Promise.all([
+        searchRequests.fetchSearchItems(keyword, newPage).then(({ items }) => {
+          if (searchItemRid === searchItemRequestId.current) {
+            setSearchItems(items);
+          }
+        }),
+        searchRequests.fetchSearchItemsTotalCount(keyword).then(({ unit_total_count: totalCount }) => {
+          if (totalItemCountRid === totalItemCountRequestId.current) {
+            setTotalItemCount(totalCount);
+          }
+        }),
+      ]);
     },
     [keyword],
   );
+  const handlePageChange = React.useCallback(
+    async newPage => {
+      setSearchItems(null);
+      setPage(newPage);
+      clearSelectedItems();
+
+      searchItemRequestId.current += 1;
+      const searchItemRid = searchItemRequestId.current;
+      const { items } = await searchRequests.fetchSearchItems(keyword, newPage);
+      if (searchItemRid === searchItemRequestId.current) {
+        setSearchItems(items);
+      }
+    },
+    [keyword],
+  );
+  const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
 
   function renderSearchBar() {
     return (
@@ -131,18 +205,68 @@ export default function SearchView({ shelfTitle, onBackClick }) {
   }
 
   function renderActionBar() {
-    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick() {}, disable: true }];
+    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick: handleAddToShelf, disable: !isSelected }];
     return <BottomActionBar buttonProps={buttons} />;
+  }
+
+  function renderPaginator() {
+    return <ResponsivePaginatorWithHandler currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />;
+  }
+
+  function renderBooks() {
+    return (
+      <>
+        <SearchBooks items={searchItems} />
+        {renderPaginator()}
+      </>
+    );
+  }
+
+  function renderMain() {
+    if (!isSearching) {
+      return <Empty IconComponent={SearchIcon} iconWidth={38} message="검색어를 입력해주세요." />;
+    }
+    if (searchItems == null) {
+      return (
+        <div css={mainStyles.paddingForPagination}>
+          <ResponsiveBooks>
+            <SkeletonBooks viewType={ViewType.LANDSCAPE} />
+          </ResponsiveBooks>
+        </div>
+      );
+    }
+    if (searchItems.length === 0) {
+      return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+    }
+    return (
+      <div css={mainStyles.paddingForPagination}>
+        <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>
+      </div>
+    );
   }
 
   return (
     <>
       <NavigationBar shelfTitle={shelfTitle} onBackClick={onBackClick} />
       <FixedToolbarView allowFixed toolbar={renderSearchBar()} actionBar={renderActionBar()}>
-        <main>
-          <Responsive />
-        </main>
+        <main>{renderMain()}</main>
       </FixedToolbarView>
     </>
   );
 }
+
+function mapStateToProps(state, props) {
+  return {
+    shelfTitle: shelfSelectors.getShelfName(state, props.uuid),
+    isSelected: selectionSelectors.getTotalSelectedCount(state) !== 0,
+  };
+}
+
+const mapDispatchToProps = {
+  clearSelectedItems: selectionActions.clearSelectedItems,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SearchView);
