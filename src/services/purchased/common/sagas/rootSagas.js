@@ -2,7 +2,7 @@ import { isAfter, subDays } from 'date-fns';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import { toFlatten } from '../../../../utils/array';
 import { loadBookData } from '../../../book/sagas';
-import { getBooks } from '../../../book/selectors';
+import { getBook, getBooks } from '../../../book/selectors';
 import { CONFIRM_HIDE_ALL_EXPIRED_BOOKS, setFetchingReadLatest, setReadLatestBookId, setRecentlyUpdatedData } from '../actions';
 import { fetchReadLatestBookId } from '../requests';
 import { getReadLatestData } from '../selectors';
@@ -34,7 +34,7 @@ export function* loadRecentlyUpdatedData(bookIds) {
 
 export function* loadReadLatestBookId(unitId, bookId) {
   yield call(loadBookData, [bookId]);
-  const book = yield select(state => state.books.books.get(bookId));
+  const book = yield select(getBook, bookId);
   if (!book || !book.series || !book.support || !book.support.web_viewer) {
     return;
   }

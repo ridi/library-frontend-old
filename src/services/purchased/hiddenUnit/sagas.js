@@ -72,11 +72,11 @@ function* loadItems() {
     // Unit 로딩
     yield call(loadUnitData, [unitId]);
 
-    const [itemResponse, countResponse] = yield all([
+    const [itemResponse, countResponse, primaryItem] = yield all([
       call(fetchHiddenUnitItems, unitId, page),
       call(fetchHiddenUnitItemsTotalCount, unitId),
+      call(loadPrimaryItem, unitId),
     ]);
-    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.item_total_count) {
@@ -85,18 +85,16 @@ function* loadItems() {
     }
 
     // 대표 책 데이터 로딩
-    const primaryItem = yield call(loadPrimaryItem, unitId);
-    yield call(loadBookDescriptions, [primaryBookId]);
-    yield call(loadBookStarRatings, [primaryBookId]);
-
-    // 책 데이터 로딩
-    yield call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryBookId]);
-
+    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
     yield all([
       put(setPrimaryBookId(unitId, primaryBookId)),
       put(setHiddenUnitPrimaryItem(primaryItem)),
       put(setItems(itemResponse.items)),
       put(setTotalCount(countResponse.item_total_count)),
+      // 책 데이터 로딩
+      call(loadBookDescriptions, [primaryBookId]),
+      call(loadBookStarRatings, [primaryBookId]),
+      call(loadBookData, [...toFlatten(itemResponse.items, 'b_id'), primaryBookId]),
     ]);
   } catch (err) {
     yield put(setError(true));

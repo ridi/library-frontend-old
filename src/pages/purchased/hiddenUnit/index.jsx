@@ -149,20 +149,14 @@ class HiddenUnit extends React.Component {
 
   renderSeriesList() {
     const {
-      primaryBookId,
       pageInfo: { currentPage, totalPages, unitId },
       isFetchingBook,
       items,
-      books,
       unit,
       dispatchSelectAllBooks,
       dispatchClearSelectedBooks,
     } = this.props;
     const { isEditing } = this.state;
-
-    if (!books[primaryBookId]) {
-      return null;
-    }
 
     return (
       <SeriesList
@@ -178,7 +172,6 @@ class HiddenUnit extends React.Component {
         isEditing={isEditing}
         onEditingChange={this.handleEditingChange}
         items={items}
-        books={books}
         unit={unit}
         onClickSelectAllBooks={dispatchSelectAllBooks}
         onClickUnselectAllBooks={dispatchClearSelectedBooks}
