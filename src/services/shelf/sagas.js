@@ -9,6 +9,7 @@ import { thousandsSeperator } from '../../utils/number';
 import { makeLinkProps } from '../../utils/uri';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
+import * as bookDownloadActions from '../bookDownload/actions';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
@@ -355,6 +356,15 @@ function* removeSelectedFromShelf({ payload }) {
   yield put(actions.loadShelfBooks(uuid, pageOptions));
 }
 
+function* downloadSelectedUnits() {
+  const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
+    .filter(([, checked]) => checked)
+    .map(([bookId]) => bookId);
+  const bookToUnit = yield select(state => state.shelf.bookToUnit);
+  const unitIds = bookIds.map(bookId => bookToUnit[bookId]);
+  yield put(bookDownloadActions.downloadBooksByUnitIds(unitIds));
+}
+
 export default function* shelfRootSaga(isServer) {
   yield all([
     takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
@@ -370,6 +380,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF_FROM_DETAIL, deleteShelfFromDetail),
     takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
+    takeEvery(actions.DOWNLOAD_SELECTED_UNITS, downloadSelectedUnits),
     takeEvery(actions.VALIDATE_SHELVES_LIMIT, validateShelvesLimit),
   ]);
 }
