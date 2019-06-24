@@ -12,6 +12,7 @@ import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
 import { Editing, ShelfOrder } from '../../../components/Tool';
 import { Add } from '../../../components/Tool/Add';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
 import { SHELVES_LIMIT } from '../../../constants/shelves';
 import { URLMap } from '../../../constants/urls';
@@ -27,7 +28,6 @@ import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import { OrderOptions } from '../../../constants/orderOptions';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;

@@ -67,6 +67,7 @@ import { OrderOptions } from '../../constants/orderOptions';
  *     orderDirection: '',
  *     page: 2,
  *   }
+ *   order: OrderOptions.CREATE_DATE.key, // OrderOptions.CREATE_DATE.key | OrderOptions.SHELF_TITLE.key
  * }
  * */
 const initialState = {
