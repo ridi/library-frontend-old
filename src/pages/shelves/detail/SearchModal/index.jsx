@@ -8,6 +8,7 @@ import { ButtonType } from '../../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../../components/ActionBar/styles';
 import Empty from '../../../../components/Empty';
 import FixedToolbarView from '../../../../components/FixedToolbarView';
+import PageNavigationBar, { NavigationBarColor } from '../../../../components/PageNavigationBar';
 import { ResponsivePaginatorWithHandler } from '../../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../../constants/page';
@@ -19,7 +20,6 @@ import * as shelfSelectors from '../../../../services/shelf/selectors';
 import SearchIcon from '../../../../svgs/Search.svg';
 import * as paginationUtils from '../../../../utils/pagination';
 import { ResponsiveBooks } from '../../../base/Responsive';
-import NavigationBar from './NavigationBar';
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
 
@@ -151,7 +151,9 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
 
   return (
     <>
-      <NavigationBar shelfTitle={shelfTitle} onBackClick={onBackClick} />
+      <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
+        ‘{shelfTitle}’에 추가
+      </PageNavigationBar>
       <FixedToolbarView allowFixed toolbar={renderSearchBar()} actionBar={renderActionBar()}>
         <main>{renderMain()}</main>
       </FixedToolbarView>
