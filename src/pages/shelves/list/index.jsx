@@ -27,6 +27,7 @@ import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import { OrderOptions } from '../../../constants/orderOptions';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -48,7 +49,6 @@ const ShelvesList = props => {
     selectShelf,
     clearSelectedShelves,
     order,
-    orderOptions,
     selectedShelves,
     showConfirm,
     showPrompt,
@@ -134,13 +134,16 @@ const ShelvesList = props => {
     console.log(option);
   };
 
-  const renderTools = () => (
-    <div css={toolsWrapper}>
-      <Add onClickAddButton={handleAddShelf} />
-      <Editing toggleEditingMode={toggleSelectMode} />
-      {orderOptions && <ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />}
-    </div>
-  );
+  const renderTools = () => {
+    const orderOptions = OrderOptions.toShelves();
+    return (
+      <div css={toolsWrapper}>
+        <Add onClickAddButton={handleAddShelf} />
+        <Editing toggleEditingMode={toggleSelectMode} />
+        <ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
+      </div>
+    );
+  };
 
   const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
   const renderPaginator = () => {
@@ -209,9 +212,8 @@ const mapStateToProps = (state, props) => {
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
-  const order = 'test';
-  const orderOptions = [{ title: 'test', key: 'test' }, { title: 'test2', key: 'test2' }];
-  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves, order, orderOptions };
+  const order = shelfSelectors.getShelvesOrder(state);
+  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves, order };
 };
 
 const mapDispatchToProps = {

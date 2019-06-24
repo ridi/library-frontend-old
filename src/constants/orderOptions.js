@@ -4,9 +4,11 @@ export const OrderBy = {
 };
 
 export const OrderType = {
+  CREATE_DATE: 'create_date',
   PURCHASE_DATE: 'purchase_date',
   EXPIRE_DATE: 'expire_date',
   EXPIRED_BOOKS_ONLY: 'expired_books_only',
+  SHELF_TITLE: 'shelf_title',
   UNIT_TITLE: 'unit_title',
   BOOK_TITLE: 'book_title',
   UNIT_AUTHOR: 'unit_author',
@@ -58,6 +60,10 @@ export class OrderOptions extends BaseOrderOptions {
     ];
   }
 
+  static toShelves() {
+    return [this.CREATE_DATE, this.SHELF_TITLE];
+  }
+
   static toShelfList(unitOfCount) {
     return [
       applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
@@ -86,6 +92,24 @@ export class OrderOptions extends BaseOrderOptions {
 
   static get DEFAULT() {
     return this.PURCHASE_DATE;
+  }
+
+  static get CREATE_DATE() {
+    return {
+      key: 'CREATE_DATE',
+      title: '최근 생성순',
+      orderType: OrderType.CREATE_DATE,
+      orderBy: OrderBy.DESC,
+    };
+  }
+
+  static get SHELF_TITLE() {
+    return {
+      key: 'SHELF_TITLE',
+      title: '이름 가나다순',
+      orderType: OrderType.SHELF_TITLE,
+      orderBy: OrderBy.ASC,
+    };
   }
 
   static get UNIT_LIST_DEFAULT() {

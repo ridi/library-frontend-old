@@ -21,6 +21,8 @@ export const getShelves = createSelector(
   (shelves, orderBy, orderDirection, page) => shelves[`${orderBy}_${orderDirection}_${page}`] || { loading: false, items: null },
 );
 
+export const getShelvesOrder = state => state.shelf.order;
+
 // getShelfCount(state: State): number | null
 // 로드 중이면 null
 export const getShelfCount = state => state.shelf.shelfCount;

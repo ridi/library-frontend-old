@@ -17,6 +17,7 @@ import {
   SET_SHELF_LIST_PAGE_OPTIONS,
   SET_SHELVES,
 } from './actions';
+import { OrderOptions } from '../../constants/orderOptions';
 
 /*
  * {
@@ -86,7 +87,7 @@ const initialState = {
     orderDirection: '',
     page: 1,
   },
-  order: 'test',
+  order: OrderOptions.CREATE_DATE.key,
 };
 
 const makeBaseShelfData = uuid => ({
