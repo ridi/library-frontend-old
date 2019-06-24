@@ -31,6 +31,7 @@ import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 import EditButton from './EditButton';
+import SearchModal from './SearchModal';
 
 const shelfBar = {
   backgroundColor: '#ffffff',
@@ -60,6 +61,7 @@ const toolBar = css`
 
 function ShelfDetail(props) {
   const {
+    addSelectedToShelf,
     bookIds,
     clearSelectedBooks,
     removeShelfFromDetail,
@@ -81,6 +83,7 @@ function ShelfDetail(props) {
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
   const [isEditing, setIsEditing] = React.useState(false);
+  const [isAdding, setIsAdding] = React.useState(false);
   const toggleEditingMode = React.useCallback(() => {
     clearSelectedBooks();
     setIsEditing(value => !value);
@@ -105,6 +108,8 @@ function ShelfDetail(props) {
     clearSelectedBooks();
     setIsEditing(false);
   }, []);
+  const handleAddClick = React.useCallback(() => setIsAdding(true), []);
+  const handleAddBackClick = React.useCallback(() => setIsAdding(false), []);
   const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
@@ -132,6 +137,19 @@ function ShelfDetail(props) {
       });
     },
     [name],
+  );
+  const handleAddSelected = React.useCallback(
+    targetUuid => {
+      addSelectedToShelf({
+        fromShelfPageOptions: { orderBy, orderDirection, page },
+        uuid: targetUuid,
+        onComplete() {
+          clearSelectedBooks();
+          setIsAdding(false);
+        },
+      });
+    },
+    [orderBy, orderDirection, page],
   );
 
   const linkBuilder = React.useCallback(
@@ -195,6 +213,7 @@ function ShelfDetail(props) {
   function renderToolbar() {
     const right = (
       <div css={toolsWrapper}>
+        <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
       </div>
     );
@@ -246,6 +265,17 @@ function ShelfDetail(props) {
       <div css={paddingForPagination}>
         <ResponsiveBooks>{books}</ResponsiveBooks>
       </div>
+    );
+  }
+
+  if (isAdding) {
+    return (
+      <>
+        <Head>
+          <title>{name} - 내 서재</title>
+        </Head>
+        <SearchModal onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
+      </>
     );
   }
 
@@ -336,6 +366,7 @@ function mapStateToProps(state, props) {
 }
 
 const mapDispatchToProps = {
+  addSelectedToShelf: actions.addSelectedToShelf,
   clearSelectedBooks: selectionActions.clearSelectedItems,
   removeShelfFromDetail: actions.deleteShelfFromDetail,
   downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,

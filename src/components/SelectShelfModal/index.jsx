@@ -14,12 +14,12 @@ import * as paginationUtils from '../../utils/pagination';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
 import FlexBar from '../FlexBar';
+import PageNavigationBar, { NavigationBarColor } from '../PageNavigationBar';
 import { ResponsivePaginatorWithHandler } from '../ResponsivePaginator';
 import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
 import { SkeletonShelves } from '../Skeleton/SkeletonShelves';
 import * as Tool from '../Tool';
-import NavigationBar from './NavigationBar';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -90,7 +90,9 @@ function SelectShelfModalInner(props) {
     const right = <Tool.Add onClickAddButton={handleAddShelf} />;
     return (
       <>
-        <NavigationBar onBackClick={onBackClick} />
+        <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
+          책장 선택
+        </PageNavigationBar>
         <FlexBar css={toolBar} flexLeft={<div />} flexRight={right} />
       </>
     );

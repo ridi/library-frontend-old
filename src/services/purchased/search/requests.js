@@ -1,4 +1,3 @@
-import { put } from 'redux-saga/effects';
 import { HttpStatusCode } from '../../../api/constants';
 
 import config from '../../../config';
@@ -6,20 +5,20 @@ import config from '../../../config';
 import { calcOffset } from '../../../utils/pagination';
 import { makeURI } from '../../../utils/uri';
 
-import { getAPI } from '../../../api/actions';
+import { getApi } from '../../../api';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
-export function* fetchSearchItems(keyword, page) {
+export async function fetchSearchItems(keyword, page) {
   const options = {
     keyword,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   };
 
-  const api = yield put(getAPI());
+  const api = getApi();
   try {
-    const response = yield api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
+    const response = await api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
     if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
@@ -31,14 +30,14 @@ export function* fetchSearchItems(keyword, page) {
   }
 }
 
-export function* fetchSearchItemsTotalCount(keyword) {
+export async function fetchSearchItemsTotalCount(keyword) {
   const options = {
     keyword,
   };
 
-  const api = yield put(getAPI());
+  const api = getApi();
   try {
-    const response = yield api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
+    const response = await api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
     if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
