@@ -19,7 +19,6 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
-import * as bookDownloadActions from '../../../services/bookDownload/actions';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
@@ -65,7 +64,7 @@ function ShelfDetail(props) {
     bookIds,
     clearSelectedBooks,
     removeShelfFromDetail,
-    downloadSelectedBooks,
+    downloadSelectedUnits,
     name,
     orderBy,
     orderDirection,
@@ -104,7 +103,7 @@ function ShelfDetail(props) {
     });
   }, []);
   const downloadBooks = React.useCallback(() => {
-    downloadSelectedBooks();
+    downloadSelectedUnits();
     clearSelectedBooks();
     setIsEditing(false);
   }, []);
@@ -369,7 +368,7 @@ const mapDispatchToProps = {
   addSelectedToShelf: actions.addSelectedToShelf,
   clearSelectedBooks: selectionActions.clearSelectedItems,
   removeShelfFromDetail: actions.deleteShelfFromDetail,
-  downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
+  downloadSelectedUnits: actions.downloadSelectedUnits,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,
