@@ -86,6 +86,7 @@ const initialState = {
     orderDirection: '',
     page: 1,
   },
+  order: 'test',
 };
 
 const makeBaseShelfData = uuid => ({

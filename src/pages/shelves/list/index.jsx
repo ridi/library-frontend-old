@@ -10,7 +10,7 @@ import FlexBar from '../../../components/FlexBar';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
-import { Editing } from '../../../components/Tool';
+import { Editing, ShelfOrder } from '../../../components/Tool';
 import { Add } from '../../../components/Tool/Add';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
 import { SHELVES_LIMIT } from '../../../constants/shelves';
@@ -20,7 +20,7 @@ import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
-import * as selectors from '../../../services/shelf/selectors';
+import * as shelfSelectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
@@ -47,6 +47,8 @@ const ShelvesList = props => {
     totalSelectedCount,
     selectShelf,
     clearSelectedShelves,
+    order,
+    orderOptions,
     selectedShelves,
     showConfirm,
     showPrompt,
@@ -128,10 +130,15 @@ const ShelvesList = props => {
     ],
   };
 
+  const handleOrderOptionClick = option => {
+    console.log(option);
+  };
+
   const renderTools = () => (
     <div css={toolsWrapper}>
       <Add onClickAddButton={handleAddShelf} />
       <Editing toggleEditingMode={toggleSelectMode} />
+      {orderOptions && <ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />}
     </div>
   );
 
@@ -198,11 +205,13 @@ ShelvesList.getInitialProps = async ({ query, store }) => {
 
 const mapStateToProps = (state, props) => {
   const { pageOptions } = props;
-  const shelves = selectors.getShelves(state, pageOptions);
-  const totalShelfCount = selectors.getShelfCount(state);
+  const shelves = shelfSelectors.getShelves(state, pageOptions);
+  const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
-  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves };
+  const order = 'test';
+  const orderOptions = [{ title: 'test', key: 'test' }, { title: 'test2', key: 'test2' }];
+  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves, order, orderOptions };
 };
 
 const mapDispatchToProps = {
