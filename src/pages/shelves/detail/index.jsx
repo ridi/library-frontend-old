@@ -31,7 +31,7 @@ import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 import EditButton from './EditButton';
-import SearchView from './SearchView';
+import SearchModal from './SearchModal';
 
 const shelfBar = {
   backgroundColor: '#ffffff',
@@ -275,7 +275,7 @@ function ShelfDetail(props) {
         <Head>
           <title>{name} - 내 서재</title>
         </Head>
-        <SearchView onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
+        <SearchModal onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
       </>
     );
   }

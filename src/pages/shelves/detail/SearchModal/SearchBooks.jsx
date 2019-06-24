@@ -2,10 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { Books } from '../../../components/Books';
-import ViewType from '../../../constants/viewType';
-import * as bookActions from '../../../services/book/actions';
-import * as bookSelectors from '../../../services/book/selectors';
+import { Books } from '../../../../components/Books';
+import ViewType from '../../../../constants/viewType';
+import * as bookActions from '../../../../services/book/actions';
+import * as bookSelectors from '../../../../services/book/selectors';
+
+function emptyLinkBuilder() {
+  return null;
+}
 
 function SearchBooks({ items, loadBookData, loadUnitData, platformBooks, units }) {
   React.useEffect(
@@ -22,7 +26,7 @@ function SearchBooks({ items, loadBookData, loadUnitData, platformBooks, units }
       units={units}
       isSelectMode
       viewType={ViewType.LANDSCAPE}
-      linkBuilder={() => null}
+      linkBuilder={emptyLinkBuilder}
     />
   );
 }
@@ -36,7 +40,6 @@ function mapStateToPropsFactory() {
     props => props.items,
     items => items.map(item => item.unit_id),
   );
-  // FIXME: 책 목록이 LRU
   return (state, props) => {
     const bookIds = selectBookIds(props);
     const unitIds = selectUnitIds(props);
