@@ -141,9 +141,8 @@ function ShelfDetail(props) {
   const handleAddSelected = React.useCallback(
     targetUuid => {
       addSelectedToShelf({
-        isFromShelf: true,
+        fromShelfPageOptions: { orderBy, orderDirection, page },
         uuid: targetUuid,
-        pageOptions: { orderBy, orderDirection, page },
         onComplete() {
           clearSelectedBooks();
           setIsAdding(false);

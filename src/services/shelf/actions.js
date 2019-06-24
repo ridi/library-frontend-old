@@ -206,12 +206,11 @@ export const deleteShelfFromDetail = uuid => ({
   },
 });
 
-export const addSelectedToShelf = ({ isFromShelf, onComplete, pageOptions, uuid }) => ({
+export const addSelectedToShelf = ({ fromShelfPageOptions, onComplete, uuid }) => ({
   type: ADD_SELECTED_TO_SHELF,
   payload: {
-    isFromShelf,
+    fromShelfPageOptions,
     onComplete,
-    pageOptions,
     uuid,
   },
 });

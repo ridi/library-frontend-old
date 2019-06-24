@@ -268,7 +268,7 @@ function* deleteShelfFromDetail({ payload }) {
 
 function* addSelectedToShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
-  const { isFromShelf, onComplete, pageOptions, uuid } = payload;
+  const { fromShelfPageOptions, onComplete, uuid } = payload;
   try {
     const count = yield call(requests.fetchShelfBookCount, { uuid });
     if (count >= ITEMS_LIMIT_PER_SHELF) {
@@ -292,10 +292,9 @@ function* addSelectedToShelf({ payload }) {
     }));
     const shelfName = yield select(selectors.getShelfName, uuid);
     yield call(addShelfItem, { payload: { uuid, units } });
-    if (pageOptions != null) {
-      yield call(loadShelfBooks, false, { payload: { uuid, ...pageOptions } });
-    }
-    if (isFromShelf) {
+
+    if (fromShelfPageOptions != null) {
+      yield call(loadShelfBooks, false, { payload: { uuid, ...fromShelfPageOptions } });
       yield put(
         toastActions.showToast({
           message: '책장에 추가했습니다.',
