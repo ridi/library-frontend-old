@@ -10,6 +10,8 @@ import { makeLinkProps } from '../../utils/uri';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as bookDownloadActions from '../bookDownload/actions';
+import { MakeBookIdsError } from '../common/errors';
+import * as dialogActions from '../dialog/actions';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
@@ -362,7 +364,15 @@ function* downloadSelectedUnits() {
     .map(([bookId]) => bookId);
   const bookToUnit = yield select(state => state.shelf.bookToUnit);
   const unitIds = bookIds.map(bookId => bookToUnit[bookId]);
-  yield put(bookDownloadActions.downloadBooksByUnitIds(unitIds));
+  try {
+    yield put(bookDownloadActions.downloadBooksByUnitIds(unitIds));
+  } catch (err) {
+    let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    }
+    yield put(dialogActions.showDialog('다운로드 오류', message));
+  }
 }
 
 export default function* shelfRootSaga(isServer) {
