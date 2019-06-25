@@ -20,7 +20,6 @@ import * as uiActions from '../ui/actions';
 import * as actions from './actions';
 import * as requests from './requests';
 import * as selectors from './selectors';
-import { OrderOptions } from '../../constants/orderOptions';
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',

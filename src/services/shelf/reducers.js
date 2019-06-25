@@ -129,13 +129,14 @@ const shelfReducer = produce((draft, action) => {
         items: items.map(item => item.uuid),
       };
 
-      for (const { id, uuid, name, thumbnails } of items) {
+      for (const { id, uuid, name, thumbnails, bookCount } of items) {
         if (draft.shelf[uuid] == null) {
           draft.shelf[uuid] = makeBaseShelfData(uuid);
         }
         draft.shelf[uuid].id = id;
         draft.shelf[uuid].name = name;
         draft.shelf[uuid].thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
+        draft.shelf[uuid].bookCount = bookCount;
       }
       break;
     }

@@ -12,6 +12,7 @@ export async function fetchShelves({ offset, limit, orderType, orderBy }) {
     uuid: item.shelf_uuid,
     name: item.name,
     thumbnails: item.items,
+    bookCount: item.count,
   }));
 }
 
