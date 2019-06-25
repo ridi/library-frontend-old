@@ -5,9 +5,11 @@ import { isAfter, subDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import config from '../../config';
 import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
+import { getAdultVerification } from '../../services/account/selectors';
 import { showShelfBookAlertToast } from '../../services/book/actions';
 import { getBooks } from '../../services/book/selectors';
 import * as featureSelectors from '../../services/feature/selectors';
@@ -37,6 +39,7 @@ const refineBookData = ({
   isSyncShelfEnabled,
   recentlyUpdatedMap,
   thumbnailWidth,
+  isVerifiedAdult,
 }) => {
   const {
     unit_count: bookCount,
@@ -75,9 +78,12 @@ const refineBookData = ({
   const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = unit ? unit.title : unitTitle || platformBookData.title.main;
 
+  const thumbnailUrl =
+    isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${platformBookData.thumbnail.large}?dpi=xhdpi`;
+
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
-    thumbnailUrl: `${platformBookData.thumbnail.large}?dpi=xhdpi`,
+    thumbnailUrl,
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
@@ -124,6 +130,7 @@ const mapStateToPropsFactory = () => {
       isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
       selectedBooks: getSelectedItems(state),
       platformBookDTO: getBooks(state, bookIds),
+      isVerifiedAdult: getAdultVerification(state),
     };
   };
 };
@@ -152,6 +159,7 @@ export const Books = connect(
     isSyncShelfEnabled,
     recentlyUpdatedMap,
     dispatchShowShelfBookAlertToast,
+    isVerifiedAdult,
   } = props;
   const [thumbnailWidth, setThumbnailWidth] = useState('100%');
   const setResponsiveThumbnailWidth = () => {
@@ -215,6 +223,7 @@ export const Books = connect(
           isSyncShelfEnabled,
           recentlyUpdatedMap,
           thumbnailWidth,
+          isVerifiedAdult,
         });
 
         return viewType === ViewType.PORTRAIT ? (
