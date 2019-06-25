@@ -67,7 +67,6 @@ import { OrderOptions } from '../../constants/orderOptions';
  *     orderDirection: '',
  *     page: 2,
  *   }
- *   order: OrderOptions.CREATE_DATE.key, // OrderOptions.CREATE_DATE.key | OrderOptions.SHELF_TITLE.key
  * }
  * */
 const initialState = {
@@ -88,7 +87,6 @@ const initialState = {
     orderDirection: '',
     page: 1,
   },
-  order: OrderOptions.CREATE_DATE.key,
 };
 
 const makeBaseShelfData = uuid => ({

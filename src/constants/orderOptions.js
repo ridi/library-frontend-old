@@ -4,11 +4,11 @@ export const OrderBy = {
 };
 
 export const OrderType = {
-  CREATE_DATE: 'create_date',
   PURCHASE_DATE: 'purchase_date',
   EXPIRE_DATE: 'expire_date',
   EXPIRED_BOOKS_ONLY: 'expired_books_only',
-  SHELF_TITLE: 'shelf_title',
+  SHELF_CREATED: 'created',
+  SHELF_NAME: 'name',
   UNIT_TITLE: 'unit_title',
   BOOK_TITLE: 'book_title',
   UNIT_AUTHOR: 'unit_author',
@@ -61,7 +61,7 @@ export class OrderOptions extends BaseOrderOptions {
   }
 
   static toShelves() {
-    return [this.CREATE_DATE, this.SHELF_TITLE];
+    return [this.SHELF_CREATED, this.SHELF_NAME];
   }
 
   static toShelfList(unitOfCount) {
@@ -83,6 +83,8 @@ export class OrderOptions extends BaseOrderOptions {
       this.UNIT_AUTHOR,
       this.EXPIRE_DATE,
       this.EXPIRED_BOOKS_ONLY,
+      this.SHELF_CREATED,
+      this.SHELF_NAME,
       this.UNIT_ORDER_DESC,
       this.UNIT_ORDER_ASC,
       this.BOOK_TITLE,
@@ -94,20 +96,20 @@ export class OrderOptions extends BaseOrderOptions {
     return this.PURCHASE_DATE;
   }
 
-  static get CREATE_DATE() {
+  static get SHELF_CREATED() {
     return {
-      key: 'CREATE_DATE',
+      key: 'SHELF_CREATED',
       title: '최근 생성순',
-      orderType: OrderType.CREATE_DATE,
+      orderType: OrderType.SHELF_CREATED,
       orderBy: OrderBy.DESC,
     };
   }
 
-  static get SHELF_TITLE() {
+  static get SHELF_NAME() {
     return {
-      key: 'SHELF_TITLE',
+      key: 'SHELF_NAME',
       title: '이름 가나다순',
-      orderType: OrderType.SHELF_TITLE,
+      orderType: OrderType.SHELF_NAME,
       orderBy: OrderBy.ASC,
     };
   }

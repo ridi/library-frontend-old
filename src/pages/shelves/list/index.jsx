@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
+import Router from 'next/router';
 import Head from 'next/head';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -25,6 +26,7 @@ import * as shelfSelectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
+import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
@@ -48,7 +50,6 @@ const ShelvesList = props => {
     totalSelectedCount,
     selectShelf,
     clearSelectedShelves,
-    order,
     selectedShelves,
     showConfirm,
     showPrompt,
@@ -131,11 +132,21 @@ const ShelvesList = props => {
   };
 
   const handleOrderOptionClick = option => {
-    console.log(option);
+    const { orderType, orderBy } = option;
+    const newPageOptions = {
+      page: 1,
+      orderBy: orderType,
+      orderDirection: orderBy,
+    };
+    const { href, as } = URLMap.shelves;
+    const linkProps = makeLinkProps(href, as, newPageOptions);
+    Router.push(linkProps.href, linkProps.as);
   };
 
   const renderTools = () => {
     const orderOptions = OrderOptions.toShelves();
+    const { orderBy, orderDirection } = pageOptions;
+    const order = OrderOptions.toKey(orderBy, orderDirection);
     return (
       <div css={toolsWrapper}>
         <Add onClickAddButton={handleAddShelf} />
@@ -195,9 +206,10 @@ const ShelvesList = props => {
 
 ShelvesList.getInitialProps = async ({ query, store }) => {
   const page = parseInt(query.page, 10) || 1;
-  const orderBy = '';
-  const orderDirection = '';
+  const orderBy = query.order_by || OrderOptions.SHELF_CREATED.orderType;
+  const orderDirection = query.order_direction || OrderOptions.SHELF_CREATED.orderBy;
   const pageOptions = { orderBy, orderDirection, page };
+
   store.dispatch(shelfActions.setListPageOptions(pageOptions));
   store.dispatch(shelfActions.loadShelves(pageOptions));
   store.dispatch(shelfActions.loadShelfCount());
@@ -212,8 +224,7 @@ const mapStateToProps = (state, props) => {
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
-  const order = shelfSelectors.getShelvesOrder(state);
-  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves, order };
+  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves };
 };
 
 const mapDispatchToProps = {

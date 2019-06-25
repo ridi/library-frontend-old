@@ -20,6 +20,7 @@ import * as uiActions from '../ui/actions';
 import * as actions from './actions';
 import * as requests from './requests';
 import * as selectors from './selectors';
+import { OrderOptions } from '../../constants/orderOptions';
 
 const OperationType = {
   ADD_SHELF: 'add_shelf',
@@ -51,9 +52,8 @@ function* loadShelves(isServer, { payload }) {
   const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
   const limit = SHELVES_LIMIT_PER_PAGE;
   try {
-    const items = yield call(requests.fetchShelves, { offset, limit });
+    const items = yield call(requests.fetchShelves, { offset, limit, orderType: orderBy, orderBy: orderDirection });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
-    yield all(items.map(({ uuid }) => fork(loadShelfBookCount, isServer, { payload: { uuid } })));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
