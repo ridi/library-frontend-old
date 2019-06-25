@@ -3,36 +3,36 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
-import MoreModal from '../Modal/MoreModal';
+import ShelfOrderModal from '../Modal/ShelfOrderModal';
 import * as styles from './styles';
 
-export default class More extends React.Component {
+export default class ShelfOrder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMoreModalShow: false,
+      isShelfOrderModalShow: false,
     };
   }
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.order !== this.props.order) {
-      this.setState({ isMoreModalShow: false });
+      this.setState({ isShelfOrderModalShow: false });
     }
     return true;
   }
 
   render() {
-    const { isMoreModalShow } = this.state;
-    const { order, orderOptions, query, showViewType, showOrder, showHidden } = this.props;
+    const { isShelfOrderModalShow } = this.state;
+    const { order, orderOptions, onClickOrderOption } = this.props;
 
     return (
       <div css={styles.buttonWrapper}>
         <IconButton
-          a11y="정렬"
-          css={styles.iconButton(isMoreModalShow)}
+          a11y="책장 정렬"
+          css={styles.iconButton(isShelfOrderModalShow)}
           onClick={() => {
             this.setState({
-              isMoreModalShow: true,
+              isShelfOrderModalShow: true,
             });
           }}
         >
@@ -40,20 +40,17 @@ export default class More extends React.Component {
             <ThreeDotsVertical css={styles.threeDotsIcon} />
           </div>
         </IconButton>
-        {isMoreModalShow && (
-          <MoreModal
+        {isShelfOrderModalShow && (
+          <ShelfOrderModal
             order={order}
             orderOptions={orderOptions}
-            query={query}
-            isActive={isMoreModalShow}
+            isActive={isShelfOrderModalShow}
             onClickModalBackground={() => {
               this.setState({
-                isMoreModalShow: false,
+                isShelfOrderModalShow: false,
               });
             }}
-            showViewType={showViewType}
-            showOrder={showOrder}
-            showHidden={showHidden}
+            onClickOrderOption={onClickOrderOption}
           />
         )}
       </div>

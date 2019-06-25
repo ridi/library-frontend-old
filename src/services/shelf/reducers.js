@@ -1,19 +1,18 @@
 import produce from 'immer';
-
 import {
   BEGIN_OPERATION,
   END_OPERATION,
   INVALIDATE_SHELF_PAGE,
-  LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_BOOKS,
+  LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_COUNT,
   LOAD_SHELVES,
   SET_LIBRARY_BOOKS,
-  SET_SHELF_BOOK_COUNT,
   SET_SHELF_BOOKS,
+  SET_SHELF_BOOK_COUNT,
   SET_SHELF_COUNT,
-  SET_SHELF_INFO,
   SET_SHELF_DETAIL_PAGE_OPTIONS,
+  SET_SHELF_INFO,
   SET_SHELF_LIST_PAGE_OPTIONS,
   SET_SHELVES,
 } from './actions';
@@ -128,13 +127,14 @@ const shelfReducer = produce((draft, action) => {
         items: items.map(item => item.uuid),
       };
 
-      for (const { id, uuid, name, thumbnails } of items) {
+      for (const { id, uuid, name, thumbnails, bookCount } of items) {
         if (draft.shelf[uuid] == null) {
           draft.shelf[uuid] = makeBaseShelfData(uuid);
         }
         draft.shelf[uuid].id = id;
         draft.shelf[uuid].name = name;
         draft.shelf[uuid].thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
+        draft.shelf[uuid].bookCount = bookCount;
       }
       break;
     }

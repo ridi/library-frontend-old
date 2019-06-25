@@ -1,6 +1,7 @@
 import { Add } from './Add';
-import Filter from './Filter';
 import Editing from './Editing';
+import Filter from './Filter';
 import More from './More';
+import ShelfOrder from './ShelfOrder';
 
-export { Add, Filter, Editing, More };
+export { Add, Editing, Filter, More, ShelfOrder };
