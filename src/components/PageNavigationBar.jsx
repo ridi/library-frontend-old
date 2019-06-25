@@ -43,6 +43,10 @@ const title = css`
   color: white;
   height: 30px;
   line-height: 30px;
+  flex: 1 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 // TODO: Title이랑 잘 합쳐보기

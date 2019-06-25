@@ -6,7 +6,7 @@ export const title = {
   display: 'flex',
   alignItems: 'center',
   height: 46,
-  width: '100%',
+  overflow: 'hidden',
 };
 
 export const backButton = {
