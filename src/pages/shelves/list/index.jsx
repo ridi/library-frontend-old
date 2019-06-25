@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import Router from 'next/router';
 import Head from 'next/head';
+import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
