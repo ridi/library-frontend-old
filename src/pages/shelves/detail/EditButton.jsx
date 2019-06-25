@@ -7,6 +7,7 @@ import IconButton from '../../../components/IconButton';
 const wrapper = css`
   position: relative;
   line-height: 0;
+  margin-left: 16px;
 `;
 
 const button = css`

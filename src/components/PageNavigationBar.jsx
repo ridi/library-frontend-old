@@ -29,7 +29,8 @@ const bar = css`
 `;
 const iconWrapper = css`
   display: block;
-  padding: 13px 10px 13px 0;
+  padding: 15px 10px 14px 0;
+  line-height: 0;
 `;
 const icon = css`
   width: 16px;
@@ -37,12 +38,15 @@ const icon = css`
   fill: white;
 `;
 const title = css`
-  padding-bottom: 3px;
   font-size: 16px;
   font-weight: bold;
   color: white;
   height: 30px;
   line-height: 30px;
+  flex: 1 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 // TODO: Title이랑 잘 합쳐보기
