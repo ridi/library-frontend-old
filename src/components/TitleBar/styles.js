@@ -11,8 +11,9 @@ export const title = {
 
 export const backButton = {
   display: 'block',
-  padding: '13px 10px 13px 0',
+  padding: '15px 10px 14px 0',
   fill: '#40474d',
+  lineHeight: 0,
 };
 
 export const backIcon = {
@@ -28,7 +29,6 @@ export const titleTextWrapper = {
   display: 'flex',
   minWidth: 0,
   alignItems: 'center',
-  paddingBottom: 3,
 };
 
 export const titleText = {
