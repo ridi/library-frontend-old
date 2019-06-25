@@ -1,6 +1,6 @@
 {
-  "name": "내서재",
-  "short_name": "내서재",
+  "name": "내 서재",
+  "short_name": "내 서재",
   "icons": [
     {
       "src": "./android-chrome-192x192.png",
@@ -8,8 +8,8 @@
       "type": "image/png"
     },
     {
-      "src": "./android-chrome-256x256.png",
-      "sizes": "256x256",
+      "src": "./android-chrome-384x384.png",
+      "sizes": "384x384",
       "type": "image/png"
     }
   ],
