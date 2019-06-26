@@ -5,7 +5,7 @@ import { notifySentry } from '../../utils/sentry';
 import { makeURI } from '../../utils/uri';
 
 const maintenanceStatus = data => ({
-  isShow: data ? isNowBetween(data.start, data.end) : false,
+  isShow: data ? isNowBetween(new Date(data.start), new Date(data.end)) : false,
   terms: data ? data.terms : '',
   unavailableServiceList: data ? data.unavailableServiceList : [],
 });
