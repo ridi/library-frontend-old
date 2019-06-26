@@ -3,7 +3,7 @@ import { css, jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
-import { SHELVES_LIMIT } from '../../constants/shelves';
+import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import Responsive from '../../pages/base/Responsive';
 import * as promptActions from '../../services/prompt/actions';
 import * as shelfActions from '../../services/shelf/actions';
@@ -60,6 +60,7 @@ function SelectShelfModalInner(props) {
           title: '새 책장 추가',
           message: '새 책장의 이름을 입력해주세요.',
           emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+          limit: SHELF_NAME_LIMIT,
           onClickConfirmButton: shelfName => {
             addShelf({ name: shelfName, pageOptions: { orderBy, orderDirection, page } });
           },

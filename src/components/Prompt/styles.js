@@ -51,13 +51,43 @@ export const promptContent = {
   margin: '20px 0',
 };
 
+export const promptInputWrapper = {
+  position: 'relative',
+  marginTop: '12px',
+  padding: '14px 10px',
+  borderBottom: '1px solid #1f8ce6',
+  border: '1px solid #d1d5d9',
+  borderRadius: '3px',
+  '&.focus': {
+    borderColor: '#349cf2',
+  },
+  '&.invalid': {
+    borderColor: '#fabab3',
+    paddingRight: '34px',
+  },
+};
+
+export const invalidIcon = {
+  position: 'absolute',
+  right: '11px',
+  top: '50%',
+  width: '12px',
+  height: '12px',
+  marginTop: '-6px',
+  fill: '#e64938',
+};
+
+export const invalidInfo = {
+  marginTop: '10px',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#e64938',
+  paddingLeft: '9px',
+};
+
 export const promptInput = {
   display: 'block',
-  marginTop: '13px',
   width: '100%',
-  padding: '4px 8px',
-  borderBottom: '1px solid #1f8ce6',
-  boxSizing: 'border-box',
   fontSize: '15px',
   color: '#525a61',
   fontWeight: 'bold',

@@ -93,6 +93,7 @@ export const shelfStyles = {
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
+    word-break: break-all;
   `,
   countWrapper: css`
     ${ResponsiveCountWrapper}
