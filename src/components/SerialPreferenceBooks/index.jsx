@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
-import { merge } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import config from '../../config';
@@ -98,7 +97,10 @@ const toProps = ({
     additionalButton,
   };
 
-  return merge(defaultBookProps, landscapeBookProps);
+  return {
+    ...defaultBookProps,
+    ...landscapeBookProps,
+  };
 };
 
 class SerialPreferenceBooks extends React.Component {

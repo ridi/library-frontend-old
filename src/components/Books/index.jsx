@@ -2,7 +2,6 @@
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter, subDays } from 'date-fns';
-import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -106,7 +105,10 @@ const refineBookData = ({
   return {
     isPurchasedBook,
     isCollectionBook,
-    libraryBookProps: merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
+    libraryBookProps: {
+      ...defaultBookProps,
+      ...(viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
+    },
     thumbnailLink,
   };
 };
