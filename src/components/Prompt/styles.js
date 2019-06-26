@@ -62,7 +62,7 @@ export const promptInputWrapper = {
     borderColor: '#349cf2',
   },
   '&.invalid': {
-    borderColor: 'red',
+    borderColor: '#fabab3',
     paddingRight: '34px',
   },
 };
