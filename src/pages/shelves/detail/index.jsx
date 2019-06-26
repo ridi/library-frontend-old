@@ -130,6 +130,7 @@ function ShelfDetail(props) {
       showPrompt({
         title: '책장 이름 변경',
         message: '책장의 이름을 입력해주세요.',
+        placeHolder: '책장 이름',
         confirmLabel: '확인',
         initialValue: name,
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',

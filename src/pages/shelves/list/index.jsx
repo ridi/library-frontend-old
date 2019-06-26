@@ -101,6 +101,7 @@ const ShelvesList = props => {
       showPrompt({
         title: '새 책장 추가',
         message: '새 책장의 이름을 입력해주세요.',
+        placeHolder: '책장 이름',
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
         onClickConfirmButton: handleAddshelfConfirm,
         limit: SHELF_NAME_LIMIT,
