@@ -16,7 +16,7 @@ import { Add } from '../../../components/Tool/Add';
 import { Tooltip } from '../../../components/Tooltip';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
-import { SHELVES_LIMIT } from '../../../constants/shelves';
+import { SHELVES_LIMIT, SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { URLMap } from '../../../constants/urls';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
@@ -103,6 +103,7 @@ const ShelvesList = props => {
         message: '새 책장의 이름을 입력해주세요.',
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
         onClickConfirmButton: handleAddshelfConfirm,
+        limit: SHELF_NAME_LIMIT,
       });
     });
   };

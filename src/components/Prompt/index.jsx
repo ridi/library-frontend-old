@@ -1,10 +1,12 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import classname from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as toastActions from '../../services/toast/actions';
 import { ToastStyle } from '../../services/toast/constants';
 import Close from '../../svgs/Close.svg';
+import Exclamation from '../../svgs/ExclamationCircleFill.svg';
 import { disableScroll, enableScroll } from '../../utils/scroll';
 import IconButton from '../IconButton';
 import * as styles from './styles';
@@ -14,6 +16,8 @@ class Prompt extends React.Component {
     super(props);
     this.state = {
       promptInput: this.props.initialValue || '',
+      isInputLimitOver: false,
+      isFocused: false,
     };
   }
 
@@ -41,14 +45,31 @@ class Prompt extends React.Component {
   };
 
   handleChange = e => {
-    this.setState({
-      promptInput: e.target.value,
-    });
+    const { value: inputValue } = e.target;
+    const { limit } = this.props;
+    if (limit && inputValue.length > limit) {
+      this.setState({
+        isInputLimitOver: true,
+      });
+    } else {
+      this.setState({
+        isInputLimitOver: false,
+        promptInput: inputValue,
+      });
+    }
+  };
+
+  handleFocus = () => {
+    this.setState({ isFocused: true });
+  };
+
+  handleBlur = () => {
+    this.setState({ isFocused: false });
   };
 
   render() {
-    const { onClickCloseButton, title, message, confirmLabel, placeHolder } = this.props;
-    const { promptInput: inputValue } = this.state;
+    const { onClickCloseButton, title, message, confirmLabel, placeHolder, limit } = this.props;
+    const { promptInput: inputValue, isInputLimitOver, isFocused } = this.state;
     return (
       <form css={styles.promptWrapper} onSubmit={this.submitPrompt}>
         <div css={styles.prompt}>
@@ -60,15 +81,21 @@ class Prompt extends React.Component {
           </div>
           <div css={styles.promptContent}>
             <p>{message}</p>
-            <input
-              css={styles.promptInput}
-              type="text"
-              placeholder={placeHolder}
-              onChange={this.handleChange}
-              autoComplete="off"
-              value={inputValue}
-              autoFocus
-            />
+            <div css={styles.promptInputWrapper} className={classname([isFocused && 'focus', isInputLimitOver && 'invalid'])}>
+              <input
+                css={styles.promptInput}
+                type="text"
+                placeholder={placeHolder}
+                onChange={this.handleChange}
+                onFocus={this.handleFocus}
+                onBlur={this.handleBlur}
+                autoComplete="off"
+                value={inputValue}
+                autoFocus
+              />
+              {isInputLimitOver && <Exclamation css={styles.invalidIcon} />}
+            </div>
+            {isInputLimitOver && <p css={styles.invalidInfo}>최대 {limit}자까지 작성가능합니다.</p>}
           </div>
           <div css={styles.promptFooter}>
             <button type="submit" css={styles.promptButton}>

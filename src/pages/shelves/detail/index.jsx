@@ -16,6 +16,7 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
 import * as Tools from '../../../components/Tool';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import { SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
@@ -133,6 +134,7 @@ function ShelfDetail(props) {
         initialValue: name,
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
         onClickConfirmButton: confirmShelfRename,
+        limit: SHELF_NAME_LIMIT,
       });
     },
     [name],
