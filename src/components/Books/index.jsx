@@ -101,14 +101,13 @@ const refineBookData = ({
     thumbnailWidth: 60,
     expiredAt,
   };
-  const viewTypeBookProps = viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps;
 
   return {
     isPurchasedBook,
     isCollectionBook,
     libraryBookProps: {
       ...defaultBookProps,
-      ...viewTypeBookProps,
+      ...(viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
     },
     thumbnailLink,
   };
