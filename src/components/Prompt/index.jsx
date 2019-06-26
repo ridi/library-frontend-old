@@ -81,7 +81,7 @@ class Prompt extends React.Component {
           </div>
           <div css={styles.promptContent}>
             <p>{message}</p>
-            <div css={styles.promptInputWrapper} className={classname([isFocused && 'focus', isInputLimitOver && 'invalid'])}>
+            <div css={styles.promptInputWrapper} className={classname(isFocused && 'focus', isInputLimitOver && 'invalid')}>
               <input
                 css={styles.promptInput}
                 type="text"
