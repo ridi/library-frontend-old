@@ -5,7 +5,9 @@ import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import config from '../../config';
 import { UnitType } from '../../constants/unitType';
+import { getAdultVerification } from '../../services/account/selectors';
 import { getBook } from '../../services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
 import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
@@ -212,7 +214,7 @@ class UnitDetailView extends React.Component {
   }
 
   render() {
-    const { unit, items, primaryItem, book, bookDescription, bookStarRating } = this.props;
+    const { unit, items, primaryItem, book, bookDescription, bookStarRating, isVerifiedAdult } = this.props;
     const { thumbnailWidth } = this.state;
 
     if (!unit || !book || !bookDescription || !bookStarRating) {
@@ -224,6 +226,10 @@ class UnitDetailView extends React.Component {
     }
 
     const _notAvailable = this.isPurchased && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
+    const isAdultOnly = book.property.is_adult_only;
+    const thumbnailUrl =
+      isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${book.thumbnail.xxlarge}?dpi=xhdpi`;
+
     return (
       <div css={styles.unitDetailViewWrapper}>
         <section css={styles.header}>
@@ -232,8 +238,8 @@ class UnitDetailView extends React.Component {
               <Book.Thumbnail
                 expired={_notAvailable}
                 notAvailable={_notAvailable}
-                adultBadge={book.property.is_adult_only}
-                thumbnailUrl={`${book.thumbnail.xxlarge}?dpi=xhdpi`}
+                adultBadge={isAdultOnly}
+                thumbnailUrl={thumbnailUrl}
                 thumbnailWidth={thumbnailWidth}
                 expiredAt={UnitType.isBook(unit.type) && this.isPurchased && primaryItem.remain_time}
               />
@@ -267,6 +273,7 @@ const mapStateToPropsFactory = () => {
     fetchingReadLatest: getFetchingReadLatest(state),
     book: getBook(state, props.primaryBookId),
     bookMetadata: selectBookMetadata(state, props.primaryBookId, props.unit),
+    isVerifiedAdult: getAdultVerification(state),
   });
 };
 
