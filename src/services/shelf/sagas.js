@@ -9,6 +9,9 @@ import { thousandsSeperator } from '../../utils/number';
 import { makeLinkProps } from '../../utils/uri';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
+import * as bookDownloadActions from '../bookDownload/actions';
+import { MakeBookIdsError } from '../common/errors';
+import * as dialogActions from '../dialog/actions';
 import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
@@ -48,9 +51,8 @@ function* loadShelves(isServer, { payload }) {
   const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
   const limit = SHELVES_LIMIT_PER_PAGE;
   try {
-    const items = yield call(requests.fetchShelves, { offset, limit });
+    const items = yield call(requests.fetchShelves, { offset, limit, orderType: orderBy, orderBy: orderDirection });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
-    yield all(items.map(({ uuid }) => fork(loadShelfBookCount, isServer, { payload: { uuid } })));
   } catch (err) {
     if (!err.response || err.response.status !== 401 || !isServer) {
       throw err;
@@ -268,7 +270,7 @@ function* deleteShelfFromDetail({ payload }) {
 
 function* addSelectedToShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
-  const { onComplete, uuid } = payload;
+  const { fromShelfPageOptions, onComplete, uuid } = payload;
   try {
     const count = yield call(requests.fetchShelfBookCount, { uuid });
     if (count >= ITEMS_LIMIT_PER_SHELF) {
@@ -292,19 +294,29 @@ function* addSelectedToShelf({ payload }) {
     }));
     const shelfName = yield select(selectors.getShelfName, uuid);
     yield call(addShelfItem, { payload: { uuid, units } });
-    yield put(
-      toastActions.showToast({
-        message: `"${shelfName}" 책장에 추가했습니다.`,
-        linkName: '책장 바로 보기',
-        linkProps: makeLinkProps(
-          {
-            pathname: URLMap[PageType.SHELF_DETAIL].href,
-            query: { uuid },
-          },
-          URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-        ),
-      }),
-    );
+
+    if (fromShelfPageOptions != null) {
+      yield call(loadShelfBooks, false, { payload: { uuid, ...fromShelfPageOptions } });
+      yield put(
+        toastActions.showToast({
+          message: '책장에 추가했습니다.',
+        }),
+      );
+    } else {
+      yield put(
+        toastActions.showToast({
+          message: `"${shelfName}" 책장에 추가했습니다.`,
+          linkName: '책장 바로 보기',
+          linkProps: makeLinkProps(
+            {
+              pathname: URLMap[PageType.SHELF_DETAIL].href,
+              query: { uuid },
+            },
+            URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+          ),
+        }),
+      );
+    }
     onComplete && onComplete();
   } catch (err) {
     console.error(err);
@@ -345,6 +357,23 @@ function* removeSelectedFromShelf({ payload }) {
   yield put(actions.loadShelfBooks(uuid, pageOptions));
 }
 
+function* downloadSelectedUnits() {
+  const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
+    .filter(([, checked]) => checked)
+    .map(([bookId]) => bookId);
+  const bookToUnit = yield select(state => state.shelf.bookToUnit);
+  const unitIds = bookIds.map(bookId => bookToUnit[bookId]);
+  try {
+    yield put(bookDownloadActions.downloadBooksByUnitIds(unitIds));
+  } catch (err) {
+    let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+    if (err instanceof MakeBookIdsError) {
+      message = '다운로드 대상 도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    }
+    yield put(dialogActions.showDialog('다운로드 오류', message));
+  }
+}
+
 export default function* shelfRootSaga(isServer) {
   yield all([
     takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
@@ -360,6 +389,7 @@ export default function* shelfRootSaga(isServer) {
     takeEvery(actions.DELETE_SHELF_FROM_DETAIL, deleteShelfFromDetail),
     takeEvery(actions.ADD_SELECTED_TO_SHELF, addSelectedToShelf),
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
+    takeEvery(actions.DOWNLOAD_SELECTED_UNITS, downloadSelectedUnits),
     takeEvery(actions.VALIDATE_SHELVES_LIMIT, validateShelvesLimit),
   ]);
 }

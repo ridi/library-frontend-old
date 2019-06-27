@@ -2,14 +2,17 @@ import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
 
-export async function fetchShelves({ offset, limit }) {
+export async function fetchShelves({ offset, limit, orderType, orderBy }) {
   const api = getApi();
-  const response = await api.get(makeURI('/shelves/', { offset, limit, need_three_items: true }, config.LIBRARY_API_BASE_URL));
+  const response = await api.get(
+    makeURI('/shelves/', { offset, limit, need_three_items: true, order_type: orderType, order_by: orderBy }, config.LIBRARY_API_BASE_URL),
+  );
   return response.data.items.map(item => ({
     id: item.id,
     uuid: item.shelf_uuid,
     name: item.name,
     thumbnails: item.items,
+    bookCount: item.count,
   }));
 }
 

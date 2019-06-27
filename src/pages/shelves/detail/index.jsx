@@ -16,10 +16,10 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import Title from '../../../components/TitleBar/Title';
 import * as Tools from '../../../components/Tool';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+import { SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
-import * as bookDownloadActions from '../../../services/bookDownload/actions';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
@@ -31,6 +31,7 @@ import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 import EditButton from './EditButton';
+import SearchModal from './SearchModal';
 
 const shelfBar = {
   backgroundColor: '#ffffff',
@@ -60,10 +61,11 @@ const toolBar = css`
 
 function ShelfDetail(props) {
   const {
+    addSelectedToShelf,
     bookIds,
     clearSelectedBooks,
     removeShelfFromDetail,
-    downloadSelectedBooks,
+    downloadSelectedUnits,
     name,
     orderBy,
     orderDirection,
@@ -81,6 +83,7 @@ function ShelfDetail(props) {
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
   const [isEditing, setIsEditing] = React.useState(false);
+  const [isAdding, setIsAdding] = React.useState(false);
   const toggleEditingMode = React.useCallback(() => {
     clearSelectedBooks();
     setIsEditing(value => !value);
@@ -101,10 +104,12 @@ function ShelfDetail(props) {
     });
   }, []);
   const downloadBooks = React.useCallback(() => {
-    downloadSelectedBooks();
+    downloadSelectedUnits();
     clearSelectedBooks();
     setIsEditing(false);
   }, []);
+  const handleAddClick = React.useCallback(() => setIsAdding(true), []);
+  const handleAddBackClick = React.useCallback(() => setIsAdding(false), []);
   const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
@@ -125,13 +130,28 @@ function ShelfDetail(props) {
       showPrompt({
         title: '책장 이름 변경',
         message: '책장의 이름을 입력해주세요.',
+        placeHolder: '책장 이름',
         confirmLabel: '확인',
         initialValue: name,
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
         onClickConfirmButton: confirmShelfRename,
+        limit: SHELF_NAME_LIMIT,
       });
     },
     [name],
+  );
+  const handleAddSelected = React.useCallback(
+    targetUuid => {
+      addSelectedToShelf({
+        fromShelfPageOptions: { orderBy, orderDirection, page },
+        uuid: targetUuid,
+        onComplete() {
+          clearSelectedBooks();
+          setIsAdding(false);
+        },
+      });
+    },
+    [orderBy, orderDirection, page],
   );
 
   const linkBuilder = React.useCallback(
@@ -195,6 +215,7 @@ function ShelfDetail(props) {
   function renderToolbar() {
     const right = (
       <div css={toolsWrapper}>
+        <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
       </div>
     );
@@ -246,6 +267,17 @@ function ShelfDetail(props) {
       <div css={paddingForPagination}>
         <ResponsiveBooks>{books}</ResponsiveBooks>
       </div>
+    );
+  }
+
+  if (isAdding) {
+    return (
+      <>
+        <Head>
+          <title>{name} - 내 서재</title>
+        </Head>
+        <SearchModal onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
+      </>
     );
   }
 
@@ -336,9 +368,10 @@ function mapStateToProps(state, props) {
 }
 
 const mapDispatchToProps = {
+  addSelectedToShelf: actions.addSelectedToShelf,
   clearSelectedBooks: selectionActions.clearSelectedItems,
   removeShelfFromDetail: actions.deleteShelfFromDetail,
-  downloadSelectedBooks: bookDownloadActions.downloadSelectedBooks,
+  downloadSelectedUnits: actions.downloadSelectedUnits,
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,

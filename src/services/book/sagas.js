@@ -4,7 +4,9 @@ import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { showToast } from '../toast/actions';
 import {
+  LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
+  LOAD_UNIT_DATA,
   setBookData,
   setBookDataFromStorage,
   setBookDescriptions,
@@ -41,21 +43,11 @@ function filterTTLObj(itemIds, existItems) {
   // Step 3. Fetch ttl item data
   // Step 4. Set ttl item data
   const criterion = getCriterion();
-  return itemIds.reduce((previous, itemId) => {
-    const item = existItems.find(itemId);
-
-    if (!item) {
-      // 없거나
-      return [...previous, itemId];
-    }
-
-    if (item.value.ttl <= criterion) {
-      // TTL이 만료되었거나
-      return [...previous, itemId];
-    }
-
-    return previous;
-  }, []);
+  return itemIds.filter(itemId => {
+    const item = existItems[itemId];
+    // 없거나 TTL이 만료된 경우
+    return !item || item.ttl <= criterion;
+  });
 }
 
 export function* loadBookData(bookIds) {
@@ -71,8 +63,12 @@ export function* loadBookData(bookIds) {
   const books = yield call(fetchBookData, bookIdsWithoutInvalidValue);
   yield put(setBookData(books));
 
-  // TODO: LRU버그로 인해 주석처리
+  // TODO: 되살릴 타이밍 잡기 (LRU)
   // yield fork(persistBookDataToStorage);
+}
+
+function* loadBookDataFromAction({ payload: { bookIds } }) {
+  yield* loadBookData(bookIds);
 }
 
 export function* loadBookDescriptions(bookIds) {
@@ -124,6 +120,10 @@ export function* loadUnitData(unitIds) {
   yield put(setUnitData(units));
 }
 
+function* loadUnitDataFromAction({ payload: { unitIds } }) {
+  yield* loadUnitData(unitIds);
+}
+
 export function* loadUnitOrders(unitId, orderType, orderBy, page) {
   const unitOrders = yield call(fetchUnitOrders, unitId, orderType, orderBy, page);
   yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
@@ -143,5 +143,7 @@ export default function* bookRootSaga() {
   yield all([
     takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
     takeEvery(SHOW_SHELF_BOOK_ALERT_TOAST, showShelfBookAlertToast),
+    takeEvery(LOAD_BOOK_DATA, loadBookDataFromAction),
+    takeEvery(LOAD_UNIT_DATA, loadUnitDataFromAction),
   ]);
 }

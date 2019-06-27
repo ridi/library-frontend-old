@@ -3,7 +3,6 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import { URLMap, PageType } from '../../../constants/urls';
-import { getBooks, getUnit, getBookStarRating, getBookDescription } from '../../../services/book/selectors';
 import { getSearchPageInfo } from '../../../services/purchased/search/selectors';
 import {
   downloadSelectedBooks,
@@ -22,7 +21,6 @@ import {
   getUnitId,
   getPrimaryItem,
 } from '../../../services/purchased/searchUnit/selectors';
-import { toFlatten } from '../../../utils/array';
 import { getPrimaryBookId } from '../../../services/purchased/common/selectors';
 import UnitPageTemplate from '../../base/UnitPageTemplate';
 
@@ -43,17 +41,11 @@ class searchUnit extends React.Component {
 
 const mapStateToProps = state => {
   const unitId = getUnitId(state);
-  const unit = getUnit(state, unitId);
   const primaryBookId = getPrimaryBookId(state, unitId);
   const primaryItem = getPrimaryItem(state);
   const items = getItemsByPage(state);
 
-  const books = getBooks(state, [...toFlatten(items, 'b_id'), primaryBookId]);
-  const bookDescription = getBookDescription(state, primaryBookId);
-  const bookStarRating = getBookStarRating(state, primaryBookId);
-
   const totalCount = getTotalCount(state);
-
   const isFetchingBook = getIsFetchingBook(state);
 
   const pageInfo = getPageInfo(state);
@@ -61,20 +53,17 @@ const mapStateToProps = state => {
   const shelfPageOptions = shelfSelectors.getDetailPageOptions(state);
 
   return {
-    pageInfo,
     items,
     unitId,
-    unit,
     primaryBookId,
     primaryItem,
-    books,
-    bookDescription,
-    bookStarRating,
     totalCount,
     isFetchingBook,
 
+    pageInfo,
     searchPageInfo,
     shelfPageOptions,
+
     isError: state.ui.isError,
   };
 };

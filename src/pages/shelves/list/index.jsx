@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import Head from 'next/head';
+import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
@@ -10,20 +11,23 @@ import FlexBar from '../../../components/FlexBar';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
-import { Editing } from '../../../components/Tool';
+import { Editing, ShelfOrder } from '../../../components/Tool';
 import { Add } from '../../../components/Tool/Add';
+import { Tooltip } from '../../../components/Tooltip';
+import { OrderOptions } from '../../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
-import { SHELVES_LIMIT } from '../../../constants/shelves';
+import { SHELVES_LIMIT, SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { URLMap } from '../../../constants/urls';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
 import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
-import * as selectors from '../../../services/shelf/selectors';
+import * as shelfSelectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
+import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
@@ -97,8 +101,10 @@ const ShelvesList = props => {
       showPrompt({
         title: '새 책장 추가',
         message: '새 책장의 이름을 입력해주세요.',
+        placeHolder: '책장 이름',
         emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
         onClickConfirmButton: handleAddshelfConfirm,
+        limit: SHELF_NAME_LIMIT,
       });
     });
   };
@@ -128,12 +134,34 @@ const ShelvesList = props => {
     ],
   };
 
-  const renderTools = () => (
-    <div css={toolsWrapper}>
-      <Add onClickAddButton={handleAddShelf} />
-      <Editing toggleEditingMode={toggleSelectMode} />
-    </div>
-  );
+  const handleOrderOptionClick = option => {
+    const { orderType, orderBy } = option;
+    const newPageOptions = {
+      page: 1,
+      orderBy: orderType,
+      orderDirection: orderBy,
+    };
+    const { href, as } = URLMap.shelves;
+    const linkProps = makeLinkProps(href, as, newPageOptions);
+    Router.push(linkProps.href, linkProps.as);
+  };
+
+  const renderTools = () => {
+    const orderOptions = OrderOptions.toShelves();
+    const { orderBy, orderDirection } = pageOptions;
+    const order = OrderOptions.toKey(orderBy, orderDirection);
+    return (
+      <div css={toolsWrapper}>
+        <Add onClickAddButton={handleAddShelf}>
+          <Tooltip name="SHELVES_TOOLTIP" expires={new Date(2019, 8, 20)}>
+            책장을 만들어 원하는 책을 담아보세요!
+          </Tooltip>
+        </Add>
+        <Editing toggleEditingMode={toggleSelectMode} />
+        <ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
+      </div>
+    );
+  };
 
   const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
   const renderPaginator = () => {
@@ -185,9 +213,10 @@ const ShelvesList = props => {
 
 ShelvesList.getInitialProps = async ({ query, store }) => {
   const page = parseInt(query.page, 10) || 1;
-  const orderBy = '';
-  const orderDirection = '';
+  const orderBy = query.order_by || OrderOptions.SHELF_CREATED.orderType;
+  const orderDirection = query.order_direction || OrderOptions.SHELF_CREATED.orderBy;
   const pageOptions = { orderBy, orderDirection, page };
+
   store.dispatch(shelfActions.setListPageOptions(pageOptions));
   store.dispatch(shelfActions.loadShelves(pageOptions));
   store.dispatch(shelfActions.loadShelfCount());
@@ -198,8 +227,8 @@ ShelvesList.getInitialProps = async ({ query, store }) => {
 
 const mapStateToProps = (state, props) => {
   const { pageOptions } = props;
-  const shelves = selectors.getShelves(state, pageOptions);
-  const totalShelfCount = selectors.getShelfCount(state);
+  const shelves = shelfSelectors.getShelves(state, pageOptions);
+  const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
   return { shelves, totalShelfCount, totalSelectedCount, selectedShelves };

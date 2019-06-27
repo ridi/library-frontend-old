@@ -26,6 +26,7 @@ export const VALIDATE_SHELVES_LIMIT = 'VALIDATE_SHELVES_LIMIT';
 export const DELETE_SHELF_FROM_DETAIL = 'DELETE_SHELF_FROM_DETAIL';
 export const ADD_SELECTED_TO_SHELF = 'ADD_SELECTED_TO_SHELF';
 export const REMOVE_SELECTED_FROM_SHELF = 'REMOVE_SELECTED_FROM_SHELF';
+export const DOWNLOAD_SELECTED_UNITS = 'DOWNLOAD_SELECTED_UNITS';
 
 export const BEGIN_OPERATION = 'BEGIN_OPERATION';
 export const END_OPERATION = 'END_OPERATION';
@@ -206,9 +207,10 @@ export const deleteShelfFromDetail = uuid => ({
   },
 });
 
-export const addSelectedToShelf = ({ onComplete, uuid }) => ({
+export const addSelectedToShelf = ({ fromShelfPageOptions, onComplete, uuid }) => ({
   type: ADD_SELECTED_TO_SHELF,
   payload: {
+    fromShelfPageOptions,
     onComplete,
     uuid,
   },
@@ -220,6 +222,10 @@ export const removeSelectedFromShelf = ({ uuid, pageOptions }) => ({
     uuid,
     pageOptions,
   },
+});
+
+export const downloadSelectedUnits = () => ({
+  type: DOWNLOAD_SELECTED_UNITS,
 });
 
 export const beginOperation = ({ revision }) => ({

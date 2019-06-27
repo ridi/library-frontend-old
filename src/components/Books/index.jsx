@@ -2,13 +2,16 @@
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter, subDays } from 'date-fns';
-import { merge } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import config from '../../config';
 import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
+import { getAdultVerification } from '../../services/account/selectors';
 import { showShelfBookAlertToast } from '../../services/book/actions';
+import { getBooks } from '../../services/book/selectors';
 import * as featureSelectors from '../../services/feature/selectors';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
@@ -36,6 +39,7 @@ const refineBookData = ({
   isSyncShelfEnabled,
   recentlyUpdatedMap,
   thumbnailWidth,
+  isVerifiedAdult,
 }) => {
   const {
     unit_count: bookCount,
@@ -74,9 +78,12 @@ const refineBookData = ({
   const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = unit ? unit.title : unitTitle || platformBookData.title.main;
 
+  const thumbnailUrl =
+    isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${platformBookData.thumbnail.large}?dpi=xhdpi`;
+
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,
-    thumbnailUrl: `${platformBookData.thumbnail.large}?dpi=xhdpi`,
+    thumbnailUrl,
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
@@ -104,15 +111,29 @@ const refineBookData = ({
   return {
     isPurchasedBook,
     isCollectionBook,
-    libraryBookProps: merge(defaultBookProps, viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
+    libraryBookProps: {
+      ...defaultBookProps,
+      ...(viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
+    },
     thumbnailLink,
   };
 };
 
-const mapStateToProps = state => ({
-  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
-  selectedBooks: getSelectedItems(state),
-});
+const mapStateToPropsFactory = () => {
+  const selectBookIds = createSelector(
+    props => props.libraryBookDTO,
+    items => items.map(x => x.b_id),
+  );
+  return (state, props) => {
+    const bookIds = selectBookIds(props);
+    return {
+      isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
+      selectedBooks: getSelectedItems(state),
+      platformBookDTO: getBooks(state, bookIds),
+      isVerifiedAdult: getAdultVerification(state),
+    };
+  };
+};
 
 const mapDispatchToProps = {
   onSelectedChange: toggleItem,
@@ -120,7 +141,7 @@ const mapDispatchToProps = {
 };
 
 export const Books = connect(
-  mapStateToProps,
+  mapStateToPropsFactory,
   mapDispatchToProps,
 )(props => {
   const isLoaded = true;
@@ -138,6 +159,7 @@ export const Books = connect(
     isSyncShelfEnabled,
     recentlyUpdatedMap,
     dispatchShowShelfBookAlertToast,
+    isVerifiedAdult,
   } = props;
   const [thumbnailWidth, setThumbnailWidth] = useState('100%');
   const setResponsiveThumbnailWidth = () => {
@@ -201,6 +223,7 @@ export const Books = connect(
           isSyncShelfEnabled,
           recentlyUpdatedMap,
           thumbnailWidth,
+          isVerifiedAdult,
         });
 
         return viewType === ViewType.PORTRAIT ? (

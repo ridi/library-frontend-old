@@ -180,7 +180,6 @@ class Search extends React.Component {
     const { isEditing: isSelectMode } = this.state;
     const {
       items: libraryBookDTO,
-      books: platformBookDTO,
       units,
       recentlyUpdatedMap,
       isFetchingBooks,
@@ -215,7 +214,6 @@ class Search extends React.Component {
         <Books
           {...{
             libraryBookDTO,
-            platformBookDTO,
             units,
             isSelectMode,
             viewType,
@@ -315,11 +313,11 @@ class Search extends React.Component {
 const mapStateToProps = state => {
   const pageInfo = getSearchPageInfo(state);
   const items = getItemsByPage(state);
-  const books = getBooks(state, toFlatten(items, 'b_id'));
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
+  const books = getBooks(state, toFlatten(items, 'b_id'));
   const lastBookIds = toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
 
@@ -327,7 +325,6 @@ const mapStateToProps = state => {
   return {
     pageInfo,
     items,
-    books,
     units,
     recentlyUpdatedMap,
     totalSelectedCount,
