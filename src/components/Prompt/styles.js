@@ -91,6 +91,10 @@ export const promptInput = {
   fontSize: '15px',
   color: '#525a61',
   fontWeight: 'bold',
+  '&::placeholder': {
+    color: '#9ea7ad',
+    fontWeight: 'normal',
+  },
 };
 
 export const promptButton = {
