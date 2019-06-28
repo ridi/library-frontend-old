@@ -135,6 +135,8 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
         a11y="검색어 제거"
         css={[styles.clearButton, (isSearchBoxFocused || keyword) && styles.clearButtonActive]}
         onClick={handleCancel}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       >
         <Close css={styles.clearIcon} />
       </IconButton>
