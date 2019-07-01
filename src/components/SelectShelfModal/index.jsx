@@ -2,6 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import Responsive from '../../pages/base/Responsive';
@@ -20,7 +21,6 @@ import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
 import { SkeletonShelves } from '../Skeleton/SkeletonShelves';
 import * as Tool from '../Tool';
-import { OrderOptions } from '../../constants/orderOptions';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
