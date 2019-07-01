@@ -8,8 +8,31 @@ import { getUnit, getUnitOrders, getBooks } from '../../../book/selectors';
 import { fetchItems } from '../requests';
 
 function getLibraryItem(itemBookIds, libraryItems) {
-  const selectedLibraryItems = itemBookIds.filter(bookId => !!libraryItems[bookId]);
-  return selectedLibraryItems ? libraryItems[selectedLibraryItems[0]] : null;
+  const selectedLibraryItems = itemBookIds.map(bookId => libraryItems[bookId]).filter(item => !!item);
+  // 우선순위:
+  // 1. 대여 기한이 많이 남은 것 (만료 시각이 큰 것)
+  //    - 만료 기한이 없는 도서는 만료 시각이 최댓값을 가짐
+  // 2. 셀렉트 도서가 아닌 것
+  // 3. 최근에 구매한 것 (구매 시각이 큰 것)
+  let optimalValue = null;
+  for (const item of selectedLibraryItems) {
+    if (optimalValue == null) {
+      optimalValue = item;
+    } else if (optimalValue.expire_date !== item.expire_date) {
+      if (new Date(optimalValue.expire_date) < new Date(item.expire_date)) {
+        optimalValue = item;
+      }
+    } else if (optimalValue.is_ridiselect !== item.is_ridiselect) {
+      if (!item.is_ridiselect) {
+        optimalValue = item;
+      }
+    } else if (optimalValue.purchase_date !== item.purchase_date) {
+      if (new Date(optimalValue.purchase_date) < new Date(item.purchase_date)) {
+        optimalValue = item;
+      }
+    }
+  }
+  return optimalValue;
 }
 
 // TODO: 컴포넌트 업데이트 전까지 임시적으로 처리한다.
