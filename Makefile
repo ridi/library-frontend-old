@@ -8,16 +8,15 @@ docker-all: yarn-install run-local
 
 # install
 yarn-install:
-	@yarn global add pm2 && yarn install
+	@yarn install
 
 
 # run
 run-local:
-	NODE_ENV=local yarn local
+	yarn local
 
 build-local:
-	NODE_ENV=local yarn build
-	NODE_ENV=local yarn export
+	yarn build webpack.local.js
 
 # docker
 docker-up:
