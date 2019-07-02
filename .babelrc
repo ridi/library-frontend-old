@@ -1,10 +1,13 @@
 {
   "presets": [
-    ["next/babel",
+    [
+      "@babel/preset-react"
+    ],
+    [
+      "@babel/preset-env",
       {
-        "preset-env": {
-          "useBuiltIns": "entry"
-        }
+        "corejs": 3,
+        "useBuiltIns": "entry"
       }
     ]
   ],
