@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "build": ""
+    "local": "webpack-dev-server -r esm --config webpack.local.js",
+    "build": "webpack -r esm --config"
   },
   "husky": {
     "hooks": {
@@ -67,6 +68,7 @@
     "pretty-quick": "^1.8.0",
     "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1"
   },
   "browserslist": [
