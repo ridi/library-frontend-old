@@ -20,6 +20,7 @@ export default merge(common, {
     contentBase: path.resolve(__dirname, 'dist'),
     host: '0.0.0.0',
     port: 3000,
+    sockPort: 443,
     allowedHosts: ['library.local.ridi.io'],
     stats: common.stats,
     // hot: true,
