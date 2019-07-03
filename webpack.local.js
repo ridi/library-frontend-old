@@ -21,6 +21,7 @@ export default merge(common, {
     host: '0.0.0.0',
     port: 3000,
     allowedHosts: ['library.local.ridi.io'],
+    stats: common.stats,
     // hot: true,
   },
 });
