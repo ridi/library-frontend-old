@@ -89,7 +89,7 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
   const [isSearchBoxFocused, setSearchBoxFocused] = React.useState(false);
   const inputRef = React.useRef();
   const handleChange = React.useCallback(e => onKeywordChange(e.target.value), [onKeywordChange]);
-  const handleClear = React.useCallback(
+  const handleReset = React.useCallback(
     () => {
       onKeywordChange('');
       onClear && onClear();
@@ -129,13 +129,8 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
   }, []);
 
   function renderCancelButton() {
-    const handleCancel = isSearchPage ? undefined : handleClear;
     const button = (
-      <IconButton
-        a11y="검색어 제거"
-        css={[styles.clearButton, (isSearchBoxFocused || keyword) && styles.clearButtonActive]}
-        onClick={handleCancel}
-      >
+      <IconButton a11y="검색어 제거" css={[styles.clearButton, (isSearchBoxFocused || keyword) && styles.clearButtonActive]} type="reset">
         <Close css={styles.clearIcon} />
       </IconButton>
     );
@@ -151,7 +146,13 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
   }
 
   return (
-    <form css={[styles.searchBox, isSearchBoxFocused && styles.focused, keyword && styles.keywordAdded]} onSubmit={handleSubmit}>
+    <form
+      css={[styles.searchBox, isSearchBoxFocused && styles.focused, keyword && styles.keywordAdded]}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+    >
       <Search css={styles.icon} />
       <input
         ref={inputRef}
@@ -161,8 +162,6 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
         css={styles.input}
         value={keyword}
         onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
         onKeyUp={handleKeyUp}
         autoComplete="off"
       />

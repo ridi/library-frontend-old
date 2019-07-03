@@ -2,6 +2,7 @@
 import { css, jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import Responsive from '../../pages/base/Responsive';
@@ -25,6 +26,10 @@ const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
   box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #f3f4f5;
+`;
+
+const toolsWrapper = css`
+  display: flex;
 `;
 
 function SelectShelfLinkButton(props) {
@@ -87,9 +92,25 @@ function SelectShelfModalInner(props) {
     [orderBy, orderDirection, page],
   );
 
+  const handleOrderOptionClick = React.useCallback(option => {
+    const newPageOptions = {
+      page: 1,
+      orderBy: option.orderType,
+      orderDirection: option.orderBy,
+    };
+    onPageOptionsChange(newPageOptions);
+  }, []);
+
   function renderToolBar() {
     const { onBackClick } = props;
-    const right = <Tool.Add onClickAddButton={handleAddShelf} />;
+    const orderOptions = OrderOptions.toShelves();
+    const order = OrderOptions.toKey(orderBy, orderDirection);
+    const right = (
+      <div css={toolsWrapper}>
+        <Tool.Add onClickAddButton={handleAddShelf} />
+        <Tool.ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
+      </div>
+    );
     return (
       <>
         <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
@@ -155,8 +176,8 @@ const SelectShelfModal = connect(
 )(SelectShelfModalInner);
 
 export default function SelectShelfModalContainer({ onBackClick, onShelfSelect }) {
-  const [orderBy, setOrderBy] = React.useState('');
-  const [orderDirection, setOrderDirection] = React.useState('');
+  const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderType);
+  const [orderDirection, setOrderDirection] = React.useState(OrderOptions.SHELF_CREATED.orderBy);
   const [page, setPage] = React.useState(1);
 
   const handlePageOptionsChange = React.useCallback(options => {
