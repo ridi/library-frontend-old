@@ -11,5 +11,9 @@ export default merge(common, {
     chunkFilename: '[id].[hash].js',
   },
   plugins: [new webpack.DefinePlugin(buildDefinitions(settings))],
+  stats: {
+    assetsSort: '!size',
+    performance: true,
+  },
   devtool: 'hidden-source-map',
 });

@@ -1,6 +1,7 @@
 import * as path from 'path';
 
 import webpack from 'webpack';
+import WebpackBar from 'webpackbar';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 export default {
@@ -36,7 +37,20 @@ export default {
         viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
       },
     }),
+    new WebpackBar(),
   ],
+  stats: {
+    all: false,
+    assets: true,
+    assetsSort: 'id',
+    errors: true,
+    errorDetails: true,
+    hash: true,
+    moduleTrace: true,
+    version: true,
+    warnings: true,
+    warningsFilter: 'size limit',
+  },
   devtool: 'inline-source-map',
 };
 
