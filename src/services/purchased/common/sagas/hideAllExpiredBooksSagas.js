@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { channel, delay } from 'redux-saga';
 import { all, call, put, take } from 'redux-saga/effects';
 import { OrderOptions } from '../../../../constants/orderOptions';
@@ -130,7 +129,7 @@ export function* hideAllExpiredBooks() {
       put(setFullScreenLoading(false)),
     ]);
   } finally {
-    Router.replace(URLMap.main.href, URLMap.main.as);
+    // Router.replace(URLMap.main.href, URLMap.main.as);
   }
 }
 
