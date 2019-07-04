@@ -200,9 +200,10 @@ export const deleteShelfItem = ({ uuid, units }) => ({
   },
 });
 
-export const deleteShelfFromDetail = uuid => ({
+export const deleteShelfFromDetail = (uuid, history) => ({
   type: DELETE_SHELF_FROM_DETAIL,
   payload: {
+    history,
     uuid,
   },
 });
