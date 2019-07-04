@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
 import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
@@ -13,27 +13,13 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
   </button>
 );
 
-export const ModalLinkItem = ({
-  title,
-  isSelected,
-  children,
-  count,
-  IconComponent,
-  href,
-  as,
-  style,
-  query = {},
-  replace = false,
-  scroll = true,
-}) => (
-  <Link prefetch replace={replace} scroll={scroll} {...makeLinkProps(href, as, query)}>
-    <a css={[modalStyles.item, style]}>
-      {IconComponent && <IconComponent css={modalStyles.icon} />}
-      {isSelected && <Check css={modalStyles.selectedIcon} />}
-      {children}
-      {title}
-      {count ? <span css={modalStyles.count}>{count}</span> : null}
-    </a>
+export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, as, style, query = {}, replace = false }) => (
+  <Link replace={replace} {...makeLinkProps({}, as, query)} css={[modalStyles.item, style]}>
+    {IconComponent && <IconComponent css={modalStyles.icon} />}
+    {isSelected && <Check css={modalStyles.selectedIcon} />}
+    {children}
+    {title}
+    {count ? <span css={modalStyles.count}>{count}</span> : null}
   </Link>
 );
 

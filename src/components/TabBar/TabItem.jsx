@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
 
@@ -13,13 +13,11 @@ export const TabItem = ({ name, onClick, isActive }) => (
   </li>
 );
 
-export const TabLinkItem = ({ name, href, as, query, isActive }) => (
+export const TabLinkItem = ({ name, as, query, isActive }) => (
   <li css={styles.tabItem}>
-    <Link prefetch {...makeLinkProps(href, as, query)}>
-      <a css={[styles.tabButton, styles.tabButtonToggle(isActive)]}>
-        {name}
-        <span css={[styles.activeBar, styles.activeBarToggle(isActive)]} />
-      </a>
+    <Link {...makeLinkProps({}, as, query)} css={[styles.tabButton, styles.tabButtonToggle(isActive)]}>
+      {name}
+      <span css={[styles.activeBar, styles.activeBarToggle(isActive)]} />
     </Link>
   </li>
 );
