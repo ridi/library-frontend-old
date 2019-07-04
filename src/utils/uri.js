@@ -41,11 +41,11 @@ export const makeRidiStoreUri = bookId => `${config.STORE_API_BASE_URL}/v2/Detai
 export const makeLinkProps = (href, as, query) => {
   const snakeQuery = typeof query === 'object' ? snakelize(query) : {};
   const searchParams = new URLSearchParams();
-  for (const [k, v] of Object.entries(snakeQuery)) {
+  for (const [k, v] of Object.entries(snakeQuery).filter(([, x]) => x != null)) {
     searchParams.append(k, v);
   }
   if (typeof as.query === 'object') {
-    for (const [k, v] of Object.entries(snakelize(as.query))) {
+    for (const [k, v] of Object.entries(snakelize(as.query)).filter(([, x]) => x != null)) {
       searchParams.append(k, v);
     }
   }

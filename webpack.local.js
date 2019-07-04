@@ -22,6 +22,7 @@ export default merge(common, {
     port: 3000,
     sockPort: 443,
     allowedHosts: ['library.local.ridi.io'],
+    historyApiFallback: true,
     stats: common.stats,
     // hot: true,
   },
