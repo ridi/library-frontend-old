@@ -52,8 +52,6 @@ function PurchasedMain(props) {
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
   const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
 
-  const realPage = Math.max(1, Math.min(totalPages, currentPage));
-
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
 
@@ -255,15 +253,18 @@ function PurchasedMain(props) {
   }
 
   let redirection = null;
-  if (currentPage !== realPage) {
-    const newUrlParams = new URLSearchParams(location.search);
-    newUrlParams.set('page', realPage);
-    const newSearch = newUrlParams.toString();
-    const to = {
-      ...location,
-      search: newSearch !== '' ? `?${newSearch}` : '',
-    };
-    redirection = <Redirect to={to} />;
+  if (totalPages > 0) {
+    const realPage = Math.max(1, Math.min(totalPages, currentPage));
+    if (currentPage !== realPage) {
+      const newUrlParams = new URLSearchParams(location.search);
+      newUrlParams.set('page', realPage);
+      const newSearch = newUrlParams.toString();
+      const to = {
+        ...location,
+        search: newSearch !== '' ? `?${newSearch}` : '',
+      };
+      redirection = <Redirect to={to} />;
+    }
   }
 
   if (showShelves) {
