@@ -1,5 +1,5 @@
-import { all } from 'redux-saga/effects';
-import accountRootSaga from '../services/account/sagas';
+import { all, call, put } from 'redux-saga/effects';
+import accountRootSaga, { loadUserInfo } from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
 // import excelDownloadRootSaga from '../services/excelDownload/sagas';
@@ -15,6 +15,22 @@ import purchasedMainRootSaga from '../services/purchased/main/sagas';
 // import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
 import trackingRootSaga from '../services/tracking/sagas';
+
+import { startAccountTracker } from '../services/account/actions';
+import { setMaintenance } from '../services/maintenance/actions';
+import { getMaintenanceStatus } from '../services/maintenance/requests';
+
+function* getMaintenanceStatusSaga() {
+  try {
+    const [maintenanceStatus] = yield all([call(getMaintenanceStatus), call(loadUserInfo)]);
+    yield put(setMaintenance(maintenanceStatus));
+    if (!maintenanceStatus.isShow) {
+      yield put(startAccountTracker());
+    }
+  } catch (e) {
+    //
+  }
+}
 
 export default function* rootSaga() {
   yield all([
@@ -34,5 +50,6 @@ export default function* rootSaga() {
     toastRootSaga(),
     trackingRootSaga(),
     bookDownloadRootSaga(),
+    getMaintenanceStatusSaga(),
   ]);
 }

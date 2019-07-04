@@ -4,6 +4,7 @@ import { initializeSentry } from './utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
 
 import Routes from './Routes';
+import Layout from './pages/base/Layout';
 
 export default function App() {
   React.useEffect(() => {
@@ -20,5 +21,9 @@ export default function App() {
     };
   }, []);
 
-  return <Routes />;
+  return (
+    <Layout>
+      <Routes />
+    </Layout>
+  );
 }
