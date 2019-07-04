@@ -60,6 +60,7 @@ function ShelfDetail(props) {
     clearSelectedBooks,
     removeShelfFromDetail,
     downloadSelectedUnits,
+    history,
     name,
     orderBy,
     orderDirection,
@@ -110,7 +111,7 @@ function ShelfDetail(props) {
     clearSelectedBooks();
     setIsAdding(false);
   }, []);
-  const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
+  const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid, history), [uuid, history]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
       title: '책장 삭제',

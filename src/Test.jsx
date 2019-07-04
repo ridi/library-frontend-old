@@ -11,6 +11,7 @@ import Empty from './components/Empty';
 import { BookError } from './components/Error';
 import ResponsivePaginator from './components/ResponsivePaginator';
 import SearchBar from './components/SearchBar';
+import SelectShelfModal from './components/SelectShelfModal';
 import SkeletonBooks from './components/Skeleton/SkeletonBooks';
 import * as featureIds from './constants/featureIds';
 import { ListInstructions } from './constants/listInstructions';
@@ -43,6 +44,7 @@ import { makeLinkProps } from './utils/uri';
 
 function Main(props) {
   const { listInstruction, location, totalPages } = props;
+  const { dispatchAddSelectedToShelf, dispatchDownloadSelectedBooks, dispatchClearSelectedBooks, dispatchHideSelectedBooks } = props;
 
   const urlParams = new URLSearchParams(location.search);
   const currentPage = parseInt(urlParams.get('page'), 10) || 1;
@@ -53,6 +55,8 @@ function Main(props) {
   const realPage = Math.max(1, Math.min(totalPages, currentPage));
 
   const [isEditing, setIsEditing] = React.useState(false);
+  const [showShelves, setShowShelves] = React.useState(false);
+
   const linkBuilder = React.useCallback(
     libraryBookData => {
       const order = OrderOptions.toKey(orderType, orderBy);
@@ -130,7 +134,6 @@ function Main(props) {
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
-  const { dispatchClearSelectedBooks } = props;
   const toggleEditingMode = React.useCallback(
     () => {
       if (isEditing) {
@@ -172,6 +175,38 @@ function Main(props) {
     };
   }
 
+  const handleHideClick = React.useCallback(
+    () => {
+      dispatchHideSelectedBooks();
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchHideSelectedBooks],
+  );
+  const handleDownloadClick = React.useCallback(
+    () => {
+      dispatchDownloadSelectedBooks();
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooks],
+  );
+  const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
+  const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
+  const handleShelfSelect = React.useCallback(
+    uuid => {
+      dispatchAddSelectedToShelf({
+        uuid,
+        onComplete: () => {
+          setIsEditing(false);
+          setShowShelves(false);
+          dispatchClearSelectedBooks();
+        },
+      });
+    },
+    [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
+  );
+
   function makeActionBarProps() {
     const { isSyncShelfEnabled, totalSelectedCount } = props;
     const disable = totalSelectedCount === 0;
@@ -181,12 +216,12 @@ function Main(props) {
       buttonProps = [
         {
           name: '숨기기',
-          // onClick: this.handleOnClickHide,
+          onClick: handleHideClick,
           disable,
         },
         {
           name: '책장에 추가',
-          // onClick: this.handleAddToShelf,
+          onClick: handleAddToShelf,
           disable,
         },
         {
@@ -194,7 +229,7 @@ function Main(props) {
         },
         {
           name: '다운로드',
-          // onClick: this.handleOnClickDownload,
+          onClick: handleDownloadClick,
           disable,
         },
       ];
@@ -202,7 +237,7 @@ function Main(props) {
       buttonProps = [
         {
           name: '선택 숨기기',
-          // onClick: this.handleOnClickHide,
+          onClick: handleHideClick,
           disable,
         },
         {
@@ -210,7 +245,7 @@ function Main(props) {
         },
         {
           name: '선택 다운로드',
-          // onClick: this.handleOnClickDownload,
+          onClick: handleDownloadClick,
           disable,
         },
       ];
@@ -229,6 +264,18 @@ function Main(props) {
       search: newSearch !== '' ? `?${newSearch}` : '',
     };
     redirection = <Redirect to={to} />;
+  }
+
+  if (showShelves) {
+    return (
+      <>
+        <Helmet>
+          <title>모든 책 - 내 서재</title>
+        </Helmet>
+        {redirection}
+        <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
+      </>
+    );
   }
 
   return (
