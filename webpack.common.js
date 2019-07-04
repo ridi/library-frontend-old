@@ -79,7 +79,9 @@ const DEF_KEYS = [
 export function buildDefinitions(settings) {
   const ret = {};
   for (const key of DEF_KEYS) {
-    ret[key] = JSON.stringify(settings[key.toLowerCase()]);
+    ret[key] = settings[key.toLowerCase()];
   }
-  return ret;
+  return {
+    __CONFIG__: JSON.stringify(ret),
+  };
 }

@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import * as featureIds from '../../../constants/featureIds';
 import { OrderOptions } from '../../../constants/orderOptions';
@@ -29,17 +28,6 @@ import {
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
 import { getFilter, getItems, getItemsByPage, getOptions, getPage } from './selectors';
 
-function moveToFirstPage(payload) {
-  const linkProps = makeLinkProps({ pathname: URLMap.main.href }, URLMap.main.as, {
-    page: 1,
-    order_type: payload.orderType,
-    order_by: payload.orderBy,
-    filter: payload.categoryFilter,
-  });
-
-  Router.replace(linkProps.href, linkProps.as);
-}
-
 function* loadMainItemsWithPayload(payload) {
   // Clear Error
   yield put(setError(false));
@@ -53,12 +41,7 @@ function* loadMainItemsWithPayload(payload) {
     ]);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
-    if (!itemResponse.items.length && countResponse.unit_total_count) {
-      // 서버 렌더링에서는 바로 리디렉트하기 까다로우므로 로딩 표시를 띄워놓는
-      // 것으로 대체
-      if (!isServer) {
-        moveToFirstPage(payload);
-      }
+    if (!itemResponse.items.length && countResponse.unit_total_count && isServer) {
       // 이대로 리턴하면 로딩 표시가 남는다
       return;
     }
@@ -76,6 +59,7 @@ function* loadMainItemsWithPayload(payload) {
     );
     yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
+    console.error(err);
     yield put(setError(true));
   }
   yield put(setIsFetchingBooks(false));

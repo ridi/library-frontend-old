@@ -7,11 +7,15 @@
       "@babel/preset-env",
       {
         "corejs": 3,
-        "useBuiltIns": "entry"
+        "useBuiltIns": "usage",
+        "shippedProposals": true
       }
     ]
   ],
-  "plugins": ["@babel/plugin-proposal-optional-chaining"],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-optional-chaining"
+  ],
   "env": {
     "production": {
       "plugins": [
