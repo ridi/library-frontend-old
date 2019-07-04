@@ -74,12 +74,15 @@ const DEF_KEYS = [
   'RIDI_TOKEN_AUTHORIZE_URL',
   'RIDI_OAUTH2_CLIENT_ID',
   'SENTRY_DSN',
+  'RIDI_STATUS_URL',
 ];
 
 export function buildDefinitions(settings) {
   const ret = {};
   for (const key of DEF_KEYS) {
-    ret[key] = JSON.stringify(settings[key.toLowerCase()]);
+    ret[key] = settings[key.toLowerCase()];
   }
-  return ret;
+  return {
+    __CONFIG__: JSON.stringify(ret),
+  };
 }

@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import React from 'react';
 import FooterNewIcon from '../../../svgs/FooterNewIcon.svg';
 import FooterPaperIcon from '../../../svgs/FooterPaperIcon.svg';
 import * as styles from './styles';
