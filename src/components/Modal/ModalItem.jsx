@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
 import Sync from '../../svgs/Sync.svg';
 import { makeLinkProps } from '../../utils/uri';
@@ -31,26 +31,12 @@ export const ModalSyncButtonItem = ({ title, syncing, onClick, style }) => (
   </button>
 );
 
-export const ModalLinkItem = ({
-  title,
-  isSelected,
-  children,
-  count,
-  IconComponent,
-  href,
-  as,
-  style,
-  query = {},
-  replace = false,
-  scroll = true,
-}) => (
-  <Link prefetch replace={replace} scroll={scroll} {...makeLinkProps(href, as, query)}>
-    <a css={[modalStyles.item, style]}>
-      <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
-      {children}
-      {title}
-      {count ? <span css={modalStyles.count}>{count}</span> : null}
-    </a>
+export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, as, style, query = {}, replace = false }) => (
+  <Link replace={replace} {...makeLinkProps({}, as, query)} css={[modalStyles.item, style]}>
+    <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
+    {children}
+    {title}
+    {count ? <span css={modalStyles.count}>{count}</span> : null}
   </Link>
 );
 

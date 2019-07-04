@@ -25,7 +25,7 @@ function Routes({ dispatch, location }) {
       }
       if (matchData != null) {
         if (typeof component.prepare === 'function') {
-          component.prepare({ ...matchData, dispatch });
+          component.prepare({ ...matchData, dispatch, location });
         }
       }
     },

@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
-import Router from 'next/router';
+import { Link, withRouter } from 'react-router-dom';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
@@ -22,9 +21,10 @@ class SearchBar extends React.Component {
   handleKeywordChange = value => this.setState({ keyword: value });
 
   handleOnSubmitSearchBar = () => {
+    const { history } = this.props;
     const { keyword } = this.state;
-    const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, { keyword });
-    Router.push(linkProps.href, linkProps.as);
+    const linkProps = makeLinkProps({}, URLMap.search.as, { keyword });
+    history.push(linkProps.to);
   };
 
   handleOnFocusSearchBar = () => {
@@ -61,8 +61,8 @@ class SearchBar extends React.Component {
         {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
         {orderOptions && <More order={order} orderOptions={orderOptions} query={{ filter }} showViewType showOrder showHidden />}
         {isSearchPage && (
-          <Link prefetch {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
-            <a css={styles.cancelSearchButton}>취소</a>
+          <Link {...makeLinkProps({}, URLMap.main.as)} css={styles.cancelSearchButton}>
+            취소
           </Link>
         )}
       </div>
@@ -72,4 +72,4 @@ class SearchBar extends React.Component {
   }
 }
 
-export default SearchBar;
+export default withRouter(SearchBar);
