@@ -4,13 +4,18 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { ButtonType } from './components/ActionBar/constants';
 import { Books } from './components/Books';
+import Editable from './components/Editable';
 import Empty from './components/Empty';
+import { BookError } from './components/Error';
 import ResponsivePaginator from './components/ResponsivePaginator';
+import SearchBar from './components/SearchBar';
 import SkeletonBooks from './components/Skeleton/SkeletonBooks';
 import * as featureIds from './constants/featureIds';
 import { ListInstructions } from './constants/listInstructions';
 import { OrderOptions } from './constants/orderOptions';
+import { UnitType } from './constants/unitType';
 import { URLMap } from './constants/urls';
 import { getUnits } from './services/book/selectors';
 import * as featureSelectors from './services/feature/selectors';
@@ -114,10 +119,104 @@ function Main(props) {
   }
 
   function renderMain() {
+    const { dispatchLoadItems, isError } = props;
+    if (isError) {
+      return <BookError onClickRefreshButton={dispatchLoadItems} />;
+    }
+
     if (listInstruction === ListInstructions.EMPTY) {
       return <Empty IconComponent={BookOutline} message={getEmptyMessage()} />;
     }
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
+  }
+
+  const { dispatchClearSelectedBooks } = props;
+  const toggleEditingMode = React.useCallback(
+    () => {
+      if (isEditing) {
+        dispatchClearSelectedBooks();
+      }
+      setIsEditing(!isEditing);
+    },
+    [dispatchClearSelectedBooks, isEditing],
+  );
+  function renderSearchBar() {
+    const { filterOptions } = props;
+    const order = OrderOptions.toKey(orderType, orderBy);
+    const orderOptions = OrderOptions.toMainList();
+
+    const searchBarProps = {
+      filter: categoryFilter,
+      filterOptions,
+      order,
+      orderOptions,
+      orderBy,
+      orderType,
+      toggleEditingMode,
+    };
+
+    return <SearchBar {...searchBarProps} />;
+  }
+
+  function makeEditingBarProps() {
+    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks } = props;
+    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
+
+    return {
+      totalSelectedCount,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
+      onClickSuccessButton: toggleEditingMode,
+    };
+  }
+
+  function makeActionBarProps() {
+    const { isSyncShelfEnabled, totalSelectedCount } = props;
+    const disable = totalSelectedCount === 0;
+
+    let buttonProps;
+    if (isSyncShelfEnabled) {
+      buttonProps = [
+        {
+          name: '숨기기',
+          // onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          name: '책장에 추가',
+          // onClick: this.handleAddToShelf,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '다운로드',
+          // onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ];
+    } else {
+      buttonProps = [
+        {
+          name: '선택 숨기기',
+          // onClick: this.handleOnClickHide,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '선택 다운로드',
+          // onClick: this.handleOnClickDownload,
+          disable,
+        },
+      ];
+    }
+
+    return { buttonProps };
   }
 
   let redirection = null;
@@ -139,7 +238,15 @@ function Main(props) {
       </Helmet>
       {redirection}
       <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-      {renderMain()}
+      <Editable
+        allowFixed
+        isEditing={isEditing}
+        nonEditBar={renderSearchBar()}
+        editingBarProps={makeEditingBarProps()}
+        actionBarProps={makeActionBarProps()}
+      >
+        <main>{renderMain()}</main>
+      </Editable>
       <Footer />
     </>
   );
