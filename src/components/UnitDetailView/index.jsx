@@ -33,7 +33,7 @@ class UnitDetailView extends React.Component {
     this.state = {
       isExpanded: false,
       isTruncated: false,
-      thumbnailWidth: '100%',
+      thumbnailWidth: 130,
     };
   }
 

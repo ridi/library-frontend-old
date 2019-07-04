@@ -161,7 +161,7 @@ export const Books = connect(
     dispatchShowShelfBookAlertToast,
     isVerifiedAdult,
   } = props;
-  const [thumbnailWidth, setThumbnailWidth] = useState('100%');
+  const [thumbnailWidth, setThumbnailWidth] = useState(100);
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
