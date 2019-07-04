@@ -12,7 +12,7 @@ import purchasedMainRootSaga from '../services/purchased/main/sagas';
 // import purchasedSearchRootSaga from '../services/purchased/search/sagas';
 // import purchasedSearchUnitRootSaga from '../services/purchased/searchUnit/sagas';
 // import serialPreferenceRootSaga from '../services/serialPreference/sagas';
-// import shelfRootSaga from '../services/shelf/sagas';
+import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
 import trackingRootSaga from '../services/tracking/sagas';
 
@@ -46,7 +46,7 @@ export default function* rootSaga() {
     // purchasedHiddenSaga(),
     // purchaseHiddenUnitRootSaga(),
     // serialPreferenceRootSaga(),
-    // shelfRootSaga(isServer),
+    shelfRootSaga(),
     toastRootSaga(),
     trackingRootSaga(),
     bookDownloadRootSaga(),

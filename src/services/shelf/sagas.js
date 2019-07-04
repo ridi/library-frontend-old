@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { delay } from 'redux-saga';
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
@@ -253,10 +252,10 @@ function* deleteShelfItem({ payload }) {
 }
 
 function* deleteShelfFromDetail({ payload }) {
-  const { uuid } = payload;
+  const { history, uuid } = payload;
   yield put(uiActions.setFullScreenLoading(true));
   yield call(deleteShelf, { payload: { uuid } });
-  Router.push(URLMap.shelves.href, URLMap.shelves.as);
+  history.push(URLMap.shelves.as);
   yield all([
     put(uiActions.setFullScreenLoading(false)),
     put(
