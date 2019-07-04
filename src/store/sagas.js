@@ -2,7 +2,7 @@ import { all, call, put } from 'redux-saga/effects';
 import accountRootSaga, { loadUserInfo } from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
-// import excelDownloadRootSaga from '../services/excelDownload/sagas';
+import excelDownloadRootSaga from '../services/excelDownload/sagas';
 import featureRootSaga from '../services/feature/sagas';
 import purchasedCommonRootSaga from '../services/purchased/common/sagas/rootSagas';
 // import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
@@ -36,7 +36,7 @@ export default function* rootSaga() {
   yield all([
     accountRootSaga(),
     bookRootSaga(),
-    // excelDownloadRootSaga(),
+    excelDownloadRootSaga(),
     featureRootSaga(),
     purchasedCommonRootSaga(),
     purchasedMainRootSaga(),

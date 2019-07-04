@@ -1,6 +1,7 @@
 import { Global } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+import BookDownLoader from '../../components/BookDownLoader';
 import Confirm from '../../components/Confirm';
 import Dialog from '../../components/Dialog';
 import FullScreenLoading from '../../components/FullScreenLoading';
@@ -34,6 +35,7 @@ class Layout extends React.Component {
         {maintenance.isShow && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
         {maintenance.isShow === false && (
           <>
+            <BookDownLoader />
             <GNB />
             {children}
             {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
