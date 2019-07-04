@@ -1,14 +1,14 @@
 /** @jsx jsx */
 import { Global, jsx } from '@emotion/core';
-import Head from 'next/head';
+import Helmet from 'react-helmet';
 import { generate } from 'shortid';
 import * as styles from './styles';
 
 const Maintenance = ({ terms, unavailableServiceList }) => (
   <>
-    <Head>
+    <Helmet>
       <title>시스템 점검 중 - 내 서재</title>
-    </Head>
+    </Helmet>
     <section css={styles.maintenance}>
       <Global styles={styles.global} />
       <h1 css={styles.title}>시스템 점검 안내</h1>

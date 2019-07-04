@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import { cancelClose, closeToast, closeWithDelay } from '../../services/toast/actions';
 import { getToast } from '../../services/toast/selectors';
@@ -34,7 +34,7 @@ class Toaster extends React.Component {
 
     if (linkProps) {
       return (
-        <Link prefetch {...linkProps}>
+        <Link {...linkProps}>
           <button
             css={styles.toastLink}
             type="button"
