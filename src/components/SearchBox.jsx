@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { jsx } from '@emotion/core';
 import Close from '../svgs/Close.svg';
 import Search from '../svgs/Search.svg';
@@ -136,11 +136,7 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
     );
 
     if (isSearchPage) {
-      return (
-        <Link prefetch {...makeLinkProps(URLMap.main.href, URLMap.main.as)}>
-          {button}
-        </Link>
-      );
+      return <Link {...makeLinkProps({}, URLMap.main.as)}>{button}</Link>;
     }
     return button;
   }
