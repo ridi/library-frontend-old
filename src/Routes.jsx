@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, matchPath, withRouter } from 'react-router-dom';
-import PurchasedMain from './Test';
+import PurchasedMain from './pages/purchased/main';
 
 const routes = [
   {
