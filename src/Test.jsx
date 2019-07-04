@@ -32,6 +32,7 @@ import { getTotalSelectedCount } from './services/selection/selectors';
 import * as shelfActions from './services/shelf/actions';
 import BookOutline from './svgs/BookOutline.svg';
 import Footer from './pages/base/Footer';
+import { TabBar, TabMenuTypes } from './pages/base/LNB';
 import { ResponsiveBooks } from './pages/base/Responsive';
 import { makeLinkProps } from './utils/uri';
 
@@ -137,6 +138,7 @@ function Main(props) {
         <title>모든 책 - 내 서재</title>
       </Helmet>
       {redirection}
+      <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
       {renderMain()}
       <Footer />
     </>
