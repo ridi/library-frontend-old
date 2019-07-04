@@ -109,7 +109,10 @@ function ShelfDetail(props) {
     setIsEditing(false);
   }, []);
   const handleAddClick = React.useCallback(() => setIsAdding(true), []);
-  const handleAddBackClick = React.useCallback(() => setIsAdding(false), []);
+  const handleAddBackClick = React.useCallback(() => {
+    clearSelectedBooks();
+    setIsAdding(false);
+  }, []);
   const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
