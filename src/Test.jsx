@@ -3,8 +3,9 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Books } from './components/Books';
+import Empty from './components/Empty';
 import ResponsivePaginator from './components/ResponsivePaginator';
 import SkeletonBooks from './components/Skeleton/SkeletonBooks';
 import * as featureIds from './constants/featureIds';
@@ -29,16 +30,21 @@ import {
 import { clearSelectedItems } from './services/selection/actions';
 import { getTotalSelectedCount } from './services/selection/selectors';
 import * as shelfActions from './services/shelf/actions';
+import BookOutline from './svgs/BookOutline.svg';
 import Footer from './pages/base/Footer';
 import { ResponsiveBooks } from './pages/base/Responsive';
 import { makeLinkProps } from './utils/uri';
 
 function Main(props) {
-  const urlParams = new URLSearchParams(props.location.search);
+  const { listInstruction, location, totalPages } = props;
+
+  const urlParams = new URLSearchParams(location.search);
   const currentPage = parseInt(urlParams.get('page'), 10) || 1;
   const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
   const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
+
+  const realPage = Math.max(1, Math.min(totalPages, currentPage));
 
   const [isEditing, setIsEditing] = React.useState(false);
   const linkBuilder = React.useCallback(
@@ -59,8 +65,6 @@ function Main(props) {
   );
 
   function renderPaginator() {
-    const { totalPages } = props;
-
     return (
       <ResponsivePaginator
         currentPage={currentPage}
@@ -72,7 +76,7 @@ function Main(props) {
   }
 
   function renderBooks() {
-    const { listInstruction, items: libraryBookDTO, units, recentlyUpdatedMap, viewType } = props;
+    const { items: libraryBookDTO, units, recentlyUpdatedMap, viewType } = props;
 
     if (listInstruction === ListInstructions.SKELETON) {
       return <SkeletonBooks viewType={viewType} />;
@@ -95,14 +99,36 @@ function Main(props) {
     );
   }
 
-  function renderMain() {
-    const { listInstruction } = props;
+  function getEmptyMessage() {
+    const order = OrderOptions.toKey(orderType, orderBy);
 
+    if (OrderOptions.EXPIRE_DATE.key === order) {
+      return '대여 중인 도서가 없습니다.';
+    }
+    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+      return '만료된 도서가 없습니다.';
+    }
+
+    return '구매/대여하신 책이 없습니다.';
+  }
+
+  function renderMain() {
     if (listInstruction === ListInstructions.EMPTY) {
-      // return <Empty IconComponent={BookOutline} message={this.getEmptyMessage()} />;
-      return null;
+      return <Empty IconComponent={BookOutline} message={getEmptyMessage()} />;
     }
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
+  }
+
+  let redirection = null;
+  if (currentPage !== realPage) {
+    const newUrlParams = new URLSearchParams(location.search);
+    newUrlParams.set('page', realPage);
+    const newSearch = newUrlParams.toString();
+    const to = {
+      ...location,
+      search: newSearch !== '' ? `?${newSearch}` : '',
+    };
+    redirection = <Redirect to={to} />;
   }
 
   return (
@@ -110,7 +136,7 @@ function Main(props) {
       <Helmet>
         <title>모든 책 - 내 서재</title>
       </Helmet>
-      {props.items.length <= 0 && props.totalPages > 0 && null}
+      {redirection}
       {renderMain()}
       <Footer />
     </>

@@ -32,7 +32,7 @@ function* accountTracker() {
     }
 
     const userInfo = yield select(state => state.account.userInfo);
-    if (userInfo.idx !== newUserInfo.idx) {
+    if (userInfo && userInfo.idx !== newUserInfo.idx) {
       window.location.reload();
     }
   }

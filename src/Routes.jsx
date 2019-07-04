@@ -9,6 +9,11 @@ const routes = [
     path: '/',
     exact: true,
   },
+  {
+    component: PurchasedMain,
+    path: '/books',
+    exact: true,
+  },
 ];
 
 function Routes({ dispatch, location }) {
