@@ -5,7 +5,6 @@ export const SET_SEARCH_TOTAL_COUNT = 'SET_SEARCH_TOTAL_COUNT';
 export const SET_SEARCH_PAGE = 'SET_SEARCH_PAGE';
 
 export const SET_SEARCH_KEYWORD = 'SET_SEARCH_KEYWORD';
-export const CHANGE_SEARCH_KEYWORD = 'CHANGE_SEARCH_KEYWORD';
 
 export const SELECT_ALL_SEARCH_BOOKS = 'SELECT_ALL_SEARCH_BOOKS';
 export const HIDE_SELECTED_SEARCH_BOOKS = 'HIDE_SELECTED_SEARCH_BOOKS';
@@ -13,8 +12,12 @@ export const DOWNLOAD_SELECTED_SEARCH_BOOKS = 'DOWNLOAD_SELECTED_SEARCH_BOOKS';
 
 export const SET_SEARCH_IS_FETCHING_BOOKS = 'SET_SEARCH_IS_FETCHING_BOOKS';
 
-export const loadItems = () => ({
+export const loadItems = ({ page, keyword }) => ({
   type: LOAD_SEARCH_ITEMS,
+  payload: {
+    keyword,
+    page,
+  },
 });
 
 export const setItems = items => ({
@@ -41,13 +44,6 @@ export const setPage = page => ({
 
 export const setSearchKeyword = keyword => ({
   type: SET_SEARCH_KEYWORD,
-  payload: {
-    keyword,
-  },
-});
-
-export const changeSearchKeyword = keyword => ({
-  type: CHANGE_SEARCH_KEYWORD,
   payload: {
     keyword,
   },
