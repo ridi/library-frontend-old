@@ -96,23 +96,34 @@ module.exports.buildDefinitions = function buildDefinitions(settings) {
 };
 
 module.exports.buildFileLoader = function buildFileLoader(settings) {
-  return {
-    include: path.resolve(__dirname, 'src/static'),
-    type: 'javascript/auto',
-    use: [
-      {
-        loader: 'file-loader',
-        options: {
-          name(file) {
-            if (file.endsWith('/maintenance.json')) {
-              return '[name].[ext]';
-            }
-            return '[name].[sha1:hash:base62:12].[ext]';
-          },
-          outputPath: 'static',
-          publicPath: new URL('static', settings.static_url).toString(),
-        },
+  const fileLoader = {
+    loader: 'file-loader',
+    options: {
+      name(file) {
+        if (file.endsWith('/maintenance.json')) {
+          return '[name].[ext]';
+        }
+        return '[name].[sha1:hash:base62:12].[ext]';
       },
-    ],
+      outputPath: 'static',
+      publicPath: new URL('static', settings.static_url).toString(),
+    },
   };
+  const manifestPaths = [
+    path.resolve(__dirname, 'src/static/favicon/browserconfig.xml'),
+    path.resolve(__dirname, 'src/static/favicon/site.webmanifest.json'),
+  ];
+  return [
+    {
+      include: path.resolve(__dirname, 'src/static'),
+      exclude: manifestPaths,
+      type: 'javascript/auto',
+      use: [fileLoader],
+    },
+    {
+      include: manifestPaths,
+      type: 'javascript/auto',
+      use: [fileLoader, 'app-manifest-loader'],
+    },
+  ];
 };
