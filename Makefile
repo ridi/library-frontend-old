@@ -1,32 +1,12 @@
-.PHONY: help
+.PHONY: help docker-all
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-docker-all: yarn-install run-local
+docker-all:
+	@echo "Docker 대신 traefik/library.toml을 사용해 주세요.\n자세한 내용은 README.md를 확인하세요."
 
-
-# install
-yarn-install:
-	@yarn install
-
-
-# run
-run-local:
-	yarn local
-
-build-local:
-	yarn build webpack.local.js
 
 # docker
-docker-up:
-	@docker-compose up
-
 docker-static-up:
 	@docker-compose -f docker-compose-static.yml up
-
-docker-logs:
-	@docker ps -a -q -f name=library-web | awk '{print $1}' | xargs docker logs -f
-
-docker-web:
-	@docker-compose up library-web
