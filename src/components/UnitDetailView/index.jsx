@@ -5,13 +5,13 @@ import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { getAdultVerification } from '../../services/account/selectors';
 import { getBook } from '../../services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
 import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
 import { getLocationHref } from '../../services/router/selectors';
+import adultCover from '../../static/cover/adult.png';
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
@@ -227,8 +227,7 @@ class UnitDetailView extends React.Component {
 
     const _notAvailable = this.isPurchased && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     const isAdultOnly = book.property.is_adult_only;
-    const thumbnailUrl =
-      isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${book.thumbnail.xxlarge}?dpi=xhdpi`;
+    const thumbnailUrl = isAdultOnly && !isVerifiedAdult ? adultCover : `${book.thumbnail.xxlarge}?dpi=xhdpi`;
 
     return (
       <div css={styles.unitDetailViewWrapper}>

@@ -1,8 +1,9 @@
 import axios from 'axios';
-import config from '../../config';
 import { isNowBetween } from '../../utils/datetime';
 import { notifySentry } from '../../utils/sentry';
 import { makeURI } from '../../utils/uri';
+
+import maintenanceUrl from '../../static/maintenance.json';
 
 const maintenanceStatus = data => ({
   isShow: data ? isNowBetween(new Date(data.start), new Date(data.end)) : false,
@@ -12,7 +13,7 @@ const maintenanceStatus = data => ({
 
 export const getMaintenanceStatus = () =>
   axios
-    .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
+    .get(makeURI(maintenanceUrl, {}))
     .then(response => maintenanceStatus(response.data))
     .catch(error => {
       notifySentry(error);

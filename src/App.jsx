@@ -1,9 +1,11 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import { initializeApi } from './api';
 import { initializeSentry } from './utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
 
 import Routes from './Routes';
+import Favicon from './pages/base/Favicon';
 import Layout from './pages/base/Layout';
 
 export default function App() {
@@ -22,8 +24,11 @@ export default function App() {
   }, []);
 
   return (
-    <Layout>
-      <Routes />
-    </Layout>
+    <>
+      <Favicon />
+      <Layout>
+        <Routes />
+      </Layout>
+    </>
   );
 }

@@ -4,13 +4,16 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import settings from './settings/local.json';
-import common, { buildDefinitions } from './webpack.common';
+import { buildDefinitions, buildFileLoader, config } from './webpack.common';
 
-export default merge(common, {
+export default merge(config, {
   mode: 'development',
   output: {
     filename: '[name].js',
     chunkFilename: '[id].js',
+  },
+  module: {
+    rules: [buildFileLoader(settings)],
   },
   plugins: [
     new webpack.DefinePlugin(buildDefinitions(settings)),
@@ -23,7 +26,7 @@ export default merge(common, {
     sockPort: 443,
     allowedHosts: ['library.local.ridi.io'],
     historyApiFallback: true,
-    stats: common.stats,
+    stats: config.stats,
     // hot: true,
   },
 });
