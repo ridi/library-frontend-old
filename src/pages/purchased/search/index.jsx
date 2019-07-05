@@ -37,70 +37,77 @@ const paddingForPagination = {
   paddingBottom: ACTION_BAR_HEIGHT,
 };
 
-class Search extends React.Component {
-  static async prepare({ dispatch, location }) {
-    const params = new URLSearchParams(location.search);
-    const page = parseInt(params.get('page'), 10) || 1;
-    const keyword = params.get('keyword') || '';
-    await dispatch(clearSelectedItems());
-    await dispatch(loadItems({ page, keyword }));
-  }
+function Search(props) {
+  const { location, totalPages } = props;
+  const {
+    dispatchAddSelectedToShelf,
+    dispatchClearSelectedBooks,
+    dispatchDownloadSelectedBooks,
+    dispatchHideSelectedBooks,
+    dispatchLoadItems,
+  } = props;
+  const params = new URLSearchParams(location.search);
+  const currentPage = parseInt(params.get('page'), 10) || 1;
+  const keyword = params.get('keyword') || '';
 
-  constructor(props) {
-    super(props);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [showShelves, setShowShelves] = React.useState(false);
 
-    this.state = {
-      isEditing: false,
-      showShelves: false,
-    };
-  }
+  const toggleEditingMode = React.useCallback(
+    () => {
+      if (isEditing === true) {
+        dispatchClearSelectedBooks();
+      }
 
-  toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    const { dispatchClearSelectedBooks } = this.props;
+      setIsEditing(!isEditing);
+    },
+    [dispatchClearSelectedBooks, isEditing],
+  );
 
-    if (isEditing === true) {
+  const handleHideClick = React.useCallback(
+    () => {
+      dispatchHideSelectedBooks();
       dispatchClearSelectedBooks();
-    }
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchHideSelectedBooks],
+  );
 
-    this.setState({ isEditing: !isEditing });
-  };
+  const handleDownloadClick = React.useCallback(
+    () => {
+      dispatchDownloadSelectedBooks();
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooks],
+  );
 
-  handleOnClickHide = () => {
-    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+  const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
+  const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
 
-    dispatchHideSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
+  const handleShelfSelect = React.useCallback(
+    uuid => {
+      dispatchAddSelectedToShelf({
+        uuid,
+        onComplete: () => {
+          setIsEditing(false);
+          setShowShelves(false);
+          dispatchClearSelectedBooks();
+        },
+      });
+    },
+    [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
+  );
 
-  handleOnClickDownload = () => {
-    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
-    dispatchDownloadSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
+  const handleRefresh = React.useCallback(
+    () => {
+      dispatchLoadItems({ page: currentPage, keyword });
+    },
+    [currentPage, dispatchLoadItems, keyword],
+  );
 
-  handleAddToShelf = () => {
-    this.setState({ showShelves: true });
-  };
-
-  handleShelfBackClick = () => {
-    this.setState({ showShelves: false });
-  };
-
-  handleShelfSelect = uuid => {
-    this.props.dispatchAddSelectedToShelf({
-      uuid,
-      onComplete: () => {
-        this.setState({ isEditing: false, showShelves: false });
-        this.props.dispatchClearSelectedBooks();
-      },
-    });
-  };
-
-  makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+  function makeEditingBarProps() {
+    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks } = props;
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
@@ -109,12 +116,12 @@ class Search extends React.Component {
       isSelectedAllItem: isSelectedAllBooks,
       onClickSelectAllItem: dispatchSelectAllBooks,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
+      onClickSuccessButton: toggleEditingMode,
     };
   }
 
-  makeActionBarProps() {
-    const { isSyncShelfEnabled, totalSelectedCount } = this.props;
+  function makeActionBarProps() {
+    const { isSyncShelfEnabled, totalSelectedCount } = props;
     const disable = totalSelectedCount === 0;
 
     let buttonProps;
@@ -122,12 +129,12 @@ class Search extends React.Component {
       buttonProps = [
         {
           name: '숨기기',
-          onClick: this.handleOnClickHide,
+          onClick: handleHideClick,
           disable,
         },
         {
           name: '책장에 추가',
-          onClick: this.handleAddToShelf,
+          onClick: handleAddToShelf,
           disable,
         },
         {
@@ -135,7 +142,7 @@ class Search extends React.Component {
         },
         {
           name: '다운로드',
-          onClick: this.handleOnClickDownload,
+          onClick: handleDownloadClick,
           disable,
         },
       ];
@@ -143,7 +150,7 @@ class Search extends React.Component {
       buttonProps = [
         {
           name: '선택 숨기기',
-          onClick: this.handleOnClickHide,
+          onClick: handleHideClick,
           disable,
         },
         {
@@ -151,7 +158,7 @@ class Search extends React.Component {
         },
         {
           name: '선택 다운로드',
-          onClick: this.handleOnClickDownload,
+          onClick: handleDownloadClick,
           disable,
         },
       ];
@@ -160,21 +167,25 @@ class Search extends React.Component {
     return { buttonProps };
   }
 
-  renderSearchBar() {
-    const { keyword } = this;
-
-    const searchBarProps = {
-      keyword,
-      toggleEditingMode: this.toggleEditingMode,
-    };
-
+  function renderSearchBar() {
+    const searchBarProps = { keyword, toggleEditingMode };
     return <SearchBar isSearchPage {...searchBarProps} />;
   }
 
-  renderBooks() {
-    const { isEditing: isSelectMode } = this.state;
-    const { items: libraryBookDTO, units, recentlyUpdatedMap, isFetchingBooks, viewType } = this.props;
-    const { keyword } = this;
+  function renderPaginator() {
+    return (
+      <ResponsivePaginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        href={URLMap.search.href}
+        as={URLMap.search.as}
+        query={{ keyword }}
+      />
+    );
+  }
+
+  function renderBooks() {
+    const { items: libraryBookDTO, units, recentlyUpdatedMap, isFetchingBooks, viewType } = props;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
@@ -193,35 +204,23 @@ class Search extends React.Component {
           {...{
             libraryBookDTO,
             units,
-            isSelectMode,
+            isSelectMode: isEditing,
             viewType,
             linkBuilder: linkBuilder(keyword),
           }}
           recentlyUpdatedMap={recentlyUpdatedMap}
         />
-        {this.renderPaginator()}
+        {renderPaginator()}
       </>
     );
   }
 
-  renderPaginator() {
-    const { totalPages } = this.props;
-    const { page: currentPage, keyword } = this;
+  function renderMain() {
+    const { items, isError, isFetchingBooks } = props;
 
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.search.href}
-        as={URLMap.search.as}
-        query={{ keyword }}
-      />
-    );
-  }
-
-  renderMain() {
-    const { items, isFetchingBooks } = this.props;
-    const { keyword } = this;
+    if (isError) {
+      return <BookError onClickRefreshButton={handleRefresh} />;
+    }
 
     if (!isFetchingBooks && items.length === 0) {
       let message = `'${keyword}'에 대한 검색 결과가 없습니다.`;
@@ -234,81 +233,71 @@ class Search extends React.Component {
 
     return (
       <div css={paddingForPagination}>
-        <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
+        <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>
       </div>
     );
   }
 
-  get page() {
-    const { location } = this.props;
-    const params = new URLSearchParams(location.search);
-    return parseInt(params.get('page'), 10) || 1;
+  let title = `'${keyword}' 검색 결과 - 내 서재`;
+  if (!keyword) {
+    title = '검색 - 내 서재';
   }
 
-  get keyword() {
-    const { location } = this.props;
-    const params = new URLSearchParams(location.search);
-    return params.get('keyword') || '';
+  let redirection = null;
+  if (totalPages > 0) {
+    const realPage = Math.max(1, Math.min(totalPages, currentPage));
+    if (currentPage !== realPage) {
+      const newUrlParams = new URLSearchParams(location.search);
+      newUrlParams.set('page', realPage);
+      const newSearch = newUrlParams.toString();
+      const to = {
+        ...location,
+        search: newSearch !== '' ? `?${newSearch}` : '',
+      };
+      redirection = <Redirect to={to} />;
+    }
   }
 
-  render() {
-    const { isEditing, showShelves } = this.state;
-    const { totalPages, isError, dispatchLoadItems, location } = this.props;
-    const { page: currentPage, keyword } = this;
-
-    let title = `'${keyword}' 검색 결과 - 내 서재`;
-    if (!keyword) {
-      title = '검색 - 내 서재';
-    }
-
-    let redirection = null;
-    if (totalPages > 0) {
-      const realPage = Math.max(1, Math.min(totalPages, currentPage));
-      if (currentPage !== realPage) {
-        const newUrlParams = new URLSearchParams(location.search);
-        newUrlParams.set('page', realPage);
-        const newSearch = newUrlParams.toString();
-        const to = {
-          ...location,
-          search: newSearch !== '' ? `?${newSearch}` : '',
-        };
-        redirection = <Redirect to={to} />;
-      }
-    }
-
-    if (showShelves) {
-      return (
-        <>
-          <Helmet>
-            <title>{title}</title>
-          </Helmet>
-          {redirection}
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
-        </>
-      );
-    }
-
+  if (showShelves) {
     return (
       <>
         <Helmet>
           <title>{title}</title>
         </Helmet>
         {redirection}
-        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        <Editable
-          allowFixed
-          isEditing={isEditing}
-          nonEditBar={this.renderSearchBar()}
-          editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.makeActionBarProps()}
-        >
-          <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
-          <BookDownLoader />
-        </Editable>
+        <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
       </>
     );
   }
+
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+      {redirection}
+      <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+      <Editable
+        allowFixed
+        isEditing={isEditing}
+        nonEditBar={renderSearchBar()}
+        editingBarProps={makeEditingBarProps()}
+        actionBarProps={makeActionBarProps()}
+      >
+        <main>{renderMain()}</main>
+        <BookDownLoader />
+      </Editable>
+    </>
+  );
 }
+
+Search.prepare = ({ dispatch, location }) => {
+  const params = new URLSearchParams(location.search);
+  const page = parseInt(params.get('page'), 10) || 1;
+  const keyword = params.get('keyword') || '';
+  dispatch(clearSelectedItems());
+  dispatch(loadItems({ page, keyword }));
+};
 
 const mapStateToProps = state => {
   const totalPages = getTotalPages(state);
