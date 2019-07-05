@@ -3,7 +3,6 @@ import { jsx } from '@emotion/core';
 import { withRouter } from 'react-router-dom';
 import React from 'react';
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';
-import { makeLinkProps } from '../utils/uri';
 import { MQ, Responsive } from '../styles/responsive';
 import Paginator from './Paginator';
 
@@ -40,14 +39,18 @@ export const ResponsivePaginatorWithHandler = ({ currentPage, totalPages, onPage
   );
 };
 
-const ResponsivePaginator = ({ currentPage, totalPages, history, as, query }) => {
+const ResponsivePaginator = ({ currentPage, totalPages, history, location }) => {
   const handlePageChange = React.useCallback(
     page => {
-      const newQuery = query || {};
-      const linkProps = makeLinkProps({}, as, { ...newQuery, page });
-      history.push(linkProps.to);
+      const params = new URLSearchParams(location.search);
+      params.set('page', page);
+      const search = params.toString();
+      history.push({
+        ...location,
+        search: search === '' ? '' : `?${search}`,
+      });
     },
-    [history, as, query],
+    [history, location],
   );
   return <ResponsivePaginatorWithHandler currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />;
 };

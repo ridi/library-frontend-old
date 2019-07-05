@@ -167,15 +167,7 @@ function Search(props) {
   }
 
   function renderPaginator() {
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.search.href}
-        as={URLMap.search.as}
-        query={{ keyword }}
-      />
-    );
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   const linkBuilder = React.useCallback(
