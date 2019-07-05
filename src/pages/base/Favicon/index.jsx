@@ -5,7 +5,8 @@ import faviconIco from 'static/favicon/favicon.ico';
 import appleTouchIcon from 'static/favicon/apple-touch-icon.png';
 import favicon32 from 'static/favicon/favicon-32x32.png';
 import favicon16 from 'static/favicon/favicon-16x16.png';
-import webmanifest from 'static/favicon/site.2019-06-03.webmanifest.json';
+import webmanifest from 'static/favicon/site.webmanifest.json';
+import browserconfig from 'static/favicon/browserconfig.xml';
 import safariPinnedTab from 'static/favicon/safari-pinned-tab.svg';
 
 const Favicon = () => (
@@ -16,7 +17,7 @@ const Favicon = () => (
     <link rel="icon" type="image/png" sizes="16x16" href={favicon16} />
     <link rel="manifest" href={webmanifest} />
     <link rel="mask-icon" href={safariPinnedTab} color="#5bbad5" />
-    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="msapplication-config" content={browserconfig} />
     <meta name="theme-color" content="#ffffff" />
   </Helmet>
 );
