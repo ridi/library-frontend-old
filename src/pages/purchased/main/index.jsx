@@ -38,7 +38,6 @@ import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
-import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
@@ -60,17 +59,25 @@ function PurchasedMain(props) {
     libraryBookData => {
       const order = OrderOptions.toKey(orderType, orderBy);
 
-      const query = {};
+      const params = new URLSearchParams();
       if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-        query.orderType = orderType;
-        query.orderBy = orderBy;
+        params.append('order_type', orderType);
+        params.append('order_by', orderBy);
       }
+      const search = params.toString();
 
-      const linkProps = makeLinkProps({}, URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }), query);
+      // TODO: react-router 5.1 나오면 함수로 바꿀 것
+      const to = {
+        pathname: URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+        search: search === '' ? '' : `?${search}`,
+        state: {
+          backLocation: location,
+        },
+      };
 
-      return <Link {...linkProps}>더보기</Link>;
+      return <Link to={to}>더보기</Link>;
     },
-    [orderType, orderBy],
+    [location, orderType, orderBy],
   );
 
   function renderPaginator() {

@@ -28,7 +28,6 @@ import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import SearchIcon from '../../../svgs/Search.svg';
 import { toFlatten } from '../../../utils/array';
-import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 
@@ -41,9 +40,9 @@ function Search(props) {
     dispatchHideSelectedBooks,
     dispatchLoadItems,
   } = props;
-  const params = new URLSearchParams(location.search);
-  const currentPage = parseInt(params.get('page'), 10) || 1;
-  const keyword = params.get('keyword') || '';
+  const urlParams = new URLSearchParams(location.search);
+  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
+  const keyword = urlParams.get('keyword') || '';
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
@@ -179,6 +178,25 @@ function Search(props) {
     );
   }
 
+  const linkBuilder = React.useCallback(
+    libraryBookData => {
+      const params = new URLSearchParams();
+      params.append('keyword', keyword);
+      const search = params.toString();
+
+      // TODO: react-router 5.1 나오면 함수로 바꿀 것
+      const to = {
+        pathname: URLMap.searchUnit.as({ unitId: libraryBookData.unit_id }),
+        search: search === '' ? '' : `?${search}`,
+        state: {
+          backLocation: location,
+        },
+      };
+      return <Link to={to}>더보기</Link>;
+    },
+    [keyword, location],
+  );
+
   function renderBooks() {
     const { items: libraryBookDTO, units, recentlyUpdatedMap, isFetchingBooks, viewType } = props;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
@@ -186,12 +204,6 @@ function Search(props) {
     if (showSkeleton) {
       return <SkeletonBooks viewType={viewType} />;
     }
-
-    const linkBuilder = _keyword => libraryBookData => {
-      const linkProps = makeLinkProps({}, URLMap.searchUnit.as({ unitId: libraryBookData.unit_id }), { keyword: _keyword });
-
-      return <Link {...linkProps}>더보기</Link>;
-    };
 
     return (
       <>
@@ -201,7 +213,7 @@ function Search(props) {
             units,
             isSelectMode: isEditing,
             viewType,
-            linkBuilder: linkBuilder(keyword),
+            linkBuilder,
           }}
           recentlyUpdatedMap={recentlyUpdatedMap}
         />
