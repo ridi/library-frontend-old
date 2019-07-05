@@ -81,14 +81,7 @@ function PurchasedMain(props) {
   );
 
   function renderPaginator() {
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        as={URLMap.main.as}
-        query={{ orderType, orderBy, filter: categoryFilter }}
-      />
-    );
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   function renderBooks() {
