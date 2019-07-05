@@ -1,8 +1,6 @@
 import * as path from 'path';
-
 import webpack from 'webpack';
 import merge from 'webpack-merge';
-
 import settings from './settings/local.json';
 import { buildDefinitions, buildFileLoader, config } from './webpack.common';
 
