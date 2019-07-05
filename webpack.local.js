@@ -9,6 +9,7 @@ export default merge(config, {
   output: {
     filename: '[name].js',
     chunkFilename: '[id].js',
+    publicPath: settings.static_url,
   },
   module: {
     rules: buildFileLoader(settings),

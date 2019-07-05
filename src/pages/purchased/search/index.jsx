@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
@@ -22,14 +22,8 @@ import ViewType from '../../../constants/viewType';
 import { getBooks, getUnits } from '../../../services/book/selectors';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
-import {
-  changeSearchKeyword,
-  downloadSelectedBooks,
-  hideSelectedBooks,
-  loadItems,
-  selectAllBooks,
-} from '../../../services/purchased/search/actions';
-import { getIsFetchingBooks, getItemsByPage, getSearchPageInfo } from '../../../services/purchased/search/selectors';
+import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/search/actions';
+import { getIsFetchingBooks, getItemsByPage, getTotalPages } from '../../../services/purchased/search/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
@@ -44,9 +38,12 @@ const paddingForPagination = {
 };
 
 class Search extends React.Component {
-  static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems());
+  static async prepare({ dispatch, location }) {
+    const params = new URLSearchParams(location.search);
+    const page = parseInt(params.get('page'), 10) || 1;
+    const keyword = params.get('keyword') || '';
+    await dispatch(clearSelectedItems());
+    await dispatch(loadItems({ page, keyword }));
   }
 
   constructor(props) {
@@ -164,9 +161,7 @@ class Search extends React.Component {
   }
 
   renderSearchBar() {
-    const {
-      pageInfo: { keyword },
-    } = this.props;
+    const { keyword } = this;
 
     const searchBarProps = {
       keyword,
@@ -178,14 +173,8 @@ class Search extends React.Component {
 
   renderBooks() {
     const { isEditing: isSelectMode } = this.state;
-    const {
-      items: libraryBookDTO,
-      units,
-      recentlyUpdatedMap,
-      isFetchingBooks,
-      viewType,
-      pageInfo: { keyword },
-    } = this.props;
+    const { items: libraryBookDTO, units, recentlyUpdatedMap, isFetchingBooks, viewType } = this.props;
+    const { keyword } = this;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
@@ -193,20 +182,9 @@ class Search extends React.Component {
     }
 
     const linkBuilder = _keyword => libraryBookData => {
-      const linkProps = makeLinkProps(
-        {
-          pathname: URLMap.searchUnit.href,
-          query: { unitId: libraryBookData.unit_id },
-        },
-        URLMap.searchUnit.as({ unitId: libraryBookData.unit_id }),
-        { keyword: _keyword },
-      );
+      const linkProps = makeLinkProps({}, URLMap.searchUnit.as({ unitId: libraryBookData.unit_id }), { keyword: _keyword });
 
-      return (
-        <Link prefetch {...linkProps}>
-          <a>더보기</a>
-        </Link>
-      );
+      return <Link {...linkProps}>더보기</Link>;
     };
 
     return (
@@ -227,9 +205,8 @@ class Search extends React.Component {
   }
 
   renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages, keyword },
-    } = this.props;
+    const { totalPages } = this.props;
+    const { page: currentPage, keyword } = this;
 
     return (
       <ResponsivePaginator
@@ -243,11 +220,8 @@ class Search extends React.Component {
   }
 
   renderMain() {
-    const {
-      items,
-      isFetchingBooks,
-      pageInfo: { keyword },
-    } = this.props;
+    const { items, isFetchingBooks } = this.props;
+    const { keyword } = this;
 
     if (!isFetchingBooks && items.length === 0) {
       let message = `'${keyword}'에 대한 검색 결과가 없습니다.`;
@@ -265,25 +239,50 @@ class Search extends React.Component {
     );
   }
 
+  get page() {
+    const { location } = this.props;
+    const params = new URLSearchParams(location.search);
+    return parseInt(params.get('page'), 10) || 1;
+  }
+
+  get keyword() {
+    const { location } = this.props;
+    const params = new URLSearchParams(location.search);
+    return params.get('keyword') || '';
+  }
+
   render() {
     const { isEditing, showShelves } = this.state;
-    const {
-      pageInfo: { keyword },
-      isError,
-      dispatchLoadItems,
-    } = this.props;
+    const { totalPages, isError, dispatchLoadItems, location } = this.props;
+    const { page: currentPage, keyword } = this;
 
     let title = `'${keyword}' 검색 결과 - 내 서재`;
     if (!keyword) {
       title = '검색 - 내 서재';
     }
 
+    let redirection = null;
+    if (totalPages > 0) {
+      const realPage = Math.max(1, Math.min(totalPages, currentPage));
+      if (currentPage !== realPage) {
+        const newUrlParams = new URLSearchParams(location.search);
+        newUrlParams.set('page', realPage);
+        const newSearch = newUrlParams.toString();
+        const to = {
+          ...location,
+          search: newSearch !== '' ? `?${newSearch}` : '',
+        };
+        redirection = <Redirect to={to} />;
+      }
+    }
+
     if (showShelves) {
       return (
         <>
-          <Head>
+          <Helmet>
             <title>{title}</title>
-          </Head>
+          </Helmet>
+          {redirection}
           <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
         </>
       );
@@ -291,9 +290,10 @@ class Search extends React.Component {
 
     return (
       <>
-        <Head>
+        <Helmet>
           <title>{title}</title>
-        </Head>
+        </Helmet>
+        {redirection}
         <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
         <Editable
           allowFixed
@@ -311,7 +311,7 @@ class Search extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const pageInfo = getSearchPageInfo(state);
+  const totalPages = getTotalPages(state);
   const items = getItemsByPage(state);
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalSelectedCount = getTotalSelectedCount(state);
@@ -323,7 +323,7 @@ const mapStateToProps = state => {
 
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
   return {
-    pageInfo,
+    totalPages,
     items,
     units,
     recentlyUpdatedMap,
@@ -337,7 +337,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   dispatchLoadItems: loadItems,
-  dispatchChangeSearchKeyword: changeSearchKeyword,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,

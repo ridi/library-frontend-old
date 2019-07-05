@@ -24,18 +24,9 @@ export const getItemsByPage = createSelector(
   },
 );
 
-export const getSearchPageInfo = createSelector(
-  [getState, getDataState],
-  (state, dataState) => {
-    const { keyword } = state;
-    const { page, unitTotalCount } = dataState;
-
-    return {
-      currentPage: page,
-      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-      keyword,
-    };
-  },
+export const getTotalPages = createSelector(
+  getDataState,
+  dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
 export const getPage = createSelector(
