@@ -107,7 +107,7 @@ module.exports.buildFileLoader = function buildFileLoader(settings) {
             if (file.endsWith('/maintenance.json')) {
               return '[name].[ext]';
             }
-            return '[name].[sha256:hash:base62].[ext]';
+            return '[name].[sha1:hash:base62:12].[ext]';
           },
           outputPath: 'static',
           publicPath: new URL('static', settings.static_url).toString(),
