@@ -1,6 +1,5 @@
 import webpack from 'webpack';
 import merge from 'webpack-merge';
-
 import settings from './settings/staging.json';
 import { buildDefinitions, buildFileLoader, config } from './webpack.common';
 

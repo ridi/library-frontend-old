@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "local": "webpack-dev-server -r esm --config webpack.local.js",
+    "local": "webpack-dev-server -r esm --config webpack.local.js & onchange '**/*.{js,jsx,html,json}' -e 'dist/**/*.*' -- prettier --write {{changed}}",
     "build": "webpack -r esm --config"
   },
   "husky": {
