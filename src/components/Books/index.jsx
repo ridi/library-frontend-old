@@ -5,7 +5,6 @@ import { isAfter, subDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import config from '../../config';
 import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
@@ -15,6 +14,7 @@ import { getBooks } from '../../services/book/selectors';
 import * as featureSelectors from '../../services/feature/selectors';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
+import adultCover from '../../static/cover/adult.png';
 import * as styles from '../../styles/books';
 import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
 import BookMetaData from '../../utils/bookMetaData';
@@ -78,8 +78,7 @@ const refineBookData = ({
   const unitBookCount = bookCount && <Book.UnitBookCount bookCount={bookCount} bookCountUnit={bookCountUnit} />;
   const title = unit ? unit.title : unitTitle || platformBookData.title.main;
 
-  const thumbnailUrl =
-    isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${platformBookData.thumbnail.large}?dpi=xhdpi`;
+  const thumbnailUrl = isAdultOnly && !isVerifiedAdult ? adultCover : `${platformBookData.thumbnail.large}?dpi=xhdpi`;
 
   const defaultBookProps = {
     thumbnailTitle: `${title} 표지`,

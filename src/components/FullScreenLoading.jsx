@@ -2,7 +2,8 @@
 import React from 'react';
 import { jsx } from '@emotion/core';
 import { disableScroll, enableScroll } from '../utils/scroll';
-import config from '../config';
+
+import graySpinner from '../static/spinner/gray_spinner.gif';
 
 const styles = {
   background: {
@@ -21,7 +22,7 @@ const styles = {
   spinner: {
     width: 34,
     height: 34,
-    background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+    background: `url(${graySpinner}) center no-repeat`,
     backgroundSize: '100%',
   },
 };

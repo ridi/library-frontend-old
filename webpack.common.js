@@ -1,10 +1,12 @@
-import * as path from 'path';
+const path = require('path');
 
-import webpack from 'webpack';
-import WebpackBar from 'webpackbar';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const webpack = require('webpack');
+const WebpackBar = require('webpackbar');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-export default {
+module.exports = {};
+
+module.exports.config = {
   entry: {
     app: './src/index.jsx',
   },
@@ -26,6 +28,13 @@ export default {
   },
   resolve: {
     extensions: ['.jsx', '.js'],
+    alias: {
+      pages: path.resolve(__dirname, 'src/pages'),
+      components: path.resolve(__dirname, 'src/components'),
+      services: path.resolve(__dirname, 'src/services'),
+      constants: path.resolve(__dirname, 'src/constants'),
+      static: path.resolve(__dirname, 'src/static'),
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -77,7 +86,7 @@ const DEF_KEYS = [
   'RIDI_STATUS_URL',
 ];
 
-export function buildDefinitions(settings) {
+module.exports.buildDefinitions = function buildDefinitions(settings) {
   const ret = {};
   for (const key of DEF_KEYS) {
     ret[key] = settings[key.toLowerCase()];
@@ -85,4 +94,26 @@ export function buildDefinitions(settings) {
   return {
     __CONFIG__: JSON.stringify(ret),
   };
-}
+};
+
+module.exports.buildFileLoader = function buildFileLoader(settings) {
+  return {
+    include: path.resolve(__dirname, 'src/static'),
+    type: 'javascript/auto',
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          name(file) {
+            if (file.endsWith('/maintenance.json')) {
+              return '[name].[ext]';
+            }
+            return '[name].[sha256:hash:base62].[ext]';
+          },
+          outputPath: 'static',
+          publicPath: new URL('static', settings.static_url).toString(),
+        },
+      },
+    ],
+  };
+};
