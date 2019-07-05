@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
+import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
@@ -296,6 +297,7 @@ function PurchasedMain(props) {
         <main>{renderMain()}</main>
         <Footer />
       </Editable>
+      <BookDownLoader />
     </>
   );
 }
