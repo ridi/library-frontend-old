@@ -15,6 +15,13 @@ module.exports = {
     jest: true,
   },
   plugins: ['import', 'prettier'],
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: 'webpack.common.js',
+      },
+    },
+  },
   rules: {
     // prettier
     'prettier/prettier': 'error',
