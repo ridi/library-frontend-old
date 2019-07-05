@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
@@ -12,51 +11,27 @@ import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/
 import { getBookIdsByItems } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
 import * as featureSelectors from '../../feature/selectors';
-import { getQuery } from '../../router/selectors';
 import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
 import {
-  CHANGE_SEARCH_KEYWORD,
   DOWNLOAD_SELECTED_SEARCH_BOOKS,
   HIDE_SELECTED_SEARCH_BOOKS,
   LOAD_SEARCH_ITEMS,
   SELECT_ALL_SEARCH_BOOKS,
   setItems,
-  setPage,
   setSearchIsFetchingBooks,
-  setSearchKeyword,
   setTotalCount,
 } from './actions';
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getItems, getItemsByPage, getOptions } from './selectors';
+import { getItems, getItemsByPage, getKeyword, getPage } from './selectors';
 
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
-  const keyword = query.keyword || '';
-
-  yield all([put(setPage(page)), put(setSearchKeyword(keyword))]);
-}
-
-function* moveToFirstPage() {
-  const query = yield select(getQuery);
-
-  const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, {
-    ...query,
-    page: 1,
-  });
-
-  Router.replace(linkProps.href, linkProps.as);
-}
-
-function* loadPage() {
+function* loadPage(action) {
   yield put(setError(false));
-  yield call(persistPageOptionsFromQueries);
 
-  const { page, keyword } = yield select(getOptions);
+  const { page, keyword } = action.payload;
 
   if (!keyword) {
     return;
@@ -69,7 +44,6 @@ function* loadPage() {
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.unit_total_count) {
-      yield moveToFirstPage();
       return;
     }
 
@@ -122,7 +96,9 @@ function* hideSelectedBooks() {
   }
 
   if (isFinish) {
-    yield call(loadPage);
+    const page = yield select(getPage);
+    const keyword = yield select(getKeyword);
+    yield call(loadPage, { payload: { page, keyword } });
   }
 
   yield all([
@@ -164,7 +140,6 @@ function* selectAllBooks() {
 export default function* purchasedSearchRootSaga() {
   yield all([
     takeEvery(LOAD_SEARCH_ITEMS, loadPage),
-    takeEvery(CHANGE_SEARCH_KEYWORD, changeSearchKeyword),
     takeEvery(HIDE_SELECTED_SEARCH_BOOKS, hideSelectedBooks),
     takeEvery(DOWNLOAD_SELECTED_SEARCH_BOOKS, downloadSelectedBooks),
     takeEvery(SELECT_ALL_SEARCH_BOOKS, selectAllBooks),
