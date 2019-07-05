@@ -14,22 +14,13 @@
 ## Installation
 
 ```
-make yarn-install
+yarn install
 ```
 
 ## Run Development
 
-- SSR 버젼으로 개발
+`webpack-dev-server`로 실행하는 방법입니다.
 
-```
-make docker-up
-```
-
-## Run Static Development
-
-- CSR 버젼으로 개발
-
-```
-make docker-static-up
-make build-local
-```
+1. 프론트엔드 `traefik` 리포지토리 안에 있는 `traefik` 디렉토리에 이
+   리포지토리의 `traefik/library.toml`을 복사해 넣습니다.
+1. `yarn local`으로 개발 서버를 실행합니다.
