@@ -11,7 +11,7 @@ export default merge(config, {
     chunkFilename: '[id].js',
   },
   module: {
-    rules: [buildFileLoader(settings)],
+    rules: buildFileLoader(settings),
   },
   plugins: [new webpack.DefinePlugin(buildDefinitions(settings))],
 });
