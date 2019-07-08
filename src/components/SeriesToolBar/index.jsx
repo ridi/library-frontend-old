@@ -24,7 +24,7 @@ class SeriesToolBar extends React.Component {
   }
 
   renderOrder() {
-    const { currentOrder, orderOptions, href, as } = this.props;
+    const { currentOrder, orderOptions } = this.props;
     const { isSortModalShow } = this.state;
 
     if (!currentOrder || !orderOptions) {
@@ -55,8 +55,6 @@ class SeriesToolBar extends React.Component {
               isSortModalShow: false,
             });
           }}
-          href={href}
-          as={as}
         />
       </div>
     );
