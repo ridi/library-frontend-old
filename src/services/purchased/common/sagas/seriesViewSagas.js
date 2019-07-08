@@ -59,6 +59,7 @@ export function getOpendBookId(itemBookIds, pageBookData) {
 }
 
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
+  const options = { unitId, orderType, orderBy, page };
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   // 시리즈 리스트 페이지별 도서 목록
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
@@ -89,7 +90,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     });
   }
 
-  yield all([put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
+  yield all([put(setItems(items, options)), put(setTotalCount(unitOrders.total_count, options))]);
 }
 
 export function* isTotalSeriesView(unitId, order) {

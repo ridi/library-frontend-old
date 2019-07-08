@@ -1,5 +1,5 @@
 import produce from 'immer';
-import OrderOptions from '../../constants/orderOptions';
+import { OrderOptions } from '../../constants/orderOptions';
 import { concat, toDict, toFlatten } from '../../utils/array';
 import {
   LOAD_UNIT_ITEMS,
@@ -13,9 +13,9 @@ import { createInitialDataState, initialState } from './state';
 
 const unitPageReducer = produce((draft, action) => {
   let key = '';
-  if (action.payload.orderType != null) {
-    const order = OrderOptions.toKey(action.payload.orderType, action.paylaod.orderBy);
-    key = concat(action.payload.unitId, order);
+  if (action.payload && action.payload.orderType != null) {
+    const order = OrderOptions.toKey(action.payload.orderType, action.payload.orderBy);
+    key = concat([action.payload.unitId, order]);
     if (draft.data[key] == null) {
       draft.data[key] = createInitialDataState();
     }

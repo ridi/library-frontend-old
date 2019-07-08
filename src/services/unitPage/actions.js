@@ -12,9 +12,10 @@ export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
 export const SET_UNIT_PRIMARY_ITEM = 'SET_UNIT_PRIMARY_ITEM';
 export const SET_UNIT_PURCHASED_TOTAL_COUNT = 'SET_UNIT_PURCHASED_TOTAL_COUNT';
 
-export const loadItems = ({ unitId, orderType, orderBy, page }) => ({
+export const loadItems = ({ kind, unitId, orderType, orderBy, page }) => ({
   type: LOAD_UNIT_ITEMS,
   payload: {
+    kind,
     unitId,
     orderType,
     orderBy,
@@ -54,9 +55,10 @@ export const selectAllBooks = ({ unitId, orderType, orderBy, page }) => ({
   },
 });
 
-export const hideSelectedBooks = ({ unitId, orderType, orderBy, page }) => ({
+export const hideSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
   type: HIDE_SELECTED_UNIT_BOOKS,
   payload: {
+    kind,
     unitId,
     orderType,
     orderBy,

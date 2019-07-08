@@ -70,21 +70,9 @@ class SeriesList extends React.Component {
   }
 
   renderSeriesToolBar() {
-    const {
-      currentOrder,
-      orderOptions,
-      pageProps: { href, as },
-    } = this.props;
+    const { currentOrder, orderOptions } = this.props;
 
-    return (
-      <SeriesToolBar
-        toggleEditingMode={this.toggleEditingMode}
-        currentOrder={currentOrder}
-        orderOptions={orderOptions}
-        href={href}
-        as={as}
-      />
-    );
+    return <SeriesToolBar toggleEditingMode={this.toggleEditingMode} currentOrder={currentOrder} orderOptions={orderOptions} />;
   }
 
   getEmptyMessage(defaultMessage) {
@@ -158,10 +146,8 @@ class SeriesList extends React.Component {
   }
 
   renderPaginator() {
-    const {
-      pageProps: { currentPage, totalPages, href, as, query },
-    } = this.props;
-    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} href={href} as={as} query={query} />;
+    const { currentPage, totalPages } = this.props;
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   render() {

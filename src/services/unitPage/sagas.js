@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 
 import { OrderOptions } from '../../constants/orderOptions';
@@ -54,8 +53,8 @@ function* loadPrimaryItem(kind, unitId) {
   }
 }
 
-function* loadPurchasedItems(kind, options) {
-  const { unitId, orderType, orderBy, page } = options;
+function* loadPurchasedItems(options) {
+  const { kind, unitId, orderType, orderBy, page } = options;
   let itemResponse;
   let countResponse;
   if (kind === 'main') {
@@ -133,6 +132,7 @@ function* loadItems(action) {
       yield loadPurchasedItems(action.payload);
     }
   } catch (err) {
+    console.error(err);
     yield put(setError(true));
   } finally {
     yield put(setIsFetchingBook(false));
