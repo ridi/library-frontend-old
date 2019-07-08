@@ -60,18 +60,12 @@ export const getOrder = createSelector(
   state => state.order,
 );
 
-export const getKeyword = createSelector(
-  getState,
-  state => state.keyword,
-);
-
 export const getOptions = createSelector(
-  [getUnitId, getPage, getOrder, getKeyword],
-  (unitId, page, order, keyword) => ({
+  [getUnitId, getPage, getOrder],
+  (unitId, page, order) => ({
     unitId,
     page,
     order,
-    keyword,
   }),
 );
 

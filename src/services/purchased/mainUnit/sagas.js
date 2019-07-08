@@ -26,9 +26,9 @@ import {
   setIsFetchingBook,
   setItems,
   setOrder,
-  setPurchasedTotalCount,
   setPage,
   setPrimaryItem,
+  setPurchasedTotalCount,
   setTotalCount,
 } from './actions';
 import { fetchMainUnitItems, fetchMainUnitItemsTotalCount, getMainUnitPrimaryItem } from './requests';
