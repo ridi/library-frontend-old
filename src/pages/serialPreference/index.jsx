@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
@@ -152,9 +152,9 @@ class SerialPreference extends React.Component {
 
     return (
       <>
-        <Head>
+        <Helmet>
           <title>선호 작품 - 내 서재</title>
-        </Head>
+        </Helmet>
         <TabBar activeMenu={TabMenuTypes.SERIAL_PREFERENCE} />
         <Editable
           allowFixed
@@ -176,7 +176,6 @@ const mapStateToProps = state => {
   const items = getItemsByPage(state);
 
   const seriesBookIds = toFlatten(items, 'series_id');
-
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
   const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
