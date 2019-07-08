@@ -12,7 +12,7 @@ import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
 import { Editing, ShelfOrder } from '../../../components/Tool';
 import { Add } from '../../../components/Tool/Add';
-// import { Tooltip } from '../../../components/Tooltip';
+import { Tooltip } from '../../../components/Tooltip';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../../constants/shelves';
@@ -139,9 +139,9 @@ const ShelvesList = props => {
     return (
       <div css={toolsWrapper}>
         <Add onClickAddButton={handleAddShelf}>
-          {/* <Tooltip name="SHELVES_TOOLTIP" expires={new Date(2019, 8, 20)}>
+          <Tooltip name="SHELVES_TOOLTIP" expires={new Date(2019, 8, 20)}>
             책장을 만들어 원하는 책을 담아보세요!
-          </Tooltip> */}
+          </Tooltip>
         </Add>
         <Editing toggleEditingMode={toggleSelectMode} />
         <ShelfOrder order={order} orderOptions={orderOptions} />

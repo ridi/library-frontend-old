@@ -8,11 +8,6 @@ const SettingKey = {
 class Settings {
   constructor() {
     this.cookies = Cookies;
-    this.ctx = null;
-  }
-
-  setContext(ctx) {
-    this.ctx = ctx;
   }
 
   makeKey(key) {
@@ -21,12 +16,12 @@ class Settings {
 
   get(keySalt) {
     const key = this.makeKey(keySalt);
-    return this.cookies.get(this.ctx, key);
+    return this.cookies.get(key);
   }
 
   set(keySalt, val, options) {
     const key = this.makeKey(keySalt);
-    this.cookies.set(this.ctx, key, val, options);
+    this.cookies.set(key, val, options);
   }
 
   migrate() {
@@ -35,23 +30,23 @@ class Settings {
     // SET_VIEW_TYPE -> ridi_lib:VIEW_TYPE
     // TOOLTIP -> ridi_lib:TOOLTIP
     // NEW_LIBRARY -> ridi_lib:NEW_LIBRARY
-    const viewType = this.cookies.get(this.ctx, 'SET_VIEW_TYPE');
-    const tooltip = this.cookies.get(this.ctx, 'TOOLTIP');
-    const newLibrary = this.cookies.get(this.ctx, 'NEW_LIBRARY');
+    const viewType = this.cookies.get('SET_VIEW_TYPE');
+    const tooltip = this.cookies.get('TOOLTIP');
+    const newLibrary = this.cookies.get('NEW_LIBRARY');
 
     if (viewType) {
       this.viewType = viewType;
-      this.cookies.delete(this.ctx, 'SET_VIEW_TYPE');
+      this.cookies.delete('SET_VIEW_TYPE');
     }
 
     if (tooltip) {
       this.set('TOOLTIP', tooltip, { path: '/', expires: new Date(2019, 3, 25) });
-      this.cookies.delete(this.ctx, 'TOOLTIP');
+      this.cookies.delete('TOOLTIP');
     }
 
     if (newLibrary) {
       this.set('NEW_LIBRARY', newLibrary, { path: '/', expires: new Date(2019, 3, 25) });
-      this.cookies.delete(this.ctx, 'NEW_LIBRARY');
+      this.cookies.delete('NEW_LIBRARY');
     }
   }
 
