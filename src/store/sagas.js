@@ -8,10 +8,9 @@ import purchasedCommonRootSaga from '../services/purchased/common/sagas/rootSaga
 // import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 // import purchaseHiddenUnitRootSaga from '../services/purchased/hiddenUnit/sagas';
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
-// import purchasedMainUnitRootSaga from '../services/purchased/mainUnit/sagas';
 import purchasedSearchRootSaga from '../services/purchased/search/sagas';
-// import purchasedSearchUnitRootSaga from '../services/purchased/searchUnit/sagas';
 import serialPreferenceRootSaga from '../services/serialPreference/sagas';
+import unitPageRootSaga from '../services/unitPage/sagas';
 import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
 import trackingRootSaga from '../services/tracking/sagas';
@@ -40,12 +39,11 @@ export default function* rootSaga() {
     featureRootSaga(),
     purchasedCommonRootSaga(),
     purchasedMainRootSaga(),
-    // purchasedMainUnitRootSaga(),
     purchasedSearchRootSaga(),
-    // purchasedSearchUnitRootSaga(),
     // purchasedHiddenSaga(),
     // purchaseHiddenUnitRootSaga(),
     serialPreferenceRootSaga(),
+    unitPageRootSaga(),
     shelfRootSaga(),
     toastRootSaga(),
     trackingRootSaga(),
