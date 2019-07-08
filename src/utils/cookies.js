@@ -5,8 +5,8 @@ const Cookies = {
   set: (key, value, options) => {
     JSCookie.set(key, value, options);
   },
-  delete: key => {
-    JSCookie.remove(key);
+  delete: (key, options) => {
+    JSCookie.remove(key, options);
   },
 };
 
