@@ -1,35 +1,36 @@
 import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
+import { URLMap } from '../../../constants/urls';
+
+import { toFlatten } from '../../../utils/array';
+import { isExpiredTTL } from '../../../utils/ttl';
+import { makeLinkProps } from '../../../utils/uri';
+
+import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
+import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
+import { showDialog } from '../../dialog/actions';
+import { getQuery } from '../../router/selectors';
+import { showToast } from '../../toast/actions';
+import { setFullScreenLoading, setError } from '../../ui/actions';
+
 import {
   DELETE_SELECTED_HIDDEN_UNIT_BOOKS,
   LOAD_HIDDEN_UNIT_ITEMS,
   SELECT_ALL_HIDDEN_UNIT_BOOKS,
+  UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
+  setHiddenUnitPrimaryItem,
+  setIsFetchingHiddenBook,
   setItems,
   setPage,
   setTotalCount,
-  UNHIDE_SELECTED_HIDDEN_UNIT_BOOKS,
-  setIsFetchingHiddenBook,
-  setHiddenUnitPrimaryItem,
 } from './actions';
 import { fetchHiddenUnitItems, fetchHiddenUnitItemsTotalCount, getHiddenUnitPrimaryItem } from './requests';
-
-import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../../book/sagas';
-import { getOptions, getUnitId, getItemsByPage, getPrimaryItem } from './selectors';
-
-import { toFlatten } from '../../../utils/array';
-import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
-import { selectItems } from '../../selection/actions';
-import { showToast } from '../../toast/actions';
-import { getQuery } from '../../router/selectors';
-import { getSelectedItems } from '../../selection/selectors';
-import { isExpiredTTL } from '../../../utils/ttl';
-import { setFullScreenLoading, setError } from '../../ui/actions';
-import { makeLinkProps } from '../../../utils/uri';
-import { URLMap } from '../../../constants/urls';
-import { showDialog } from '../../dialog/actions';
+import { getItemsByPage, getOptions, getPrimaryItem, getUnitId } from './selectors';
 import { fetchPrimaryBookId } from '../../book/requests';
 import { setPrimaryBookId } from '../common/actions';
+import { selectItems } from '../../selection/actions';
+import { getSelectedItems } from '../../selection/selectors';
 
 function* persistPageOptionsFromQueries() {
   const query = yield select(getQuery);

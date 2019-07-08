@@ -4,7 +4,6 @@ import {
   SET_IS_FETCHING_SEARCH_BOOK,
   SET_SEARCH_UNIT_ID,
   SET_SEARCH_UNIT_ITEMS,
-  SET_SEARCH_UNIT_KEYWORD,
   SET_SEARCH_UNIT_ORDER,
   SET_SEARCH_UNIT_PAGE,
   SET_SEARCH_UNIT_PRIMARY_ITEM,
@@ -40,9 +39,6 @@ const searchUnitReducer = produce((draft, action) => {
       break;
     case SET_SEARCH_UNIT_ORDER:
       draft.order = action.payload.order;
-      break;
-    case SET_SEARCH_UNIT_KEYWORD:
-      draft.keyword = action.payload.keyword;
       break;
     case SET_IS_FETCHING_SEARCH_BOOK:
       draft.isFetchingBook = action.payload.isFetchingBook;

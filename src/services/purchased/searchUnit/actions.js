@@ -5,7 +5,6 @@ export const SET_SEARCH_UNIT_TOTAL_COUNT = 'SET_SEARCH_UNIT_TOTAL_COUNT';
 export const SET_SEARCH_UNIT_ID = 'SET_SEARCH_UNIT_ID';
 export const SET_SEARCH_UNIT_PAGE = 'SET_SEARCH_UNIT_PAGE';
 export const SET_SEARCH_UNIT_ORDER = 'SET_SEARCH_UNIT_ORDER';
-export const SET_SEARCH_UNIT_KEYWORD = 'SET_SEARCH_UNIT_KEYWORD';
 
 export const SELECT_ALL_SEARCH_UNIT_BOOKS = 'SELECT_ALL_SEARCH_UNIT_BOOKS ';
 export const HIDE_SELECTED_SEARCH_UNIT_BOOKS = 'HIDE_SELECTED_SEARCH_UNIT_BOOKS';
@@ -52,13 +51,6 @@ export const setOrder = order => ({
   type: SET_SEARCH_UNIT_ORDER,
   payload: {
     order,
-  },
-});
-
-export const setKeyword = keyword => ({
-  type: SET_SEARCH_UNIT_KEYWORD,
-  payload: {
-    keyword,
   },
 });
 

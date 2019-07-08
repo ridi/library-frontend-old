@@ -25,7 +25,6 @@ import {
   SELECT_ALL_SEARCH_UNIT_BOOKS,
   setIsFetchingSearchBook,
   setItems,
-  setKeyword,
   setOrder,
   setPage,
   setPrimaryItem,
@@ -49,7 +48,7 @@ function* persistPageOptionsFromQueries() {
   } = query;
   const order = OrderOptions.toKey(orderType, orderBy);
 
-  yield all([put(setPage(page)), put(setOrder(order)), put(setKeyword(query.keyword))]);
+  yield all([put(setPage(page)), put(setOrder(order))]);
 }
 
 function* loadPrimaryItem(unitId) {
@@ -163,7 +162,6 @@ function* hideSelectedBooks() {
   if (isFinish) {
     yield call(loadItems);
   }
-
   yield all([
     put(
       showToast({
@@ -178,6 +176,7 @@ function* hideSelectedBooks() {
 
 function* downloadSelectedBooks() {
   const selectedBooks = yield select(getSelectedItems);
+
   try {
     const bookIds = Object.keys(selectedBooks);
     yield call(downloadBooks, bookIds);
