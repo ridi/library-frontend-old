@@ -3,16 +3,13 @@ import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import ArrowLeft from '../../svgs/ArrowLeft.svg';
 import { thousandsSeperator } from '../../utils/number';
-import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';
 
-const Title = ({ title, showCount, totalCount, as, query, a11y = '뒤로가기' }) => (
+const Title = ({ title, showCount, totalCount, to, a11y = '뒤로가기' }) => (
   <div css={styles.title}>
-    <Link {...makeLinkProps({}, as, query)}>
-      <a css={styles.backButton}>
-        <ArrowLeft css={styles.backIcon} />
-        <span className="a11y">{a11y}</span>
-      </a>
+    <Link to={to} css={styles.backButton}>
+      <ArrowLeft css={styles.backIcon} />
+      <span className="a11y">{a11y}</span>
     </Link>
     <h2 css={styles.titleTextWrapper}>
       <span css={styles.titleText}>{title}</span>

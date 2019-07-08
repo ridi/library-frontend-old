@@ -8,7 +8,7 @@ import { createInitialDataState } from './state';
 
 const getDataState = (state, options) => {
   const order = OrderOptions.toKey(options.orderType, options.orderBy);
-  const key = concat(options.unitId, order);
+  const key = concat([options.unitId, order]);
   return state.unitPage.data[key] || createInitialDataState();
 };
 
@@ -21,18 +21,11 @@ export const getItemsByPage = createSelector(
   },
 );
 
-export const getPrimaryItem = (state, unitId) => state.primaryItems[unitId];
+export const getPrimaryItem = (state, unitId) => state.unitPage.primaryItems[unitId];
 
-export const getPageInfo = createSelector(
+export const getTotalPages = createSelector(
   getDataState,
-  dataState => {
-    const { page, itemTotalCount } = dataState;
-
-    return {
-      currentPage: page,
-      totalPages: calcPage(itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-    };
-  },
+  dataState => calcPage(dataState.itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
 export const getTotalCount = createSelector(
