@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Modal, ModalButtonItem, ModalItemGroup } from '.';
-import { ModalLinkItem } from './ModalItem';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 
 const ShelfOrderModal = ({ order, orderOptions, isActive, onClickModalBackground, onClickOrderOption }) => (
