@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Modal, ModalButtonItem, ModalItemGroup } from '.';
+import { ModalLinkItem } from './ModalItem';
+import { URLMap } from '../../constants/urls';
 
 const ShelfOrderModal = ({ order, orderOptions, isActive, onClickModalBackground, onClickOrderOption }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
@@ -8,13 +10,26 @@ const ShelfOrderModal = ({ order, orderOptions, isActive, onClickModalBackground
       <ul>
         {orderOptions.map(option => (
           <li key={option.key}>
-            <ModalButtonItem
-              title={option.title}
-              isSelected={option.key === order}
-              onClick={() => {
-                onClickOrderOption(option);
-              }}
-            />
+            {onClickOrderOption ? (
+              <ModalButtonItem
+                title={option.title}
+                isSelected={option.key === order}
+                onClick={() => {
+                  onClickOrderOption(option);
+                }}
+              />
+            ) : (
+              <ModalLinkItem
+                title={option.title}
+                isSelected={option.key === order}
+                as={URLMap.shelves.as}
+                query={{
+                  orderBy: option.orderType,
+                  orderDirection: option.orderBy,
+                  page: 1,
+                }}
+              />
+            )}
           </li>
         ))}
       </ul>
