@@ -1,12 +1,12 @@
-import JSCookies from 'js-cookie';
+import JSCookie from 'js-cookie';
 
 const Cookies = {
-  get: key => JSCookies.get(key),
+  get: key => JSCookie.get(key),
   set: (key, value, options) => {
-    JSCookies.set(key, value, options);
+    JSCookie.set(key, value, options);
   },
   delete: key => {
-    JSCookies.remove(key);
+    JSCookie.remove(key);
   },
 };
 
