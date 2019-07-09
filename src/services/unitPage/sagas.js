@@ -14,7 +14,6 @@ import { showDialog } from '../dialog/actions';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
 import { loadReadLatestBookId } from '../purchased/common/sagas/rootSagas';
-import { isTotalSeriesView, loadTotalItems } from '../purchased/common/sagas/seriesViewSagas';
 
 import {
   DOWNLOAD_SELECTED_UNIT_BOOKS,
@@ -27,13 +26,14 @@ import {
   setPurchasedTotalCount,
   setTotalCount,
 } from './actions';
-import * as mainUnitRequests from '../purchased/mainUnit/requests';
-import * as searchUnitRequests from '../purchased/searchUnit/requests';
 import { getItemsByPage, getPrimaryItem } from './selectors';
 import { fetchPrimaryBookId } from '../book/requests';
 import { setPrimaryBookId } from '../purchased/common/actions';
 import { selectItems } from '../selection/actions';
 import { getSelectedItems } from '../selection/selectors';
+import * as mainUnitRequests from './mainRequests';
+import * as searchUnitRequests from './searchRequests';
+import { isTotalSeriesView, loadTotalItems } from './seriesViewSagas';
 
 function* loadPrimaryItem(kind, unitId) {
   const primaryItem = yield select(getPrimaryItem, unitId);
