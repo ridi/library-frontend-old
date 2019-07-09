@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Route, Switch, matchPath, withRouter } from 'react-router-dom';
 import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
+import ShelvesList from './pages/shelves/list';
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
   {
     component: PurchasedSearch,
     path: '/books/search',
+    exact: true,
+  },
+  {
+    component: ShelvesList,
+    path: '/shelves',
     exact: true,
   },
 ];
