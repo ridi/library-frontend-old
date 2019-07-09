@@ -1,15 +1,12 @@
-import nookies from 'nookies';
+import JSCookie from 'js-cookie';
 
 const Cookies = {
-  get: (context, key) => {
-    const cookies = nookies.get(context);
-    return cookies[key];
+  get: key => JSCookie.get(key),
+  set: (key, value, options) => {
+    JSCookie.set(key, value, options);
   },
-  set: (context, key, value, options) => {
-    nookies.set(context, key, value, options);
-  },
-  delete: (context, key) => {
-    nookies.destroy(context, key);
+  delete: (key, options) => {
+    JSCookie.remove(key, options);
   },
 };
 

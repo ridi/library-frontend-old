@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { OrderOptions } from '../../constants/orderOptions';
 import {
   BEGIN_OPERATION,
   END_OPERATION,
@@ -76,8 +77,8 @@ const initialState = {
   bookToUnit: {},
   libraryBooks: {},
   listPageOptions: {
-    orderBy: '',
-    orderDirection: '',
+    orderBy: OrderOptions.SHELF_CREATED.orderType,
+    orderDirection: OrderOptions.SHELF_CREATED.orderBy,
     page: 1,
   },
   detailPageOptions: {
