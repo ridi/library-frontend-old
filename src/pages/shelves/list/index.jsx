@@ -229,8 +229,8 @@ ShelvesList.prepare = async ({ dispatch, location }) => {
   await dispatch(shelfActions.loadShelfCount());
 };
 
-const mapStateToProps = state => {
-  const pageOptions = getPageOptions(window.location.search);
+const mapStateToProps = (state, props) => {
+  const pageOptions = getPageOptions(props.location.search);
   const shelves = shelfSelectors.getShelves(state, pageOptions);
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
