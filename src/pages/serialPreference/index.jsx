@@ -24,11 +24,6 @@ import { TabBar, TabMenuTypes } from '../base/LNB';
 import { ResponsiveBooks } from '../base/Responsive';
 
 class SerialPreference extends React.Component {
-  static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems());
-  }
-
   constructor(props) {
     super(props);
 
@@ -170,6 +165,11 @@ class SerialPreference extends React.Component {
     );
   }
 }
+
+SerialPreference.prepare = async ({ dispatch }) => {
+  await dispatch(clearSelectedItems());
+  await dispatch(loadItems());
+};
 
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
