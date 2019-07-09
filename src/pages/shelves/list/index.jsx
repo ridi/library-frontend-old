@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import Head from 'next/head';
-import Router from 'next/router';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import Editable from '../../../components/Editable';
@@ -16,7 +15,7 @@ import { Add } from '../../../components/Tool/Add';
 import { Tooltip } from '../../../components/Tooltip';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
-import { SHELVES_LIMIT, SHELF_NAME_LIMIT } from '../../../constants/shelves';
+import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../../constants/shelves';
 import { URLMap } from '../../../constants/urls';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
@@ -27,8 +26,8 @@ import * as shelfSelectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
-import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
+import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 
@@ -135,15 +134,15 @@ const ShelvesList = props => {
   };
 
   const handleOrderOptionClick = option => {
+    const { href, as } = URLMap.shelves;
     const { orderType, orderBy } = option;
     const newPageOptions = {
       page: 1,
       orderBy: orderType,
       orderDirection: orderBy,
     };
-    const { href, as } = URLMap.shelves;
-    const linkProps = makeLinkProps(href, as, newPageOptions);
-    Router.push(linkProps.href, linkProps.as);
+    const { to } = makeLinkProps(href, as, newPageOptions);
+    props.history.push(to);
   };
 
   const renderTools = () => {
@@ -191,9 +190,9 @@ const ShelvesList = props => {
 
   return (
     <>
-      <Head>
+      <Helmet>
         <title>책장 - 내 서재</title>
-      </Head>
+      </Helmet>
       <TabBar activeMenu={TabMenuTypes.SHELVES} />
       <Editable
         allowFixed
@@ -211,27 +210,32 @@ const ShelvesList = props => {
   );
 };
 
-ShelvesList.getInitialProps = async ({ query, store }) => {
-  const page = parseInt(query.page, 10) || 1;
-  const orderBy = query.order_by || OrderOptions.SHELF_CREATED.orderType;
-  const orderDirection = query.order_direction || OrderOptions.SHELF_CREATED.orderBy;
-  const pageOptions = { orderBy, orderDirection, page };
-
-  store.dispatch(shelfActions.setListPageOptions(pageOptions));
-  store.dispatch(shelfActions.loadShelves(pageOptions));
-  store.dispatch(shelfActions.loadShelfCount());
+const getPageOptions = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
+  const page = parseInt(urlParams.get('page'), 10) || 1;
+  const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_CREATED.orderType;
+  const orderDirection = urlParams.get('order_direction') || OrderOptions.SHELF_CREATED.orderBy;
   return {
-    pageOptions,
+    page,
+    orderBy,
+    orderDirection,
   };
 };
 
+ShelvesList.prepare = async ({ dispatch, location }) => {
+  const pageOptions = getPageOptions(location.search);
+  await dispatch(shelfActions.setListPageOptions(pageOptions));
+  await dispatch(shelfActions.loadShelves(pageOptions));
+  await dispatch(shelfActions.loadShelfCount());
+};
+
 const mapStateToProps = (state, props) => {
-  const { pageOptions } = props;
+  const pageOptions = getPageOptions(props.location.search);
   const shelves = shelfSelectors.getShelves(state, pageOptions);
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
   const selectedShelves = selectionSelectors.getSelectedItems(state);
-  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves };
+  return { shelves, totalShelfCount, totalSelectedCount, selectedShelves, pageOptions };
 };
 
 const mapDispatchToProps = {
