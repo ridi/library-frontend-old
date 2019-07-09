@@ -1,3 +1,4 @@
+import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
 import { OrderOptions } from '../../constants/orderOptions';
 
@@ -6,11 +7,16 @@ import { concat } from '../../utils/array';
 import { calcPage } from '../../utils/pagination';
 import { createInitialDataState } from './state';
 
-const getDataState = (state, options) => {
-  const order = OrderOptions.toKey(options.orderType, options.orderBy);
-  const key = concat([options.unitId, order]);
-  return state.unitPage.data[key] || createInitialDataState();
-};
+function makeKeyFromOptions({ unitId, orderType, orderBy }) {
+  const order = OrderOptions.toKey(orderType, orderBy);
+  return concat([unitId, order]);
+}
+
+const getDataState = createCachedSelector(
+  state => state.unitPage,
+  (_, options) => makeKeyFromOptions(options),
+  (unitPage, key) => unitPage.data[key] || createInitialDataState(),
+)((_, options) => makeKeyFromOptions(options));
 
 export const getItemsByPage = createSelector(
   getDataState,
