@@ -141,10 +141,8 @@ const ShelvesList = props => {
       orderBy: orderType,
       orderDirection: orderBy,
     };
-    const {
-      to: { pathname, search },
-    } = makeLinkProps(href, as, newPageOptions);
-    props.history.push(`${pathname}${search}`);
+    const { to } = makeLinkProps(href, as, newPageOptions);
+    props.history.push(to);
   };
 
   const renderTools = () => {
