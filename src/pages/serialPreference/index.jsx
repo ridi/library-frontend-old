@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
@@ -24,11 +24,6 @@ import { TabBar, TabMenuTypes } from '../base/LNB';
 import { ResponsiveBooks } from '../base/Responsive';
 
 class SerialPreference extends React.Component {
-  static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems());
-  }
-
   constructor(props) {
     super(props);
 
@@ -152,9 +147,9 @@ class SerialPreference extends React.Component {
 
     return (
       <>
-        <Head>
+        <Helmet>
           <title>선호 작품 - 내 서재</title>
-        </Head>
+        </Helmet>
         <TabBar activeMenu={TabMenuTypes.SERIAL_PREFERENCE} />
         <Editable
           allowFixed
@@ -171,12 +166,16 @@ class SerialPreference extends React.Component {
   }
 }
 
+SerialPreference.prepare = async ({ dispatch }) => {
+  await dispatch(clearSelectedItems());
+  await dispatch(loadItems());
+};
+
 const mapStateToProps = state => {
   const pageInfo = getPageInfo(state);
   const items = getItemsByPage(state);
 
   const seriesBookIds = toFlatten(items, 'series_id');
-
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
   const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
