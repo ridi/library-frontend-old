@@ -31,8 +31,7 @@ import { fetchPrimaryBookId } from '../book/requests';
 import { setPrimaryBookId } from '../purchased/common/actions';
 import { selectItems } from '../selection/actions';
 import { getSelectedItems } from '../selection/selectors';
-import * as mainUnitRequests from './mainRequests';
-import * as searchUnitRequests from './searchRequests';
+import * as requests from './requests';
 import { isTotalSeriesView, loadTotalItems } from './seriesViewSagas';
 
 function* loadPrimaryItem(kind, unitId) {
@@ -40,34 +39,18 @@ function* loadPrimaryItem(kind, unitId) {
   if (primaryItem && !isExpiredTTL(primaryItem)) {
     return primaryItem;
   }
-  let primaryItemEffect;
-  if (kind === 'main') {
-    primaryItemEffect = call(mainUnitRequests.getMainUnitPrimaryItem, unitId);
-  } else if (kind === 'search') {
-    primaryItemEffect = call(searchUnitRequests.getSearchUnitPrimaryItem, unitId);
-  }
   try {
-    return yield primaryItemEffect;
+    return yield call(requests.getUnitPrimaryItem, { kind, unitId });
   } catch (err) {
     return null;
   }
 }
 
 function* loadPurchasedItems(options) {
-  const { kind, unitId, orderType, orderBy, page } = options;
-  let itemResponse;
-  let countResponse;
-  if (kind === 'main') {
-    [itemResponse, countResponse] = yield all([
-      call(mainUnitRequests.fetchMainUnitItems, unitId, orderType, orderBy, page),
-      call(mainUnitRequests.fetchMainUnitItemsTotalCount, unitId, orderType, orderBy),
-    ]);
-  } else if (kind === 'search') {
-    [itemResponse, countResponse] = yield all([
-      call(searchUnitRequests.fetchSearchUnitItems, unitId, orderType, orderBy, page),
-      call(searchUnitRequests.fetchSearchUnitItemsTotalCount, unitId, orderType, orderBy),
-    ]);
-  }
+  const [itemResponse, countResponse] = yield all([
+    call(requests.fetchUnitItems, options),
+    call(requests.fetchUnitItemsTotalCount, options),
+  ]);
 
   // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
   if (!itemResponse.items.length && countResponse.item_total_count) {
@@ -97,23 +80,15 @@ function* loadItems(action) {
     yield put(setIsFetchingBook(true));
 
     // Unit 로딩
-    let countEffect;
-    if (kind === 'main') {
-      countEffect = call(
-        mainUnitRequests.fetchMainUnitItemsTotalCount,
-        unitId,
-        OrderOptions.PURCHASE_DATE.orderType,
-        OrderOptions.PURCHASE_DATE.orderBy,
-      );
-    } else if (kind === 'search') {
-      countEffect = call(
-        searchUnitRequests.fetchSearchUnitItemsTotalCount,
-        unitId,
-        OrderOptions.PURCHASE_DATE.orderType,
-        OrderOptions.PURCHASE_DATE.orderBy,
-      );
-    }
-    const [, primaryItem, countResponse] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, kind, unitId), countEffect]);
+    const [, primaryItem, countResponse] = yield all([
+      call(loadUnitData, [unitId]),
+      call(loadPrimaryItem, kind, unitId),
+      call(requests.fetchUnitItemsTotalCount, {
+        ...action.payload,
+        orderType: OrderOptions.PURCHASE_DATE.orderType,
+        orderBy: OrderOptions.PURCHASE_DATE.orderBy,
+      }),
+    ]);
     const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
     yield fork(loadReadLatestBookId, unitId, primaryBookId);
