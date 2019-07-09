@@ -13,7 +13,7 @@ const titleBar = {
   marginTop: -1,
 };
 
-const TitleBar = ({ backLocation, title, showCount, totalCount, query, showTools, toggleEditingMode }) => (
+const TitleBar = ({ backLocation, title, showCount, totalCount, showTools, toggleEditingMode }) => (
   <FlexBar
     css={titleBar}
     flexLeft={<Title title={title} showCount={showCount} totalCount={totalCount} to={backLocation} />}

@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
@@ -11,7 +10,6 @@ import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } fr
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
 import * as featureSelectors from '../../feature/selectors';
-import { getQuery } from '../../router/selectors';
 import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
@@ -20,37 +18,17 @@ import {
   DELETE_SELECTED_HIDDEN_BOOKS,
   LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
+  UNHIDE_SELECTED_HIDDEN_BOOKS,
   setHiddenIsFetchingBooks,
   setItems,
-  setPage,
   setTotalCount,
-  UNHIDE_SELECTED_HIDDEN_BOOKS,
 } from './actions';
 import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
-import { getItems, getItemsByPage, getOptions } from './selectors';
+import { getItems, getItemsByPage } from './selectors';
 
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
-  yield put(setPage(page));
-}
-
-function* moveToFirstPage() {
-  const query = yield select(getQuery);
-
-  const linkProps = makeLinkProps({ pathname: URLMap.hidden.href }, URLMap.hidden.as, {
-    ...query,
-    page: 1,
-  });
-
-  Router.replace(linkProps.href, linkProps.as);
-}
-
-function* loadItems() {
+function* loadItems(action) {
   yield put(setError(false));
-  yield call(persistPageOptionsFromQueries);
-
-  const { page } = yield select(getOptions);
+  const { page } = action.payload;
 
   try {
     yield put(setHiddenIsFetchingBooks(true));
@@ -58,14 +36,16 @@ function* loadItems() {
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.unit_total_count) {
-      yield moveToFirstPage();
       return;
     }
 
     // Request BookData
     yield all([call(loadBookData, toFlatten(itemResponse.items, 'b_id')), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
 
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+    yield all([
+      put(setItems(itemResponse.items, page)),
+      put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count)),
+    ]);
   } catch (err) {
     yield put(setError(true));
   } finally {
@@ -73,7 +53,7 @@ function* loadItems() {
   }
 }
 
-function* unhideSelectedBooks() {
+function* unhideSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedItems);
@@ -101,7 +81,7 @@ function* unhideSelectedBooks() {
   }
 
   if (isFinish) {
-    yield call(loadItems);
+    yield call(loadItems, action);
   }
   yield all([
     put(
@@ -115,7 +95,7 @@ function* unhideSelectedBooks() {
   ]);
 }
 
-function* deleteSelectedBooks() {
+function* deleteSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedItems);
@@ -142,14 +122,15 @@ function* deleteSelectedBooks() {
   }
 
   if (isFinish) {
-    yield call(loadItems);
+    yield call(loadItems, action);
   }
 
   yield all([put(showToast({ message: isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.' })), put(setFullScreenLoading(false))]);
 }
 
-function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+function* selectAllBooks(action) {
+  const { page } = action.payload;
+  const items = yield select(getItemsByPage, page);
   const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
   const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
   const bookIds = toFlatten(filteredItems, 'b_id');

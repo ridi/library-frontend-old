@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, matchPath, withRouter } from 'react-router-dom';
+import PurchasedHidden from './pages/purchased/hidden';
 import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
 import serialPreference from './pages/serialPreference';
@@ -21,6 +22,11 @@ const routes = [
   {
     component: PurchasedSearch,
     path: '/books/search',
+    exact: true,
+  },
+  {
+    component: PurchasedHidden,
+    path: '/books/hidden',
     exact: true,
   },
   {
