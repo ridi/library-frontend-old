@@ -27,6 +27,7 @@ import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
 import Footer from '../../base/Footer';
+import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 
@@ -132,6 +133,20 @@ const ShelvesList = props => {
     ],
   };
 
+  const handleOrderOptionClick = option => {
+    const { href, as } = URLMap.shelves;
+    const { orderType, orderBy } = option;
+    const newPageOptions = {
+      page: 1,
+      orderBy: orderType,
+      orderDirection: orderBy,
+    };
+    const {
+      to: { pathname, search },
+    } = makeLinkProps(href, as, newPageOptions);
+    props.history.push(`${pathname}${search}`);
+  };
+
   const renderTools = () => {
     const orderOptions = OrderOptions.toShelves();
     const { orderBy, orderDirection } = pageOptions;
@@ -144,7 +159,7 @@ const ShelvesList = props => {
           </Tooltip>
         </Add>
         <Editing toggleEditingMode={toggleSelectMode} />
-        <ShelfOrder order={order} orderOptions={orderOptions} />
+        <ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
       </div>
     );
   };
@@ -197,21 +212,27 @@ const ShelvesList = props => {
   );
 };
 
-ShelvesList.prepare = async ({ dispatch, location }) => {
-  const urlParams = new URLSearchParams(location.search);
+const getPageOptions = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_CREATED.orderType;
   const orderDirection = urlParams.get('order_direction') || OrderOptions.SHELF_CREATED.orderBy;
-  const pageOptions = { orderBy, orderDirection, page };
+  return {
+    page,
+    orderBy,
+    orderDirection,
+  };
+};
 
+ShelvesList.prepare = async ({ dispatch, location }) => {
+  const pageOptions = getPageOptions(location.search);
   await dispatch(shelfActions.setListPageOptions(pageOptions));
   await dispatch(shelfActions.loadShelves(pageOptions));
   await dispatch(shelfActions.loadShelfCount());
 };
 
 const mapStateToProps = state => {
-  const { orderBy, orderDirection, page } = shelfSelectors.getListPageOptions(state);
-  const pageOptions = { orderBy, orderDirection, page };
+  const pageOptions = getPageOptions(window.location.search);
   const shelves = shelfSelectors.getShelves(state, pageOptions);
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
