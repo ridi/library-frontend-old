@@ -195,64 +195,32 @@ function Unit(props) {
     const { isSelected, isSyncShelfEnabled } = props;
     const disable = !isSelected;
 
-    let buttonProps;
+    let buttonProps = [];
     if (kind === 'hidden') {
       buttonProps = [];
-    } else if (isSyncShelfEnabled) {
-      if (UnitType.isCollection(unit.type)) {
-        buttonProps = [
-          {
-            name: '숨기기',
-            onClick: handleHideClick,
-            disable,
-          },
-          {
-            name: '책장에 추가',
-            onClick: handleAddToShelf,
-            disable,
-          },
-          {
-            type: ButtonType.SPACER,
-          },
-          {
-            name: '다운로드',
-            onClick: handleDownloadClick,
-            disable,
-          },
-        ];
-      } else {
-        buttonProps = [
-          {
-            name: '숨기기',
-            onClick: handleHideClick,
-            disable,
-          },
-          {
-            type: ButtonType.SPACER,
-          },
-          {
-            name: '다운로드',
-            onClick: handleDownloadClick,
-            disable,
-          },
-        ];
-      }
     } else {
-      buttonProps = [
-        {
-          name: '선택 숨기기',
-          onClick: handleHideClick,
+      buttonProps.push({
+        name: '숨기기',
+        onClick: handleHideClick,
+        disable,
+      });
+      if (isSyncShelfEnabled && UnitType.isCollection(unit.type)) {
+        buttonProps.push({
+          name: '책장에 추가',
+          onClick: handleAddToShelf,
           disable,
-        },
+        });
+      }
+      buttonProps.push(
         {
           type: ButtonType.SPACER,
         },
         {
-          name: '선택 다운로드',
+          name: '다운로드',
           onClick: handleDownloadClick,
           disable,
         },
-      ];
+      );
     }
 
     return { buttonProps };
