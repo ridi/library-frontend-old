@@ -1,11 +1,11 @@
 import { all, call, put, select } from 'redux-saga/effects';
-import { OrderOptions } from '../../../../constants/orderOptions';
-import { ServiceType } from '../../../../constants/serviceType';
-import { UnitType } from '../../../../constants/unitType';
-import { toDict, toFlatten } from '../../../../utils/array';
-import { loadBookData, loadUnitOrders } from '../../../book/sagas';
-import { getUnit, getUnitOrders, getBooks } from '../../../book/selectors';
-import { fetchItems } from '../requests';
+import { OrderOptions } from '../../constants/orderOptions';
+import { ServiceType } from '../../constants/serviceType';
+import { UnitType } from '../../constants/unitType';
+import { toDict, toFlatten } from '../../utils/array';
+import { loadBookData, loadUnitOrders } from '../book/sagas';
+import { fetchLibraryBookData } from '../book/requests';
+import { getUnit, getUnitOrders, getBooks } from '../book/selectors';
 
 function getLibraryItem(itemBookIds, libraryItems) {
   const selectedLibraryItems = itemBookIds.map(bookId => libraryItems[bookId]).filter(item => !!item);
@@ -59,6 +59,7 @@ export function getOpendBookId(itemBookIds, pageBookData) {
 }
 
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
+  const options = { unitId, orderType, orderBy, page };
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   // 시리즈 리스트 페이지별 도서 목록
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
@@ -69,7 +70,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   let items = [];
   if (bookIds.length > 0) {
     // 내가 갖고있는 도서 목록
-    const libraryItems = toDict((yield call(fetchItems, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+    const libraryItems = toDict((yield call(fetchLibraryBookData, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
 
     // unitOrders와 libraryItems을 병합해서 재구성한다.
     items = unitOrders.items.map(unitOrder => {
@@ -89,7 +90,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     });
   }
 
-  yield all([put(setItems(items)), put(setTotalCount(unitOrders.total_count))]);
+  yield all([put(setItems(items, options)), put(setTotalCount(unitOrders.total_count, options))]);
 }
 
 export function* isTotalSeriesView(unitId, order) {

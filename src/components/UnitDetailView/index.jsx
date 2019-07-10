@@ -270,8 +270,8 @@ const mapStateToPropsFactory = () => {
     locationHref: getLocationHref(state),
     readLatestBookData: props.unit ? getReadLatestData(state, props.unit.id) : null,
     fetchingReadLatest: getFetchingReadLatest(state),
-    book: getBook(state, props.primaryBookId),
-    bookMetadata: selectBookMetadata(state, props.primaryBookId, props.unit),
+    book: props.primaryBookId && getBook(state, props.primaryBookId),
+    bookMetadata: props.primaryBookId && selectBookMetadata(state, props.primaryBookId, props.unit),
     isVerifiedAdult: getAdultVerification(state),
   });
 };

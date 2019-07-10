@@ -5,6 +5,7 @@ import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
 import serialPreference from './pages/serialPreference';
 import ShelvesList from './pages/shelves/list';
+import Unit from './pages/unit';
 
 const routes = [
   {
@@ -31,6 +32,18 @@ const routes = [
     component: ShelvesList,
     path: '/shelves',
     exact: true,
+  },
+  {
+    component: Unit,
+    path: '/books/search/:unitId',
+  },
+  {
+    component: Unit,
+    path: '/books/hidden/:unitId',
+  },
+  {
+    component: Unit,
+    path: '/books/:unitId',
   },
 ];
 

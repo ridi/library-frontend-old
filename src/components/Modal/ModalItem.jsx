@@ -13,8 +13,8 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
   </button>
 );
 
-export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, as, style, query = {}, replace = false }) => (
-  <Link replace={replace} {...makeLinkProps({}, as, query)} css={[modalStyles.item, style]}>
+export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, to, style, replace = false }) => (
+  <Link replace={replace} to={to} css={[modalStyles.item, style]}>
     {IconComponent && <IconComponent css={modalStyles.icon} />}
     {isSelected && <Check css={modalStyles.selectedIcon} />}
     {children}
