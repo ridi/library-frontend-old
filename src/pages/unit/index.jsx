@@ -304,13 +304,15 @@ function Unit(props) {
   }
 
   const title = unit.title ? `${unit.title} - 내 서재` : '내 서재';
+  let body = null;
   if (showShelves) {
-    return (
+    body = <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />;
+  } else {
+    body = (
       <>
-        <Helmet>
-          <title>{title}</title>
-        </Helmet>
-        <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
+        {renderTitleBar()}
+        <main>{renderMain()}</main>
+        <BookDownLoader />
       </>
     );
   }
@@ -320,9 +322,7 @@ function Unit(props) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      {renderTitleBar()}
-      <main>{renderMain()}</main>
-      <BookDownLoader />
+      {body}
     </>
   );
 }
