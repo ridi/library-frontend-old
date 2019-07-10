@@ -34,7 +34,7 @@ function extractOptions({ location }) {
 }
 
 function makeBackLocation({ location }) {
-  if (location.state.backLocation != null) {
+  if (location.state?.backLocation != null) {
     return location.state.backLocation;
   }
   return {
