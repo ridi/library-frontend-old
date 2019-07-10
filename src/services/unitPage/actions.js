@@ -5,6 +5,8 @@ export const SET_UNIT_TOTAL_COUNT = 'SET_UNIT_TOTAL_COUNT';
 
 export const SELECT_ALL_UNIT_BOOKS = 'SELECT_ALL_UNIT_BOOKS ';
 export const HIDE_SELECTED_UNIT_BOOKS = 'HIDE_SELECTED_UNIT_BOOKS';
+export const UNHIDE_SELECTED_UNIT_BOOKS = 'UNHIDE_SELECTED_UNIT_BOOKS';
+export const DELETE_SELECTED_UNIT_BOOKS = 'DELETE_SELECTED_UNIT_BOOKS';
 export const DOWNLOAD_SELECTED_UNIT_BOOKS = 'DOWNLOAD_SELECTED_UNIT_BOOKS';
 
 export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
@@ -57,6 +59,28 @@ export const selectAllBooks = ({ unitId, orderType, orderBy, page }) => ({
 
 export const hideSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
   type: HIDE_SELECTED_UNIT_BOOKS,
+  payload: {
+    kind,
+    unitId,
+    orderType,
+    orderBy,
+    page,
+  },
+});
+
+export const unhideSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
+  type: UNHIDE_SELECTED_UNIT_BOOKS,
+  payload: {
+    kind,
+    unitId,
+    orderType,
+    orderBy,
+    page,
+  },
+});
+
+export const deleteSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
+  type: DELETE_SELECTED_UNIT_BOOKS,
   payload: {
     kind,
     unitId,
