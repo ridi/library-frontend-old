@@ -10,7 +10,6 @@ import maintenanceReducer from '../services/maintenance/reducers';
 import promptReducer from '../services/prompt/reducers';
 import purchasedCommonReducer from '../services/purchased/common/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
-import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
 import purchasedSearchReducer from '../services/purchased/search/reducers';
 import unitPageReducer from '../services/unitPage/reducers';
@@ -31,7 +30,6 @@ export default combineReducers({
   purchasedMain: purchasedMainReducer,
   purchasedSearch: purchasedSearchReducer,
   purchasedHidden: purchasedHiddenReducer,
-  purchasedHiddenUnit: purchasedHiddenUnitReducer,
   unitPage: unitPageReducer,
 
   serialPreference: serialPreferenceReducer,

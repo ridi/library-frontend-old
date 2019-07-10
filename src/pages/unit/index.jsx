@@ -14,6 +14,7 @@ import { OrderOptions } from '../../constants/orderOptions';
 import { UnitType } from '../../constants/unitType';
 import { PageType, URLMap } from '../../constants/urls';
 import * as bookSelectors from '../../services/book/selectors';
+import * as confirmActions from '../../services/confirm/actions';
 import * as featureSelectors from '../../services/feature/selectors';
 import * as purchasedCommonSelectors from '../../services/purchased/common/selectors';
 import * as selectionActions from '../../services/selection/actions';
@@ -108,18 +109,23 @@ function Unit(props) {
   const {
     dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
+    dispatchDeleteSelectedBooks,
     dispatchDownloadSelectedBooks,
     dispatchHideSelectedBooks,
     dispatchLoadItems,
     dispatchSelectAllBooks,
+    dispatchShowConfirm,
+    dispatchUnhideSelectedBooks,
   } = props;
 
   const [isSelecting, setIsSelecting] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
 
   const hideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, options);
+  const unhideSelectedBooksWithOptions = useDispatchOptions(dispatchUnhideSelectedBooks, options);
   const selectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, options);
   const loadItemsWithOptions = useDispatchOptions(dispatchLoadItems, options);
+  const deleteSelectedBooksWithOptions = useDispatchOptions(dispatchDeleteSelectedBooks, options);
 
   const handleHideClick = React.useCallback(
     () => {
@@ -127,7 +133,16 @@ function Unit(props) {
       dispatchClearSelectedBooks();
       setIsSelecting(false);
     },
-    [dispatchHideSelectedBooks, dispatchClearSelectedBooks],
+    [dispatchClearSelectedBooks, hideSelectedBooksWithOptions],
+  );
+
+  const handleUnhideClick = React.useCallback(
+    () => {
+      unhideSelectedBooksWithOptions();
+      dispatchClearSelectedBooks();
+      setIsSelecting(false);
+    },
+    [dispatchClearSelectedBooks, unhideSelectedBooksWithOptions],
   );
 
   const handleDownloadClick = React.useCallback(
@@ -155,6 +170,25 @@ function Unit(props) {
       });
     },
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
+  );
+
+  const handleDeleteClick = React.useCallback(
+    () => {
+      dispatchShowConfirm({
+        title: '영구 삭제',
+        message: (
+          <>
+            내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+            <br />
+            <br />
+            그래도 삭제하시겠습니까?
+          </>
+        ),
+        confirmLabel: '삭제',
+        onClickConfirmButton: deleteSelectedBooksWithOptions,
+      });
+    },
+    [deleteSelectedBooksWithOptions, dispatchShowConfirm],
   );
 
   function renderTitleBar() {
@@ -196,7 +230,22 @@ function Unit(props) {
 
     let buttonProps = [];
     if (kind === 'hidden') {
-      buttonProps = [];
+      buttonProps = [
+        {
+          name: '영구 삭제',
+          type: ButtonType.DANGER,
+          onClick: handleDeleteClick,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '숨김 해제',
+          onClick: handleUnhideClick,
+          disable,
+        },
+      ];
     } else {
       buttonProps.push({
         name: '숨기기',
@@ -323,10 +372,13 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = {
   dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
   dispatchClearSelectedBooks: selectionActions.clearSelectedItems,
+  dispatchDeleteSelectedBooks: unitPageActions.deleteSelectedBooks,
   dispatchDownloadSelectedBooks: unitPageActions.downloadSelectedBooks,
   dispatchHideSelectedBooks: unitPageActions.hideSelectedBooks,
   dispatchLoadItems: unitPageActions.loadItems,
   dispatchSelectAllBooks: unitPageActions.selectAllBooks,
+  dispatchShowConfirm: confirmActions.showConfirm,
+  dispatchUnhideSelectedBooks: unitPageActions.unhideSelectedBooks,
 };
 
 export default connect(
