@@ -5,7 +5,7 @@ import bookDownloadRootSaga from '../services/bookDownload/sagas';
 import excelDownloadRootSaga from '../services/excelDownload/sagas';
 import featureRootSaga from '../services/feature/sagas';
 import purchasedCommonRootSaga from '../services/purchased/common/sagas/rootSagas';
-// import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
+import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 // import purchaseHiddenUnitRootSaga from '../services/purchased/hiddenUnit/sagas';
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
 import purchasedSearchRootSaga from '../services/purchased/search/sagas';
@@ -40,7 +40,7 @@ export default function* rootSaga() {
     purchasedCommonRootSaga(),
     purchasedMainRootSaga(),
     purchasedSearchRootSaga(),
-    // purchasedHiddenSaga(),
+    purchasedHiddenSaga(),
     // purchaseHiddenUnitRootSaga(),
     serialPreferenceRootSaga(),
     unitPageRootSaga(),

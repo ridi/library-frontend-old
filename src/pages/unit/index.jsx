@@ -55,9 +55,8 @@ function extractOptions({ location, path, params }) {
 }
 
 function makeBackLocation({ location, match }) {
-  const { backLocation } = location.state;
-  if (backLocation != null) {
-    return backLocation;
+  if (location.state?.backLocation != null) {
+    return location.state.backLocation;
   }
 
   const searchParams = new URLSearchParams(location.search);

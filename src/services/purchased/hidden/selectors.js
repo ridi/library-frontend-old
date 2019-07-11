@@ -1,3 +1,4 @@
+import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
@@ -9,36 +10,20 @@ export const getItems = createSelector(
   getState,
   state => state.items,
 );
-export const getItemsByPage = createSelector(
-  getState,
-  state => {
-    const { page, itemIdsForPage, items } = state;
+
+export const getItemsByPage = createCachedSelector(
+  state => state.purchasedHidden.itemIdsForPage,
+  state => state.purchasedHidden.items,
+  (_, page) => page,
+  (itemIdsForPage, items, page) => {
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
-);
+)((_, page) => page);
 
-export const getPageInfo = createSelector(
-  getState,
-  state => {
-    const { page, unitTotalCount } = state;
-    return {
-      currentPage: page,
-      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-    };
-  },
-);
-
-export const getPage = createSelector(
-  getState,
-  state => state.page,
-);
-
-export const getOptions = createSelector(
-  [getPage],
-  page => ({
-    page,
-  }),
+export const getTotalPages = createSelector(
+  state => state.purchasedHidden.unitTotalCount,
+  unitTotalCount => calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
 export const getTotalCount = createSelector(
