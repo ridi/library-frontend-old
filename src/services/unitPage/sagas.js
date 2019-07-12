@@ -1,4 +1,4 @@
-import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 
 import { OrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
@@ -9,23 +9,13 @@ import { makeLinkProps } from '../../utils/uri';
 
 import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../book/sagas';
 import { downloadBooks } from '../bookDownload/sagas';
-import { getRevision, requestCheckQueueStatus, requestHide } from '../common/requests';
+import * as commonRequests from '../common/requests';
 import { showDialog } from '../dialog/actions';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
 import { loadReadLatestBookId } from '../purchased/common/sagas/rootSagas';
 
-import {
-  DOWNLOAD_SELECTED_UNIT_BOOKS,
-  HIDE_SELECTED_UNIT_BOOKS,
-  LOAD_UNIT_ITEMS,
-  SELECT_ALL_UNIT_BOOKS,
-  setIsFetchingBook,
-  setItems,
-  setPrimaryItem,
-  setPurchasedTotalCount,
-  setTotalCount,
-} from './actions';
+import * as actions from './actions';
 import { getItemsByPage, getPrimaryItem } from './selectors';
 import { fetchPrimaryBookId } from '../book/requests';
 import { setPrimaryBookId } from '../purchased/common/actions';
@@ -59,8 +49,8 @@ function* loadPurchasedItems(options) {
 
   yield all([
     call(loadBookData, toFlatten(itemResponse.items, 'b_id')),
-    put(setItems(itemResponse.items, options)),
-    put(setTotalCount(countResponse.item_total_count, options)),
+    put(actions.setItems(itemResponse.items, options)),
+    put(actions.setTotalCount(countResponse.item_total_count, options)),
   ]);
 }
 
@@ -77,52 +67,79 @@ function* loadItems(action) {
   };
 
   try {
-    yield put(setIsFetchingBook(true));
+    yield put(actions.setIsFetchingBook(true));
 
-    // Unit 로딩
-    const [, primaryItem, countResponse] = yield all([
-      call(loadUnitData, [unitId]),
-      call(loadPrimaryItem, kind, unitId),
+    const basicTask = yield fork(function* loadBasicData() {
+      const [, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, kind, unitId)]);
+      const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
+      if (kind === 'hidden') {
+        yield call(loadBookData, [primaryBookId]);
+      } else {
+        yield fork(loadReadLatestBookId, unitId, primaryBookId);
+      }
+      yield all([
+        put(setPrimaryBookId(unitId, primaryBookId)),
+        put(actions.setPrimaryItem(unitId, primaryItem)),
+        call(loadBookDescriptions, [primaryBookId]),
+        call(loadBookStarRatings, [primaryBookId]),
+      ]);
+      return primaryItem;
+    });
+
+    if (kind === 'hidden') {
+      yield loadPurchasedItems(action.payload);
+      yield join(basicTask);
+      return;
+    }
+
+    const countResponse = yield all([
       call(requests.fetchUnitItemsTotalCount, {
         ...action.payload,
         orderType: OrderOptions.PURCHASE_DATE.orderType,
         orderBy: OrderOptions.PURCHASE_DATE.orderBy,
       }),
     ]);
-    const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
 
-    yield fork(loadReadLatestBookId, unitId, primaryBookId);
-
-    yield all([
-      put(setPrimaryBookId(unitId, primaryBookId)),
-      put(setPrimaryItem(unitId, primaryItem)),
-      put(setPurchasedTotalCount(countResponse.item_total_count, options)),
-      call(loadBookDescriptions, [primaryBookId]),
-      call(loadBookStarRatings, [primaryBookId]),
-    ]);
+    yield put(actions.setPurchasedTotalCount(countResponse.item_total_count, options));
 
     if (yield call(isTotalSeriesView, unitId, order)) {
-      yield loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount);
+      yield loadTotalItems(unitId, orderType, orderBy, page, actions.setItems, actions.setTotalCount);
     } else {
       yield loadPurchasedItems(action.payload);
     }
+    yield join(basicTask);
   } catch (err) {
     console.error(err);
     yield put(setError(true));
   } finally {
-    yield put(setIsFetchingBook(false));
+    yield put(actions.setIsFetchingBook(false));
   }
+}
+
+function* requestActionToSelection(request) {
+  const selectedBooks = yield select(getSelectedItems);
+  const bookIds = Object.keys(selectedBooks);
+  const revision = yield call(commonRequests.getRevision);
+  const queueIds = yield call(request, bookIds, revision);
+
+  let isFinish = false;
+  try {
+    isFinish = yield call(commonRequests.requestCheckQueueStatus, queueIds);
+  } catch (err) {
+    isFinish = false;
+  }
+
+  return {
+    queueIds,
+    isFinish,
+  };
 }
 
 function* hideSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
-  const selectedBooks = yield select(getSelectedItems);
-
-  let queueIds;
+  let isFinish;
   try {
-    const bookIds = Object.keys(selectedBooks);
-    const revision = yield call(getRevision);
-    queueIds = yield call(requestHide, bookIds, revision);
+    ({ isFinish } = yield call(requestActionToSelection, commonRequests.requestHide));
   } catch (err) {
     yield all([
       put(showDialog('도서 숨기기 오류', '숨기기 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
@@ -131,16 +148,10 @@ function* hideSelectedBooks(action) {
     return;
   }
 
-  let isFinish = false;
-  try {
-    isFinish = yield call(requestCheckQueueStatus, queueIds);
-  } catch (err) {
-    isFinish = false;
-  }
-
   if (isFinish) {
     yield call(loadItems, action);
   }
+
   yield all([
     put(
       showToast({
@@ -151,6 +162,55 @@ function* hideSelectedBooks(action) {
     ),
     put(setFullScreenLoading(false)),
   ]);
+}
+
+function* unhideSelectedBooks(action) {
+  yield put(setFullScreenLoading(true));
+  let isFinish;
+  try {
+    ({ isFinish } = yield call(requestActionToSelection, commonRequests.requestUnhide));
+  } catch (err) {
+    yield all([
+      put(showDialog('도서 숨김 해제 오류', '숨김 해제 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
+    return;
+  }
+
+  if (isFinish) {
+    yield call(loadItems, action);
+  }
+
+  yield all([
+    put(
+      showToast({
+        message: isFinish ? '숨김 해제되었습니다.' : '숨김 해제되었습니다. 잠시후 반영 됩니다.',
+        linkName: '내 서재 바로가기',
+        linkProps: makeLinkProps(URLMap.main.href, URLMap.main.as),
+      }),
+    ),
+    put(setFullScreenLoading(false)),
+  ]);
+}
+
+function* deleteSelectedBooks(action) {
+  yield put(setFullScreenLoading(true));
+  let isFinish;
+  try {
+    ({ isFinish } = yield call(requestActionToSelection, commonRequests.requestDelete));
+  } catch (err) {
+    yield all([
+      put(showDialog('영구 삭제 오류', '도서의 정보 구성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')),
+      put(setFullScreenLoading(false)),
+    ]);
+    return;
+  }
+
+  if (isFinish) {
+    yield call(loadItems, action);
+  }
+
+  yield all([put(showToast({ message: isFinish ? '영구 삭제 되었습니다.' : '잠시후 반영 됩니다.' })), put(setFullScreenLoading(false))]);
 }
 
 function* downloadSelectedBooks() {
@@ -172,9 +232,11 @@ function* selectAllBooks(action) {
 
 export default function* UnitPageRootSaga() {
   yield all([
-    takeEvery(LOAD_UNIT_ITEMS, loadItems),
-    takeEvery(HIDE_SELECTED_UNIT_BOOKS, hideSelectedBooks),
-    takeEvery(DOWNLOAD_SELECTED_UNIT_BOOKS, downloadSelectedBooks),
-    takeEvery(SELECT_ALL_UNIT_BOOKS, selectAllBooks),
+    takeEvery(actions.LOAD_UNIT_ITEMS, loadItems),
+    takeEvery(actions.HIDE_SELECTED_UNIT_BOOKS, hideSelectedBooks),
+    takeEvery(actions.UNHIDE_SELECTED_UNIT_BOOKS, unhideSelectedBooks),
+    takeEvery(actions.DELETE_SELECTED_UNIT_BOOKS, deleteSelectedBooks),
+    takeEvery(actions.DOWNLOAD_SELECTED_UNIT_BOOKS, downloadSelectedBooks),
+    takeEvery(actions.SELECT_ALL_UNIT_BOOKS, selectAllBooks),
   ]);
 }
