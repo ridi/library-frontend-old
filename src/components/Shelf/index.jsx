@@ -2,7 +2,6 @@
 import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import * as selectors from '../../services/shelf/selectors';
-import ArrowTriangleRight from '../../svgs/ArrowTriangleRight.svg';
 import { thousandsSeperator } from '../../utils/number';
 import { ShelfDetailLink } from './ShelfDetailLink';
 import { ShelfSelectButton } from './ShelfSelectButton';
@@ -12,6 +11,8 @@ import { shelfStyles } from './styles';
 function defaultRenderLink({ uuid, name }) {
   return <ShelfDetailLink uuid={uuid} name={name} />;
 }
+
+const TotalCount = ({ count }) => (count && count > 0 ? <p css={shelfStyles.count}>{thousandsSeperator(count)}</p> : null);
 
 const Shelf = props => {
   const { uuid, name, totalCount, thumbnailIds, renderLink = defaultRenderLink, selectMode } = props;
@@ -24,10 +25,7 @@ const Shelf = props => {
           <h1 css={shelfStyles.name}>{name}</h1>
         </div>
         <div css={shelfStyles.countWrapper}>
-          <p css={shelfStyles.count}>
-            총 {totalCount ? thousandsSeperator(totalCount) : 0}권
-            <ArrowTriangleRight css={shelfStyles.countArrowIcon} />
-          </p>
+          <TotalCount count={totalCount} />
         </div>
       </div>
       {renderLink({ uuid, name })}

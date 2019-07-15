@@ -101,24 +101,14 @@ export const shelfStyles = {
   count: css`
     position: relative;
     display: inline-block;
-    padding: 0 14px 0 10px;
-    border: solid 1px #808991;
+    padding: 0 7px;
+    border: solid 1px #d1d5d9;
     border-radius: 30px;
     height: 20px;
     line-height: 20px;
     font-size: 12px;
     font-weight: 600;
-    color: #808991;
-  `,
-  countArrowIcon: css`
-    display: block;
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    margin-top: -3px;
-    width: 3px;
-    height: 6px;
-    fill: #808991;
+    color: #b8bfc4;
   `,
   link: css`
     display: block;
