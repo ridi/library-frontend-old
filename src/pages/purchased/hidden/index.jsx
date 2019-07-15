@@ -3,12 +3,13 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
+import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
@@ -211,29 +212,14 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { currentPage, location, totalPages } = this.props;
-
-    let redirection = null;
-    if (totalPages > 0) {
-      const realPage = Math.max(1, Math.min(totalPages, currentPage));
-      if (currentPage !== realPage) {
-        const newUrlParams = new URLSearchParams(location.search);
-        newUrlParams.set('page', realPage);
-        const newSearch = newUrlParams.toString();
-        const to = {
-          ...location,
-          search: newSearch !== '' ? `?${newSearch}` : '',
-        };
-        redirection = <Redirect to={to} />;
-      }
-    }
+    const { currentPage, totalPages } = this.props;
 
     return (
       <>
         <Helmet>
           <title>숨긴 도서 목록 - 내 서재</title>
         </Helmet>
-        {redirection}
+        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
         <Editable
           allowFixed
           isEditing={isEditing}
