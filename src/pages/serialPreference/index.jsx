@@ -10,12 +10,11 @@ import ResponsivePaginator from '../../components/ResponsivePaginator';
 import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
 import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
-import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
-import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
 import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
+import { deleteSelectedBooks, loadItems, selectAllBooks, setPage } from '../../services/serialPreference/actions';
 import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
@@ -132,14 +131,7 @@ class SerialPreference extends React.Component {
       pageInfo: { currentPage, totalPages },
     } = this.props;
 
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.serialPreference.href}
-        as={URLMap.serialPreference.as}
-      />
-    );
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   render() {
@@ -166,8 +158,12 @@ class SerialPreference extends React.Component {
   }
 }
 
-SerialPreference.prepare = async ({ dispatch }) => {
+SerialPreference.prepare = async ({ dispatch, location }) => {
+  const urlParams = new URLSearchParams(location.search);
+  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
+
   await dispatch(clearSelectedItems());
+  await dispatch(setPage(currentPage));
   await dispatch(loadItems());
 };
 

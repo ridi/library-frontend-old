@@ -1,40 +1,26 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-
 import { toFlatten } from '../../utils/array';
-
+import { fetchUnitIdMap } from '../book/requests';
 import { loadBookData } from '../book/sagas';
 import { showDialog } from '../dialog/actions';
-
-import { getQuery } from '../router/selectors';
+import { selectItems } from '../selection/actions';
+import { getSelectedItems } from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
-
 import {
   DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS,
   LOAD_SERIAL_PREFERENCE_ITEMS,
   SELECT_ALL_SERIAL_PREFERENCE_BOOKS,
   setIsFetchingBooks,
   setItems,
-  setPage,
-  setTotalCount,
   setSerialUnitIdMap,
+  setTotalCount,
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
 import { getItemsByPage, getOptions } from './selectors';
-import { selectItems } from '../selection/actions';
-import { getSelectedItems } from '../selection/selectors';
-import { fetchUnitIdMap } from '../book/requests';
-
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
-
-  yield all([put(setPage(page))]);
-}
 
 function* loadItems() {
   yield put(setError(false));
-  yield call(persistPageOptionsFromQueries);
 
   const { page } = yield select(getOptions);
 
