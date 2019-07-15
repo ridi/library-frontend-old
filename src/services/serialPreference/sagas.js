@@ -17,16 +17,15 @@ import {
   setTotalCount,
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
-import { getItemsByPage, getOptions } from './selectors';
+import { getItemsByPage } from './selectors';
 
-function* loadItems() {
+function* loadItems({ payload }) {
+  const { page } = payload;
+  const currentPage = page || 1;
   yield put(setError(false));
-
-  const { page } = yield select(getOptions);
-
   try {
     yield put(setIsFetchingBooks(true));
-    const itemResponse = yield call(fetchSerialPreferenceItems, page);
+    const itemResponse = yield call(fetchSerialPreferenceItems, currentPage);
 
     if (itemResponse.items.length !== 0) {
       const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
@@ -36,8 +35,7 @@ function* loadItems() {
       yield call(loadBookData, bookIds);
       yield put(setSerialUnitIdMap(unitIdMapResponse.result));
     }
-
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(itemResponse.book_count))]);
+    yield all([put(setItems(itemResponse.items, currentPage)), put(setTotalCount(itemResponse.book_count))]);
   } catch (err) {
     yield put(setError(true));
   } finally {
