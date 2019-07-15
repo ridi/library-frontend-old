@@ -75,13 +75,13 @@ class UnitPageTemplate extends React.Component {
       if (UnitType.isCollection(unit.type)) {
         buttonProps = [
           {
-            name: '숨기기',
-            onClick: this.handleOnClickHide,
+            name: '책장에 추가',
+            onClick: this.handleAddToShelf,
             disable,
           },
           {
-            name: '책장에 추가',
-            onClick: this.handleAddToShelf,
+            name: '숨기기',
+            onClick: this.handleOnClickHide,
             disable,
           },
           {
