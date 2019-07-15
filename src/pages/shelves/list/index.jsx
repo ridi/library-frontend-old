@@ -7,6 +7,7 @@ import { ButtonType } from '../../../components/ActionBar/constants';
 import Editable from '../../../components/Editable';
 import { EmptyShelves } from '../../../components/Empty/EmptyShelves';
 import FlexBar from '../../../components/FlexBar';
+import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import { Shelves } from '../../../components/Shelves';
 import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
@@ -193,6 +194,7 @@ const ShelvesList = props => {
       <Helmet>
         <title>책장 - 내 서재</title>
       </Helmet>
+      <PageRedirect currentPage={pageOptions.page} totalPages={totalPages} />
       <TabBar activeMenu={TabMenuTypes.SHELVES} />
       <Editable
         allowFixed
