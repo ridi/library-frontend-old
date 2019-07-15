@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import BookDownLoader from '../../components/BookDownLoader';
 import { BookError } from '../../components/Error';
+import PageRedirect from '../../components/PageRedirect';
 import SelectShelfModal from '../../components/SelectShelfModal';
 import SeriesList from '../../components/SeriesList';
 import TitleBar from '../../components/TitleBar';
@@ -105,7 +106,7 @@ function Unit(props) {
   const { kind, orderType, orderBy, page: currentPage } = options;
   const backLocation = makeBackLocation({ location, match });
 
-  const { unit, totalCount } = props;
+  const { unit, totalCount, totalPages } = props;
   const {
     dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
@@ -275,7 +276,7 @@ function Unit(props) {
   }
 
   function renderSeriesList() {
-    const { primaryBook, isFetchingBook, primaryItem, totalPages, items } = props;
+    const { primaryBook, isFetchingBook, primaryItem, items } = props;
     if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
       return null;
     }
@@ -327,6 +328,7 @@ function Unit(props) {
     body = (
       <>
         {renderTitleBar()}
+        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
         <main>{renderMain()}</main>
         <BookDownLoader />
       </>

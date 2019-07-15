@@ -3,7 +3,7 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
@@ -11,6 +11,7 @@ import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
+import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SelectShelfModal from '../../../components/SelectShelfModal';
@@ -247,28 +248,13 @@ function Search(props) {
     title = '검색 - 내 서재';
   }
 
-  let redirection = null;
-  if (totalPages > 0) {
-    const realPage = Math.max(1, Math.min(totalPages, currentPage));
-    if (currentPage !== realPage) {
-      const newUrlParams = new URLSearchParams(location.search);
-      newUrlParams.set('page', realPage);
-      const newSearch = newUrlParams.toString();
-      const to = {
-        ...location,
-        search: newSearch !== '' ? `?${newSearch}` : '',
-      };
-      redirection = <Redirect to={to} />;
-    }
-  }
-
   if (showShelves) {
     return (
       <>
         <Helmet>
           <title>{title}</title>
         </Helmet>
-        {redirection}
+        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
         <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
       </>
     );
@@ -279,7 +265,7 @@ function Search(props) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      {redirection}
+      <PageRedirect currentPage={currentPage} totalPages={totalPages} />
       <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
       <Editable
         allowFixed
