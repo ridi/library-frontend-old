@@ -4,13 +4,14 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
+import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { getAdultVerification } from '../../services/account/selectors';
 import { getBook } from '../../services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
 import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
-import { getLocationHref } from '../../services/router/selectors';
 import adultCover from '../../static/cover/adult.png';
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
@@ -261,13 +262,19 @@ class UnitDetailView extends React.Component {
 }
 
 const mapStateToPropsFactory = () => {
+  const getLocationHref = location => {
+    const { pathname, search } = location;
+    return `${config.BASE_URL}${pathname}${search}`;
+  };
+
   const selectBookMetadata = createSelector(
     getBook,
     (state, primaryBookId, unit) => unit,
     (book, unit) => new BookMetaData(book, unit),
   );
+
   return (state, props) => ({
-    locationHref: getLocationHref(state),
+    locationHref: getLocationHref(props.location),
     readLatestBookData: props.unit ? getReadLatestData(state, props.unit.id) : null,
     fetchingReadLatest: getFetchingReadLatest(state),
     book: props.primaryBookId && getBook(state, props.primaryBookId),
@@ -281,7 +288,9 @@ const mapDispatchToProps = {
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
 };
 
-export default connect(
-  mapStateToPropsFactory,
-  mapDispatchToProps,
-)(UnitDetailView);
+export default withRouter(
+  connect(
+    mapStateToPropsFactory,
+    mapDispatchToProps,
+  )(UnitDetailView),
+);

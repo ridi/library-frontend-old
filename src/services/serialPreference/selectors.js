@@ -1,8 +1,5 @@
 import { createSelector } from 'reselect';
-
-import { SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
-import { calcPage } from '../../utils/pagination';
-import { initialDataState, getKey } from './state';
+import { getKey, initialDataState } from './state';
 
 const getState = state => state.serialPreference;
 const getDataState = state => {
@@ -11,43 +8,15 @@ const getDataState = state => {
   return mainState.data[key] || initialDataState;
 };
 
-export const getItems = createSelector(
-  getDataState,
-  dataState => dataState.items,
-);
-
-export const getItemsByPage = createSelector(
-  getDataState,
-  dataState => {
-    const { page, itemIdsForPage, items } = dataState;
-    const itemIds = itemIdsForPage[page] || [];
-    return itemIds.map(itemId => items[itemId]);
-  },
-);
-
-export const getPageInfo = createSelector(
-  [getState, getDataState],
-  (state, dataState) => {
-    const { page, totalCount } = dataState;
-
-    return {
-      currentPage: page,
-      totalPages: calcPage(totalCount, SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE),
-    };
-  },
-);
-
-export const getPage = createSelector(
-  getDataState,
-  dataState => dataState.page,
-);
-
-export const getOptions = createSelector(
-  [getPage],
-  page => ({
-    page,
-  }),
-);
+export const getItemsByPage = (state, currentPage) =>
+  createSelector(
+    getDataState,
+    dataState => {
+      const { itemIdsForPage, items } = dataState;
+      const itemIds = itemIdsForPage[currentPage] || [];
+      return itemIds.map(itemId => items[itemId]);
+    },
+  )(state);
 
 export const getTotalCount = createSelector(
   getDataState,
@@ -56,15 +25,15 @@ export const getTotalCount = createSelector(
 
 export const getIsFetchingBooks = createSelector(
   getState,
-  state => state.isFetchingBooks,
+  serialPrefereneceState => serialPrefereneceState.isFetchingBooks,
 );
 
 export const getUnitIdsMap = (state, bookIds) =>
   createSelector(
     getState,
-    state =>
+    serialPrefereneceState =>
       bookIds.reduce((previous, bookId) => {
-        previous[bookId] = state.unitIdMap[bookId];
+        previous[bookId] = serialPrefereneceState.unitIdMap[bookId];
         return previous;
       }, {}),
   )(state);

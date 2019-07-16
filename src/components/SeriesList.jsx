@@ -2,14 +2,16 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import config from '../config';
 import { OrderOptions } from '../constants/orderOptions';
 import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
-import { getLocationHref } from '../services/router/selectors';
 import { getTotalSelectedCount } from '../services/selection/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
 import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
+import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 import { Books } from './Books';
 import Editable from './Editable';
 import Empty from './Empty';
@@ -17,7 +19,6 @@ import HorizontalRuler from './HorizontalRuler';
 import ResponsivePaginator from './ResponsivePaginator';
 import SeriesToolBar from './SeriesToolBar';
 import SkeletonBooks from './Skeleton/SkeletonBooks';
-import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 
 const seriesListStyle = {
   paddingBottom: ACTION_BAR_HEIGHT,
@@ -171,14 +172,21 @@ class SeriesList extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  locationHref: getLocationHref(state),
-  totalSelectedCount: getTotalSelectedCount(state),
-});
+const mapStateToProps = (state, props) => {
+  const { pathname, search } = props.location;
+  const locationHref = `${config.BASE_URL}${pathname}${search}`;
+
+  return {
+    locationHref,
+    totalSelectedCount: getTotalSelectedCount(state),
+  };
+};
 
 const mapDispatchToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SeriesList);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(SeriesList),
+);
