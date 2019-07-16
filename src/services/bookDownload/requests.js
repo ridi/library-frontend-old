@@ -12,6 +12,6 @@ export function* triggerDownload(bookIds) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/api/user_books/trigger_download', query, config.STORE_API_BASE_URL));
+  const response = yield api.post(makeURI('/api/user_books/trigger_download', null, config.STORE_API_BASE_URL), query);
   return response.data;
 }
