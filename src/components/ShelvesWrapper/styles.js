@@ -58,7 +58,7 @@ export const responsiveWrapper = `
   ${MQ([Responsive.Large], wrapperAndShelvesStyles(LargeShelfSize, 3, 20, 24))}
   ${MQ([Responsive.XLarge], wrapperAndShelvesStyles(XLargeShelfSize, 3, 24, 40))}
   ${MQ([Responsive.XXLarge], wrapperAndShelvesStyles(XLargeShelfSize, 4, 24, 40))}
-  ${MQ([Responsive.Full], wrapperAndShelvesStyles(XLargeShelfSize, 5, { row: 40, column: 24 }, 40))}
+  ${MQ([Responsive.Full], wrapperAndShelvesStyles(LargeShelfSize, 6, 32, 40))}
 `;
 
 export const responsiveStyles = css`
