@@ -1,12 +1,11 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import Head from 'next/head';
-import Link from 'next/link';
-import Router from 'next/router';
+import { jsx } from '@emotion/core';
+// import Router from 'next/router';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
-import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
@@ -32,32 +31,7 @@ import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 import EditButton from './EditButton';
 import SearchModal from './SearchModal';
-
-const shelfBar = {
-  backgroundColor: '#ffffff',
-  borderTop: '1px solid #f3f4f5',
-  borderBottom: '1px solid #d1d5d9',
-  marginTop: -1,
-};
-
-const toolsWrapper = {
-  flex: 'auto',
-  justifyContent: 'flex-end',
-  display: 'flex',
-  alignItems: 'center',
-  paddingLeft: 2,
-  whiteSpace: 'nowrap',
-};
-
-const paddingForPagination = {
-  paddingBottom: ACTION_BAR_HEIGHT,
-};
-
-const toolBar = css`
-  border-bottom: 1px solid #d1d5d9;
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
-  background-color: #f3f4f5;
-`;
+import * as styles from './styles';
 
 function ShelfDetail(props) {
   const {
@@ -194,7 +168,8 @@ function ShelfDetail(props) {
             page: newPage,
           },
         );
-        Router.replace(linkProps.href, linkProps.as);
+        console.log(linkProps);
+        // Router.replace(linkProps.href, linkProps.as);
       }
     },
     [page, totalPages],
@@ -213,17 +188,17 @@ function ShelfDetail(props) {
       />
     );
     const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
-    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+    return <FlexBar css={styles.shelfBar} flexLeft={left} flexRight={right} />;
   }
 
   function renderToolbar() {
     const right = (
-      <div css={toolsWrapper}>
+      <div css={styles.toolsWrapper}>
         <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
       </div>
     );
-    return <FlexBar css={toolBar} flexRight={right} />;
+    return <FlexBar css={styles.toolBar} flexRight={right} />;
   }
 
   function renderPaginator() {
@@ -268,7 +243,7 @@ function ShelfDetail(props) {
       return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;
     }
     return (
-      <div css={paddingForPagination}>
+      <div css={styles.paddingForPagination}>
         <ResponsiveBooks>{books}</ResponsiveBooks>
       </div>
     );
@@ -277,9 +252,9 @@ function ShelfDetail(props) {
   if (isAdding) {
     return (
       <>
-        <Head>
-          <title>{name} - 내 서재</title>
-        </Head>
+        <Helmet>
+          <title>{`${name} - 내 서재`}</title>
+        </Helmet>
         <SearchModal onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
       </>
     );
@@ -313,9 +288,9 @@ function ShelfDetail(props) {
 
   return (
     <>
-      <Head>
-        <title>{name} - 내 서재</title>
-      </Head>
+      <Helmet>
+        <title>{`${name} - 내 서재`}</title>
+      </Helmet>
       {renderShelfBar()}
       <Editable
         allowFixed
@@ -330,27 +305,35 @@ function ShelfDetail(props) {
   );
 }
 
-ShelfDetail.getInitialProps = async ({ query, store }) => {
-  const { uuid } = query;
-  const page = parseInt(query.page, 10) || 1;
-  const orderBy = '';
-  const orderDirection = '';
-  const pageOptions = { orderBy, orderDirection, page };
-  store.dispatch(actions.setDetailPageOptions(pageOptions));
-  store.dispatch(actions.loadShelfBooks(uuid, pageOptions));
-  store.dispatch(actions.loadShelfBookCount(uuid));
+const getPageOptions = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
+  const page = parseInt(urlParams.get('page'), 10) || 1;
+  const orderBy = urlParams.get('order_by') || '';
+  const orderDirection = urlParams.get('order_direction') || '';
   return {
-    uuid,
-    ...pageOptions,
+    page,
+    orderBy,
+    orderDirection,
   };
 };
 
+const getUuid = matchParams => matchParams.shelfId;
+
+ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
+  const pageOptions = getPageOptions(location.search);
+  const uuid = getUuid(matchData.params);
+
+  dispatch(actions.loadShelfBooks(uuid, pageOptions));
+  dispatch(actions.loadShelfBookCount(uuid));
+};
+
 function mapStateToProps(state, props) {
-  const { uuid, page, orderBy, orderDirection } = props;
+  const pageOptions = getPageOptions(props.location.search);
+  const uuid = getUuid(props.match.params);
+
   const name = selectors.getShelfName(state, uuid);
   const totalBookCount = selectors.getShelfBookCount(state, uuid);
 
-  const pageOptions = { orderBy, orderDirection, page };
   const { loading: booksLoading } = selectors.getShelfBooks(state, uuid, pageOptions);
   const libraryBooks = selectors.getLibraryBooks(state, uuid, pageOptions);
   const bookIds = selectors.getBookIds(state, uuid, pageOptions);
@@ -368,6 +351,8 @@ function mapStateToProps(state, props) {
     shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
+    page: pageOptions.page,
+    uuid,
   };
 }
 
