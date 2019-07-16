@@ -10,15 +10,16 @@ import ResponsivePaginator from '../../components/ResponsivePaginator';
 import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
 import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
-import { URLMap } from '../../constants/urls';
+import { SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
-import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
 import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
-import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
+import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
+import { getIsFetchingBooks, getItemsByPage, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
+import { calcPage } from '../../utils/pagination';
 import Footer from '../base/Footer';
 import { TabBar, TabMenuTypes } from '../base/LNB';
 import { ResponsiveBooks } from '../base/Responsive';
@@ -128,18 +129,9 @@ class SerialPreference extends React.Component {
   }
 
   renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages },
-    } = this.props;
-
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.serialPreference.href}
-        as={URLMap.serialPreference.as}
-      />
-    );
+    const { currentPage, totalCount } = this.props;
+    const totalPages = calcPage(totalCount, SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE);
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   render() {
@@ -166,15 +158,19 @@ class SerialPreference extends React.Component {
   }
 }
 
-SerialPreference.prepare = async ({ dispatch }) => {
-  await dispatch(clearSelectedItems());
-  await dispatch(loadItems());
+const getCurrentPage = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
+  return parseInt(urlParams.get('page'), 10) || 1;
 };
 
-const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
-  const items = getItemsByPage(state);
+SerialPreference.prepare = async ({ dispatch, location }) => {
+  await dispatch(clearSelectedItems());
+  await dispatch(loadItems(getCurrentPage(location.search)));
+};
 
+const mapStateToProps = (state, props) => {
+  const currentPage = getCurrentPage(props.location.search);
+  const items = getItemsByPage(state, currentPage);
   const seriesBookIds = toFlatten(items, 'series_id');
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
   const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
@@ -183,10 +179,10 @@ const mapStateToProps = state => {
   const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
-    pageInfo,
     items,
     toUnitIdMap,
     books,
+    currentPage,
     totalCount,
     totalSelectedCount,
     isFetchingBooks,

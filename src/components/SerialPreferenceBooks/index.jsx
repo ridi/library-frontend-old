@@ -3,9 +3,9 @@ import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import config from '../../config';
 import Genre from '../../constants/category';
-import { getLocationHref } from '../../services/router/selectors';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
@@ -142,16 +142,22 @@ class SerialPreferenceBooks extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  locationHref: getLocationHref(state),
-  selectedBooks: getSelectedItems(state),
-});
+const mapStateToProps = (state, props) => {
+  const { pathname, search } = props.location;
+  const locationHref = `${config.BASE_URL}${pathname}${search}`;
+  return {
+    locationHref,
+    selectedBooks: getSelectedItems(state),
+  };
+};
 
 const mapDispatchToProps = {
   onSelectedChange: toggleItem,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SerialPreferenceBooks);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(SerialPreferenceBooks),
+);
