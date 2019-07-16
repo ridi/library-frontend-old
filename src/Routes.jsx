@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, matchPath, withRouter } from 'react-router-dom';
+import NotFound from './pages/errors/notFound';
 import PurchasedHidden from './pages/purchased/hidden';
 import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
-import serialPreference from './pages/serialPreference';
+import SerialPreference from './pages/serialPreference';
 import ShelvesList from './pages/shelves/list';
 import Unit from './pages/unit';
 
@@ -30,7 +31,7 @@ const routes = [
     exact: true,
   },
   {
-    component: serialPreference,
+    component: SerialPreference,
     path: '/serial-preferences',
     exact: true,
   },
@@ -50,6 +51,9 @@ const routes = [
   {
     component: Unit,
     path: '/books/:unitId',
+  },
+  {
+    component: NotFound,
   },
 ];
 
