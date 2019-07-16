@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import React from 'react';
 import Helmet from 'react-helmet';
 import ErrorBook from '../../svgs/ErrorBook.svg';
 import * as styles from './styles';
