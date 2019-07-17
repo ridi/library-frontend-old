@@ -99,6 +99,8 @@ export const shelfStyles = {
     ${ResponsiveCountWrapper}
   `,
   count: css`
+    min-width: 14px;
+    text-align: center;
     position: relative;
     display: inline-block;
     padding: 0 7px;
