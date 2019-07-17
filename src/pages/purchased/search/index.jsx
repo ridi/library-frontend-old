@@ -37,6 +37,18 @@ const paddingForPagination = {
   paddingBottom: ACTION_BAR_HEIGHT,
 };
 
+function extractPageOptions(location) {
+  const params = new URLSearchParams(location.search);
+  const page = parseInt(params.get('page'), 10) || 1;
+  const keyword = params.get('keyword') || '';
+  return { page, keyword };
+}
+
+function useDispatchOptions(actionDispatcher, options) {
+  const { page, keyword } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, page, keyword]);
+}
+
 function Search(props) {
   const { location, totalPages } = props;
   const {
@@ -45,13 +57,17 @@ function Search(props) {
     dispatchDownloadSelectedBooks,
     dispatchHideSelectedBooks,
     dispatchLoadItems,
+    dispatchSelectAllBooks,
   } = props;
-  const urlParams = new URLSearchParams(location.search);
-  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
-  const keyword = urlParams.get('keyword') || '';
+  const pageOptions = extractPageOptions(location);
+  const { page: currentPage, keyword } = pageOptions;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
+
+  const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
+  const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
+  const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
 
   const toggleEditingMode = React.useCallback(
     () => {
@@ -66,20 +82,20 @@ function Search(props) {
 
   const handleHideClick = React.useCallback(
     () => {
-      dispatchHideSelectedBooks();
+      dispatchHideSelectedBooksWithOptions();
       dispatchClearSelectedBooks();
       setIsEditing(false);
     },
-    [dispatchClearSelectedBooks, dispatchHideSelectedBooks],
+    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
   );
 
   const handleDownloadClick = React.useCallback(
     () => {
-      dispatchDownloadSelectedBooks();
+      dispatchDownloadSelectedBooksWithOptions();
       dispatchClearSelectedBooks();
       setIsEditing(false);
     },
-    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooks],
+    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
   );
 
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
@@ -101,20 +117,20 @@ function Search(props) {
 
   const handleRefresh = React.useCallback(
     () => {
-      dispatchLoadItems({ page: currentPage, keyword });
+      dispatchLoadItems(pageOptions);
     },
     [currentPage, dispatchLoadItems, keyword],
   );
 
   function makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks } = props;
+    const { isSyncShelfEnabled, items, totalSelectedCount } = props;
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooksWithOptions,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: toggleEditingMode,
     };
@@ -282,16 +298,15 @@ function Search(props) {
 }
 
 Search.prepare = ({ dispatch, location }) => {
-  const params = new URLSearchParams(location.search);
-  const page = parseInt(params.get('page'), 10) || 1;
-  const keyword = params.get('keyword') || '';
+  const pageOptions = extractPageOptions(location);
   dispatch(clearSelectedItems());
-  dispatch(loadItems({ page, keyword }));
+  dispatch(loadItems(pageOptions));
 };
 
-const mapStateToProps = state => {
-  const totalPages = getTotalPages(state);
-  const items = getItemsByPage(state);
+const mapStateToProps = (state, props) => {
+  const pageOptions = extractPageOptions(props.location);
+  const totalPages = getTotalPages(state, pageOptions);
+  const items = getItemsByPage(state, pageOptions);
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
