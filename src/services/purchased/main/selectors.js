@@ -1,44 +1,40 @@
+import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
 
-import { OrderOptions } from '../../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { toFlatten } from '../../../utils/array';
 import { calcPage } from '../../../utils/pagination';
-import { initialDataState, getKey } from './state';
+import { createInitialDataState, mapPageOptionsToKey } from './state';
 
 import { getBooks } from '../../book/selectors';
 
-const getState = state => state.purchasedMain;
-const getDataState = state => {
-  const mainState = state.purchasedMain;
-  const key = getKey(mainState);
-  return mainState.data[key] || initialDataState;
-};
+const getDataState = createCachedSelector(
+  state => state.purchasedMain.data,
+  (_, pageOptions) => mapPageOptionsToKey(pageOptions),
+  (data, key) => data[key] || createInitialDataState(),
+)((_, pageOptions) => mapPageOptionsToKey(pageOptions));
 
 export const getItems = createSelector(
   getDataState,
   dataState => dataState.items,
 );
 
-export const getItemsByPage = createSelector(
+export const getItemsByPage = createCachedSelector(
   getDataState,
-  dataState => {
-    const { page, itemIdsForPage, items } = dataState;
+  (_, pageOptions) => pageOptions.page,
+  (dataState, page) => {
+    const { itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
-);
+)((_, pageOptions) => pageOptions.page);
 
-export const getBookIdsByPage = createSelector(
+const getBookIdsByPage = createSelector(
   getItemsByPage,
   items => toFlatten(items, 'b_id'),
 );
 
-export const getBooksByPage = createSelector(
-  state => state,
-  getBookIdsByPage,
-  getBooks,
-);
+const getBooksByPage = (state, pageOptions) => getBooks(state, getBookIdsByPage(state, pageOptions));
 
 export const getUnitIdsByPage = createSelector(
   getItemsByPage,
@@ -55,54 +51,6 @@ export const getTotalPages = createSelector(
   dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
-export const getPage = createSelector(
-  getDataState,
-  dataState => dataState.page,
-);
+export const getFilterOptions = state => state.purchasedMain.filter.options;
 
-export const getOrder = createSelector(
-  getState,
-  state => state.order,
-);
-
-export const getFilterOptions = createSelector(
-  getState,
-  state => state.filter.options,
-);
-
-export const getFilter = createSelector(
-  getState,
-  state => state.filter.selected,
-);
-
-export const getOptions = createSelector(
-  [getPage, getOrder, getFilter],
-  (page, order, filter) => ({
-    page,
-    order,
-    filter,
-  }),
-);
-
-export const getPageInfo = createSelector(
-  getPage,
-  getTotalPages,
-  getOrder,
-  getFilter,
-  (currentPage, totalPages, order, filter) => {
-    const { orderType, orderBy } = OrderOptions.parse(order);
-    return {
-      currentPage,
-      totalPages,
-      order,
-      orderType,
-      orderBy,
-      filter,
-    };
-  },
-);
-
-export const getIsFetchingBooks = createSelector(
-  getState,
-  state => state.isFetchingBooks,
-);
+export const getIsFetchingBooks = state => state.purchasedMain.isFetchingBooks;

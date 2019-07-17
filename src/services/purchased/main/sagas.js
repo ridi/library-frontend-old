@@ -1,6 +1,5 @@
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import * as featureIds from '../../../constants/featureIds';
-import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
@@ -26,13 +25,13 @@ import {
   updateItems,
 } from './actions';
 import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
-import { getFilter, getItems, getItemsByPage, getOptions, getPage } from './selectors';
+import { getItems, getItemsByPage } from './selectors';
 
-function* loadMainItemsWithPayload(payload) {
+function* loadMainItemsWithPageOptions(pageOptions) {
   // Clear Error
   yield put(setError(false));
 
-  const { currentPage, orderType, orderBy, categoryFilter, isServer } = payload;
+  const { page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
   try {
     const [itemResponse, countResponse, categories] = yield all([
       call(fetchMainItems, orderType, orderBy, categoryFilter, currentPage),
@@ -41,7 +40,7 @@ function* loadMainItemsWithPayload(payload) {
     ]);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
-    if (!itemResponse.items.length && countResponse.unit_total_count && isServer) {
+    if (!itemResponse.items.length && countResponse.unit_total_count) {
       // 이대로 리턴하면 로딩 표시가 남는다
       return;
     }
@@ -51,6 +50,7 @@ function* loadMainItemsWithPayload(payload) {
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
     yield put(
       updateItems({
+        pageOptions,
         items: itemResponse.items,
         unitTotalCount: countResponse.unit_total_count,
         itemTotalCount: countResponse.item_total_count,
@@ -66,16 +66,16 @@ function* loadMainItemsWithPayload(payload) {
 }
 
 function* loadMainItems(action) {
-  yield call(loadMainItemsWithPayload, action.payload);
+  yield call(loadMainItemsWithPageOptions, action.payload.pageOptions);
 }
 
-function* hideSelectedBooks() {
+function* hideSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedItems);
 
-  const { order } = yield select(getOptions);
-  const { orderType, orderBy } = OrderOptions.parse(order);
+  const { pageOptions } = action.payload;
+  const { orderType, orderBy } = pageOptions;
 
   let queueIds;
   try {
@@ -100,9 +100,7 @@ function* hideSelectedBooks() {
   }
 
   if (isFinish) {
-    const currentPage = yield select(getPage);
-    const categoryFilter = yield select(getFilter);
-    yield call(loadMainItemsWithPayload, { currentPage, orderType, orderBy, categoryFilter, isServer: false });
+    yield call(loadMainItemsWithPageOptions, pageOptions);
   }
 
   yield all([
@@ -117,12 +115,12 @@ function* hideSelectedBooks() {
   ]);
 }
 
-function* downloadSelectedBooks() {
+function* downloadSelectedBooks(action) {
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedItems);
 
-  const { order } = yield select(getOptions);
-  const { orderType, orderBy } = OrderOptions.parse(order);
+  const { pageOptions } = action.payload;
+  const { orderType, orderBy } = pageOptions;
 
   try {
     const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
@@ -136,8 +134,9 @@ function* downloadSelectedBooks() {
   }
 }
 
-function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+function* selectAllBooks(action) {
+  const { pageOptions } = action.payload;
+  const items = yield select(getItemsByPage, pageOptions);
   const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
   const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
   const bookIds = toFlatten(filteredItems, 'b_id');

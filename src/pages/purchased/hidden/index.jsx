@@ -21,7 +21,6 @@ import { showConfirm } from '../../../services/confirm/actions';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
 import { getIsFetchingBooks, getItemsByPage, getTotalCount, getTotalPages } from '../../../services/purchased/hidden/selectors';
-import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
@@ -243,7 +242,6 @@ const mapStateToProps = (state, props) => {
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
-  const mainPageInfo = getMainPageInfo(state);
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   return {
@@ -254,7 +252,6 @@ const mapStateToProps = (state, props) => {
     totalPages,
     totalSelectedCount,
     isFetchingBooks,
-    mainPageInfo,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
     isSyncShelfEnabled,
