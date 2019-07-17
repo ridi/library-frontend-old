@@ -1,19 +1,16 @@
-import { concat } from '../../../utils/array';
-
 export const initialState = {
-  keyword: null,
   data: {},
-
   isFetchingBooks: false,
 };
 
-export const initialDataState = {
+export const createInitialDataState = () => ({
   itemIdsForPage: {},
   items: {},
-  page: 1,
 
   unitTotalCount: 0,
   itemTotalCount: 0,
-};
+});
 
-export const getKey = state => concat([state.keyword]);
+export function mapPageOptionsToKey(pageOptions) {
+  return pageOptions.keyword;
+}

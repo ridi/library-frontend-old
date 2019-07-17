@@ -26,12 +26,13 @@ import {
   setTotalCount,
 } from './actions';
 import { fetchSearchItems, fetchSearchItemsTotalCount } from './requests';
-import { getItems, getItemsByPage, getKeyword, getPage } from './selectors';
+import { getItems, getItemsByPage } from './selectors';
 
 function* loadPage(action) {
   yield put(setError(false));
 
-  const { page, keyword } = action.payload;
+  const { pageOptions } = action.payload;
+  const { page, keyword } = pageOptions;
 
   if (!keyword) {
     return;
@@ -50,7 +51,10 @@ function* loadPage(action) {
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count))]);
+    yield all([
+      put(setItems(itemResponse.items, pageOptions)),
+      put(setTotalCount(countResponse.unit_total_count, countResponse.item_total_count, pageOptions)),
+    ]);
 
     yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
@@ -60,15 +64,7 @@ function* loadPage(action) {
   }
 }
 
-function changeSearchKeyword(action) {
-  const linkProps = makeLinkProps({ pathname: URLMap.search.href }, URLMap.search.as, {
-    page: 1,
-    keyword: action.payload.keyword,
-  });
-  Router.push(linkProps.href, linkProps.as);
-}
-
-function* hideSelectedBooks() {
+function* hideSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems);
   const selectedBooks = yield select(getSelectedItems);
@@ -96,9 +92,7 @@ function* hideSelectedBooks() {
   }
 
   if (isFinish) {
-    const page = yield select(getPage);
-    const keyword = yield select(getKeyword);
-    yield call(loadPage, { payload: { page, keyword } });
+    yield call(loadPage, action);
   }
 
   yield all([
@@ -113,8 +107,8 @@ function* hideSelectedBooks() {
   ]);
 }
 
-function* downloadSelectedBooks() {
-  const items = yield select(getItems);
+function* downloadSelectedBooks(action) {
+  const items = yield select(getItems, action.payload.pageOptions);
   const selectedBooks = yield select(getSelectedItems);
 
   try {
@@ -129,8 +123,8 @@ function* downloadSelectedBooks() {
   }
 }
 
-function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+function* selectAllBooks(action) {
+  const items = yield select(getItemsByPage, action.payload.pageOptions);
   const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
   const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
   const bookIds = toFlatten(filteredItems, 'b_id');
