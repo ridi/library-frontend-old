@@ -3,4 +3,4 @@ export const MOBILE_PAGE_COUNT = 5;
 
 export const LIBRARY_ITEMS_LIMIT_PER_PAGE = 48;
 export const SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE = 48;
-export const SHELVES_LIMIT_PER_PAGE = 20;
+export const SHELVES_LIMIT_PER_PAGE = 24;
