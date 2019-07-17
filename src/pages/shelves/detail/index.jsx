@@ -1,10 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-// import Router from 'next/router';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -53,6 +52,7 @@ function ShelfDetail(props) {
     totalBookCount,
     totalSelectedCount,
     uuid,
+    backLocation,
   } = props;
   const visibleBookCount = bookIds.length;
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
@@ -143,11 +143,7 @@ function ShelfDetail(props) {
         URLMap[PageType.SHELF_UNIT].as({ uuid, unitId }),
         {},
       );
-      return (
-        <Link prefetch {...linkProps}>
-          <a>더보기</a>
-        </Link>
-      );
+      return <Link to={linkProps.to}>더보기</Link>;
     },
     [uuid],
   );
@@ -168,25 +164,14 @@ function ShelfDetail(props) {
             page: newPage,
           },
         );
-        console.log(linkProps);
-        // Router.replace(linkProps.href, linkProps.as);
+        this.props.history.push(linkProps.to);
       }
     },
     [page, totalPages],
   );
 
   function renderShelfBar() {
-    const { shelfListPageOptions } = props;
-    const left = (
-      <Title
-        title={name}
-        showCount={totalBookCount != null}
-        totalCount={totalBookCount}
-        href={URLMap[PageType.SHELVES].href}
-        as={URLMap[PageType.SHELVES].as}
-        query={shelfListPageOptions}
-      />
-    );
+    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={backLocation} />;
     const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={styles.shelfBar} flexLeft={left} flexRight={right} />;
   }
@@ -202,18 +187,7 @@ function ShelfDetail(props) {
   }
 
   function renderPaginator() {
-    if (totalPages == null) {
-      return null;
-    }
-    return (
-      <ResponsivePaginator
-        currentPage={page}
-        totalPages={totalPages}
-        href={{ pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } }}
-        as={URLMap[PageType.SHELF_DETAIL].as({ uuid })}
-        query={{ orderBy, orderDirection }}
-      />
-    );
+    return totalPages ? <ResponsivePaginator currentPage={page} totalPages={totalPages} /> : null;
   }
 
   function renderMain() {
@@ -305,6 +279,8 @@ function ShelfDetail(props) {
   );
 }
 
+const getBackLocation = locationState => locationState?.backLocation || URLMap[PageType.SHELVES].as;
+
 const getPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
@@ -317,7 +293,7 @@ const getPageOptions = locationSearch => {
   };
 };
 
-const getUuid = matchParams => matchParams.shelfId;
+const getUuid = matchParams => matchParams?.shelfId;
 
 ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
   const pageOptions = getPageOptions(location.search);
@@ -328,6 +304,7 @@ ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
 };
 
 function mapStateToProps(state, props) {
+  const backLocation = getBackLocation(props.location.state);
   const pageOptions = getPageOptions(props.location.search);
   const uuid = getUuid(props.match.params);
 
@@ -341,18 +318,17 @@ function mapStateToProps(state, props) {
 
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
 
-  const shelfListPageOptions = selectors.getListPageOptions(state);
   return {
     bookIds,
     booksLoading,
     libraryBooks,
     name,
     platformBooks,
-    shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
     page: pageOptions.page,
     uuid,
+    backLocation,
   };
 }
 
@@ -368,7 +344,9 @@ const mapDispatchToProps = {
   showPrompt: promptActions.showPrompt,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ShelfDetail);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(ShelfDetail),
+);

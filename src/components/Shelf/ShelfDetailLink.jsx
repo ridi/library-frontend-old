@@ -1,16 +1,26 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { PageType, URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import { shelfStyles } from './styles';
 
-export const ShelfDetailLink = ({ uuid, name }) => {
+const ShelfDetailLink = ({ uuid, name, location }) => {
   const { as } = URLMap[PageType.SHELF_DETAIL];
-  const linkProps = makeLinkProps({}, as({ uuid }));
+  const { to } = makeLinkProps({}, as({ uuid }));
   return (
-    <Link {...linkProps} css={shelfStyles.link}>
+    <Link
+      to={{
+        ...to,
+        state: {
+          backLocation: location,
+        },
+      }}
+      css={shelfStyles.link}
+    >
       <span className="a11y">{name} 바로가기</span>
     </Link>
   );
 };
+
+export default withRouter(ShelfDetailLink);
