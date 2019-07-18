@@ -272,8 +272,12 @@ function* addSelectedToShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
   const { fromShelfPageOptions, onComplete, uuid } = payload;
   try {
+    const selectedBooks = yield select(selectionSelectors.getSelectedItems);
+    const bookIds = Object.entries(selectedBooks)
+      .filter(([, selected]) => selected)
+      .map(([key]) => key);
     const count = yield call(requests.fetchShelfBookCount, { uuid });
-    if (count >= ITEMS_LIMIT_PER_SHELF) {
+    if (count + bookIds.length > ITEMS_LIMIT_PER_SHELF) {
       yield put(
         toastActions.showToast({
           message: `최대 ${thousandsSeperator(ITEMS_LIMIT_PER_SHELF)}권까지 추가할 수 있습니다.`,
@@ -283,10 +287,6 @@ function* addSelectedToShelf({ payload }) {
       return;
     }
 
-    const selectedBooks = yield select(selectionSelectors.getSelectedItems);
-    const bookIds = Object.entries(selectedBooks)
-      .filter(([, selected]) => selected)
-      .map(([key]) => key);
     const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
     const units = libraryBookData.items.map(book => ({
       unitId: book.search_unit_id,
