@@ -58,6 +58,7 @@ const routes = [
 ];
 
 function Routes({ dispatch, location }) {
+  const [renderLocation, setRenderLocation] = React.useState(location);
   React.useEffect(
     () => {
       let component = null;
@@ -74,11 +75,12 @@ function Routes({ dispatch, location }) {
           component.prepare({ ...matchData, dispatch, location });
         }
       }
+      setRenderLocation(location);
     },
     [dispatch, location],
   );
   return (
-    <Switch>
+    <Switch location={renderLocation}>
       {routes.map(props => (
         <Route key={JSON.stringify(props)} {...props} />
       ))}
