@@ -1,8 +1,7 @@
+import { stringify } from 'qs';
 import { put } from 'redux-saga/effects';
-
-import config from '../../config';
 import { getAPI } from '../../api/actions';
-
+import config from '../../config';
 import { makeURI } from '../../utils/uri';
 
 export function* triggerDownload(bookIds) {
@@ -12,6 +11,6 @@ export function* triggerDownload(bookIds) {
   };
 
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/api/user_books/trigger_download', query, config.STORE_API_BASE_URL));
+  const response = yield api.post(makeURI('/api/user_books/trigger_download', {}, config.STORE_API_BASE_URL), stringify(query));
   return response.data;
 }
