@@ -143,7 +143,18 @@ function ShelfDetail(props) {
         URLMap[PageType.SHELF_UNIT].as({ uuid, unitId }),
         {},
       );
-      return <Link to={linkProps.to}>더보기</Link>;
+      return (
+        <Link
+          to={{
+            ...linkProps.to,
+            state: {
+              backLocation: props.location,
+            },
+          }}
+        >
+          더보기
+        </Link>
+      );
     },
     [uuid],
   );
