@@ -1,14 +1,19 @@
 import { css } from '@emotion/core';
 import { MQ, Responsive } from '../../styles/responsive';
 
-export const responsiveMetaStyles = (underLargeSizeStyles, moreThanLargeSizeStyles) => `
-  ${MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], underLargeSizeStyles)}
-  ${MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], moreThanLargeSizeStyles)}
+export const responsiveMetaStyles = (smallSizeStyles, mediumSizeStyles, largeSizeStyles) => `
+  ${MQ([Responsive.XSmall, Responsive.Small], smallSizeStyles)}
+  ${MQ([Responsive.Medium, Responsive.Large, Responsive.Full], mediumSizeStyles)}
+  ${MQ([Responsive.XLarge, Responsive.XXLarge], largeSizeStyles)}
 `;
 
-const responsiveNameWrapper = responsiveMetaStyles(
+const responsiveNamePadding = responsiveMetaStyles(
   `
     padding: 8px 7px;
+    font-size: 15px;
+  `,
+  `
+    padding: 7px;
     font-size: 15px;
   `,
   `
@@ -19,7 +24,11 @@ const responsiveNameWrapper = responsiveMetaStyles(
 
 const ResponsiveCountWrapper = responsiveMetaStyles(
   `
-    padding: 1px 7px 11px 7px;
+    padding: 8px 7px 11px 7px;
+    font-size: 15px;
+  `,
+  `
+    padding: 14px 7px 11px 7px;
     font-size: 15px;
   `,
   `
@@ -79,8 +88,8 @@ export const shelfStyles = {
     background: white;
     border-radius: 0 0 ${InnerBorderRadius}px ${InnerBorderRadius}px;
   `,
-  nameWrapper: css`
-    ${responsiveNameWrapper}
+  namePadding: css`
+    ${responsiveNamePadding}
   `,
   name: css`
     font-weight: bold;
@@ -88,37 +97,26 @@ export const shelfStyles = {
     line-height: 1.2em;
     font-size: inherit;
 
-    display: -webkit-box;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    word-break: break-all;
   `,
   countWrapper: css`
     ${ResponsiveCountWrapper}
   `,
   count: css`
+    min-width: 14px;
+    text-align: center;
     position: relative;
     display: inline-block;
-    padding: 0 14px 0 10px;
-    border: solid 1px #808991;
+    padding: 0 7px;
+    border: solid 1px #d1d5d9;
     border-radius: 30px;
     height: 20px;
     line-height: 20px;
     font-size: 12px;
     font-weight: 600;
-    color: #808991;
-  `,
-  countArrowIcon: css`
-    display: block;
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    margin-top: -3px;
-    width: 3px;
-    height: 6px;
-    fill: #808991;
+    color: #b8bfc4;
   `,
   link: css`
     display: block;

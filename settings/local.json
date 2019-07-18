@@ -11,7 +11,7 @@
   "store_base_url": "https://master.test.ridi.io",
   "store_api_base_url": "https://master.test.ridi.io",
   "store_static_base_url": "https://static.master.test.ridi.io",
-  "viewer_api_base_url": "https://viewer-api.dev.ridi.io",
+  "viewer_api_base_url": "https://viewer-api-v1.dev.ridi.io",
   "select_base_url": "https://select.dev.ridi.io",
   "library_api_base_url": "https://library-api.dev.ridi.io",
   "book_api_base_url": "https://book-api.dev.ridi.io",
