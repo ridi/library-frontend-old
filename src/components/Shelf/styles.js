@@ -1,14 +1,19 @@
 import { css } from '@emotion/core';
 import { MQ, Responsive } from '../../styles/responsive';
 
-export const responsiveMetaStyles = (underLargeSizeStyles, moreThanLargeSizeStyles) => `
-  ${MQ([Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large], underLargeSizeStyles)}
-  ${MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], moreThanLargeSizeStyles)}
+export const responsiveMetaStyles = (smallSizeStyles, mediumSizeStyles, largeSizeStyles) => `
+  ${MQ([Responsive.XSmall, Responsive.Small], smallSizeStyles)}
+  ${MQ([Responsive.Medium, Responsive.Large, Responsive.Full], mediumSizeStyles)}
+  ${MQ([Responsive.XLarge, Responsive.XXLarge], largeSizeStyles)}
 `;
 
-const responsiveNameWrapper = responsiveMetaStyles(
+const responsiveNamePadding = responsiveMetaStyles(
   `
     padding: 8px 7px;
+    font-size: 15px;
+  `,
+  `
+    padding: 7px;
     font-size: 15px;
   `,
   `
@@ -19,7 +24,11 @@ const responsiveNameWrapper = responsiveMetaStyles(
 
 const ResponsiveCountWrapper = responsiveMetaStyles(
   `
-    padding: 1px 7px 11px 7px;
+    padding: 8px 7px 11px 7px;
+    font-size: 15px;
+  `,
+  `
+    padding: 14px 7px 11px 7px;
     font-size: 15px;
   `,
   `
@@ -79,8 +88,8 @@ export const shelfStyles = {
     background: white;
     border-radius: 0 0 ${InnerBorderRadius}px ${InnerBorderRadius}px;
   `,
-  nameWrapper: css`
-    ${responsiveNameWrapper}
+  namePadding: css`
+    ${responsiveNamePadding}
   `,
   name: css`
     font-weight: bold;
@@ -88,12 +97,9 @@ export const shelfStyles = {
     line-height: 1.2em;
     font-size: inherit;
 
-    display: -webkit-box;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    word-break: break-all;
   `,
   countWrapper: css`
     ${ResponsiveCountWrapper}

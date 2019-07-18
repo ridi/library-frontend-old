@@ -21,9 +21,7 @@ const Shelf = props => {
     <article css={shelfStyles.wrapper}>
       <ShelfThumbnails thumbnailIds={thumbnailIds} shelfName={name} />
       <div css={shelfStyles.infoWrapper}>
-        <div css={shelfStyles.nameWrapper}>
-          <h1 css={shelfStyles.name}>{name}</h1>
-        </div>
+        <h1 css={[shelfStyles.namePadding, shelfStyles.name]}>{name}</h1>
         <div css={shelfStyles.countWrapper}>
           <TotalCount count={totalCount} />
         </div>
