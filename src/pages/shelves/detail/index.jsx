@@ -181,10 +181,9 @@ function ShelfDetail(props) {
     [page, totalPages, history],
   );
 
-  const getBackLocation = React.useCallback(locationState => locationState?.backLocation || URLMap[PageType.SHELVES].as, [location]);
-
   function renderShelfBar() {
-    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={getBackLocation(location.state)} />;
+    const backLocation = location.state ? location.state.backLocation : URLMap[PageType.SHELVES].as;
+    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={backLocation} />;
     const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={styles.shelfBar} flexLeft={left} flexRight={right} />;
   }
