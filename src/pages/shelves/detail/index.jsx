@@ -303,7 +303,7 @@ const getPageOptions = locationSearch => {
   };
 };
 
-const getUuid = matchParams => matchParams?.shelfId;
+const getUuid = matchParams => matchParams?.uuid;
 
 ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
   const pageOptions = getPageOptions(location.search);

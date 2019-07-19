@@ -42,8 +42,12 @@ const routes = [
     exact: true,
   },
   {
+    component: Unit,
+    path: '/shelf/:uuid/:unitId',
+  },
+  {
     component: ShelfDetail,
-    path: '/shelf/:shelfId',
+    path: '/shelf/:uuid',
   },
   {
     component: Unit,
