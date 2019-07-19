@@ -158,7 +158,7 @@ function ShelfDetail(props) {
         </Link>
       );
     },
-    [uuid],
+    [location],
   );
 
   React.useEffect(
