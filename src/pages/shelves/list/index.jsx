@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
@@ -27,21 +27,12 @@ import * as shelfSelectors from '../../../services/shelf/selectors';
 import * as toastActions from '../../../services/toast/actions';
 import { ToastStyle } from '../../../services/toast/constants';
 import * as paginationUtils from '../../../utils/pagination';
-import Footer from '../../base/Footer';
 import { makeLinkProps } from '../../../utils/uri';
+import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
 import { BetaAlert } from './BetaAlert';
-
-const toolBar = css`
-  border-bottom: 1px solid #d1d5d9;
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
-  background-color: #f3f4f5;
-`;
-
-const toolsWrapper = css`
-  display: flex;
-`;
+import * as styles from './styles';
 
 const ShelvesList = props => {
   const {
@@ -159,7 +150,7 @@ const ShelvesList = props => {
     const { orderBy, orderDirection } = pageOptions;
     const order = OrderOptions.toKey(orderBy, orderDirection);
     return (
-      <div css={toolsWrapper}>
+      <div css={styles.toolsWrapper}>
         <Add onClickAddButton={handleAddShelf}>
           <Tooltip name="SHELVES_TOOLTIP" expires={new Date(2019, 8, 20)}>
             책장을 만들어 원하는 책을 담아보세요!
@@ -177,19 +168,8 @@ const ShelvesList = props => {
     );
   };
 
-  const renderToolBar = () => <FlexBar css={toolBar} flexLeft={<div />} flexRight={renderTools()} />;
-  const renderPaginator = () => {
-    const { page, orderBy, orderDirection } = pageOptions;
-    return (
-      <ResponsivePaginator
-        currentPage={page}
-        totalPages={totalPages}
-        href={{ pathname: URLMap.shelves.href }}
-        as={URLMap.shelves.as}
-        query={{ orderBy, orderDirection }}
-      />
-    );
-  };
+  const renderToolBar = () => <FlexBar css={styles.toolBar} flexLeft={<div />} flexRight={renderTools()} />;
+  const renderPaginator = () => <ResponsivePaginator currentPage={pageOptions.page} totalPages={totalPages} />;
   const renderMain = () => {
     const { loading: isLoading, items: shelfIds } = shelves;
     if (shelfIds == null || (shelfIds.length === 0 && isLoading)) return <SkeletonShelves />;
@@ -243,7 +223,6 @@ const getPageOptions = locationSearch => {
 
 ShelvesList.prepare = async ({ dispatch, location }) => {
   const pageOptions = getPageOptions(location.search);
-  await dispatch(shelfActions.setListPageOptions(pageOptions));
   await dispatch(shelfActions.loadShelves(pageOptions));
   await dispatch(shelfActions.loadShelfCount());
 };

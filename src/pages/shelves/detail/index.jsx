@@ -1,10 +1,9 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
-import Head from 'next/head';
-import Link from 'next/link';
-import Router from 'next/router';
+import { jsx } from '@emotion/core';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -30,28 +29,7 @@ import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 import SearchModal from './SearchModal';
-
-const shelfBar = {
-  backgroundColor: '#ffffff',
-  borderTop: '1px solid #f3f4f5',
-  borderBottom: '1px solid #d1d5d9',
-  marginTop: -1,
-};
-
-const toolsWrapper = {
-  flex: 'auto',
-  justifyContent: 'flex-end',
-  display: 'flex',
-  alignItems: 'center',
-  paddingLeft: 2,
-  whiteSpace: 'nowrap',
-};
-
-const toolBar = css`
-  border-bottom: 1px solid #d1d5d9;
-  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.04);
-  background-color: #f3f4f5;
-`;
+import * as styles from './styles';
 
 function ShelfDetail(props) {
   const {
@@ -61,6 +39,7 @@ function ShelfDetail(props) {
     removeShelfFromDetail,
     downloadSelectedUnits,
     history,
+    location,
     name,
     orderBy,
     orderDirection,
@@ -167,8 +146,15 @@ function ShelfDetail(props) {
         {},
       );
       return (
-        <Link prefetch {...linkProps}>
-          <a>더보기</a>
+        <Link
+          to={{
+            ...linkProps.to,
+            state: {
+              backLocation: location,
+            },
+          }}
+        >
+          더보기
         </Link>
       );
     },
@@ -191,30 +177,21 @@ function ShelfDetail(props) {
             page: newPage,
           },
         );
-        Router.replace(linkProps.href, linkProps.as);
+        history.push(linkProps.to);
       }
     },
-    [page, totalPages],
+    [page, totalPages, history],
   );
 
   function renderShelfBar() {
-    const { shelfListPageOptions } = props;
-    const left = (
-      <Title
-        title={name}
-        showCount={totalBookCount != null}
-        totalCount={totalBookCount}
-        href={URLMap[PageType.SHELVES].href}
-        as={URLMap[PageType.SHELVES].as}
-        query={shelfListPageOptions}
-      />
-    );
-    return <FlexBar css={shelfBar} flexLeft={left} />;
+    const backLocation = location.state ? location.state.backLocation : URLMap[PageType.SHELVES].as;
+    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={backLocation} />;
+    return <FlexBar css={styles.shelfBar} flexLeft={left} />;
   }
 
   function renderToolbar() {
     const right = (
-      <div css={toolsWrapper}>
+      <div css={styles.toolsWrapper}>
         <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
         <Tools.ShelfEdit
@@ -225,22 +202,11 @@ function ShelfDetail(props) {
         />
       </div>
     );
-    return <FlexBar css={toolBar} flexRight={right} />;
+    return <FlexBar css={styles.toolBar} flexRight={right} />;
   }
 
   function renderPaginator() {
-    if (totalPages == null) {
-      return null;
-    }
-    return (
-      <ResponsivePaginator
-        currentPage={page}
-        totalPages={totalPages}
-        href={{ pathname: URLMap[PageType.SHELF_DETAIL].href, query: { uuid } }}
-        as={URLMap[PageType.SHELF_DETAIL].as({ uuid })}
-        query={{ orderBy, orderDirection }}
-      />
-    );
+    return totalPages ? <ResponsivePaginator currentPage={page} totalPages={totalPages} /> : null;
   }
 
   function renderMain() {
@@ -275,9 +241,9 @@ function ShelfDetail(props) {
   if (isAdding) {
     return (
       <>
-        <Head>
-          <title>{name} - 내 서재</title>
-        </Head>
+        <Helmet>
+          <title>{`${name} - 내 서재`}</title>
+        </Helmet>
         <SearchModal onAddSelected={handleAddSelected} onBackClick={handleAddBackClick} uuid={uuid} />
       </>
     );
@@ -311,9 +277,9 @@ function ShelfDetail(props) {
 
   return (
     <>
-      <Head>
-        <title>{name} - 내 서재</title>
-      </Head>
+      <Helmet>
+        <title>{`${name} - 내 서재`}</title>
+      </Helmet>
       {renderShelfBar()}
       <Editable
         allowFixed
@@ -328,27 +294,35 @@ function ShelfDetail(props) {
   );
 }
 
-ShelfDetail.getInitialProps = async ({ query, store }) => {
-  const { uuid } = query;
-  const page = parseInt(query.page, 10) || 1;
-  const orderBy = '';
-  const orderDirection = '';
-  const pageOptions = { orderBy, orderDirection, page };
-  store.dispatch(actions.setDetailPageOptions(pageOptions));
-  store.dispatch(actions.loadShelfBooks(uuid, pageOptions));
-  store.dispatch(actions.loadShelfBookCount(uuid));
+const getPageOptions = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
+  const page = parseInt(urlParams.get('page'), 10) || 1;
+  const orderBy = urlParams.get('order_by') || '';
+  const orderDirection = urlParams.get('order_direction') || '';
   return {
-    uuid,
-    ...pageOptions,
+    page,
+    orderBy,
+    orderDirection,
   };
 };
 
+const getUuid = matchParams => matchParams?.uuid;
+
+ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
+  const pageOptions = getPageOptions(location.search);
+  const uuid = getUuid(matchData.params);
+
+  dispatch(actions.loadShelfBooks(uuid, pageOptions));
+  dispatch(actions.loadShelfBookCount(uuid));
+};
+
 function mapStateToProps(state, props) {
-  const { uuid, page, orderBy, orderDirection } = props;
+  const pageOptions = getPageOptions(props.location.search);
+  const uuid = getUuid(props.match.params);
+
   const name = selectors.getShelfName(state, uuid);
   const totalBookCount = selectors.getShelfBookCount(state, uuid);
 
-  const pageOptions = { orderBy, orderDirection, page };
   const { loading: booksLoading } = selectors.getShelfBooks(state, uuid, pageOptions);
   const libraryBooks = selectors.getLibraryBooks(state, uuid, pageOptions);
   const bookIds = selectors.getBookIds(state, uuid, pageOptions);
@@ -356,17 +330,17 @@ function mapStateToProps(state, props) {
 
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);
 
-  const shelfListPageOptions = selectors.getListPageOptions(state);
   return {
     bookIds,
     booksLoading,
     libraryBooks,
     name,
     platformBooks,
-    shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
     viewType: state.ui.viewType,
+    page: pageOptions.page,
+    uuid,
   };
 }
 
@@ -383,7 +357,9 @@ const mapDispatchToProps = {
   showPrompt: promptActions.showPrompt,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ShelfDetail);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(ShelfDetail),
+);

@@ -3,7 +3,6 @@ import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
 import Sync from '../../svgs/Sync.svg';
-import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
 function ItemIcon(props) {
