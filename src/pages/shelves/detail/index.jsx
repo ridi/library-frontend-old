@@ -40,6 +40,7 @@ function ShelfDetail(props) {
     removeShelfFromDetail,
     downloadSelectedUnits,
     history,
+    location,
     name,
     orderBy,
     orderDirection,
@@ -52,7 +53,6 @@ function ShelfDetail(props) {
     totalBookCount,
     totalSelectedCount,
     uuid,
-    backLocation,
   } = props;
   const visibleBookCount = bookIds.length;
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
@@ -148,7 +148,7 @@ function ShelfDetail(props) {
           to={{
             ...linkProps.to,
             state: {
-              backLocation: props.location,
+              backLocation: location,
             },
           }}
         >
@@ -175,14 +175,16 @@ function ShelfDetail(props) {
             page: newPage,
           },
         );
-        this.props.history.push(linkProps.to);
+        history.push(linkProps.to);
       }
     },
-    [page, totalPages],
+    [page, totalPages, history],
   );
 
+  const getBackLocation = React.useCallback(locationState => locationState?.backLocation || URLMap[PageType.SHELVES].as, [location]);
+
   function renderShelfBar() {
-    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={backLocation} />;
+    const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={getBackLocation(location.state)} />;
     const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
     return <FlexBar css={styles.shelfBar} flexLeft={left} flexRight={right} />;
   }
@@ -290,8 +292,6 @@ function ShelfDetail(props) {
   );
 }
 
-const getBackLocation = locationState => locationState?.backLocation || URLMap[PageType.SHELVES].as;
-
 const getPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
@@ -315,7 +315,6 @@ ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
 };
 
 function mapStateToProps(state, props) {
-  const backLocation = getBackLocation(props.location.state);
   const pageOptions = getPageOptions(props.location.search);
   const uuid = getUuid(props.match.params);
 
@@ -339,7 +338,6 @@ function mapStateToProps(state, props) {
     totalSelectedCount,
     page: pageOptions.page,
     uuid,
-    backLocation,
   };
 }
 
