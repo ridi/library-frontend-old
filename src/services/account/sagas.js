@@ -2,11 +2,17 @@ import * as Sentry from '@sentry/browser';
 import { all, call, put, take, select } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
-import { START_ACCOUNT_TRACKER, setUserInfo } from './actions';
+import { START_ACCOUNT_TRACKER, setNeedLogin, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
 export function* loadUserInfo() {
-  const userInfo = yield call(fetchUserInfo);
+  let userInfo;
+  try {
+    userInfo = yield call(fetchUserInfo);
+  } catch (e) {
+    yield put(setNeedLogin());
+    return null;
+  }
   Sentry.configureScope(scope => {
     scope.setUser({
       id: userInfo.idx,
@@ -15,6 +21,7 @@ export function* loadUserInfo() {
     });
   });
   yield put(setUserInfo(userInfo));
+  return userInfo;
 }
 
 function* accountTracker() {

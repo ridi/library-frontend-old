@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch, matchPath, withRouter } from 'react-router-dom';
+import { Route, Switch, matchPath } from 'react-router-dom';
 import NotFound from './pages/errors/notFound';
 import PurchasedHidden from './pages/purchased/hidden';
 import PurchasedMain from './pages/purchased/main';
@@ -97,4 +97,4 @@ function Routes({ dispatch, location }) {
   );
 }
 
-export default withRouter(connect()(Routes));
+export default connect()(Routes);

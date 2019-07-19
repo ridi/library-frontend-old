@@ -1,9 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
 import React from 'react';
+import Helmet from 'react-helmet';
 import config from '../config';
-import { makeLoginURI } from '../utils/uri';
 import Footer from './base/Footer';
 
 const fixedStyle = {
@@ -60,47 +59,45 @@ const signupButtonStyle = {
   color: '#808991',
 };
 
-class Login extends React.Component {
-  static async getInitialProps({ query }) {
-    return {
-      next: query.next || '/',
-    };
-  }
+function Login(props) {
+  const searchParams = new URLSearchParams(props.location.search);
+  const next = searchParams.get('next');
+  const returnUrl = new URL(next, config.BASE_URL).toString();
 
-  render() {
-    const { next } = this.props;
-    const returnUrl = encodeURIComponent(`${config.BASE_URL}${next}`);
-    const loginUrl = makeLoginURI(config.RIDI_TOKEN_AUTHORIZE_URL, config.RIDI_OAUTH2_CLIENT_ID, returnUrl);
-    const sighupUrl = `${config.STORE_API_BASE_URL}/account/signup?return_url=${returnUrl})}`;
+  const loginUrl = new URL(config.RIDI_TOKEN_AUTHORIZE_URL);
+  loginUrl.searchParams.set('client_id', config.RIDI_OAUTH2_CLIENT_ID);
+  loginUrl.searchParams.set('redirect_uri', returnUrl);
+  loginUrl.searchParams.set('response_type', 'code');
+  const signupUrl = new URL('/account/signup', config.STORE_API_BASE_URL);
+  signupUrl.searchParams.set('return_url', returnUrl);
 
-    return (
-      <>
-        <Head>
-          <title>로그인 - 내 서재</title>
-        </Head>
-        <div css={fixedStyle}>
-          <main css={mainStyle}>
-            <p css={messageStyle}>
-              로그아웃 상태입니다.
-              <br />
-              로그인하여 내 서재를 확인해보세요.
-            </p>
-            <div>
-              <a css={loginButtonStyle} href={loginUrl}>
-                로그인
-              </a>
-            </div>
-            <div>
-              <a css={signupButtonStyle} href={sighupUrl}>
-                회원가입
-              </a>
-            </div>
-          </main>
-        </div>
-        <Footer />
-      </>
-    );
-  }
+  return (
+    <>
+      <Helmet>
+        <title>로그인 - 내 서재</title>
+      </Helmet>
+      <div css={fixedStyle}>
+        <main css={mainStyle}>
+          <p css={messageStyle}>
+            로그아웃 상태입니다.
+            <br />
+            로그인하여 내 서재를 확인해보세요.
+          </p>
+          <div>
+            <a css={loginButtonStyle} href={loginUrl.toString()}>
+              로그인
+            </a>
+          </div>
+          <div>
+            <a css={signupButtonStyle} href={signupUrl.toString()}>
+              회원가입
+            </a>
+          </div>
+        </main>
+      </div>
+      <Footer />
+    </>
+  );
 }
 
 export default Login;

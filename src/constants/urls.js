@@ -30,6 +30,7 @@ export const URLMap = {
   },
   [PageType.LOGIN]: {
     href: '/login',
+    path: '/login',
     as: '/login',
     regex: /^\/login\/?$/,
   },
