@@ -12,9 +12,7 @@ import {
   SET_SHELF_BOOKS,
   SET_SHELF_BOOK_COUNT,
   SET_SHELF_COUNT,
-  SET_SHELF_DETAIL_PAGE_OPTIONS,
   SET_SHELF_INFO,
-  SET_SHELF_LIST_PAGE_OPTIONS,
   SET_SHELVES,
 } from './actions';
 
@@ -60,11 +58,6 @@ import {
  *     '4': 34,
  *   },
  *   libraryBooks: {
- *   },
- *   detailPageOptions: {
- *     orderBy: '',
- *     orderDirection: '',
- *     page: 2,
  *   }
  * }
  * */
@@ -76,16 +69,6 @@ const initialState = {
   itemMap: {},
   bookToUnit: {},
   libraryBooks: {},
-  listPageOptions: {
-    orderBy: OrderOptions.SHELF_CREATED.orderType,
-    orderDirection: OrderOptions.SHELF_CREATED.orderBy,
-    page: 1,
-  },
-  detailPageOptions: {
-    orderBy: '',
-    orderDirection: '',
-    page: 1,
-  },
 };
 
 const makeBaseShelfData = uuid => ({
@@ -218,20 +201,6 @@ const shelfReducer = produce((draft, action) => {
         draft.libraryBooks[book.unit_id] = book;
         draft.bookToUnit[book.b_id] = book.unit_id;
       }
-      break;
-    }
-    case SET_SHELF_LIST_PAGE_OPTIONS: {
-      const { orderBy, orderDirection, page } = action.payload;
-      draft.listPageOptions.orderBy = orderBy;
-      draft.listPageOptions.orderDirection = orderDirection;
-      draft.listPageOptions.page = page;
-      break;
-    }
-    case SET_SHELF_DETAIL_PAGE_OPTIONS: {
-      const { orderBy, orderDirection, page } = action.payload;
-      draft.detailPageOptions.orderBy = orderBy;
-      draft.detailPageOptions.orderDirection = orderDirection;
-      draft.detailPageOptions.page = page;
       break;
     }
     default:

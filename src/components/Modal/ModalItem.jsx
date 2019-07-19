@@ -2,7 +2,6 @@
 import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
-import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
