@@ -7,6 +7,7 @@ import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
 import SerialPreference from './pages/serialPreference';
 import ShelvesList from './pages/shelves/list';
+import ShelfDetail from './pages/shelves/detail';
 import Unit from './pages/unit';
 
 const routes = [
@@ -39,6 +40,14 @@ const routes = [
     component: ShelvesList,
     path: '/shelves',
     exact: true,
+  },
+  {
+    component: Unit,
+    path: '/shelf/:uuid/:unitId',
+  },
+  {
+    component: ShelfDetail,
+    path: '/shelf/:uuid',
   },
   {
     component: Unit,
