@@ -291,7 +291,7 @@ function ShelfDetail(props) {
   );
 }
 
-const getPageOptions = locationSearch => {
+const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderBy = urlParams.get('order_by') || '';
@@ -306,7 +306,7 @@ const getPageOptions = locationSearch => {
 const getUuid = matchParams => matchParams?.uuid;
 
 ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
-  const pageOptions = getPageOptions(location.search);
+  const pageOptions = extractPageOptions(location.search);
   const uuid = getUuid(matchData.params);
 
   dispatch(actions.loadShelfBooks(uuid, pageOptions));
@@ -314,7 +314,7 @@ ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
 };
 
 function mapStateToProps(state, props) {
-  const pageOptions = getPageOptions(props.location.search);
+  const pageOptions = extractPageOptions(props.location.search);
   const uuid = getUuid(props.match.params);
 
   const name = selectors.getShelfName(state, uuid);
