@@ -73,6 +73,8 @@ export const authorizationInterceptor = {
               if (!URLMap.login.regex.exec(window.location.pathname)) {
                 // 로직을 끊고 가기 위해 location 에 바로 주입한다.
                 // Router 를 사용하면 시점이 꼬이게 된다.
+                // FIXME: 이상적으로는 Redux store의 needLogin을 세팅해주는 게
+                // 좋은데, 어떻게 해야 할까...?
                 const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
                 window.location.href = makeLibraryLoginURI(URLMap.login.as, next);
                 return null;
