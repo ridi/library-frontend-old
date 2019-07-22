@@ -31,12 +31,12 @@ function App(props) {
   const routes = [];
   if (userInfo == null || needLogin) {
     // 로그인이 필요할지도 모르는 경우
-    routes.push(<Route exact key={URLMap[PageType.LOGIN].path} path={URLMap[PageType.LOGIN].path} component={Login} />);
+    routes.push(<Route exact key={`${URLMap[PageType.LOGIN].path}0`} path={URLMap[PageType.LOGIN].path} component={Login} />);
     if (needLogin) {
       // 로그인이 필요한 경우. 다른 경로로 접근하면 리디렉션하도록 함
       routes.push(
         <Route
-          key={URLMap[PageType.LOGIN].as}
+          key={`${URLMap[PageType.LOGIN].path}1`}
           render={({ location }) => {
             const searchParams = new URLSearchParams();
             searchParams.set('next', `${location.pathname}${location.search}${location.hash}`);
