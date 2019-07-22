@@ -25,9 +25,6 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
   )}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=${packageName};end`;
 };
 
-export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
-  `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
-
 export const makeLibraryLoginURI = (libraryURI, next) => `${libraryURI}?next=${next}`;
 
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.

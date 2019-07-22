@@ -20,9 +20,9 @@ import { getMaintenanceStatus } from '../services/maintenance/requests';
 
 function* getMaintenanceStatusSaga() {
   try {
-    const [maintenanceStatus] = yield all([call(getMaintenanceStatus), call(loadUserInfo)]);
+    const [maintenanceStatus, userInfo] = yield all([call(getMaintenanceStatus), call(loadUserInfo)]);
     yield put(setMaintenance(maintenanceStatus));
-    if (!maintenanceStatus.isShow) {
+    if (!maintenanceStatus.isShow && userInfo != null) {
       yield put(startAccountTracker());
     }
   } catch (e) {
