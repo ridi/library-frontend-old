@@ -25,13 +25,10 @@ import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
-  getFilter,
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
   getLastBookIdsByPage,
-  getOrder,
-  getPage,
   getTotalPages,
   getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
@@ -43,18 +40,39 @@ import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 
-function PurchasedMain(props) {
-  const { listInstruction, location, totalPages } = props;
-  const { dispatchAddSelectedToShelf, dispatchDownloadSelectedBooks, dispatchClearSelectedBooks, dispatchHideSelectedBooks } = props;
-
+function extractPageOptions(location) {
   const urlParams = new URLSearchParams(location.search);
   const currentPage = parseInt(urlParams.get('page'), 10) || 1;
   const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
   const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
+  return { page: currentPage, orderType, orderBy, categoryFilter };
+}
+
+function useDispatchOptions(actionDispatcher, options) {
+  const { page, orderType, orderBy, categoryFilter } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, page, orderType, orderBy, categoryFilter]);
+}
+
+function PurchasedMain(props) {
+  const { listInstruction, location, totalPages } = props;
+  const {
+    dispatchAddSelectedToShelf,
+    dispatchClearSelectedBooks,
+    dispatchDownloadSelectedBooks,
+    dispatchHideSelectedBooks,
+    dispatchSelectAllBooks,
+  } = props;
+
+  const pageOptions = extractPageOptions(location);
+  const { page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
+
+  const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
+  const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
+  const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
 
   const linkBuilder = React.useCallback(
     libraryBookData => {
@@ -162,14 +180,14 @@ function PurchasedMain(props) {
   }
 
   function makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks } = props;
+    const { isSyncShelfEnabled, items, totalSelectedCount } = props;
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooksWithOptions,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: toggleEditingMode,
     };
@@ -177,19 +195,19 @@ function PurchasedMain(props) {
 
   const handleHideClick = React.useCallback(
     () => {
-      dispatchHideSelectedBooks();
+      dispatchHideSelectedBooksWithOptions();
       dispatchClearSelectedBooks();
       setIsEditing(false);
     },
-    [dispatchClearSelectedBooks, dispatchHideSelectedBooks],
+    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
   );
   const handleDownloadClick = React.useCallback(
     () => {
-      dispatchDownloadSelectedBooks();
+      dispatchDownloadSelectedBooksWithOptions();
       dispatchClearSelectedBooks();
       setIsEditing(false);
     },
-    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooks],
+    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
   );
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
   const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
@@ -291,30 +309,22 @@ function PurchasedMain(props) {
 PurchasedMain.prepare = async ({ dispatch, location, req }) => {
   const isServer = Boolean(req);
 
-  const urlParams = new URLSearchParams(location.search);
-  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
-  const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
-  const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
-  const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
-
-  const args = { currentPage, orderType, orderBy, categoryFilter };
+  const pageOptions = extractPageOptions(location);
   await dispatch(clearSelectedItems());
-  await dispatch(loadItems(args, isServer));
+  await dispatch(loadItems(pageOptions, isServer));
 };
 
-const mapStateToProps = state => {
-  const currentPage = getPage(state);
-  const order = getOrder(state);
-  const { orderType, orderBy } = OrderOptions.parse(order);
-  const categoryFilter = getFilter(state);
-  const totalPages = getTotalPages(state);
+const mapStateToProps = (state, props) => {
+  const pageOptions = extractPageOptions(props.location);
+
+  const totalPages = getTotalPages(state, pageOptions);
   const filterOptions = getFilterOptions(state);
-  const items = getItemsByPage(state);
-  const unitIds = getUnitIdsByPage(state);
+  const items = getItemsByPage(state, pageOptions);
+  const unitIds = getUnitIdsByPage(state, pageOptions);
   const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
-  const lastBookIds = getLastBookIdsByPage(state);
+  const lastBookIds = getLastBookIdsByPage(state, pageOptions);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
@@ -327,10 +337,6 @@ const mapStateToProps = state => {
     listInstruction = ListInstructions.EMPTY;
   }
   return {
-    currentPage,
-    orderType,
-    orderBy,
-    categoryFilter,
     totalPages,
     filterOptions,
     items,

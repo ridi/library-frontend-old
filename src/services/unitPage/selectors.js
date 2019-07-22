@@ -20,8 +20,9 @@ const getDataState = createCachedSelector(
 
 export const getItemsByPage = createSelector(
   getDataState,
-  dataState => {
-    const { page, itemIdsForPage, items } = dataState;
+  (_, options) => options.page,
+  (dataState, page) => {
+    const { itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
