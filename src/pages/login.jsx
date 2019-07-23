@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import config from '../config';
+import { PageType, URLMap } from '../constants/urls';
 import Footer from './base/Footer';
 
 const fixedStyle = {
@@ -60,16 +61,18 @@ const signupButtonStyle = {
 };
 
 function Login(props) {
-  const searchParams = new URLSearchParams(props.location.search);
-  const next = searchParams.get('next');
-  const returnUrl = new URL(next, config.BASE_URL).toString();
+  const next = props.location;
+  const returnUrl = new URL(next.pathname, config.BASE_URL);
+  returnUrl.search = next.search;
+  returnUrl.hash = next.hash;
+  const returnUrlString = returnUrl.toString();
 
   const loginUrl = new URL(config.RIDI_TOKEN_AUTHORIZE_URL);
   loginUrl.searchParams.set('client_id', config.RIDI_OAUTH2_CLIENT_ID);
-  loginUrl.searchParams.set('redirect_uri', returnUrl);
+  loginUrl.searchParams.set('redirect_uri', returnUrlString);
   loginUrl.searchParams.set('response_type', 'code');
   const signupUrl = new URL('/account/signup', config.STORE_API_BASE_URL);
-  signupUrl.searchParams.set('return_url', returnUrl);
+  signupUrl.searchParams.set('return_url', returnUrlString);
 
   return (
     <>
