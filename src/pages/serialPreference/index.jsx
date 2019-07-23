@@ -158,18 +158,18 @@ class SerialPreference extends React.Component {
   }
 }
 
-const getCurrentPage = locationSearch => {
+const extractCurrentPage = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   return parseInt(urlParams.get('page'), 10) || 1;
 };
 
 SerialPreference.prepare = async ({ dispatch, location }) => {
   await dispatch(clearSelectedItems());
-  await dispatch(loadItems(getCurrentPage(location.search)));
+  await dispatch(loadItems(extractCurrentPage(location.search)));
 };
 
 const mapStateToProps = (state, props) => {
-  const currentPage = getCurrentPage(props.location.search);
+  const currentPage = extractCurrentPage(props.location.search);
   const items = getItemsByPage(state, currentPage);
   const seriesBookIds = toFlatten(items, 'series_id');
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);

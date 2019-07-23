@@ -209,7 +209,7 @@ const ShelvesList = props => {
   );
 };
 
-const getPageOptions = locationSearch => {
+const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_CREATED.orderType;
@@ -222,13 +222,13 @@ const getPageOptions = locationSearch => {
 };
 
 ShelvesList.prepare = async ({ dispatch, location }) => {
-  const pageOptions = getPageOptions(location.search);
+  const pageOptions = extractPageOptions(location.search);
   await dispatch(shelfActions.loadShelves(pageOptions));
   await dispatch(shelfActions.loadShelfCount());
 };
 
 const mapStateToProps = (state, props) => {
-  const pageOptions = getPageOptions(props.location.search);
+  const pageOptions = extractPageOptions(props.location.search);
   const shelves = shelfSelectors.getShelves(state, pageOptions);
   const totalShelfCount = shelfSelectors.getShelfCount(state);
   const totalSelectedCount = selectionSelectors.getTotalSelectedCount(state);

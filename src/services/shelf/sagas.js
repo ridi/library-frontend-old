@@ -33,19 +33,19 @@ const OperationStatus = {
   FORBIDDEN: 'forbidden',
 };
 
-function* loadShelfBookCount(isServer, { payload }) {
+function* loadShelfBookCount({ payload }) {
   const { uuid } = payload;
   try {
     const count = yield call(requests.fetchShelfBookCount, { uuid });
     yield put(actions.setShelfBookCount({ uuid, count }));
   } catch (err) {
-    if (!err.response || err.response.status !== 401 || !isServer) {
+    if (!err.response || err.response.status !== 401) {
       throw err;
     }
   }
 }
 
-function* loadShelves(isServer, { payload }) {
+function* loadShelves({ payload }) {
   const { orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
   const limit = SHELVES_LIMIT_PER_PAGE;
@@ -53,24 +53,24 @@ function* loadShelves(isServer, { payload }) {
     const items = yield call(requests.fetchShelves, { offset, limit, orderType: orderBy, orderBy: orderDirection });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
   } catch (err) {
-    if (!err.response || err.response.status !== 401 || !isServer) {
+    if (!err.response || err.response.status !== 401) {
       throw err;
     }
   }
 }
 
-function* loadShelfCount(isServer) {
+function* loadShelfCount() {
   try {
     const count = yield call(requests.fetchShelfCount);
     yield put(actions.setShelfCount(count));
   } catch (err) {
-    if (!err.response || err.response.status !== 401 || !isServer) {
+    if (!err.response || err.response.status !== 401) {
       throw err;
     }
   }
 }
 
-function* loadShelfBooks(isServer, { payload }) {
+function* loadShelfBooks({ payload }) {
   const { uuid, orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * LIBRARY_ITEMS_LIMIT_PER_PAGE;
   const limit = LIBRARY_ITEMS_LIMIT_PER_PAGE;
@@ -86,7 +86,7 @@ function* loadShelfBooks(isServer, { payload }) {
     yield call(bookSagas.loadBookData, bookIds);
     yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
   } catch (err) {
-    if (!err.response || err.response.status !== 401 || !isServer) {
+    if (!err.response || err.response.status !== 401) {
       throw err;
     }
   }
@@ -380,12 +380,12 @@ function* downloadSelectedUnits() {
   }
 }
 
-export default function* shelfRootSaga(isServer) {
+export default function* shelfRootSaga() {
   yield all([
-    takeEvery(actions.LOAD_SHELVES, loadShelves, isServer),
-    takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount, isServer),
-    takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks, isServer),
-    takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount, isServer),
+    takeEvery(actions.LOAD_SHELVES, loadShelves),
+    takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
+    takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks),
+    takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.RENAME_SHELF, renameShelf),
     takeEvery(actions.DELETE_SHELF, deleteShelf),

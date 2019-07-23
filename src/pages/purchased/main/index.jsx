@@ -306,12 +306,10 @@ function PurchasedMain(props) {
   );
 }
 
-PurchasedMain.prepare = async ({ dispatch, location, req }) => {
-  const isServer = Boolean(req);
-
+PurchasedMain.prepare = async ({ dispatch, location }) => {
   const pageOptions = extractPageOptions(location);
   await dispatch(clearSelectedItems());
-  await dispatch(loadItems(pageOptions, isServer));
+  await dispatch(loadItems(pageOptions));
 };
 
 const mapStateToProps = (state, props) => {
