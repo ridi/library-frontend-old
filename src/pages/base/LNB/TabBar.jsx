@@ -1,10 +1,11 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import { TabBar as LNBTabBar, TabLinkItem } from '../../../components/TabBar';
 import * as featureIds from '../../../constants/featureIds';
 import { URLMap } from '../../../constants/urls';
 import * as featureSelectors from '../../../services/feature/selectors';
+import BetaIcon from '../../../svgs/Beta.svg';
 import Responsive from '../Responsive';
 
 export const TabMenuTypes = {
@@ -22,6 +23,15 @@ const styles = {
   },
 };
 
+const betaIconStyle = isActive => css`
+  position: absolute;
+  right: -16px;
+  top: -1px;
+  width: 22px;
+  height: 12px;
+  fill: ${isActive ? '#40474d' : '#808991'};
+`;
+
 const TabMenus = [
   {
     type: TabMenuTypes.ALL_BOOKS,
@@ -38,6 +48,7 @@ const TabMenus = [
       href: URLMap.shelves.href,
       as: URLMap.shelves.as,
     },
+    icon: isActive => <BetaIcon css={betaIconStyle(isActive)} />,
   },
   {
     type: TabMenuTypes.SERIAL_PREFERENCE,
@@ -56,7 +67,7 @@ const mapStateToProps = state => ({
 export const TabBar = connect(mapStateToProps)(({ activeMenu, isSyncShelfEnabled }) => {
   const menus = isSyncShelfEnabled ? TabMenus : TabMenus.filter(item => item.type !== TabMenuTypes.SHELVES);
   const menuNodes = menus.map(menu => (
-    <TabLinkItem key={`${JSON.stringify(menu)}`} name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
+    <TabLinkItem key={`${JSON.stringify(menu)}`} name={menu.name} isActive={activeMenu === menu.type} icon={menu.icon} {...menu.linkInfo} />
   ));
   return (
     <Responsive css={styles.LNBTabBarWrapper}>

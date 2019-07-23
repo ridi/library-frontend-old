@@ -13,11 +13,12 @@ export const TabItem = ({ name, onClick, isActive }) => (
   </li>
 );
 
-export const TabLinkItem = ({ name, href, as, query, isActive }) => (
+export const TabLinkItem = ({ name, href, as, query, isActive, icon }) => (
   <li css={styles.tabItem}>
     <Link prefetch {...makeLinkProps(href, as, query)}>
       <a css={[styles.tabButton, styles.tabButtonToggle(isActive)]}>
         {name}
+        {icon && icon(isActive)}
         <span css={[styles.activeBar, styles.activeBarToggle(isActive)]} />
       </a>
     </Link>

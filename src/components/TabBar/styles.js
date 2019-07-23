@@ -13,6 +13,7 @@ export const tabItem = {
 };
 
 export const tabButton = {
+  position: 'relative',
   display: 'block',
   padding: '0 2px',
   height: 40,
