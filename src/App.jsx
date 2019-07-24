@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
-import { PageType, URLMap } from './constants/urls';
 import { initializeSentry } from './utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
 import Routes from './Routes';
@@ -12,7 +11,7 @@ import Layout from './pages/base/Layout';
 import Login from './pages/login';
 
 function App(props) {
-  const { needLogin, userInfo } = props;
+  const { needLogin } = props;
 
   React.useEffect(() => {
     initializeTabKeyFocus();
@@ -28,50 +27,18 @@ function App(props) {
     };
   }, []);
 
-  const routes = [];
-  if (userInfo == null || needLogin) {
-    // 로그인이 필요할지도 모르는 경우
-    routes.push(<Route exact key={`${URLMap[PageType.LOGIN].path}0`} path={URLMap[PageType.LOGIN].path} component={Login} />);
-    if (needLogin) {
-      // 로그인이 필요한 경우. 다른 경로로 접근하면 리디렉션하도록 함
-      routes.push(
-        <Route
-          key={`${URLMap[PageType.LOGIN].path}1`}
-          render={({ location }) => {
-            const searchParams = new URLSearchParams();
-            searchParams.set('next', `${location.pathname}${location.search}${location.hash}`);
-            const to = {
-              pathname: URLMap[PageType.LOGIN].as,
-              search: `?${searchParams.toString()}`,
-            };
-            return <Redirect to={to} />;
-          }}
-        />,
-      );
-    }
+  let routes;
+  // 로그인 필요하면 로그인 화면만 띄움
+  if (needLogin) {
+    routes = <Route component={Login} />;
   } else {
-    // 로그인된 경우. 로그인 경로로 접근하면 next로 보냄
-    routes.push(
-      <Route
-        exact
-        key={URLMap[PageType.LOGIN].path}
-        path={URLMap[PageType.LOGIN].path}
-        render={({ location }) => {
-          const searchParams = new URLSearchParams(location.search);
-          const next = searchParams.get('next') || URLMap[PageType.INDEX].as;
-          return <Redirect to={next} />;
-        }}
-      />,
-      <Route key="componentRoutes" component={Routes} />,
-    );
+    routes = <Route component={Routes} />;
   }
 
   return (
     <>
       <Favicon />
-      <Layout>
-        <Switch>{routes}</Switch>
-      </Layout>
+      <Layout>{routes}</Layout>
     </>
   );
 }
@@ -79,7 +46,6 @@ function App(props) {
 function mapStateToProps(state) {
   return {
     needLogin: accountSelectors.getNeedLogin(state),
-    userInfo: accountSelectors.getUserInfo(state),
   };
 }
 
