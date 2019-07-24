@@ -1260,10 +1260,10 @@
     performance-now "^2.1.0"
     url-parse "^1.4.3"
 
-"@ridi/web-ui@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.5.0.tgz#5ac8e1d5d9023f09fd1e4a2374f0ab113ccd3d33"
-  integrity sha512-yH9QnwRjEFUYUc1cWe9qJ3K7OVkiGiZmqSjd/9Zgn5GJaaiG6bfnRVTiE/tPnHHZA66jddKJ3Vx/vQKPIycrDQ==
+"@ridi/web-ui@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@ridi/web-ui/-/web-ui-0.6.0.tgz#b0d598d269100b8cf669c6336233890f43df02c5"
+  integrity sha512-l3YcFgNbrnjCzKCkP9idzM9SEOXxKycZzstqsEbJ8i2MmjS2aDcEPtbYMf08enWEmnBpuBIYKosUleZMFRgVJA==
 
 "@sentry/browser@^4.4.1":
   version "4.4.1"
