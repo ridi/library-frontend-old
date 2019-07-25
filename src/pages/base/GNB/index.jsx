@@ -4,10 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import MyMenuModal from '../../../components/Modal/MyMenuModal';
 import config from '../../../config';
-import * as featureIds from '../../../constants/featureIds';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
-import * as featureSelectors from '../../../services/feature/selectors';
 import { Hidden } from '../../../styles';
 import BetaBadge from '../../../svgs/BetaSquareFill.svg';
 import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
@@ -92,8 +90,6 @@ class GNB extends React.Component {
   }
 
   render() {
-    const { isSyncShelfEnabled } = this.props;
-    const showGNBBetaBadge = isSyncShelfEnabled === false;
     return (
       <>
         <Responsive css={styles.GNB}>
@@ -104,7 +100,7 @@ class GNB extends React.Component {
                   내 서재
                 </a>
               </h1>
-              {showGNBBetaBadge && <BetaBadge css={styles.BetaBadge} />}
+              <BetaBadge css={styles.BetaBadge} />
             </div>
             {this.renderRightUi()}
           </header>
@@ -117,12 +113,10 @@ class GNB extends React.Component {
 const mapStateToProps = state => {
   const isExcelDownloading = getIsExcelDownloading(state);
   const userId = state.account.userInfo ? state.account.userInfo.id : null;
-  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   return {
     userId,
     isExcelDownloading,
-    isSyncShelfEnabled,
   };
 };
 
