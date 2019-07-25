@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 
-const ScrollToTop = ({ children, location }) => {
+const ScrollToTop = ({ location }) => {
   useEffect(
     () => {
       window.scrollTo(0, 0);
@@ -9,7 +9,7 @@ const ScrollToTop = ({ children, location }) => {
     [location],
   );
 
-  return children || null;
+  return null;
 };
 
 export default withRouter(ScrollToTop);

@@ -14,9 +14,8 @@ ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
       <CacheProvider value={cache}>
-        <ScrollToTop>
-          <App />
-        </ScrollToTop>
+        <ScrollToTop />
+        <App />
       </CacheProvider>
     </Provider>
   </BrowserRouter>,
