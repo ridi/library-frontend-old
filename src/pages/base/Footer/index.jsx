@@ -1,15 +1,14 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import FooterNewIcon from '../../../svgs/FooterNewIcon.svg';
-import FooterPaperIcon from '../../../svgs/FooterPaperIcon.svg';
 import * as styles from './styles';
 
-const Footer = () => (
+const Footer = ({ children, additionalHeight = 0 }) => (
   <>
-    <div css={styles.footerMargin} />
+    <div css={styles.footerMargin(additionalHeight)} />
     <footer css={styles.footer}>
       <div css={styles.footerWrapper}>
         <div css={styles.footerTermWrapper}>
+          {children}
           <p css={styles.copyright}>© RIDI Corp.</p>
           <div>
             <ul css={styles.termsList}>
