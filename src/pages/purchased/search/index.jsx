@@ -139,13 +139,13 @@ function Search(props) {
     if (isSyncShelfEnabled) {
       buttonProps = [
         {
-          name: '숨기기',
-          onClick: handleHideClick,
+          name: '책장에 추가',
+          onClick: handleAddToShelf,
           disable,
         },
         {
-          name: '책장에 추가',
-          onClick: handleAddToShelf,
+          name: '숨기기',
+          onClick: handleHideClick,
           disable,
         },
         {
