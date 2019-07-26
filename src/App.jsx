@@ -6,7 +6,6 @@ import { initializeSentry } from './utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
 import Routes from './Routes';
 import * as accountSelectors from './services/account/selectors';
-import Favicon from './pages/base/Favicon';
 import Layout from './pages/base/Layout';
 import Login from './pages/login';
 
@@ -27,20 +26,9 @@ function App(props) {
     };
   }, []);
 
-  let routes;
-  // 로그인 필요하면 로그인 화면만 띄움
-  if (needLogin) {
-    routes = <Route component={Login} />;
-  } else {
-    routes = <Route component={Routes} />;
-  }
+  const routes = needLogin ? <Route component={Login} /> : <Route component={Routes} />;
 
-  return (
-    <>
-      <Favicon />
-      <Layout>{routes}</Layout>
-    </>
-  );
+  return <Layout>{routes}</Layout>;
 }
 
 function mapStateToProps(state) {
