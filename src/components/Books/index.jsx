@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
-import { isAfter, subDays } from 'date-fns';
+import isAfter from 'date-fns/is_after';
+import subDays from 'date-fns/sub_days';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';

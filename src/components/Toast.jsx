@@ -1,4 +1,4 @@
-import { isAfter } from 'date-fns';
+import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';
 import { showToast } from '../services/toast/actions';
@@ -38,7 +38,7 @@ class Toast extends React.Component {
   }
 
   render() {
-    return <></>;
+    return null;
   }
 }
 
