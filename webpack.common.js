@@ -1,8 +1,6 @@
 const path = require('path');
-
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {};
 
@@ -39,13 +37,6 @@ module.exports.config = {
   plugins: [
     new webpack.DefinePlugin({
       SENTRY_RELEASE_VERSION: JSON.stringify(process.env.SENTRY_RELEASE_VERSION),
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/index.ejs',
-      title: '내 서재',
-      meta: {
-        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
-      },
     }),
     new WebpackBar(),
   ],

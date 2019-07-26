@@ -4,6 +4,8 @@ import merge from 'webpack-merge';
 import settings from './settings/local.json';
 import { buildDefinitions, buildFileLoader, config } from './webpack.common';
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 export default merge(config, {
   mode: 'development',
   output: {
@@ -16,6 +18,11 @@ export default merge(config, {
   },
   plugins: [
     new webpack.DefinePlugin(buildDefinitions(settings)),
+    new HtmlWebpackPlugin({
+      template: './src/index.ejs',
+      libraryBaseUrl: settings.base_url,
+      storeStaticUrl: settings.store_static_base_url,
+    }),
     // new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
