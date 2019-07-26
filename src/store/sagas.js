@@ -9,6 +9,7 @@ import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
 import purchasedSearchRootSaga from '../services/purchased/search/sagas';
 import serialPreferenceRootSaga from '../services/serialPreference/sagas';
+import uiRootSaga from '../services/ui/sagas';
 import unitPageRootSaga from '../services/unitPage/sagas';
 import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
@@ -41,6 +42,7 @@ export default function* rootSaga() {
     purchasedSearchRootSaga(),
     purchasedHiddenSaga(),
     serialPreferenceRootSaga(),
+    uiRootSaga(),
     unitPageRootSaga(),
     shelfRootSaga(),
     toastRootSaga(),
