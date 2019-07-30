@@ -35,10 +35,11 @@ export const getSorryRidibooksStatus = () =>
     });
 
 export const getMaintenanceStatus = async () => {
-  const staticMaintenanceStatus = await getStaticMaintenanceStatus();
-  if (staticMaintenanceStatus.isShow) {
-    return staticMaintenanceStatus;
-  }
   const sorryRidibooksStatus = await getSorryRidibooksStatus();
-  return sorryRidibooksStatus;
+  if (sorryRidibooksStatus.isShow) {
+    return sorryRidibooksStatus;
+  }
+
+  const staticMaintenanceStatus = await getStaticMaintenanceStatus();
+  return staticMaintenanceStatus;
 };
