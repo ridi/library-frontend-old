@@ -19,13 +19,12 @@ import {
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
 import { getItemsByPage } from './selectors';
 
-function* loadItems({ payload }) {
-  const { page } = payload;
-  const currentPage = page || 1;
+function* loadItems(action) {
+  const { page } = action.payload;
   yield put(setError(false));
   try {
     yield put(setIsFetchingBooks(true));
-    const itemResponse = yield call(fetchSerialPreferenceItems, currentPage);
+    const itemResponse = yield call(fetchSerialPreferenceItems, page);
 
     if (itemResponse.items.length !== 0) {
       const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
@@ -35,7 +34,7 @@ function* loadItems({ payload }) {
       yield call(loadBookData, bookIds);
       yield put(setSerialUnitIdMap(unitIdMapResponse.result));
     }
-    yield all([put(setItems(itemResponse.items, currentPage)), put(setTotalCount(itemResponse.book_count))]);
+    yield all([put(setItems(itemResponse.items, page)), put(setTotalCount(itemResponse.book_count))]);
   } catch (err) {
     yield put(setError(true));
   } finally {
@@ -43,7 +42,7 @@ function* loadItems({ payload }) {
   }
 }
 
-function* deleteSelectedBooks() {
+function* deleteSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedItems);
   const bookSeriesIds = Object.keys(selectedBooks);
@@ -57,11 +56,11 @@ function* deleteSelectedBooks() {
     yield put(setFullScreenLoading(false));
   }
 
-  yield all([put(showToast({ message: '선호작품에서 삭제되었습니다.' })), call(loadItems)]);
+  yield all([put(showToast({ message: '선호작품에서 삭제되었습니다.' })), call(loadItems, action)]);
 }
 
-function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+function* selectAllBooks(action) {
+  const items = yield select(getItemsByPage, action.payload.page);
   const bookIds = toFlatten(items, 'series_id');
   yield put(selectItems(bookIds));
 }
