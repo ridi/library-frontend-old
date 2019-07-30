@@ -38,12 +38,18 @@ export const setSerialUnitIdMap = unitIdMap => ({
   },
 });
 
-export const selectAllBooks = () => ({
+export const selectAllBooks = page => ({
   type: SELECT_ALL_SERIAL_PREFERENCE_BOOKS,
+  payload: {
+    page,
+  },
 });
 
-export const deleteSelectedBooks = () => ({
+export const deleteSelectedBooks = page => ({
   type: DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS,
+  payload: {
+    page,
+  },
 });
 
 export const setIsFetchingBooks = isFetchingBooks => ({
