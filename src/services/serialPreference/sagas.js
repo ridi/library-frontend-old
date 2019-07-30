@@ -28,10 +28,8 @@ function* loadItems(action) {
 
     if (itemResponse.items.length !== 0) {
       const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
-      const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
-      // Request BookData
       const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
-      yield call(loadBookData, bookIds);
+      const [unitIdMapResponse] = yield all([call(fetchUnitIdMap, seriesBookIds), call(loadBookData, bookIds)]);
       yield put(setSerialUnitIdMap(unitIdMapResponse.result));
     }
     yield all([put(setItems(itemResponse.items, page)), put(setTotalCount(itemResponse.book_count))]);
