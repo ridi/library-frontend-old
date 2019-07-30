@@ -4,17 +4,41 @@ import { isNowBetween } from '../../utils/datetime';
 import { notifySentry } from '../../utils/sentry';
 import { makeURI } from '../../utils/uri';
 
-const maintenanceStatus = data => ({
-  isShow: data ? isNowBetween(new Date(data.start), new Date(data.end)) : false,
-  terms: data ? data.terms : '',
-  unavailableServiceList: data ? data.unavailableServiceList : [],
+const maintenanceStatus = (isShow = false, terms = '', unavailableServiceList = []) => ({
+  isShow,
+  terms,
+  unavailableServiceList,
 });
 
-export const getMaintenanceStatus = () =>
+export const getStaticMaintenanceStatus = () =>
   axios
     .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
-    .then(response => maintenanceStatus(response.data))
+    .then(({ data }) => {
+      const { start, end, terms, unavailableServiceList } = data;
+      return data ? maintenanceStatus(isNowBetween(new Date(start), new Date(end)), terms, unavailableServiceList) : maintenanceStatus();
+    })
     .catch(error => {
       notifySentry(error);
       return maintenanceStatus();
     });
+
+export const getSorryRidibooksStatus = () =>
+  axios
+    .get('https://sorry.ridibooks.com/status')
+    .then(({ data }) => {
+      const { status, period, unavailableService } = data;
+      return data ? maintenanceStatus(status === 'maintenance', period, unavailableService) : maintenanceStatus();
+    })
+    .catch(error => {
+      notifySentry(error);
+      return maintenanceStatus();
+    });
+
+export const getMaintenanceStatus = async () => {
+  const staticMaintenanceStatus = await getStaticMaintenanceStatus();
+  if (staticMaintenanceStatus.isShow) {
+    return staticMaintenanceStatus;
+  }
+  const sorryRidibooksStatus = await getSorryRidibooksStatus();
+  return sorryRidibooksStatus;
+};
