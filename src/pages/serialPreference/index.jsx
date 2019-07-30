@@ -45,21 +45,26 @@ class SerialPreference extends React.Component {
   };
 
   handleOnClickDelete = () => {
-    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    const { currentPage, dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchDeleteSelectedBooks();
+    dispatchDeleteSelectedBooks(currentPage);
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
+  handleSelectAllBooks = () => {
+    const { currentPage, dispatchSelectAllBooks } = this.props;
+    dispatchSelectAllBooks(currentPage);
+  };
+
   makeEditingBarProps() {
-    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const { items, totalSelectedCount, dispatchClearSelectedBooks } = this.props;
     const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickSelectAllItem: this.handleSelectAllBooks,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
