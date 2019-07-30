@@ -66,7 +66,7 @@ function* loadPage(action) {
 
 function* hideSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
-  const items = yield select(getItems);
+  const items = yield select(getItems, action.payload.pageOptions);
   const selectedBooks = yield select(getSelectedItems);
 
   let queueIds;
