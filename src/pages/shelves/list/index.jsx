@@ -31,7 +31,6 @@ import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
-import { BetaAlert } from './BetaAlert';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -66,7 +65,6 @@ const ShelvesList = props => {
     setSelectMode(isSelectMode => !isSelectMode);
   }, []);
   const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
-  const showPaginator = totalPages && totalPages > 1;
 
   const visibleShelvesCount = shelves?.items?.length;
   const selectAllShelf = React.useCallback(() => selectShelf(shelves.items), [shelves.items]);
@@ -184,16 +182,7 @@ const ShelvesList = props => {
     return shelfIds.length > 0 ? (
       <>
         <Shelves shelfIds={shelfIds} selectMode={selectMode} />
-        {showPaginator && (
-          <>
-            <BetaAlert
-              styles={css`
-                padding: 4px 0 20px 0;
-              `}
-            />
-            {renderPaginator()}
-          </>
-        )}
+        {renderPaginator()}
       </>
     ) : (
       <EmptyShelves />
@@ -217,7 +206,7 @@ const ShelvesList = props => {
           <Responsive>{renderMain()}</Responsive>
         </main>
       </Editable>
-      <Footer additionalHeight={22}>{!showPaginator && <BetaAlert />}</Footer>
+      <Footer />
     </>
   );
 };

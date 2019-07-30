@@ -1,12 +1,12 @@
 import { maxWidthWrapper } from '../../../styles';
 import { MQ, Responsive } from '../../../styles/responsive';
 
-export const footerMargin = additionalHeight => ({
-  height: 124 + additionalHeight,
+export const footerMargin = {
+  height: 124,
   ...MQ([Responsive.XLarge, Responsive.XXLarge, Responsive.Full], {
-    height: 124 + additionalHeight,
+    height: 124,
   }),
-});
+};
 
 export const footer = {
   position: 'absolute',
