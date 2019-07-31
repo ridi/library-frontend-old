@@ -26,13 +26,17 @@ const createInterceptor = (onSuccess, onFailure) => ({
 export const maintenanceInterceptor = {
   response: createInterceptor(null, async error => {
     const { response } = error;
-    if (response.status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE) {
-      const maintenanceStatus = await getMaintenanceStatus();
-      if (maintenanceStatus.isShow) {
-        window.location.reload();
-        return null;
+    if (response) {
+      const { status, data } = response;
+      if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE && data.status === 'maintenance') {
+        const maintenanceStatus = await getMaintenanceStatus();
+        if (maintenanceStatus.isShow) {
+          window.location.reload();
+          return null;
+        }
       }
     }
+
     return Promise.reject(error);
   }),
 };
