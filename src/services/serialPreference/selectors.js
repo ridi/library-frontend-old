@@ -1,11 +1,11 @@
 import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
-import { getKey, initialDataState } from './state';
+import { createInitialDataState, getKey } from './state';
 
 const getDataState = state => {
   const mainState = state.serialPreference;
   const key = getKey(mainState);
-  return mainState.data[key] || initialDataState;
+  return mainState.data[key] || createInitialDataState();
 };
 
 export const getItemsByPage = createCachedSelector(
