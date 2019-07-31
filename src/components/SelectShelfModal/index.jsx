@@ -6,6 +6,7 @@ import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import Responsive from '../../pages/base/Responsive';
+import { BetaAlert } from '../../pages/shelves/list/BetaAlert';
 import * as promptActions from '../../services/prompt/actions';
 import * as shelfActions from '../../services/shelf/actions';
 import * as shelfSelectors from '../../services/shelf/selectors';
@@ -147,7 +148,10 @@ function SelectShelfModalInner(props) {
     <>
       <Editable allowFixed doubleEditBar isEditing={false} nonEditBar={renderToolBar()} editingBarProps={{}} actionBarProps={{}}>
         <main>
-          <Responsive>{renderMain()}</Responsive>
+          <Responsive>
+            <BetaAlert />
+            {renderMain()}
+          </Responsive>
         </main>
       </Editable>
     </>

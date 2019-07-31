@@ -31,6 +31,7 @@ import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import Responsive from '../../base/Responsive';
+import { BetaAlert } from './BetaAlert';
 
 const toolBar = css`
   border-bottom: 1px solid #d1d5d9;
@@ -203,7 +204,10 @@ const ShelvesList = props => {
         actionBarProps={actionBarProps}
       >
         <main>
-          <Responsive>{renderMain()}</Responsive>
+          <Responsive>
+            <BetaAlert />
+            {renderMain()}
+          </Responsive>
         </main>
       </Editable>
       <Footer />
