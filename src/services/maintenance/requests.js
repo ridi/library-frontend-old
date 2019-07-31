@@ -15,7 +15,11 @@ export const getStaticMaintenanceStatus = () =>
     .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
     .then(({ data }) => {
       const { start, end, terms, unavailableServiceList } = data;
-      return data ? maintenanceStatus(isNowBetween(new Date(start), new Date(end)), terms, unavailableServiceList) : maintenanceStatus();
+      let isShow = null;
+      if (start && end) {
+        isShow = isNowBetween(new Date(start), new Date(end));
+      }
+      return maintenanceStatus(isShow, terms, unavailableServiceList);
     })
     .catch(error => {
       notifySentry(error);
@@ -27,7 +31,7 @@ export const getSorryRidibooksStatus = () =>
     .get('https://sorry.ridibooks.com/status')
     .then(({ data }) => {
       const { status, period, unavailableService } = data;
-      return data ? maintenanceStatus(status === 'maintenance', period, unavailableService) : maintenanceStatus();
+      return maintenanceStatus(status === 'maintenance', period, unavailableService);
     })
     .catch(error => {
       notifySentry(error);
