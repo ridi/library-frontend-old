@@ -1,12 +1,12 @@
 import produce from 'immer';
 import { toDict, toFlatten } from '../../utils/array';
 import { SET_IS_FETCHING_BOOKS, SET_SERIAL_PREFERENCE_ITEMS, SET_SERIAL_PREFERENCE_TOTAL_COUNT, SET_SERIAL_UNIT_ID_MAP } from './actions';
-import { getKey, initialDataState, initialState } from './state';
+import { createInitialDataState, getKey, initialState } from './state';
 
 const serialPreferenceReducer = produce((draft, action) => {
   const key = getKey(draft);
   if (draft.data[key] == null) {
-    draft.data[key] = { ...initialDataState };
+    draft.data[key] = createInitialDataState();
   }
   switch (action.type) {
     case SET_SERIAL_PREFERENCE_ITEMS:
