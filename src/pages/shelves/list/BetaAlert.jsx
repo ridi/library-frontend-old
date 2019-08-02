@@ -1,17 +1,18 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { PageAlert } from '../../../components/PageAlert';
-import { responsiveStyles } from '../../../components/ShelvesWrapper/styles';
+import { responsiveStylesWidth } from '../../../components/ShelvesWrapper/styles';
+import { MQ, Responsive } from '../../../styles/responsive';
 
 const styles = {
   alertWrapper: css`
-    padding: 0 !important;
-    margin-top: 16px;
+    margin-top: 20px;
+    ${MQ([Responsive.XSmall, Responsive.Small], 'margin-top: 16px;')}
   `,
 };
 
 export const BetaAlert = () => (
-  <div css={[responsiveStyles, styles.alertWrapper]}>
+  <div css={[responsiveStylesWidth, styles.alertWrapper]}>
     <PageAlert alertMessage="책장 서비스는 BETA 운영중입니다." />
   </div>
 );
