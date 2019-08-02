@@ -21,6 +21,7 @@ const {
   RIDI_OAUTH2_CLIENT_ID,
   SENTRY_DSN,
   SENTRY_RELEASE_VERSION,
+  RIDI_STATUS_URL,
 } = publicRuntimeConfig;
 
 const config = {
@@ -43,6 +44,7 @@ const config = {
   RIDI_OAUTH2_CLIENT_ID,
   SENTRY_DSN,
   SENTRY_RELEASE_VERSION,
+  RIDI_STATUS_URL,
 };
 
 export default config;

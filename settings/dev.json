@@ -1,5 +1,6 @@
 {
   "environment": "development",
+  "ridi_status_url": "https://sorry.ridibooks.com/status",
   "ridi_token_authorize_url": "https://account.dev.ridi.io/ridi/authorize",
   "ridi_oauth2_client_id": "Nkt2Xdc0zMuWmye6MSkYgqCh9q6JjeMCsUiH1kgL",
   "ridi_logout_url": "https://master.test.ridi.io/account/logout?return_url=https%3A%2F%2Flibrary.ridi.io%2Flogin",
