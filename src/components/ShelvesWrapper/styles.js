@@ -5,6 +5,8 @@ const wrapperAndShelvesStyles = (shelfSize, countPerLine, shelfSpacing, wrapperS
   const { shelfWidth, shelfMinHeight, thumbnailHeight } = shelfSize;
   let shelfRowSpacing;
   let shelfColumnSpacing;
+  let wrapperSpacingTop;
+  let wrapperSpacingBottom;
   if (typeof shelfSpacing === 'number') {
     shelfRowSpacing = shelfSpacing;
     shelfColumnSpacing = shelfSpacing;
@@ -12,9 +14,16 @@ const wrapperAndShelvesStyles = (shelfSize, countPerLine, shelfSpacing, wrapperS
     shelfRowSpacing = shelfSpacing.row;
     shelfColumnSpacing = shelfSpacing.column;
   }
-  return `
-    padding: ${wrapperSpacing}px 0 ${wrapperSpacing - shelfRowSpacing}px 0;
-    max-width: ${shelfWidth * countPerLine + shelfColumnSpacing * (countPerLine - 1)}px;
+  if (typeof wrapperSpacing === 'number') {
+    wrapperSpacingTop = wrapperSpacing;
+    wrapperSpacingBottom = wrapperSpacing;
+  } else {
+    wrapperSpacingTop = wrapperSpacing.top;
+    wrapperSpacingBottom = wrapperSpacing.bottom;
+  }
+  const width = `max-width: ${shelfWidth * countPerLine + shelfColumnSpacing * (countPerLine - 1)}px;`;
+  const padding = `
+    padding: ${wrapperSpacingTop}px 0 ${wrapperSpacingBottom - shelfRowSpacing}px 0;
     .shelf {
       width: ${shelfWidth}px;
       min-height: ${shelfMinHeight}px;
@@ -28,6 +37,7 @@ const wrapperAndShelvesStyles = (shelfSize, countPerLine, shelfSpacing, wrapperS
       }
     }
   `;
+  return { width, padding };
 };
 
 const SmallShelfSize = {
@@ -51,19 +61,75 @@ const XLargeShelfSize = {
   thumbnailHeight: 99,
 };
 
-export const responsiveWrapper = `
-  ${MQ([Responsive.XSmall], wrapperAndShelvesStyles(SmallShelfSize, 2, 16, 16))}
-  ${MQ([Responsive.Small], wrapperAndShelvesStyles(MediumShelfSize, 2, 16, 16))}
-  ${MQ([Responsive.Medium], wrapperAndShelvesStyles(LargeShelfSize, 2, 20, 24))}
-  ${MQ([Responsive.Large], wrapperAndShelvesStyles(LargeShelfSize, 3, 20, 24))}
-  ${MQ([Responsive.XLarge], wrapperAndShelvesStyles(XLargeShelfSize, 3, 24, 40))}
-  ${MQ([Responsive.XXLarge], wrapperAndShelvesStyles(XLargeShelfSize, 4, 24, 40))}
-  ${MQ([Responsive.Full], wrapperAndShelvesStyles(LargeShelfSize, 6, 32, 40))}
-`;
+const wrapperSpecs = [
+  {
+    width: [Responsive.XSmall],
+    shelfSize: SmallShelfSize,
+    countPerLine: 2,
+    shelfSpacing: 16,
+    wrapperSpacing: 16,
+  },
+  {
+    width: [Responsive.Small],
+    shelfSize: MediumShelfSize,
+    countPerLine: 2,
+    shelfSpacing: 16,
+    wrapperSpacing: 16,
+  },
+  {
+    width: [Responsive.Medium],
+    shelfSize: LargeShelfSize,
+    countPerLine: 2,
+    shelfSpacing: 20,
+    wrapperSpacing: { top: 20, bottom: 24 },
+  },
+  {
+    width: [Responsive.Large],
+    shelfSize: LargeShelfSize,
+    countPerLine: 3,
+    shelfSpacing: 20,
+    wrapperSpacing: { top: 20, bottom: 24 },
+  },
+  {
+    width: [Responsive.XLarge],
+    shelfSize: XLargeShelfSize,
+    countPerLine: 3,
+    shelfSpacing: 24,
+    wrapperSpacing: { top: 20, bottom: 40 },
+  },
+  {
+    width: [Responsive.XXLarge],
+    shelfSize: XLargeShelfSize,
+    countPerLine: 4,
+    shelfSpacing: 24,
+    wrapperSpacing: { top: 20, bottom: 40 },
+  },
+  {
+    width: [Responsive.Full],
+    shelfSize: LargeShelfSize,
+    countPerLine: 6,
+    shelfSpacing: 32,
+    wrapperSpacing: { top: 20, bottom: 40 },
+  },
+];
+
+const responsiveWrapperWidth = wrapperSpecs
+  .map(spec => MQ(spec.width, wrapperAndShelvesStyles(spec.shelfSize, spec.countPerLine, spec.shelfSpacing, spec.wrapperSpacing).width))
+  .join('');
+const responsiveWrapperPadding = wrapperSpecs
+  .map(spec => MQ(spec.width, wrapperAndShelvesStyles(spec.shelfSize, spec.countPerLine, spec.shelfSpacing, spec.wrapperSpacing).padding))
+  .join('');
+export const responsiveWrapper = responsiveWrapperWidth + responsiveWrapperPadding;
 
 export const responsiveStyles = css`
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
-  ${responsiveWrapper}
+  ${responsiveWrapperWidth}
+  ${responsiveWrapperPadding}
+`;
+
+export const responsiveStylesWidth = css`
+  margin: 0 auto;
+  ${responsiveWrapperWidth}
 `;
