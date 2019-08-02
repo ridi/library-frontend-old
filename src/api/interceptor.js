@@ -30,7 +30,7 @@ export const maintenanceInterceptor = {
       const { status, data } = response;
       if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE && data.status === 'maintenance') {
         const maintenanceStatus = await getMaintenanceStatus();
-        if (maintenanceStatus.isShow) {
+        if (maintenanceStatus.visible) {
           window.location.reload();
           return null;
         }

@@ -1,9 +1,9 @@
 export const SET_MAINTENANCE = 'SET_MAINTENANCE';
 
-export const setMaintenance = ({ isShow, terms, unavailableServiceList }) => ({
+export const setMaintenance = ({ visible, terms, unavailableServiceList }) => ({
   type: SET_MAINTENANCE,
   payload: {
-    isShow,
+    visible,
     terms,
     unavailableServiceList,
   },

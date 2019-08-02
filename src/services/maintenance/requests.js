@@ -4,8 +4,8 @@ import { isNowBetween } from '../../utils/datetime';
 import { notifySentry } from '../../utils/sentry';
 import { makeURI } from '../../utils/uri';
 
-const maintenanceStatus = (isShow = false, terms = '', unavailableServiceList = []) => ({
-  isShow,
+const maintenanceStatus = (visible = false, terms = '', unavailableServiceList = []) => ({
+  visible,
   terms,
   unavailableServiceList,
 });
@@ -15,11 +15,11 @@ export const getStaticMaintenanceStatus = () =>
     .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
     .then(({ data }) => {
       const { start, end, terms, unavailableServiceList } = data;
-      let isShow = null;
+      let visible = null;
       if (start && end) {
-        isShow = isNowBetween(new Date(start), new Date(end));
+        visible = isNowBetween(new Date(start), new Date(end));
       }
-      return maintenanceStatus(isShow, terms, unavailableServiceList);
+      return maintenanceStatus(visible, terms, unavailableServiceList);
     })
     .catch(error => {
       notifySentry(error);
@@ -40,7 +40,7 @@ export const getSorryRidibooksStatus = () =>
 
 export const getMaintenanceStatus = async () => {
   const sorryRidibooksStatus = await getSorryRidibooksStatus();
-  if (sorryRidibooksStatus.isShow) {
+  if (sorryRidibooksStatus.visible) {
     return sorryRidibooksStatus;
   }
 

@@ -31,8 +31,8 @@ class Layout extends React.Component {
       <>
         <Global styles={globalStyles} />
         <Environment />
-        {maintenance.isShow && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
-        {maintenance.isShow === false && (
+        {maintenance.visible && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
+        {maintenance.visible === false && (
           <>
             <GNB />
             {children}
