@@ -13,7 +13,7 @@ const maintenanceStatus = (visible = false, terms = '', unavailableServiceList =
 export const getStaticMaintenanceStatus = () =>
   axios
     .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
-    .then(({ data }) => {
+    .then(({ data = {} }) => {
       const { start, end, terms, unavailableServiceList } = data;
       let visible = false;
       if (start && end) {
@@ -29,7 +29,7 @@ export const getStaticMaintenanceStatus = () =>
 export const getSorryRidibooksStatus = () =>
   axios
     .get(config.RIDI_STATUS_URL)
-    .then(({ data }) => {
+    .then(({ data = {} }) => {
       const { status, period, unavailableService } = data;
       return maintenanceStatus(status === 'maintenance', period, unavailableService);
     })
