@@ -86,7 +86,7 @@ class Toaster extends React.Component {
     const { toast } = this.props;
     const Duration = 300;
     return (
-      <Transition in={toast && toast.isShow} timeout={Duration} unmountOnExit>
+      <Transition in={toast && toast.visible} timeout={Duration} unmountOnExit>
         {state =>
           toast ? (
             <div css={[styles.toastWrapper, toast.withBottomFixedButton && styles.withBottomFixedButton]}>
