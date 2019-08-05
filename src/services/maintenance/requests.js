@@ -16,7 +16,7 @@ export const getStaticMaintenanceStatus = () =>
     .then(({ data }) => {
       const maintenanceData = data || {};
       const { start, end, terms, unavailableServiceList } = maintenanceData;
-      const visible = start && end && isNowBetween(new Date(start), new Date(end));
+      const visible = Boolean(start && end) && isNowBetween(new Date(start), new Date(end));
       return maintenanceStatus(visible, terms, unavailableServiceList);
     })
     .catch(error => {
