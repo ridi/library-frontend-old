@@ -32,8 +32,9 @@ export const getSorryRidibooksStatus = () =>
     .get(config.RIDI_STATUS_URL)
     .then(({ data }) => {
       const maintenanceData = data || {};
-      const { status, period, unavailableService } = maintenanceData;
-      return maintenanceStatus(status === 'maintenance', period, unavailableService);
+      const { status, start, end, period, unavailableService } = maintenanceData;
+      const visible = start && end ? isNowBetween(new Date(start), new Date(end)) : status === 'maintenance';
+      return maintenanceStatus(visible, period, unavailableService);
     })
     .catch(error => {
       notifySentry(error);
