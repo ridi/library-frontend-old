@@ -2,7 +2,7 @@ import produce from 'immer';
 import { SET_TOAST, UNSET_TOAST } from './actions';
 
 const initialState = {
-  isShow: false,
+  visible: false,
 };
 
 const toastReducer = produce((draft, action) => {
@@ -10,10 +10,10 @@ const toastReducer = produce((draft, action) => {
     case SET_TOAST:
       return {
         ...action.payload,
-        isShow: true,
+        visible: true,
       };
     case UNSET_TOAST:
-      draft.isShow = false;
+      draft.visible = false;
       break;
     default:
       break;

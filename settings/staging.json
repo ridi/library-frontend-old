@@ -1,5 +1,6 @@
 {
   "environment": "staging",
+  "ridi_status_url": "https://sorry.ridibooks.com/status",
   "library_api_base_url": "https://library-api.ridibooks.com",
   "platform_api_base_url": "https://book-api.ridibooks.com",
   "ridi_logout_url": "https://ridibooks.com/account/logout?return_url=https%3A%2F%2Flibrary.ridibooks.com%2Flogin",

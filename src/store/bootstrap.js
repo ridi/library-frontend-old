@@ -48,7 +48,7 @@ const afterCreatingStore = async (store, context) => {
         ...maintenanceStatue,
       }),
     );
-    if (!maintenanceStatue.isShow) {
+    if (!maintenanceStatue.visible) {
       await store.dispatch(loadActualPage());
 
       // TODO: 되살릴 타이밍 잡기 (LRU)

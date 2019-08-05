@@ -62,5 +62,6 @@ module.exports = withSourceMaps({
 
     SENTRY_DSN: settings.sentry_dsn,
     SENTRY_RELEASE_VERSION,
+    RIDI_STATUS_URL: settings.ridi_status_url,
   },
 });

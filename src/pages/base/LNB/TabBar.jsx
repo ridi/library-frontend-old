@@ -56,7 +56,7 @@ const mapStateToProps = state => ({
 export const TabBar = connect(mapStateToProps)(({ activeMenu, isSyncShelfEnabled }) => {
   const menus = isSyncShelfEnabled ? TabMenus : TabMenus.filter(item => item.type !== TabMenuTypes.SHELVES);
   const menuNodes = menus.map(menu => (
-    <TabLinkItem key={`${JSON.stringify(menu)}`} name={menu.name} isActive={activeMenu === menu.type} {...menu.linkInfo} />
+    <TabLinkItem key={`${JSON.stringify(menu)}`} name={menu.name} isActive={activeMenu === menu.type} icon={menu.icon} {...menu.linkInfo} />
   ));
   return (
     <Responsive css={styles.LNBTabBarWrapper}>

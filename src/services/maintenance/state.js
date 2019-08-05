@@ -1,5 +1,5 @@
 export const initialState = {
-  isShow: null,
+  visible: null,
   terms: '',
   unavailableServiceList: [],
 };
