@@ -13,7 +13,6 @@ import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
 import purchasedSearchReducer from '../services/purchased/search/reducers';
 import unitPageReducer from '../services/unitPage/reducers';
-import routerReducer from '../services/router/reducers';
 import selectionReducer from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
 import shelfReducer from '../services/shelf/reducers';
@@ -40,7 +39,6 @@ export default combineReducers({
 
   maintenance: maintenanceReducer,
 
-  router: routerReducer,
   toast: toastReducer,
   confirm: confirmReducer,
   dialog: dialogReducer,
