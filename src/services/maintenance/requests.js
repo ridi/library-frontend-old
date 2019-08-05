@@ -16,10 +16,7 @@ export const getStaticMaintenanceStatus = () =>
     .then(({ data }) => {
       const maintenanceData = data || {};
       const { start, end, terms, unavailableServiceList } = maintenanceData;
-      let visible = false;
-      if (start && end) {
-        visible = isNowBetween(new Date(start), new Date(end));
-      }
+      const visible = Boolean(start && end) && isNowBetween(new Date(start), new Date(end));
       return maintenanceStatus(visible, terms, unavailableServiceList);
     })
     .catch(error => {
@@ -32,8 +29,9 @@ export const getSorryRidibooksStatus = () =>
     .get(config.RIDI_STATUS_URL)
     .then(({ data }) => {
       const maintenanceData = data || {};
-      const { status, period, unavailableService } = maintenanceData;
-      return maintenanceStatus(status === 'maintenance', period, unavailableService);
+      const { status, start_at: start, end_at: end, period, unavailableService } = maintenanceData;
+      const visible = start && end ? isNowBetween(new Date(start), new Date(end)) : status === 'maintenance';
+      return maintenanceStatus(visible, period, unavailableService);
     })
     .catch(error => {
       notifySentry(error);
