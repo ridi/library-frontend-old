@@ -57,6 +57,13 @@ export const shelfStyles = {
       transform: translate3d(0, -4px, 0);
       box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.1);
     }
+    // IE에서 안 되지만 어차피 모바일 버전이 없으니 상관 없음
+    @media (hover: none) {
+      &:hover {
+        transform: translate3d(0, 0, 0);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+      }
+    }
   `,
   thumbnails: css`
     display: flex;
