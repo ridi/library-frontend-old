@@ -70,12 +70,12 @@ function* loadMainItems(action) {
 }
 
 function* hideSelectedBooks(action) {
-  yield put(setFullScreenLoading(true));
-  const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedItems);
-
   const { pageOptions } = action.payload;
   const { orderType, orderBy } = pageOptions;
+
+  yield put(setFullScreenLoading(true));
+  const items = yield select(getItems, pageOptions);
+  const selectedBooks = yield select(getSelectedItems);
 
   let queueIds;
   try {
@@ -116,11 +116,11 @@ function* hideSelectedBooks(action) {
 }
 
 function* downloadSelectedBooks(action) {
-  const items = yield select(getItems);
-  const selectedBooks = yield select(getSelectedItems);
-
   const { pageOptions } = action.payload;
   const { orderType, orderBy } = pageOptions;
+
+  const items = yield select(getItems, pageOptions);
+  const selectedBooks = yield select(getSelectedItems);
 
   try {
     const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
