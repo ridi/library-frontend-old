@@ -1,4 +1,5 @@
 import { captureMessage } from '@sentry/browser';
+import { stringify } from 'qs';
 import { put } from 'redux-saga/effects';
 import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
@@ -45,7 +46,7 @@ const _reduceBookStarRatings = bookStarRatings =>
 
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/books', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
+  const response = yield api.post(makeURI('/books', {}, config.BOOK_API_BASE_URL), stringify({ b_ids: bookIds.join(',') }));
 
   const idSet = new Set(response.data.map(book => book.id));
   for (const bookId of bookIds) {
