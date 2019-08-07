@@ -93,6 +93,7 @@ function ShelfDetail(props) {
   const confirmRemove = React.useCallback(
     () => {
       removeSelectedFromShelf({ uuid, pageOptions: { orderBy, orderDirection, page } });
+      setIsEditing(false);
     },
     [uuid, orderBy, orderDirection, page],
   );

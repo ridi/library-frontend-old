@@ -117,6 +117,7 @@ const ShelvesList = props => {
       confirmLabel: '삭제',
       onClickConfirmButton: () => {
         removeShelves({ uuids: Object.keys(selectedShelves), pageOptions });
+        setSelectMode(false);
       },
     });
   };
