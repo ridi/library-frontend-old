@@ -342,19 +342,30 @@ function* removeSelectedFromShelf({ payload }) {
     const unitId = bookToUnit[bookId];
     return itemMap[unitId];
   });
-  // invalidateShelfPage: 스켈레톤 강제로 띄우기 위한 action. 스피너로 대체하면 빼도 됨
-  yield all([
-    put(actions.invalidateShelfPage(uuid, pageOptions)),
-    put(
+  try {
+    yield all([
+      put(uiActions.setFullScreenLoading(true)),
+      put(selectionActions.clearSelectedItems()),
+      call(deleteShelfItem, { payload: { uuid, units } }),
+    ]);
+    yield put(
       toastActions.showToast({
         message: '책장에서 삭제했습니다.',
         withBottomFixedButton: true,
       }),
-    ),
-    put(selectionActions.clearSelectedItems()),
-  ]);
-  yield call(deleteShelfItem, { payload: { uuid, units } });
-  yield put(actions.loadShelfBooks(uuid, pageOptions));
+    );
+    yield put(actions.loadShelfBooks(uuid, pageOptions));
+  } catch (err) {
+    console.error(err);
+    yield put(
+      toastActions.showToast({
+        message: '책장에서 삭제하는 중 오류가 발생했습니다. 다시 시도해 주세요.',
+        toastStyle: ToastStyle.RED,
+      }),
+    );
+  } finally {
+    yield put(uiActions.setFullScreenLoading(false));
+  }
 }
 
 function* downloadSelectedUnits() {
