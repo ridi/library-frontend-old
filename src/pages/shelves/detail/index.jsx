@@ -318,6 +318,7 @@ ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
 
 function mapStateToProps(state, props) {
   const pageOptions = extractPageOptions(props.location.search);
+  const { orderBy, orderDirection, page } = pageOptions;
   const uuid = getUuid(props.match.params);
 
   const name = selectors.getShelfName(state, uuid);
@@ -339,7 +340,9 @@ function mapStateToProps(state, props) {
     totalBookCount,
     totalSelectedCount,
     viewType: state.ui.viewType,
-    page: pageOptions.page,
+    orderBy,
+    orderDirection,
+    page,
     uuid,
   };
 }
