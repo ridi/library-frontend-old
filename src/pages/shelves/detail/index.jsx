@@ -99,7 +99,7 @@ function ShelfDetail(props) {
   );
   const showRemoveConfirm = React.useCallback(() => {
     showConfirm({
-      title: '책장에서 책을 삭제하시겠습니까?',
+      title: '책장에서 책 삭제',
       message: '책장에서 삭제해도 다시 추가할 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: confirmRemove,
