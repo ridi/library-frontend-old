@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import React from 'react';
+import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 
 const fixed = css`
   position: fixed;
@@ -20,9 +21,19 @@ const double = css`
   }
 `;
 
+const container = css`
+  position: relative;
+`;
+
+const actionBarPadding = css`
+  height: ${ACTION_BAR_HEIGHT}px;
+`;
+
 const styles = {
   fixed,
   double,
+  container,
+  actionBarPadding,
 };
 
 export default class FixedToolbarView extends React.Component {
@@ -81,7 +92,10 @@ export default class FixedToolbarView extends React.Component {
         <nav ref={this.navRef} css={[isFixed && styles.fixed, isFixed && doubleToolbar && styles.double]}>
           {toolbar}
         </nav>
-        <section ref={this.sectionRef}>{children}</section>
+        <section css={styles.container} ref={this.sectionRef}>
+          {children}
+        </section>
+        {actionBar != null && <div css={styles.actionBarPadding} />}
         {actionBar}
       </>
     );

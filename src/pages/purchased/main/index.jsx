@@ -311,8 +311,8 @@ class Main extends React.PureComponent {
           actionBarProps={this.makeActionBarProps()}
         >
           <main>{isError ? <BookError onClickRefreshButton={this.dispatchLoadItems} /> : this.renderMain()}</main>
+          <Footer />
         </Editable>
-        <Footer />
         <BookDownLoader />
       </>
     );

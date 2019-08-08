@@ -1,11 +1,10 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 
 import BottomActionBar from '../../../../components/BottomActionBar';
 import { ButtonType } from '../../../../components/ActionBar/constants';
-import { ACTION_BAR_HEIGHT } from '../../../../components/ActionBar/styles';
 import Empty from '../../../../components/Empty';
 import FixedToolbarView from '../../../../components/FixedToolbarView';
 import PageNavigationBar, { NavigationBarColor } from '../../../../components/PageNavigationBar';
@@ -22,12 +21,6 @@ import * as paginationUtils from '../../../../utils/pagination';
 import { ResponsiveBooks } from '../../../base/Responsive';
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
-
-const mainStyles = {
-  paddingForPagination: css`
-    padding-bottom: ${ACTION_BAR_HEIGHT}px;
-  `,
-};
 
 function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClick, shelfTitle, uuid }) {
   const [keyword, setKeyword] = React.useState('');
@@ -132,21 +125,15 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     }
     if (searchItems == null) {
       return (
-        <div css={mainStyles.paddingForPagination}>
-          <ResponsiveBooks>
-            <SkeletonBooks viewType={ViewType.LANDSCAPE} />
-          </ResponsiveBooks>
-        </div>
+        <ResponsiveBooks>
+          <SkeletonBooks viewType={ViewType.LANDSCAPE} />
+        </ResponsiveBooks>
       );
     }
     if (searchItems.length === 0) {
       return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
     }
-    return (
-      <div css={mainStyles.paddingForPagination}>
-        <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>
-      </div>
-    );
+    return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
   return (

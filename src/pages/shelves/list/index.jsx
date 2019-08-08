@@ -210,8 +210,8 @@ const ShelvesList = props => {
             {renderMain()}
           </Responsive>
         </main>
+        <Footer />
       </Editable>
-      <Footer />
     </>
   );
 };
