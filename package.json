@@ -18,7 +18,7 @@
     "@babel/polyfill": "^7.2.5",
     "@emotion/core": "^10.0.2",
     "@ridi/event-tracker": "^0.5.8",
-    "@ridi/web-ui": "^0.6.0",
+    "@ridi/web-ui": "^0.6.1",
     "@sentry/browser": "^4.4.1",
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
