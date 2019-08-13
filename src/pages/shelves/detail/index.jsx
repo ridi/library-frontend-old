@@ -18,7 +18,6 @@ import * as Tools from '../../../components/Tool';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { PageType, URLMap } from '../../../constants/urls';
-import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
@@ -26,11 +25,11 @@ import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import * as uiActions from '../../../services/ui/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
-import EditButton from './EditButton';
 import SearchModal from './SearchModal';
 
 const shelfBar = {
@@ -73,11 +72,13 @@ function ShelfDetail(props) {
     removeSelectedFromShelf,
     renameShelf,
     selectBooks,
+    setViewType,
     showConfirm,
     showPrompt,
     totalBookCount,
     totalSelectedCount,
     uuid,
+    viewType,
   } = props;
   const visibleBookCount = bookIds.length;
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
@@ -211,7 +212,14 @@ function ShelfDetail(props) {
         query={shelfListPageOptions}
       />
     );
-    const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
+    const right = (
+      <Tools.ShelfEdit
+        viewType={viewType}
+        onRemoveClick={showShelfRemoveConfirm}
+        onRenameClick={showShelfRenamePrompt}
+        onViewTypeChange={setViewType}
+      />
+    );
     return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
   }
 
@@ -249,7 +257,7 @@ function ShelfDetail(props) {
       (libraryBooks.length === 0 && booksLoading) ||
       (totalPages > 0 && page > totalPages)
     ) {
-      books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
+      books = <SkeletonBooks viewType={viewType} />;
     } else if (libraryBooks.length > 0) {
       books = (
         <>
@@ -257,7 +265,7 @@ function ShelfDetail(props) {
             libraryBookDTO={libraryBooks}
             platformBookDTO={platformBooks}
             isSelectMode={isEditing}
-            viewType={ViewType.PORTRAIT}
+            viewType={viewType}
             linkBuilder={linkBuilder}
           />
           {renderPaginator()}
@@ -367,6 +375,7 @@ function mapStateToProps(state, props) {
     shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
+    viewType: state.ui.viewType,
   };
 }
 
@@ -378,6 +387,7 @@ const mapDispatchToProps = {
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,
+  setViewType: uiActions.setViewType,
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
 };
