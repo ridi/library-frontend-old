@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import FixedToolbarView from './FixedToolbarView';
-import EditingBar from './EditingBar';
 import BottomActionBar from './BottomActionBar';
+import EditingBar from './EditingBar';
+import FixedToolbarView from './FixedToolbarView';
 
 export default function Editable({ actionBarProps, allowFixed, children, doubleEditBar, editingBarProps, isEditing, nonEditBar }) {
   return (

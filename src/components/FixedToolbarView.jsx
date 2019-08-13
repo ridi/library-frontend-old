@@ -20,9 +20,14 @@ const double = css`
   }
 `;
 
+const container = css`
+  position: relative;
+`;
+
 const styles = {
   fixed,
   double,
+  container,
 };
 
 export default class FixedToolbarView extends React.Component {
@@ -81,7 +86,9 @@ export default class FixedToolbarView extends React.Component {
         <nav ref={this.navRef} css={[isFixed && styles.fixed, isFixed && doubleToolbar && styles.double]}>
           {toolbar}
         </nav>
-        <section ref={this.sectionRef}>{children}</section>
+        <section css={styles.container} ref={this.sectionRef}>
+          {children}
+        </section>
         {actionBar}
       </>
     );

@@ -164,8 +164,8 @@ class SerialPreference extends React.Component {
           actionBarProps={this.makeActionBarProps()}
         >
           <main>{this.renderMain()}</main>
+          <Footer />
         </Editable>
-        <Footer />
       </>
     );
   }
