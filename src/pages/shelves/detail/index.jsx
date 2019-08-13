@@ -208,15 +208,7 @@ function ShelfDetail(props) {
         query={shelfListPageOptions}
       />
     );
-    const right = (
-      <Tools.ShelfEdit
-        viewType={viewType}
-        onRemoveClick={showShelfRemoveConfirm}
-        onRenameClick={showShelfRenamePrompt}
-        onViewTypeChange={setViewType}
-      />
-    );
-    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+    return <FlexBar css={shelfBar} flexLeft={left} />;
   }
 
   function renderToolbar() {
@@ -224,6 +216,12 @@ function ShelfDetail(props) {
       <div css={toolsWrapper}>
         <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
+        <Tools.ShelfEdit
+          viewType={viewType}
+          onRemoveClick={showShelfRemoveConfirm}
+          onRenameClick={showShelfRenamePrompt}
+          onViewTypeChange={setViewType}
+        />
       </div>
     );
     return <FlexBar css={toolBar} flexRight={right} />;
