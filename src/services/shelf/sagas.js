@@ -217,7 +217,7 @@ function* deleteShelves({ payload }) {
     put(uiActions.setFullScreenLoading(false)),
     put(
       toastActions.showToast({
-        message: '책장에서 삭제했습니다.',
+        message: '책장을 삭제했습니다.',
         withBottomFixedButton: true,
       }),
     ),

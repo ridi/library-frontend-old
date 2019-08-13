@@ -84,7 +84,7 @@ const ShelvesList = props => {
       onInvalid: () => {
         loadShelves(pageOptions);
         showToast({
-          message: `최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
+          message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
           toastStyle: ToastStyle.RED,
         });
       },
