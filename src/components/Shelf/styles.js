@@ -68,6 +68,7 @@ export const shelfStyles = {
   thumbnails: css`
     display: flex;
     flex-flow: row nowrap;
+    background: #e6e8eb;
     border-bottom: 1px solid #d1d5d9;
     border-radius: ${InnerBorderRadius}px ${InnerBorderRadius}px 0 0;
     overflow: hidden;
