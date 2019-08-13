@@ -74,7 +74,7 @@ function SelectShelfModalInner(props) {
         });
       } else {
         showToast({
-          message: '책장은 최대 100개까지 만들 수 있습니다.',
+          message: `최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
           toastStyle: ToastStyle.RED,
         });
       }
