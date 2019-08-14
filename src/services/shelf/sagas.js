@@ -217,8 +217,7 @@ function* deleteShelves({ payload }) {
     put(uiActions.setFullScreenLoading(false)),
     put(
       toastActions.showToast({
-        message: '책장에서 삭제했습니다.',
-        withBottomFixedButton: true,
+        message: '책장을 삭제했습니다.',
       }),
     ),
     put(actions.loadShelves(pageOptions)),
@@ -262,7 +261,6 @@ function* deleteShelfFromDetail({ payload }) {
     put(
       toastActions.showToast({
         message: '책장을 삭제했습니다.',
-        withBottomFixedButton: true,
       }),
     ),
   ]);
@@ -350,7 +348,6 @@ function* removeSelectedFromShelf({ payload }) {
     yield put(
       toastActions.showToast({
         message: '책장에서 삭제했습니다.',
-        withBottomFixedButton: true,
       }),
     );
     yield put(actions.loadShelfBooks(uuid, pageOptions));
