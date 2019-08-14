@@ -113,8 +113,8 @@ function ShelfDetail(props) {
   const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
-      title: '책장을 삭제하겠습니까?',
-      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      title: '책장 삭제',
+      message: '모든 기기에서 선택한 책장이 삭제됩니다. 삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: confirmShelfRemove,
     });
