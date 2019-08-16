@@ -84,7 +84,7 @@ const ShelvesList = props => {
       onInvalid: () => {
         loadShelves(pageOptions);
         showToast({
-          message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
+          message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
           toastStyle: ToastStyle.RED,
         });
       },
@@ -112,11 +112,12 @@ const ShelvesList = props => {
 
   const handleRemoveShelves = () => {
     showConfirm({
-      title: '책장을 삭제하겠습니까?',
-      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      title: '책장 삭제',
+      message: '모든 기기에서 선택한 책장이 삭제됩니다. 삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: () => {
         removeShelves({ uuids: Object.keys(selectedShelves), pageOptions });
+        setSelectMode(false);
       },
     });
   };
@@ -209,8 +210,8 @@ const ShelvesList = props => {
             {renderMain()}
           </Responsive>
         </main>
+        <Footer />
       </Editable>
-      <Footer />
     </>
   );
 };

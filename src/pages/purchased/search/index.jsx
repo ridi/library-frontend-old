@@ -5,7 +5,6 @@ import Link from 'next/link';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
-import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -38,10 +37,6 @@ import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
-
-const paddingForPagination = {
-  paddingBottom: ACTION_BAR_HEIGHT,
-};
 
 class Search extends React.Component {
   static async getInitialProps({ store }) {
@@ -258,11 +253,7 @@ class Search extends React.Component {
       return <Empty IconComponent={SearchIcon} iconWidth={38} message={message} />;
     }
 
-    return (
-      <div css={paddingForPagination}>
-        <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>
-      </div>
-    );
+    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
   }
 
   render() {

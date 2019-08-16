@@ -6,7 +6,6 @@ import Router from 'next/router';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../../components/ActionBar/constants';
-import { ACTION_BAR_HEIGHT } from '../../../components/ActionBar/styles';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
@@ -18,7 +17,6 @@ import * as Tools from '../../../components/Tool';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { SHELF_NAME_LIMIT } from '../../../constants/shelves';
 import { PageType, URLMap } from '../../../constants/urls';
-import ViewType from '../../../constants/viewType';
 import * as bookSelectors from '../../../services/book/selectors';
 import * as confirmActions from '../../../services/confirm/actions';
 import * as promptActions from '../../../services/prompt/actions';
@@ -26,11 +24,11 @@ import * as selectionActions from '../../../services/selection/actions';
 import * as selectionSelectors from '../../../services/selection/selectors';
 import * as actions from '../../../services/shelf/actions';
 import * as selectors from '../../../services/shelf/selectors';
+import * as uiActions from '../../../services/ui/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import * as paginationUtils from '../../../utils/pagination';
 import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
-import EditButton from './EditButton';
 import SearchModal from './SearchModal';
 
 const shelfBar = {
@@ -47,10 +45,6 @@ const toolsWrapper = {
   alignItems: 'center',
   paddingLeft: 2,
   whiteSpace: 'nowrap',
-};
-
-const paddingForPagination = {
-  paddingBottom: ACTION_BAR_HEIGHT,
 };
 
 const toolBar = css`
@@ -73,11 +67,13 @@ function ShelfDetail(props) {
     removeSelectedFromShelf,
     renameShelf,
     selectBooks,
+    setViewType,
     showConfirm,
     showPrompt,
     totalBookCount,
     totalSelectedCount,
     uuid,
+    viewType,
   } = props;
   const visibleBookCount = bookIds.length;
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
@@ -92,12 +88,13 @@ function ShelfDetail(props) {
   const confirmRemove = React.useCallback(
     () => {
       removeSelectedFromShelf({ uuid, pageOptions: { orderBy, orderDirection, page } });
+      setIsEditing(false);
     },
     [uuid, orderBy, orderDirection, page],
   );
   const showRemoveConfirm = React.useCallback(() => {
     showConfirm({
-      title: '책장에서 책을 삭제하시겠습니까?',
+      title: '책장에서 책 삭제',
       message: '책장에서 삭제해도 다시 추가할 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: confirmRemove,
@@ -116,8 +113,8 @@ function ShelfDetail(props) {
   const confirmShelfRemove = React.useCallback(() => removeShelfFromDetail(uuid), [uuid]);
   const showShelfRemoveConfirm = React.useCallback(() => {
     showConfirm({
-      title: '책장을 삭제하겠습니까?',
-      message: '삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
+      title: '책장 삭제',
+      message: '모든 기기에서 선택한 책장이 삭제됩니다. 삭제한 책장의 책은 ‘모든 책’에서 볼 수 있습니다.',
       confirmLabel: '삭제',
       onClickConfirmButton: confirmShelfRemove,
     });
@@ -211,8 +208,7 @@ function ShelfDetail(props) {
         query={shelfListPageOptions}
       />
     );
-    const right = <EditButton onRemoveClick={showShelfRemoveConfirm} onRenameClick={showShelfRenamePrompt} />;
-    return <FlexBar css={shelfBar} flexLeft={left} flexRight={right} />;
+    return <FlexBar css={shelfBar} flexLeft={left} />;
   }
 
   function renderToolbar() {
@@ -220,6 +216,12 @@ function ShelfDetail(props) {
       <div css={toolsWrapper}>
         <Tools.Add onClickAddButton={handleAddClick} />
         <Tools.Editing toggleEditingMode={toggleEditingMode} />
+        <Tools.ShelfEdit
+          viewType={viewType}
+          onRemoveClick={showShelfRemoveConfirm}
+          onRenameClick={showShelfRenamePrompt}
+          onViewTypeChange={setViewType}
+        />
       </div>
     );
     return <FlexBar css={toolBar} flexRight={right} />;
@@ -249,7 +251,7 @@ function ShelfDetail(props) {
       (libraryBooks.length === 0 && booksLoading) ||
       (totalPages > 0 && page > totalPages)
     ) {
-      books = <SkeletonBooks viewType={ViewType.PORTRAIT} />;
+      books = <SkeletonBooks viewType={viewType} />;
     } else if (libraryBooks.length > 0) {
       books = (
         <>
@@ -257,7 +259,7 @@ function ShelfDetail(props) {
             libraryBookDTO={libraryBooks}
             platformBookDTO={platformBooks}
             isSelectMode={isEditing}
-            viewType={ViewType.PORTRAIT}
+            viewType={viewType}
             linkBuilder={linkBuilder}
           />
           {renderPaginator()}
@@ -266,11 +268,7 @@ function ShelfDetail(props) {
     } else {
       return <Empty IconComponent={BookOutline} iconWidth={40} iconHeight={48} message="책장에 도서가 없습니다." />;
     }
-    return (
-      <div css={paddingForPagination}>
-        <ResponsiveBooks>{books}</ResponsiveBooks>
-      </div>
-    );
+    return <ResponsiveBooks>{books}</ResponsiveBooks>;
   }
 
   if (isAdding) {
@@ -367,6 +365,7 @@ function mapStateToProps(state, props) {
     shelfListPageOptions,
     totalBookCount,
     totalSelectedCount,
+    viewType: state.ui.viewType,
   };
 }
 
@@ -378,6 +377,7 @@ const mapDispatchToProps = {
   removeSelectedFromShelf: actions.removeSelectedFromShelf,
   renameShelf: actions.renameShelf,
   selectBooks: selectionActions.selectItems,
+  setViewType: uiActions.setViewType,
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
 };

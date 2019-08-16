@@ -5,6 +5,7 @@ import { delay } from '../../utils/delay';
 import { getDeviceInfo } from '../../utils/device';
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 
+import { fetchBookData } from '../book/requests';
 import { getBookIdsByUnitIds } from '../common/sagas';
 import * as selectionSelectors from '../selection/selectors';
 import { showToast } from '../toast/actions';
@@ -14,7 +15,8 @@ import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, se
 import { DownloadError } from './errors';
 import { triggerDownload } from './requests';
 
-function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
+function* _launchAppToDownload(isIos, isAndroid, isFirefox, bookIds, url) {
+  const appUri = `${url}&payload=${encodeURIComponent(JSON.stringify({ b_ids: bookIds }))}`;
   if (isIos) {
     try {
       window.location.href = appUri;
@@ -29,8 +31,30 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, appUri) {
       window.location.href = appUri;
     }
   } else {
-    yield put(setBookDownloadSrc(appUri));
+    const books = yield call(fetchBookData, bookIds);
+    const bookIdsWithoutWebtoon = books.filter(book => !book.file?.is_webtoon).map(book => book.id);
+    const pcUri = `${url}&payload=${encodeURIComponent(JSON.stringify({ b_ids: bookIdsWithoutWebtoon }))}`;
+    if (bookIds.length !== bookIdsWithoutWebtoon.length) {
+      if (bookIdsWithoutWebtoon.length === 0) {
+        yield put(
+          showToast({
+            message: '정책상의 이유로 웹툰은 PC뷰어에서 이용할 수 없습니다.',
+            toastStyle: ToastStyle.BLUE,
+          }),
+        );
+        return false;
+      }
+      yield put(
+        showToast({
+          message: '정책상의 이유로 웹툰은 제외하고 다운로드합니다.',
+          toastStyle: ToastStyle.BLUE,
+        }),
+      );
+      yield call(delay, 1000);
+    }
+    yield put(setBookDownloadSrc(pcUri));
   }
+  return true;
 }
 
 function* _showViewerGuildLink(isIos, isAndroid) {
@@ -58,10 +82,11 @@ function* _showViewerGuildLink(isIos, isAndroid) {
 }
 
 export function* _download(bookIds, url) {
-  const appUri = `${url}&payload=${encodeURIComponent(JSON.stringify({ b_ids: bookIds }))}`;
   const { isIos, isAndroid, isFirefox } = getDeviceInfo();
-
-  yield _launchAppToDownload(isIos, isAndroid, isFirefox, appUri);
+  const isSuccessful = yield _launchAppToDownload(isIos, isAndroid, isFirefox, bookIds, url);
+  if (!isSuccessful) {
+    return;
+  }
 
   // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
   // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 뷰어 오픈이 성공 했어도 뷰어 가이드를 보여준다.

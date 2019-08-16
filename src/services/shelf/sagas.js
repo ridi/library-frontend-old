@@ -217,8 +217,7 @@ function* deleteShelves({ payload }) {
     put(uiActions.setFullScreenLoading(false)),
     put(
       toastActions.showToast({
-        message: '책장 목록에서 삭제했습니다.',
-        withBottomFixedButton: true,
+        message: '책장을 삭제했습니다.',
       }),
     ),
     put(actions.loadShelves(pageOptions)),
@@ -262,7 +261,6 @@ function* deleteShelfFromDetail({ payload }) {
     put(
       toastActions.showToast({
         message: '책장을 삭제했습니다.',
-        withBottomFixedButton: true,
       }),
     ),
   ]);
@@ -292,20 +290,19 @@ function* addSelectedToShelf({ payload }) {
       unitId: book.search_unit_id,
       bookIds: [book.b_id],
     }));
-    const shelfName = yield select(selectors.getShelfName, uuid);
     yield call(addShelfItem, { payload: { uuid, units } });
 
     if (fromShelfPageOptions != null) {
       yield call(loadShelfBooks, false, { payload: { uuid, ...fromShelfPageOptions } });
       yield put(
         toastActions.showToast({
-          message: '책장에 추가했습니다.',
+          message: '선택한 책을 책장에 추가했습니다.',
         }),
       );
     } else {
       yield put(
         toastActions.showToast({
-          message: `"${shelfName}" 책장에 추가했습니다.`,
+          message: '선택한 책을 책장에 추가했습니다.',
           linkName: '책장 바로 보기',
           linkProps: makeLinkProps(
             {
@@ -322,7 +319,7 @@ function* addSelectedToShelf({ payload }) {
     console.error(err);
     yield put(
       toastActions.showToast({
-        message: '책장에 추가하는 중 오류가 발생했습니다. 다시 시도해 주세요.',
+        message: '책장에 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.',
         toastStyle: ToastStyle.RED,
       }),
     );
@@ -342,19 +339,29 @@ function* removeSelectedFromShelf({ payload }) {
     const unitId = bookToUnit[bookId];
     return itemMap[unitId];
   });
-  // invalidateShelfPage: 스켈레톤 강제로 띄우기 위한 action. 스피너로 대체하면 빼도 됨
-  yield all([
-    put(actions.invalidateShelfPage(uuid, pageOptions)),
-    put(
+  try {
+    yield all([
+      put(uiActions.setFullScreenLoading(true)),
+      put(selectionActions.clearSelectedItems()),
+      call(deleteShelfItem, { payload: { uuid, units } }),
+    ]);
+    yield put(
       toastActions.showToast({
         message: '책장에서 삭제했습니다.',
-        withBottomFixedButton: true,
       }),
-    ),
-    put(selectionActions.clearSelectedItems()),
-  ]);
-  yield call(deleteShelfItem, { payload: { uuid, units } });
-  yield put(actions.loadShelfBooks(uuid, pageOptions));
+    );
+    yield put(actions.loadShelfBooks(uuid, pageOptions));
+  } catch (err) {
+    console.error(err);
+    yield put(
+      toastActions.showToast({
+        message: '책장에서 삭제하는 중 오류가 발생했습니다. 다시 시도해주세요.',
+        toastStyle: ToastStyle.RED,
+      }),
+    );
+  } finally {
+    yield put(uiActions.setFullScreenLoading(false));
+  }
 }
 
 function* downloadSelectedUnits() {

@@ -16,8 +16,9 @@ export const buttonWrapper = {
 
 export const iconButton = isActive => ({
   position: 'relative',
-  padding: '2px 3px',
+  padding: 3,
   borderRadius: 3,
+  lineHeight: 0,
   whiteSpace: 'nowrap',
   background: isActive ? '#e6e8eb' : null,
   fill: '#40474d',
