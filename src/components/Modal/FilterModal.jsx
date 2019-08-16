@@ -7,7 +7,7 @@ import { makeLinkProps } from '../../utils/uri';
 import { filterModalStyle as styles } from './styles';
 
 const makeModalLinkItem = (option, filter, query, isChild, checkedItemRef) => {
-  const { to } = makeLinkProps({}, URLMap.main.as, { ...query, filter: option.vakue });
+  const { to } = makeLinkProps({}, URLMap.main.as, { ...query, filter: option.value });
   return (
     <li key={`${JSON.stringify(option)}-${isChild}`} ref={option.value === filter ? checkedItemRef : null}>
       <ModalLinkItem count={option.count} isSelected={option.value === filter} to={to}>
