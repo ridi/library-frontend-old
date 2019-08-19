@@ -92,13 +92,11 @@ function* loadItems(action) {
       return;
     }
 
-    const countResponse = yield all([
-      call(requests.fetchUnitItemsTotalCount, {
-        ...action.payload,
-        orderType: OrderOptions.PURCHASE_DATE.orderType,
-        orderBy: OrderOptions.PURCHASE_DATE.orderBy,
-      }),
-    ]);
+    const countResponse = yield call(requests.fetchUnitItemsTotalCount, {
+      ...action.payload,
+      orderType: OrderOptions.PURCHASE_DATE.orderType,
+      orderBy: OrderOptions.PURCHASE_DATE.orderBy,
+    });
 
     yield put(actions.setPurchasedTotalCount(countResponse.item_total_count, options));
 

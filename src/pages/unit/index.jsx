@@ -195,13 +195,13 @@ function Unit(props) {
   function renderTitleBar() {
     const order = OrderOptions.toKey(orderType, orderBy);
     const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
+    const shownTotalCount = usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount;
 
     const extraTitleBarProps = unit
       ? {
           title: unit.title,
-          showCount:
-            !UnitType.isBook(unit.type) && (usePurchasedTotalCount ? totalCount.purchasedTotalCount > 0 : totalCount.itemTotalCount > 0),
-          totalCount: usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount,
+          showCount: !UnitType.isBook(unit.type) && shownTotalCount > 0,
+          totalCount: shownTotalCount,
         }
       : {};
 
