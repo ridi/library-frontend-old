@@ -292,7 +292,7 @@ function* addSelectedToShelf({ payload }) {
     yield call(addShelfItem, { payload: { uuid, units } });
 
     if (fromShelfPageOptions != null) {
-      yield call(loadShelfBooks, false, { payload: { uuid, ...fromShelfPageOptions } });
+      yield call(loadShelfBooks, { payload: { uuid, ...fromShelfPageOptions } });
       yield put(
         toastActions.showToast({
           message: '선택한 책을 책장에 추가했습니다.',
