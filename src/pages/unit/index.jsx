@@ -353,7 +353,7 @@ Unit.prepare = ({ dispatch, location, path, params }) => {
 
 const mapStateToProps = (state, props) => {
   const options = extractOptions({ location: props.location, ...props.match });
-  const { unitId } = options;
+  const { kind, unitId } = options;
   const primaryBookId = purchasedCommonSelectors.getPrimaryBookId(state, unitId);
   return {
     bookDescription: primaryBookId && bookSelectors.getBookDescription(state, primaryBookId),
@@ -364,7 +364,7 @@ const mapStateToProps = (state, props) => {
     items: unitPageSelectors.getItemsByPage(state, options),
     primaryBook: primaryBookId && bookSelectors.getBook(state, primaryBookId),
     primaryBookId,
-    primaryItem: unitPageSelectors.getPrimaryItem(state, unitId),
+    primaryItem: unitPageSelectors.getPrimaryItem(state, kind, unitId),
     totalCount: unitPageSelectors.getTotalCount(state, options),
     totalPages: unitPageSelectors.getTotalPages(state, options),
     unit: bookSelectors.getUnit(state, unitId),

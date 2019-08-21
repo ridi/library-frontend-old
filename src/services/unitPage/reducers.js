@@ -33,7 +33,7 @@ const unitPageReducer = produce((draft, action) => {
       draft.data[key].itemTotalCount = action.payload.itemTotalCount;
       break;
     case SET_UNIT_PRIMARY_ITEM:
-      draft.primaryItems[action.payload.unitId] = action.payload.primaryItem;
+      draft.primaryItems[`${action.payload.kind}${action.payload.unitId}`] = action.payload.primaryItem;
       break;
     case SET_UNIT_PURCHASED_TOTAL_COUNT:
       draft.data[key].purchasedTotalCount = action.payload.purchasedTotalCount;

@@ -101,9 +101,10 @@ export const setIsFetchingBook = isFetchingBook => ({
   },
 });
 
-export const setPrimaryItem = (unitId, primaryItem) => ({
+export const setPrimaryItem = (kind, unitId, primaryItem) => ({
   type: SET_UNIT_PRIMARY_ITEM,
   payload: {
+    kind,
     unitId,
     primaryItem,
   },

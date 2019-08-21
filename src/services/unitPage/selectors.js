@@ -28,7 +28,7 @@ export const getItemsByPage = createSelector(
   },
 );
 
-export const getPrimaryItem = (state, unitId) => state.unitPage.primaryItems[unitId];
+export const getPrimaryItem = (state, kind, unitId) => state.unitPage.primaryItems[`${kind}${unitId}`];
 
 export const getTotalPages = createSelector(
   getDataState,

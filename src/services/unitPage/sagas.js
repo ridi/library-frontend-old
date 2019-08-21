@@ -25,7 +25,7 @@ import * as requests from './requests';
 import { isTotalSeriesView, loadTotalItems } from './seriesViewSagas';
 
 function* loadPrimaryItem(kind, unitId) {
-  const primaryItem = yield select(getPrimaryItem, unitId);
+  const primaryItem = yield select(getPrimaryItem, kind, unitId);
   if (primaryItem && !isExpiredTTL(primaryItem)) {
     return primaryItem;
   }
@@ -79,7 +79,7 @@ function* loadItems(action) {
       }
       yield all([
         put(setPrimaryBookId(unitId, primaryBookId)),
-        put(actions.setPrimaryItem(unitId, primaryItem)),
+        put(actions.setPrimaryItem(kind, unitId, primaryItem)),
         call(loadBookDescriptions, [primaryBookId]),
         call(loadBookStarRatings, [primaryBookId]),
       ]);
