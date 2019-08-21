@@ -21,6 +21,7 @@ module.exports.config = {
       {
         test: /\.svg$/,
         use: '@svgr/webpack',
+        exclude: path.resolve(__dirname, './src/static/favicon/'),
       },
     ],
   },
