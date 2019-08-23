@@ -17,7 +17,7 @@ function OrderOptionItem(props) {
 }
 
 export default function ShelfOrder(props) {
-  const { order, orderOptions, onOrderOptionClick, onSyncClick } = props;
+  const { order, orderOptions, onOrderOptionClick, onSyncClick, syncing } = props;
   const [isModalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
 
@@ -46,7 +46,7 @@ export default function ShelfOrder(props) {
           <ModalItemGroup groupTitle="책장 관리">
             <ul>
               <li>
-                <ModalSyncButtonItem title="책장 동기화" onClick={onSyncClick} />
+                <ModalSyncButtonItem title={syncing ? '책장 동기화 중' : '책장 동기화'} onClick={onSyncClick} syncing={syncing} />
               </li>
             </ul>
           </ModalItemGroup>

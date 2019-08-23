@@ -26,7 +26,7 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
 
 export const ModalSyncButtonItem = ({ title, syncing, onClick, style }) => (
   <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={syncing}>
-    <Sync css={[modalStyles.selectedIcon, modalStyles.paddedIcon]} />
+    <Sync css={[modalStyles.selectedIcon, modalStyles.paddedIcon, syncing && modalStyles.iconSpinning]} />
     {title}
   </button>
 );

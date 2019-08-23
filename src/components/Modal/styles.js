@@ -1,3 +1,4 @@
+import { css, keyframes } from '@emotion/core';
 import config from '../../config';
 import { Hoverable } from '../../styles/responsive';
 
@@ -79,6 +80,9 @@ export const item = {
   ...Hoverable({
     backgroundColor: '#f3f4f5',
   }),
+  '&:disabled': {
+    opacity: 0.4,
+  },
 };
 
 export const spinner = showSpinner =>
@@ -119,6 +123,19 @@ export const paddedIcon = {
   margin: 0,
   marginRight: 10,
 };
+
+const iconSpinKeyframes = keyframes`
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+`;
+
+export const iconSpinning = css`
+  animation: ${iconSpinKeyframes} 2s linear infinite;
+`;
 
 export const count = {
   marginLeft: 4,

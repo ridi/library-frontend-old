@@ -57,6 +57,7 @@ const ShelvesList = props => {
     showPrompt,
     showToast,
     pageOptions,
+    loadShelfCount,
     loadShelves,
     validateShelvesLimit,
   } = props;
@@ -148,7 +149,10 @@ const ShelvesList = props => {
     Router.push(linkProps.href, linkProps.as);
   };
 
-  const handleSyncClick = () => {};
+  const handleSyncClick = () => {
+    loadShelves(pageOptions);
+    loadShelfCount();
+  };
 
   const renderTools = () => {
     const orderOptions = OrderOptions.toShelves();
@@ -162,7 +166,13 @@ const ShelvesList = props => {
           </Tooltip>
         </Add>
         <Editing toggleEditingMode={toggleSelectMode} />
-        <ShelfOrder order={order} orderOptions={orderOptions} onOrderOptionClick={handleOrderOptionClick} onSyncClick={handleSyncClick} />
+        <ShelfOrder
+          order={order}
+          orderOptions={orderOptions}
+          onOrderOptionClick={handleOrderOptionClick}
+          onSyncClick={handleSyncClick}
+          syncing={shelves.loading}
+        />
       </div>
     );
   };
@@ -248,6 +258,7 @@ const mapDispatchToProps = {
   showPrompt: promptActions.showPrompt,
   showToast: toastActions.showToast,
   addShelf: shelfActions.addShelf,
+  loadShelfCount: shelfActions.loadShelfCount,
   removeShelves: shelfActions.deleteShelves,
   loadShelves: shelfActions.loadShelves,
   validateShelvesLimit: shelfActions.validateShelvesLimit,
