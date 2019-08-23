@@ -5,10 +5,20 @@ import Check from '../../svgs/Check.svg';
 import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
+function ItemIcon(props) {
+  const { isSelected, IconComponent } = props;
+  if (isSelected) {
+    return <Check css={modalStyles.selectedIcon} />;
+  }
+  if (IconComponent) {
+    return <IconComponent css={modalStyles.icon} />;
+  }
+  return <div css={modalStyles.paddedIcon} />;
+}
+
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
   <button type="button" css={[modalStyles.item, style, modalStyles.spinner(showSpinner)]} onClick={onClick} disabled={showSpinner}>
-    {IconComponent && <IconComponent css={modalStyles.icon} />}
-    {isSelected && <Check css={modalStyles.selectedIcon} />}
+    <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
     {title}
   </button>
 );
@@ -28,8 +38,7 @@ export const ModalLinkItem = ({
 }) => (
   <Link prefetch replace={replace} scroll={scroll} {...makeLinkProps(href, as, query)}>
     <a css={[modalStyles.item, style]}>
-      {IconComponent && <IconComponent css={modalStyles.icon} />}
-      {isSelected && <Check css={modalStyles.selectedIcon} />}
+      <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
       {children}
       {title}
       {count ? <span css={modalStyles.count}>{count}</span> : null}
@@ -40,8 +49,7 @@ export const ModalLinkItem = ({
 export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style }) => {
   return (
     <a css={[modalStyles.item, style]} href={href}>
-      {IconComponent && <IconComponent css={modalStyles.icon} />}
-      {isSelected && <Check css={modalStyles.selectedIcon} />}
+      <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
       {title}
     </a>
   );
