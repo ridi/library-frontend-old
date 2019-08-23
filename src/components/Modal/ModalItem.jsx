@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import Link from 'next/link';
 import Check from '../../svgs/Check.svg';
+import Sync from '../../svgs/Sync.svg';
 import { makeLinkProps } from '../../utils/uri';
 import * as modalStyles from './styles';
 
@@ -19,6 +20,13 @@ function ItemIcon(props) {
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
   <button type="button" css={[modalStyles.item, style, modalStyles.spinner(showSpinner)]} onClick={onClick} disabled={showSpinner}>
     <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
+    {title}
+  </button>
+);
+
+export const ModalSyncButtonItem = ({ title, syncing, onClick, style }) => (
+  <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={syncing}>
+    <Sync css={[modalStyles.selectedIcon, modalStyles.paddedIcon]} />
     {title}
   </button>
 );
