@@ -133,7 +133,14 @@ const shelfReducer = produce((draft, action) => {
         }
         draft.shelf[uuid].id = id;
         draft.shelf[uuid].name = name;
-        draft.shelf[uuid].thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
+        const thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
+        if (draft.shelf[uuid].thumbnailIds.length !== thumbnailIds.length) {
+          draft.shelf[uuid].thumbnailIds = thumbnailIds;
+        } else {
+          for (let i = 0; i < thumbnailIds.length; i += 1) {
+            draft.shelf[uuid].thumbnailIds[i] = thumbnailIds[i];
+          }
+        }
         draft.shelf[uuid].bookCount = bookCount;
       }
       break;

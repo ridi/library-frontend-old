@@ -1,3 +1,4 @@
+import { css, keyframes } from '@emotion/core';
 import config from '../../config';
 import { Hoverable } from '../../styles/responsive';
 
@@ -66,18 +67,22 @@ export const groupTitle = {
 };
 
 export const item = {
-  display: 'block',
-  position: 'relative',
-  minWidth: 200,
+  display: 'flex',
+  alignItems: 'center',
   boxSizing: 'border-box',
-  padding: '11px 11px 10px 42px',
+  padding: '8px 10px',
+  minWidth: 200,
   fontSize: 15,
+  lineHeight: '20px',
   color: '#40474d',
   textAlign: 'left',
   whiteSpace: 'nowrap',
   ...Hoverable({
     backgroundColor: '#f3f4f5',
   }),
+  '&:disabled': {
+    opacity: 0.4,
+  },
 };
 
 export const spinner = showSpinner =>
@@ -100,12 +105,10 @@ export const spinner = showSpinner =>
     : {};
 
 export const icon = {
-  position: 'absolute',
   width: 18,
   height: 18,
-  left: 14,
-  top: '50%',
-  transform: 'translate3d(0, -50%, 0)',
+  margin: 3,
+  marginRight: 13,
   fill: '#9ea7ad',
 };
 
@@ -113,6 +116,26 @@ export const selectedIcon = {
   ...icon,
   fill: '#339cf2',
 };
+
+export const paddedIcon = {
+  width: 24,
+  height: 24,
+  margin: 0,
+  marginRight: 10,
+};
+
+const iconSpinKeyframes = keyframes`
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+`;
+
+export const iconSpinning = css`
+  animation: ${iconSpinKeyframes} 2s linear infinite;
+`;
 
 export const count = {
   marginLeft: 4,

@@ -3,57 +3,55 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
-import ShelfOrderModal from '../Modal/ShelfOrderModal';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalSyncButtonItem } from '../Modal';
 import * as styles from './styles';
 
-export default class ShelfOrder extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isShelfOrderModalShow: false,
-    };
-  }
+function OrderOptionItem(props) {
+  const { isSelected, option, onClick } = props;
+  const handleClick = React.useCallback(() => onClick(option), [option, onClick]);
+  return (
+    <li>
+      <ModalButtonItem title={option.title} isSelected={isSelected} onClick={handleClick} />
+    </li>
+  );
+}
 
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.order !== this.props.order) {
-      this.setState({ isShelfOrderModalShow: false });
-    }
-    return true;
-  }
+export default function ShelfOrder(props) {
+  const { order, orderOptions, onOrderOptionClick, onSyncClick, syncing } = props;
+  const [isModalActive, setModalActive] = React.useState(false);
+  const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
 
-  render() {
-    const { isShelfOrderModalShow } = this.state;
-    const { order, orderOptions, onClickOrderOption } = this.props;
-
-    return (
-      <div css={styles.buttonWrapper}>
-        <IconButton
-          a11y="책장 정렬"
-          css={styles.iconButton(isShelfOrderModalShow)}
-          onClick={() => {
-            this.setState({
-              isShelfOrderModalShow: true,
-            });
-          }}
-        >
-          <div css={styles.iconWrapper}>
-            <ThreeDotsVertical css={styles.threeDotsIcon} />
-          </div>
-        </IconButton>
-        {isShelfOrderModalShow && (
-          <ShelfOrderModal
-            order={order}
-            orderOptions={orderOptions}
-            isActive={isShelfOrderModalShow}
-            onClickModalBackground={() => {
-              this.setState({
-                isShelfOrderModalShow: false,
-              });
-            }}
-            onClickOrderOption={onClickOrderOption}
-          />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div css={styles.buttonWrapper}>
+      <IconButton
+        a11y="더 보기"
+        css={styles.iconButton(isModalActive)}
+        onClick={() => {
+          setModalActive(true);
+        }}
+      >
+        <div css={styles.iconWrapper}>
+          <ThreeDotsVertical css={styles.threeDotsIcon} />
+        </div>
+      </IconButton>
+      {isModalActive && (
+        <Modal isActive={isModalActive} a11y="옵션" onClickModalBackground={toggleModalActive}>
+          <ModalItemGroup groupTitle="정렬 순서">
+            <ul>
+              {orderOptions.map(option => (
+                <OrderOptionItem key={option.key} isSelected={option.key === order} option={option} onClick={onOrderOptionClick} />
+              ))}
+            </ul>
+          </ModalItemGroup>
+          <ModalItemGroup groupTitle="책장 관리">
+            <ul>
+              <li>
+                <ModalSyncButtonItem title={syncing ? '책장 동기화 중' : '책장 동기화'} onClick={onSyncClick} syncing={syncing} />
+              </li>
+            </ul>
+          </ModalItemGroup>
+        </Modal>
+      )}
+    </div>
+  );
 }
