@@ -3,25 +3,21 @@ export default class AuthorRole {
     return 'author';
   }
 
+  static get BIBLIO_INTRO() {
+    return 'bibliographical_introduction';
+  }
+
   // 만화장르에서는 글, 그림으로 노출하기 위해 임의로 COMIC_AUTHOR 를 만듬
   static get COMIC_AUTHOR() {
     return 'comic_author';
   }
 
-  static get TRANSLATOR() {
-    return 'translator';
-  }
-
-  static get PHOTO() {
-    return 'author_photo';
-  }
-
-  static get BIBLIO_INTRO() {
-    return 'bibliographical_introduction';
-  }
-
   static get COMMENTATOR() {
     return 'commentator';
+  }
+
+  static get COMPILER() {
+    return 'compiler';
   }
 
   static get EDITOR() {
@@ -36,6 +32,19 @@ export default class AuthorRole {
     return 'original_author';
   }
 
+  static get ORIG_ILLUSTRATOR() {
+    return 'original_illustrator';
+  }
+
+  // 연주자(악보PDF용)
+  static get PERFORMER() {
+    return 'performer';
+  }
+
+  static get PHOTO() {
+    return 'author_photo';
+  }
+
   static get PLANNER() {
     return 'planner';
   }
@@ -48,43 +57,34 @@ export default class AuthorRole {
     return 'supervise';
   }
 
-  static get PERFORMER() {
-    // 연주자(악보PDF용)
-    return 'performer';
-  }
-
-  static get COMPILER() {
-    return 'compiler';
-  }
-
-  static get ORIG_ILLUSTRATOR() {
-    return 'original_illustrator';
+  static get TRANSLATOR() {
+    return 'translator';
   }
 
   static convertToString(role) {
     const rolesMap = {
-      [this.COMIC_AUTHOR]: '글, 그림',
       [this.AUTHOR]: '저',
-      [this.STORY_WRITER]: '글',
-      [this.ILLUSTRATOR]: '그림',
-      [this.TRANSLATOR]: '역',
-      [this.PHOTO]: '사진',
       [this.BIBLIO_INTRO]: '해제',
+      [this.COMIC_AUTHOR]: '글, 그림',
       [this.COMMENTATOR]: '해설',
+      [this.COMPILER]: '엮음',
       [this.EDITOR]: '편집',
+      [this.ILLUSTRATOR]: '그림',
       [this.ORIG_AUTHOR]: '원작',
       [this.ORIG_ILLUSTRATOR]: '원화',
-      [this.PLANNER]: '기획',
-      [this.SUPERVISOR]: '감수',
       [this.PERFORMER]: '연주자',
-      [this.COMPILER]: '엮음',
+      [this.PHOTO]: '사진',
+      [this.PLANNER]: '기획',
+      [this.STORY_WRITER]: '글',
+      [this.SUPERVISOR]: '감수',
+      [this.TRANSLATOR]: '역',
     };
     return rolesMap[role];
   }
 
   static getPriorities(authors) {
     if (authors[this.AUTHOR]) {
-      return [this.AUTHOR, this.ILLUSTRATOR, this.TRANSLATOR];
+      return [this.AUTHOR, this.STORY_WRITER, this.TRANSLATOR, this.ORIG_AUTHOR, this.ILLUSTRATOR];
     }
 
     if (authors[this.ORIG_AUTHOR]) {
@@ -94,14 +94,17 @@ export default class AuthorRole {
 
     return [
       this.STORY_WRITER,
+      this.TRANSLATOR,
       this.ILLUSTRATOR,
-      this.EDITOR,
       this.PHOTO,
       this.PLANNER,
-      // this.TRANSLATOR, TODO: 확인필요 - 저자가 없고 번역만 있으면 이상함
-      this.COMMENTATOR,
       this.BIBLIO_INTRO,
+      this.COMPILER,
       this.COMMENTATOR,
+      this.EDITOR,
+      this.SUPERVISOR,
+      this.PERFORMER,
+      this.ORIG_ILLUSTRATOR,
     ];
   }
 }
