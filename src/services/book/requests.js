@@ -12,7 +12,7 @@ import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
 import { OrderOptions } from '../../constants/orderOptions';
 
-const authorsRestructuring = _authors => {
+const restructureAuthors = _authors => {
   const authors = {};
   _authors.forEach(author => {
     const { id, name, role } = author;
@@ -33,7 +33,7 @@ const _reduceBooks = books =>
     file: book.file,
     thumbnail: book.thumbnail,
     property: book.property,
-    authors: book.authors_ordered ? authorsRestructuring(book.authors_ordered) : null,
+    authors: book.authors_ordered ? restructureAuthors(book.authors_ordered) : null,
     series: book.series,
     setbook: book.setbook,
     support: {
