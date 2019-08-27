@@ -82,13 +82,6 @@ export const myMenuWrapper = {
   padding: '7px 0',
 };
 
-export const BetaBadge = {
-  width: 27,
-  height: 12,
-  fill: '#808991',
-  padding: '19px 0 14px 0',
-};
-
 export const myMenuToggleButton = {
   padding: '6px 0',
   marginLeft: 3,

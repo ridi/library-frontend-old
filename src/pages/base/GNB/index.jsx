@@ -7,7 +7,6 @@ import config from '../../../config';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
 import { Hidden } from '../../../styles';
-import BetaBadge from '../../../svgs/BetaSquareFill.svg';
 import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
 import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import MyMenuActiveIcon from '../../../svgs/MyMenu-active.svg';
@@ -100,7 +99,6 @@ class GNB extends React.Component {
                   내 서재
                 </a>
               </h1>
-              <BetaBadge css={styles.BetaBadge} />
             </div>
             {this.renderRightUi()}
           </header>
