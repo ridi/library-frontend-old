@@ -5,9 +5,12 @@ import { Route } from 'react-router-dom';
 import { initializeSentry } from './utils/sentry';
 import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
 import Routes from './Routes';
+import ErrorBoundary from './components/ErrorBoundary';
 import * as accountSelectors from './services/account/selectors';
 import Layout from './pages/base/Layout';
-import Login from './pages/login';
+import { Loading } from './pages/base/Loading';
+
+const Login = React.lazy(() => import('./pages/login'));
 
 function App(props) {
   const { needLogin } = props;
@@ -28,7 +31,13 @@ function App(props) {
 
   const routes = needLogin ? <Route component={Login} /> : <Route component={Routes} />;
 
-  return <Layout>{routes}</Layout>;
+  return (
+    <ErrorBoundary>
+      <Layout>
+        <React.Suspense fallback={<Loading />}>{routes}</React.Suspense>
+      </Layout>
+    </ErrorBoundary>
+  );
 }
 
 function mapStateToProps(state) {

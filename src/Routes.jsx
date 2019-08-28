@@ -1,14 +1,15 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import NotFound from './pages/errors/notFound';
-import Login from './pages/login';
-import PurchasedHidden from './pages/purchased/hidden';
-import PurchasedMain from './pages/purchased/main';
-import PurchasedSearch from './pages/purchased/search';
-import SerialPreference from './pages/serialPreference';
-import ShelvesList from './pages/shelves/list';
-import ShelfDetail from './pages/shelves/detail';
-import Unit from './pages/unit';
+
+const NotFound = React.lazy(() => import('./pages/errors/notFound'));
+const Login = React.lazy(() => import('./pages/login'));
+const PurchasedHidden = React.lazy(() => import('./pages/purchased/hidden'));
+const PurchasedMain = React.lazy(() => import('./pages/purchased/main'));
+const PurchasedSearch = React.lazy(() => import('./pages/purchased/search'));
+const SerialPreference = React.lazy(() => import('./pages/serialPreference'));
+const ShelvesList = React.lazy(() => import('./pages/shelves/list'));
+const ShelfDetail = React.lazy(() => import('./pages/shelves/detail'));
+const Unit = React.lazy(() => import('./pages/unit'));
 
 const routes = [
   {
