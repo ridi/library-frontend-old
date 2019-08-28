@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "target": "esnext",
+    "jsx": "preserve",
+    "noImplicitReturns": true,
+    "sourceMap": true
+  },
+  "include": ["./src/**/*"]
+}

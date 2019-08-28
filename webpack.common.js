@@ -19,6 +19,10 @@ module.exports.config = {
         exclude: /node_modules/,
       },
       {
+        test: /\.tsx?$/,
+        use: ['babel-loader', 'ts-loader'],
+      },
+      {
         test: /\.svg$/,
         use: '@svgr/webpack',
         exclude: path.resolve(__dirname, './src/static/favicon/'),
@@ -26,7 +30,7 @@ module.exports.config = {
     ],
   },
   resolve: {
-    extensions: ['.jsx', '.js'],
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
     alias: {
       pages: path.resolve(__dirname, 'src/pages'),
       components: path.resolve(__dirname, 'src/components'),

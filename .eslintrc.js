@@ -108,7 +108,7 @@ module.exports = {
     'react/jsx-filename-extension': [
       'warn',
       {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.tsx', '.jsx'],
       },
     ],
     'react/jsx-one-expression-per-line': 'off',
