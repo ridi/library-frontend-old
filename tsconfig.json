@@ -6,7 +6,15 @@
     "target": "esnext",
     "jsx": "preserve",
     "noImplicitReturns": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "pages/*": ["src/pages/*"],
+      "components/*": ["src/components/*"],
+      "services/*": ["src/services/*"],
+      "constants/*": ["src/constants/*"],
+      "static/*": ["src/static/*"]
+    }
   },
   "include": ["./src/**/*"]
 }

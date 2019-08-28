@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
+const TsconfigPathsWebpackPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {};
 
@@ -31,13 +32,7 @@ module.exports.config = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
-    alias: {
-      pages: path.resolve(__dirname, 'src/pages'),
-      components: path.resolve(__dirname, 'src/components'),
-      services: path.resolve(__dirname, 'src/services'),
-      constants: path.resolve(__dirname, 'src/constants'),
-      static: path.resolve(__dirname, 'src/static'),
-    },
+    plugins: [new TsconfigPathsWebpackPlugin({ extensions: ['.tsx', '.ts', '.jsx', '.js'] })],
   },
   plugins: [
     new webpack.DefinePlugin({
