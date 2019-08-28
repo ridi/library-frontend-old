@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const TsconfigPathsWebpackPlugin = require('tsconfig-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {};
 
@@ -21,7 +22,15 @@ module.exports.config = {
       },
       {
         test: /\.tsx?$/,
-        use: ['babel-loader', 'ts-loader'],
+        use: [
+          'babel-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.svg$/,
@@ -38,6 +47,7 @@ module.exports.config = {
     new webpack.DefinePlugin({
       SENTRY_RELEASE_VERSION: JSON.stringify(process.env.SENTRY_RELEASE_VERSION),
     }),
+    new ForkTsCheckerWebpackPlugin(),
     new WebpackBar(),
   ],
   stats: {
