@@ -229,12 +229,6 @@ const extractPageOptions = locationSearch => {
   };
 };
 
-ShelvesList.prepare = async ({ dispatch, location }) => {
-  const pageOptions = extractPageOptions(location.search);
-  await dispatch(shelfActions.loadShelves(pageOptions));
-  await dispatch(shelfActions.loadShelfCount());
-};
-
 const mapStateToProps = (state, props) => {
   const pageOptions = extractPageOptions(props.location.search);
   const shelves = shelfSelectors.getShelves(state, pageOptions);

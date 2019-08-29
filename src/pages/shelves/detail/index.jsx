@@ -66,6 +66,7 @@ function ShelfDetail(props) {
 
   React.useEffect(
     () => {
+      clearSelectedBooks();
       loadShelfBooks(uuid, pageOptions);
       loadShelfBookCount(uuid);
     },
@@ -319,14 +320,6 @@ const extractPageOptions = locationSearch => {
 };
 
 const getUuid = matchParams => matchParams?.uuid;
-
-ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
-  const pageOptions = extractPageOptions(location.search);
-  const uuid = getUuid(matchData.params);
-  dispatch(selectionActions.clearSelectedItems());
-  dispatch(actions.loadShelfBooks(uuid, pageOptions));
-  dispatch(actions.loadShelfBookCount(uuid));
-};
 
 function mapStateToProps(state, props) {
   const pageOptions = extractPageOptions(props.location.search);
