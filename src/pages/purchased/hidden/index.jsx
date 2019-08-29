@@ -27,7 +27,7 @@ import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
 import { ResponsiveBooks } from '../../base/Responsive';
 
-function extractOptions({ location }) {
+function extractOptions(location) {
   const searchParams = new URLSearchParams(location.search);
   const page = parseInt(searchParams.get('page'), 10) || 1;
   return { page };
@@ -42,49 +42,72 @@ function makeBackLocation({ location }) {
   };
 }
 
-class Hidden extends React.Component {
-  static async prepare({ dispatch, location }) {
-    const { page } = extractOptions({ location });
-    dispatch(clearSelectedItems());
-    dispatch(loadItems(page));
-  }
+const Hidden = props => {
+  const {
+    currentPage,
+    isError,
+    isFetchingBooks,
+    isSyncShelfEnabled,
+    items,
+    location,
+    totalCount,
+    totalPages,
+    totalSelectedCount,
+    units,
+    viewType,
+  } = props;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEditing: false,
-    };
-  }
+  const {
+    dispatchClearSelectedBooks,
+    dispatchDeleteSelectedBooks,
+    dispatchLoadItems,
+    dispatchSelectAllBooks,
+    dispatchShowConfirm,
+    dispatchUnhideSelectedBooks,
+  } = props;
 
-  toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    const { dispatchClearSelectedBooks } = this.props;
+  const { page } = extractOptions(location);
 
-    if (isEditing === true) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  React.useEffect(
+    () => {
       dispatchClearSelectedBooks();
-    }
+      dispatchLoadItems(page);
+    },
+    [location],
+  );
 
-    this.setState({ isEditing: !isEditing });
-  };
+  const toggleEditingMode = React.useCallback(
+    () => {
+      if (isEditing === true) {
+        dispatchClearSelectedBooks();
+      }
 
-  handleOnClickUnhide = () => {
-    const { currentPage, dispatchUnhideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+      setIsEditing(!isEditing);
+    },
+    [dispatchClearSelectedBooks, isEditing],
+  );
 
-    dispatchUnhideSelectedBooks(currentPage);
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
+  const handleOnClickUnhide = React.useCallback(
+    () => {
+      dispatchUnhideSelectedBooks(currentPage);
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchUnhideSelectedBooks],
+  );
 
-  deleteSelectedBooks = () => {
-    const { currentPage, dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
+  const handleOnclickDeleteConfirm = React.useCallback(
+    () => {
+      dispatchDeleteSelectedBooks(currentPage);
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchDeleteSelectedBooks, dispatchClearSelectedBooks],
+  );
 
-    dispatchDeleteSelectedBooks(currentPage);
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
-
-  handleOnClickDelete = () => {
-    this.props.dispatchShowConfirm({
+  const handleOnClickDelete = () => {
+    dispatchShowConfirm({
       title: '영구 삭제',
       message: (
         <>
@@ -95,49 +118,42 @@ class Hidden extends React.Component {
         </>
       ),
       confirmLabel: '삭제',
-      onClickConfirmButton: this.deleteSelectedBooks,
+      onClickConfirmButton: handleOnclickDeleteConfirm,
     });
   };
-
-  handleRefreshClick = () => this.props.dispatchLoadItems(this.props.currentPage);
-
-  handleSelectAllBooks = () => this.props.dispatchSelectAllBooks(this.props.currentPage);
-
-  linkBuilder = libraryBookData => {
-    const { location: backLocation } = this.props;
+  const handleRefreshClick = () => dispatchLoadItems(currentPage);
+  const handleSelectAllBooks = () => dispatchSelectAllBooks(currentPage);
+  const linkBuilder = libraryBookData => {
     const to = {
       pathname: URLMap.hiddenUnit.as({ unitId: libraryBookData.unit_id }),
       state: {
-        backLocation,
+        backLocation: location,
       },
     };
     return <Link to={to}>더보기</Link>;
   };
 
-  makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchClearSelectedBooks } = this.props;
+  const makeEditingBarProps = () => {
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: this.handleSelectAllBooks,
+      onClickSelectAllItem: handleSelectAllBooks,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
+      onClickSuccessButton: toggleEditingMode,
     };
-  }
+  };
 
-  makeActionBarProps() {
-    const { totalSelectedCount } = this.props;
+  const makeActionBarProps = () => {
     const disable = totalSelectedCount === 0;
-
     return {
       buttonProps: [
         {
           name: '선택 영구 삭제',
           type: ButtonType.DANGER,
-          onClick: this.handleOnClickDelete,
+          onClick: handleOnClickDelete,
           disable,
         },
         {
@@ -145,16 +161,14 @@ class Hidden extends React.Component {
         },
         {
           name: '선택 숨김 해제',
-          onClick: this.handleOnClickUnhide,
+          onClick: handleOnClickUnhide,
           disable,
         },
       ],
     };
-  }
+  };
 
-  renderTitleBar() {
-    const { location, totalCount } = this.props;
-
+  const renderTitleBar = () => {
     const titleBarProps = {
       backLocation: makeBackLocation({ location }),
       title: '숨긴 도서 목록',
@@ -162,15 +176,16 @@ class Hidden extends React.Component {
       totalCount: totalCount.itemTotalCount,
       edit: true,
       showTools: true,
-      toggleEditingMode: this.toggleEditingMode,
+      toggleEditingMode,
     };
 
     return <TitleBar {...titleBarProps} />;
-  }
+  };
 
-  renderBooks() {
-    const { isEditing: isSelectMode } = this.state;
-    const { items: libraryBookDTO, units, isFetchingBooks, viewType } = this.props;
+  const renderPaginator = () => <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
+
+  const renderBooks = () => {
+    const libraryBookDTO = items;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
@@ -181,58 +196,46 @@ class Hidden extends React.Component {
           {...{
             libraryBookDTO,
             units,
-            isSelectMode,
+            isSelectMode: isEditing,
             viewType,
-            linkBuilder: this.linkBuilder,
+            linkBuilder,
           }}
         />
-        {this.renderPaginator()}
+        {renderPaginator()}
       </>
     );
-  }
+  };
 
-  renderPaginator() {
-    const { currentPage, totalPages } = this.props;
-    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
-  }
-
-  renderMain() {
-    const { isFetchingBooks, isError, items } = this.props;
-
+  const renderMain = () => {
     if (isError) {
-      return <BookError onClickRefreshButton={this.handleRefreshClick} />;
+      return <BookError onClickRefreshButton={handleRefreshClick} />;
     }
 
     if (!isFetchingBooks && items.length === 0) {
       return <Empty IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
     }
 
-    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
-  }
+    return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
+  };
 
-  render() {
-    const { isEditing } = this.state;
-    const { currentPage, totalPages } = this.props;
-
-    return (
-      <>
-        <Helmet>
-          <title>숨긴 도서 목록 - 내 서재</title>
-        </Helmet>
-        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
-        <Editable
-          allowFixed
-          isEditing={isEditing}
-          nonEditBar={this.renderTitleBar()}
-          editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.makeActionBarProps()}
-        >
-          <main>{this.renderMain()}</main>
-        </Editable>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Helmet>
+        <title>숨긴 도서 목록 - 내 서재</title>
+      </Helmet>
+      <PageRedirect currentPage={currentPage} totalPages={totalPages} />
+      <Editable
+        allowFixed
+        isEditing={isEditing}
+        nonEditBar={renderTitleBar()}
+        editingBarProps={makeEditingBarProps()}
+        actionBarProps={makeActionBarProps()}
+      >
+        <main>{renderMain()}</main>
+      </Editable>
+    </>
+  );
+};
 
 const mapStateToProps = (state, props) => {
   const { page: currentPage } = extractOptions(props);
