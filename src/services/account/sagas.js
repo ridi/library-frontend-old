@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import { all, call, put, take, select } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { all, call, delay, put, take, select } from 'redux-saga/effects';
 
 import { START_ACCOUNT_TRACKER, setNeedLogin, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
@@ -29,7 +28,7 @@ function* accountTracker() {
   yield take(START_ACCOUNT_TRACKER);
 
   while (true) {
-    yield call(delay, TRACK_DELAY_MILLISECS);
+    yield delay(TRACK_DELAY_MILLISECS);
 
     let newUserInfo;
     try {

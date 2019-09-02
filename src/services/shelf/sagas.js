@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga';
-import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { ITEMS_LIMIT_PER_SHELF, SHELVES_LIMIT } from '../../constants/shelves';
