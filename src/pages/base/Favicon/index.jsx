@@ -2,7 +2,7 @@ import React from 'react';
 
 import config from '../../../config';
 
-const DATE = '20190603';
+const DATE = '20190902';
 
 const Favicon = () => (
   <>
