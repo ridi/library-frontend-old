@@ -140,23 +140,39 @@ export async function fetchLibraryUnitData(units) {
     unitResponseMap = new Map(unitResponse.data.units.map(unit => [String(unit.id), unit]));
   }
 
-  return units.map(({ unitId, fallbackBookId }) => {
+  const result = units
+    .filter(({ unitId }) => {
+      const unitIdStr = String(unitId);
+      return itemResponseMap.get(unitIdStr) != null || unitResponseMap.get(unitIdStr) != null;
+    })
+    .map(({ unitId, fallbackBookId }) => {
+      const unitIdStr = String(unitId);
+      const bookDetail = itemResponseMap.get(unitIdStr);
+      if (bookDetail != null) {
+        return bookDetail;
+      }
+      const unit = unitResponseMap.get(unitIdStr);
+      return {
+        remain_time: '',
+        expire_date: '9999-12-31T23:59:59+09:00',
+        is_ridiselect: false,
+        b_id: fallbackBookId || '',
+        purchase_date: new Date(0).toISOString(),
+        unit_id: unitIdStr,
+        unit_type: unit.type,
+        unit_title: unit.title,
+        unit_count: unit.total_count,
+      };
+    });
+  const unitIdSet = new Set(result.map(({ unit_id: unitId }) => unitId));
+  for (const unitId of unitIds) {
     const unitIdStr = String(unitId);
-    const bookDetail = itemResponseMap.get(unitIdStr);
-    if (bookDetail != null) {
-      return bookDetail;
+    if (!unitIdSet.has(unitIdStr)) {
+      console.error('Unit requested but does not exist:', unitIdStr);
+      captureMessage('Unit requested but does not exist', {
+        extra: { unitId: unitIdStr },
+      });
     }
-    const unit = unitResponseMap.get(unitIdStr);
-    return {
-      remain_time: '',
-      expire_date: '9999-12-31T23:59:59+09:00',
-      is_ridiselect: false,
-      b_id: fallbackBookId || '',
-      purchase_date: new Date(0).toISOString(),
-      unit_id: unitIdStr,
-      unit_type: unit.type,
-      unit_title: unit.title,
-      unit_count: unit.total_count,
-    };
-  });
+  }
+  return result;
 }
