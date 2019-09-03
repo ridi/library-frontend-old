@@ -47,6 +47,7 @@ module.exports.config = {
     assetsSort: 'id',
     errors: true,
     errorDetails: true,
+    excludeAssets: [/\.map$/],
     hash: true,
     moduleTrace: true,
     version: true,
