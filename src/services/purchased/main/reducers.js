@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { toDict, toFlatten } from '../../../utils/array';
-import { LOAD_MAIN_ITEMS, SET_IS_FETCHING_BOOKS, UPDATE_MAIN_ITEMS } from './actions';
+import { LOAD_MAIN_ITEMS, SET_MAIN_IS_FETCHING_BOOKS, UPDATE_MAIN_ITEMS } from './actions';
 import { createInitialDataState, initialState, mapPageOptionsToKey } from './state';
 
 const mainReducer = produce((draft, action) => {
@@ -25,7 +25,7 @@ const mainReducer = produce((draft, action) => {
       draft.data[key].itemTotalCount = action.payload.itemTotalCount;
       draft.filter.options = action.payload.filterOptions;
       break;
-    case SET_IS_FETCHING_BOOKS:
+    case SET_MAIN_IS_FETCHING_BOOKS:
       draft.isFetchingBooks = action.payload.isFetchingBooks;
       break;
     default:

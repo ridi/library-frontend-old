@@ -1,6 +1,11 @@
 import produce from 'immer';
 import { toDict, toFlatten } from '../../utils/array';
-import { SET_IS_FETCHING_BOOKS, SET_SERIAL_PREFERENCE_ITEMS, SET_SERIAL_PREFERENCE_TOTAL_COUNT, SET_SERIAL_UNIT_ID_MAP } from './actions';
+import {
+  SET_SERIAL_IS_FETCHING_BOOKS,
+  SET_SERIAL_PREFERENCE_ITEMS,
+  SET_SERIAL_PREFERENCE_TOTAL_COUNT,
+  SET_SERIAL_UNIT_ID_MAP,
+} from './actions';
 import { createInitialDataState, getKey, initialState } from './state';
 
 const serialPreferenceReducer = produce((draft, action) => {
@@ -25,7 +30,7 @@ const serialPreferenceReducer = produce((draft, action) => {
         ...action.payload.unitIdMap,
       };
       break;
-    case SET_IS_FETCHING_BOOKS:
+    case SET_SERIAL_IS_FETCHING_BOOKS:
       draft.isFetchingBooks = action.payload.isFetchingBooks;
       break;
     default:

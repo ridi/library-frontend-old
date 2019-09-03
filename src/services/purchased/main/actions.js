@@ -7,7 +7,7 @@ export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
-export const SET_IS_FETCHING_BOOKS = 'SET_IS_FETCHING_BOOKS';
+export const SET_MAIN_IS_FETCHING_BOOKS = 'SET_MAIN_IS_FETCHING_BOOKS';
 
 export const loadItems = pageOptions => ({
   type: LOAD_MAIN_ITEMS,
@@ -49,7 +49,7 @@ export const downloadSelectedBooks = pageOptions => ({
 });
 
 export const setIsFetchingBooks = isFetchingBooks => ({
-  type: SET_IS_FETCHING_BOOKS,
+  type: SET_MAIN_IS_FETCHING_BOOKS,
   payload: {
     isFetchingBooks,
   },

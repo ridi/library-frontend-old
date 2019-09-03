@@ -7,7 +7,7 @@ export const SET_SERIAL_UNIT_ID_MAP = 'SET_SERIAL_UNIT_ID_MAP';
 export const SELECT_ALL_SERIAL_PREFERENCE_BOOKS = 'SELECT_ALL_SERIAL_PREFERENCE_BOOKS';
 export const DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS = 'DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS';
 
-export const SET_IS_FETCHING_BOOKS = 'SET_IS_FETCHING_BOOKS';
+export const SET_SERIAL_IS_FETCHING_BOOKS = 'SET_SERIAL_IS_FETCHING_BOOKS';
 
 export const loadItems = page => ({
   type: LOAD_SERIAL_PREFERENCE_ITEMS,
@@ -53,7 +53,7 @@ export const deleteSelectedBooks = page => ({
 });
 
 export const setIsFetchingBooks = isFetchingBooks => ({
-  type: SET_IS_FETCHING_BOOKS,
+  type: SET_SERIAL_IS_FETCHING_BOOKS,
   payload: {
     isFetchingBooks,
   },
