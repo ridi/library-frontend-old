@@ -38,7 +38,7 @@ export const resetFont = {
   color: 'black',
   fontFamily,
   fontWeight: 400,
-  letterSpacing: '-.4px',
+  letterSpacing: '-.03em',
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'grayscale',
 };
