@@ -1,9 +1,9 @@
 import API from './api';
-import { authorizationInterceptor, maintenanceInterceptor } from './interceptor';
+import { createAuthorizationInterceptor, maintenanceInterceptor } from './interceptor';
 
 let api = null;
 
-export const initializeApi = req => {
+export const initializeApi = (req, store) => {
   if (req != null) {
     const { token } = req;
     api = new API(false, { Cookie: `ridi-at=${token};` });
@@ -12,7 +12,7 @@ export const initializeApi = req => {
 
   const withCredentials = true;
   api = new API(withCredentials);
-  api.addInterceptors([maintenanceInterceptor, authorizationInterceptor]);
+  api.addInterceptors([maintenanceInterceptor, createAuthorizationInterceptor(store)]);
   api.registerInterceptor();
   return api;
 };

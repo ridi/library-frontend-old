@@ -1,5 +1,4 @@
-import { delay } from 'redux-saga';
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import { all, call, delay, put, takeEvery } from 'redux-saga/effects';
 import { downloadFile } from '../../utils/file';
 import { setExcelDownloadStatus, START_EXCEL_DOWNLOAD } from './actions';
 import { CHECK_EXCEL_DOWNLOAD_STATUS_RETRY_DELAY, EXCEL_FILE_NAME, ExcelDownloadStatusCode } from './constants';
@@ -13,7 +12,7 @@ function* requestExcelDownloadUrl() {
     const response = yield call(fetchCheckExcelDownload, queueId);
     switch (response.state) {
       case ExcelDownloadStatusCode.UNDONE:
-        yield call(delay, CHECK_EXCEL_DOWNLOAD_STATUS_RETRY_DELAY);
+        yield delay(CHECK_EXCEL_DOWNLOAD_STATUS_RETRY_DELAY);
         break;
 
       case ExcelDownloadStatusCode.FAIL:

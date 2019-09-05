@@ -1,7 +1,6 @@
-import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, delay, put, select, takeEvery } from 'redux-saga/effects';
 
 import { OrderBy, OrderType } from '../../constants/orderOptions';
-import { delay } from '../../utils/delay';
 import { getDeviceInfo } from '../../utils/device';
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
 
@@ -50,7 +49,7 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, bookIds, url) {
           toastStyle: ToastStyle.BLUE,
         }),
       );
-      yield call(delay, 1000);
+      yield delay(1000);
     }
     yield put(setBookDownloadSrc(pcUri));
   }
@@ -91,7 +90,7 @@ export function* _download(bookIds, url) {
   // 안드로이드에서는 convertUriToAndroidIntentUri 를 통해서 자동으로 플레이스토어를 띄워준다.
   // 그러나 안드로이드 파이어폭스 브라우저는 그런 기능이 없기 때문에 뷰어 오픈이 성공 했어도 뷰어 가이드를 보여준다.
   if (!isAndroid || isFirefox) {
-    yield call(delay, 1000);
+    yield delay(1000);
     yield call(_showViewerGuildLink, isIos, isAndroid);
   }
 }

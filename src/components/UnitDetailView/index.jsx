@@ -4,6 +4,7 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import { isAfter } from 'date-fns';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import config from '../../config';
 import { UnitType } from '../../constants/unitType';
@@ -11,7 +12,7 @@ import { getAdultVerification } from '../../services/account/selectors';
 import { getBook } from '../../services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
 import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
-import { getLocationHref } from '../../services/router/selectors';
+import adultCover from '../../static/cover/adult.png';
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
@@ -227,8 +228,7 @@ class UnitDetailView extends React.Component {
 
     const _notAvailable = this.isPurchased && items.length === 1 && isAfter(new Date(), primaryItem.expire_date);
     const isAdultOnly = book.property.is_adult_only;
-    const thumbnailUrl =
-      isAdultOnly && !isVerifiedAdult ? `${config.STATIC_URL}/static/cover/adult.png` : `${book.thumbnail.xxlarge}?dpi=xhdpi`;
+    const thumbnailUrl = isAdultOnly && !isVerifiedAdult ? adultCover : `${book.thumbnail.xxlarge}?dpi=xhdpi`;
 
     return (
       <div css={styles.unitDetailViewWrapper}>
@@ -262,17 +262,23 @@ class UnitDetailView extends React.Component {
 }
 
 const mapStateToPropsFactory = () => {
+  const getLocationHref = location => {
+    const { pathname, search } = location;
+    return `${config.BASE_URL}${pathname}${search}`;
+  };
+
   const selectBookMetadata = createSelector(
     getBook,
     (state, primaryBookId, unit) => unit,
     (book, unit) => new BookMetaData(book, unit),
   );
+
   return (state, props) => ({
-    locationHref: getLocationHref(state),
+    locationHref: getLocationHref(props.location),
     readLatestBookData: props.unit ? getReadLatestData(state, props.unit.id) : null,
     fetchingReadLatest: getFetchingReadLatest(state),
-    book: getBook(state, props.primaryBookId),
-    bookMetadata: selectBookMetadata(state, props.primaryBookId, props.unit),
+    book: props.primaryBookId && getBook(state, props.primaryBookId),
+    bookMetadata: props.primaryBookId && selectBookMetadata(state, props.primaryBookId, props.unit),
     isVerifiedAdult: getAdultVerification(state),
   });
 };
@@ -282,7 +288,9 @@ const mapDispatchToProps = {
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
 };
 
-export default connect(
-  mapStateToPropsFactory,
-  mapDispatchToProps,
-)(UnitDetailView);
+export default withRouter(
+  connect(
+    mapStateToPropsFactory,
+    mapDispatchToProps,
+  )(UnitDetailView),
+);

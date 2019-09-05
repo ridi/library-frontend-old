@@ -1,57 +1,38 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-
 import { toFlatten } from '../../utils/array';
-
+import { fetchUnitIdMap } from '../book/requests';
 import { loadBookData } from '../book/sagas';
 import { showDialog } from '../dialog/actions';
-
-import { getQuery } from '../router/selectors';
+import { selectItems } from '../selection/actions';
+import { getSelectedItems } from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
-
 import {
   DELETE_SELECTED_SERIAL_PREFERENCE_BOOKS,
   LOAD_SERIAL_PREFERENCE_ITEMS,
   SELECT_ALL_SERIAL_PREFERENCE_BOOKS,
   setIsFetchingBooks,
   setItems,
-  setPage,
-  setTotalCount,
   setSerialUnitIdMap,
+  setTotalCount,
 } from './actions';
 import { deleteSerialPreferenceItems, fetchSerialPreferenceItems } from './requests';
-import { getItemsByPage, getOptions } from './selectors';
-import { selectItems } from '../selection/actions';
-import { getSelectedItems } from '../selection/selectors';
-import { fetchUnitIdMap } from '../book/requests';
+import { getItemsByPage } from './selectors';
 
-function* persistPageOptionsFromQueries() {
-  const query = yield select(getQuery);
-  const page = parseInt(query.page, 10) || 1;
-
-  yield all([put(setPage(page))]);
-}
-
-function* loadItems() {
+function* loadItems(action) {
+  const { page } = action.payload;
   yield put(setError(false));
-  yield call(persistPageOptionsFromQueries);
-
-  const { page } = yield select(getOptions);
-
   try {
     yield put(setIsFetchingBooks(true));
     const itemResponse = yield call(fetchSerialPreferenceItems, page);
 
     if (itemResponse.items.length !== 0) {
       const seriesBookIds = toFlatten(itemResponse.items, 'series_id');
-      const unitIdMapResponse = yield call(fetchUnitIdMap, seriesBookIds);
-      // Request BookData
       const bookIds = [...seriesBookIds, ...toFlatten(itemResponse.items, 'recent_read_b_id')];
-      yield call(loadBookData, bookIds);
+      const [unitIdMapResponse] = yield all([call(fetchUnitIdMap, seriesBookIds), call(loadBookData, bookIds)]);
       yield put(setSerialUnitIdMap(unitIdMapResponse.result));
     }
-
-    yield all([put(setItems(itemResponse.items)), put(setTotalCount(itemResponse.book_count))]);
+    yield all([put(setItems(itemResponse.items, page)), put(setTotalCount(itemResponse.book_count))]);
   } catch (err) {
     yield put(setError(true));
   } finally {
@@ -59,7 +40,7 @@ function* loadItems() {
   }
 }
 
-function* deleteSelectedBooks() {
+function* deleteSelectedBooks(action) {
   yield put(setFullScreenLoading(true));
   const selectedBooks = yield select(getSelectedItems);
   const bookSeriesIds = Object.keys(selectedBooks);
@@ -73,11 +54,11 @@ function* deleteSelectedBooks() {
     yield put(setFullScreenLoading(false));
   }
 
-  yield all([put(showToast({ message: '선호작품에서 삭제되었습니다.' })), call(loadItems)]);
+  yield all([put(showToast({ message: '선호작품에서 삭제되었습니다.' })), call(loadItems, action)]);
 }
 
-function* selectAllBooks() {
-  const items = yield select(getItemsByPage);
+function* selectAllBooks(action) {
+  const items = yield select(getItemsByPage, action.payload.page);
   const bookIds = toFlatten(items, 'series_id');
   yield put(selectItems(bookIds));
 }

@@ -1,0 +1,8 @@
+[frontends.library]
+backend = "library"
+passHostHeader = true
+[frontends.library.routes.web]
+rule = "Host:library.local.ridi.io"
+
+[backends.library.servers.web]
+url = "http://host.docker.internal:3000"

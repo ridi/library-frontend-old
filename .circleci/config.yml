@@ -26,7 +26,7 @@ commands:
       - run:
           command: |
             sentry-cli releases new ${CIRCLE_SHA1}
-            sentry-cli releases files ${CIRCLE_SHA1} upload-sourcemaps out/
+            sentry-cli releases files ${CIRCLE_SHA1} upload-sourcemaps dist/
             sentry-cli releases finalize ${CIRCLE_SHA1}
           environment:
             SENTRY_LOG_LEVEL: debug
@@ -38,22 +38,20 @@ jobs:
     parameters:
       env:
         type: string
-        default: production
+        default: prod
     steps:
       - checkout
       - install
       - run:
-          name: Build next.js application
+          name: Run webpack
           environment:
             SENTRY_RELEASE_VERSION: ${CIRCLE_SHA1}
             NODE_ENV: <<parameters.env>>
-          command: |
-            yarn build
-            yarn export
+          command: yarn build webpack.<<parameters.env>>.js
       - persist_to_workspace:
           root: .
           paths:
-            - out
+            - dist
   deploy:
     docker:
       - image: circleci/python:3.7
@@ -87,7 +85,7 @@ jobs:
           condition: <<parameters.dev>>
           steps:
             - aws-s3/sync:
-                from: out
+                from: dist
                 to: ${S3_BUCKET_DEV}
                 aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
@@ -116,7 +114,7 @@ jobs:
           condition: <<parameters.stage>>
           steps:
             - aws-s3/sync:
-                from: out
+                from: dist
                 to: ${S3_BUCKET_PROD}/staging/
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
@@ -137,7 +135,7 @@ jobs:
           condition: <<parameters.prod>>
           steps:
             - aws-s3/sync:
-                from: out
+                from: dist
                 to: ${S3_BUCKET_PROD}
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
@@ -172,7 +170,7 @@ workflows:
             branches:
               only:
                 - master
-          env: development
+          env: dev
       - deploy:
           name: deploy-dev
           requires:

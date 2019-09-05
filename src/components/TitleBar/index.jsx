@@ -13,10 +13,10 @@ const titleBar = {
   marginTop: -1,
 };
 
-const TitleBar = ({ title, showCount, totalCount, href, as, query, showTools, toggleEditingMode }) => (
+const TitleBar = ({ backLocation, title, showCount, totalCount, showTools, toggleEditingMode }) => (
   <FlexBar
     css={titleBar}
-    flexLeft={<Title title={title} showCount={showCount} totalCount={totalCount} href={href} as={as} query={query} />}
+    flexLeft={<Title title={title} showCount={showCount} totalCount={totalCount} to={backLocation} />}
     flexRight={
       showTools ? (
         <div css={styles.toolsWrapper}>

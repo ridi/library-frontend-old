@@ -1,9 +1,8 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Router from 'next/router';
+import { withRouter } from 'react-router-dom';
 import React from 'react';
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';
-import { makeLinkProps } from '../utils/uri';
 import { MQ, Responsive } from '../styles/responsive';
 import Paginator from './Paginator';
 
@@ -40,23 +39,20 @@ export const ResponsivePaginatorWithHandler = ({ currentPage, totalPages, onPage
   );
 };
 
-const ResponsivePaginator = ({ currentPage, totalPages, href, as, query, scroll }) => {
+const ResponsivePaginator = ({ currentPage, totalPages, history, location }) => {
   const handlePageChange = React.useCallback(
     page => {
-      const newQuery = query || {};
-      const linkProps = makeLinkProps(href, as, { ...newQuery, page });
-      Router.push(linkProps.href, linkProps.as);
-
-      // next/link의 로직
-      const doScrollTop = scroll == null ? !linkProps.as.pathname.includes('#') : scroll;
-      if (doScrollTop) {
-        window.scrollTo(0, 0);
-        document.body.focus();
-      }
+      const params = new URLSearchParams(location.search);
+      params.set('page', page);
+      const search = params.toString();
+      history.push({
+        ...location,
+        search: search === '' ? '' : `?${search}`,
+      });
     },
-    [href, as, query, scroll],
+    [history, location],
   );
   return <ResponsivePaginatorWithHandler currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />;
 };
 
-export default ResponsivePaginator;
+export default withRouter(ResponsivePaginator);

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
@@ -10,104 +10,80 @@ import ResponsivePaginator from '../../components/ResponsivePaginator';
 import SerialPreferenceBooks from '../../components/SerialPreferenceBooks';
 import SerialPreferenceToolBar from '../../components/SerialPreferenceToolBar';
 import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
-import { URLMap } from '../../constants/urls';
+import { SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
-import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
 import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
-import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
+import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
+import { getIsFetchingBooks, getItemsByPage, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
 import HeartIcon from '../../svgs/HeartOutline.svg';
 import { toFlatten } from '../../utils/array';
+import { calcPage } from '../../utils/pagination';
 import Footer from '../base/Footer';
 import { TabBar, TabMenuTypes } from '../base/LNB';
 import { ResponsiveBooks } from '../base/Responsive';
 
-class SerialPreference extends React.Component {
-  static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems());
-  }
+const extractCurrentPage = locationSearch => {
+  const urlParams = new URLSearchParams(locationSearch);
+  return parseInt(urlParams.get('page'), 10) || 1;
+};
 
-  constructor(props) {
-    super(props);
+function useDispatchPage(actionDispatcher, page) {
+  return React.useCallback(() => actionDispatcher(page), [actionDispatcher, page]);
+}
 
-    this.state = {
-      isEditing: false,
-    };
-  }
+function SerialPreference(props) {
+  const { currentPage, items, totalSelectedCount } = props;
+  const { dispatchClearSelectedBooks, dispatchDeleteSelectedBooks, dispatchSelectAllBooks } = props;
+  const [isSelectMode, setIsSelectMode] = React.useState(false);
 
-  toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    const { dispatchClearSelectedBooks } = this.props;
+  const dispatchDeleteSelectedBooksWithPage = useDispatchPage(dispatchDeleteSelectedBooks, currentPage);
+  const dispatchSelectAllBooksWithPage = useDispatchPage(dispatchSelectAllBooks, currentPage);
 
-    if (isEditing === true) {
+  const toggleEditingMode = React.useCallback(
+    () => {
+      if (isSelectMode) {
+        dispatchClearSelectedBooks();
+      }
+      setIsSelectMode(!isSelectMode);
+    },
+    [dispatchClearSelectedBooks, isSelectMode],
+  );
+
+  const handleDeleteClick = React.useCallback(
+    () => {
+      dispatchDeleteSelectedBooksWithPage();
       dispatchClearSelectedBooks();
-    }
+      setIsSelectMode(false);
+    },
+    [dispatchClearSelectedBooks, dispatchDeleteSelectedBooksWithPage],
+  );
 
-    this.setState({ isEditing: !isEditing });
-  };
-
-  handleOnClickDelete = () => {
-    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    dispatchDeleteSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
-
-  makeEditingBarProps() {
-    const { items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
-
-    return {
-      totalSelectedCount,
-      isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
-      onClickUnselectAllItem: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
-  }
-
-  makeActionBarProps() {
-    const { totalSelectedCount } = this.props;
-    const disable = totalSelectedCount === 0;
-
-    return {
-      buttonProps: [
-        {
-          type: ButtonType.SPACER,
-        },
-        {
-          name: '선택 삭제',
-          type: ButtonType.DANGER,
-          onClick: this.handleOnClickDelete,
-          disable,
-        },
-      ],
-    };
-  }
-
-  renderToolBar() {
-    const { totalCount, isFetchingBooks } = this.props;
+  function renderToolBar() {
+    const { totalCount, isFetchingBooks } = props;
 
     const toolBarProps = {
       isFetchingBooks,
       totalCount,
-      toggleEditingMode: this.toggleEditingMode,
+      toggleEditingMode,
     };
 
     return <SerialPreferenceToolBar {...toolBarProps} />;
   }
 
-  renderBooks() {
-    const { isEditing: isSelectMode } = this.state;
-    const { items, toUnitIdMap, books: platformBookDTO, isFetchingBooks, viewType } = this.props;
+  function renderPaginator() {
+    const { totalCount } = props;
+    const totalPages = calcPage(totalCount, SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE);
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
+  }
 
+  function renderBooks() {
+    const { toUnitIdMap, books: platformBookDTO, isFetchingBooks } = props;
     const showSkeleton = isFetchingBooks && items.length === 0;
 
     return showSkeleton ? (
-      <SkeletonBooks viewType={viewType} />
+      <SkeletonBooks viewType={ViewType.LANDSCAPE} />
     ) : (
       <>
         <SerialPreferenceBooks
@@ -115,68 +91,74 @@ class SerialPreference extends React.Component {
           toUnitIdMap={toUnitIdMap}
           platformBookDTO={platformBookDTO}
           isSelectMode={isSelectMode}
-          viewType={viewType}
+          viewType={ViewType.LANDSCAPE}
         />
-        {this.renderPaginator()}
+        {renderPaginator()}
       </>
     );
   }
 
-  renderMain() {
-    const { items, isFetchingBooks } = this.props;
+  function renderMain() {
+    const { isFetchingBooks } = props;
 
     if (!isFetchingBooks && items.length === 0) {
       return <Empty IconComponent={HeartIcon} iconWidth={44} message="등록하신 선호 작품이 없습니다." />;
     }
 
-    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
+    return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
-  renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages },
-    } = this.props;
+  const selectModeBarProps = {
+    totalSelectedCount,
+    isSelectedAllItem: totalSelectedCount === items.length,
+    onClickSelectAllItem: dispatchSelectAllBooksWithPage,
+    onClickUnselectAllItem: dispatchClearSelectedBooks,
+    onClickSuccessButton: toggleEditingMode,
+  };
 
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.serialPreference.href}
-        as={URLMap.serialPreference.as}
-      />
-    );
-  }
+  const actionBarProps = {
+    buttonProps: [
+      {
+        type: ButtonType.SPACER,
+      },
+      {
+        name: '선택 삭제',
+        type: ButtonType.DANGER,
+        onClick: handleDeleteClick,
+        disable: totalSelectedCount === 0,
+      },
+    ],
+  };
 
-  render() {
-    const { isEditing } = this.state;
-
-    return (
-      <>
-        <Head>
-          <title>선호 작품 - 내 서재</title>
-        </Head>
-        <TabBar activeMenu={TabMenuTypes.SERIAL_PREFERENCE} />
-        <Editable
-          allowFixed
-          isEditing={isEditing}
-          nonEditBar={this.renderToolBar()}
-          editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.makeActionBarProps()}
-        >
-          <main>{this.renderMain()}</main>
-          <Footer />
-        </Editable>
-      </>
-    );
-  }
+  return (
+    <>
+      <Helmet>
+        <title>선호 작품 - 내 서재</title>
+      </Helmet>
+      <TabBar activeMenu={TabMenuTypes.SERIAL_PREFERENCE} />
+      <Editable
+        allowFixed
+        isEditing={isSelectMode}
+        nonEditBar={renderToolBar()}
+        editingBarProps={selectModeBarProps}
+        actionBarProps={actionBarProps}
+      >
+        <main>{renderMain()}</main>
+        <Footer />
+      </Editable>
+    </>
+  );
 }
 
-const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
-  const items = getItemsByPage(state);
+SerialPreference.prepare = async ({ dispatch, location }) => {
+  await dispatch(clearSelectedItems());
+  await dispatch(loadItems(extractCurrentPage(location.search)));
+};
 
+const mapStateToProps = (state, props) => {
+  const currentPage = extractCurrentPage(props.location.search);
+  const items = getItemsByPage(state, currentPage);
   const seriesBookIds = toFlatten(items, 'series_id');
-
   const toUnitIdMap = getUnitIdsMap(state, seriesBookIds);
   const books = getBooks(state, [...seriesBookIds, ...toFlatten(items, 'recent_read_b_id')]);
   const totalCount = getTotalCount(state);
@@ -184,14 +166,13 @@ const mapStateToProps = state => {
   const isFetchingBooks = getIsFetchingBooks(state);
 
   return {
-    pageInfo,
     items,
     toUnitIdMap,
     books,
+    currentPage,
     totalCount,
     totalSelectedCount,
     isFetchingBooks,
-    viewType: ViewType.LANDSCAPE,
   };
 };
 

@@ -1,0 +1,47 @@
+<% var title = '내 서재'; %>
+<% var keyword = '구매 목록, 리디 내 서재, 내 서재'; %>
+<% var description = '리디북스에서 구매하고 리디셀렉트에서 추가한 모든 책. 이제 내 서재에서 한 번에 즐겨보세요!'; %>
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+    <title>내 서재</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-title" content="<%= title %>" />
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+    <meta name="keywords" content="<%= keyword %>" />
+    <meta name="description" content="<%= description %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@ridibooks" />
+    <meta property="fb:app_id" content="208688205808637" />
+    <meta property="og:url" content="<%= htmlWebpackPlugin.options.libraryBaseUrl %>" />
+    <meta property="og:title" content="<%= title %> - 리디" />
+    <meta property="og:image" content="<%= require('./static/OG/library.jpg') %>" />
+    <meta property="og:description" content="<%= description %>" />
+    <link rel="icon" type="image/x-icon" href="<%= require('./static/favicon/favicon.ico') %>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= require('./static/favicon/apple-touch-icon.png') %>" />
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= require('./static/favicon/favicon-32x32.png') %>" />
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= require('./static/favicon/favicon-16x16.png') %>" />
+    <link rel="manifest" href="<%= require('./static/favicon/site.webmanifest.json') %>" />
+    <link rel="mask-icon" href="<%= require('./static/favicon/safari-pinned-tab.svg') %>" color="#5bbad5" />
+    <meta name="msapplication-config" content="<%= require('./static/favicon/browserconfig.xml') %>" />
+    <meta name="theme-color" content="#ffffff" />
+    <script>if (window.navigator.userAgent.indexOf('MSIE ') > 0) location.replace('<%= htmlWebpackPlugin.options.storeStaticUrl %>/pages/end_support_ie.html');</script>
+    <script type="application/ld+json">{
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "<%= htmlWebpackPlugin.options.libraryBaseUrl %>",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "<%= htmlWebpackPlugin.options.libraryBaseUrl %>/books/search/?keyword={keyword}&amp;referer=sitelinks_searchbox",
+        "query-input": "required name=keyword"
+      }
+    }</script>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>

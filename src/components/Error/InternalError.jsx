@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
+import Helmet from 'react-helmet';
 import ErrorBook from '../../svgs/ErrorBook.svg';
 import * as styles from './styles';
 
@@ -10,9 +10,9 @@ const onClickReload = () => {
 
 export const InternalError = () => (
   <>
-    <Head>
+    <Helmet>
       <title>500 에러 - 내 서재</title>
-    </Head>
+    </Helmet>
     <section css={styles.pageError}>
       <div>
         <ErrorBook css={styles.icon} />

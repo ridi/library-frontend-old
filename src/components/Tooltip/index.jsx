@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { isBefore } from 'date-fns';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CheckIcon from '../../svgs/Check.svg';
 import * as toolTipStyles from './styles';
 import { TooltipBackground } from './TooltipBackground';
@@ -43,7 +43,7 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
   };
 
   return isActive ? (
-    <>
+    <React.Fragment>
       <div css={[toolTipStyles.tooltip(isActive, horizontalAlign), style]}>
         {children}
         <div css={toolTipStyles.checkIconWrapper}>
@@ -51,6 +51,6 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
         </div>
       </div>
       <TooltipBackground isActive={isActive} onClickTooltipBackground={onClickTooltipBackground} />
-    </>
+    </React.Fragment>
   ) : null;
 };

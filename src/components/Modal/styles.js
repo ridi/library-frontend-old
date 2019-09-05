@@ -1,6 +1,7 @@
 import { css, keyframes } from '@emotion/core';
-import config from '../../config';
 import { Hoverable } from '../../styles/responsive';
+
+import graySpinner from '../../static/spinner/gray_spinner.gif';
 
 export const Align = {
   Left: 'left',
@@ -94,7 +95,7 @@ export const spinner = showSpinner =>
           left: 0,
           top: 0,
           content: `''`,
-          background: `url(${config.STATIC_URL}/static/spinner/gray_spinner.gif) center no-repeat`,
+          background: `url(${graySpinner}) center no-repeat`,
           backgroundColor: 'rgba(255, 255, 255, .9)',
           backgroundSize: '22px 22px',
           width: '100%',

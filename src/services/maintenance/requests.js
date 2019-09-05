@@ -4,6 +4,8 @@ import { isNowBetween } from '../../utils/datetime';
 import { notifySentry } from '../../utils/sentry';
 import { makeURI } from '../../utils/uri';
 
+import maintenanceUrl from '../../static/maintenance.json';
+
 const maintenanceStatus = (visible = false, terms = '', unavailableServiceList = []) => ({
   visible,
   terms,
@@ -12,7 +14,7 @@ const maintenanceStatus = (visible = false, terms = '', unavailableServiceList =
 
 export const getStaticMaintenanceStatus = () =>
   axios
-    .get(makeURI('/static/maintenance.json', {}, config.STATIC_URL))
+    .get(makeURI(maintenanceUrl, {}))
     .then(({ data }) => {
       const maintenanceData = data || {};
       const { start, end, terms, unavailableServiceList } = maintenanceData;

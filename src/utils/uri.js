@@ -25,9 +25,6 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
   )}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=${packageName};end`;
 };
 
-export const makeLoginURI = (authorizeURI, clientId, redirectURI) =>
-  `${authorizeURI}?client_id=${clientId}&response_type=code&redirect_uri=${redirectURI}`;
-
 export const makeLibraryLoginURI = (libraryURI, next) => `${libraryURI}?next=${next}`;
 
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
@@ -39,32 +36,22 @@ export const makeRidiSelectUri = bookId => `${config.SELECT_BASE_URL}/book/${boo
 export const makeRidiStoreUri = bookId => `${config.STORE_API_BASE_URL}/v2/Detail?id=${bookId}`;
 
 export const makeLinkProps = (href, as, query) => {
-  const _query = typeof query === 'object' ? snakelize(query) : null;
-
-  const _href = {
-    pathname: href,
-    query: _query,
-  };
-  if (typeof href === 'object') {
-    _href.pathname = href.pathname;
-    if (typeof href.query === 'object') {
-      _href.query = { ...snakelize(href.query), ..._query };
+  const snakeQuery = typeof query === 'object' ? snakelize(query) : {};
+  const searchParams = new URLSearchParams();
+  for (const [k, v] of Object.entries(snakeQuery).filter(([, x]) => x != null)) {
+    searchParams.append(k, v);
+  }
+  if (typeof as.query === 'object') {
+    for (const [k, v] of Object.entries(snakelize(as.query)).filter(([, x]) => x != null)) {
+      searchParams.append(k, v);
     }
   }
+  const search = searchParams.toString();
 
-  const _as = {
-    pathname: as,
-    query: _query,
+  const to = {
+    pathname: as.pathname || as,
+    search: search !== '' ? `?${search}` : '',
   };
-  if (typeof as === 'object') {
-    _as.pathname = as.pathname;
-    if (typeof as.query === 'object') {
-      _as.query = { ...snakelize(as.query), ..._query };
-    }
-  }
 
-  return {
-    href: _href,
-    as: _as,
-  };
+  return { to };
 };

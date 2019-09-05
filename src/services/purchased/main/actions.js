@@ -7,19 +7,19 @@ export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
 export const DOWNLOAD_SELECTED_MAIN_BOOKS = 'DOWNLOAD_SELECTED_MAIN_BOOKS';
 
-export const SET_IS_FETCHING_BOOKS = 'SET_IS_FETCHING_BOOKS';
+export const SET_MAIN_IS_FETCHING_BOOKS = 'SET_MAIN_IS_FETCHING_BOOKS';
 
-export const loadItems = (payload, isServer = false) => ({
+export const loadItems = pageOptions => ({
   type: LOAD_MAIN_ITEMS,
   payload: {
-    ...payload,
-    isServer,
+    pageOptions,
   },
 });
 
-export const updateItems = ({ items, unitTotalCount, itemTotalCount, filterOptions }) => ({
+export const updateItems = ({ pageOptions, items, unitTotalCount, itemTotalCount, filterOptions }) => ({
   type: UPDATE_MAIN_ITEMS,
   payload: {
+    pageOptions,
     items,
     unitTotalCount,
     itemTotalCount,
@@ -27,20 +27,29 @@ export const updateItems = ({ items, unitTotalCount, itemTotalCount, filterOptio
   },
 });
 
-export const selectAllBooks = () => ({
+export const selectAllBooks = pageOptions => ({
   type: SELECT_ALL_MAIN_BOOKS,
+  payload: {
+    pageOptions,
+  },
 });
 
-export const hideSelectedBooks = () => ({
+export const hideSelectedBooks = pageOptions => ({
   type: HIDE_SELECTED_MAIN_BOOKS,
+  payload: {
+    pageOptions,
+  },
 });
 
-export const downloadSelectedBooks = () => ({
+export const downloadSelectedBooks = pageOptions => ({
   type: DOWNLOAD_SELECTED_MAIN_BOOKS,
+  payload: {
+    pageOptions,
+  },
 });
 
 export const setIsFetchingBooks = isFetchingBooks => ({
-  type: SET_IS_FETCHING_BOOKS,
+  type: SET_MAIN_IS_FETCHING_BOOKS,
   payload: {
     isFetchingBooks,
   },

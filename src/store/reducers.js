@@ -10,12 +10,9 @@ import maintenanceReducer from '../services/maintenance/reducers';
 import promptReducer from '../services/prompt/reducers';
 import purchasedCommonReducer from '../services/purchased/common/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
-import purchasedHiddenUnitReducer from '../services/purchased/hiddenUnit/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
-import purchasedMainUnitReducer from '../services/purchased/mainUnit/reducers';
 import purchasedSearchReducer from '../services/purchased/search/reducers';
-import purchasedSearchUnitReducer from '../services/purchased/searchUnit/reducers';
-import routerReducer from '../services/router/reducers';
+import unitPageReducer from '../services/unitPage/reducers';
 import selectionReducer from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
 import shelfReducer from '../services/shelf/reducers';
@@ -30,11 +27,9 @@ export default combineReducers({
 
   purchasedCommon: purchasedCommonReducer,
   purchasedMain: purchasedMainReducer,
-  purchasedMainUnit: purchasedMainUnitReducer,
   purchasedSearch: purchasedSearchReducer,
-  purchasedSearchUnit: purchasedSearchUnitReducer,
   purchasedHidden: purchasedHiddenReducer,
-  purchasedHiddenUnit: purchasedHiddenUnitReducer,
+  unitPage: unitPageReducer,
 
   serialPreference: serialPreferenceReducer,
   shelf: shelfReducer,
@@ -44,7 +39,6 @@ export default combineReducers({
 
   maintenance: maintenanceReducer,
 
-  router: routerReducer,
   toast: toastReducer,
   confirm: confirmReducer,
   dialog: dialogReducer,
