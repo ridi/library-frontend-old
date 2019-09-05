@@ -18,5 +18,5 @@
   "ridi_oauth2_client_id": "ePgbKKRyPvdAFzTvFg2DvrS7GenfstHdkQ2uvFNd",
   "select_base_url": "https://select.ridibooks.com",
   "sentry_dsn": "https://8264e07c33fd4fb2a874bc637dd94aae@sentry.io/1335489",
-  "static_url": "https://library.ridicdn.net/staging"
+  "static_url": "https://library.ridicdn.net/staging/"
 }
