@@ -102,6 +102,11 @@ function SelectShelfModalInner(props) {
     onPageOptionsChange(newPageOptions);
   }, []);
 
+  const handleSyncClick = () => {
+    loadShelves({ orderBy, orderDirection, page });
+    loadShelfCount();
+  };
+
   function renderToolBar() {
     const { onBackClick } = props;
     const orderOptions = OrderOptions.toShelves();
@@ -109,7 +114,13 @@ function SelectShelfModalInner(props) {
     const right = (
       <div css={toolsWrapper}>
         <Tool.Add onClickAddButton={handleAddShelf} />
-        <Tool.ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
+        <Tool.ShelfOrder
+          order={order}
+          orderOptions={orderOptions}
+          onOrderOptionClick={handleOrderOptionClick}
+          onSyncClick={handleSyncClick}
+          syncing={shelves.loading}
+        />
       </div>
     );
     return (
