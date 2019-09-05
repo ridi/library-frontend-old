@@ -343,12 +343,12 @@ function* removeSelectedFromShelf({ payload }) {
       put(selectionActions.clearSelectedItems()),
       call(deleteShelfItem, { payload: { uuid, units } }),
     ]);
+    yield call(loadShelfBooks, { payload: { uuid, ...pageOptions } });
     yield put(
       toastActions.showToast({
         message: '책장에서 삭제했습니다.',
       }),
     );
-    yield put(actions.loadShelfBooks(uuid, pageOptions));
   } catch (err) {
     console.error(err);
     yield put(
