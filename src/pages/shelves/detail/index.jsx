@@ -311,7 +311,7 @@ const getUuid = matchParams => matchParams?.uuid;
 ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
   const pageOptions = extractPageOptions(location.search);
   const uuid = getUuid(matchData.params);
-
+  dispatch(selectionActions.clearSelectedItems());
   dispatch(actions.loadShelfBooks(uuid, pageOptions));
   dispatch(actions.loadShelfBookCount(uuid));
 };
