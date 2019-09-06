@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, matchPath } from 'react-router-dom';
 import NotFound from './pages/errors/notFound';
+import Login from './pages/login';
 import PurchasedHidden from './pages/purchased/hidden';
 import PurchasedMain from './pages/purchased/main';
 import PurchasedSearch from './pages/purchased/search';
@@ -14,6 +15,11 @@ const routes = [
   {
     component: PurchasedMain,
     path: '/',
+    exact: true,
+  },
+  {
+    component: Login,
+    path: '/login',
     exact: true,
   },
   {

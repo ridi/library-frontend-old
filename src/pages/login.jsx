@@ -2,9 +2,11 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import config from '../config';
-import { PageType, URLMap } from '../constants/urls';
 import Footer from './base/Footer';
+import * as accountSelectors from '../services/account/selectors';
 
 const fixedStyle = {
   borderTop: '1px solid #d1d5d9',
@@ -61,7 +63,7 @@ const signupButtonStyle = {
 };
 
 function Login(props) {
-  const next = props.location;
+  const { location: next, needLogin } = props;
   const returnUrl = new URL(next.pathname, config.BASE_URL);
   returnUrl.search = next.search;
   returnUrl.hash = next.hash;
@@ -73,6 +75,10 @@ function Login(props) {
   loginUrl.searchParams.set('response_type', 'code');
   const signupUrl = new URL('/account/signup', config.STORE_API_BASE_URL);
   signupUrl.searchParams.set('return_url', returnUrlString);
+
+  if (!needLogin) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <>
@@ -103,4 +109,10 @@ function Login(props) {
   );
 }
 
-export default Login;
+function mapStateToProps(state) {
+  return {
+    needLogin: accountSelectors.getNeedLogin(state),
+  };
+}
+
+export default connect(mapStateToProps)(Login);
