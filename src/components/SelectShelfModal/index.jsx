@@ -56,12 +56,28 @@ function SelectShelfModalInner(props) {
     showPrompt,
     showToast,
     totalShelfCount,
+    validateShelvesLimit,
   } = props;
   const totalPages = totalShelfCount == null ? null : paginationUtils.calcPage(totalShelfCount, SHELVES_LIMIT_PER_PAGE);
   const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
+  const pageOptions = { orderBy, orderDirection, page };
+
   const handleAddShelf = React.useCallback(
     () => {
-      if (totalShelfCount < SHELVES_LIMIT) {
+      const validateAddShelf = onValid => {
+        validateShelvesLimit({
+          onValid,
+          onInvalid: () => {
+            loadShelves(pageOptions);
+            showToast({
+              message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
+              toastStyle: ToastStyle.RED,
+            });
+          },
+        });
+      };
+
+      validateAddShelf(() => {
         showPrompt({
           title: '새 책장 추가',
           message: '새 책장의 이름을 입력해주세요.',
@@ -69,15 +85,12 @@ function SelectShelfModalInner(props) {
           emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
           limit: SHELF_NAME_LIMIT,
           onClickConfirmButton: shelfName => {
-            addShelf({ name: shelfName, pageOptions: { orderBy, orderDirection, page } });
+            validateAddShelf(() => {
+              addShelf({ name: shelfName, pageOptions });
+            });
           },
         });
-      } else {
-        showToast({
-          message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
-          toastStyle: ToastStyle.RED,
-        });
-      }
+      });
     },
     [orderBy, orderDirection, page, totalShelfCount],
   );
@@ -88,7 +101,7 @@ function SelectShelfModalInner(props) {
 
   React.useEffect(
     () => {
-      loadShelves({ orderBy, orderDirection, page });
+      loadShelves(pageOptions);
     },
     [orderBy, orderDirection, page],
   );
@@ -102,6 +115,11 @@ function SelectShelfModalInner(props) {
     onPageOptionsChange(newPageOptions);
   }, []);
 
+  const handleSyncClick = () => {
+    loadShelves(pageOptions);
+    loadShelfCount();
+  };
+
   function renderToolBar() {
     const { onBackClick } = props;
     const orderOptions = OrderOptions.toShelves();
@@ -109,7 +127,13 @@ function SelectShelfModalInner(props) {
     const right = (
       <div css={toolsWrapper}>
         <Tool.Add onClickAddButton={handleAddShelf} />
-        <Tool.ShelfOrder order={order} orderOptions={orderOptions} onClickOrderOption={handleOrderOptionClick} />
+        <Tool.ShelfOrder
+          order={order}
+          orderOptions={orderOptions}
+          onOrderOptionClick={handleOrderOptionClick}
+          onSyncClick={handleSyncClick}
+          syncing={shelves.loading}
+        />
       </div>
     );
     return (
@@ -172,6 +196,7 @@ const mapDispatchToProps = {
   showPrompt: promptActions.showPrompt,
   showToast: toastActions.showToast,
   addShelf: shelfActions.addShelf,
+  validateShelvesLimit: shelfActions.validateShelvesLimit,
 };
 
 const SelectShelfModal = connect(
