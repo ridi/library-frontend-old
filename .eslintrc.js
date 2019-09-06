@@ -76,6 +76,12 @@ module.exports = {
 
     // account team rules
     'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
     'no-underscore-dangle': 'off',
     'no-case-declarations': 'off',
 
