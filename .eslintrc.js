@@ -14,7 +14,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['import', 'prettier'],
+  plugins: ['import', 'prettier', 'react'],
   settings: {
     'import/resolver': {
       webpack: {
