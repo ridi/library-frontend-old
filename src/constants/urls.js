@@ -30,6 +30,7 @@ export const URLMap = {
   },
   [PageType.LOGIN]: {
     href: '/login',
+    path: '/login',
     as: '/login',
     regex: /^\/login\/?$/,
   },
@@ -40,6 +41,7 @@ export const URLMap = {
   },
   [PageType.MAIN_UNIT]: {
     href: '/purchased/mainUnit',
+    path: '/books/:unitId',
     as: ({ unitId }) => `/books/${unitId}/`,
     regex: /^\/books\/(\d+)\/?$/,
     keys: ['unitId'],
@@ -51,6 +53,7 @@ export const URLMap = {
   },
   [PageType.SEARCH_UNIT]: {
     href: '/purchased/searchUnit',
+    path: '/books/search/:unitId',
     as: ({ unitId }) => `/books/search/${unitId}`,
     regex: /^\/books\/search\/(\d+)\/?$/,
     keys: ['unitId'],
@@ -62,6 +65,7 @@ export const URLMap = {
   },
   [PageType.HIDDEN_UNIT]: {
     href: '/purchased/hiddenUnit',
+    path: '/books/hidden/:unitId',
     as: ({ unitId }) => `/books/hidden/${unitId}`,
     regex: /^\/books\/hidden\/(\d+)\/?$/,
     keys: ['unitId'],
@@ -90,6 +94,7 @@ export const URLMap = {
   },
   [PageType.SHELF_UNIT]: {
     href: '/purchased/searchUnit',
+    path: '/shelf/:uuid/:unitId',
     as: ({ uuid, unitId }) => `/shelf/${uuid}/${unitId}`,
     regex: /^\/shelf\/([0-9a-f-]+)\/(\d+)\/?$/,
     keys: ['uuid', 'unitId'],

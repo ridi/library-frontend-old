@@ -2,24 +2,19 @@ version: '3.7'
 
 services:
   library-web:
-    image: node:10
+    image: node:12-alpine
     container_name: library-web
     volumes:
-      - .:/htdocs/www
-    working_dir: /htdocs/www
-    init: true
-    command: ['make', 'docker-all']
-
-  library-web-nginx:
-    image: nginx:stable
-    container_name: library-web-nginx
-    restart: always
-    volumes:
-      - ./docs/dev/nginx/dynamic.conf:/etc/nginx/conf.d/dynamic.conf:ro
-      - ./docs/dev/cert:/etc/nginx/cert/:ro
+      - .:/app:ro
+      - /app/node_modules
+    working_dir: /app
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=${EXTERNAL_NETWORK:-ridi}'
+      - 'traefik.frontend.rule=Host:library.local.ridi.io'
+    networks:
+      - traefik
     ports:
-      - 443:443
-    depends_on:
-      - library-web
-    links:
-      - library-web
+      - 3000
+    init: true
+    entrypoint: /app/docker/run-dev.sh

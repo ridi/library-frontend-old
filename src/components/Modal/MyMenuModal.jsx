@@ -40,10 +40,10 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.READING_NOTE_URL} />
+          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.RIDI_READING_NOTE_URL} />
         </li>
         <li>
-          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.REVIEW_URL} />
+          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.RIDI_REVIEW_URL} />
         </li>
       </ul>
     </ModalItemGroup>
@@ -60,7 +60,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       </ul>
     </ModalItemGroup>
     <ModalItemGroup>
-      <ModalAnchorItem title="로그아웃" IconComponent={Logout} href={config.LOGOUT_URL} />
+      <ModalAnchorItem title="로그아웃" IconComponent={Logout} href={config.RIDI_LOGOUT_URL} />
     </ModalItemGroup>
   </Modal>
 );

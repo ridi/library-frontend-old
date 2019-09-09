@@ -7,12 +7,10 @@ export const initialState = {
   isFetchingBooks: false,
 };
 
-export const initialDataState = {
+export const createInitialDataState = () => ({
   itemIdsForPage: {},
   items: {},
-
-  page: 1,
   totalCount: 0,
-};
+});
 
 export const getKey = () => _DEFAULT_KEY;

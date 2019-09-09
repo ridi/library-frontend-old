@@ -1,14 +1,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
+import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
@@ -19,19 +20,33 @@ import { getUnits } from '../../../services/book/selectors';
 import { showConfirm } from '../../../services/confirm/actions';
 import * as featureSelectors from '../../../services/feature/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
-import { getIsFetchingBooks, getItemsByPage, getPageInfo, getTotalCount } from '../../../services/purchased/hidden/selectors';
-import { getPageInfo as getMainPageInfo } from '../../../services/purchased/main/selectors';
+import { getIsFetchingBooks, getItemsByPage, getTotalCount, getTotalPages } from '../../../services/purchased/hidden/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import { toFlatten } from '../../../utils/array';
-import { makeLinkProps } from '../../../utils/uri';
 import { ResponsiveBooks } from '../../base/Responsive';
 
+function extractOptions({ location }) {
+  const searchParams = new URLSearchParams(location.search);
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  return { page };
+}
+
+function makeBackLocation({ location }) {
+  if (location.state?.backLocation != null) {
+    return location.state.backLocation;
+  }
+  return {
+    pathname: URLMap.main.as,
+  };
+}
+
 class Hidden extends React.Component {
-  static async getInitialProps({ store }) {
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems());
+  static async prepare({ dispatch, location }) {
+    const { page } = extractOptions({ location });
+    dispatch(clearSelectedItems());
+    dispatch(loadItems(page));
   }
 
   constructor(props) {
@@ -53,17 +68,17 @@ class Hidden extends React.Component {
   };
 
   handleOnClickUnhide = () => {
-    const { dispatchUnhideSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    const { currentPage, dispatchUnhideSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchUnhideSelectedBooks();
+    dispatchUnhideSelectedBooks(currentPage);
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
 
   deleteSelectedBooks = () => {
-    const { dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
+    const { currentPage, dispatchDeleteSelectedBooks, dispatchClearSelectedBooks } = this.props;
 
-    dispatchDeleteSelectedBooks();
+    dispatchDeleteSelectedBooks(currentPage);
     dispatchClearSelectedBooks();
     this.setState({ isEditing: false });
   };
@@ -84,15 +99,29 @@ class Hidden extends React.Component {
     });
   };
 
+  handleRefreshClick = () => this.props.dispatchLoadItems(this.props.currentPage);
+
+  handleSelectAllBooks = () => this.props.dispatchSelectAllBooks(this.props.currentPage);
+
+  linkBuilder = libraryBookData => {
+    const to = {
+      pathname: URLMap.hiddenUnit.as({ unitId: libraryBookData.unit_id }),
+      state: {
+        backLocation: this.props.location,
+      },
+    };
+    return <Link to={to}>더보기</Link>;
+  };
+
   makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
+    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchClearSelectedBooks } = this.props;
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
+      onClickSelectAllItem: this.handleSelectAllBooks,
       onClickUnselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: this.toggleEditingMode,
     };
@@ -123,18 +152,13 @@ class Hidden extends React.Component {
   }
 
   renderTitleBar() {
-    const {
-      totalCount,
-      mainPageInfo: { currentPage: page, orderType, orderBy, filter },
-    } = this.props;
+    const { location, totalCount } = this.props;
 
     const titleBarProps = {
+      backLocation: makeBackLocation({ location }),
       title: '숨긴 도서 목록',
       showCount: totalCount.itemTotalCount > 0,
       totalCount: totalCount.itemTotalCount,
-      href: URLMap.main.href,
-      as: URLMap.main.as,
-      query: { page, orderType, orderBy, filter },
       edit: true,
       showTools: true,
       toggleEditingMode: this.toggleEditingMode,
@@ -146,21 +170,6 @@ class Hidden extends React.Component {
   renderBooks() {
     const { isEditing: isSelectMode } = this.state;
     const { items: libraryBookDTO, units, isFetchingBooks, viewType } = this.props;
-    const linkBuilder = () => libraryBookData => {
-      const linkProps = makeLinkProps(
-        {
-          pathname: URLMap.hiddenUnit.href,
-          query: { unitId: libraryBookData.unit_id },
-        },
-        URLMap.hiddenUnit.as({ unitId: libraryBookData.unit_id }),
-      );
-
-      return (
-        <Link prefetch {...linkProps}>
-          <a>더보기</a>
-        </Link>
-      );
-    };
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     return showSkeleton ? (
@@ -173,7 +182,7 @@ class Hidden extends React.Component {
             units,
             isSelectMode,
             viewType,
-            linkBuilder: linkBuilder(),
+            linkBuilder: this.linkBuilder,
           }}
         />
         {this.renderPaginator()}
@@ -182,15 +191,16 @@ class Hidden extends React.Component {
   }
 
   renderPaginator() {
-    const {
-      pageInfo: { currentPage, totalPages },
-    } = this.props;
-
-    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} href={URLMap.hidden.href} as={URLMap.hidden.as} />;
+    const { currentPage, totalPages } = this.props;
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
   renderMain() {
-    const { items, isFetchingBooks } = this.props;
+    const { isFetchingBooks, isError, items } = this.props;
+
+    if (isError) {
+      return <BookError onClickRefreshButton={this.handleRefreshClick} />;
+    }
 
     if (!isFetchingBooks && items.length === 0) {
       return <Empty IconComponent={BookOutline} message="숨긴 도서가 없습니다." />;
@@ -201,13 +211,14 @@ class Hidden extends React.Component {
 
   render() {
     const { isEditing } = this.state;
-    const { isError, dispatchLoadItems } = this.props;
+    const { currentPage, totalPages } = this.props;
 
     return (
       <>
-        <Head>
+        <Helmet>
           <title>숨긴 도서 목록 - 내 서재</title>
-        </Head>
+        </Helmet>
+        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
         <Editable
           allowFixed
           isEditing={isEditing}
@@ -215,32 +226,32 @@ class Hidden extends React.Component {
           editingBarProps={this.makeEditingBarProps()}
           actionBarProps={this.makeActionBarProps()}
         >
-          <main>{isError ? <BookError onClickRefreshButton={() => dispatchLoadItems()} /> : this.renderMain()}</main>
+          <main>{this.renderMain()}</main>
         </Editable>
       </>
     );
   }
 }
 
-const mapStateToProps = state => {
-  const pageInfo = getPageInfo(state);
-  const items = getItemsByPage(state);
+const mapStateToProps = (state, props) => {
+  const { page: currentPage } = extractOptions(props);
+  const items = getItemsByPage(state, currentPage);
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalCount = getTotalCount(state);
+  const totalPages = getTotalPages(state);
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
-  const mainPageInfo = getMainPageInfo(state);
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   return {
-    pageInfo,
+    currentPage,
     items,
     units,
     totalCount,
+    totalPages,
     totalSelectedCount,
     isFetchingBooks,
-    mainPageInfo,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
     isSyncShelfEnabled,

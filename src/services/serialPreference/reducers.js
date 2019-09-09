@@ -1,18 +1,17 @@
 import produce from 'immer';
 import { toDict, toFlatten } from '../../utils/array';
 import {
-  SET_IS_FETCHING_BOOKS,
+  SET_SERIAL_IS_FETCHING_BOOKS,
   SET_SERIAL_PREFERENCE_ITEMS,
-  SET_SERIAL_PREFERENCE_PAGE,
   SET_SERIAL_PREFERENCE_TOTAL_COUNT,
   SET_SERIAL_UNIT_ID_MAP,
 } from './actions';
-import { getKey, initialDataState, initialState } from './state';
+import { createInitialDataState, getKey, initialState } from './state';
 
 const serialPreferenceReducer = produce((draft, action) => {
   const key = getKey(draft);
   if (draft.data[key] == null) {
-    draft.data[key] = { ...initialDataState };
+    draft.data[key] = createInitialDataState();
   }
   switch (action.type) {
     case SET_SERIAL_PREFERENCE_ITEMS:
@@ -20,13 +19,10 @@ const serialPreferenceReducer = produce((draft, action) => {
         ...draft.data[key].items,
         ...toDict(action.payload.items, 'series_id'),
       };
-      draft.data[key].itemIdsForPage[draft.data[key].page] = toFlatten(action.payload.items, 'series_id');
+      draft.data[key].itemIdsForPage[action.payload.page] = toFlatten(action.payload.items, 'series_id');
       break;
     case SET_SERIAL_PREFERENCE_TOTAL_COUNT:
       draft.data[key].totalCount = action.payload.totalCount;
-      break;
-    case SET_SERIAL_PREFERENCE_PAGE:
-      draft.data[key].page = action.payload.page;
       break;
     case SET_SERIAL_UNIT_ID_MAP:
       draft.unitIdMap = {
@@ -34,7 +30,7 @@ const serialPreferenceReducer = produce((draft, action) => {
         ...action.payload.unitIdMap,
       };
       break;
-    case SET_IS_FETCHING_BOOKS:
+    case SET_SERIAL_IS_FETCHING_BOOKS:
       draft.isFetchingBooks = action.payload.isFetchingBooks;
       break;
     default:

@@ -1,8 +1,0 @@
-version: '2'
-
-services:
-  www:
-    image: ${ECR_REPO_URL}/${ENVIRONMENT}/library_web/www:${TAG}
-    command: ["pm2-runtime", "start", "pm2.config.js", "--only", "App", "--env", "${ENVIRONMENT}"]
-  nginx:
-    image: ${ECR_REPO_URL}/${ENVIRONMENT}/library_web/nginx:${TAG}

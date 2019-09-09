@@ -1,11 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { confirmHideAllExpiredBooks } from '../../services/purchased/common/actions';
 import { setViewType } from '../../services/ui/actions';
+import { makeLinkProps } from '../../utils/uri';
 
 const MoreModal = ({
   order,
@@ -19,6 +21,7 @@ const MoreModal = ({
   showViewType,
   showOrder,
   showHidden,
+  location,
 }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground}>
     {showViewType ? (
@@ -52,22 +55,14 @@ const MoreModal = ({
     {showOrder ? (
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
-          {orderOptions.map(option => (
-            <li key={option.key}>
-              <ModalLinkItem
-                title={option.title}
-                isSelected={option.key === order}
-                href={URLMap.main.href}
-                as={URLMap.main.as}
-                query={{
-                  ...query,
-                  orderType: option.orderType,
-                  orderBy: option.orderBy,
-                }}
-                replace
-              />
-            </li>
-          ))}
+          {orderOptions.map(option => {
+            const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderType: option.orderType, orderBy: option.orderBy });
+            return (
+              <li key={option.key}>
+                <ModalLinkItem title={option.title} isSelected={option.key === order} to={to} replace />
+              </li>
+            );
+          })}
         </ul>
       </ModalItemGroup>
     ) : null}
@@ -81,7 +76,15 @@ const MoreModal = ({
           }}
           replace
         />
-        <ModalLinkItem title="숨긴 도서 목록" href={URLMap.hidden.href} as={URLMap.hidden.as} />
+        <ModalLinkItem
+          title="숨긴 도서 목록"
+          to={{
+            pathname: URLMap.hidden.as,
+            state: {
+              backLocation: location,
+            },
+          }}
+        />
       </ModalItemGroup>
     ) : null}
   </Modal>
@@ -96,7 +99,9 @@ const mapDispatchToProps = {
   dispatchConfirmHideAllExpiredBooks: confirmHideAllExpiredBooks,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MoreModal);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(MoreModal),
+);

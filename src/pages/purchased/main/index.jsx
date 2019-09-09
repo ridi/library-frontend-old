@@ -1,15 +1,16 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
+import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SelectShelfModal from '../../../components/SelectShelfModal';
@@ -24,13 +25,10 @@ import * as featureSelectors from '../../../services/feature/selectors';
 import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
-  getFilter,
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
   getLastBookIdsByPage,
-  getOrder,
-  getPage,
   getTotalPages,
   getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
@@ -38,190 +36,79 @@ import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
-import { makeLinkProps } from '../../../utils/uri';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 
-class Main extends React.PureComponent {
-  static async getInitialProps({ query, req, store }) {
-    const isServer = Boolean(req);
+function extractPageOptions(location) {
+  const urlParams = new URLSearchParams(location.search);
+  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
+  const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
+  const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
+  const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
+  return { page: currentPage, orderType, orderBy, categoryFilter };
+}
 
-    const currentPage = parseInt(query.page, 10) || 1;
-    const { order_type: orderType = OrderOptions.DEFAULT.orderType, order_by: orderBy = OrderOptions.DEFAULT.orderBy } = query;
-    const categoryFilter = parseInt(query.filter, 10) || null;
+function useDispatchOptions(actionDispatcher, options) {
+  const { page, orderType, orderBy, categoryFilter } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, page, orderType, orderBy, categoryFilter]);
+}
 
-    const params = { currentPage, orderType, orderBy, categoryFilter };
-    await store.dispatch(clearSelectedItems());
-    await store.dispatch(loadItems(params, isServer));
+function PurchasedMain(props) {
+  const { listInstruction, location, totalPages } = props;
+  const {
+    dispatchAddSelectedToShelf,
+    dispatchClearSelectedBooks,
+    dispatchDownloadSelectedBooks,
+    dispatchHideSelectedBooks,
+    dispatchSelectAllBooks,
+  } = props;
+
+  const pageOptions = extractPageOptions(location);
+  const { page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
+
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [showShelves, setShowShelves] = React.useState(false);
+
+  const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
+  const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
+  const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
+
+  const linkBuilder = React.useCallback(
+    libraryBookData => {
+      const order = OrderOptions.toKey(orderType, orderBy);
+
+      const params = new URLSearchParams();
+      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+        params.append('order_type', orderType);
+        params.append('order_by', orderBy);
+      }
+      const search = params.toString();
+
+      // TODO: react-router 5.1 나오면 함수로 바꿀 것
+      const to = {
+        pathname: URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+        search: search === '' ? '' : `?${search}`,
+        state: {
+          backLocation: location,
+        },
+      };
+
+      return <Link to={to}>더보기</Link>;
+    },
+    [location, orderType, orderBy],
+  );
+
+  function renderPaginator() {
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
 
-  constructor(props) {
-    super(props);
+  function renderBooks() {
+    const { items: libraryBookDTO, units, recentlyUpdatedMap, viewType } = props;
 
-    this.state = {
-      isEditing: false,
-      showShelves: false,
-    };
-  }
-
-  toggleEditingMode = () => {
-    const { isEditing } = this.state;
-    const { dispatchClearSelectedBooks } = this.props;
-
-    if (isEditing === true) {
-      dispatchClearSelectedBooks();
+    if (listInstruction === ListInstructions.SKELETON) {
+      return <SkeletonBooks viewType={viewType} />;
     }
-
-    this.setState({ isEditing: !isEditing });
-  };
-
-  handleOnClickHide = () => {
-    const { dispatchHideSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    dispatchHideSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
-
-  handleOnClickDownload = () => {
-    const { dispatchDownloadSelectedBooks, dispatchClearSelectedBooks } = this.props;
-
-    dispatchDownloadSelectedBooks();
-    dispatchClearSelectedBooks();
-    this.setState({ isEditing: false });
-  };
-
-  handleAddToShelf = () => {
-    this.setState({ showShelves: true });
-  };
-
-  handleShelfBackClick = () => {
-    this.setState({ showShelves: false });
-  };
-
-  handleShelfSelect = uuid => {
-    this.props.dispatchAddSelectedToShelf({
-      uuid,
-      onComplete: () => {
-        this.setState({ isEditing: false, showShelves: false });
-        this.props.dispatchClearSelectedBooks();
-      },
-    });
-  };
-
-  makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount, dispatchSelectAllBooks, dispatchClearSelectedBooks } = this.props;
-    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
-    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
-
-    return {
-      totalSelectedCount,
-      isSelectedAllItem: isSelectedAllBooks,
-      onClickSelectAllItem: dispatchSelectAllBooks,
-      onClickUnselectAllItem: dispatchClearSelectedBooks,
-      onClickSuccessButton: this.toggleEditingMode,
-    };
-  }
-
-  makeActionBarProps() {
-    const { isSyncShelfEnabled, totalSelectedCount } = this.props;
-    const disable = totalSelectedCount === 0;
-
-    let buttonProps;
-    if (isSyncShelfEnabled) {
-      buttonProps = [
-        {
-          name: '책장에 추가',
-          onClick: this.handleAddToShelf,
-          disable,
-        },
-        {
-          name: '숨기기',
-          onClick: this.handleOnClickHide,
-          disable,
-        },
-        {
-          type: ButtonType.SPACER,
-        },
-        {
-          name: '다운로드',
-          onClick: this.handleOnClickDownload,
-          disable,
-        },
-      ];
-    } else {
-      buttonProps = [
-        {
-          name: '선택 숨기기',
-          onClick: this.handleOnClickHide,
-          disable,
-        },
-        {
-          type: ButtonType.SPACER,
-        },
-        {
-          name: '선택 다운로드',
-          onClick: this.handleOnClickDownload,
-          disable,
-        },
-      ];
-    }
-
-    return { buttonProps };
-  }
-
-  renderSearchBar() {
-    const { orderType, orderBy, categoryFilter: filter, filterOptions } = this.props;
-    const order = OrderOptions.toKey(orderType, orderBy);
-    const orderOptions = OrderOptions.toMainList();
-
-    const searchBarProps = {
-      filter,
-      filterOptions,
-      order,
-      orderOptions,
-      orderBy,
-      orderType,
-      toggleEditingMode: this.toggleEditingMode,
-    };
-
-    return <SearchBar {...searchBarProps} />;
-  }
-
-  linkBuilder = libraryBookData => {
-    const { orderType, orderBy } = this.props; // eslint-disable-line react/no-this-in-sfc
-    const order = OrderOptions.toKey(orderType, orderBy);
-
-    const query = {};
-    if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-      query.orderType = orderType;
-      query.orderBy = orderBy;
-    }
-
-    const linkProps = makeLinkProps(
-      {
-        pathname: URLMap.mainUnit.href,
-        query: { unitId: libraryBookData.unit_id },
-      },
-      URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
-      query,
-    );
-
-    return (
-      <Link prefetch {...linkProps}>
-        <a>더보기</a>
-      </Link>
-    );
-  };
-
-  renderBooks() {
-    if (this.props.listInstruction === ListInstructions.SKELETON) {
-      return <SkeletonBooks viewType={this.props.viewType} />;
-    }
-
-    const { isEditing: isSelectMode } = this.state;
-    const { items: libraryBookDTO, units, recentlyUpdatedMap, viewType } = this.props;
 
     return (
       <>
@@ -229,19 +116,18 @@ class Main extends React.PureComponent {
           {...{
             libraryBookDTO,
             units,
-            isSelectMode,
+            isSelectMode: isEditing,
             viewType,
-            linkBuilder: this.linkBuilder,
+            linkBuilder,
             recentlyUpdatedMap,
           }}
         />
-        {this.renderPaginator()}
+        {renderPaginator()}
       </>
     );
   }
 
-  getEmptyMessage() {
-    const { orderType, orderBy } = this.props;
+  function getEmptyMessage() {
     const order = OrderOptions.toKey(orderType, orderBy);
 
     if (OrderOptions.EXPIRE_DATE.key === order) {
@@ -254,84 +140,189 @@ class Main extends React.PureComponent {
     return '구매/대여하신 책이 없습니다.';
   }
 
-  renderMain() {
-    const { listInstruction } = this.props;
+  function renderMain() {
+    const { dispatchLoadItems, isError } = props;
+    if (isError) {
+      return <BookError onClickRefreshButton={dispatchLoadItems} />;
+    }
 
     if (listInstruction === ListInstructions.EMPTY) {
-      return <Empty IconComponent={BookOutline} message={this.getEmptyMessage()} />;
+      return <Empty IconComponent={BookOutline} message={getEmptyMessage()} />;
     }
-    return <ResponsiveBooks>{this.renderBooks()}</ResponsiveBooks>;
+    return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
-  renderPaginator() {
-    const { currentPage, orderType, orderBy, categoryFilter: filter, totalPages } = this.props;
+  const toggleEditingMode = React.useCallback(
+    () => {
+      if (isEditing) {
+        dispatchClearSelectedBooks();
+      }
+      setIsEditing(!isEditing);
+    },
+    [dispatchClearSelectedBooks, isEditing],
+  );
+  function renderSearchBar() {
+    const { filterOptions } = props;
+    const order = OrderOptions.toKey(orderType, orderBy);
+    const orderOptions = OrderOptions.toMainList();
 
-    return (
-      <ResponsivePaginator
-        currentPage={currentPage}
-        totalPages={totalPages}
-        href={URLMap.main.href}
-        as={URLMap.main.as}
-        query={{ orderType, orderBy, filter }}
-      />
-    );
+    const searchBarProps = {
+      filter: categoryFilter,
+      filterOptions,
+      order,
+      orderOptions,
+      orderBy,
+      orderType,
+      toggleEditingMode,
+    };
+
+    return <SearchBar {...searchBarProps} />;
   }
 
-  dispatchLoadItems = () => {
-    const { currentPage, orderType, orderBy, categoryFilter, dispatchLoadItems } = this.props;
-    return dispatchLoadItems({ currentPage, orderType, orderBy, categoryFilter });
-  };
+  function makeEditingBarProps() {
+    const { isSyncShelfEnabled, items, totalSelectedCount } = props;
+    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
-  render() {
-    const { isEditing, showShelves } = this.state;
-    const { isError } = this.props;
+    return {
+      totalSelectedCount,
+      isSelectedAllItem: isSelectedAllBooks,
+      onClickSelectAllItem: dispatchSelectAllBooksWithOptions,
+      onClickUnselectAllItem: dispatchClearSelectedBooks,
+      onClickSuccessButton: toggleEditingMode,
+    };
+  }
 
-    if (showShelves) {
-      return (
-        <>
-          <Head>
-            <title>모든 책 - 내 서재</title>
-          </Head>
-          <SelectShelfModal onBackClick={this.handleShelfBackClick} onShelfSelect={this.handleShelfSelect} />
-        </>
-      );
+  const handleHideClick = React.useCallback(
+    () => {
+      dispatchHideSelectedBooksWithOptions();
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
+  );
+  const handleDownloadClick = React.useCallback(
+    () => {
+      dispatchDownloadSelectedBooksWithOptions();
+      dispatchClearSelectedBooks();
+      setIsEditing(false);
+    },
+    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
+  );
+  const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
+  const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
+  const handleShelfSelect = React.useCallback(
+    uuid => {
+      dispatchAddSelectedToShelf({
+        uuid,
+        onComplete: () => {
+          setIsEditing(false);
+          setShowShelves(false);
+          dispatchClearSelectedBooks();
+        },
+      });
+    },
+    [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
+  );
+
+  function makeActionBarProps() {
+    const { isSyncShelfEnabled, totalSelectedCount } = props;
+    const disable = totalSelectedCount === 0;
+
+    let buttonProps;
+    if (isSyncShelfEnabled) {
+      buttonProps = [
+        {
+          name: '책장에 추가',
+          onClick: handleAddToShelf,
+          disable,
+        },
+        {
+          name: '숨기기',
+          onClick: handleHideClick,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '다운로드',
+          onClick: handleDownloadClick,
+          disable,
+        },
+      ];
+    } else {
+      buttonProps = [
+        {
+          name: '선택 숨기기',
+          onClick: handleHideClick,
+          disable,
+        },
+        {
+          type: ButtonType.SPACER,
+        },
+        {
+          name: '선택 다운로드',
+          onClick: handleDownloadClick,
+          disable,
+        },
+      ];
     }
 
+    return { buttonProps };
+  }
+
+  if (showShelves) {
     return (
       <>
-        <Head>
+        <Helmet>
           <title>모든 책 - 내 서재</title>
-        </Head>
-        <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
-        <Editable
-          allowFixed
-          isEditing={isEditing}
-          nonEditBar={this.renderSearchBar()}
-          editingBarProps={this.makeEditingBarProps()}
-          actionBarProps={this.makeActionBarProps()}
-        >
-          <main>{isError ? <BookError onClickRefreshButton={this.dispatchLoadItems} /> : this.renderMain()}</main>
-          <Footer />
-        </Editable>
-        <BookDownLoader />
+        </Helmet>
+        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
+        <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
       </>
     );
   }
+
+  return (
+    <>
+      <Helmet>
+        <title>모든 책 - 내 서재</title>
+      </Helmet>
+      <PageRedirect currentPage={currentPage} totalPages={totalPages} />
+      <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
+      <Editable
+        allowFixed
+        isEditing={isEditing}
+        nonEditBar={renderSearchBar()}
+        editingBarProps={makeEditingBarProps()}
+        actionBarProps={makeActionBarProps()}
+      >
+        <main>{renderMain()}</main>
+        <Footer />
+      </Editable>
+      <BookDownLoader />
+    </>
+  );
 }
 
-const mapStateToProps = state => {
-  const currentPage = getPage(state);
-  const order = getOrder(state);
-  const { orderType, orderBy } = OrderOptions.parse(order);
-  const categoryFilter = getFilter(state);
-  const totalPages = getTotalPages(state);
+PurchasedMain.prepare = async ({ dispatch, location }) => {
+  const pageOptions = extractPageOptions(location);
+  await dispatch(clearSelectedItems());
+  await dispatch(loadItems(pageOptions));
+};
+
+const mapStateToProps = (state, props) => {
+  const pageOptions = extractPageOptions(props.location);
+
+  const totalPages = getTotalPages(state, pageOptions);
   const filterOptions = getFilterOptions(state);
-  const items = getItemsByPage(state);
-  const unitIds = getUnitIdsByPage(state);
+  const items = getItemsByPage(state, pageOptions);
+  const unitIds = getUnitIdsByPage(state, pageOptions);
   const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
-  const lastBookIds = getLastBookIdsByPage(state);
+  const lastBookIds = getLastBookIdsByPage(state, pageOptions);
   const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
@@ -344,10 +335,6 @@ const mapStateToProps = state => {
     listInstruction = ListInstructions.EMPTY;
   }
   return {
-    currentPage,
-    orderType,
-    orderBy,
-    categoryFilter,
     totalPages,
     filterOptions,
     items,
@@ -373,4 +360,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Main);
+)(PurchasedMain);

@@ -1,14 +1,21 @@
 {
   "presets": [
-    ["next/babel",
+    [
+      "@babel/preset-react"
+    ],
+    [
+      "@babel/preset-env",
       {
-        "preset-env": {
-          "useBuiltIns": "entry"
-        }
+        "corejs": 3,
+        "useBuiltIns": "usage",
+        "shippedProposals": true
       }
     ]
   ],
-  "plugins": ["@babel/plugin-proposal-optional-chaining"],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-optional-chaining"
+  ],
   "env": {
     "production": {
       "plugins": [

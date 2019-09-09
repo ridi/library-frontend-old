@@ -9,8 +9,6 @@ export const SET_SHELF_INFO = 'SET_SHELF_INFO';
 export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
-export const SET_SHELF_LIST_PAGE_OPTIONS = 'SET_SHELF_LIST_PAGE_OPTIONS';
-export const SET_SHELF_DETAIL_PAGE_OPTIONS = 'SET_SHELF_DETAIL_PAGE_OPTIONS';
 
 export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
 
@@ -135,24 +133,6 @@ export const setLibraryBooks = books => ({
   },
 });
 
-export const setListPageOptions = ({ orderBy, orderDirection, page }) => ({
-  type: SET_SHELF_LIST_PAGE_OPTIONS,
-  payload: {
-    orderBy,
-    orderDirection,
-    page,
-  },
-});
-
-export const setDetailPageOptions = ({ orderBy, orderDirection, page }) => ({
-  type: SET_SHELF_DETAIL_PAGE_OPTIONS,
-  payload: {
-    orderBy,
-    orderDirection,
-    page,
-  },
-});
-
 export const addShelf = ({ name, pageOptions }) => ({
   type: ADD_SHELF,
   payload: {
@@ -200,9 +180,10 @@ export const deleteShelfItem = ({ uuid, units }) => ({
   },
 });
 
-export const deleteShelfFromDetail = uuid => ({
+export const deleteShelfFromDetail = (uuid, history) => ({
   type: DELETE_SHELF_FROM_DETAIL,
   payload: {
+    history,
     uuid,
   },
 });

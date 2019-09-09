@@ -1,8 +1,22 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
+import { withRouter } from 'react-router-dom';
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 
-const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, onClickModalBackground, horizontalAlign }) => (
+function buildTargetLocation(location, option) {
+  const params = new URLSearchParams(location.search);
+  const { orderBy, orderType } = option;
+  orderType != null && params.set('order_type', orderType);
+  orderBy != null && params.set('order_by', orderBy);
+  const search = params.toString();
+
+  return {
+    ...location,
+    search: search === '' ? '' : `?${search}`,
+  };
+}
+
+const UnitSortModal = ({ order, orderOptions, isActive, location, onClickModalBackground, horizontalAlign }) => (
   <Modal isActive={isActive} a11y="옵션" onClickModalBackground={onClickModalBackground} horizontalAlign={horizontalAlign}>
     <ModalItemGroup groupTitle="정렬 순서">
       <ul>
@@ -12,13 +26,7 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
               scroll={false}
               title={option.title}
               isSelected={option.key === order}
-              href={href}
-              as={as}
-              query={{
-                ...query,
-                orderType: option.orderType,
-                orderBy: option.orderBy,
-              }}
+              to={buildTargetLocation(location, option)}
               replace
             />
           </li>
@@ -28,4 +36,4 @@ const UnitSortModal = ({ order, orderOptions, isActive, href, as, query = {}, on
   </Modal>
 );
 
-export default UnitSortModal;
+export default withRouter(UnitSortModal);

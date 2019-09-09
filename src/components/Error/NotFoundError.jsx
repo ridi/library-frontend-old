@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import Head from 'next/head';
+import React from 'react';
+import Helmet from 'react-helmet';
 import ErrorBook from '../../svgs/ErrorBook.svg';
 import * as styles from './styles';
 
@@ -10,9 +11,9 @@ const onClickHistoryBack = () => {
 
 export const NotFoundError = () => (
   <>
-    <Head>
+    <Helmet>
       <title>404 에러 - 내 서재</title>
-    </Head>
+    </Helmet>
     <section css={styles.pageError}>
       <div>
         <ErrorBook css={styles.icon} />

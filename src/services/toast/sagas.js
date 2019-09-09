@@ -1,5 +1,4 @@
-import { all, takeEvery, call, put, take, race } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { all, delay, takeEvery, call, put, take, race } from 'redux-saga/effects';
 
 import { SHOW_TOAST, CLOSE_TOAST, CLOSE_WITH_DELAY, CANCEL_CLOSE, setToast, unsetToast, cancelClose } from './actions';
 
@@ -10,7 +9,7 @@ function* closeToast() {
 function* _delayClose(duration) {
   const { cancel } = yield race({
     cancel: take(CANCEL_CLOSE),
-    timeout: call(delay, duration),
+    timeout: delay(duration),
   });
 
   if (cancel) {

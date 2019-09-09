@@ -17,5 +17,6 @@ function* checkAllFeatures() {
 }
 
 export default function* featureRootSaga() {
-  yield takeEvery(actions.CHECK_ALL_FEATURES, checkAllFeatures);
+  // yield takeEvery(actions.CHECK_ALL_FEATURES, checkAllFeatures);
+  yield call(checkAllFeatures);
 }

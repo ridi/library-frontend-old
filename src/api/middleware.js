@@ -1,16 +1,12 @@
 import { GET_API } from './actions';
-import { initializeApi } from './index';
+import { getApi } from './index';
 
-const createApiMiddleware = context => {
-  const api = initializeApi(context && context.req);
+const createApiMiddleware = () => () => next => action => {
+  if (action.type === GET_API) {
+    return getApi();
+  }
 
-  return () => next => action => {
-    if (action.type === GET_API) {
-      return api;
-    }
-
-    return next(action);
-  };
+  return next(action);
 };
 
 export default createApiMiddleware;

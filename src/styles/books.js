@@ -1,26 +1,30 @@
+import ViewType from 'constants/viewType';
+import portraitBookW86 from 'static/separator/portrait_book_w86.png';
+import portraitBookW100 from 'static/separator/portrait_book_w100.png';
+import portraitBookW110 from 'static/separator/portrait_book_w110.png';
+import portraitBookW140 from 'static/separator/portrait_book_w140.png';
+
 import { Responsive, MQ } from './responsive';
-import ViewType from '../constants/viewType';
 import { BookSize, FULL_MAX_WIDTH } from './constants';
-import config from '../config';
 
 const responsiveDefaultPadding = 16;
 const separatorHeight = 1;
 
 const separatorBG = {
   ...Responsive.XSmall({
-    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w86.png) center top repeat-y`,
+    background: `url(${portraitBookW86}) center top repeat-y`,
     backgroundSize: `100% ${BookSize.XSmall.height}px`,
   }),
   ...Responsive.Small({
-    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w100.png) center top repeat-y`,
+    background: `url(${portraitBookW100}) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Small.height}px`,
   }),
   ...MQ([Responsive.Medium, Responsive.Large, Responsive.XLarge], {
-    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w110.png) center top repeat-y`,
+    background: `url(${portraitBookW110}) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Medium.height}px`,
   }),
   ...MQ([Responsive.XXLarge, Responsive.Full], {
-    background: `url(${config.STATIC_URL}/static/separator/portrait_book_w140.png) center top repeat-y`,
+    background: `url(${portraitBookW140}) center top repeat-y`,
     backgroundSize: `100% ${BookSize.Large.height}px`,
   }),
 };

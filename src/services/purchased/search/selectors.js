@@ -1,59 +1,33 @@
+import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { calcPage } from '../../../utils/pagination';
-import { initialDataState, getKey } from './state';
+import { createInitialDataState, mapPageOptionsToKey } from './state';
 
-const getState = state => state.purchasedSearch;
-const getDataState = state => {
-  const searchState = state.purchasedSearch;
-  const key = getKey(searchState);
-  return searchState.data[key] || initialDataState;
-};
+const getDataState = createCachedSelector(
+  state => state.purchasedSearch.data,
+  (_, pageOptions) => mapPageOptionsToKey(pageOptions),
+  (data, key) => data[key] || createInitialDataState(),
+)((_, pageOptions) => mapPageOptionsToKey(pageOptions));
 
 export const getItems = createSelector(
   getDataState,
   dataState => dataState.items,
 );
 
-export const getItemsByPage = createSelector(
+export const getItemsByPage = createCachedSelector(
   getDataState,
-  dataState => {
-    const { page, itemIdsForPage, items } = dataState;
+  (_, pageOptions) => pageOptions.page,
+  (dataState, page) => {
+    const { itemIdsForPage, items } = dataState;
     const itemIds = itemIdsForPage[page] || [];
     return itemIds.map(itemId => items[itemId]);
   },
-);
+)((_, pageOptions) => pageOptions.page);
 
-export const getSearchPageInfo = createSelector(
-  [getState, getDataState],
-  (state, dataState) => {
-    const { keyword } = state;
-    const { page, unitTotalCount } = dataState;
-
-    return {
-      currentPage: page,
-      totalPages: calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-      keyword,
-    };
-  },
-);
-
-export const getPage = createSelector(
+export const getTotalPages = createSelector(
   getDataState,
-  dataState => dataState.page,
+  dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
-export const getKeyword = createSelector(
-  getState,
-  state => state.keyword,
-);
-
-export const getOptions = createSelector(
-  [getPage, getKeyword],
-  (page, keyword) => ({ page, keyword }),
-);
-
-export const getIsFetchingBooks = createSelector(
-  getState,
-  state => state.isFetchingBooks,
-);
+export const getIsFetchingBooks = state => state.purchasedSearch.isFetchingBooks;
