@@ -17,6 +17,7 @@
   "book_feedback_api_base_url": "https://book-feedback.ridibooks.com",
   "ridi_oauth2_client_id": "ePgbKKRyPvdAFzTvFg2DvrS7GenfstHdkQ2uvFNd",
   "select_base_url": "https://select.ridibooks.com",
-  "sentry_dsn": "https://8264e07c33fd4fb2a874bc637dd94aae@sentry.io/1335489",
+  "sentry_dsn": "https://0100a981cf6840ceac1a206051a199ba@sentry.io/1335489",
+  "sentry_env": "staging",
   "static_url": "https://library.ridicdn.net/staging/"
 }

@@ -4,8 +4,9 @@ import config from '../config';
 export const initializeSentry = () => {
   init({
     dsn: config.SENTRY_DSN,
+    environment: config.SENTRY_ENV,
     release: SENTRY_RELEASE_VERSION || undefined,
-    sampleRate: 0.05,
+    sampleRate: 0.4,
   });
 };
 
