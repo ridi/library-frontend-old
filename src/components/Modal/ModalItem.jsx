@@ -3,6 +3,7 @@ import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
 import Sync from '../../svgs/Sync.svg';
+import LoadingSpinner from '../LoadingSpinner';
 import * as modalStyles from './styles';
 
 function ItemIcon(props) {
@@ -17,8 +18,8 @@ function ItemIcon(props) {
 }
 
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
-  <button type="button" css={[modalStyles.item, style, modalStyles.spinner(showSpinner)]} onClick={onClick} disabled={showSpinner}>
-    <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
+  <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={showSpinner}>
+    <ItemIcon isSelected={isSelected} IconComponent={showSpinner ? LoadingSpinner : IconComponent} />
     {title}
   </button>
 );

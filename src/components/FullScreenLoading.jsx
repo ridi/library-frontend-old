@@ -3,7 +3,7 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 import { disableScroll, enableScroll } from '../utils/scroll';
 
-import graySpinner from '../static/spinner/gray_spinner.gif';
+import LoadingSpinner from './LoadingSpinner';
 
 const styles = {
   background: {
@@ -20,10 +20,8 @@ const styles = {
     zIndex: 9999,
   },
   spinner: {
-    width: 34,
-    height: 34,
-    background: `url(${graySpinner}) center no-repeat`,
-    backgroundSize: '100%',
+    width: 32,
+    height: 32,
   },
 };
 
@@ -39,7 +37,7 @@ export default class FullScreenLoading extends React.Component {
   render() {
     return (
       <div css={styles.background}>
-        <div css={styles.spinner} />
+        <LoadingSpinner css={styles.spinner} />
       </div>
     );
   }
