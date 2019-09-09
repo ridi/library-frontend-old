@@ -45,9 +45,10 @@ jobs:
       - run:
           name: Run webpack
           environment:
-            SENTRY_RELEASE_VERSION: ${CIRCLE_SHA1}
             NODE_ENV: <<parameters.env>>
-          command: yarn build webpack.<<parameters.env>>.js
+          command: |
+            SENTRY_RELEASE_VERSION="${CIRCLE_SHA1}" \
+              yarn build webpack.<<parameters.env>>.js
       - persist_to_workspace:
           root: .
           paths:
