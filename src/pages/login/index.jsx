@@ -4,63 +4,10 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import config from '../config';
-import Footer from './base/Footer';
-import * as accountSelectors from '../services/account/selectors';
-
-const fixedStyle = {
-  borderTop: '1px solid #d1d5d9',
-  width: '100%',
-  minHeight: 350,
-  paddingTop: 46,
-};
-
-const mainStyle = {
-  position: 'absolute',
-  left: '50%',
-  top: '50%',
-  width: 360,
-  marginTop: -200,
-  marginLeft: -180,
-  textAlign: 'center',
-};
-
-const messageStyle = {
-  width: '100%',
-  lineHeight: '1.5em',
-  fontSize: 20,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  color: '#40474d',
-  marginBottom: 16,
-};
-
-const defaultButtonStyle = {
-  marginTop: 8,
-  width: 300,
-  display: 'inline-block',
-  lineHeight: '50px',
-  borderRadius: 4,
-  fontSize: 16,
-  fontWeight: 'bold',
-  boxSizing: 'border-box',
-};
-
-const loginButtonStyle = {
-  ...defaultButtonStyle,
-  boxShadow: '1px 1px 1px 0 rgba(31, 140, 230, 0.3)',
-  backgroundColor: '#1f8ce6',
-  border: '1px solid #0077d9',
-  color: '#fff',
-};
-
-const signupButtonStyle = {
-  ...defaultButtonStyle,
-  boxShadow: '1px 1px 1px 0 rgba(209, 213, 217, 0.3)',
-  backgroundColor: '#ffffff',
-  border: '2px solid #d1d5d9',
-  color: '#808991',
-};
+import config from '../../config';
+import * as accountSelectors from '../../services/account/selectors';
+import Footer from '../base/Footer';
+import * as loginStyles from './styles';
 
 function Login(props) {
   const { location: next, needLogin } = props;
@@ -85,20 +32,20 @@ function Login(props) {
       <Helmet>
         <title>로그인 - 내 서재</title>
       </Helmet>
-      <div css={fixedStyle}>
-        <main css={mainStyle}>
-          <p css={messageStyle}>
+      <div css={loginStyles.fixedStyle}>
+        <main css={loginStyles.mainStyle}>
+          <p css={loginStyles.messageStyle}>
             로그아웃 상태입니다.
             <br />
             로그인하여 내 서재를 확인해보세요.
           </p>
           <div>
-            <a css={loginButtonStyle} href={loginUrl.toString()}>
+            <a css={loginStyles.loginButtonStyle} href={loginUrl.toString()}>
               로그인
             </a>
           </div>
           <div>
-            <a css={signupButtonStyle} href={signupUrl.toString()}>
+            <a css={loginStyles.signupButtonStyle} href={signupUrl.toString()}>
               회원가입
             </a>
           </div>
