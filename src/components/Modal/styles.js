@@ -85,23 +85,15 @@ export const item = {
 };
 
 export const icon = {
-  width: 18,
-  height: 18,
-  margin: 3,
-  marginRight: 13,
+  width: 24,
+  height: 24,
+  margin: 0,
+  marginRight: 8,
   fill: '#9ea7ad',
 };
 
 export const selectedIcon = {
-  ...icon,
   fill: '#339cf2',
-};
-
-export const paddedIcon = {
-  width: 24,
-  height: 24,
-  margin: 0,
-  marginRight: 10,
 };
 
 const iconSpinKeyframes = keyframes`

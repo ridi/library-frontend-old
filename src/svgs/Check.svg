@@ -1,1 +1,9 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9"><title>check</title><polygon points="4.03 6.32 1.4 3.79 0 5.13 4.03 9 5.42 7.66 12 1.34 10.61 0 4.03 6.32"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>icon/menu/checked</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon/menu/checked" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path" fill="#339CF2" fill-rule="nonzero" transform="translate(12, 10.72) rotate(90) translate(-12, -10.72)" points="5.27991626 2.35887203 15.3553741 12.7578861 9.08947216 19.035705 10.7522802 20.7200837 18.7200837 12.7578861 6.97799208 0.720083738"></polygon>
+    </g>
+</svg>

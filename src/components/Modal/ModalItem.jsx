@@ -9,12 +9,12 @@ import * as modalStyles from './styles';
 function ItemIcon(props) {
   const { isSelected, IconComponent } = props;
   if (isSelected) {
-    return <Check css={modalStyles.selectedIcon} />;
+    return <Check css={[modalStyles.icon, modalStyles.selectedIcon]} />;
   }
   if (IconComponent) {
     return <IconComponent css={modalStyles.icon} />;
   }
-  return <div css={modalStyles.paddedIcon} />;
+  return <div css={modalStyles.icon} />;
 }
 
 export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
@@ -26,7 +26,7 @@ export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, sty
 
 export const ModalSyncButtonItem = ({ title, syncing, onClick, style }) => (
   <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={syncing}>
-    <Sync css={[modalStyles.selectedIcon, modalStyles.paddedIcon, syncing && modalStyles.iconSpinning]} />
+    <Sync css={[modalStyles.icon, modalStyles.selectedIcon, syncing && modalStyles.iconSpinning]} />
     {title}
   </button>
 );
