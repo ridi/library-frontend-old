@@ -6,7 +6,7 @@ const getPurchasedCommonState = state => state.purchasedCommon;
 export const getReadLatestData = (state, unitId) =>
   createSelector(
     getPurchasedCommonState,
-    state => state.readLatestBookIds[unitId],
+    _state => _state.readLatestBookIds[unitId],
   )(state);
 
 export const getFetchingReadLatest = createSelector(

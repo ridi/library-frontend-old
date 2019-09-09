@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import * as featureIds from '../../constants/featureIds';
 import * as actions from './actions';
 import * as requests from './requests';
@@ -17,6 +17,5 @@ function* checkAllFeatures() {
 }
 
 export default function* featureRootSaga() {
-  // yield takeEvery(actions.CHECK_ALL_FEATURES, checkAllFeatures);
   yield call(checkAllFeatures);
 }

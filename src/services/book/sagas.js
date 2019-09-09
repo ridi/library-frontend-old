@@ -3,6 +3,7 @@ import { toFlatten } from '../../utils/array';
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
 import { showToast } from '../toast/actions';
+import { ToastStyle } from '../toast/constants';
 import {
   LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
@@ -17,7 +18,6 @@ import {
 } from './actions';
 import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
 import { getBooks } from './selectors';
-import { ToastStyle, Duration } from '../toast/constants';
 
 function* persistBookDataToStorage() {
   // Step 1. Select book data in redux store.

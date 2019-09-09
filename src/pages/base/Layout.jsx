@@ -15,40 +15,38 @@ import { Environment } from './Environment';
 import GNB from './GNB';
 import { globalStyles } from './styles';
 
-class Layout extends React.Component {
-  render() {
-    const {
-      children,
-      showFullScreenLoading,
-      confirm,
-      dispatchCloseConfirm,
-      dialog,
-      dispatchCloseDialog,
-      prompt,
-      dispatchClosePrompt,
-      maintenance,
-    } = this.props;
-    return (
-      <>
-        <Global styles={globalStyles} />
-        <Environment />
-        {maintenance.visible && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
-        {maintenance.visible === false && (
-          <>
-            <BookDownLoader />
-            <GNB />
-            {children}
-            {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
-            {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
-            {prompt ? <Prompt onClickCloseButton={() => dispatchClosePrompt()} {...prompt} /> : null}
-            {showFullScreenLoading ? <FullScreenLoading /> : null}
-            <Toaster />
-          </>
-        )}
-      </>
-    );
-  }
-}
+const Layout = props => {
+  const {
+    children,
+    showFullScreenLoading,
+    confirm,
+    dispatchCloseConfirm,
+    dialog,
+    dispatchCloseDialog,
+    prompt,
+    dispatchClosePrompt,
+    maintenance,
+  } = props;
+  return (
+    <>
+      <Global styles={globalStyles} />
+      <Environment />
+      {maintenance.visible && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
+      {maintenance.visible === false && (
+        <>
+          <BookDownLoader />
+          <GNB />
+          {children}
+          {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
+          {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
+          {prompt ? <Prompt onClickCloseButton={() => dispatchClosePrompt()} {...prompt} /> : null}
+          {showFullScreenLoading ? <FullScreenLoading /> : null}
+          <Toaster />
+        </>
+      )}
+    </>
+  );
+};
 
 const mapStateToProps = state => {
   const { ui, dialog, confirm, maintenance, prompt } = state;

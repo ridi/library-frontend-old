@@ -40,11 +40,9 @@ export const ModalLinkItem = ({ title, isSelected, children, count, IconComponen
   </Link>
 );
 
-export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style }) => {
-  return (
-    <a css={[modalStyles.item, style]} href={href}>
-      <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
-      {title}
-    </a>
-  );
-};
+export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style }) => (
+  <a css={[modalStyles.item, style]} href={href}>
+    <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
+    {title}
+  </a>
+);
