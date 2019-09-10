@@ -33,13 +33,6 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} />
-        </li>
-      </ul>
-    </ModalItemGroup>
-    <ModalItemGroup>
-      <ul>
-        <li>
           <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.RIDI_READING_NOTE_URL} />
         </li>
         <li>
@@ -51,7 +44,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       <ul>
         <li>
           <ModalButtonItem
-            title={isExcelDownloading ? '파일 생성중' : '모든 책 목록 다운로드'}
+            title={isExcelDownloading ? '파일 생성 중' : '모든 책 목록 다운로드'}
             IconComponent={Download}
             onClick={() => dispatchStartExcelDownload()}
             showSpinner={isExcelDownloading}
