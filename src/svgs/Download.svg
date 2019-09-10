@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="#9EA7AD" fill-rule="evenodd">
-        <path d="M11 2v12.18L5.411 8.59 4.001 10l7.991 8L20 10l-1.418-1.419L13 14.163V2zM4 22h16v-2H4z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>icon / setting / AllDownload</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-setting-/-AllDownload" fill="#9EA7AD">
+            <polygon id="Fill-1" points="11.0002 2.0002 11.0002 14.1802 5.4112 8.5902 4.0002 10.0002 11.9922 18.0002 20.0002 10.0002 18.5822 8.5812 13.0002 14.1632 13.0002 2.0002"></polygon>
+            <polygon id="Fill-2" points="4 22 20 22 20 20 4 20"></polygon>
+        </g>
     </g>
 </svg>
