@@ -68,9 +68,10 @@ function* loadItems(action) {
 
   try {
     yield put(actions.setIsFetchingBook(true));
+    yield call(loadUnitData, [unitId]);
 
     const basicTask = yield fork(function* loadBasicData() {
-      const [, primaryItem] = yield all([call(loadUnitData, [unitId]), call(loadPrimaryItem, kind, unitId)]);
+      const primaryItem = yield call(loadPrimaryItem, kind, unitId);
       const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
       if (kind === 'hidden') {
         yield call(loadBookData, [primaryBookId]);
