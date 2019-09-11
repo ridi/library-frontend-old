@@ -4,17 +4,17 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import { useDispatch, useSelector } from 'react-redux';
 import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { getAdultVerification } from '../../services/account/selectors';
 import { showShelfBookAlertToast } from '../../services/book/actions';
-import { getBooks } from '../../services/book/selectors';
+import * as bookSelectors from '../../services/book/selectors';
 import * as featureSelectors from '../../services/feature/selectors';
+import { getIsRecentlyUpdated } from '../../services/purchased/common/selectors';
 import { toggleItem } from '../../services/selection/actions';
-import { getSelectedItems } from '../../services/selection/selectors';
+import * as selectionSelectors from '../../services/selection/selectors';
 import adultCover from '../../static/cover/adult.png';
 import * as styles from '../../styles/books';
 import { getResponsiveBookSizeForBookList } from '../../styles/responsive';
@@ -30,15 +30,14 @@ import { ShelfBookAlertButton } from './ShelfBookAlertButton';
 const refineBookData = ({
   libraryBookData,
   platformBookData,
-  units,
+  unitData,
   isSelectMode,
   isSelected,
   onSelectedChange,
   viewType,
   linkBuilder,
-  isSeriesView,
   isSyncShelfEnabled,
-  recentlyUpdatedMap,
+  showUpdateBadge,
   thumbnailWidth,
   isVerifiedAdult,
 }) => {
@@ -49,9 +48,7 @@ const refineBookData = ({
     is_ridiselect: isRidiselect,
     unit_type: unitType,
     unit_title: unitTitle,
-    b_id: bookId,
     purchase_date: purchaseDate,
-    unit_id: unitId,
   } = libraryBookData;
   const bookMetaData = new BookMetaData(platformBookData);
 
@@ -62,17 +59,9 @@ const refineBookData = ({
   const isPurchasedBook = !!purchaseDate;
   const isCollectionBook = unitType && UnitType.isCollection(unitType);
   const isUnitBook = unitType && !UnitType.isBook(unitType);
-  const unit = units && units[unitId] ? units[unitId] : null;
+  const unit = unitData;
 
   const isRidiselectSingleUnit = isRidiselect && isUnitBook && bookCount === 1;
-  let updateBadge = false;
-  if (platformBookData.series) {
-    if (isSeriesView) {
-      updateBadge = isAfter(platformBookData.publish.ridibooks_publish, subDays(new Date(), 3));
-    } else {
-      updateBadge = recentlyUpdatedMap ? recentlyUpdatedMap[platformBookData.series.property.opened_last_volume_id] : false;
-    }
-  }
 
   const thumbnailLink = linkBuilder ? linkBuilder(libraryBookData, platformBookData) : null;
 
@@ -87,13 +76,13 @@ const refineBookData = ({
     adultBadge: isAdultOnly,
     expired: isExpired,
     notAvailable: isNotAvailable,
-    updateBadge,
+    updateBadge: showUpdateBadge,
     ridiselect: isRidiselect,
     selectMode: isSelectMode && isPurchasedBook && !(isSyncShelfEnabled && isCollectionBook),
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
-    onSelectedChange: () => onSelectedChange(bookId),
+    onSelectedChange,
     thumbnailLink,
   };
 
@@ -119,54 +108,82 @@ const refineBookData = ({
   };
 };
 
-const mapStateToPropsFactory = () => {
-  const selectBookIds = createSelector(
-    props => props.libraryBookDTO,
-    items => items.map(x => x.b_id),
-  );
-  return (state, props) => {
-    const bookIds = selectBookIds(props);
-    return {
-      isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
-      selectedBooks: getSelectedItems(state),
-      platformBookDTO: getBooks(state, bookIds),
-      isVerifiedAdult: getAdultVerification(state),
-    };
-  };
-};
+function BookItem(props) {
+  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth } = props;
 
-const mapDispatchToProps = {
-  onSelectedChange: toggleItem,
-  dispatchShowShelfBookAlertToast: showShelfBookAlertToast,
-};
+  const dispatch = useDispatch();
+  const handleShelfBookAlert = React.useCallback(() => dispatch(showShelfBookAlertToast()), []);
+  const platformBookData = useSelector(state => bookSelectors.getBook(state, bookId));
+  const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
+  const viewType = useSelector(state => state.ui.viewType);
+  const isSelected = useSelector(state => selectionSelectors.getIsItemSelected(state, bookId));
+  const isVerifiedAdult = useSelector(getAdultVerification);
+  const isSyncShelfEnabled = useSelector(state => featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF));
+  const showUpdateBadge = useSelector(state => {
+    if (!platformBookData.series) {
+      return false;
+    }
 
-export const Books = connect(
-  mapStateToPropsFactory,
-  mapDispatchToProps,
-)(props => {
-  const isLoaded = true;
-  const {
-    libraryBookDTO,
-    bookIds,
-    platformBookDTO,
-    units,
-    selectedBooks,
+    if (isSeriesView) {
+      return isAfter(platformBookData.publish.ridibooks_publish, subDays(new Date(), 3));
+    }
+
+    return getIsRecentlyUpdated(state, platformBookData.series.property.opened_last_volume_id);
+  });
+
+  const handleSelectedChange = React.useCallback(() => dispatch(toggleItem(bookId)), [bookId]);
+
+  if (!libraryBookData || !platformBookData) {
+    return viewType === ViewType.PORTRAIT ? (
+      <div key={bookId} className={className} css={styles.portrait}>
+        <PortraitBook />
+      </div>
+    ) : (
+      <div key={bookId} className={className} css={styles.landscape}>
+        <LandscapeBook />
+      </div>
+    );
+  }
+  if (platformBookData.isDeleted) return null;
+
+  const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
+    libraryBookData,
+    platformBookData,
+    unit: unitData,
     isSelectMode,
-    onSelectedChange,
+    isSelected,
+    onSelectedChange: handleSelectedChange,
     viewType,
     linkBuilder,
-    isSeriesView,
     isSyncShelfEnabled,
-    recentlyUpdatedMap,
-    dispatchShowShelfBookAlertToast,
+    showUpdateBadge,
+    thumbnailWidth,
     isVerifiedAdult,
-  } = props;
+  });
+
+  return viewType === ViewType.PORTRAIT ? (
+    <div className={className} css={styles.portrait}>
+      <Book.PortraitBook {...libraryBookProps} />
+      {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+    </div>
+  ) : (
+    <div className={className} css={styles.landscape}>
+      <Book.LandscapeBook {...libraryBookProps} />
+      {isSelectMode && !isPurchasedBook && <Disabled />}
+      {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
+      {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+    </div>
+  );
+}
+
+export function Books(props) {
+  const { bookIds, isSelectMode, isSeriesView, libraryBookDTO, linkBuilder } = props;
+
+  const viewType = useSelector(state => state.ui.viewType);
+  const isLoaded = true;
   const [thumbnailWidth, setThumbnailWidth] = useState(100);
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
-  };
-  const handleShelfBookAlert = () => {
-    dispatchShowShelfBookAlertToast();
   };
   useEffect(
     () => {
@@ -193,53 +210,18 @@ export const Books = connect(
     <BooksWrapper
       viewType={viewType}
       books={finalBookIds}
-      renderBook={({ book: bookId, className }) => {
-        const libraryBookData = libraryBookMap.get(bookId);
-        const platformBookData = platformBookDTO[bookId];
-        if (!libraryBookData || !platformBookData) {
-          return viewType === ViewType.PORTRAIT ? (
-            <div key={bookId} className={className} css={styles.portrait}>
-              <PortraitBook />
-            </div>
-          ) : (
-            <div key={bookId} className={className} css={styles.landscape}>
-              <LandscapeBook />
-            </div>
-          );
-        }
-        if (platformBookData.isDeleted) return null;
-
-        const isSelected = !!selectedBooks[bookId];
-        const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
-          libraryBookData,
-          platformBookData,
-          units,
-          isSelectMode,
-          isSelected,
-          onSelectedChange,
-          viewType,
-          linkBuilder,
-          isSeriesView,
-          isSyncShelfEnabled,
-          recentlyUpdatedMap,
-          thumbnailWidth,
-          isVerifiedAdult,
-        });
-
-        return viewType === ViewType.PORTRAIT ? (
-          <div key={bookId} className={className} css={styles.portrait}>
-            <Book.PortraitBook {...libraryBookProps} />
-            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
-          </div>
-        ) : (
-          <div key={bookId} className={className} css={styles.landscape}>
-            <Book.LandscapeBook {...libraryBookProps} />
-            {isSelectMode && !isPurchasedBook && <Disabled />}
-            {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
-          </div>
-        );
-      }}
+      renderBook={({ book: bookId, className }) => (
+        <BookItem
+          key={bookId}
+          bookId={bookId}
+          className={className}
+          isSelectMode={isSelectMode}
+          isSeriesView={isSeriesView}
+          libraryBookData={libraryBookMap.get(bookId)}
+          linkBuilder={linkBuilder}
+          thumbnailWidth={thumbnailWidth}
+        />
+      )}
     >
       {({ books }) => {
         const libraryBooksCount = finalBookIds.length;
@@ -254,4 +236,4 @@ export const Books = connect(
       }}
     </BooksWrapper>
   );
-});
+}

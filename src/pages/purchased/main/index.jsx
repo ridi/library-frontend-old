@@ -22,13 +22,11 @@ import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import * as featureSelectors from '../../../services/feature/selectors';
-import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
   getFilterOptions,
   getIsFetchingBooks,
   getItemsByPage,
-  getLastBookIdsByPage,
   getTotalPages,
   getUnitIdsByPage,
 } from '../../../services/purchased/main/selectors';
@@ -114,7 +112,7 @@ function PurchasedMain(props) {
   }
 
   function renderBooks() {
-    const { items: libraryBookDTO, units, recentlyUpdatedMap, viewType } = props;
+    const { items: libraryBookDTO, units, viewType } = props;
 
     if (listInstruction === ListInstructions.SKELETON) {
       return <SkeletonBooks viewType={viewType} />;
@@ -129,7 +127,6 @@ function PurchasedMain(props) {
             isSelectMode: isEditing,
             viewType,
             linkBuilder,
-            recentlyUpdatedMap,
           }}
         />
         {renderPaginator()}
@@ -326,8 +323,6 @@ const mapStateToProps = (state, props) => {
   const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
-  const lastBookIds = getLastBookIdsByPage(state, pageOptions);
-  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   let listInstruction;
@@ -343,7 +338,6 @@ const mapStateToProps = (state, props) => {
     filterOptions,
     items,
     units,
-    recentlyUpdatedMap,
     totalSelectedCount,
     listInstruction,
     viewType: state.ui.viewType,

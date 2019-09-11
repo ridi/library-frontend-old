@@ -19,9 +19,8 @@ import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
-import { getBooks, getUnits } from '../../../services/book/selectors';
+import { getUnits } from '../../../services/book/selectors';
 import * as featureSelectors from '../../../services/feature/selectors';
-import { getRecentlyUpdatedData } from '../../../services/purchased/common/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/search/actions';
 import { getIsFetchingBooks, getItemsByPage, getTotalPages } from '../../../services/purchased/search/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
@@ -209,7 +208,7 @@ function Search(props) {
   );
 
   function renderBooks() {
-    const { items: libraryBookDTO, units, recentlyUpdatedMap, isFetchingBooks, viewType } = props;
+    const { items: libraryBookDTO, units, isFetchingBooks, viewType } = props;
     const showSkeleton = isFetchingBooks && libraryBookDTO.length === 0;
 
     if (showSkeleton) {
@@ -226,7 +225,6 @@ function Search(props) {
             viewType,
             linkBuilder,
           }}
-          recentlyUpdatedMap={recentlyUpdatedMap}
         />
         {renderPaginator()}
       </>
@@ -298,16 +296,11 @@ const mapStateToProps = (state, props) => {
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
-  const books = getBooks(state, toFlatten(items, 'b_id'));
-  const lastBookIds = toFlatten(Object.values(books), 'series.property.opened_last_volume_id', true);
-  const recentlyUpdatedMap = getRecentlyUpdatedData(state, lastBookIds);
-
   const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
   return {
     totalPages,
     items,
     units,
-    recentlyUpdatedMap,
     totalSelectedCount,
     isFetchingBooks,
     viewType: ViewType.LANDSCAPE,
