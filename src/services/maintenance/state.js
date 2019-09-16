@@ -1,5 +1,5 @@
 export const initialState = {
-  visible: null,
+  visible: false,
   terms: '',
   unavailableServiceList: [],
 };
