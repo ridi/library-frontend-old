@@ -61,6 +61,7 @@ function PurchasedMain(props) {
     dispatchClearSelectedBooks,
     dispatchDownloadSelectedBooks,
     dispatchHideSelectedBooks,
+    dispatchLoadItems,
     dispatchSelectAllBooks,
   } = props;
 
@@ -73,6 +74,7 @@ function PurchasedMain(props) {
   const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
   const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
   const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
+  const handleRefresh = useDispatchOptions(dispatchLoadItems, pageOptions);
 
   const linkBuilder = React.useCallback(
     libraryBookData => {
@@ -141,9 +143,9 @@ function PurchasedMain(props) {
   }
 
   function renderMain() {
-    const { dispatchLoadItems, isError } = props;
+    const { isError } = props;
     if (isError) {
-      return <BookError onClickRefreshButton={dispatchLoadItems} />;
+      return <BookError onClickRefreshButton={handleRefresh} />;
     }
 
     if (listInstruction === ListInstructions.EMPTY) {
