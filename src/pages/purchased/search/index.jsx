@@ -63,6 +63,7 @@ function Search(props) {
   const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
   const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
   const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
+  const handleRefresh = useDispatchOptions(dispatchLoadItems, pageOptions);
 
   const toggleEditingMode = React.useCallback(
     () => {
@@ -108,13 +109,6 @@ function Search(props) {
       });
     },
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
-  );
-
-  const handleRefresh = React.useCallback(
-    () => {
-      dispatchLoadItems(pageOptions);
-    },
-    [currentPage, dispatchLoadItems, keyword],
   );
 
   function makeEditingBarProps() {
