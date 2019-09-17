@@ -8,7 +8,7 @@ import Note from '../../svgs/Note.svg';
 import Review from '../../svgs/Review.svg';
 import FeedbackIcon from '../../svgs/FeedbackIcon.svg';
 
-const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=573127';
+const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=664048';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
@@ -29,6 +29,13 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       <p css={userIdStyle}>
         <strong>{userId}</strong> 님
       </p>
+    </ModalItemGroup>
+    <ModalItemGroup>
+      <ul>
+        <li>
+          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} />
+        </li>
+      </ul>
     </ModalItemGroup>
     <ModalItemGroup>
       <ul>
