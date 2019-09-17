@@ -51,6 +51,4 @@ export const getTotalPages = createSelector(
   dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
-export const getFilterOptions = state => state.purchasedMain.filter.options;
-
 export const getIsFetchingBooks = state => state.purchasedMain.isFetchingBooks;

@@ -18,14 +18,9 @@ import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
+import { getFilterOptions } from '../../../services/purchased/filter/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import {
-  getFilterOptions,
-  getIsFetchingBooks,
-  getItemsByPage,
-  getTotalPages,
-  getUnitIdsByPage,
-} from '../../../services/purchased/main/selectors';
+import { getIsFetchingBooks, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';

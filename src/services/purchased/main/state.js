@@ -1,17 +1,6 @@
 import { OrderOptions } from '../../../constants/orderOptions';
 
 export const initialState = {
-  // 공용
-  filter: {
-    options: [
-      {
-        title: '전체 카테고리',
-        value: null,
-        hasChildren: false,
-        children: null,
-      },
-    ],
-  },
   data: {},
   isFetchingBooks: false,
 };

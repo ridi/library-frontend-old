@@ -14,6 +14,8 @@ import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
+import { fetchPurchaseCategories } from '../filter/requests';
+import { setFilterOptions } from '../filter/actions';
 import {
   DOWNLOAD_SELECTED_MAIN_BOOKS,
   HIDE_SELECTED_MAIN_BOOKS,
@@ -22,7 +24,7 @@ import {
   setIsFetchingBooks,
   updateItems,
 } from './actions';
-import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
+import { fetchMainItems, fetchMainItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';
 
 function* loadMainItemsWithPageOptions(pageOptions) {
@@ -46,15 +48,17 @@ function* loadMainItemsWithPageOptions(pageOptions) {
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
-    yield put(
-      updateItems({
-        pageOptions,
-        items: itemResponse.items,
-        unitTotalCount: countResponse.unit_total_count,
-        itemTotalCount: countResponse.item_total_count,
-        filterOptions: categories,
-      }),
-    );
+    yield all([
+      put(
+        updateItems({
+          pageOptions,
+          items: itemResponse.items,
+          unitTotalCount: countResponse.unit_total_count,
+          itemTotalCount: countResponse.item_total_count,
+        }),
+      ),
+      put(setFilterOptions(categories)),
+    ]);
     yield fork(loadRecentlyUpdatedData, bookIds);
   } catch (err) {
     console.error(err);
