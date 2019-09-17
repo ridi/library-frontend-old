@@ -30,7 +30,7 @@ const Footer = () => (
                 <a href="https://ridibooks.com/legal/youth">청소년 보호 정책</a>
               </li>
               <li css={[styles.termsItem]}>
-                <a href="http://ftc.go.kr/info/bizinfo/communicationList.jsp">사업자 정보 확인</a>
+                <a href="http://ftc.go.kr/www/bizCommView.do?key=232&apv_perm_no=2009322012730202139">사업자 정보 확인</a>
               </li>
             </ul>
           </div>
