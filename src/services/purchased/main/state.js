@@ -13,7 +13,13 @@ export const createInitialDataState = () => ({
 });
 
 export function mapPageOptionsToKey(pageOptions) {
-  const { orderType, orderBy, categoryFilter } = pageOptions;
-  const order = OrderOptions.toKey(orderType, orderBy);
-  return `${categoryFilter}_${order}`;
+  const { kind, keyword, orderType, orderBy, categoryFilter } = pageOptions;
+  let key = '';
+  if (kind === 'main') {
+    const order = OrderOptions.toKey(orderType, orderBy);
+    key = `${categoryFilter}_${order}`;
+  } else if (kind === 'search') {
+    key = keyword;
+  }
+  return `${kind}_${key}`;
 }

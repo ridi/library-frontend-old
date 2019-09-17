@@ -12,7 +12,6 @@ import purchasedCommonReducer from '../services/purchased/common/reducers';
 import filterReducer from '../services/purchased/filter/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
-import purchasedSearchReducer from '../services/purchased/search/reducers';
 import unitPageReducer from '../services/unitPage/reducers';
 import selectionReducer from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
@@ -29,7 +28,6 @@ export default combineReducers({
   purchasedCommon: purchasedCommonReducer,
   filter: filterReducer,
   purchasedMain: purchasedMainReducer,
-  purchasedSearch: purchasedSearchReducer,
   purchasedHidden: purchasedHiddenReducer,
   unitPage: unitPageReducer,
 

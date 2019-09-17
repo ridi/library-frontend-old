@@ -15,9 +15,16 @@ export const PageType = {
   NOT_FOUND: 'notFound',
 };
 
+export const BooksPageKind = {
+  MAIN: 'main',
+  SEARCH: 'search',
+  HIDDEN: 'hidden',
+};
+
 export const URLMap = {
   [PageType.INDEX]: {
     href: '/purchased/main',
+    path: '/',
     as: '/',
     regex: /^\/$/,
   },
@@ -29,6 +36,7 @@ export const URLMap = {
   },
   [PageType.MAIN]: {
     href: '/purchased/main',
+    path: '/books',
     as: '/books',
     regex: /^\/books\/?$/,
   },
@@ -41,6 +49,7 @@ export const URLMap = {
   },
   [PageType.SEARCH]: {
     href: '/purchased/search',
+    path: '/books/search',
     as: '/books/search',
     regex: /^\/books\/search\/?$/,
   },

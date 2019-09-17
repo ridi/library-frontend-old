@@ -5,7 +5,6 @@ const NotFound = React.lazy(() => import('./pages/errors/notFound'));
 const Login = React.lazy(() => import('./pages/login'));
 const PurchasedHidden = React.lazy(() => import('./pages/purchased/hidden'));
 const PurchasedMain = React.lazy(() => import('./pages/purchased/main'));
-const PurchasedSearch = React.lazy(() => import('./pages/purchased/search'));
 const SerialPreference = React.lazy(() => import('./pages/serialPreference'));
 const ShelvesList = React.lazy(() => import('./pages/shelves/list'));
 const ShelfDetail = React.lazy(() => import('./pages/shelves/detail'));
@@ -28,7 +27,7 @@ const routes = [
     exact: true,
   },
   {
-    component: PurchasedSearch,
+    component: PurchasedMain,
     path: '/books/search',
     exact: true,
   },
