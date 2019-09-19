@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/browser';
 import axios from 'axios';
 import config from '../config';
 import * as accountActions from '../services/account/actions';
+import * as maintenanceAction from '../services/maintenance/actions';
 import { getMaintenanceStatus } from '../services/maintenance/requests';
 import { retry, throwNetworkError } from '../utils/retry';
 import { HttpStatusCode } from './constants';
@@ -22,23 +23,22 @@ const createInterceptor = (onSuccess, onFailure) => ({
   },
 });
 
-export const maintenanceInterceptor = {
+export const createMaintenanceInterceptor = store => ({
   response: createInterceptor(null, async error => {
     const { response } = error;
     if (response) {
       const { status, data } = response;
-      if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE && data.status === 'maintenance') {
+      if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE || data.status === 'maintenance') {
         const maintenanceStatus = await getMaintenanceStatus();
         if (maintenanceStatus.visible) {
-          window.location.reload();
+          store.dispatch(maintenanceAction.setMaintenance(maintenanceStatus));
           return null;
         }
       }
     }
-
     return Promise.reject(error);
   }),
-};
+});
 
 export const createAuthorizationInterceptor = store => ({
   response: createInterceptor(null, error => {

@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
-import createCachedSelector from 're-reselect';
 
-export const getSelectedItems = state => state.selection;
+export const getSelectedItems = state => state.selection.ids;
 
 export const getSelectedItemIds = createSelector(
   getSelectedItems,
@@ -11,11 +10,7 @@ export const getSelectedItemIds = createSelector(
       .map(([itemId]) => itemId),
 );
 
-export const getIsItemSelected = createCachedSelector(
-  getSelectedItems,
-  (state, itemId) => itemId,
-  (selection, itemId) => Boolean(selection[itemId]),
-)((state, itemId) => itemId);
+export const getIsItemSelected = (state, itemId) => Boolean(getSelectedItems(state)[itemId]);
 
 export const getTotalSelectedCount = createSelector(
   getSelectedItems,

@@ -1,5 +1,5 @@
 import API from './api';
-import { createAuthorizationInterceptor, maintenanceInterceptor } from './interceptor';
+import { createAuthorizationInterceptor, createMaintenanceInterceptor } from './interceptor';
 
 let api = null;
 
@@ -12,7 +12,7 @@ export const initializeApi = (req, store) => {
 
   const withCredentials = true;
   api = new API(withCredentials);
-  api.addInterceptors([maintenanceInterceptor, createAuthorizationInterceptor(store)]);
+  api.addInterceptors([createAuthorizationInterceptor(store), createMaintenanceInterceptor(store)]);
   api.registerInterceptor();
   return api;
 };

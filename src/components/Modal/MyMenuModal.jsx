@@ -8,7 +8,7 @@ import Note from '../../svgs/Note.svg';
 import Review from '../../svgs/Review.svg';
 import FeedbackIcon from '../../svgs/FeedbackIcon.svg';
 
-const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=573127';
+const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=664048';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
@@ -51,7 +51,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
       <ul>
         <li>
           <ModalButtonItem
-            title={isExcelDownloading ? '파일 생성중' : '모든 책 목록 다운로드'}
+            title={isExcelDownloading ? '파일 생성 중' : '모든 책 목록 다운로드'}
             IconComponent={Download}
             onClick={() => dispatchStartExcelDownload()}
             showSpinner={isExcelDownloading}

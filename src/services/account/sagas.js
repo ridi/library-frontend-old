@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser';
-import { all, call, delay, put, take, select } from 'redux-saga/effects';
+import { all, call, delay, put, select } from 'redux-saga/effects';
 
-import { START_ACCOUNT_TRACKER, setNeedLogin, setUserInfo } from './actions';
+import { setNeedLogin, setUserInfo } from './actions';
 import { fetchUserInfo } from './requests';
 
 export function* loadUserInfo() {
@@ -25,21 +25,22 @@ export function* loadUserInfo() {
 
 function* accountTracker() {
   const TRACK_DELAY_MILLISECS = 1000 * 60 * 3;
-  yield take(START_ACCOUNT_TRACKER);
 
-  while (true) {
-    yield delay(TRACK_DELAY_MILLISECS);
+  if (yield call(loadUserInfo)) {
+    while (true) {
+      yield delay(TRACK_DELAY_MILLISECS);
 
-    let newUserInfo;
-    try {
-      newUserInfo = yield call(fetchUserInfo);
-    } catch (e) {
-      return;
-    }
+      let newUserInfo;
+      try {
+        newUserInfo = yield call(fetchUserInfo);
+      } catch (e) {
+        return;
+      }
 
-    const userInfo = yield select(state => state.account.userInfo);
-    if (userInfo && userInfo.idx !== newUserInfo.idx) {
-      window.location.reload();
+      const userInfo = yield select(state => state.account.userInfo);
+      if (userInfo && userInfo.idx !== newUserInfo.idx) {
+        window.location.reload();
+      }
     }
   }
 }
