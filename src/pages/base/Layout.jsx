@@ -40,7 +40,7 @@ const Layout = props => {
           {confirm ? <Confirm onClickCloseButton={() => dispatchCloseConfirm()} {...confirm} /> : null}
           {dialog ? <Dialog onClickCloseButton={() => dispatchCloseDialog()} {...dialog} /> : null}
           {prompt ? <Prompt onClickCloseButton={() => dispatchClosePrompt()} {...prompt} /> : null}
-          {showFullScreenLoading ? <FullScreenLoading /> : null}
+          {showFullScreenLoading ? <FullScreenLoading fixed /> : null}
           <Toaster />
         </>
       )}

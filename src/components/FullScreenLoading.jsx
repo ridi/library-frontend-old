@@ -1,28 +1,33 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import { disableScroll, enableScroll } from '../utils/scroll';
 
 import LoadingSpinner from './LoadingSpinner';
 
 const styles = {
-  background: {
-    position: 'fixed',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 9999,
-  },
-  spinner: {
-    width: 32,
-    height: 32,
-  },
+  background: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+  `,
+  fixed: css`
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  `,
+  static: css`
+    width: 100vw;
+    height: 90vh;
+  `,
+  spinner: css`
+    width: 32px;
+    height: 32px;
+  `,
 };
 
 export default class FullScreenLoading extends React.Component {
@@ -35,8 +40,9 @@ export default class FullScreenLoading extends React.Component {
   }
 
   render() {
+    const { fixed: isFixed } = this.props;
     return (
-      <div css={styles.background}>
+      <div css={[styles.background, isFixed ? styles.fixed : styles.static]}>
         <LoadingSpinner css={styles.spinner} />
       </div>
     );
