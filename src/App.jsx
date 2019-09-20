@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-
-import { initializeSentry } from './utils/sentry';
-import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
-import Routes from './Routes';
 import ErrorBoundary from './components/ErrorBoundary';
 import FullScreenLoading from './components/FullScreenLoading';
-import * as accountSelectors from './services/account/selectors';
 import Layout from './pages/base/Layout';
+import Routes from './Routes';
+import * as accountSelectors from './services/account/selectors';
+import { initializeSentry } from './utils/sentry';
+import { initializeTabKeyFocus, registerMouseDownEvent, registerTabKeyUpEvent } from './utils/tabFocus';
 
 const Login = React.lazy(() => import('./pages/login'));
 
