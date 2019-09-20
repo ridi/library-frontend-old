@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';

@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { Editing } from '../Tool';
 import FlexBar from '../FlexBar';

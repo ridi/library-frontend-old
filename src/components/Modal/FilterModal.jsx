@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import { useLayoutEffect, useRef } from 'react';
-import { jsx } from '@emotion/core';
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';

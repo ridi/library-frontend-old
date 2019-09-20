@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import * as modalStyles from './styles';
 import { ModalBackground } from './ModalBackground';

@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import ViewType from '../../../constants/viewType';
 import * as styles from '../../../styles/books';

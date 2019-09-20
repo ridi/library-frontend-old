@@ -1,7 +1,5 @@
-/** @jsx jsx */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { jsx } from '@emotion/core';
 import Close from '../svgs/Close.svg';
 import Search from '../svgs/Search.svg';
 import IconButton from './IconButton';

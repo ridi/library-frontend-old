@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import CategoryFilter from '../../svgs/CategoryFilter.svg';
 import On from '../../svgs/On.svg';

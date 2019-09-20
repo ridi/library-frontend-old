@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-
 const disabled = {
   display: 'block',
   position: 'absolute',
@@ -19,7 +16,7 @@ const dimmed = {
   width: '100%',
   height: '100%',
   background: '#f3f4f5',
-  opacity: '.4',
+  opacity: '0.4',
 };
 
 export const Disabled = () => (

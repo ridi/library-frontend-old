@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import ArrowTriangleDown from '../../svgs/ArrowTriangleDown.svg';
 import FlexBar from '../FlexBar';

@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Modal, ModalAnchorItem, ModalButtonItem, ModalItemGroup } from '.';
 import config from '../../config';
 import Download from '../../svgs/Download.svg';

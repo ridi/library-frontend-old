@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import { makeLinkProps } from '../../utils/uri';
 import * as styles from './styles';

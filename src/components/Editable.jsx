@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import BottomActionBar from './BottomActionBar';
 import EditingBar from './EditingBar';
 import FixedToolbarView from './FixedToolbarView';

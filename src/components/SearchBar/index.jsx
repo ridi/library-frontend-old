@@ -1,6 +1,5 @@
-/** @jsx jsx */
 import React from 'react';
-import { jsx } from '@emotion/core';
+
 import { Link, withRouter } from 'react-router-dom';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';

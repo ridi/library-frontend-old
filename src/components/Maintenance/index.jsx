@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { Global, jsx } from '@emotion/core';
+import { Global } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import RIDIIcon from '../../svgs/LogoRidi.svg';

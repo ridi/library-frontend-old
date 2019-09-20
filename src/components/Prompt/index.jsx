@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import classname from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';

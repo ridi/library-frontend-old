@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';

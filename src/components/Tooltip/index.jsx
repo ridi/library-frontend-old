@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import isBefore from 'date-fns/is_before';
 import React from 'react';
 import CheckIcon from '../../svgs/Check.svg';

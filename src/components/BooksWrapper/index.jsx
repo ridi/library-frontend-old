@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import * as styles from '../../styles/books';
 
