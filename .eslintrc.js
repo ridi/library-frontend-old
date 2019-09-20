@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended'],
   parser: 'babel-eslint',
