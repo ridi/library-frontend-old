@@ -33,11 +33,18 @@ module.exports = {
     'prettier/prettier': 'error',
 
     // reset @ridi
+    camelcase: 'off',
     'class-methods-use-this': 'error',
     'no-constant-condition': 'error',
     'no-plusplus': 'error',
-    'babel/camelcase': 0,
-    'babel/no-invalid-this': 0,
+    'babel/camelcase': [
+      'error',
+      {
+        properties: 'never',
+        ignoreDestructuring: false,
+      },
+    ],
+    'babel/no-invalid-this': 'error',
 
     // account-team rules
     'max-len': ['error', { code: 140 }],
