@@ -31,11 +31,11 @@ function App(props) {
   const routes = needLogin ? <Route component={Login} /> : <Route component={Routes} />;
 
   return (
-    <ErrorBoundary>
-      <Layout>
+    <Layout>
+      <ErrorBoundary>
         <React.Suspense fallback={<FullScreenLoading />}>{routes}</React.Suspense>
-      </Layout>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </Layout>
   );
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PageLoadError } from '../Error';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class ErrorBoundary extends React.Component {
     const { hasError } = this.state;
     const { children } = this.props;
     if (hasError) {
-      return <p>문제가 발생 했습니다. 잠시후 새로고침 해주세요.</p>;
+      return <PageLoadError />;
     }
 
     return children;
