@@ -1,5 +1,5 @@
 import { CacheProvider } from '@emotion/core';
-import { cache } from 'emotion';
+import createCache from '@emotion/cache';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -9,11 +9,12 @@ import ScrollToTop from './pages/base/ScrollToTop';
 import { makeStoreWithApi } from './store';
 
 const store = makeStoreWithApi({}, {});
+const styleCache = createCache();
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      <CacheProvider value={cache}>
+      <CacheProvider value={styleCache}>
         <ScrollToTop />
         <App />
       </CacheProvider>

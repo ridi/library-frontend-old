@@ -6,7 +6,7 @@ import { generate } from 'shortid';
 import * as styles from './styles';
 
 const Maintenance = ({ terms, unavailableServiceList }) => (
-  <>
+  <React.Fragment>
     <Helmet>
       <title>시스템 점검 중 - 내 서재</title>
     </Helmet>
@@ -40,7 +40,7 @@ const Maintenance = ({ terms, unavailableServiceList }) => (
         <strong>리디북스 드림.</strong>
       </p>
     </section>
-  </>
+  </React.Fragment>
 );
 
 export default Maintenance;

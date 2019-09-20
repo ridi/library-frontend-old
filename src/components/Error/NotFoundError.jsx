@@ -10,7 +10,7 @@ const onClickHistoryBack = () => {
 };
 
 export const NotFoundError = () => (
-  <>
+  <React.Fragment>
     <Helmet>
       <title>404 에러 - 내 서재</title>
     </Helmet>
@@ -37,5 +37,5 @@ export const NotFoundError = () => (
         </li>
       </ul>
     </section>
-  </>
+  </React.Fragment>
 );

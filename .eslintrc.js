@@ -1,10 +1,11 @@
 module.exports = {
-  extends: ['@ridi', 'prettier'],
+  extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2017,
     ecmaFeatures: {
       experimentalObjectRestSpread: true,
+      jsx: true,
     },
   },
   globals: {
@@ -14,11 +15,14 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['import', 'prettier'],
+  plugins: ['import', 'prettier', 'babel', 'react', 'emotion'],
   settings: {
     'import/resolver': {
+      node: {
+        moduleDirectory: ['./src'],
+      },
       webpack: {
-        config: 'webpack.common.js',
+        config: './webpack.common.js',
       },
     },
   },
@@ -27,9 +31,18 @@ module.exports = {
     'prettier/prettier': 'error',
 
     // reset @ridi
+    camelcase: 'off',
     'class-methods-use-this': 'error',
     'no-constant-condition': 'error',
     'no-plusplus': 'error',
+    'babel/camelcase': [
+      'error',
+      {
+        properties: 'never',
+        ignoreDestructuring: false,
+      },
+    ],
+    'babel/no-invalid-this': 'error',
 
     // account-team rules
     'max-len': ['error', { code: 140 }],
@@ -76,10 +89,24 @@ module.exports = {
 
     // account team rules
     'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
     'no-underscore-dangle': 'off',
     'no-case-declarations': 'off',
 
+    // emotion
+    'emotion/jsx-import': 'error',
+    'emotion/no-vanilla': 'error',
+    'emotion/import-from-emotion': 'error',
+    'emotion/styled-import': 'error',
+
     // jsx
+    'react/jsx-uses-react': 'error',
+    'react/jsx-uses-vars': 'error',
     'react/no-unknown-property': [
       'warn',
       {
@@ -94,7 +121,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     ],
-    'react/jsx-one-expression-per-line': 'allow',
+    'react/jsx-one-expression-per-line': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/mouse-events-have-key-events': 'off',
     'jsx-a11y/no-autofocus': 'off',
