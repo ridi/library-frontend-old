@@ -1,6 +1,5 @@
 import axios from 'axios';
 import config from '../../config';
-import { isNowBetween } from '../../utils/datetime';
 import { notifySentry } from '../../utils/sentry';
 
 const maintenanceStatus = (visible = false, terms = '', unavailableServiceList = []) => ({
@@ -14,8 +13,8 @@ export const getSorryRidibooksStatus = () =>
     .get(config.RIDI_STATUS_URL)
     .then(({ data }) => {
       const maintenanceData = data || {};
-      const { status, start_at: start, end_at: end, period, unavailableService } = maintenanceData;
-      const visible = start && end ? isNowBetween(new Date(start), new Date(end)) : status === 'maintenance';
+      const { status, period, unavailableService } = maintenanceData;
+      const visible = status === 'maintenance';
       return maintenanceStatus(visible, period, unavailableService);
     })
     .catch(error => {
