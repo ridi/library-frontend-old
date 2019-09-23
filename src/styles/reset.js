@@ -13,128 +13,245 @@ export const fontFamily = [
   'sans-serif',
 ].join(', ');
 
-export const cursorDefault = {
-  cursor: 'default',
-};
+export const cursorDefault = css`
+  cursor: default;
+`;
 
-export const cursorPointer = {
-  cursor: 'pointer',
-};
+export const cursorPointer = css`
+  cursor: pointer;
+`;
 
-export const inheritFont = {
-  color: 'inherit',
-  letterSpacing: 'inherit',
-  fontFamily: 'inherit',
-};
+export const inheritFont = css`
+  color: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+`;
 
-export const resetAppearance = {
-  appearance: 'none',
-  background: 'none',
-  boxShadow: 'none',
-  border: 0,
-};
+export const resetAppearance = css`
+  appearance: none;
+  background: none;
+  box-shadow: none;
+  border: 0;
+`;
 
-export const resetFont = {
-  color: 'black',
-  fontFamily,
-  fontWeight: 400,
-  letterSpacing: '-.03em',
-  WebkitFontSmoothing: 'antialiased',
-  MozOsxFontSmoothing: 'grayscale',
-};
+export const resetFont = css`
+  color: black;
+  font-family: ${fontFamily};
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+`;
 
-export const resetLayout = {
-  padding: 0,
-  margin: 0,
-};
+export const resetLayout = css`
+  padding: 0;
+  margin: 0;
+`;
 
-export const reset = {
-  a: css([
-    inheritFont,
-    cursorPointer,
-    {
-      '&:link, &:visited': {
-        textDecoration: 'none',
-      },
-    },
-  ]),
-  article: css([resetLayout]),
-  aside: css([resetLayout]),
-  body: css([resetLayout, cursorDefault]),
-  button: css([cursorPointer, inheritFont, resetAppearance, resetLayout]),
-  canvas: css([resetLayout]),
-  dd: css([resetLayout]),
-  details: css([resetLayout]),
-  div: css([resetLayout]),
-  dl: css([resetLayout]),
-  dt: css([resetLayout]),
-  fieldset: css([resetLayout]),
-  figcaption: css([resetLayout]),
-  figure: css([resetLayout]),
-  footer: css([resetLayout]),
-  form: css([resetLayout]),
-  header: css([resetLayout]),
-  hr: css({ display: 'none' }),
-  html: css([
-    resetFont,
-    resetLayout,
-    {
-      textSizeAdjust: '100%',
-    },
-  ]),
-  h1: css([resetLayout]),
-  h2: css([resetLayout]),
-  h3: css([resetLayout]),
-  h4: css([resetLayout]),
-  h5: css([resetLayout]),
-  h6: css([resetLayout]),
-  iframe: css([resetLayout], {
-    display: 'block',
-  }),
-  img: css({
-    border: 0,
-    msInterpolationMode: 'bicubic',
-  }),
-  input: css([
-    inheritFont,
-    resetAppearance,
-    resetLayout,
-    {
-      '&::-ms-clear': {
-        display: 'none',
-      },
-      '&::-webkit-search-cancel-button': {
-        display: 'none',
-      },
-    },
-  ]),
-  legend: css([resetLayout]),
-  li: css([resetLayout]),
-  nav: css([resetLayout]),
-  ol: css([resetLayout, { listStyle: 'none' }]),
-  p: css([resetLayout]),
-  section: css([resetLayout]),
-  select: css([inheritFont, resetAppearance, resetLayout]),
-  summary: css([resetLayout]),
-  table: css([
-    resetLayout,
-    {
-      borderCollapse: 'collapse',
-      borderSpacing: 0,
-    },
-  ]),
-  td: css([resetLayout]),
-  textarea: css([inheritFont, resetLayout]),
-  th: css([resetLayout]),
-  ul: css([resetLayout, { listStyle: 'none' }]),
-  '.a11y': css({
-    position: 'absolute',
-    width: 1,
-    height: 1,
-    margin: -1,
-    padding: 0,
-    overflow: 'hidden',
-    border: 0,
-    clip: 'rect(0, 0, 0, 0)',
-  }),
-};
+export const reset = css`
+  a {
+    ${inheritFont};
+    ${cursorPointer};
+
+    &:link,
+    &:visited {
+      text-decoration: none;
+    }
+  }
+
+  article {
+    ${resetLayout};
+  }
+
+  aside {
+    ${resetLayout};
+  }
+
+  body {
+    ${resetLayout};
+    ${cursorDefault};
+  }
+
+  button {
+    ${cursorPointer};
+    ${inheritFont};
+    ${resetAppearance};
+    ${resetLayout};
+  }
+
+  canvas {
+    ${resetLayout};
+  }
+
+  dd {
+    ${resetLayout};
+  }
+
+  details {
+    ${resetLayout};
+  }
+
+  div {
+    ${resetLayout};
+  }
+
+  dl {
+    ${resetLayout};
+  }
+
+  dt {
+    ${resetLayout};
+  }
+
+  fieldset {
+    ${resetLayout};
+  }
+
+  figcaption {
+    ${resetLayout};
+  }
+
+  figure {
+    ${resetLayout};
+  }
+
+  footer {
+    ${resetLayout};
+  }
+
+  form {
+    ${resetLayout};
+  }
+
+  header {
+    ${resetLayout};
+  }
+
+  hr {
+    display: none;
+  }
+
+  html {
+    ${resetFont};
+    ${resetLayout};
+    text-size-adjust: 100%;
+  }
+
+  h1 {
+    ${resetLayout};
+  }
+
+  h2 {
+    ${resetLayout};
+  }
+
+  h3 {
+    ${resetLayout};
+  }
+
+  h4 {
+    ${resetLayout};
+  }
+
+  h5 {
+    ${resetLayout};
+  }
+
+  h6 {
+    ${resetLayout};
+  }
+
+  iframe {
+    ${resetLayout};
+    display: block;
+  }
+
+  img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+  }
+
+  input {
+    ${inheritFont};
+    ${resetAppearance};
+    ${resetLayout};
+
+    &::-ms-clear {
+      display: none;
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  legend {
+    ${resetLayout};
+  }
+
+  li {
+    ${resetLayout};
+  }
+
+  nav {
+    ${resetLayout};
+  }
+
+  ol {
+    ${resetLayout};
+    list-style: none;
+  }
+
+  p {
+    ${resetLayout};
+  }
+
+  section {
+    ${resetLayout};
+  }
+
+  select {
+    ${inheritFont};
+    ${resetAppearance};
+    ${resetLayout};
+  }
+
+  summary {
+    ${resetLayout};
+  }
+
+  table {
+    ${resetLayout};
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  td {
+    ${resetLayout};
+  }
+
+  textarea {
+    ${inheritFont};
+    ${resetLayout};
+  }
+
+  th {
+    ${resetLayout};
+  }
+
+  ul {
+    ${resetLayout};
+    list-style: none;
+  }
+
+  .a11y {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+  }
+`;

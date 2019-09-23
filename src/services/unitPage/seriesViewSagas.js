@@ -15,7 +15,7 @@ function getLibraryItem(itemBookIds, libraryItems) {
   // 2. 셀렉트 도서가 아닌 것
   // 3. 최근에 구매한 것 (구매 시각이 큰 것)
   let optimalValue = null;
-  for (const item of selectedLibraryItems) {
+  selectedLibraryItems.forEach(item => {
     if (optimalValue == null) {
       optimalValue = item;
     } else if (optimalValue.expire_date !== item.expire_date) {
@@ -31,7 +31,8 @@ function getLibraryItem(itemBookIds, libraryItems) {
         optimalValue = item;
       }
     }
-  }
+  });
+
   return optimalValue;
 }
 

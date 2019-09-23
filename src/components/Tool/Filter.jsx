@@ -14,7 +14,8 @@ export default class Filter extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.filter !== this.props.filter) {
+    const { filter } = this.props;
+    if (nextProps.filter !== filter) {
       this.setState({ isFilterModalShow: false });
     }
     return true;

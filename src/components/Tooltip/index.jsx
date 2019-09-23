@@ -30,6 +30,7 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
       }
+      return null;
     },
     [isActive],
   );

@@ -27,9 +27,30 @@ class SeriesList extends React.Component {
     this.seriesListRef = React.createRef();
   }
 
+  getEmptyMessage(defaultMessage) {
+    const { currentOrder } = this.props;
+
+    if (!currentOrder) {
+      return defaultMessage;
+    }
+
+    if (OrderOptions.EXPIRE_DATE.key === currentOrder) {
+      return '대여 중인 도서가 없습니다.';
+    }
+    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
+      return '만료된 도서가 없습니다.';
+    }
+    return defaultMessage;
+  }
+
   toggleEditingMode = () => {
     const { isEditing, onEditingChange } = this.props;
     onEditingChange && onEditingChange(!isEditing);
+  };
+
+  calculateScroll = () => {
+    const seriesList = this.seriesListRef.current;
+    return seriesList ? { x: 0, y: seriesList.offsetTop - 10 } : null;
   };
 
   makeEditingBarProps() {
@@ -48,11 +69,6 @@ class SeriesList extends React.Component {
     };
   }
 
-  calculateScroll = () => {
-    const seriesList = this.seriesListRef.current;
-    return seriesList ? { x: 0, y: seriesList.offsetTop - 10 } : null;
-  };
-
   renderSeriesToolBar() {
     const { currentOrder, orderOptions } = this.props;
 
@@ -64,22 +80,6 @@ class SeriesList extends React.Component {
         scroll={this.calculateScroll}
       />
     );
-  }
-
-  getEmptyMessage(defaultMessage) {
-    const { currentOrder } = this.props;
-
-    if (!currentOrder) {
-      return defaultMessage;
-    }
-
-    if (OrderOptions.EXPIRE_DATE.key === currentOrder) {
-      return '대여 중인 도서가 없습니다.';
-    }
-    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
-      return '만료된 도서가 없습니다.';
-    }
-    return defaultMessage;
   }
 
   renderBooks() {

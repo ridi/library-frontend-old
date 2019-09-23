@@ -35,20 +35,6 @@ class UnitDetailView extends React.Component {
     };
   }
 
-  get isPurchased() {
-    const { primaryItem } = this.props;
-    return !!primaryItem;
-  }
-
-  setThumbnailWidth = () => {
-    const newThumbnailWidth = getResponsiveBookWidthForDetailHeader(window.innerWidth);
-    if (this.state.thumbnailWidth !== newThumbnailWidth) {
-      this.setState({
-        thumbnailWidth: newThumbnailWidth,
-      });
-    }
-  };
-
   componentDidMount() {
     this.setThumbnailWidth();
     window.addEventListener('resize', this.setThumbnailWidth);
@@ -58,9 +44,30 @@ class UnitDetailView extends React.Component {
     window.removeEventListener('resize', this.setThumbnailWidth);
   }
 
+  get isPurchased() {
+    const { primaryItem } = this.props;
+    return !!primaryItem;
+  }
+
+  setThumbnailWidth = () => {
+    const newThumbnailWidth = getResponsiveBookWidthForDetailHeader(window.innerWidth);
+    const { thumbnailWidth } = this.state;
+    if (thumbnailWidth !== newThumbnailWidth) {
+      this.setState({
+        thumbnailWidth: newThumbnailWidth,
+      });
+    }
+  };
+
+  toggleExpand = () => {
+    const { isExpanded } = this.state;
+    this.setState({ isExpanded: !isExpanded });
+  };
+
   checkTruncated() {
+    const { isTruncated } = this.state;
     if (this.wrapper) {
-      if (!this.state.isTruncated && this.wrapper.offsetHeight > (LINE - 1) * LINE_HEIGHT) {
+      if (!isTruncated && this.wrapper.offsetHeight > (LINE - 1) * LINE_HEIGHT) {
         this.setState({ isTruncated: true });
       }
     }
@@ -88,11 +95,6 @@ class UnitDetailView extends React.Component {
     );
   }
 
-  toggleExpand = () => {
-    const { isExpanded } = this.state;
-    this.setState({ isExpanded: !isExpanded });
-  };
-
   renderExpanderButton() {
     const { isExpanded, isTruncated } = this.state;
 
@@ -118,6 +120,7 @@ class UnitDetailView extends React.Component {
         <div css={[styles.bookDescriptionBody(LINE_HEIGHT), !isExpanded && styles.bookDescriptionFolded(LINE, LINE_HEIGHT)]}>
           <p
             css={styles.bookDescription}
+            /* eslint react/no-danger: "off" */
             dangerouslySetInnerHTML={{ __html: bookDescription.intro.split('\n').join('<br />') }}
             ref={wrapper => {
               this.wrapper = wrapper;

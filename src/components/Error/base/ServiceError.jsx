@@ -39,7 +39,7 @@ const ServiceError = ({ children, errorTitle, reloadButton, prevPageButton, home
   return (
     <React.Fragment>
       <Helmet>
-        <title>{errorTitle ? errorTitle : ''}에러 - 내 서재</title>
+        <title>{errorTitle || ''}에러 - 내 서재</title>
       </Helmet>
       <section css={styles.pageError}>
         <div>

@@ -100,9 +100,9 @@ function* waitForOperation(revision, opIds) {
       const statuses = yield call(requests.fetchOperationStatus, pendingIds);
       const resolvedOps = statuses.filter(({ status }) => status !== OperationStatus.UNDONE);
       pendingIds = statuses.filter(({ status }) => status === OperationStatus.UNDONE).map(({ id }) => id);
-      for (const { id, status } of resolvedOps) {
+      resolvedOps.forEach(({ id, status }) => {
         results[id] = status;
-      }
+      });
       if (pendingIds.length === 0) {
         break;
       }
