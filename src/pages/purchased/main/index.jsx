@@ -101,6 +101,14 @@ function PurchasedMain(props) {
     [location, orderType, orderBy],
   );
 
+  React.useEffect(
+    () => {
+      dispatchClearSelectedBooks();
+      dispatchLoadItems(pageOptions);
+    },
+    [location],
+  );
+
   function renderPaginator() {
     return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
   }
@@ -307,12 +315,6 @@ function PurchasedMain(props) {
     </>
   );
 }
-
-PurchasedMain.prepare = async ({ dispatch, location }) => {
-  const pageOptions = extractPageOptions(location);
-  await dispatch(clearSelectedItems());
-  await dispatch(loadItems(pageOptions));
-};
 
 const mapStateToProps = (state, props) => {
   const pageOptions = extractPageOptions(props.location);

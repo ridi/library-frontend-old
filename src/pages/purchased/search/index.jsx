@@ -111,6 +111,14 @@ function Search(props) {
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
   );
 
+  React.useEffect(
+    () => {
+      dispatchClearSelectedBooks();
+      dispatchLoadItems(pageOptions);
+    },
+    [location],
+  );
+
   function makeEditingBarProps() {
     const { isSyncShelfEnabled, items, totalSelectedCount } = props;
     const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
@@ -281,12 +289,6 @@ function Search(props) {
     </>
   );
 }
-
-Search.prepare = ({ dispatch, location }) => {
-  const pageOptions = extractPageOptions(location);
-  dispatch(clearSelectedItems());
-  dispatch(loadItems(pageOptions));
-};
 
 const mapStateToProps = (state, props) => {
   const pageOptions = extractPageOptions(props.location);

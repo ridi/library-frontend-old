@@ -1,6 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Switch, matchPath } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import NotFound from './pages/errors/notFound';
 import Login from './pages/login';
 import PurchasedHidden from './pages/purchased/hidden';
@@ -72,35 +71,12 @@ const routes = [
   },
 ];
 
-function Routes({ dispatch, location }) {
-  const [renderLocation, setRenderLocation] = React.useState(location);
-  React.useEffect(
-    () => {
-      let component = null;
-      let matchData = null;
-      for (const route of routes) {
-        ({ component } = route);
-        matchData = matchPath(location.pathname, route);
-        if (matchData != null) {
-          break;
-        }
-      }
-      if (matchData != null) {
-        if (typeof component.prepare === 'function') {
-          component.prepare({ ...matchData, dispatch, location });
-        }
-      }
-      setRenderLocation(location);
-    },
-    [dispatch, location],
-  );
+export default function Routes() {
   return (
-    <Switch location={renderLocation}>
+    <Switch>
       {routes.map(props => (
         <Route key={JSON.stringify(props)} {...props} />
       ))}
     </Switch>
   );
 }
-
-export default connect()(Routes);
