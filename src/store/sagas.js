@@ -3,7 +3,7 @@ import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
 import excelDownloadRootSaga from '../services/excelDownload/sagas';
-import featureRootSaga from '../services/feature/sagas';
+// import featureRootSaga from '../services/feature/sagas';
 import purchasedCommonRootSaga from '../services/purchased/common/sagas/rootSagas';
 import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
@@ -20,7 +20,7 @@ export default function* rootSaga() {
     accountRootSaga(),
     bookRootSaga(),
     excelDownloadRootSaga(),
-    featureRootSaga(),
+    // featureRootSaga(),
     purchasedCommonRootSaga(),
     purchasedMainRootSaga(),
     purchasedSearchRootSaga(),

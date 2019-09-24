@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
@@ -9,7 +8,6 @@ import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestDelete, requestUnhide } from '../../common/requests';
 import { getBookIdsByUnitIdsForHidden } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
-import * as featureSelectors from '../../feature/selectors';
 import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
@@ -131,8 +129,7 @@ function* deleteSelectedBooks(action) {
 function* selectAllBooks(action) {
   const { page } = action.payload;
   const items = yield select(getItemsByPage, page);
-  const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
-  const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+  const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
   const bookIds = toFlatten(filteredItems, 'b_id');
   yield put(selectItems(bookIds));
 }
