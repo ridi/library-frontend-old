@@ -11,11 +11,11 @@ export const header = css`
   height: 50px;
   line-height: 50px;
   text-align: center;
-  border-bottom: 1px solid rgb(214, 222, 235);
+  border-bottom: 1px solid ${colors.blueGray10};
 `;
 
 export const logo = css`
-  fill: rgb(31, 140, 230);
+  fill: ${colors.dodgerBlue50};
   width: 44px;
   height: 18px;
   vertical-align: middle;
