@@ -920,6 +920,11 @@
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.0.2.tgz#1d94f02800b094753f9271c206a26c2a06ca14ee"
   integrity sha512-8/qcMh15507AnXJ3lBeuhsdFwnWQqnp68EpUuHlYPixJ5vjVmls7/Jq48cnUlrZI8Jd9U1jkhfCl0gaT5KMgVw==
 
+"@ridi/colors@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@ridi/colors/-/colors-0.6.0.tgz#016792c81c8670cea06347f261a6ab3162db54a6"
+  integrity sha512-s7hJzbGYlUrJMP06dU1imVOjOfcK2nQjtwhfHUzd+P1CpqfEqcto3/8kSN/D+TY6zURfeNWPhl29pKOOceXnHA==
+
 "@ridi/eslint-config@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@ridi/eslint-config/-/eslint-config-4.1.1.tgz#2c6d7f88bfa2f527c54ea1cbcbf5bbb8d92668cd"
