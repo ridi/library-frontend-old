@@ -14,6 +14,8 @@ export const getFetchingReadLatest = createSelector(
   state => state.fetchingReadLatest,
 );
 
+export const getIsRecentlyUpdated = (state, bookId) => Boolean(state.purchasedCommon.recentlyUpdatedData[bookId]);
+
 export const getRecentlyUpdatedData = createCachedSelector(
   state => state.purchasedCommon.recentlyUpdatedData,
   (state, bookIds) => bookIds,

@@ -44,6 +44,7 @@ function ShelfDetail(props) {
     orderBy,
     orderDirection,
     page,
+    pageOptions,
     removeSelectedFromShelf,
     renameShelf,
     selectBooks,
@@ -54,12 +55,24 @@ function ShelfDetail(props) {
     totalSelectedCount,
     uuid,
     viewType,
+    loadShelfBooks,
+    loadShelfBookCount,
   } = props;
   const visibleBookCount = bookIds.length;
   const totalPages = totalBookCount == null ? null : paginationUtils.calcPage(totalBookCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
+
+  React.useEffect(
+    () => {
+      clearSelectedBooks();
+      loadShelfBooks(uuid, pageOptions);
+      loadShelfBookCount(uuid);
+    },
+    [location],
+  );
+
   const toggleEditingMode = React.useCallback(() => {
     clearSelectedBooks();
     setIsEditing(value => !value);
@@ -308,14 +321,6 @@ const extractPageOptions = locationSearch => {
 
 const getUuid = matchParams => matchParams?.uuid;
 
-ShelfDetail.prepare = async ({ dispatch, location, ...matchData }) => {
-  const pageOptions = extractPageOptions(location.search);
-  const uuid = getUuid(matchData.params);
-  dispatch(selectionActions.clearSelectedItems());
-  dispatch(actions.loadShelfBooks(uuid, pageOptions));
-  dispatch(actions.loadShelfBookCount(uuid));
-};
-
 function mapStateToProps(state, props) {
   const pageOptions = extractPageOptions(props.location.search);
   const { orderBy, orderDirection, page } = pageOptions;
@@ -343,6 +348,7 @@ function mapStateToProps(state, props) {
     orderBy,
     orderDirection,
     page,
+    pageOptions,
     uuid,
   };
 }
@@ -358,6 +364,8 @@ const mapDispatchToProps = {
   setViewType: uiActions.setViewType,
   showConfirm: confirmActions.showConfirm,
   showPrompt: promptActions.showPrompt,
+  loadShelfBooks: actions.loadShelfBooks,
+  loadShelfBookCount: actions.loadShelfBookCount,
 };
 
 export default withRouter(

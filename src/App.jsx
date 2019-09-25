@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-
-import { initializeSentry } from './utils/sentry';
-import { initializeTabKeyFocus, registerTabKeyUpEvent, registerMouseDownEvent } from './utils/tabFocus';
+import ErrorBoundary from './components/ErrorBoundary';
+import Layout from './pages/base/Layout';
+import PageLoadingSpinner from './pages/base/PageLoadingSpinner';
 import Routes from './Routes';
 import * as accountSelectors from './services/account/selectors';
-import Layout from './pages/base/Layout';
-import Login from './pages/login';
+import { initializeSentry } from './utils/sentry';
+import { initializeTabKeyFocus, registerMouseDownEvent, registerTabKeyUpEvent } from './utils/tabFocus';
+
+const Login = React.lazy(() => import('./pages/login'));
 
 function App(props) {
   const { needLogin } = props;
@@ -20,15 +22,21 @@ function App(props) {
     disposeBag.push(registerTabKeyUpEvent(body));
     disposeBag.push(registerMouseDownEvent(body));
     return () => {
-      for (const callback of disposeBag) {
+      disposeBag.forEach(callback => {
         callback();
-      }
+      });
     };
   }, []);
 
   const routes = needLogin ? <Route component={Login} /> : <Route component={Routes} />;
 
-  return <Layout>{routes}</Layout>;
+  return (
+    <Layout>
+      <ErrorBoundary>
+        <React.Suspense fallback={<PageLoadingSpinner />}>{routes}</React.Suspense>
+      </ErrorBoundary>
+    </Layout>
+  );
 }
 
 function mapStateToProps(state) {

@@ -2,7 +2,6 @@
 import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import MyMenuModal from '../../../components/Modal/MyMenuModal';
 import config from '../../../config';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
@@ -14,98 +13,88 @@ import MyMenuIcon from '../../../svgs/MyMenu.svg';
 import Responsive from '../Responsive';
 import * as styles from './styles';
 
-class GNB extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isModalActive: false,
-    };
-  }
+const FamilyServices = React.memo(() => (
+  <ul css={styles.familyServiceList}>
+    <li css={styles.familyServiceItem}>
+      <a css={styles.familyServiceLink} href={config.STORE_BASE_URL}>
+        <LogoRidibooks css={styles.ridibooksIcon} />
+        <span css={Hidden}>RIDIBOOKS</span>
+      </a>
+    </li>
+    <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
+      <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL}>
+        <LogoRidiselect css={styles.ridiSelectIcon} />
+        <span css={Hidden}>RIDI Select</span>
+      </a>
+    </li>
+  </ul>
+));
 
-  onModalBackgroundClick = () => {
-    this.setState({ isModalActive: false });
-  };
+function GNB(props) {
+  const { userId } = props;
 
-  onMyMenuClick = () => {
-    const { isModalActive } = this.state;
-    this.setState({ isModalActive: !isModalActive });
-  };
+  const [isModalActive, setModalActive] = React.useState(false);
+  const [MyMenuModal, setMyMenuModal] = React.useState(null);
+  const handleModalBackgroundClick = React.useCallback(() => setModalActive(false), []);
+  const handleMyMenuClick = React.useCallback(() => setModalActive(active => !active), []);
 
-  renderFamilyServiceIcons = () => (
-    <ul css={styles.familyServiceList}>
-      <li css={styles.familyServiceItem}>
-        <a css={styles.familyServiceLink} href={config.STORE_BASE_URL}>
-          <LogoRidibooks css={styles.ridibooksIcon} />
-          <span css={Hidden}>RIDIBOOKS</span>
-        </a>
-      </li>
-      <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-        <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL}>
-          <LogoRidiselect css={styles.ridiSelectIcon} />
-          <span css={Hidden}>RIDI Select</span>
-        </a>
-      </li>
-    </ul>
+  React.useEffect(
+    () => {
+      if (userId != null) {
+        import('../../../components/Modal/MyMenuModal').then(({ default: component }) => setMyMenuModal(() => component));
+      }
+    },
+    [userId],
   );
 
-  renderMyMenu = () => {
-    const { userId, isExcelDownloading, dispatchStartExcelDownload } = this.props;
-    const { isModalActive } = this.state;
+  function renderMyMenu() {
+    const { isExcelDownloading, dispatchStartExcelDownload } = props;
+    const isIconInteractable = userId != null && MyMenuModal != null;
 
     return (
       <>
-        {userId ? (
-          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} onClick={this.onMyMenuClick} type="button">
-            {isModalActive ? <MyMenuActiveIcon css={styles.myMenuActiveIcon} /> : <MyMenuIcon css={styles.myMenuIcon} />}
-            <span css={Hidden}>마이메뉴</span>
-          </button>
-        ) : (
-          <button id="MyMenuToggleButton" css={styles.myMenuToggleButton} type="button">
-            {<MyMenuIcon css={styles.myMenuInactiveIcon} />}
-            <span css={Hidden}>마이메뉴</span>
-          </button>
-        )}
-
-        {userId ? (
+        <button
+          id="MyMenuToggleButton"
+          css={styles.myMenuToggleButton}
+          onClick={isIconInteractable ? handleMyMenuClick : undefined}
+          type="button"
+        >
+          {isIconInteractable && isModalActive ? (
+            <MyMenuActiveIcon css={styles.myMenuActiveIcon} />
+          ) : (
+            <MyMenuIcon css={styles.myMenuIcon} />
+          )}
+          <span css={Hidden}>마이메뉴</span>
+        </button>
+        {isIconInteractable && (
           <MyMenuModal
             userId={userId}
             isActive={isModalActive}
             isExcelDownloading={isExcelDownloading}
             dispatchStartExcelDownload={dispatchStartExcelDownload}
-            onClickModalBackground={this.onModalBackgroundClick}
+            onClickModalBackground={handleModalBackgroundClick}
           />
-        ) : null}
-      </>
-    );
-  };
-
-  renderRightUi() {
-    return (
-      <div css={styles.myMenuWrapper}>
-        {this.renderFamilyServiceIcons()}
-        {this.renderMyMenu()}
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <>
-        <Responsive css={styles.GNB}>
-          <header css={styles.flexWrapper}>
-            <div>
-              <h1 css={styles.title}>
-                <a css={styles.titleLink} href="/">
-                  내 서재
-                </a>
-              </h1>
-            </div>
-            {this.renderRightUi()}
-          </header>
-        </Responsive>
+        )}
       </>
     );
   }
+  return (
+    <Responsive css={styles.GNB}>
+      <header css={styles.flexWrapper}>
+        <div>
+          <h1 css={styles.title}>
+            <a css={styles.titleLink} href="/">
+              내 서재
+            </a>
+          </h1>
+        </div>
+        <div css={styles.myMenuWrapper}>
+          <FamilyServices />
+          {renderMyMenu()}
+        </div>
+      </header>
+    </Responsive>
+  );
 }
 
 const mapStateToProps = state => {

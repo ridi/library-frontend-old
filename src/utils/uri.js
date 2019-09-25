@@ -8,7 +8,7 @@ export const makeURI = (pathname, query = {}, baseHost = null) => {
   const path = `${pathname}?${stringify(_query, { skipNulls: true })}`;
 
   if (baseHost) {
-    return `${baseHost}${path}`;
+    return new URL(path, baseHost);
   }
 
   return path;

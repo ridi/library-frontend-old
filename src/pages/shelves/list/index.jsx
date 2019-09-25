@@ -50,9 +50,17 @@ const ShelvesList = props => {
     pageOptions,
     loadShelfCount,
     loadShelves,
+    location,
     validateShelvesLimit,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
+  React.useEffect(
+    () => {
+      loadShelves(pageOptions);
+      loadShelfCount();
+    },
+    [location],
+  );
   const toggleSelectMode = React.useCallback(() => {
     clearSelectedShelves();
     setSelectMode(isSelectMode => !isSelectMode);
@@ -219,12 +227,6 @@ const extractPageOptions = locationSearch => {
     orderBy,
     orderDirection,
   };
-};
-
-ShelvesList.prepare = async ({ dispatch, location }) => {
-  const pageOptions = extractPageOptions(location.search);
-  await dispatch(shelfActions.loadShelves(pageOptions));
-  await dispatch(shelfActions.loadShelfCount());
 };
 
 const mapStateToProps = (state, props) => {
