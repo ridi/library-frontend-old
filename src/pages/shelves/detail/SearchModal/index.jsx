@@ -84,6 +84,8 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
       if (searchItemRid === searchItemRequestId.current) {
         setSearchItems(items);
       }
+
+      window.scrollTo(0, 0);
     },
     [keyword],
   );

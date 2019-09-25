@@ -148,7 +148,7 @@ class SeriesList extends React.Component {
 
   renderPaginator() {
     const { currentPage, totalPages } = this.props;
-    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} preserveScroll />;
   }
 
   render() {
