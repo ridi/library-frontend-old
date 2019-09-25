@@ -38,7 +38,7 @@ jobs:
     parameters:
       env:
         type: string
-        default: prod
+        default: production
     steps:
       - checkout
       - install
@@ -48,7 +48,7 @@ jobs:
             NODE_ENV: <<parameters.env>>
           command: |
             SENTRY_RELEASE_VERSION="${CIRCLE_SHA1}" \
-              yarn build webpack.<<parameters.env>>.js
+              yarn build <<parameters.env>>
       - persist_to_workspace:
           root: .
           paths:

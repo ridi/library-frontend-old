@@ -15,7 +15,7 @@ module.exports = {
         moduleDirectory: ['./src'],
       },
       webpack: {
-        config: './webpack.common.js',
+        config: './webpack.config.js',
       },
     },
   },
