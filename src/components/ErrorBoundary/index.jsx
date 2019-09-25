@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser';
 import React from 'react';
 import { PageLoadError } from '../Error';
 
@@ -7,9 +8,13 @@ export default class ErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
+    Sentry.withScope(scope => {
+      scope.setExtra('componentsError', info);
+      Sentry.captureException(error);
+    });
     console.error(error);
-    return { hasError: true };
   }
 
   render() {
