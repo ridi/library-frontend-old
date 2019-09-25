@@ -109,13 +109,12 @@ const refineBookData = ({
 };
 
 function BookItem(props) {
-  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth } = props;
+  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth, viewType } = props;
 
   const dispatch = useDispatch();
   const handleShelfBookAlert = React.useCallback(() => dispatch(showShelfBookAlertToast()), []);
   const platformBookData = useSelector(state => bookSelectors.getBook(state, bookId));
   const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
-  const viewType = useSelector(state => state.ui.viewType);
   const isSelected = useSelector(state => selectionSelectors.getIsItemSelected(state, bookId));
   const isVerifiedAdult = useSelector(getAdultVerification);
   const isSyncShelfEnabled = useSelector(state => featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF));
@@ -177,9 +176,9 @@ function BookItem(props) {
 }
 
 export function Books(props) {
-  const { bookIds, isSelectMode, isSeriesView, libraryBookDTO, linkBuilder } = props;
+  const { bookIds, isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
 
-  const viewType = useSelector(state => state.ui.viewType);
+  const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
   const [thumbnailWidth, setThumbnailWidth] = useState(100);
   const setResponsiveThumbnailWidth = () => {
@@ -220,6 +219,7 @@ export function Books(props) {
           libraryBookData={libraryBookMap.get(bookId)}
           linkBuilder={linkBuilder}
           thumbnailWidth={thumbnailWidth}
+          viewType={viewType}
         />
       )}
     >
