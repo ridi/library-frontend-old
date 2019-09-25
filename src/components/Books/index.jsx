@@ -119,7 +119,7 @@ function BookItem(props) {
   const isVerifiedAdult = useSelector(getAdultVerification);
   const isSyncShelfEnabled = useSelector(state => featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF));
   const showUpdateBadge = useSelector(state => {
-    if (!platformBookData.series) {
+    if (!(platformBookData && platformBookData.series)) {
       return false;
     }
 
