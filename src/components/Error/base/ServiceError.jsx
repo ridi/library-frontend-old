@@ -13,7 +13,7 @@ const onClickHistoryBack = () => {
   window.history.back();
 };
 
-const ServiceError = ({ errorTitle, errorMessage, reloadButton, prevPageButton, homeButton }) => {
+const ServiceError = ({ children, errorTitle, reloadButton, prevPageButton, homeButton }) => {
   const renderReloadButton = () => (
     <li css={styles.errorButtonWrapper}>
       <button type="button" css={[styles.errorButton, styles.whiteButton]} onClick={onClickReload}>
@@ -48,7 +48,7 @@ const ServiceError = ({ errorTitle, errorMessage, reloadButton, prevPageButton, 
           <ErrorBook css={styles.icon} />
         </div>
         {errorTitle && <h2 css={styles.errorTitle}>{errorTitle}</h2>}
-        <p css={styles.errorDescription}>{errorMessage}</p>
+        <p css={styles.errorDescription}>{children}</p>
         <ul>
           {reloadButton && renderReloadButton()}
           {prevPageButton && renderPrevPageButton()}

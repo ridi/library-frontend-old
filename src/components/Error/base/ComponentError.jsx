@@ -32,10 +32,10 @@ const styles = {
   `,
 };
 
-const ComponentError = ({ ErrorIcon, errorMessage, onClickRefreshButton }) => (
+const ComponentError = ({ children, ErrorIcon, onClickRefreshButton }) => (
   <div css={styles.errorWrapper}>
     <ErrorIcon css={styles.icon} />
-    <p css={styles.message}>{errorMessage()}</p>
+    <p css={styles.message}>{children}</p>
     {onClickRefreshButton && (
       <button type="button" onClick={onClickRefreshButton} css={styles.refreshButton}>
         새로고침
