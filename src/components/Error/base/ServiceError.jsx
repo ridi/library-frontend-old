@@ -48,7 +48,7 @@ const ServiceError = ({ errorTitle, errorMessage, reloadButton, prevPageButton, 
           <ErrorBook css={styles.icon} />
         </div>
         {errorTitle && <h2 css={styles.errorTitle}>{errorTitle}</h2>}
-        <p css={styles.errorDescription}>{errorMessage()}</p>
+        <p css={styles.errorDescription}>{errorMessage}</p>
         <ul>
           {reloadButton && renderReloadButton()}
           {prevPageButton && renderPrevPageButton()}
