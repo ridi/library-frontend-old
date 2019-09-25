@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const WebpackBar = require('webpackbar');
 
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsWebpackPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -117,6 +118,7 @@ function buildBaseConfig(isProduction, settings) {
         SENTRY_RELEASE_VERSION: JSON.stringify(process.env.SENTRY_RELEASE_VERSION),
       }),
       new webpack.DefinePlugin(buildDefinitions(settings)),
+      new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/index.ejs',
         libraryBaseUrl: settings.base_url,
