@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+import colors from '@ridi/colors';
 
 export const global = css`
   body::after {
@@ -6,53 +7,111 @@ export const global = css`
   }
 `;
 
-export const maintenance = css`
+export const header = css`
+  height: 50px;
+  line-height: 50px;
   text-align: center;
-  padding: 82px 0;
+  border-bottom: 1px solid ${colors.blueGray10};
 `;
-export const title = css`
-  font-size: 26px;
-  font-weight: 700;
-  color: black;
-  line-height: 1em;
+
+export const logo = css`
+  fill: ${colors.dodgerBlue50};
+  width: 44px;
+  height: 18px;
+  vertical-align: middle;
 `;
-export const description = css`
-  padding: 30px 20px;
-  background: #eee;
-  max-width: 560px;
-  margin: 24px auto 0 auto;
-`;
-const descriptionTitle = `
-  font-size: 20px;
-  font-weight: 700;
-  color: #333;
-  line-height: 1em;
-`;
-export const termsTitle = css`
-  ${descriptionTitle}
-`;
-export const serviceListTitle = css`
-  ${descriptionTitle}
-  margin-top: 30px;
-`;
-export const terms = css`
-  margin-top: 10px;
+
+export const maintenance = css`
+  max-width: 630px;
+  margin: 0 auto;
+  padding: 40px 0;
   font-size: 14px;
-  color: #666;
-  line-height: 1.8em;
-`;
-export const unavailableServiceList = css`
-  margin-top: 10px;
-`;
-export const service = css`
-  font-size: 14px;
-  color: #666;
-  line-height: 1.8em;
-`;
-export const footer = css`
-  margin-top: 16px;
-  padding: 0 22px;
-  font-size: 15px;
-  color: #000;
-  line-height: 1.8em;
+  line-height: 1.3em;
+  color: ${colors.slateGray90};
+
+  @media (max-width: 670px) {
+    margin: 0 16px;
+  }
+
+  header {
+    h1 {
+      font-size: 24px;
+      line-height: 1em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+  }
+
+  section {
+    margin: 20px 0 12px;
+    padding: 12px 40px;
+    border-radius: 4px;
+    background-color: ${colors.slateGray5};
+    color: ${colors.slateGray70};
+    font-size: 13px;
+    line-height: 1.5em;
+    position: relative;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: ${colors.slateGray40};
+      position: absolute;
+      top: 12px;
+      left: 16px;
+    }
+
+    dl {
+      dt {
+        font-weight: bold;
+        margin: 14px 0 5px;
+
+        &:first-of-type {
+          margin-top: 0;
+        }
+      }
+
+      dd {
+        & > ul {
+          & > li {
+            margin-top: 8px;
+
+            &:first-child {
+              margin-top: 0;
+            }
+
+            & > ul > li {
+              margin-top: 3px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ul li {
+    list-style: none;
+    padding-left: 15px;
+    position: relative;
+    &::before {
+      content: '';
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${colors.slateGray50};
+      display: inline-block;
+      vertical-align: middle;
+      position: absolute;
+      top: 6px;
+      left: 6px;
+    }
+  }
+
+  footer {
+    margin-top: 15px;
+    line-height: 2em;
+  }
 `;

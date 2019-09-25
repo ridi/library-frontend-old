@@ -104,10 +104,11 @@ class Hidden extends React.Component {
   handleSelectAllBooks = () => this.props.dispatchSelectAllBooks(this.props.currentPage);
 
   linkBuilder = libraryBookData => {
+    const { location: backLocation } = this.props;
     const to = {
       pathname: URLMap.hiddenUnit.as({ unitId: libraryBookData.unit_id }),
       state: {
-        backLocation: this.props.location,
+        backLocation,
       },
     };
     return <Link to={to}>더보기</Link>;

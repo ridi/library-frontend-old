@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { OrderOptions } from '../../constants/orderOptions';
 import {
   BEGIN_OPERATION,
   END_OPERATION,

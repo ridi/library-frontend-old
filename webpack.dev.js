@@ -8,8 +8,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 export default merge(config, {
   mode: 'development',
   output: {
-    filename: '[name].js',
-    chunkFilename: '[id].js',
+    filename: '[name].[hash].js',
+    chunkFilename: '[id].[hash].js',
     publicPath: settings.static_url,
   },
   module: {

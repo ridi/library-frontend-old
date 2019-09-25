@@ -3,7 +3,7 @@ import { put, takeEvery } from 'redux-saga/effects';
 import settings from '../../utils/settings';
 import * as uiActions from './actions';
 
-function* saveViewType(action) {
+function saveViewType(action) {
   settings.viewType = action.payload.viewType;
 }
 

@@ -28,7 +28,7 @@ export const createMaintenanceInterceptor = store => ({
     const { response } = error;
     if (response) {
       const { status, data } = response;
-      if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE || data.status === 'maintenance') {
+      if (status === HttpStatusCode.HTTP_503_SERVICE_UNAVAILABLE && data.status === 'maintenance') {
         const maintenanceStatus = await getMaintenanceStatus();
         if (maintenanceStatus.visible) {
           store.dispatch(maintenanceAction.setMaintenance(maintenanceStatus));

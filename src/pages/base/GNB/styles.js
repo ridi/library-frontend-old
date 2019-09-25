@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import { maxWidthWrapper } from '../../../styles';
 import { MQ, Responsive } from '../../../styles/responsive';
 
