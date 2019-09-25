@@ -8,13 +8,16 @@ export default class ErrorBoundary extends React.Component {
     this.state = { hasError: false };
   }
 
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
   componentDidCatch(error, info) {
-    this.setState({ hasError: true });
+    console.error(error);
     Sentry.withScope(scope => {
       scope.setExtra('componentsError', info);
       Sentry.captureException(error);
     });
-    console.error(error);
   }
 
   render() {
