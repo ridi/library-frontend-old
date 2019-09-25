@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
-import FullScreenLoading from './components/FullScreenLoading';
 import Layout from './pages/base/Layout';
+import PageLoadingSpinner from './pages/base/PageLoadingSpinner';
 import Routes from './Routes';
 import * as accountSelectors from './services/account/selectors';
 import { initializeSentry } from './utils/sentry';
@@ -33,7 +33,7 @@ function App(props) {
   return (
     <Layout>
       <ErrorBoundary>
-        <React.Suspense fallback={<FullScreenLoading />}>{routes}</React.Suspense>
+        <React.Suspense fallback={<PageLoadingSpinner />}>{routes}</React.Suspense>
       </ErrorBoundary>
     </Layout>
   );

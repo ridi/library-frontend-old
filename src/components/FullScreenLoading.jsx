@@ -10,9 +10,9 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
   `,
   fixed: css`
+    background-color: rgba(255, 255, 255, 0.9);
     position: fixed;
     z-index: 9999;
     top: 0;
@@ -21,6 +21,7 @@ const styles = {
     right: 0;
   `,
   static: css`
+    background-color: #f3f4f5;
     width: 100vw;
     height: 90vh;
   `,
