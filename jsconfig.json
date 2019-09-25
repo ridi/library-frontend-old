@@ -8,7 +8,7 @@
       "components/*": ["./src/components/*"],
       "services/*": ["./src/services/*"],
       "constants/*": ["./src/constants/*"],
-      "static/*": ["./src/stati/*"]
+      "static/*": ["./src/static/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
