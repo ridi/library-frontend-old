@@ -196,8 +196,22 @@ function ShelfDetail(props) {
     [page, totalPages, history],
   );
 
+  function makeBackLocation() {
+    if (location.state && location.state.backLocation) {
+      const { backLocation } = location.state.backLocation;
+      return {
+        ...backLocation,
+        state: {
+          ...(backLocation.state || {}),
+          scroll: { from: backLocation.key },
+        },
+      };
+    }
+    return URLMap[PageType.SHELVES].as;
+  }
+
   function renderShelfBar() {
-    const backLocation = location.state ? location.state.backLocation : URLMap[PageType.SHELVES].as;
+    const backLocation = makeBackLocation();
     const left = <Title title={name} showCount={totalBookCount != null} totalCount={totalBookCount} to={backLocation} />;
     return <FlexBar css={styles.shelfBar} flexLeft={left} />;
   }

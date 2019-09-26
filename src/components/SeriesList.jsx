@@ -30,25 +30,6 @@ class SeriesList extends React.Component {
     this.seriesListRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
-    this.scrollToHeadWhenChangeOrder(prevProps);
-  }
-
-  scrollToHeadWhenChangeOrder(prevProps) {
-    const { currentOrder: order } = this.props;
-    const { currentOrder: prevOrder } = prevProps;
-
-    if (order !== prevOrder) {
-      setTimeout(() => {
-        if (!this.seriesListRef.current) {
-          return;
-        }
-
-        window.scrollTo(0, this.seriesListRef.current.offsetTop - 10);
-      }, 300);
-    }
-  }
-
   toggleEditingMode = () => {
     const { isEditing, onEditingChange } = this.props;
     onEditingChange && onEditingChange(!isEditing);
@@ -70,10 +51,22 @@ class SeriesList extends React.Component {
     };
   }
 
+  calculateScroll = () => {
+    const seriesList = this.seriesListRef.current;
+    return seriesList ? { x: 0, y: seriesList.offsetTop - 10 } : null;
+  };
+
   renderSeriesToolBar() {
     const { currentOrder, orderOptions } = this.props;
 
-    return <SeriesToolBar toggleEditingMode={this.toggleEditingMode} currentOrder={currentOrder} orderOptions={orderOptions} />;
+    return (
+      <SeriesToolBar
+        toggleEditingMode={this.toggleEditingMode}
+        currentOrder={currentOrder}
+        orderOptions={orderOptions}
+        scroll={this.calculateScroll}
+      />
+    );
   }
 
   getEmptyMessage(defaultMessage) {
@@ -148,7 +141,7 @@ class SeriesList extends React.Component {
 
   renderPaginator() {
     const { currentPage, totalPages } = this.props;
-    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} preserveScroll />;
+    return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} scroll={this.calculateScroll} />;
   }
 
   render() {

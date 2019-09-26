@@ -39,22 +39,23 @@ export const ResponsivePaginatorWithHandler = ({ currentPage, totalPages, onPage
   );
 };
 
-const ResponsivePaginator = ({ currentPage, totalPages, preserveScroll, history, location }) => {
+const ResponsivePaginator = ({ currentPage, totalPages, scroll, history, location }) => {
   const handlePageChange = React.useCallback(
     page => {
       const params = new URLSearchParams(location.search);
       params.set('page', page);
       const search = params.toString();
+      const calculatedScroll = typeof scroll === 'function' ? scroll() : scroll;
       history.push({
         ...location,
         search: search === '' ? '' : `?${search}`,
+        state: {
+          ...(location.state || {}),
+          scroll: calculatedScroll,
+        },
       });
-
-      if (!preserveScroll) {
-        window.scrollTo(0, 0);
-      }
     },
-    [history, location, preserveScroll],
+    [history, location],
   );
   return <ResponsivePaginatorWithHandler currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />;
 };
