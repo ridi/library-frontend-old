@@ -1,52 +1,55 @@
-export const editingBarWrapper = {
-  backgroundColor: '#0077d9',
-  boxShadow: '0 2px 10px 0 rgba(0, 0, 0, .04)',
-  width: '100%',
-};
+import { css } from '@emotion/core';
 
-export const editingBar = {
-  height: 46,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-};
+export const editingBarWrapper = css`
+  background-color: #0077d9;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.04);
+  width: 100%;
+`;
 
-export const editingBarIconWrapper = {
-  flex: 'auto',
-};
+export const editingBar = css`
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-export const editingBarIcon = {
-  width: 12,
-  height: 9,
-  fill: 'white',
-  padding: '0 2px',
-  marginRight: 4,
-};
+export const editingBarIconWrapper = css`
+  flex: auto;
+  display: flex;
+  align-items: center;
+`;
 
-export const editingBarSelectCount = {
-  display: 'inline-block',
-  fontSize: 15,
-  color: 'white',
-};
+export const editingBarIcon = css`
+  width: 18px;
+  height: 18px;
+  fill: white;
+  margin-right: 4px;
+`;
 
-export const editingBarAllSelect = {
-  fontSize: 15,
-  color: 'white',
-  padding: 8,
-  marginRight: 8,
-};
+export const editingBarSelectCount = css`
+  display: inline-block;
+  font-size: 15px;
+  color: white;
+`;
 
-export const editingBarCompleteButton = {
-  width: 52,
-  height: 30,
-  lineHeight: '28px',
-  borderRadius: 4,
-  backgroundColor: 'white',
-  boxShadow: '1px 1px 1px 0 rgba(0, 0, 0, 0.05)',
-  border: '1px solid #d1d5d9',
-  boxSizing: 'border-box',
-  fontSize: 13,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  color: '#0077d9',
-};
+export const editingBarAllSelect = css`
+  font-size: 15px;
+  color: white;
+  padding: 8px;
+  margin-right: 8px;
+`;
+
+export const editingBarCompleteButton = css`
+  width: 52px;
+  height: 30px;
+  line-height: 28px;
+  border-radius: 4px;
+  background-color: white;
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #d1d5d9;
+  box-sizing: border-box;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: #0077d9;
+`;
