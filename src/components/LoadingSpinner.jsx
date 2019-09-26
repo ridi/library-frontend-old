@@ -7,7 +7,7 @@ const spinAnimation = keyframes`
     transform: rotate(0turn);
   }
   to {
-    transform: rotate(-1turn);
+    transform: rotate(1turn);
   }
 `;
 
