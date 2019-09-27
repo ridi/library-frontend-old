@@ -28,19 +28,19 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
   useEffect(
     () => {
       if (isActive) {
-        window.addEventListener('scroll', () => {
-          showTooltip(false);
-          window.removeEventListener('scroll');
-        });
+        window.addEventListener('scroll', handleScroll);
       }
-      return window.removeEventListener('scroll');
+      return window.removeEventListener('scroll', handleScroll);
     },
     [isActive],
   );
 
-  const onClickTooltipBackground = () => {
-    showTooltip(false);
+  const handleScroll = () => {
+    setActive(false);
+    window.removeEventListener('scroll', handleScroll);
   };
+
+  const onClickTooltipBackground = React.useCallback(() => setActive(false), []);
 
   return isActive ? (
     <React.Fragment>
