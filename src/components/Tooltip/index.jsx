@@ -24,15 +24,17 @@ export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => 
   React.useEffect(
     () => {
       if (isActive) {
-        window.addEventListener('scroll', () => {
-          setActive(false);
-          window.removeEventListener('scroll');
-        });
+        window.addEventListener('scroll', handleScroll);
       }
-      return window.removeEventListener('scroll');
+      return window.removeEventListener('scroll', handleScroll);
     },
     [isActive],
   );
+
+  const handleScroll = () => {
+    setActive(false);
+    window.removeEventListener('scroll', handleScroll);
+  };
 
   const onClickTooltipBackground = React.useCallback(() => setActive(false), []);
 
