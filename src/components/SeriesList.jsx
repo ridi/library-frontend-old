@@ -10,7 +10,7 @@ import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getTotalSelectedCount } from '../services/selection/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
+import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../utils/uri';
 import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 import { Books } from './Books';
 import Editable from './Editable';
@@ -110,7 +110,7 @@ class SeriesList extends React.Component {
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
       // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && platformBookData.support.web_viewer) {
-        return <a href={makeWebViewerURI(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
+        return <a href={makeWebViewerUri(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
       }
 
       // 구매한 책이면 책의 서비스에 따라 이동
