@@ -231,7 +231,7 @@ function Unit(props) {
         unit={unit}
         primaryBookId={primaryBookId}
         primaryItem={primaryItem}
-        items={items}
+        items={items || []}
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable

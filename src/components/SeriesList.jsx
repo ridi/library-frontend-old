@@ -37,7 +37,7 @@ class SeriesList extends React.Component {
 
   makeEditingBarProps() {
     const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks, onEditingChange } = this.props;
-    const isSelectedAllBooks = totalSelectedCount === items.filter(item => item.purchased).length;
+    const isSelectedAllBooks = totalSelectedCount === (items || []).filter(item => item.purchased).length;
 
     return {
       totalSelectedCount,
@@ -97,8 +97,8 @@ class SeriesList extends React.Component {
       locationHref,
     } = this.props;
 
-    // Data 가져오는 상태면서 캐싱된 items가 없으면 Skeleton 노출
-    if (isFetching && items.length === 0) {
+    // items가 한번도 설정된 적이 없으면 Skeleton 노출
+    if (items == null) {
       return <SkeletonBooks viewType={ViewType.LANDSCAPE} />;
     }
 
