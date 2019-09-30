@@ -27,9 +27,9 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
 
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
 export const makeWebViewerUri = (bookId, currentUri) => {
-  const webViewrBaseUrl = new URL(`books/${bookId}`, 'https://view.ridibooks.com');
-  webViewrBaseUrl.searchParams.set('referrer', encodeURIComponent(currentUri));
-  return webViewrBaseUrl.toString();
+  const webViewerBaseUrl = new URL(`books/${bookId}`, 'https://view.ridibooks.com');
+  webViewerBaseUrl.searchParams.set('referrer', currentUri);
+  return webViewerBaseUrl.toString();
 };
 
 export const makeRidiSelectUri = bookId => new URL(`book/${bookId}`, config.SELECT_BASE_URL).toString();
