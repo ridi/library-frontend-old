@@ -19,7 +19,7 @@ import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import Star from '../../svgs/Star.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { thousandsSeperator } from '../../utils/number';
-import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
+import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
@@ -154,7 +154,7 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <a css={styles.readLatestButtonAnchor} href={makeWebViewerURI(readLatestBookData.bookId || book.series.id, locationHref)}>
+      <a css={styles.readLatestButtonAnchor} href={makeWebViewerUri(readLatestBookData.bookId || book.series.id, locationHref)}>
         <button type="button" css={styles.readLatestButton}>
           {readLatestBookData.bookId ? '이어보기' : '첫화보기'}
         </button>

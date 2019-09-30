@@ -25,15 +25,20 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
   )}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=${packageName};end`;
 };
 
-export const makeLibraryLoginURI = (libraryURI, next) => `${libraryURI}?next=${next}`;
-
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
-export const makeWebViewerURI = (bookId, currentUri) =>
-  `https://view.ridibooks.com/books/${bookId}?referrer=${encodeURIComponent(currentUri)}`;
+export const makeWebViewerUri = (bookId, currentUri) => {
+  const webViewrBaseUrl = new URL(`books/${bookId}`, 'https://view.ridibooks.com');
+  webViewrBaseUrl.searchParams.set('referrer', encodeURIComponent(currentUri));
+  return webViewrBaseUrl.toString();
+};
 
-export const makeRidiSelectUri = bookId => `${config.SELECT_BASE_URL}/book/${bookId}`;
+export const makeRidiSelectUri = bookId => new URL(`book/${bookId}`, config.SELECT_BASE_URL).toString();
 
-export const makeRidiStoreUri = bookId => `${config.STORE_API_BASE_URL}/v2/Detail?id=${bookId}`;
+export const makeRidiStoreUri = bookId => {
+  const storeBaseUrl = new URL('v2/Detail', config.STORE_BASE_URL);
+  storeBaseUrl.searchParams.set('id', bookId);
+  return storeBaseUrl.toString();
+};
 
 export const makeLinkProps = (href, as, query) => {
   const snakeQuery = typeof query === 'object' ? snakelize(query) : {};
