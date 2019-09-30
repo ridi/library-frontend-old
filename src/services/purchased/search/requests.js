@@ -18,7 +18,7 @@ export async function fetchSearchItems(keyword, page) {
 
   const api = getApi();
   try {
-    const response = await api.get(makeURI('/items/search/', options, config.LIBRARY_API_BASE_URL));
+    const response = await api.get(makeURI('/items/search', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
     if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {
@@ -37,7 +37,7 @@ export async function fetchSearchItemsTotalCount(keyword) {
 
   const api = getApi();
   try {
-    const response = await api.get(makeURI('/items/search/count/', options, config.LIBRARY_API_BASE_URL));
+    const response = await api.get(makeURI('/items/search/count', options, config.LIBRARY_API_BASE_URL));
     return response.data;
   } catch (err) {
     if (err.response.status === HttpStatusCode.HTTP_400_BAD_REQUEST) {

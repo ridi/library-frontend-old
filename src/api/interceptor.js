@@ -56,7 +56,7 @@ export const createAuthorizationInterceptor = store => ({
         message: 'Refreshing token',
         level: Sentry.Severity.Info,
       });
-      return retry({ retryCount: 3, retryDelay: 1000 }, throwNetworkError(axios.post), `${config.ACCOUNT_BASE_URL}/ridi/token`, null, {
+      return retry({ retryCount: 3, retryDelay: 1000 }, throwNetworkError(axios.post), `${config.ACCOUNT_BASE_URL}ridi/token`, null, {
         withCredentials: true,
       })
         .then(() => {

@@ -58,7 +58,14 @@ function extractOptions({ location, path, params }) {
 
 function makeBackLocation({ location, match }) {
   if (location.state?.backLocation != null) {
-    return location.state.backLocation;
+    const { backLocation } = location.state;
+    return {
+      ...backLocation,
+      state: {
+        ...(backLocation.state || {}),
+        scroll: { from: backLocation.key },
+      },
+    };
   }
 
   const searchParams = new URLSearchParams(location.search);
@@ -106,7 +113,7 @@ function Unit(props) {
   const { kind, orderType, orderBy, page: currentPage } = options;
   const backLocation = makeBackLocation({ location, match });
 
-  const { unit, totalCount, totalPages } = props;
+  const { unit, unitOptions, totalCount, totalPages } = props;
   const {
     dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
@@ -121,6 +128,14 @@ function Unit(props) {
 
   const [isSelecting, setIsSelecting] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
+
+  React.useEffect(
+    () => {
+      dispatchClearSelectedBooks();
+      dispatchLoadItems(unitOptions);
+    },
+    [location],
+  );
 
   const hideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, options);
   const unhideSelectedBooksWithOptions = useDispatchOptions(dispatchUnhideSelectedBooks, options);
@@ -216,7 +231,7 @@ function Unit(props) {
         unit={unit}
         primaryBookId={primaryBookId}
         primaryItem={primaryItem}
-        items={items}
+        items={items || []}
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable
@@ -345,15 +360,9 @@ function Unit(props) {
   );
 }
 
-Unit.prepare = ({ dispatch, location, path, params }) => {
-  const options = extractOptions({ location, path, params });
-  dispatch(selectionActions.clearSelectedItems());
-  dispatch(unitPageActions.loadItems(options));
-};
-
 const mapStateToProps = (state, props) => {
-  const options = extractOptions({ location: props.location, ...props.match });
-  const { kind, unitId } = options;
+  const unitOptions = extractOptions({ location: props.location, ...props.match });
+  const { kind, unitId } = unitOptions;
   const primaryBookId = purchasedCommonSelectors.getPrimaryBookId(state, unitId);
   return {
     bookDescription: primaryBookId && bookSelectors.getBookDescription(state, primaryBookId),
@@ -361,13 +370,14 @@ const mapStateToProps = (state, props) => {
     isFetchingBook: unitPageSelectors.getIsFetchingBook(state),
     isSelected: selectionSelectors.getTotalSelectedCount(state) !== 0,
     isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
-    items: unitPageSelectors.getItemsByPage(state, options),
+    items: unitPageSelectors.getItemsByPage(state, unitOptions),
     primaryBook: primaryBookId && bookSelectors.getBook(state, primaryBookId),
     primaryBookId,
     primaryItem: unitPageSelectors.getPrimaryItem(state, kind, unitId),
-    totalCount: unitPageSelectors.getTotalCount(state, options),
-    totalPages: unitPageSelectors.getTotalPages(state, options),
+    totalCount: unitPageSelectors.getTotalCount(state, unitOptions),
+    totalPages: unitPageSelectors.getTotalPages(state, unitOptions),
     unit: bookSelectors.getUnit(state, unitId),
+    unitOptions,
   };
 };
 

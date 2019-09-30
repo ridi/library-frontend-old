@@ -34,8 +34,8 @@ function useDispatchPage(actionDispatcher, page) {
 }
 
 function SerialPreference(props) {
-  const { currentPage, items, totalSelectedCount } = props;
-  const { dispatchClearSelectedBooks, dispatchDeleteSelectedBooks, dispatchSelectAllBooks } = props;
+  const { currentPage, items, totalSelectedCount, location } = props;
+  const { dispatchClearSelectedBooks, dispatchDeleteSelectedBooks, dispatchSelectAllBooks, dispatchLoadSerialPreferenceBooks } = props;
   const [isSelectMode, setIsSelectMode] = React.useState(false);
 
   const dispatchDeleteSelectedBooksWithPage = useDispatchPage(dispatchDeleteSelectedBooks, currentPage);
@@ -58,6 +58,14 @@ function SerialPreference(props) {
       setIsSelectMode(false);
     },
     [dispatchClearSelectedBooks, dispatchDeleteSelectedBooksWithPage],
+  );
+
+  React.useEffect(
+    () => {
+      dispatchClearSelectedBooks();
+      dispatchLoadSerialPreferenceBooks(extractCurrentPage(location.search));
+    },
+    [location],
   );
 
   function renderToolBar() {
@@ -150,11 +158,6 @@ function SerialPreference(props) {
   );
 }
 
-SerialPreference.prepare = async ({ dispatch, location }) => {
-  await dispatch(clearSelectedItems());
-  await dispatch(loadItems(extractCurrentPage(location.search)));
-};
-
 const mapStateToProps = (state, props) => {
   const currentPage = extractCurrentPage(props.location.search);
   const items = getItemsByPage(state, currentPage);
@@ -180,6 +183,7 @@ const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
+  dispatchLoadSerialPreferenceBooks: loadItems,
 };
 
 export default connect(

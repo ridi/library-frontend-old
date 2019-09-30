@@ -23,8 +23,8 @@ export const getItemsByPage = createSelector(
   (_, options) => options.page,
   (dataState, page) => {
     const { itemIdsForPage, items } = dataState;
-    const itemIds = itemIdsForPage[page] || [];
-    return itemIds.map(itemId => items[itemId]);
+    const itemIds = itemIdsForPage[page];
+    return itemIds && itemIds.map(itemId => items[itemId]);
   },
 );
 
