@@ -10,12 +10,13 @@ function buildTargetLocation(location, option, scroll) {
   orderBy != null && params.set('order_by', orderBy);
   const search = params.toString();
 
+  const calculatedScroll = typeof scroll === 'function' ? scroll() : scroll;
   return {
     ...location,
     search: search === '' ? '' : `?${search}`,
     state: {
       ...(location.state || {}),
-      scroll,
+      scroll: calculatedScroll,
     },
   };
 }
