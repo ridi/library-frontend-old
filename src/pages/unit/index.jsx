@@ -58,7 +58,14 @@ function extractOptions({ location, path, params }) {
 
 function makeBackLocation({ location, match }) {
   if (location.state?.backLocation != null) {
-    return location.state.backLocation;
+    const { backLocation } = location.state;
+    return {
+      ...backLocation,
+      state: {
+        ...(backLocation.state || {}),
+        scroll: { from: backLocation.key },
+      },
+    };
   }
 
   const searchParams = new URLSearchParams(location.search);
@@ -224,7 +231,7 @@ function Unit(props) {
         unit={unit}
         primaryBookId={primaryBookId}
         primaryItem={primaryItem}
-        items={items}
+        items={items || []}
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
         downloadable

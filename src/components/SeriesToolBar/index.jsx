@@ -24,7 +24,7 @@ class SeriesToolBar extends React.Component {
   }
 
   renderOrder() {
-    const { currentOrder, orderOptions } = this.props;
+    const { currentOrder, orderOptions, scroll } = this.props;
     const { isSortModalShow } = this.state;
 
     if (!currentOrder || !orderOptions) {
@@ -49,6 +49,7 @@ class SeriesToolBar extends React.Component {
           horizontalAlign={Align.Left}
           order={currentOrder}
           orderOptions={orderOptions}
+          scroll={scroll}
           isActive={isSortModalShow}
           onClickModalBackground={() => {
             this.setState({

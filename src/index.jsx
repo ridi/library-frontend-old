@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import ScrollManager from './ScrollManager';
 import { makeStoreWithApi } from './store';
 
 const store = makeStoreWithApi({}, {});
@@ -14,6 +15,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
       <CacheProvider value={styleCache}>
+        <ScrollManager />
         <App />
       </CacheProvider>
     </Provider>
