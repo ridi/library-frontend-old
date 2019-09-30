@@ -4,7 +4,6 @@ import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import config from '../../config';
 import Genre from '../../constants/category';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
@@ -13,7 +12,7 @@ import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { EmptySeries } from '../../utils/dataObject';
 import { notifyMessage } from '../../utils/sentry';
-import { makeWebViewerUri, makeRidiStoreUri } from '../../utils/uri';
+import { makeLocationHref, makeWebViewerUri, makeRidiStoreUri } from '../../utils/uri';
 import BooksWrapper from '../BooksWrapper';
 import FullButton from './FullButton';
 import * as serialPreferenceStyles from './styles';
@@ -105,7 +104,7 @@ const toProps = ({
 
 class SerialPreferenceBooks extends React.Component {
   render() {
-    const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, locationHref } = this.props;
+    const { items, location, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType } = this.props;
 
     return (
       <BooksWrapper
@@ -126,7 +125,7 @@ class SerialPreferenceBooks extends React.Component {
             isSelected,
             onSelectedChange,
             viewType,
-            locationHref,
+            locationHref: makeLocationHref(location),
           });
           const { thumbnailLink } = libraryBookProps;
 
@@ -142,14 +141,9 @@ class SerialPreferenceBooks extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const { pathname, search } = props.location;
-  const locationHref = `${config.BASE_URL}${pathname}${search}`;
-  return {
-    locationHref,
-    selectedBooks: getSelectedItems(state),
-  };
-};
+const mapStateToProps = state => ({
+  selectedBooks: getSelectedItems(state),
+});
 
 const mapDispatchToProps = {
   onSelectedChange: toggleItem,

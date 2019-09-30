@@ -25,6 +25,12 @@ export const convertUriToAndroidIntentUri = (uri, packageName) => {
   )}#Intent;scheme=${scheme};action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=${packageName};end`;
 };
 
+export const makeLocationHref = location => {
+  const url = new URL(location.pathname, config.BASE_URL);
+  url.search = location.search;
+  return url.toString();
+};
+
 // 개발용 웹뷰어가 없기 때문에 도메인을 고정한다.
 export const makeWebViewerUri = (bookId, currentUri) => {
   const webViewerBaseUrl = new URL(`books/${bookId}`, 'https://view.ridibooks.com');
