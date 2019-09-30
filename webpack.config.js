@@ -70,7 +70,7 @@ function buildFileLoader(settings) {
   ];
 }
 
-function buildBaseConfig(isProduction, settings) {
+function buildBaseConfig(isProduction, indexName, settings) {
   return {
     mode: isProduction ? 'production' : 'development',
     entry: {
@@ -121,6 +121,7 @@ function buildBaseConfig(isProduction, settings) {
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: './src/index.ejs',
+        filename: indexName,
         libraryBaseUrl: settings.base_url,
         storeStaticUrl: settings.store_static_base_url,
       }),
@@ -149,7 +150,8 @@ module.exports = function buildConfig(env = 'dev') {
   const settings = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'settings', `${env}.json`)));
 
   const isProduction = env === 'staging' || env === 'production';
-  const baseConfig = buildBaseConfig(isProduction, settings);
+  const indexName = env === 'staging' ? 'staging.html' : 'index.html';
+  const baseConfig = buildBaseConfig(isProduction, indexName, settings);
   const overrideConfig = {};
 
   if (env === 'local') {

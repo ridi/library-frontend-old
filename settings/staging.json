@@ -19,5 +19,5 @@
   "select_base_url": "https://select.ridibooks.com/",
   "sentry_dsn": "https://0100a981cf6840ceac1a206051a199ba@sentry.io/1335489",
   "sentry_env": "staging",
-  "static_url": "https://library.ridicdn.net/staging/"
+  "static_url": "https://library.ridicdn.net/"
 }
