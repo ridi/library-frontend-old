@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import classname from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,8 +12,9 @@ import * as styles from './styles';
 class Prompt extends React.Component {
   constructor(props) {
     super(props);
+    const { initialValue } = this.props;
     this.state = {
-      promptInput: this.props.initialValue || '',
+      promptInput: initialValue || '',
       isInputLimitOver: false,
       isFocused: false,
     };
@@ -32,7 +31,8 @@ class Prompt extends React.Component {
   submitPrompt = e => {
     e.preventDefault();
     const { emptyInputAlertMessage, onClickCloseButton, onClickConfirmButton, dispatchShowToast } = this.props;
-    const trimmedInputValue = this.state.promptInput.trim();
+    const { promptInput } = this.state;
+    const trimmedInputValue = promptInput.trim();
     if (trimmedInputValue.length === 0) {
       dispatchShowToast({
         message: emptyInputAlertMessage || '한 글자 이상 입력해주세요.',

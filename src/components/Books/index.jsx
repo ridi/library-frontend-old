@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';
@@ -184,16 +182,13 @@ export function Books(props) {
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
-  useEffect(
-    () => {
-      setResponsiveThumbnailWidth();
-      window.addEventListener('resize', setResponsiveThumbnailWidth);
-      return () => {
-        window.removeEventListener('resize', setResponsiveThumbnailWidth);
-      };
-    },
-    [isLoaded],
-  );
+  useEffect(() => {
+    setResponsiveThumbnailWidth();
+    window.addEventListener('resize', setResponsiveThumbnailWidth);
+    return () => {
+      window.removeEventListener('resize', setResponsiveThumbnailWidth);
+    };
+  }, [isLoaded]);
 
   // TODO: compat
   let finalBookIds = [];
@@ -228,10 +223,10 @@ export function Books(props) {
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (
-          <React.Fragment>
+          <>
             {books}
             {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
-          </React.Fragment>
+          </>
         );
       }}
     </BooksWrapper>

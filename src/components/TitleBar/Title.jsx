@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import ArrowLeft from '../../svgs/ArrowLeft.svg';
 import { thousandsSeperator } from '../../utils/number';

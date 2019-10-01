@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
@@ -41,32 +39,23 @@ function SerialPreference(props) {
   const dispatchDeleteSelectedBooksWithPage = useDispatchPage(dispatchDeleteSelectedBooks, currentPage);
   const dispatchSelectAllBooksWithPage = useDispatchPage(dispatchSelectAllBooks, currentPage);
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isSelectMode) {
-        dispatchClearSelectedBooks();
-      }
-      setIsSelectMode(!isSelectMode);
-    },
-    [dispatchClearSelectedBooks, isSelectMode],
-  );
-
-  const handleDeleteClick = React.useCallback(
-    () => {
-      dispatchDeleteSelectedBooksWithPage();
+  const toggleEditingMode = React.useCallback(() => {
+    if (isSelectMode) {
       dispatchClearSelectedBooks();
-      setIsSelectMode(false);
-    },
-    [dispatchClearSelectedBooks, dispatchDeleteSelectedBooksWithPage],
-  );
+    }
+    setIsSelectMode(!isSelectMode);
+  }, [dispatchClearSelectedBooks, isSelectMode]);
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadSerialPreferenceBooks(extractCurrentPage(location.search));
-    },
-    [location],
-  );
+  const handleDeleteClick = React.useCallback(() => {
+    dispatchDeleteSelectedBooksWithPage();
+    dispatchClearSelectedBooks();
+    setIsSelectMode(false);
+  }, [dispatchClearSelectedBooks, dispatchDeleteSelectedBooksWithPage]);
+
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadSerialPreferenceBooks(extractCurrentPage(location.search));
+  }, [location]);
 
   function renderToolBar() {
     const { totalCount, isFetchingBooks } = props;

@@ -23,18 +23,18 @@ const initialState = {
 };
 
 function update(container, entries) {
-  for (const entry of entries) {
+  entries.forEach(entry => {
     if (!(entry.key in container) || compareWithTTL(container[entry.key], entry.value)) {
       container[entry.key] = entry.value;
     }
-  }
+  });
   if (Object.keys(container).length > THRESHOLD) {
     const expired = Object.entries(container)
       .filter(([, entry]) => isExpiredTTL(entry))
       .map(([id]) => id);
-    for (const id of expired) {
+    expired.forEach(id => {
       delete container[id];
-    }
+    });
   }
 }
 

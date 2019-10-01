@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as selectors from '../../services/shelf/selectors';
@@ -15,7 +13,7 @@ function defaultRenderLink({ uuid, name }) {
 
 const TotalCount = ({ count }) => (count && count > 0 ? <p css={shelfStyles.count}>{thousandsSeperator(count)}</p> : null);
 
-const Shelf = React.memo(props => {
+const Shelf = props => {
   const { uuid, name, totalCount, thumbnailIds, renderLink = defaultRenderLink, selectMode } = props;
 
   return (
@@ -31,7 +29,7 @@ const Shelf = React.memo(props => {
       <ShelfSelectButton uuid={uuid} isActive={selectMode} />
     </article>
   );
-});
+};
 
 const mapStateToProps = (state, props) => {
   const { uuid } = props;
@@ -45,4 +43,4 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-export default connect(mapStateToProps)(Shelf);
+export default connect(mapStateToProps)(React.memo(Shelf));

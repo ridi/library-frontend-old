@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { ShelvesWrapper } from '../ShelvesWrapper';
 import Shelf from '../Shelf';
 

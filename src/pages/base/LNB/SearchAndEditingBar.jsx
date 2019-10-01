@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import EditingBar from '../../../components/EditingBar';
 import SearchBar from '../../../components/SearchBar';
 import * as styles from './styles';

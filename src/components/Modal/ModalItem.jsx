@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Link } from 'react-router-dom';
 import Check from '../../svgs/Check.svg';
 import Sync from '../../svgs/Sync.svg';

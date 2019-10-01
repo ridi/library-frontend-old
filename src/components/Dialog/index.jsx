@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import Close from '../../svgs/Close.svg';
 import { disableScroll, enableScroll } from '../../utils/scroll';

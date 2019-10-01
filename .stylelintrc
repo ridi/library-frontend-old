@@ -3,8 +3,9 @@
     "stylelint-config-standard"
   ],
   "rules": {
-    "no-empty-source": null,
     "declaration-empty-line-before": null,
+    "no-empty-source": null,
+    "no-extra-semicolons": null,
     "no-missing-end-of-source-newline": null,
   }
 }

@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { withRouter } from 'react-router-dom';
 import React from 'react';
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';

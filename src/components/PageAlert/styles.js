@@ -32,6 +32,7 @@ export const link = css`
   color: #525a61;
   text-decoration: underline;
   margin-left: 8px;
+
   &:link,
   &:visited {
     text-decoration: underline;

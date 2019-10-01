@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import React from 'react';
-import { jsx } from '@emotion/core';
 
 import * as styles from './styles';
 import NoneDashedArrowLeft from '../../svgs/NoneDashedArrowLeft.svg';

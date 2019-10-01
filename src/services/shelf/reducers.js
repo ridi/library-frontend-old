@@ -110,7 +110,7 @@ const shelfReducer = produce((draft, action) => {
         items: items.map(item => item.uuid),
       };
 
-      for (const { id, uuid, name, thumbnails, bookCount } of items) {
+      items.forEach(({ id, uuid, name, thumbnails, bookCount }) => {
         if (draft.shelf[uuid] == null) {
           draft.shelf[uuid] = makeBaseShelfData(uuid);
         }
@@ -125,7 +125,8 @@ const shelfReducer = produce((draft, action) => {
           }
         }
         draft.shelf[uuid].bookCount = bookCount;
-      }
+      });
+
       break;
     }
     case SET_SHELF_INFO: {
@@ -168,9 +169,9 @@ const shelfReducer = produce((draft, action) => {
         loading: false,
         items: items.map(({ unitId }) => unitId),
       };
-      for (const { bookIds, unitId } of items) {
+      items.forEach(({ bookIds, unitId }) => {
         draft.itemMap[unitId] = { bookIds, unitId };
-      }
+      });
       break;
     }
     case LOAD_SHELF_BOOK_COUNT: {
@@ -203,10 +204,12 @@ const shelfReducer = produce((draft, action) => {
     }
     case SET_LIBRARY_BOOKS: {
       const { books } = action.payload;
-      for (const book of books) {
+
+      books.forEach(book => {
         draft.libraryBooks[book.unit_id] = book;
         draft.bookToUnit[book.b_id] = book.unit_id;
-      }
+      });
+
       break;
     }
     default:

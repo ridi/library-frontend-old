@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import ArrowTriangleDown from '../../svgs/ArrowTriangleDown.svg';
 import FlexBar from '../FlexBar';
@@ -17,7 +15,8 @@ class SeriesToolBar extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.currentOrder !== this.props.currentOrder) {
+    const { currentOrder } = this.props;
+    if (nextProps.currentOrder !== currentOrder) {
       this.setState({ isSortModalShow: false });
     }
     return true;

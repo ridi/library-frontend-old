@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
@@ -64,34 +62,25 @@ function Search(props) {
   const dispatchSelectAllBooksWithOptions = useDispatchOptions(dispatchSelectAllBooks, pageOptions);
   const handleRefresh = useDispatchOptions(dispatchLoadItems, pageOptions);
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isEditing === true) {
-        dispatchClearSelectedBooks();
-      }
-
-      setIsEditing(!isEditing);
-    },
-    [dispatchClearSelectedBooks, isEditing],
-  );
-
-  const handleHideClick = React.useCallback(
-    () => {
-      dispatchHideSelectedBooksWithOptions();
+  const toggleEditingMode = React.useCallback(() => {
+    if (isEditing === true) {
       dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
-  );
+    }
 
-  const handleDownloadClick = React.useCallback(
-    () => {
-      dispatchDownloadSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
-  );
+    setIsEditing(!isEditing);
+  }, [dispatchClearSelectedBooks, isEditing]);
+
+  const handleHideClick = React.useCallback(() => {
+    dispatchHideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions]);
+
+  const handleDownloadClick = React.useCallback(() => {
+    dispatchDownloadSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions]);
 
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
   const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
@@ -110,13 +99,10 @@ function Search(props) {
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
   );
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadItems(pageOptions);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(pageOptions);
+  }, [location]);
 
   function makeEditingBarProps() {
     const { isSyncShelfEnabled, items, totalSelectedCount } = props;

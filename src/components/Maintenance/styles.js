@@ -45,6 +45,25 @@ export const maintenance = css`
     }
   }
 
+  ul li {
+    list-style: none;
+    padding-left: 15px;
+    position: relative;
+
+    &::before {
+      content: '';
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${colors.slateGray50};
+      display: inline-block;
+      vertical-align: middle;
+      position: absolute;
+      top: 6px;
+      left: 6px;
+    }
+  }
+
   section {
     margin: 20px 0 12px;
     padding: 12px 40px;
@@ -79,34 +98,16 @@ export const maintenance = css`
           & > li {
             margin-top: 8px;
 
-            &:first-child {
-              margin-top: 0;
-            }
-
             & > ul > li {
               margin-top: 3px;
+            }
+
+            &:first-child {
+              margin-top: 0;
             }
           }
         }
       }
-    }
-  }
-
-  ul li {
-    list-style: none;
-    padding-left: 15px;
-    position: relative;
-    &::before {
-      content: '';
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: ${colors.slateGray50};
-      display: inline-block;
-      vertical-align: middle;
-      position: absolute;
-      top: 6px;
-      left: 6px;
     }
   }
 

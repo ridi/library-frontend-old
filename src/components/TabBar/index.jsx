@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import * as styles from './styles';
 
 export const TabBar = ({ children }) => (

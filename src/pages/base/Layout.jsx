@@ -29,7 +29,7 @@ const Layout = props => {
   } = props;
   return (
     <>
-      <Global styles={globalStyles} />
+      <Global styles={[globalStyles]} />
       <Environment />
       {maintenance.visible && <Maintenance terms={maintenance.terms} unavailableServiceList={maintenance.unavailableServiceList} />}
       {maintenance.visible === false && (

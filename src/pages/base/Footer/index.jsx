@@ -1,10 +1,8 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import * as styles from './styles';
 
 const Footer = () => (
-  <React.Fragment>
+  <>
     <div css={styles.footerMargin} />
     <footer css={styles.footer}>
       <div css={styles.footerWrapper}>
@@ -35,7 +33,7 @@ const Footer = () => (
         </div>
       </div>
     </footer>
-  </React.Fragment>
+  </>
 );
 
 export default Footer;

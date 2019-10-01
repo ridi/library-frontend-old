@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';
@@ -15,7 +13,8 @@ export default class More extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.order !== this.props.order) {
+    const { order } = this.props;
+    if (nextProps.order !== order) {
       this.setState({ isMoreModalShow: false });
     }
     return true;

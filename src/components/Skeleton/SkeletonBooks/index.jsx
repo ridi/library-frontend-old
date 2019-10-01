@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import ViewType from '../../../constants/viewType';
 import * as styles from '../../../styles/books';
@@ -9,7 +7,7 @@ import PortraitBook from './PortraitBook';
 
 const SkeletonBookCount = 48;
 
-const SkeletonBooks = React.memo(({ viewType }) => (
+const SkeletonBooks = ({ viewType }) => (
   <BooksWrapper
     viewType={viewType}
     books={[...Array(SkeletonBookCount).keys()]}
@@ -25,6 +23,6 @@ const SkeletonBooks = React.memo(({ viewType }) => (
       )
     }
   />
-));
+);
 
-export default SkeletonBooks;
+export default React.memo(SkeletonBooks);

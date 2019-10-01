@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import { TabBar as LNBTabBar, TabLinkItem } from '../../../components/TabBar';
 import * as featureIds from '../../../constants/featureIds';

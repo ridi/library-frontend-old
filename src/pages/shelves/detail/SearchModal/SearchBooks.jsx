@@ -12,13 +12,10 @@ function emptyLinkBuilder() {
 }
 
 function SearchBooks({ items, loadBookData, loadUnitData, platformBooks, units }) {
-  React.useEffect(
-    () => {
-      loadBookData(items.map(item => item.b_id));
-      loadUnitData(items.map(item => item.unit_id));
-    },
-    [items],
-  );
+  React.useEffect(() => {
+    loadBookData(items.map(item => item.b_id));
+    loadUnitData(items.map(item => item.unit_id));
+  }, [items]);
   return (
     <Books
       libraryBookDTO={items}
