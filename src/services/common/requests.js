@@ -144,7 +144,7 @@ export function* requestDelete(bookIds, revision) {
   }
 
   const chunked = splitArrayByChunk(bookIds, DELETE_API_CHUNK_COUNT);
-  const [...queueIdChunks] = yield all(chunked.map(_bookIds => call(internalRequestDelete, _bookIds)));
+  const queueIdChunks = yield all(chunked.map(_bookIds => call(internalRequestDelete, _bookIds)));
   const queueIds = queueIdChunks.flat();
 
   return makeUnique(queueIds);
