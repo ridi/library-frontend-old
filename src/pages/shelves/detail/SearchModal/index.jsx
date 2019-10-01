@@ -36,40 +36,37 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     setTotalItemCount(null);
     clearSelectedItems();
   }, []);
-  const handleSearchConfirm = React.useCallback(
-    async () => {
-      const newSearching = keyword !== '';
-      const newPage = 1;
-      setSearching(newSearching);
-      setSearchItems(null);
-      setTotalItemCount(null);
-      setPage(newPage);
-      clearSelectedItems();
+  const handleSearchConfirm = React.useCallback(async () => {
+    const newSearching = keyword !== '';
+    const newPage = 1;
+    setSearching(newSearching);
+    setSearchItems(null);
+    setTotalItemCount(null);
+    setPage(newPage);
+    clearSelectedItems();
 
-      searchItemRequestId.current += 1;
-      totalItemCountRequestId.current += 1;
+    searchItemRequestId.current += 1;
+    totalItemCountRequestId.current += 1;
 
-      if (!newSearching) {
-        return;
-      }
+    if (!newSearching) {
+      return;
+    }
 
-      const searchItemRid = searchItemRequestId.current;
-      const totalItemCountRid = totalItemCountRequestId.current;
-      await Promise.all([
-        searchRequests.fetchSearchItems(keyword, newPage).then(({ items }) => {
-          if (searchItemRid === searchItemRequestId.current) {
-            setSearchItems(items);
-          }
-        }),
-        searchRequests.fetchSearchItemsTotalCount(keyword).then(({ unit_total_count: totalCount }) => {
-          if (totalItemCountRid === totalItemCountRequestId.current) {
-            setTotalItemCount(totalCount);
-          }
-        }),
-      ]);
-    },
-    [keyword],
-  );
+    const searchItemRid = searchItemRequestId.current;
+    const totalItemCountRid = totalItemCountRequestId.current;
+    await Promise.all([
+      searchRequests.fetchSearchItems(keyword, newPage).then(({ items }) => {
+        if (searchItemRid === searchItemRequestId.current) {
+          setSearchItems(items);
+        }
+      }),
+      searchRequests.fetchSearchItemsTotalCount(keyword).then(({ unit_total_count: totalCount }) => {
+        if (totalItemCountRid === totalItemCountRequestId.current) {
+          setTotalItemCount(totalCount);
+        }
+      }),
+    ]);
+  }, [keyword]);
   const handlePageChange = React.useCallback(
     async newPage => {
       setSearchItems(null);

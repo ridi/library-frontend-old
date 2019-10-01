@@ -182,16 +182,13 @@ export function Books(props) {
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
-  useEffect(
-    () => {
-      setResponsiveThumbnailWidth();
-      window.addEventListener('resize', setResponsiveThumbnailWidth);
-      return () => {
-        window.removeEventListener('resize', setResponsiveThumbnailWidth);
-      };
-    },
-    [isLoaded],
-  );
+  useEffect(() => {
+    setResponsiveThumbnailWidth();
+    window.addEventListener('resize', setResponsiveThumbnailWidth);
+    return () => {
+      window.removeEventListener('resize', setResponsiveThumbnailWidth);
+    };
+  }, [isLoaded]);
 
   // TODO: compat
   let finalBookIds = [];
@@ -226,10 +223,10 @@ export function Books(props) {
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (
-          <React.Fragment>
+          <>
             {books}
             {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
-          </React.Fragment>
+          </>
         );
       }}
     </BooksWrapper>

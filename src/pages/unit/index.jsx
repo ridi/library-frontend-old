@@ -129,13 +129,10 @@ function Unit(props) {
   const [isSelecting, setIsSelecting] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadItems(unitOptions);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(unitOptions);
+  }, [location]);
 
   const hideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, options);
   const unhideSelectedBooksWithOptions = useDispatchOptions(dispatchUnhideSelectedBooks, options);
@@ -143,32 +140,23 @@ function Unit(props) {
   const loadItemsWithOptions = useDispatchOptions(dispatchLoadItems, options);
   const deleteSelectedBooksWithOptions = useDispatchOptions(dispatchDeleteSelectedBooks, options);
 
-  const handleHideClick = React.useCallback(
-    () => {
-      hideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchClearSelectedBooks, hideSelectedBooksWithOptions],
-  );
+  const handleHideClick = React.useCallback(() => {
+    hideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchClearSelectedBooks, hideSelectedBooksWithOptions]);
 
-  const handleUnhideClick = React.useCallback(
-    () => {
-      unhideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchClearSelectedBooks, unhideSelectedBooksWithOptions],
-  );
+  const handleUnhideClick = React.useCallback(() => {
+    unhideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchClearSelectedBooks, unhideSelectedBooksWithOptions]);
 
-  const handleDownloadClick = React.useCallback(
-    () => {
-      dispatchDownloadSelectedBooks();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchDownloadSelectedBooks, dispatchClearSelectedBooks],
-  );
+  const handleDownloadClick = React.useCallback(() => {
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchDownloadSelectedBooks, dispatchClearSelectedBooks]);
 
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
 
@@ -188,24 +176,21 @@ function Unit(props) {
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
   );
 
-  const handleDeleteClick = React.useCallback(
-    () => {
-      dispatchShowConfirm({
-        title: '영구 삭제',
-        message: (
-          <>
-            내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
-            <br />
-            <br />
-            그래도 삭제하시겠습니까?
-          </>
-        ),
-        confirmLabel: '삭제',
-        onClickConfirmButton: deleteSelectedBooksWithOptions,
-      });
-    },
-    [deleteSelectedBooksWithOptions, dispatchShowConfirm],
-  );
+  const handleDeleteClick = React.useCallback(() => {
+    dispatchShowConfirm({
+      title: '영구 삭제',
+      message: (
+        <>
+          내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+          <br />
+          <br />
+          그래도 삭제하시겠습니까?
+        </>
+      ),
+      confirmLabel: '삭제',
+      onClickConfirmButton: deleteSelectedBooksWithOptions,
+    });
+  }, [deleteSelectedBooksWithOptions, dispatchShowConfirm]);
 
   function renderTitleBar() {
     const order = OrderOptions.toKey(orderType, orderBy);

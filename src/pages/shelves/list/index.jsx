@@ -51,13 +51,10 @@ const ShelvesList = props => {
     validateShelvesLimit,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
-  React.useEffect(
-    () => {
-      loadShelves(pageOptions);
-      loadShelfCount();
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    loadShelves(pageOptions);
+    loadShelfCount();
+  }, [location]);
   const toggleSelectMode = React.useCallback(() => {
     clearSelectedShelves();
     setSelectMode(isSelectMode => !isSelectMode);

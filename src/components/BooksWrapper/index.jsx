@@ -13,22 +13,16 @@ const BooksWrapper = ({ viewType, books, renderBook, children }) => {
     setAdditionalPadding(Math.floor((booksNode.offsetWidth % bookNode.offsetWidth) / 2));
   };
 
-  useEffect(
-    () => {
-      window.addEventListener('resize', setBooksAdditionalPadding);
-      return () => {
-        window.removeEventListener('resize', setBooksAdditionalPadding);
-      };
-    },
-    [isLoaded],
-  );
+  useEffect(() => {
+    window.addEventListener('resize', setBooksAdditionalPadding);
+    return () => {
+      window.removeEventListener('resize', setBooksAdditionalPadding);
+    };
+  }, [isLoaded]);
 
-  useLayoutEffect(
-    () => {
-      setBooksAdditionalPadding();
-    },
-    [isLoaded, viewType],
-  );
+  useLayoutEffect(() => {
+    setBooksAdditionalPadding();
+  }, [isLoaded, viewType]);
 
   const bookElements = books.map(book => renderBook({ book, className: bookClassName }));
   let body = bookElements;

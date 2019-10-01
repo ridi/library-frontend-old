@@ -18,7 +18,7 @@ const ServiceList = ({ services }) => (
 );
 
 const Maintenance = ({ terms, unavailableServiceList }) => (
-  <React.Fragment>
+  <>
     <Helmet>
       <title>시스템 점검 중 - 내 서재</title>
     </Helmet>
@@ -55,7 +55,7 @@ const Maintenance = ({ terms, unavailableServiceList }) => (
         감사합니다.
       </footer>
     </section>
-  </React.Fragment>
+  </>
 );
 
 export default Maintenance;

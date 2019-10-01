@@ -67,42 +67,30 @@ const Hidden = props => {
   const { page } = extractOptions(location);
 
   const [isEditing, setIsEditing] = React.useState(false);
-  React.useEffect(
-    () => {
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(page);
+  }, [location]);
+
+  const toggleEditingMode = React.useCallback(() => {
+    if (isEditing === true) {
       dispatchClearSelectedBooks();
-      dispatchLoadItems(page);
-    },
-    [location],
-  );
+    }
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isEditing === true) {
-        dispatchClearSelectedBooks();
-      }
+    setIsEditing(!isEditing);
+  }, [dispatchClearSelectedBooks, isEditing]);
 
-      setIsEditing(!isEditing);
-    },
-    [dispatchClearSelectedBooks, isEditing],
-  );
+  const handleOnClickUnhide = React.useCallback(() => {
+    dispatchUnhideSelectedBooks(currentPage);
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchUnhideSelectedBooks]);
 
-  const handleOnClickUnhide = React.useCallback(
-    () => {
-      dispatchUnhideSelectedBooks(currentPage);
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchUnhideSelectedBooks],
-  );
-
-  const handleOnclickDeleteConfirm = React.useCallback(
-    () => {
-      dispatchDeleteSelectedBooks(currentPage);
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchDeleteSelectedBooks, dispatchClearSelectedBooks],
-  );
+  const handleOnclickDeleteConfirm = React.useCallback(() => {
+    dispatchDeleteSelectedBooks(currentPage);
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchDeleteSelectedBooks, dispatchClearSelectedBooks]);
 
   const handleOnClickDelete = () => {
     dispatchShowConfirm({

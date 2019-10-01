@@ -61,49 +61,43 @@ function SelectShelfModalInner(props) {
   const handlePageChange = React.useCallback(newPage => onPageOptionsChange({ page: newPage }), [onPageOptionsChange]);
   const pageOptions = { orderBy, orderDirection, page };
 
-  const handleAddShelf = React.useCallback(
-    () => {
-      const validateAddShelf = onValid => {
-        validateShelvesLimit({
-          onValid,
-          onInvalid: () => {
-            loadShelves(pageOptions);
-            showToast({
-              message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
-              toastStyle: ToastStyle.RED,
-            });
-          },
-        });
-      };
-
-      validateAddShelf(() => {
-        showPrompt({
-          title: '새 책장 추가',
-          message: '새 책장의 이름을 입력해주세요.',
-          placeHolder: '책장 이름',
-          emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-          limit: SHELF_NAME_LIMIT,
-          onClickConfirmButton: shelfName => {
-            validateAddShelf(() => {
-              addShelf({ name: shelfName, pageOptions });
-            });
-          },
-        });
+  const handleAddShelf = React.useCallback(() => {
+    const validateAddShelf = onValid => {
+      validateShelvesLimit({
+        onValid,
+        onInvalid: () => {
+          loadShelves(pageOptions);
+          showToast({
+            message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
+            toastStyle: ToastStyle.RED,
+          });
+        },
       });
-    },
-    [orderBy, orderDirection, page, totalShelfCount],
-  );
+    };
+
+    validateAddShelf(() => {
+      showPrompt({
+        title: '새 책장 추가',
+        message: '새 책장의 이름을 입력해주세요.',
+        placeHolder: '책장 이름',
+        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+        limit: SHELF_NAME_LIMIT,
+        onClickConfirmButton: shelfName => {
+          validateAddShelf(() => {
+            addShelf({ name: shelfName, pageOptions });
+          });
+        },
+      });
+    });
+  }, [orderBy, orderDirection, page, totalShelfCount]);
 
   React.useEffect(() => {
     loadShelfCount();
   }, []);
 
-  React.useEffect(
-    () => {
-      loadShelves(pageOptions);
-    },
-    [orderBy, orderDirection, page],
-  );
+  React.useEffect(() => {
+    loadShelves(pageOptions);
+  }, [orderBy, orderDirection, page]);
 
   const handleOrderOptionClick = React.useCallback(option => {
     const newPageOptions = {

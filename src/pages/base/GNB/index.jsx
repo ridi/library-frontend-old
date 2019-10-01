@@ -17,14 +17,11 @@ function GNB(props) {
   const handleModalBackgroundClick = React.useCallback(() => setModalActive(false), []);
   const handleMyMenuClick = React.useCallback(() => setModalActive(active => !active), []);
 
-  React.useEffect(
-    () => {
-      if (userId != null) {
-        import('../../../components/Modal/MyMenuModal').then(({ default: component }) => setMyMenuModal(() => component));
-      }
-    },
-    [userId],
-  );
+  React.useEffect(() => {
+    if (userId != null) {
+      import('../../../components/Modal/MyMenuModal').then(({ default: component }) => setMyMenuModal(() => component));
+    }
+  }, [userId]);
 
   function renderMyMenu() {
     const { isExcelDownloading, dispatchStartExcelDownload } = props;

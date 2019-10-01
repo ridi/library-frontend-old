@@ -53,11 +53,12 @@ export const shelfStyles = {
     transition: transform ease 0.3s, box-shadow ease 0.3s;
     transform: translate3d(0, 0, 0);
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+
     &:hover {
       transform: translate3d(0, -4px, 0);
       box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.05);
     }
-    // IE에서 안 되지만 어차피 모바일 버전이 없으니 상관 없음
+
     @media (hover: none) {
       &:hover {
         transform: translate3d(0, 0, 0);
@@ -78,6 +79,7 @@ export const shelfStyles = {
     border-left: 1px solid #d1d5d9;
     flex: 1;
     line-height: 0;
+
     &:first-of-type {
       border-left: 0;
     }
@@ -148,9 +150,10 @@ export const shelfStyles = {
     width: 100%;
     height: 100%;
     cursor: pointer;
+
     input {
-      width: 0px;
-      height: 0px;
+      width: 0;
+      height: 0;
     }
   `,
   selectIconWrapper: css`
@@ -170,6 +173,7 @@ export const shelfStyles = {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
+
     &.active {
       background: rgb(31, 140, 230);
     }

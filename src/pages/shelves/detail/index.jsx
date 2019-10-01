@@ -62,27 +62,21 @@ function ShelfDetail(props) {
   const [isEditing, setIsEditing] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
 
-  React.useEffect(
-    () => {
-      clearSelectedBooks();
-      loadShelfBooks(uuid, pageOptions);
-      loadShelfBookCount(uuid);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    clearSelectedBooks();
+    loadShelfBooks(uuid, pageOptions);
+    loadShelfBookCount(uuid);
+  }, [location]);
 
   const toggleEditingMode = React.useCallback(() => {
     clearSelectedBooks();
     setIsEditing(value => !value);
   }, []);
   const selectAllBooks = React.useCallback(() => selectBooks(bookIds), [bookIds]);
-  const confirmRemove = React.useCallback(
-    () => {
-      removeSelectedFromShelf({ uuid, pageOptions: { orderBy, orderDirection, page } });
-      setIsEditing(false);
-    },
-    [uuid, orderBy, orderDirection, page],
-  );
+  const confirmRemove = React.useCallback(() => {
+    removeSelectedFromShelf({ uuid, pageOptions: { orderBy, orderDirection, page } });
+    setIsEditing(false);
+  }, [uuid, orderBy, orderDirection, page]);
   const showRemoveConfirm = React.useCallback(() => {
     showConfirm({
       title: '책장에서 책 삭제',
@@ -116,21 +110,18 @@ function ShelfDetail(props) {
     },
     [uuid],
   );
-  const showShelfRenamePrompt = React.useCallback(
-    () => {
-      showPrompt({
-        title: '책장 이름 변경',
-        message: '책장의 이름을 입력해주세요.',
-        placeHolder: '책장 이름',
-        confirmLabel: '확인',
-        initialValue: name,
-        emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-        onClickConfirmButton: confirmShelfRename,
-        limit: SHELF_NAME_LIMIT,
-      });
-    },
-    [name],
-  );
+  const showShelfRenamePrompt = React.useCallback(() => {
+    showPrompt({
+      title: '책장 이름 변경',
+      message: '책장의 이름을 입력해주세요.',
+      placeHolder: '책장 이름',
+      confirmLabel: '확인',
+      initialValue: name,
+      emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+      onClickConfirmButton: confirmShelfRename,
+      limit: SHELF_NAME_LIMIT,
+    });
+  }, [name]);
   const handleAddSelected = React.useCallback(
     targetUuid => {
       addSelectedToShelf({
@@ -172,27 +163,24 @@ function ShelfDetail(props) {
     [location],
   );
 
-  React.useEffect(
-    () => {
-      const newPage = Math.max(Math.min(page, totalPages), 1);
-      if (page !== newPage) {
-        const linkProps = makeLinkProps(
-          {
-            pathname: URLMap[PageType.SHELF_DETAIL].href,
-            query: { uuid },
-          },
-          URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-          {
-            orderBy,
-            orderDirection,
-            page: newPage,
-          },
-        );
-        history.push(linkProps.to);
-      }
-    },
-    [page, totalPages, history],
-  );
+  React.useEffect(() => {
+    const newPage = Math.max(Math.min(page, totalPages), 1);
+    if (page !== newPage) {
+      const linkProps = makeLinkProps(
+        {
+          pathname: URLMap[PageType.SHELF_DETAIL].href,
+          query: { uuid },
+        },
+        URLMap[PageType.SHELF_DETAIL].as({ uuid }),
+        {
+          orderBy,
+          orderDirection,
+          page: newPage,
+        },
+      );
+      history.push(linkProps.to);
+    }
+  }, [page, totalPages, history]);
 
   function makeBackLocation() {
     if (location.state && location.state.backLocation) {

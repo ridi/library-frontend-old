@@ -97,13 +97,10 @@ function PurchasedMain(props) {
     [location, orderType, orderBy],
   );
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadItems(pageOptions);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(pageOptions);
+  }, [location]);
 
   function renderPaginator() {
     return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
@@ -157,15 +154,12 @@ function PurchasedMain(props) {
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isEditing) {
-        dispatchClearSelectedBooks();
-      }
-      setIsEditing(!isEditing);
-    },
-    [dispatchClearSelectedBooks, isEditing],
-  );
+  const toggleEditingMode = React.useCallback(() => {
+    if (isEditing) {
+      dispatchClearSelectedBooks();
+    }
+    setIsEditing(!isEditing);
+  }, [dispatchClearSelectedBooks, isEditing]);
   function renderSearchBar() {
     const { filterOptions } = props;
     const order = OrderOptions.toKey(orderType, orderBy);
@@ -198,22 +192,16 @@ function PurchasedMain(props) {
     };
   }
 
-  const handleHideClick = React.useCallback(
-    () => {
-      dispatchHideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
-  );
-  const handleDownloadClick = React.useCallback(
-    () => {
-      dispatchDownloadSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
-  );
+  const handleHideClick = React.useCallback(() => {
+    dispatchHideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions]);
+  const handleDownloadClick = React.useCallback(() => {
+    dispatchDownloadSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions]);
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
   const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
   const handleShelfSelect = React.useCallback(

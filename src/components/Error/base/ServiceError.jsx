@@ -37,7 +37,7 @@ const ServiceError = ({ children, errorTitle, reloadButton, prevPageButton, home
   );
 
   return (
-    <React.Fragment>
+    <>
       <Helmet>
         <title>{errorTitle || ''}에러 - 내 서재</title>
       </Helmet>
@@ -53,7 +53,7 @@ const ServiceError = ({ children, errorTitle, reloadButton, prevPageButton, home
           {homeButton && renderHomeButton()}
         </ul>
       </section>
-    </React.Fragment>
+    </>
   );
 };
 
