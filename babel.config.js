@@ -1,6 +1,7 @@
 module.exports = function(api) {
   const emotionAdditionalPresets = api.env('production')
     ? {
+        sourceMap: true,
         hoist: true,
       }
     : {

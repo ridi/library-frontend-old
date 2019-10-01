@@ -16,7 +16,7 @@
   "dependencies": {
     "@emotion/cache": "^10.0.19",
     "@emotion/core": "^10.0.17",
-	"@ridi/colors": "^0.6.0",
+    "@ridi/colors": "^0.6.0",
     "@ridi/event-tracker": "^0.5.8",
     "@ridi/web-ui": "^0.6.1",
     "@sentry/browser": "^4.4.1",
