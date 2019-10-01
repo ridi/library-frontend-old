@@ -6,7 +6,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import config from '../../config';
 import { UnitType } from '../../constants/unitType';
 import { getAdultVerification } from '../../services/account/selectors';
 import { getBook } from '../../services/book/selectors';
@@ -19,7 +18,7 @@ import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import Star from '../../svgs/Star.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { thousandsSeperator } from '../../utils/number';
-import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../../utils/uri';
+import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../../utils/uri';
 import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
@@ -134,7 +133,8 @@ class UnitDetailView extends React.Component {
   }
 
   renderReadLatestButton() {
-    const { readableLatest, unit, book, readLatestBookData, locationHref, fetchingReadLatest } = this.props;
+    const { location, readableLatest, unit, book, readLatestBookData, fetchingReadLatest } = this.props;
+    const locationHref = makeLocationHref(location);
 
     if (!readableLatest) {
       return null;
@@ -154,7 +154,7 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <a css={styles.readLatestButtonAnchor} href={makeWebViewerURI(readLatestBookData.bookId || book.series.id, locationHref)}>
+      <a css={styles.readLatestButtonAnchor} href={makeWebViewerUri(readLatestBookData.bookId || book.series.id, locationHref)}>
         <button type="button" css={styles.readLatestButton}>
           {readLatestBookData.bookId ? '이어보기' : '첫화보기'}
         </button>
@@ -262,11 +262,6 @@ class UnitDetailView extends React.Component {
 }
 
 const mapStateToPropsFactory = () => {
-  const getLocationHref = location => {
-    const { pathname, search } = location;
-    return `${config.BASE_URL}${pathname}${search}`;
-  };
-
   const selectBookMetadata = createSelector(
     getBook,
     (state, primaryBookId, unit) => unit,
@@ -274,7 +269,6 @@ const mapStateToPropsFactory = () => {
   );
 
   return (state, props) => ({
-    locationHref: getLocationHref(props.location),
     readLatestBookData: props.unit ? getReadLatestData(state, props.unit.id) : null,
     fetchingReadLatest: getFetchingReadLatest(state),
     book: props.primaryBookId && getBook(state, props.primaryBookId),

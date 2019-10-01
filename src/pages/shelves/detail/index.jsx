@@ -198,7 +198,7 @@ function ShelfDetail(props) {
 
   function makeBackLocation() {
     if (location.state && location.state.backLocation) {
-      const { backLocation } = location.state.backLocation;
+      const { backLocation } = location.state;
       return {
         ...backLocation,
         state: {

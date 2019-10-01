@@ -3,14 +3,13 @@ import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import config from '../config';
 import { OrderOptions } from '../constants/orderOptions';
 import { UnitType } from '../constants/unitType';
 import ViewType from '../constants/viewType';
 import { ResponsiveBooks } from '../pages/base/Responsive';
 import { getTotalSelectedCount } from '../services/selection/selectors';
 import BookOutline from '../svgs/BookOutline.svg';
-import { makeRidiSelectUri, makeRidiStoreUri, makeWebViewerURI } from '../utils/uri';
+import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../utils/uri';
 import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
 import { Books } from './Books';
 import Editable from './Editable';
@@ -93,9 +92,10 @@ class SeriesList extends React.Component {
       isFetching,
       unit,
       linkWebviewer,
+      location,
       emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
-      locationHref,
     } = this.props;
+    const locationHref = makeLocationHref(location);
 
     // items가 한번도 설정된 적이 없으면 Skeleton 노출
     if (items == null) {
@@ -110,7 +110,7 @@ class SeriesList extends React.Component {
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
       // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && platformBookData.support.web_viewer) {
-        return <a href={makeWebViewerURI(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
+        return <a href={makeWebViewerUri(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
       }
 
       // 구매한 책이면 책의 서비스에 따라 이동
@@ -165,21 +165,8 @@ class SeriesList extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const { pathname, search } = props.location;
-  const locationHref = `${config.BASE_URL}${pathname}${search}`;
+const mapStateToProps = state => ({
+  totalSelectedCount: getTotalSelectedCount(state),
+});
 
-  return {
-    locationHref,
-    totalSelectedCount: getTotalSelectedCount(state),
-  };
-};
-
-const mapDispatchToProps = {};
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(SeriesList),
-);
+export default withRouter(connect(mapStateToProps)(SeriesList));
