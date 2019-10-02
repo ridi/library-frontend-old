@@ -8,7 +8,9 @@ const fullButtonStyle = css`
   width: 100%;
   height: 100%;
   z-index: 350;
-  a, button: {
+
+  a,
+  button {
     display: block;
     width: 100%;
     height: 100%;
