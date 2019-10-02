@@ -174,7 +174,7 @@ function BookItem(props) {
 }
 
 export function Books(props) {
-  const { bookIds, isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
+  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
 
   const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
@@ -190,15 +190,11 @@ export function Books(props) {
     };
   }, [isLoaded]);
 
-  // TODO: compat
   let finalBookIds = [];
   let libraryBookMap = new Map();
   if (libraryBookDTO != null) {
     finalBookIds = libraryBookDTO.map(book => book.b_id);
     libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
-  }
-  if (finalBookIds.length === 0) {
-    finalBookIds = bookIds;
   }
   return (
     <BooksWrapper
