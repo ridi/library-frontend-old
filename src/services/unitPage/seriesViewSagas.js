@@ -6,6 +6,7 @@ import { toDict, toFlatten } from '../../utils/array';
 import { loadBookData, loadUnitOrders } from '../book/sagas';
 import { fetchLibraryBookData } from '../book/requests';
 import { getUnit, getUnitOrders, getBooks } from '../book/selectors';
+import { getRemainTime } from './utils';
 
 function getLibraryItem(itemBookIds, libraryItems) {
   const selectedLibraryItems = itemBookIds.map(bookId => libraryItems[bookId]).filter(item => !!item);
@@ -34,24 +35,6 @@ function getLibraryItem(itemBookIds, libraryItems) {
   });
 
   return optimalValue;
-}
-
-// TODO: 컴포넌트 업데이트 전까지 임시적으로 처리한다.
-function getRemainTime(libraryItem) {
-  if (!libraryItem) {
-    return '';
-  }
-
-  if (libraryItem.remain_time !== '') {
-    return libraryItem.remain_time;
-  }
-
-  if (libraryItem.service_type === ServiceType.RIDISELECT) {
-    return '';
-  }
-
-  // 사용기간이 있으면
-  return libraryItem.expire_date === '9999-12-31T23:59:59+09:00' ? '구매한 책' : '대여했던 책';
 }
 
 export function getOpendBookId(itemBookIds, pageBookData) {
