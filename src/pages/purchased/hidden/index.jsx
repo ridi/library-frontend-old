@@ -238,7 +238,8 @@ const Hidden = props => {
 };
 
 const mapStateToProps = (state, props) => {
-  const { page: currentPage } = extractOptions(props);
+  const { location } = props;
+  const { page: currentPage } = extractOptions(location);
   const items = getItemsByPage(state, currentPage);
   const units = getUnits(state, toFlatten(items, 'unit_id'));
   const totalCount = getTotalCount(state);
