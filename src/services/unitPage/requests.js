@@ -9,6 +9,8 @@ import { makeURI } from '../../utils/uri';
 import { OrderType, OrderOptions } from '../../constants/orderOptions';
 import { attatchTTL } from '../../utils/ttl';
 
+import { getRemainTime } from './utils';
+
 function enhanceOptions(options, orderType, orderBy) {
   if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
     options.expiredBooksOnly = true;
@@ -31,7 +33,11 @@ export function* fetchUnitItems({ kind, unitId, orderType, orderBy, page }) {
   const api = yield put(getAPI());
   const response = yield api.get(makeURI(`/items/${kind}/${unitId}`, options, config.LIBRARY_API_BASE_URL));
   if (response.data.items) {
-    response.data.items = response.data.items.map(item => ({ ...item, purchased: true }));
+    response.data.items = response.data.items.map(item => ({
+      ...item,
+      purchased: true,
+      remain_time: getRemainTime(item),
+    }));
   }
   return response.data;
 }
