@@ -1,5 +1,4 @@
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
-import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
@@ -10,7 +9,6 @@ import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
-import * as featureSelectors from '../../feature/selectors';
 import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
@@ -125,8 +123,7 @@ function* downloadSelectedBooks(action) {
 
 function* selectAllBooks(action) {
   const items = yield select(getItemsByPage, action.payload.pageOptions);
-  const isSyncShelfEnabled = yield select(featureSelectors.getIsFeatureEnabled, featureIds.SYNC_SHELF);
-  const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+  const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
   const bookIds = toFlatten(filteredItems, 'b_id');
   yield put(selectItems(bookIds));
 }

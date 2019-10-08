@@ -10,13 +10,11 @@ import SelectShelfModal from '../../components/SelectShelfModal';
 import SeriesList from '../../components/SeriesList';
 import TitleBar from '../../components/TitleBar';
 import UnitDetailView from '../../components/UnitDetailView';
-import * as featureIds from '../../constants/featureIds';
 import { OrderOptions } from '../../constants/orderOptions';
 import { UnitType } from '../../constants/unitType';
 import { PageType, URLMap } from '../../constants/urls';
 import * as bookSelectors from '../../services/book/selectors';
 import * as confirmActions from '../../services/confirm/actions';
-import * as featureSelectors from '../../services/feature/selectors';
 import * as purchasedCommonSelectors from '../../services/purchased/common/selectors';
 import * as selectionActions from '../../services/selection/actions';
 import * as selectionSelectors from '../../services/selection/selectors';
@@ -226,7 +224,7 @@ function Unit(props) {
   }
 
   function makeActionBarProps() {
-    const { isSelected, isSyncShelfEnabled } = props;
+    const { isSelected } = props;
     const disable = !isSelected;
 
     let buttonProps = [];
@@ -253,7 +251,7 @@ function Unit(props) {
         onClick: handleHideClick,
         disable,
       });
-      if (isSyncShelfEnabled && UnitType.isCollection(unit.type)) {
+      if (UnitType.isCollection(unit.type)) {
         buttonProps.push({
           name: '책장에 추가',
           onClick: handleAddToShelf,
@@ -354,7 +352,6 @@ const mapStateToProps = (state, props) => {
     bookStarRating: primaryBookId && bookSelectors.getBookStarRating(state, primaryBookId),
     isFetchingBook: unitPageSelectors.getIsFetchingBook(state),
     isSelected: selectionSelectors.getTotalSelectedCount(state) !== 0,
-    isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
     items: unitPageSelectors.getItemsByPage(state, unitOptions),
     primaryBook: primaryBookId && bookSelectors.getBook(state, primaryBookId),
     primaryBookId,
