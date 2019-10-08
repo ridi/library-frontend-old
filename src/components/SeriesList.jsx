@@ -95,12 +95,12 @@ class SeriesList extends React.Component {
     } = this.props;
     const locationHref = makeLocationHref(location);
 
-    // items가 한번도 설정된 적이 없으면 Skeleton 노출
+    // Data 가져오는 중이거나 items가 한번도 설정된 적이 없으면 Skeleton 노출
     if (isFetching || items == null) {
       return <SkeletonBooks viewType={ViewType.LANDSCAPE} />;
     }
 
-    // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
+    // Items가 비어있으면
     if (items.length === 0) {
       return <Empty IconComponent={BookOutline} message={this.getEmptyMessage(message)} />;
     }

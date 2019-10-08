@@ -37,13 +37,18 @@ function getLibraryItem(itemBookIds, libraryItems) {
   return optimalValue;
 }
 
-export function getOpendBookId(itemBookIds, pageBookData) {
-  const opendBookId = itemBookIds.find(bookId => pageBookData[bookId].property.is_open);
-  return opendBookId || itemBookIds[0];
+export function getOpenedBookId(itemBookIds, pageBookData) {
+  const openedBookId = itemBookIds.find(bookId => pageBookData[bookId].property.is_open);
+  return openedBookId || itemBookIds[0];
 }
 
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
-  const options = { unitId, orderType, orderBy, page };
+  const options = {
+    unitId,
+    orderType,
+    orderBy,
+    page,
+  };
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   // 시리즈 리스트 페이지별 도서 목록
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
@@ -60,7 +65,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     items = unitOrders.items.map(unitOrder => {
       const { b_ids: itemBookIds } = unitOrder;
       const libraryItem = getLibraryItem(itemBookIds, libraryItems);
-      const bookId = libraryItem ? libraryItem.b_id : getOpendBookId(itemBookIds, pageBookData);
+      const bookId = libraryItem ? libraryItem.b_id : getOpenedBookId(itemBookIds, pageBookData);
 
       return {
         b_id: bookId,
