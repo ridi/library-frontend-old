@@ -97,11 +97,11 @@ export function* _download(bookIds, url) {
 
 export function* downloadBooks(bookIds) {
   const triggerResponse = yield call(triggerDownload, bookIds);
-  const { result: responseResult, b_ids: downloadableBookIds, url: downloadUrl, message } = triggerResponse;
+  const { result: responseResult, b_ids: downloadableBookIds, url: downloadUrl } = triggerResponse;
   if (responseResult) {
     yield call(_download, downloadableBookIds, downloadUrl);
   } else {
-    yield put(showToast({ message }));
+    yield put(showToast({ message: '다운로드할 수 있는 책이 없습니다.' }));
   }
 }
 
