@@ -6,11 +6,7 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { PageType } from '../../constants/urls';
 import { calcOffset } from '../../utils/pagination';
 import { attatchTTL } from '../../utils/ttl';
-<<<<<<< HEAD
-=======
 import { makeURI } from '../../utils/uri';
-import { getRemainTime } from './utils';
->>>>>>> b38624ed... 숨김 상세페이지에서 다운로드, 이어보기 버튼 제거
 
 function enhanceOptions(options, orderType, orderBy) {
   if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
