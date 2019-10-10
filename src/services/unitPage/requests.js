@@ -1,13 +1,16 @@
 import { put } from 'redux-saga/effects';
-
-import config from '../../config';
-import { calcOffset } from '../../utils/pagination';
 import { getAPI } from '../../api/actions';
-
+import config from '../../config';
+import { OrderOptions, OrderType } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
-import { makeURI } from '../../utils/uri';
-import { OrderType, OrderOptions } from '../../constants/orderOptions';
+import { PageType } from '../../constants/urls';
+import { calcOffset } from '../../utils/pagination';
 import { attatchTTL } from '../../utils/ttl';
+<<<<<<< HEAD
+=======
+import { makeURI } from '../../utils/uri';
+import { getRemainTime } from './utils';
+>>>>>>> b38624ed... 숨김 상세페이지에서 다운로드, 이어보기 버튼 제거
 
 function enhanceOptions(options, orderType, orderBy) {
   if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
@@ -24,7 +27,7 @@ export function* fetchUnitItems({ kind, unitId, orderType, orderBy, page }) {
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   };
 
-  if (kind !== 'hidden') {
+  if (kind !== PageType.HIDDEN) {
     enhanceOptions(options, orderType, orderBy);
   }
 
@@ -39,7 +42,7 @@ export function* fetchUnitItems({ kind, unitId, orderType, orderBy, page }) {
 export function* fetchUnitItemsTotalCount({ kind, unitId, orderType, orderBy }) {
   const options = {};
 
-  if (kind !== 'hidden') {
+  if (kind !== PageType.HIDDEN) {
     enhanceOptions(options, orderType, orderBy);
   }
 
@@ -54,7 +57,7 @@ export function* getUnitPrimaryItem({ kind, unitId }) {
     limit: 1,
   };
 
-  if (kind !== 'hidden') {
+  if (kind !== PageType.HIDDEN) {
     enhanceOptions(options, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy);
   }
 
