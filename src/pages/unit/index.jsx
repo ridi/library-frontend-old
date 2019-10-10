@@ -1,7 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-
 import { ButtonType } from '../../components/ActionBar/constants';
 import BookDownLoader from '../../components/BookDownLoader';
 import { BookError } from '../../components/Error';
@@ -32,14 +31,14 @@ function extractOptions({ location, path, params }) {
   let kind;
   switch (path) {
     case URLMap[PageType.MAIN_UNIT].path:
-      kind = 'main';
+      kind = PageType.MAIN;
       break;
     case URLMap[PageType.SEARCH_UNIT].path:
     case URLMap[PageType.SHELF_UNIT].path:
-      kind = 'search';
+      kind = PageType.SEARCH;
       break;
     case URLMap[PageType.HIDDEN_UNIT].path:
-      kind = 'hidden';
+      kind = PageType.HIDDEN;
       break;
     default:
       kind = '';
@@ -217,8 +216,8 @@ function Unit(props) {
         items={items || []}
         bookDescription={bookDescription}
         bookStarRating={bookStarRating}
-        downloadable
-        readableLatest
+        downloadable={kind !== PageType.HIDDEN}
+        readableLatest={kind !== PageType.HIDDEN}
       />
     );
   }
@@ -228,7 +227,7 @@ function Unit(props) {
     const disable = !isSelected;
 
     let buttonProps = [];
-    if (kind === 'hidden') {
+    if (kind === PageType.HIDDEN) {
       buttonProps = [
         {
           name: '영구 삭제',
