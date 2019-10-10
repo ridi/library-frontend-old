@@ -1,27 +1,23 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
-
 import { OrderOptions } from '../../constants/orderOptions';
-import { URLMap } from '../../constants/urls';
-
+import { URLMap, PageType } from '../../constants/urls';
 import { toFlatten } from '../../utils/array';
 import { isExpiredTTL } from '../../utils/ttl';
 import { makeLinkProps } from '../../utils/uri';
-
+import { fetchPrimaryBookId } from '../book/requests';
 import { loadBookData, loadBookDescriptions, loadBookStarRatings, loadUnitData } from '../book/sagas';
 import { downloadBooks } from '../bookDownload/sagas';
 import * as commonRequests from '../common/requests';
 import { showDialog } from '../dialog/actions';
-import { showToast } from '../toast/actions';
-import { setError, setFullScreenLoading } from '../ui/actions';
-import { loadReadLatestBookId } from '../purchased/common/sagas/rootSagas';
-
-import * as actions from './actions';
-import { getItemsByPage, getPrimaryItem } from './selectors';
-import { fetchPrimaryBookId } from '../book/requests';
 import { setPrimaryBookId } from '../purchased/common/actions';
+import { loadReadLatestBookId } from '../purchased/common/sagas/rootSagas';
 import { selectItems } from '../selection/actions';
 import { getSelectedItems } from '../selection/selectors';
+import { showToast } from '../toast/actions';
+import { setError, setFullScreenLoading } from '../ui/actions';
+import * as actions from './actions';
 import * as requests from './requests';
+import { getItemsByPage, getPrimaryItem } from './selectors';
 import { isTotalSeriesView, loadTotalItems } from './seriesViewSagas';
 
 function* loadPrimaryItem(kind, unitId) {
@@ -73,7 +69,7 @@ function* loadItems(action) {
     const basicTask = yield fork(function* loadBasicData() {
       const primaryItem = yield call(loadPrimaryItem, kind, unitId);
       const primaryBookId = primaryItem ? primaryItem.b_id : yield call(fetchPrimaryBookId, unitId);
-      if (kind === 'hidden') {
+      if (kind === PageType.HIDDEN) {
         yield call(loadBookData, [primaryBookId]);
       } else {
         yield fork(loadReadLatestBookId, unitId, primaryBookId);
@@ -87,7 +83,7 @@ function* loadItems(action) {
       return primaryItem;
     });
 
-    if (kind === 'hidden') {
+    if (kind === PageType.HIDDEN) {
       yield loadPurchasedItems(action.payload);
       yield join(basicTask);
       return;
