@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
+const TsconfigPathsWebpackPlugin = require('tsconfig-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {};
 
@@ -19,6 +21,18 @@ module.exports.config = {
         exclude: /node_modules/,
       },
       {
+        test: /\.tsx?$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
+      },
+      {
         test: /\.svg$/,
         use: '@svgr/webpack',
         exclude: path.resolve(__dirname, './src/static/favicon/'),
@@ -26,19 +40,14 @@ module.exports.config = {
     ],
   },
   resolve: {
-    extensions: ['.jsx', '.js'],
-    alias: {
-      pages: path.resolve(__dirname, 'src/pages'),
-      components: path.resolve(__dirname, 'src/components'),
-      services: path.resolve(__dirname, 'src/services'),
-      constants: path.resolve(__dirname, 'src/constants'),
-      static: path.resolve(__dirname, 'src/static'),
-    },
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    plugins: [new TsconfigPathsWebpackPlugin({ extensions: ['.tsx', '.ts', '.jsx', '.js'] })],
   },
   plugins: [
     new webpack.DefinePlugin({
       SENTRY_RELEASE_VERSION: JSON.stringify(process.env.SENTRY_RELEASE_VERSION),
     }),
+    new ForkTsCheckerWebpackPlugin(),
     new WebpackBar(),
   ],
   stats: {

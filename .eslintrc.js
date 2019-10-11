@@ -1,13 +1,6 @@
 module.exports = {
   extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended'],
-  parser: 'babel-eslint',
-  parserOptions: {
-    ecmaVersion: 2017,
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true,
-      jsx: true,
-    },
-  },
+  parser: '@typescript-eslint/parser',
   globals: {
     window: true,
   },
@@ -15,7 +8,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['import', 'prettier', 'babel', 'react', 'emotion'],
+  plugins: ['@typescript-eslint', 'import', 'prettier', 'babel', 'react', 'emotion'],
   settings: {
     'import/resolver': {
       node: {
@@ -108,7 +101,7 @@ module.exports = {
     'react/jsx-filename-extension': [
       'warn',
       {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.tsx', '.jsx'],
       },
     ],
     'react/jsx-one-expression-per-line': 'off',
