@@ -1,25 +1,25 @@
-export const PageType = {
-  INDEX: 'index',
-  LOGIN: 'login',
-  MAIN: 'main',
-  MAIN_UNIT: 'mainUnit',
-  SEARCH: 'search',
-  SEARCH_UNIT: 'searchUnit',
-  HIDDEN: 'hidden',
-  HIDDEN_UNIT: 'hiddenUnit',
-  SHELVES: 'shelves',
-  SERIAL_PREFERENCE: 'serialPreference',
-  SERIAL_PREFERENCE_UNIT: 'serialPreferenceUnit',
-  SHELF_DETAIL: 'shelfDetail',
-  SHELF_UNIT: 'shelfUnit',
-  NOT_FOUND: 'notFound',
-};
+export enum PageType {
+  INDEX = 'index',
+  LOGIN = 'login',
+  MAIN = 'main',
+  MAIN_UNIT = 'mainUnit',
+  SEARCH = 'search',
+  SEARCH_UNIT = 'searchUnit',
+  HIDDEN = 'hidden',
+  HIDDEN_UNIT = 'hiddenUnit',
+  SHELVES = 'shelves',
+  SERIAL_PREFERENCE = 'serialPreference',
+  SERIAL_PREFERENCE_UNIT = 'serialPreferenceUnit',
+  SHELF_DETAIL = 'shelfDetail',
+  SHELF_UNIT = 'shelfUnit',
+  NOT_FOUND = 'notFound',
+}
 
-export const BooksPageKind = {
-  MAIN: 'main',
-  SEARCH: 'search',
-  HIDDEN: 'hidden',
-};
+export enum BooksPageKind {
+  MAIN = 'main',
+  SEARCH = 'search',
+  HIDDEN = 'hidden',
+}
 
 export const URLMap = {
   [PageType.INDEX]: {

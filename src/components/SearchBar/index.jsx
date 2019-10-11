@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
+import { OrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
@@ -46,7 +47,8 @@ class SearchBar extends React.Component {
 
   render() {
     const { hideTools, keyword } = this.state;
-    const { filter, filterOptions, order, orderOptions, toggleEditingMode, isSearchPage } = this.props;
+    const { filter, filterOptions, orderOptions, orderBy, orderType, toggleEditingMode, isSearchPage } = this.props;
+    const order = OrderOptions.toKey(orderType, orderBy);
 
     const left = (
       <div css={styles.searchBoxWrapper}>

@@ -9,7 +9,7 @@ import { createInitialDataState, mapPageOptionsToKey } from './state';
 import { getBooks } from '../../book/selectors';
 
 const getDataState = createCachedSelector(
-  state => state.purchasedMain.data,
+  (state: any) => state.purchasedMain.data,
   (_, pageOptions) => mapPageOptionsToKey(pageOptions),
   (data, key) => data[key] || createInitialDataState(),
 )((_, pageOptions) => mapPageOptionsToKey(pageOptions));
@@ -34,7 +34,7 @@ const getBookIdsByPage = createSelector(
   items => toFlatten(items, 'b_id'),
 );
 
-const getBooksByPage = (state, pageOptions) => getBooks(state, getBookIdsByPage(state, pageOptions));
+const getBooksByPage = (state: any, pageOptions) => getBooks(state, getBookIdsByPage(state, pageOptions));
 
 export const getUnitIdsByPage = createSelector(
   getItemsByPage,

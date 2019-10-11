@@ -31,7 +31,23 @@ import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 
-function extractPageOptions({ location, path }) {
+interface MainPageOptions {
+  kind: BooksPageKind.MAIN;
+  page: number;
+  orderType: string;
+  orderBy: string;
+  categoryFilter: number;
+}
+
+interface SearchPageOptions {
+  kind: BooksPageKind.SEARCH;
+  keyword: string;
+  page: number;
+}
+
+type PageOptions = MainPageOptions | SearchPageOptions;
+
+function extractPageOptions({ location, path }): PageOptions {
   const urlParams = new URLSearchParams(location.search);
   const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
@@ -77,8 +93,7 @@ function PurchasedMain(props) {
   } = props;
 
   const pageOptions = extractPageOptions({ location, ...match });
-  const { kind, keyword, page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
-  const order = orderType != null && orderBy != null ? OrderOptions.toKey(orderType, orderBy) : '';
+  const currentPage = pageOptions.page;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
@@ -92,19 +107,18 @@ function PurchasedMain(props) {
     libraryBookData => {
       let pathname = '';
       const params = new URLSearchParams();
-      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-        params.append('order_type', orderType);
-        params.append('order_by', orderBy);
-      }
-      if (keyword) {
-        params.append('keyword', keyword);
-      }
-      if (kind === BooksPageKind.MAIN) {
+      if (pageOptions.kind === BooksPageKind.MAIN) {
         pathname = URLMap.mainUnit.as({ unitId: libraryBookData.unit_id });
-      } else if (kind === BooksPageKind.SEARCH) {
-        pathname = URLMap.searchUnit.as({ unitId: libraryBookData.unit_id });
+
+        const { orderType, orderBy } = pageOptions;
+        const order = OrderOptions.toKey(orderType, orderBy);
+        if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+          params.append('order_type', orderType);
+          params.append('order_by', orderBy);
+        }
       } else {
-        throw new Error('Invalid kind');
+        pathname = URLMap.searchUnit.as({ unitId: libraryBookData.unit_id });
+        params.append('keyword', pageOptions.keyword);
       }
       const search = params.toString();
 
@@ -119,7 +133,7 @@ function PurchasedMain(props) {
 
       return <Link to={to}>더보기</Link>;
     },
-    [keyword, kind, location, orderType, orderBy],
+    [location],
   );
 
   React.useEffect(() => {
@@ -155,19 +169,20 @@ function PurchasedMain(props) {
   }
 
   function getEmptyMessage() {
-    if (OrderOptions.EXPIRE_DATE.key === order) {
-      return '대여 중인 도서가 없습니다.';
-    }
-    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-      return '만료된 도서가 없습니다.';
-    }
-    if (keyword == null) {
+    if (pageOptions.kind === BooksPageKind.MAIN) {
+      const order = OrderOptions.toKey(pageOptions.orderType, pageOptions.orderBy);
+      if (OrderOptions.EXPIRE_DATE.key === order) {
+        return '대여 중인 도서가 없습니다.';
+      }
+      if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+        return '만료된 도서가 없습니다.';
+      }
       return '구매/대여하신 책이 없습니다.';
     }
-    if (keyword === '') {
+    if (pageOptions.keyword === '') {
       return '검색어를 입력해주세요.';
     }
-    return `'${keyword}'에 대한 검색 결과가 없습니다.`;
+    return `'${pageOptions.keyword}'에 대한 검색 결과가 없습니다.`;
   }
 
   function renderMain() {
@@ -180,8 +195,8 @@ function PurchasedMain(props) {
     if (listInstruction === ListInstructions.EMPTY) {
       const emptyProps = {
         message: getEmptyMessage(),
-        IconComponent: kind === BooksPageKind.MAIN ? BookOutline : SearchIcon,
-        iconWidth: kind === BooksPageKind.MAIN ? 30 : 38,
+        IconComponent: pageOptions.kind === BooksPageKind.MAIN ? BookOutline : SearchIcon,
+        iconWidth: pageOptions.kind === BooksPageKind.MAIN ? 30 : 38,
       };
       return <Empty {...emptyProps} />;
     }
@@ -198,22 +213,21 @@ function PurchasedMain(props) {
   function renderSearchBar() {
     let searchBarProps = {};
 
-    if (kind === BooksPageKind.MAIN) {
+    if (pageOptions.kind === BooksPageKind.MAIN) {
       const { filterOptions } = props;
       const orderOptions = OrderOptions.toMainList();
 
       searchBarProps = {
-        filter: categoryFilter,
+        filter: pageOptions.categoryFilter,
         filterOptions,
-        order,
         orderOptions,
-        orderBy,
-        orderType,
+        orderBy: pageOptions.orderBy,
+        orderType: pageOptions.orderType,
       };
-    } else if (kind === BooksPageKind.SEARCH) {
+    } else {
       searchBarProps = {
         isSearchPage: true,
-        keyword,
+        keyword: pageOptions.keyword,
       };
     }
 
@@ -288,11 +302,11 @@ function PurchasedMain(props) {
     };
   }
 
-  let title = '내 서재';
-  if (kind === BooksPageKind.MAIN) {
+  let title;
+  if (pageOptions.kind === BooksPageKind.MAIN) {
     title = '모든 책 - 내 서재';
-  } else if (keyword !== '') {
-    title = `'${keyword}' 검색 결과 - 내 서재`;
+  } else if (pageOptions.keyword !== '') {
+    title = `'${pageOptions.keyword}' 검색 결과 - 내 서재`;
   } else {
     title = '검색 - 내 서재';
   }
@@ -324,7 +338,7 @@ function PurchasedMain(props) {
         actionBarProps={makeActionBarProps()}
       >
         <main>{renderMain()}</main>
-        {kind === BooksPageKind.MAIN && <Footer />}
+        {pageOptions.kind === BooksPageKind.MAIN && <Footer />}
       </Editable>
       <BookDownLoader />
     </>

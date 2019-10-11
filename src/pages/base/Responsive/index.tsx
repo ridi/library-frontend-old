@@ -1,6 +1,8 @@
+import React from 'react';
+
 import * as styles from './styles';
 
-const Responsive = ({ className, children }) => {
+const Responsive: React.FC<{ className?: string }> = ({ className, children }) => {
   const hasPadding = true;
   const minHeight = false;
   return (
@@ -10,7 +12,7 @@ const Responsive = ({ className, children }) => {
   );
 };
 
-export const ResponsiveBooks = ({ className, children }) => {
+export const ResponsiveBooks: React.FC<{ className?: string }> = ({ className, children }) => {
   const hasPadding = false;
   const minHeight = true;
   return (
