@@ -19,6 +19,11 @@ import * as actions from './actions';
 import * as requests from './requests';
 import * as selectors from './selectors';
 
+const OperationEndpoint = {
+  SHELF: 'shelf',
+  SHELF_ITEM: 'shelfItem',
+};
+
 const OperationType = {
   ADD_SHELF: 'add_shelf',
   DELETE_SHELF: 'delete_shelf',
@@ -30,6 +35,7 @@ const OperationStatus = {
   UNDONE: 'undone',
   DONE: 'done',
   FORBIDDEN: 'forbidden',
+  FAILURE: 'failure',
 };
 
 function* loadShelfBookCount({ payload }) {
@@ -91,38 +97,34 @@ function* loadShelfBooks({ payload }) {
   }
 }
 
-function* waitForOperation(revision, opIds) {
-  const results = {};
-  let pendingIds = opIds;
-  yield delay(100);
+function* waitForOperation(revision, opResults) {
+  const results = new Map(opResults.map(({ id, status }) => [id, status]));
   while (true) {
+    const pendingIds = [...results.entries()].filter(([, result]) => result === OperationStatus.UNDONE).map(([id]) => id);
+    if (pendingIds.length === 0) {
+      break;
+    }
+
+    yield delay(1000);
     try {
       const statuses = yield call(requests.fetchOperationStatus, pendingIds);
       const resolvedOps = statuses.filter(({ status }) => status !== OperationStatus.UNDONE);
-      pendingIds = statuses.filter(({ status }) => status === OperationStatus.UNDONE).map(({ id }) => id);
       resolvedOps.forEach(({ id, status }) => {
-        results[id] = status;
+        results.set(id, status);
       });
-      if (pendingIds.length === 0) {
-        break;
-      }
     } catch (err) {
       if (err.response) {
         // TODO: 적절한 처리?
       }
       // 네트워크 에러 등, 재시도
     }
-    yield delay(1000);
   }
 
   yield put(actions.endOperation({ revision, hasError: false }));
-  return opIds.map(id => ({
-    id,
-    result: results[id],
-  }));
+  return [...results.entries()].map(([id, result]) => ({ id, result }));
 }
 
-function* createOperation(ops) {
+function* createOperation(endpoint, ops) {
   if (ops.length === 0) {
     return [];
   }
@@ -131,31 +133,47 @@ function* createOperation(ops) {
   const opsWithRevision = ops.map(op => ({ ...op, revision }));
   yield put(actions.beginOperation({ revision }));
 
-  let opIds = [];
+  let opResults;
   while (true) {
     try {
-      opIds = yield call(requests.createOperation, opsWithRevision);
+      if (endpoint === OperationEndpoint.SHELF) {
+        opResults = yield call(requests.createOperationShelf, opsWithRevision);
+      } else {
+        opResults = yield call(requests.createOperationShelfItem, opsWithRevision);
+      }
       break;
     } catch (err) {
       if (err.response) {
-        yield put(actions.endOperation({ revision, hasError: true }));
-
         const { status } = err.response;
         if (status === 403) {
-          return ops.map(() => ({ id: null, result: OperationStatus.FORBIDDEN }));
+          opResults = ops.map(() => ({ id: null, status: OperationStatus.FORBIDDEN }));
+        } else if (status === 404) {
+          opResults = ops.map(() => ({ id: null, status: OperationStatus.FAILURE }));
+        } else {
+          yield put(actions.endOperation({ revision, hasError: true }));
+          // TODO: 던지지 말고 처리?
+          throw err;
         }
-        // TODO: 던지지 말고 처리?
-        throw err;
+        break;
       }
       // 네트워크 에러 등, 재시도
     }
   }
 
-  return yield fork(waitForOperation, revision, opIds);
+  return yield fork(waitForOperation, revision, opResults);
 }
 
-function* performOperation(ops) {
-  return yield join(yield call(createOperation, ops));
+function* performOperation(type, opArgs) {
+  let endpoint;
+  if (type === OperationType.ADD_SHELF || type === OperationType.DELETE_SHELF) {
+    endpoint = OperationEndpoint.SHELF;
+  } else {
+    endpoint = OperationEndpoint.SHELF_ITEM;
+  }
+
+  const ops = Array.isArray(opArgs) ? opArgs : [opArgs];
+  const opsWithType = ops.map(op => ({ ...op, type }));
+  return yield join(yield call(createOperation, endpoint, opsWithType));
 }
 
 function* validateShelvesLimit({ payload }) {
@@ -175,7 +193,7 @@ function* addShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
   while (true) {
     const uuid = uuidv4();
-    const results = yield call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]);
+    const results = yield call(performOperation, OperationType.ADD_SHELF, { uuid, name });
     if (results[0].result === OperationStatus.DONE) {
       break;
     }
@@ -187,7 +205,7 @@ function* renameShelf({ payload }) {
   const { uuid, name } = payload;
   const [, results] = yield all([
     put(uiActions.setFullScreenLoading(true)),
-    call(performOperation, [{ type: OperationType.ADD_SHELF, uuid, name }]),
+    call(performOperation, OperationType.ADD_SHELF, { uuid, name }),
   ]);
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(uiActions.setFullScreenLoading(false));
@@ -200,17 +218,18 @@ function* renameShelf({ payload }) {
 
 function* deleteShelf({ payload }) {
   const { uuid } = payload;
-  yield call(performOperation, [{ type: OperationType.DELETE_SHELF, uuid }]);
+  yield call(performOperation, OperationType.DELETE_SHELF, { uuid });
   // 책장 삭제 에러는 무시함
 }
 
 function* deleteShelves({ payload }) {
   const { uuids, pageOptions } = payload;
-  const ops = uuids.map(uuid => ({
-    type: OperationType.DELETE_SHELF,
-    uuid,
-  }));
-  yield all([put(uiActions.setFullScreenLoading(true)), put(selectionActions.clearSelectedItems()), call(performOperation, ops)]);
+  const ops = uuids.map(uuid => ({ uuid }));
+  yield all([
+    put(uiActions.setFullScreenLoading(true)),
+    put(selectionActions.clearSelectedItems()),
+    call(performOperation, OperationType.DELETE_SHELF, ops),
+  ]);
   yield all([
     put(uiActions.setFullScreenLoading(false)),
     put(
@@ -226,12 +245,11 @@ function* deleteShelves({ payload }) {
 function* addShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
-    type: OperationType.ADD_SHELF_ITEM,
     uuid,
     unitId,
     bookIds,
   }));
-  yield call(performOperation, ops);
+  yield call(performOperation, OperationType.ADD_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(actions.loadShelfBookCount(uuid));
 }
@@ -239,12 +257,11 @@ function* addShelfItem({ payload }) {
 function* deleteShelfItem({ payload }) {
   const { uuid, units } = payload;
   const ops = units.map(({ unitId, bookIds }) => ({
-    type: OperationType.DELETE_SHELF_ITEM,
     uuid,
     unitId,
     bookIds,
   }));
-  yield call(performOperation, ops);
+  yield call(performOperation, OperationType.DELETE_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(actions.loadShelfBookCount(uuid));
 }

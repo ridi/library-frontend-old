@@ -28,13 +28,9 @@ const RFetchShelfBooksResponse = R.Record({
   items: R.Array(RShelfBook),
 });
 
-const ROperationStatus = R.Union(R.Literal('undone'), R.Literal('forbidden'), R.Literal('done'));
+const ROperationStatus = R.Union(R.Literal('undone'), R.Literal('forbidden'), R.Literal('failure'), R.Literal('done'));
 
-const RCreateOperationResponse = R.Record({
-  operation_ids: R.Array(R.Number),
-});
-
-const RFetchOperationStateResponse = R.Record({
+const RFetchOperationStatusResponse = R.Record({
   operations_status: R.Array(
     R.Record({
       id: R.Number,
@@ -91,27 +87,41 @@ export async function fetchShelfBookCount({ uuid }) {
   return data.count;
 }
 
-export async function createOperation(ops) {
+export async function createOperationShelf(ops) {
   const api = getApi();
   const payload = {
-    operations: ops.map(({ type, revision, uuid, name, unitId, bookIds }) => ({
+    operations: ops.map(({ type, revision, uuid, name }) => ({
       action_type: type,
       revision,
       shelf_uuid: uuid,
       shelf_name: name,
+    })),
+  };
+  const response = await api.post(makeURI('/operations/shelves/', null, config.LIBRARY_API_BASE_URL), payload);
+  const data = RFetchOperationStatusResponse.check(response.data);
+  return data.operations_status;
+}
+
+export async function createOperationShelfItem(ops) {
+  const api = getApi();
+  const payload = {
+    operations: ops.map(({ type, revision, uuid, unitId, bookIds }) => ({
+      action_type: type,
+      revision,
+      shelf_uuid: uuid,
       unit_id: unitId,
       b_ids: bookIds,
     })),
   };
-  const response = await api.post(makeURI('/shelves/operations/', null, config.LIBRARY_API_BASE_URL), payload);
-  const data = RCreateOperationResponse.check(response.data);
-  return data.operation_ids;
+  const response = await api.post(makeURI('/operations/shelves/books/', null, config.LIBRARY_API_BASE_URL), payload);
+  const data = RFetchOperationStatusResponse.check(response.data);
+  return data.operations_status;
 }
 
 export async function fetchOperationStatus(opIds) {
   const api = getApi();
   const payload = { operation_ids: opIds };
   const response = await api.post(makeURI('/shelves/operations/status/', null, config.LIBRARY_API_BASE_URL), payload);
-  const data = RFetchOperationStateResponse.check(response.data);
+  const data = RFetchOperationStatusResponse.check(response.data);
   return data.operations_status;
 }
