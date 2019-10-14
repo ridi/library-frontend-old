@@ -10,7 +10,8 @@ const fullButtonStyle = css`
   padding-right: 100px;
   box-sizing: border-box;
 
-  a, button: {
+  a,
+  button {
     display: block;
     width: 100%;
     height: 100%;
