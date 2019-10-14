@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import AlertIcon from '../../svgs/ExclamationCircleFill.svg';
 import Arrow from '../../svgs/NoneDashedArrowRight.svg';
 import * as alertStyles from './styles';

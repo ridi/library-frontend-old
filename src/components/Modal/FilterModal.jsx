@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import { useLayoutEffect, useRef } from 'react';
-import { jsx } from '@emotion/core';
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
@@ -29,16 +27,13 @@ const FilterModal = props => {
   const checkedItemEl = useRef(null);
   const modalEl = useRef(null);
 
-  useLayoutEffect(
-    () => {
-      const modal = modalEl.current;
-      const ModalTitleHeight = 32;
-      const modalScrollTop = modal ? modal.getBoundingClientRect().top : 0;
-      const checkedItemScrollTop = checkedItemEl.current ? checkedItemEl.current.getBoundingClientRect().top : ModalTitleHeight;
-      modal.scrollTop = checkedItemScrollTop - modalScrollTop - ModalTitleHeight;
-    },
-    [isActive],
-  );
+  useLayoutEffect(() => {
+    const modal = modalEl.current;
+    const ModalTitleHeight = 32;
+    const modalScrollTop = modal ? modal.getBoundingClientRect().top : 0;
+    const checkedItemScrollTop = checkedItemEl.current ? checkedItemEl.current.getBoundingClientRect().top : ModalTitleHeight;
+    modal.scrollTop = checkedItemScrollTop - modalScrollTop - ModalTitleHeight;
+  }, [isActive]);
 
   return (
     <Modal modalRef={modalEl} isActive={isActive} a11y="카테고리 필터" onClickModalBackground={onClickModalBackground}>

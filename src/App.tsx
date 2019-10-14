@@ -11,7 +11,13 @@ import { initializeTabKeyFocus, registerMouseDownEvent, registerTabKeyUpEvent } 
 
 const Login = React.lazy(() => import('./pages/login'));
 
-function App(props) {
+interface StateProps {
+  needLogin: boolean;
+}
+
+type Props = StateProps;
+
+function App(props: Props) {
   const { needLogin } = props;
 
   React.useEffect(() => {
@@ -39,7 +45,7 @@ function App(props) {
   );
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state): StateProps {
   return {
     needLogin: accountSelectors.getNeedLogin(state),
   };

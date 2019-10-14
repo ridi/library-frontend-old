@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import PlusIcon from '../../svgs/Plus.svg';
 import IconButton from '../IconButton';
 import * as styles from './styles';

@@ -1,4 +1,4 @@
-import { put } from 'redux-saga/effects';
+import { all, call, put } from 'redux-saga/effects';
 
 import config from '../../config';
 import { getAPI } from '../../api/actions';
@@ -144,12 +144,8 @@ export function* requestDelete(bookIds, revision) {
   }
 
   const chunked = splitArrayByChunk(bookIds, DELETE_API_CHUNK_COUNT);
-  const queueIds = [];
-
-  for (const _bookIds of chunked) {
-    const _queueIds = yield internalRequestDelete(_bookIds);
-    queueIds.push(..._queueIds);
-  }
+  const queueIdChunks = yield all(chunked.map(_bookIds => call(internalRequestDelete, _bookIds)));
+  const queueIds = queueIdChunks.flat();
 
   return makeUnique(queueIds);
 }

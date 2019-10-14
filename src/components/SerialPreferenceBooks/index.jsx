@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -102,44 +100,42 @@ const toProps = ({
   };
 };
 
-class SerialPreferenceBooks extends React.Component {
-  render() {
-    const { items, location, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType } = this.props;
+const SerialPreferenceBooks = props => {
+  const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, location } = props;
 
-    return (
-      <BooksWrapper
-        viewType={viewType}
-        books={items}
-        renderBook={({ book: item, className }) => {
-          const bookSeriesId = item.series_id;
-          const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
-          const platformBookData = platformBookDTO[bookSeriesId];
-          const isSelected = !!selectedBooks[bookSeriesId];
-          const recentReadBookId = item.recent_read_b_id;
-          const libraryBookProps = toProps({
-            bookSeriesId,
-            platformBookData,
-            recentReadPlatformBookData,
-            recentReadBookId,
-            isSelectMode,
-            isSelected,
-            onSelectedChange,
-            viewType,
-            locationHref: makeLocationHref(location),
-          });
-          const { thumbnailLink } = libraryBookProps;
+  return (
+    <BooksWrapper
+      viewType={viewType}
+      books={items}
+      renderBook={({ book: item, className }) => {
+        const bookSeriesId = item.series_id;
+        const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
+        const platformBookData = platformBookDTO[bookSeriesId];
+        const isSelected = !!selectedBooks[bookSeriesId];
+        const recentReadBookId = item.recent_read_b_id;
+        const libraryBookProps = toProps({
+          bookSeriesId,
+          platformBookData,
+          recentReadPlatformBookData,
+          recentReadBookId,
+          isSelectMode,
+          isSelected,
+          onSelectedChange,
+          viewType,
+          locationHref: makeLocationHref(location),
+        });
+        const { thumbnailLink } = libraryBookProps;
 
-          return (
-            <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
-              <Book.LandscapeBook {...libraryBookProps} />
-              {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-            </div>
-          );
-        }}
-      />
-    );
-  }
-}
+        return (
+          <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
+            <Book.LandscapeBook {...libraryBookProps} />
+            {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
+          </div>
+        );
+      }}
+    />
+  );
+};
 
 const mapStateToProps = state => ({
   selectedBooks: getSelectedItems(state),

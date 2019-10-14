@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
@@ -15,13 +13,11 @@ import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
 import SelectShelfModal from '../../../components/SelectShelfModal';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import * as featureIds from '../../../constants/featureIds';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
-import * as featureSelectors from '../../../services/feature/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
 import {
   getFilterOptions,
@@ -99,13 +95,10 @@ function PurchasedMain(props) {
     [location, orderType, orderBy],
   );
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadItems(pageOptions);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(pageOptions);
+  }, [location]);
 
   function renderPaginator() {
     return <ResponsivePaginator currentPage={currentPage} totalPages={totalPages} />;
@@ -159,15 +152,12 @@ function PurchasedMain(props) {
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isEditing) {
-        dispatchClearSelectedBooks();
-      }
-      setIsEditing(!isEditing);
-    },
-    [dispatchClearSelectedBooks, isEditing],
-  );
+  const toggleEditingMode = React.useCallback(() => {
+    if (isEditing) {
+      dispatchClearSelectedBooks();
+    }
+    setIsEditing(!isEditing);
+  }, [dispatchClearSelectedBooks, isEditing]);
   function renderSearchBar() {
     const { filterOptions } = props;
     const order = OrderOptions.toKey(orderType, orderBy);
@@ -187,8 +177,8 @@ function PurchasedMain(props) {
   }
 
   function makeEditingBarProps() {
-    const { isSyncShelfEnabled, items, totalSelectedCount } = props;
-    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const { items, totalSelectedCount } = props;
+    const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
@@ -200,22 +190,16 @@ function PurchasedMain(props) {
     };
   }
 
-  const handleHideClick = React.useCallback(
-    () => {
-      dispatchHideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions],
-  );
-  const handleDownloadClick = React.useCallback(
-    () => {
-      dispatchDownloadSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions],
-  );
+  const handleHideClick = React.useCallback(() => {
+    dispatchHideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions]);
+  const handleDownloadClick = React.useCallback(() => {
+    dispatchDownloadSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions]);
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
   const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
   const handleShelfSelect = React.useCallback(
@@ -233,12 +217,11 @@ function PurchasedMain(props) {
   );
 
   function makeActionBarProps() {
-    const { isSyncShelfEnabled, totalSelectedCount } = props;
+    const { totalSelectedCount } = props;
     const disable = totalSelectedCount === 0;
 
-    let buttonProps;
-    if (isSyncShelfEnabled) {
-      buttonProps = [
+    return {
+      buttonProps: [
         {
           name: '책장에 추가',
           onClick: handleAddToShelf,
@@ -257,26 +240,8 @@ function PurchasedMain(props) {
           onClick: handleDownloadClick,
           disable,
         },
-      ];
-    } else {
-      buttonProps = [
-        {
-          name: '선택 숨기기',
-          onClick: handleHideClick,
-          disable,
-        },
-        {
-          type: ButtonType.SPACER,
-        },
-        {
-          name: '선택 다운로드',
-          onClick: handleDownloadClick,
-          disable,
-        },
-      ];
-    }
-
-    return { buttonProps };
+      ],
+    };
   }
 
   if (showShelves) {
@@ -323,7 +288,6 @@ const mapStateToProps = (state, props) => {
   const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
-  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
 
   let listInstruction;
   if (items.length !== 0) {
@@ -342,7 +306,6 @@ const mapStateToProps = (state, props) => {
     listInstruction,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
-    isSyncShelfEnabled,
   };
 };
 

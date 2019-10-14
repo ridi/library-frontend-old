@@ -1,13 +1,6 @@
 module.exports = {
   extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended'],
-  parser: 'babel-eslint',
-  parserOptions: {
-    ecmaVersion: 2017,
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true,
-      jsx: true,
-    },
-  },
+  parser: '@typescript-eslint/parser',
   globals: {
     window: true,
   },
@@ -15,7 +8,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['import', 'prettier', 'babel', 'react', 'emotion'],
+  plugins: ['@typescript-eslint', 'import', 'prettier', 'babel', 'react', 'emotion'],
   settings: {
     'import/resolver': {
       node: {
@@ -27,27 +20,42 @@ module.exports = {
     },
   },
   rules: {
-    // prettier
-    'prettier/prettier': 'error',
-
     // reset @ridi
+    'arrow-parens': ['error', 'as-needed'],
+    'arrow-body-style': ['error', 'as-needed'],
     camelcase: 'off',
     'class-methods-use-this': 'error',
-    'no-constant-condition': 'error',
-    'no-plusplus': 'error',
-    'babel/camelcase': [
+    curly: ['error', 'multi-line', 'consistent'],
+    'import/no-extraneous-dependencies': [
       'error',
       {
-        properties: 'never',
-        ignoreDestructuring: false,
+        devDependencies: true,
       },
     ],
-    'babel/no-invalid-this': 'error',
-
-    // account-team rules
+    'import/prefer-default-export': 'off',
     'max-len': ['error', { code: 140 }],
-
-    // store rules
+    'no-bitwise': [
+      'error',
+      {
+        allow: ['~'],
+      },
+    ],
+    'no-case-declarations': 'off',
+    'no-constant-condition': 'error',
+    'no-console': [
+      'warn',
+      {
+        allow: ['error'],
+      },
+    ],
+    'no-param-reassign': [
+      'error',
+      {
+        props: false,
+      },
+    ],
+    'no-plusplus': 'error',
+    'no-underscore-dangle': 'off',
     'no-unused-expressions': [
       'error',
       {
@@ -56,27 +64,6 @@ module.exports = {
       },
     ],
     'no-unused-vars': ['error'],
-    'no-param-reassign': [
-      'error',
-      {
-        props: false,
-      },
-    ],
-    'no-bitwise': [
-      'error',
-      {
-        allow: ['~'],
-      },
-    ],
-    'no-console': [
-      'warn',
-      {
-        allow: ['error'],
-      },
-    ],
-    'arrow-parens': ['error', 'as-needed'],
-    'arrow-body-style': ['error', 'as-needed'],
-    curly: ['error', 'multi-line', 'consistent'],
     'nonblock-statement-body-position': [
       'error',
       'below',
@@ -87,24 +74,37 @@ module.exports = {
       },
     ],
 
-    // account team rules
-    'import/prefer-default-export': 'off',
-    'import/no-extraneous-dependencies': [
+    // babel
+    'babel/camelcase': [
       'error',
       {
-        devDependencies: true,
+        properties: 'never',
+        ignoreDestructuring: false,
       },
     ],
-    'no-underscore-dangle': 'off',
-    'no-case-declarations': 'off',
+    'babel/no-invalid-this': 'error',
 
     // emotion
-    'emotion/jsx-import': 'error',
-    'emotion/no-vanilla': 'error',
     'emotion/import-from-emotion': 'error',
+    'emotion/no-vanilla': 'error',
     'emotion/styled-import': 'error',
 
-    // jsx
+    // jsx-a11y
+    'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/mouse-events-have-key-events': 'off',
+    'jsx-a11y/no-autofocus': 'off',
+
+    // prettier
+    'prettier/prettier': 'error',
+
+    // react
+    'react/jsx-filename-extension': [
+      'warn',
+      {
+        extensions: ['.tsx', '.jsx'],
+      },
+    ],
+    'react/jsx-one-expression-per-line': 'off',
     'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',
     'react/no-unknown-property': [
@@ -115,15 +115,5 @@ module.exports = {
     ],
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'react/jsx-filename-extension': [
-      'warn',
-      {
-        extensions: ['.js', '.jsx'],
-      },
-    ],
-    'react/jsx-one-expression-per-line': 'off',
-    'jsx-a11y/anchor-is-valid': 'off',
-    'jsx-a11y/mouse-events-have-key-events': 'off',
-    'jsx-a11y/no-autofocus': 'off',
   },
 };

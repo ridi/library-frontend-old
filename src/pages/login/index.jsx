@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
@@ -28,7 +26,7 @@ function Login(props) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Helmet>
         <title>로그인 - 내 서재</title>
       </Helmet>
@@ -52,7 +50,7 @@ function Login(props) {
         </main>
       </div>
       <Footer />
-    </React.Fragment>
+    </>
   );
 }
 

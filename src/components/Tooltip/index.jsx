@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import isBefore from 'date-fns/is_before';
 import React from 'react';
 import CheckIcon from '../../svgs/Check.svg';
@@ -10,31 +8,26 @@ import settings from '../../utils/settings';
 export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => {
   const [isActive, setActive] = React.useState(false);
 
-  React.useEffect(
-    () => {
-      const isTooltipActive = !settings.get(name);
-      if (expires && isBefore(new Date(), expires) && isTooltipActive) {
-        settings.set(name, true, { path: '/', expires });
-        setActive(isTooltipActive);
-      }
-    },
-    [name],
-  );
+  React.useEffect(() => {
+    const isTooltipActive = !settings.get(name);
+    if (expires && isBefore(new Date(), expires) && isTooltipActive) {
+      settings.set(name, true, { path: '/', expires });
+      setActive(isTooltipActive);
+    }
+  }, [name]);
 
-  React.useEffect(
-    () => {
-      function handleScroll() {
-        setActive(false);
-        window.removeEventListener('scroll', handleScroll);
-      }
+  React.useEffect(() => {
+    function handleScroll() {
+      setActive(false);
+      window.removeEventListener('scroll', handleScroll);
+    }
 
-      if (isActive) {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-      }
-    },
-    [isActive],
-  );
+    if (isActive) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+    return null;
+  }, [isActive]);
 
   const onClickTooltipBackground = React.useCallback(() => setActive(false), []);
 

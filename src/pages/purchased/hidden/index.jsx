@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
@@ -13,12 +11,10 @@ import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
-import * as featureIds from '../../../constants/featureIds';
 import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import { showConfirm } from '../../../services/confirm/actions';
-import * as featureSelectors from '../../../services/feature/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks, unhideSelectedBooks } from '../../../services/purchased/hidden/actions';
 import { getIsFetchingBooks, getItemsByPage, getTotalCount, getTotalPages } from '../../../services/purchased/hidden/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
@@ -43,19 +39,7 @@ function makeBackLocation({ location }) {
 }
 
 const Hidden = props => {
-  const {
-    currentPage,
-    isError,
-    isFetchingBooks,
-    isSyncShelfEnabled,
-    items,
-    location,
-    totalCount,
-    totalPages,
-    totalSelectedCount,
-    units,
-    viewType,
-  } = props;
+  const { currentPage, isError, isFetchingBooks, items, location, totalCount, totalPages, totalSelectedCount, units, viewType } = props;
 
   const {
     dispatchClearSelectedBooks,
@@ -69,42 +53,30 @@ const Hidden = props => {
   const { page } = extractOptions(location);
 
   const [isEditing, setIsEditing] = React.useState(false);
-  React.useEffect(
-    () => {
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(page);
+  }, [location]);
+
+  const toggleEditingMode = React.useCallback(() => {
+    if (isEditing === true) {
       dispatchClearSelectedBooks();
-      dispatchLoadItems(page);
-    },
-    [location],
-  );
+    }
 
-  const toggleEditingMode = React.useCallback(
-    () => {
-      if (isEditing === true) {
-        dispatchClearSelectedBooks();
-      }
+    setIsEditing(!isEditing);
+  }, [dispatchClearSelectedBooks, isEditing]);
 
-      setIsEditing(!isEditing);
-    },
-    [dispatchClearSelectedBooks, isEditing],
-  );
+  const handleOnClickUnhide = React.useCallback(() => {
+    dispatchUnhideSelectedBooks(currentPage);
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchClearSelectedBooks, dispatchUnhideSelectedBooks]);
 
-  const handleOnClickUnhide = React.useCallback(
-    () => {
-      dispatchUnhideSelectedBooks(currentPage);
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchClearSelectedBooks, dispatchUnhideSelectedBooks],
-  );
-
-  const handleOnclickDeleteConfirm = React.useCallback(
-    () => {
-      dispatchDeleteSelectedBooks(currentPage);
-      dispatchClearSelectedBooks();
-      setIsEditing(false);
-    },
-    [dispatchDeleteSelectedBooks, dispatchClearSelectedBooks],
-  );
+  const handleOnclickDeleteConfirm = React.useCallback(() => {
+    dispatchDeleteSelectedBooks(currentPage);
+    dispatchClearSelectedBooks();
+    setIsEditing(false);
+  }, [dispatchDeleteSelectedBooks, dispatchClearSelectedBooks]);
 
   const handleOnClickDelete = () => {
     dispatchShowConfirm({
@@ -134,7 +106,7 @@ const Hidden = props => {
   };
 
   const makeEditingBarProps = () => {
-    const filteredItems = isSyncShelfEnabled ? items.filter(item => !UnitType.isCollection(item.unit_type)) : items;
+    const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
     const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
 
     return {
@@ -247,8 +219,6 @@ const mapStateToProps = (state, props) => {
   const totalSelectedCount = getTotalSelectedCount(state);
   const isFetchingBooks = getIsFetchingBooks(state);
 
-  const isSyncShelfEnabled = featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF);
-
   return {
     currentPage,
     items,
@@ -259,7 +229,6 @@ const mapStateToProps = (state, props) => {
     isFetchingBooks,
     viewType: state.ui.viewType,
     isError: state.ui.isError,
-    isSyncShelfEnabled,
   };
 };
 

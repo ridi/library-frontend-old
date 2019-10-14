@@ -1,10 +1,5 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-import { connect } from 'react-redux';
 import { TabBar as LNBTabBar, TabLinkItem } from '../../../components/TabBar';
-import * as featureIds from '../../../constants/featureIds';
 import { URLMap } from '../../../constants/urls';
-import * as featureSelectors from '../../../services/feature/selectors';
 import Responsive from '../Responsive';
 
 export const TabMenuTypes = {
@@ -49,12 +44,8 @@ const TabMenus = [
   },
 ];
 
-const mapStateToProps = state => ({
-  isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
-});
-
-export const TabBar = connect(mapStateToProps)(({ activeMenu, isSyncShelfEnabled }) => {
-  const menus = isSyncShelfEnabled ? TabMenus : TabMenus.filter(item => item.type !== TabMenuTypes.SHELVES);
+export const TabBar = ({ activeMenu }) => {
+  const menus = TabMenus;
   const menuNodes = menus.map(menu => (
     <TabLinkItem key={`${JSON.stringify(menu)}`} name={menu.name} isActive={activeMenu === menu.type} icon={menu.icon} {...menu.linkInfo} />
   ));
@@ -63,4 +54,4 @@ export const TabBar = connect(mapStateToProps)(({ activeMenu, isSyncShelfEnabled
       <LNBTabBar>{menuNodes}</LNBTabBar>
     </Responsive>
   );
-});
+};

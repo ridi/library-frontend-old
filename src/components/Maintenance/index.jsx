@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { Global, jsx } from '@emotion/core';
+import { Global } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import RIDIIcon from '../../svgs/LogoRidi.svg';
@@ -19,7 +18,7 @@ const ServiceList = ({ services }) => (
 );
 
 const Maintenance = ({ terms, unavailableServiceList }) => (
-  <React.Fragment>
+  <>
     <Helmet>
       <title>시스템 점검 중 - 내 서재</title>
     </Helmet>
@@ -56,7 +55,7 @@ const Maintenance = ({ terms, unavailableServiceList }) => (
         감사합니다.
       </footer>
     </section>
-  </React.Fragment>
+  </>
 );
 
 export default Maintenance;

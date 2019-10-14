@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import * as modalStyles from './styles';
 
 export const ModalItemGroup = ({ groupTitle, children, style }) => (

@@ -6,6 +6,7 @@ import { toDict, toFlatten } from '../../utils/array';
 import { loadBookData, loadUnitOrders } from '../book/sagas';
 import { fetchLibraryBookData } from '../book/requests';
 import { getUnit, getUnitOrders, getBooks } from '../book/selectors';
+import { getRemainTime } from './utils';
 
 function getLibraryItem(itemBookIds, libraryItems) {
   const selectedLibraryItems = itemBookIds.map(bookId => libraryItems[bookId]).filter(item => !!item);
@@ -15,7 +16,7 @@ function getLibraryItem(itemBookIds, libraryItems) {
   // 2. 셀렉트 도서가 아닌 것
   // 3. 최근에 구매한 것 (구매 시각이 큰 것)
   let optimalValue = null;
-  for (const item of selectedLibraryItems) {
+  selectedLibraryItems.forEach(item => {
     if (optimalValue == null) {
       optimalValue = item;
     } else if (optimalValue.expire_date !== item.expire_date) {
@@ -31,35 +32,23 @@ function getLibraryItem(itemBookIds, libraryItems) {
         optimalValue = item;
       }
     }
-  }
+  });
+
   return optimalValue;
 }
 
-// TODO: 컴포넌트 업데이트 전까지 임시적으로 처리한다.
-function getRemainTime(libraryItem) {
-  if (!libraryItem) {
-    return '';
-  }
-
-  if (libraryItem.remain_time !== '') {
-    return libraryItem.remain_time;
-  }
-
-  if (libraryItem.service_type === ServiceType.RIDISELECT) {
-    return '';
-  }
-
-  // 사용기간이 있으면
-  return libraryItem.expire_date === '9999-12-31T23:59:59+09:00' ? '구매한 책' : '대여했던 책';
-}
-
-export function getOpendBookId(itemBookIds, pageBookData) {
-  const opendBookId = itemBookIds.find(bookId => pageBookData[bookId].property.is_open);
-  return opendBookId || itemBookIds[0];
+export function getOpenedBookId(itemBookIds, pageBookData) {
+  const openedBookId = itemBookIds.find(bookId => pageBookData[bookId].property.is_open);
+  return openedBookId || itemBookIds[0];
 }
 
 export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
-  const options = { unitId, orderType, orderBy, page };
+  const options = {
+    unitId,
+    orderType,
+    orderBy,
+    page,
+  };
   yield call(loadUnitOrders, unitId, orderType, orderBy, page);
   // 시리즈 리스트 페이지별 도서 목록
   const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
@@ -76,7 +65,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
     items = unitOrders.items.map(unitOrder => {
       const { b_ids: itemBookIds } = unitOrder;
       const libraryItem = getLibraryItem(itemBookIds, libraryItems);
-      const bookId = libraryItem ? libraryItem.b_id : getOpendBookId(itemBookIds, pageBookData);
+      const bookId = libraryItem ? libraryItem.b_id : getOpenedBookId(itemBookIds, pageBookData);
 
       return {
         b_id: bookId,

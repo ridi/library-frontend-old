@@ -1,34 +1,13 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
-import config from '../../../config';
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
 import { Hidden } from '../../../styles';
-import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';
-import LogoRidiselect from '../../../svgs/LogoRidiselect.svg';
 import MyMenuActiveIcon from '../../../svgs/MyMenu-active.svg';
 import MyMenuIcon from '../../../svgs/MyMenu.svg';
 import Responsive from '../Responsive';
+import FamilyServices from './FamilyServices';
 import * as styles from './styles';
-
-const FamilyServices = React.memo(() => (
-  <ul css={styles.familyServiceList}>
-    <li css={styles.familyServiceItem}>
-      <a css={styles.familyServiceLink} href={config.STORE_BASE_URL}>
-        <LogoRidibooks css={styles.ridibooksIcon} />
-        <span css={Hidden}>RIDIBOOKS</span>
-      </a>
-    </li>
-    <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-      <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL}>
-        <LogoRidiselect css={styles.ridiSelectIcon} />
-        <span css={Hidden}>RIDI Select</span>
-      </a>
-    </li>
-  </ul>
-));
 
 function GNB(props) {
   const { userId } = props;
@@ -38,14 +17,11 @@ function GNB(props) {
   const handleModalBackgroundClick = React.useCallback(() => setModalActive(false), []);
   const handleMyMenuClick = React.useCallback(() => setModalActive(active => !active), []);
 
-  React.useEffect(
-    () => {
-      if (userId != null) {
-        import('../../../components/Modal/MyMenuModal').then(({ default: component }) => setMyMenuModal(() => component));
-      }
-    },
-    [userId],
-  );
+  React.useEffect(() => {
+    if (userId != null) {
+      import('../../../components/Modal/MyMenuModal').then(({ default: component }) => setMyMenuModal(() => component));
+    }
+  }, [userId]);
 
   function renderMyMenu() {
     const { isExcelDownloading, dispatchStartExcelDownload } = props;

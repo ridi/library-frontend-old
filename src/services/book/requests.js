@@ -49,14 +49,14 @@ export function* fetchBookData(bookIds) {
   const response = yield api.post(makeURI('/books', {}, config.BOOK_API_BASE_URL), stringify({ b_ids: bookIds.join(',') }));
 
   const idSet = new Set(response.data.map(book => book.id));
-  for (const bookId of bookIds) {
+  bookIds.forEach(bookId => {
     if (!idSet.has(bookId)) {
       console.error('Book requested but does not exist:', bookId);
       captureMessage('Book requested but does not exist', {
         extra: { bookId },
       });
     }
-  }
+  });
 
   return attatchTTL(_reduceBooks(response.data));
 }
@@ -165,7 +165,7 @@ export async function fetchLibraryUnitData(units) {
       };
     });
   const unitIdSet = new Set(result.map(({ unit_id: unitId }) => unitId));
-  for (const unitId of unitIds) {
+  unitIds.forEach(unitId => {
     const unitIdStr = String(unitId);
     if (!unitIdSet.has(unitIdStr)) {
       console.error('Unit requested but does not exist:', unitIdStr);
@@ -173,6 +173,6 @@ export async function fetchLibraryUnitData(units) {
         extra: { unitId: unitIdStr },
       });
     }
-  }
+  });
   return result;
 }

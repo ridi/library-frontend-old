@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { css } from '@emotion/core';
 import React from 'react';
 import ViewType from '../../constants/viewType';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
@@ -15,34 +14,22 @@ export default function ShelfEdit(props) {
   const { onRemoveClick, onRenameClick, onViewTypeChange, viewType } = props;
   const [isModalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
-  const handlePortraitClick = React.useCallback(
-    () => {
-      setModalActive(false);
-      onViewTypeChange && onViewTypeChange(ViewType.PORTRAIT);
-    },
-    [onViewTypeChange],
-  );
-  const handleLandscapeClick = React.useCallback(
-    () => {
-      setModalActive(false);
-      onViewTypeChange && onViewTypeChange(ViewType.LANDSCAPE);
-    },
-    [onViewTypeChange],
-  );
-  const handleRemoveClick = React.useCallback(
-    () => {
-      setModalActive(false);
-      onRemoveClick && onRemoveClick();
-    },
-    [onRemoveClick],
-  );
-  const handleRenameClick = React.useCallback(
-    () => {
-      setModalActive(false);
-      onRenameClick && onRenameClick();
-    },
-    [onRenameClick],
-  );
+  const handlePortraitClick = React.useCallback(() => {
+    setModalActive(false);
+    onViewTypeChange && onViewTypeChange(ViewType.PORTRAIT);
+  }, [onViewTypeChange]);
+  const handleLandscapeClick = React.useCallback(() => {
+    setModalActive(false);
+    onViewTypeChange && onViewTypeChange(ViewType.LANDSCAPE);
+  }, [onViewTypeChange]);
+  const handleRemoveClick = React.useCallback(() => {
+    setModalActive(false);
+    onRemoveClick && onRemoveClick();
+  }, [onRemoveClick]);
+  const handleRenameClick = React.useCallback(() => {
+    setModalActive(false);
+    onRenameClick && onRenameClick();
+  }, [onRenameClick]);
 
   return (
     <div css={styles.buttonWrapper}>

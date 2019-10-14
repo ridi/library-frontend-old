@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import { toggleItem } from '../../services/selection/actions';
 import { getIsItemSelected } from '../../services/selection/selectors';

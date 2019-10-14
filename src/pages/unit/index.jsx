@@ -9,13 +9,11 @@ import SelectShelfModal from '../../components/SelectShelfModal';
 import SeriesList from '../../components/SeriesList';
 import TitleBar from '../../components/TitleBar';
 import UnitDetailView from '../../components/UnitDetailView';
-import * as featureIds from '../../constants/featureIds';
 import { OrderOptions } from '../../constants/orderOptions';
 import { UnitType } from '../../constants/unitType';
 import { PageType, URLMap } from '../../constants/urls';
 import * as bookSelectors from '../../services/book/selectors';
 import * as confirmActions from '../../services/confirm/actions';
-import * as featureSelectors from '../../services/feature/selectors';
 import * as purchasedCommonSelectors from '../../services/purchased/common/selectors';
 import * as selectionActions from '../../services/selection/actions';
 import * as selectionSelectors from '../../services/selection/selectors';
@@ -128,13 +126,10 @@ function Unit(props) {
   const [isSelecting, setIsSelecting] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
 
-  React.useEffect(
-    () => {
-      dispatchClearSelectedBooks();
-      dispatchLoadItems(unitOptions);
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    dispatchClearSelectedBooks();
+    dispatchLoadItems(unitOptions);
+  }, [location]);
 
   const hideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, options);
   const unhideSelectedBooksWithOptions = useDispatchOptions(dispatchUnhideSelectedBooks, options);
@@ -142,32 +137,23 @@ function Unit(props) {
   const loadItemsWithOptions = useDispatchOptions(dispatchLoadItems, options);
   const deleteSelectedBooksWithOptions = useDispatchOptions(dispatchDeleteSelectedBooks, options);
 
-  const handleHideClick = React.useCallback(
-    () => {
-      hideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchClearSelectedBooks, hideSelectedBooksWithOptions],
-  );
+  const handleHideClick = React.useCallback(() => {
+    hideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchClearSelectedBooks, hideSelectedBooksWithOptions]);
 
-  const handleUnhideClick = React.useCallback(
-    () => {
-      unhideSelectedBooksWithOptions();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchClearSelectedBooks, unhideSelectedBooksWithOptions],
-  );
+  const handleUnhideClick = React.useCallback(() => {
+    unhideSelectedBooksWithOptions();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchClearSelectedBooks, unhideSelectedBooksWithOptions]);
 
-  const handleDownloadClick = React.useCallback(
-    () => {
-      dispatchDownloadSelectedBooks();
-      dispatchClearSelectedBooks();
-      setIsSelecting(false);
-    },
-    [dispatchDownloadSelectedBooks, dispatchClearSelectedBooks],
-  );
+  const handleDownloadClick = React.useCallback(() => {
+    dispatchDownloadSelectedBooks();
+    dispatchClearSelectedBooks();
+    setIsSelecting(false);
+  }, [dispatchDownloadSelectedBooks, dispatchClearSelectedBooks]);
 
   const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
 
@@ -187,24 +173,21 @@ function Unit(props) {
     [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
   );
 
-  const handleDeleteClick = React.useCallback(
-    () => {
-      dispatchShowConfirm({
-        title: '영구 삭제',
-        message: (
-          <>
-            내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
-            <br />
-            <br />
-            그래도 삭제하시겠습니까?
-          </>
-        ),
-        confirmLabel: '삭제',
-        onClickConfirmButton: deleteSelectedBooksWithOptions,
-      });
-    },
-    [deleteSelectedBooksWithOptions, dispatchShowConfirm],
-  );
+  const handleDeleteClick = React.useCallback(() => {
+    dispatchShowConfirm({
+      title: '영구 삭제',
+      message: (
+        <>
+          내 서재에서 영구히 삭제되며 다시 구매해야 이용할 수 있습니다.
+          <br />
+          <br />
+          그래도 삭제하시겠습니까?
+        </>
+      ),
+      confirmLabel: '삭제',
+      onClickConfirmButton: deleteSelectedBooksWithOptions,
+    });
+  }, [deleteSelectedBooksWithOptions, dispatchShowConfirm]);
 
   function renderTitleBar() {
     const order = OrderOptions.toKey(orderType, orderBy);
@@ -240,7 +223,7 @@ function Unit(props) {
   }
 
   function makeActionBarProps() {
-    const { isSelected, isSyncShelfEnabled } = props;
+    const { isSelected } = props;
     const disable = !isSelected;
 
     let buttonProps = [];
@@ -267,7 +250,7 @@ function Unit(props) {
         onClick: handleHideClick,
         disable,
       });
-      if (isSyncShelfEnabled && UnitType.isCollection(unit.type)) {
+      if (UnitType.isCollection(unit.type)) {
         buttonProps.push({
           name: '책장에 추가',
           onClick: handleAddToShelf,
@@ -368,7 +351,6 @@ const mapStateToProps = (state, props) => {
     bookStarRating: primaryBookId && bookSelectors.getBookStarRating(state, primaryBookId),
     isFetchingBook: unitPageSelectors.getIsFetchingBook(state),
     isSelected: selectionSelectors.getTotalSelectedCount(state) !== 0,
-    isSyncShelfEnabled: featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF),
     items: unitPageSelectors.getItemsByPage(state, unitOptions),
     primaryBook: primaryBookId && bookSelectors.getBook(state, primaryBookId),
     primaryBookId,

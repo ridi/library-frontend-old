@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
@@ -53,13 +51,10 @@ const ShelvesList = props => {
     validateShelvesLimit,
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
-  React.useEffect(
-    () => {
-      loadShelves(pageOptions);
-      loadShelfCount();
-    },
-    [location],
-  );
+  React.useEffect(() => {
+    loadShelves(pageOptions);
+    loadShelfCount();
+  }, [location]);
   const toggleSelectMode = React.useCallback(() => {
     clearSelectedShelves();
     setSelectMode(isSelectMode => !isSelectMode);

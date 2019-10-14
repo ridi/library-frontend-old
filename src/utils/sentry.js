@@ -1,3 +1,4 @@
+/* global SENTRY_RELEASE_VERSION */
 import { init, captureMessage, captureException, captureEvent, Severity } from '@sentry/browser';
 import config from '../config';
 

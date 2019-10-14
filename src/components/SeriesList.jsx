@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -29,9 +27,30 @@ class SeriesList extends React.Component {
     this.seriesListRef = React.createRef();
   }
 
+  getEmptyMessage(defaultMessage) {
+    const { currentOrder } = this.props;
+
+    if (!currentOrder) {
+      return defaultMessage;
+    }
+
+    if (OrderOptions.EXPIRE_DATE.key === currentOrder) {
+      return '대여 중인 도서가 없습니다.';
+    }
+    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
+      return '만료된 도서가 없습니다.';
+    }
+    return defaultMessage;
+  }
+
   toggleEditingMode = () => {
     const { isEditing, onEditingChange } = this.props;
     onEditingChange && onEditingChange(!isEditing);
+  };
+
+  calculateScroll = () => {
+    const seriesList = this.seriesListRef.current;
+    return seriesList ? { x: 0, y: seriesList.offsetTop - 10 } : null;
   };
 
   makeEditingBarProps() {
@@ -50,11 +69,6 @@ class SeriesList extends React.Component {
     };
   }
 
-  calculateScroll = () => {
-    const seriesList = this.seriesListRef.current;
-    return seriesList ? { x: 0, y: seriesList.offsetTop - 10 } : null;
-  };
-
   renderSeriesToolBar() {
     const { currentOrder, orderOptions } = this.props;
 
@@ -66,22 +80,6 @@ class SeriesList extends React.Component {
         scroll={this.calculateScroll}
       />
     );
-  }
-
-  getEmptyMessage(defaultMessage) {
-    const { currentOrder } = this.props;
-
-    if (!currentOrder) {
-      return defaultMessage;
-    }
-
-    if (OrderOptions.EXPIRE_DATE.key === currentOrder) {
-      return '대여 중인 도서가 없습니다.';
-    }
-    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === currentOrder) {
-      return '만료된 도서가 없습니다.';
-    }
-    return defaultMessage;
   }
 
   renderBooks() {
@@ -97,12 +95,12 @@ class SeriesList extends React.Component {
     } = this.props;
     const locationHref = makeLocationHref(location);
 
-    // items가 한번도 설정된 적이 없으면 Skeleton 노출
+    // Data 가져오는 중이거나 items가 한번도 설정된 적이 없으면 Skeleton 노출
     if (isFetching || items == null) {
       return <SkeletonBooks viewType={ViewType.LANDSCAPE} />;
     }
 
-    // Data 가져오는 상태가 아니면서 Items가 비어있으면 0
+    // Items가 비어있으면
     if (items.length === 0) {
       return <Empty IconComponent={BookOutline} message={this.getEmptyMessage(message)} />;
     }

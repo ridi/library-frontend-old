@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-
 const styles = {
   portraitBook: {
     width: '100%',

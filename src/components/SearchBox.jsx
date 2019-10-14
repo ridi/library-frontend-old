@@ -1,7 +1,5 @@
-/** @jsx jsx */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { jsx } from '@emotion/core';
 import Close from '../svgs/Close.svg';
 import Search from '../svgs/Search.svg';
 import IconButton from './IconButton';
@@ -89,13 +87,10 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
   const [isSearchBoxFocused, setSearchBoxFocused] = React.useState(false);
   const inputRef = React.useRef();
   const handleChange = React.useCallback(e => onKeywordChange(e.target.value), [onKeywordChange]);
-  const handleReset = React.useCallback(
-    () => {
-      onKeywordChange('');
-      onClear && onClear();
-    },
-    [onClear, onKeywordChange],
-  );
+  const handleReset = React.useCallback(() => {
+    onKeywordChange('');
+    onClear && onClear();
+  }, [onClear, onKeywordChange]);
   const handleSubmit = React.useCallback(
     e => {
       e.preventDefault();

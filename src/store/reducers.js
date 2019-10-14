@@ -5,7 +5,7 @@ import bookDownloadReducer from '../services/bookDownload/reducers';
 import confirmReducer from '../services/confirm/reducers';
 import dialogReducer from '../services/dialog/reducers';
 import excelDownloadReducer from '../services/excelDownload/reducers';
-import featureReducer from '../services/feature/reducers';
+// import featureReducer from '../services/feature/reducers';
 import maintenanceReducer from '../services/maintenance/reducers';
 import promptReducer from '../services/prompt/reducers';
 import purchasedCommonReducer from '../services/purchased/common/reducers';
@@ -23,7 +23,7 @@ export default combineReducers({
   account: accountReducer,
   books: bookReducer,
   selection: selectionReducer,
-  feature: featureReducer,
+  // feature: featureReducer,
 
   purchasedCommon: purchasedCommonReducer,
   purchasedMain: purchasedMainReducer,

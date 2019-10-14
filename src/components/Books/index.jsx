@@ -1,17 +1,13 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { Book } from '@ridi/web-ui/dist/index.node';
 import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as featureIds from '../../constants/featureIds';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { getAdultVerification } from '../../services/account/selectors';
 import { showShelfBookAlertToast } from '../../services/book/actions';
 import * as bookSelectors from '../../services/book/selectors';
-import * as featureSelectors from '../../services/feature/selectors';
 import { getIsRecentlyUpdated } from '../../services/purchased/common/selectors';
 import { toggleItem } from '../../services/selection/actions';
 import * as selectionSelectors from '../../services/selection/selectors';
@@ -36,7 +32,6 @@ const refineBookData = ({
   onSelectedChange,
   viewType,
   linkBuilder,
-  isSyncShelfEnabled,
   showUpdateBadge,
   thumbnailWidth,
   isVerifiedAdult,
@@ -78,7 +73,7 @@ const refineBookData = ({
     notAvailable: isNotAvailable,
     updateBadge: showUpdateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook && !(isSyncShelfEnabled && isCollectionBook),
+    selectMode: isSelectMode && isPurchasedBook && !isCollectionBook,
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
@@ -117,7 +112,6 @@ function BookItem(props) {
   const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
   const isSelected = useSelector(state => selectionSelectors.getIsItemSelected(state, bookId));
   const isVerifiedAdult = useSelector(getAdultVerification);
-  const isSyncShelfEnabled = useSelector(state => featureSelectors.getIsFeatureEnabled(state, featureIds.SYNC_SHELF));
   const showUpdateBadge = useSelector(state => {
     if (!(platformBookData && platformBookData.series)) {
       return false;
@@ -154,7 +148,6 @@ function BookItem(props) {
     onSelectedChange: handleSelectedChange,
     viewType,
     linkBuilder,
-    isSyncShelfEnabled,
     showUpdateBadge,
     thumbnailWidth,
     isVerifiedAdult,
@@ -163,20 +156,20 @@ function BookItem(props) {
   return viewType === ViewType.PORTRAIT ? (
     <div className={className} css={styles.portrait}>
       <Book.PortraitBook {...libraryBookProps} />
-      {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+      {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
     </div>
   ) : (
     <div className={className} css={styles.landscape}>
       <Book.LandscapeBook {...libraryBookProps} />
       {isSelectMode && !isPurchasedBook && <Disabled />}
       {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-      {isSyncShelfEnabled && isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
+      {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
     </div>
   );
 }
 
 export function Books(props) {
-  const { bookIds, isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
+  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
 
   const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
@@ -184,26 +177,19 @@ export function Books(props) {
   const setResponsiveThumbnailWidth = () => {
     setThumbnailWidth(getResponsiveBookSizeForBookList(window.innerWidth).width);
   };
-  useEffect(
-    () => {
-      setResponsiveThumbnailWidth();
-      window.addEventListener('resize', setResponsiveThumbnailWidth);
-      return () => {
-        window.removeEventListener('resize', setResponsiveThumbnailWidth);
-      };
-    },
-    [isLoaded],
-  );
+  useEffect(() => {
+    setResponsiveThumbnailWidth();
+    window.addEventListener('resize', setResponsiveThumbnailWidth);
+    return () => {
+      window.removeEventListener('resize', setResponsiveThumbnailWidth);
+    };
+  }, [isLoaded]);
 
-  // TODO: compat
   let finalBookIds = [];
   let libraryBookMap = new Map();
   if (libraryBookDTO != null) {
     finalBookIds = libraryBookDTO.map(book => book.b_id);
     libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
-  }
-  if (finalBookIds.length === 0) {
-    finalBookIds = bookIds;
   }
   return (
     <BooksWrapper
@@ -228,10 +214,10 @@ export function Books(props) {
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
 
         return (
-          <React.Fragment>
+          <>
             {books}
             {isNeedLandscapeBookSeparator && <EmptyLandscapeBook />}
-          </React.Fragment>
+          </>
         );
       }}
     </BooksWrapper>
