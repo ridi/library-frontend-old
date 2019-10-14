@@ -147,7 +147,7 @@ module.exports = (env = 'dev') => {
       warnings: true,
       warningsFilter: 'size limit',
     },
-    devtool: isProduction ? 'hidden-source-map' : 'inline-source-map',
+    devtool: isProduction ? 'hidden-source-map' : 'cheap-module-eval-source-map',
   };
 
   if (env === 'local') {
