@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 const WebpackBar = require('webpackbar');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -71,8 +70,13 @@ function buildFileLoader(settings) {
   ];
 }
 
-function buildBaseConfig(isProduction, indexName, settings) {
-  return {
+module.exports = (env = 'dev') => {
+  const settings = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'settings', `${env}.json`)));
+
+  const isProduction = env === 'staging' || env === 'production';
+  const indexName = env === 'staging' ? 'staging.html' : 'index.html';
+
+  const config = {
     mode: isProduction ? 'production' : 'development',
     entry: {
       app: './src/index.jsx',
@@ -145,31 +149,22 @@ function buildBaseConfig(isProduction, indexName, settings) {
     },
     devtool: isProduction ? 'hidden-source-map' : 'inline-source-map',
   };
-}
-
-module.exports = function buildConfig(env = 'dev') {
-  const settings = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'settings', `${env}.json`)));
-
-  const isProduction = env === 'staging' || env === 'production';
-  const indexName = env === 'staging' ? 'staging.html' : 'index.html';
-  const baseConfig = buildBaseConfig(isProduction, indexName, settings);
-  const overrideConfig = {};
 
   if (env === 'local') {
-    overrideConfig.output = {
+    config.output = {
       filename: '[name].js',
       chunkFilename: '[id].js',
     };
-    overrideConfig.devServer = {
+    config.devServer = {
       contentBase: path.resolve(__dirname, 'dist'),
       host: '0.0.0.0',
       port: 3000,
       sockPort: 443,
       allowedHosts: ['library.local.ridi.io'],
       historyApiFallback: true,
-      stats: baseConfig.stats,
+      stats: config.stats,
     };
   }
 
-  return merge(baseConfig, overrideConfig);
+  return config;
 };
