@@ -151,10 +151,8 @@ module.exports = (env = 'dev') => {
   };
 
   if (env === 'local') {
-    config.output = {
-      filename: '[name].js',
-      chunkFilename: '[id].js',
-    };
+    config.output.filename = '[name].js';
+    config.output.chunkFilename = '[id].js';
     config.devServer = {
       contentBase: path.resolve(__dirname, 'dist'),
       host: '0.0.0.0',
