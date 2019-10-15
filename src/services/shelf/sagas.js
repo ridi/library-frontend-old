@@ -16,6 +16,7 @@ import * as toastActions from '../toast/actions';
 import { ToastStyle } from '../toast/constants';
 import * as uiActions from '../ui/actions';
 import * as actions from './actions';
+import { OperationStatus } from './constants';
 import * as requests from './requests';
 import * as selectors from './selectors';
 
@@ -29,13 +30,6 @@ const OperationType = {
   DELETE_SHELF: 'delete_shelf',
   ADD_SHELF_ITEM: 'add_shelf_item',
   DELETE_SHELF_ITEM: 'delete_shelf_item',
-};
-
-const OperationStatus = {
-  UNDONE: 'undone',
-  DONE: 'done',
-  FORBIDDEN: 'forbidden',
-  FAILURE: 'failure',
 };
 
 function* loadShelfBookCount({ payload }) {
@@ -108,8 +102,7 @@ function* waitForOperation(revision, opResults) {
     yield delay(1000);
     try {
       const statuses = yield call(requests.fetchOperationStatus, pendingIds);
-      const resolvedOps = statuses.filter(({ status }) => status !== OperationStatus.UNDONE);
-      resolvedOps.forEach(({ id, status }) => {
+      statuses.forEach(({ id, status }) => {
         results.set(id, status);
       });
     } catch (err) {

@@ -106,9 +106,9 @@ function ShelfDetail(props) {
   }, []);
   const confirmShelfRename = React.useCallback(
     newName => {
-      renameShelf({ uuid, name: newName });
+      if (name !== newName) renameShelf({ uuid, name: newName });
     },
-    [uuid],
+    [name, uuid],
   );
   const showShelfRenamePrompt = React.useCallback(() => {
     showPrompt({
