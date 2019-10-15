@@ -40,15 +40,13 @@ const ROperationStatus = R.Union(
   R.Literal(OperationStatus.DONE),
 );
 
-const ROperationsStatus = R.Array(
-  R.Record({
-    id: R.Number,
-    status: ROperationStatus,
-  }),
-);
-
 const RFetchOperationStatusResponse = R.Record({
-  operations_status: ROperationsStatus,
+  operations_status: R.Array(
+    R.Record({
+      id: R.Number,
+      status: ROperationStatus,
+    }),
+  ),
 });
 
 export async function fetchShelves({ offset, limit, orderType, orderBy }) {
