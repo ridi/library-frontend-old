@@ -38,6 +38,7 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     clearSelectedItems();
   }, []);
   const handleSearchConfirm = React.useCallback(async () => {
+    const processedKeyword = keyword === '' ? undefined : keyword;
     const newSearching = keyword !== '';
     const newPage = 1;
     setSearching(newSearching);
@@ -49,19 +50,15 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     searchItemRequestId.current += 1;
     totalItemCountRequestId.current += 1;
 
-    if (!newSearching) {
-      return;
-    }
-
     const searchItemRid = searchItemRequestId.current;
     const totalItemCountRid = totalItemCountRequestId.current;
     await Promise.all([
-      mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage }).then(({ items }) => {
+      mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, page: newPage }).then(({ items }) => {
         if (searchItemRid === searchItemRequestId.current) {
           setSearchItems(items);
         }
       }),
-      mainRequests.fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword }).then(({ unit_total_count: totalCount }) => {
+      mainRequests.fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword: processedKeyword }).then(({ unit_total_count: totalCount }) => {
         if (totalItemCountRid === totalItemCountRequestId.current) {
           setTotalItemCount(totalCount);
         }
@@ -70,22 +67,26 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
   }, [keyword]);
   const handlePageChange = React.useCallback(
     async newPage => {
+      const processedKeyword = keyword === '' ? undefined : keyword;
       setSearchItems(null);
       setPage(newPage);
       clearSelectedItems();
+      window.scrollTo(0, 0);
 
       searchItemRequestId.current += 1;
       const searchItemRid = searchItemRequestId.current;
-      const { items } = await mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage });
+      const { items } = await mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, page: newPage });
       if (searchItemRid === searchItemRequestId.current) {
         setSearchItems(items);
       }
-
-      window.scrollTo(0, 0);
     },
     [keyword],
   );
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+
+  React.useEffect(() => {
+    handleSearchConfirm();
+  }, []);
 
   function renderSearchBar() {
     return (
@@ -118,9 +119,6 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
   }
 
   function renderMain() {
-    if (!isSearching) {
-      return <Empty IconComponent={SearchIcon} iconWidth={38} message="검색어를 입력해주세요." />;
-    }
     if (searchItems == null) {
       return (
         <ResponsiveBooks>
