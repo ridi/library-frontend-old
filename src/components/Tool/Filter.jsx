@@ -5,60 +5,41 @@ import IconButton from '../IconButton';
 import FilterModal from '../Modal/FilterModal';
 import * as styles from './styles';
 
-export default class Filter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFilterModalShow: false,
-    };
-  }
+export default function Filter({ filter, filterOptions, onFilterChange }) {
+  const [isFilterModalOpen, setFilterModalOpen] = React.useState(false);
 
-  shouldComponentUpdate(nextProps) {
-    const { filter } = this.props;
-    if (nextProps.filter !== filter) {
-      this.setState({ isFilterModalShow: false });
-    }
-    return true;
-  }
+  React.useEffect(() => {
+    setFilterModalOpen(false);
+  }, [filter]);
 
-  render() {
-    const { filter, filterOptions, query } = this.props;
-    const { isFilterModalShow } = this.state;
-
-    return (
-      <div css={styles.buttonWrapper}>
-        <IconButton
-          a11y="필터"
-          css={styles.iconButton(isFilterModalShow)}
-          onClick={() => {
-            this.setState({
-              isFilterModalShow: true,
-            });
-          }}
-        >
-          <div css={styles.iconWrapper}>
-            <CategoryFilter css={styles.categoryFilterIcon} />
+  return (
+    <div css={styles.buttonWrapper}>
+      <IconButton
+        a11y="필터"
+        css={styles.iconButton(isFilterModalOpen)}
+        onClick={() => {
+          setFilterModalOpen(true);
+        }}
+      >
+        <div css={styles.iconWrapper}>
+          <CategoryFilter css={styles.categoryFilterIcon} />
+        </div>
+        {filter && (
+          <div css={[styles.iconWrapper, { paddingRight: 2 }]}>
+            <On css={styles.onIcon} />
           </div>
-          {filter && (
-            <div css={[styles.iconWrapper, { paddingRight: 2 }]}>
-              <On css={styles.onIcon} />
-            </div>
-          )}
-        </IconButton>
-        {isFilterModalShow && (
-          <FilterModal
-            filter={filter}
-            filterOptions={filterOptions}
-            query={query}
-            isActive={isFilterModalShow}
-            onClickModalBackground={() => {
-              this.setState({
-                isFilterModalShow: false,
-              });
-            }}
-          />
         )}
-      </div>
-    );
-  }
+      </IconButton>
+      {isFilterModalOpen && (
+        <FilterModal
+          filter={filter}
+          filterOptions={filterOptions}
+          onFilterChange={onFilterChange}
+          onModalBackgroundClick={() => {
+            setFilterModalOpen(false);
+          }}
+        />
+      )}
+    </div>
+  );
 }
