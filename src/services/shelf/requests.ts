@@ -1,18 +1,23 @@
 import * as R from 'runtypes';
-
 import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
+import { OperationStatus } from './constants';
 
 const RShelfBook = R.Record({
   b_ids: R.Array(R.String),
   unit_id: R.Number,
 });
 
-const RShelfItem = R.Record({
+const RShelf = R.Record({
   id: R.Number,
   shelf_uuid: R.String,
   name: R.String,
+});
+
+const RShelfItem = R.Record({
+  items: R.Array(RShelfBook),
+  count: R.Number,
 });
 
 const RFetchCountResponse = R.Record({
@@ -20,21 +25,22 @@ const RFetchCountResponse = R.Record({
 });
 
 const RFetchShelvesResponse = R.Record({
-  items: R.Array(RShelfItem.And(R.Record({ items: R.Array(RShelfBook), count: R.Number }))),
+  items: R.Array(RShelf.And(RShelfItem)),
 });
 
 const RFetchShelfBooksResponse = R.Record({
-  shelf: RShelfItem,
+  shelf: RShelf,
   items: R.Array(RShelfBook),
 });
 
-const ROperationStatus = R.Union(R.Literal('undone'), R.Literal('forbidden'), R.Literal('done'));
+const ROperationStatus = R.Union(
+  R.Literal(OperationStatus.UNDONE),
+  R.Literal(OperationStatus.FORBIDDEN),
+  R.Literal(OperationStatus.FAILURE),
+  R.Literal(OperationStatus.DONE),
+);
 
-const RCreateOperationResponse = R.Record({
-  operation_ids: R.Array(R.Number),
-});
-
-const RFetchOperationStateResponse = R.Record({
+const RFetchOperationStatusResponse = R.Record({
   operations_status: R.Array(
     R.Record({
       id: R.Number,
@@ -91,27 +97,41 @@ export async function fetchShelfBookCount({ uuid }) {
   return data.count;
 }
 
-export async function createOperation(ops) {
+export async function createOperationShelf(ops) {
   const api = getApi();
   const payload = {
-    operations: ops.map(({ type, revision, uuid, name, unitId, bookIds }) => ({
+    operations: ops.map(({ type, revision, uuid, name }) => ({
       action_type: type,
       revision,
       shelf_uuid: uuid,
       shelf_name: name,
+    })),
+  };
+  const response = await api.post(makeURI('/operations/shelves/', null, config.LIBRARY_API_BASE_URL), payload);
+  const data = RFetchOperationStatusResponse.check(response.data);
+  return data.operations_status;
+}
+
+export async function createOperationShelfItem(ops) {
+  const api = getApi();
+  const payload = {
+    operations: ops.map(({ type, revision, uuid, unitId, bookIds }) => ({
+      action_type: type,
+      revision,
+      shelf_uuid: uuid,
       unit_id: unitId,
       b_ids: bookIds,
     })),
   };
-  const response = await api.post(makeURI('/shelves/operations/', null, config.LIBRARY_API_BASE_URL), payload);
-  const data = RCreateOperationResponse.check(response.data);
-  return data.operation_ids;
+  const response = await api.post(makeURI('/operations/shelves/books/', null, config.LIBRARY_API_BASE_URL), payload);
+  const data = RFetchOperationStatusResponse.check(response.data);
+  return data.operations_status;
 }
 
 export async function fetchOperationStatus(opIds) {
   const api = getApi();
   const payload = { operation_ids: opIds };
   const response = await api.post(makeURI('/shelves/operations/status/', null, config.LIBRARY_API_BASE_URL), payload);
-  const data = RFetchOperationStateResponse.check(response.data);
+  const data = RFetchOperationStatusResponse.check(response.data);
   return data.operations_status;
 }
