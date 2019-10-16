@@ -1,18 +1,23 @@
 import * as R from 'runtypes';
-
 import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
+import { OperationStatus } from './constants';
 
 const RShelfBook = R.Record({
   b_ids: R.Array(R.String),
   unit_id: R.Number,
 });
 
-const RShelfItem = R.Record({
+const RShelf = R.Record({
   id: R.Number,
   shelf_uuid: R.String,
   name: R.String,
+});
+
+const RShelfItem = R.Record({
+  items: R.Array(RShelfBook),
+  count: R.Number,
 });
 
 const RFetchCountResponse = R.Record({
@@ -20,15 +25,20 @@ const RFetchCountResponse = R.Record({
 });
 
 const RFetchShelvesResponse = R.Record({
-  items: R.Array(RShelfItem.And(R.Record({ items: R.Array(RShelfBook), count: R.Number }))),
+  items: R.Array(RShelf.And(RShelfItem)),
 });
 
 const RFetchShelfBooksResponse = R.Record({
-  shelf: RShelfItem,
+  shelf: RShelf,
   items: R.Array(RShelfBook),
 });
 
-const ROperationStatus = R.Union(R.Literal('undone'), R.Literal('forbidden'), R.Literal('failure'), R.Literal('done'));
+const ROperationStatus = R.Union(
+  R.Literal(OperationStatus.UNDONE),
+  R.Literal(OperationStatus.FORBIDDEN),
+  R.Literal(OperationStatus.FAILURE),
+  R.Literal(OperationStatus.DONE),
+);
 
 const RFetchOperationStatusResponse = R.Record({
   operations_status: R.Array(
