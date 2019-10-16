@@ -96,6 +96,14 @@ export function* _download(bookIds, url) {
 }
 
 export function* downloadBooks(bookIds) {
+  if (!bookIds || bookIds.length === 0) {
+    yield put(
+      showToast({
+        message: '다운로드할 수 없습니다.',
+      }),
+    );
+    return;
+  }
   const triggerResponse = yield call(triggerDownload, bookIds);
   const { result: responseResult, b_ids: downloadableBookIds, url: downloadUrl, message } = triggerResponse;
   if (responseResult) {
