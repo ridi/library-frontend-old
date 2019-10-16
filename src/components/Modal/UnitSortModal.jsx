@@ -25,13 +25,9 @@ const UnitSortModal = ({ order, orderOptions, scroll, isActive, location, onClic
       <ul>
         {orderOptions.map(option => (
           <li key={option.key}>
-            <ModalLinkItem
-              scroll={false}
-              title={option.title}
-              isSelected={option.key === order}
-              to={buildTargetLocation(location, option, scroll)}
-              replace
-            />
+            <ModalLinkItem isSelected={option.key === order} to={buildTargetLocation(location, option, scroll)} replace>
+              {option.title}
+            </ModalLinkItem>
           </li>
         ))}
       </ul>

@@ -31,34 +31,39 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="내 서재 의견 보내기" IconComponent={FeedbackIcon} href={FEEDBACK_URL} />
+          <ModalAnchorItem IconComponent={FeedbackIcon} href={FEEDBACK_URL}>
+            내 서재 의견 보내기
+          </ModalAnchorItem>
         </li>
       </ul>
     </ModalItemGroup>
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem title="독서노트" IconComponent={Note} href={config.RIDI_READING_NOTE_URL} />
+          <ModalAnchorItem IconComponent={Note} href={config.RIDI_READING_NOTE_URL}>
+            독서노트
+          </ModalAnchorItem>
         </li>
         <li>
-          <ModalAnchorItem title="내 리뷰 관리" IconComponent={Review} href={config.RIDI_REVIEW_URL} />
+          <ModalAnchorItem IconComponent={Review} href={config.RIDI_REVIEW_URL}>
+            내 리뷰 관리
+          </ModalAnchorItem>
         </li>
       </ul>
     </ModalItemGroup>
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalButtonItem
-            title={isExcelDownloading ? '파일 생성 중' : '모든 책 목록 다운로드'}
-            IconComponent={Download}
-            onClick={() => dispatchStartExcelDownload()}
-            showSpinner={isExcelDownloading}
-          />
+          <ModalButtonItem IconComponent={Download} onClick={dispatchStartExcelDownload} showSpinner={isExcelDownloading}>
+            {isExcelDownloading ? '파일 생성 중' : '모든 책 목록 다운로드'}
+          </ModalButtonItem>
         </li>
       </ul>
     </ModalItemGroup>
     <ModalItemGroup>
-      <ModalAnchorItem title="로그아웃" IconComponent={Logout} href={config.RIDI_LOGOUT_URL} />
+      <ModalAnchorItem IconComponent={Logout} href={config.RIDI_LOGOUT_URL}>
+        로그아웃
+      </ModalAnchorItem>
     </ModalItemGroup>
   </Modal>
 );

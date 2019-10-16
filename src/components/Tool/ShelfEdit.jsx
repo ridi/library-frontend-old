@@ -43,20 +43,24 @@ export default function ShelfEdit(props) {
           <ModalItemGroup groupTitle="보기 방식">
             <ul>
               <li>
-                <ModalButtonItem title="표지만 보기" isSelected={viewType === ViewType.PORTRAIT} onClick={handlePortraitClick} />
+                <ModalButtonItem isSelected={viewType === ViewType.PORTRAIT} onClick={handlePortraitClick}>
+                  표지만 보기
+                </ModalButtonItem>
               </li>
               <li>
-                <ModalButtonItem title="목록 보기" isSelected={viewType === ViewType.LANDSCAPE} onClick={handleLandscapeClick} />
+                <ModalButtonItem isSelected={viewType === ViewType.LANDSCAPE} onClick={handleLandscapeClick}>
+                  목록 보기
+                </ModalButtonItem>
               </li>
             </ul>
           </ModalItemGroup>
           <ModalItemGroup groupTitle="책장 편집">
             <ul>
               <li>
-                <ModalButtonItem title="책장 이름 변경" onClick={handleRenameClick} />
+                <ModalButtonItem onClick={handleRenameClick}>책장 이름 변경</ModalButtonItem>
               </li>
               <li>
-                <ModalButtonItem title="책장 삭제" onClick={handleRemoveClick} />
+                <ModalButtonItem onClick={handleRemoveClick}>책장 삭제</ModalButtonItem>
               </li>
             </ul>
           </ModalItemGroup>

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
-import { Modal, ModalItemGroup, ModalLinkItem } from '.';
+import { Modal, ModalItemCount, ModalItemGroup, ModalLinkItem } from '.';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import { filterModalStyle as styles } from './styles';
@@ -8,7 +8,7 @@ const makeModalLinkItem = (option, filter, query, isChild, checkedItemRef) => {
   const { to } = makeLinkProps({}, URLMap.main.as, { ...query, filter: option.value });
   return (
     <li key={`${JSON.stringify(option)}-${isChild}`} ref={option.value === filter ? checkedItemRef : null}>
-      <ModalLinkItem count={option.count} isSelected={option.value === filter} to={to}>
+      <ModalLinkItem isSelected={option.value === filter} to={to}>
         {isChild ? (
           <span css={styles.childPathWrapper}>
             <span css={styles.childPathIcon} />
@@ -17,6 +17,7 @@ const makeModalLinkItem = (option, filter, query, isChild, checkedItemRef) => {
         ) : (
           option.title
         )}
+        <ModalItemCount>{option.count}</ModalItemCount>
       </ModalLinkItem>
     </li>
   );
