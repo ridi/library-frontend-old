@@ -96,7 +96,7 @@ export function* _download(bookIds, url) {
 }
 
 export function* downloadBooks(bookIds) {
-  if (bookIds.length === 0) {
+  if (!bookIds || bookIds.length === 0) {
     yield put(
       showToast({
         message: '다운로드할 수 없습니다.',
