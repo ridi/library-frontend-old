@@ -9,7 +9,9 @@ function OrderOptionItem(props) {
   const handleClick = React.useCallback(() => onClick(option), [option, onClick]);
   return (
     <li>
-      <ModalButtonItem title={option.title} isSelected={isSelected} onClick={handleClick} />
+      <ModalButtonItem isSelected={isSelected} onClick={handleClick}>
+        {option.title}
+      </ModalButtonItem>
     </li>
   );
 }
@@ -44,7 +46,9 @@ export default function ShelfOrder(props) {
           <ModalItemGroup groupTitle="책장 관리">
             <ul>
               <li>
-                <ModalSyncButtonItem title={syncing ? '책장 동기화 중' : '책장 동기화'} onClick={onSyncClick} syncing={syncing} />
+                <ModalSyncButtonItem onClick={onSyncClick} syncing={syncing}>
+                  {syncing ? '책장 동기화 중' : '책장 동기화'}
+                </ModalSyncButtonItem>
               </li>
             </ul>
           </ModalItemGroup>

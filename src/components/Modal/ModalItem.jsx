@@ -15,32 +15,32 @@ function ItemIcon(props) {
   return <div css={modalStyles.icon} />;
 }
 
-export const ModalButtonItem = ({ title, isSelected, IconComponent, onClick, style, showSpinner = false }) => (
+export const ModalItemCount = ({ children }) => <span css={modalStyles.count}>{children}</span>;
+
+export const ModalButtonItem = ({ children, isSelected, IconComponent, style, showSpinner, onClick }) => (
   <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={showSpinner}>
     <ItemIcon isSelected={isSelected} IconComponent={showSpinner ? LoadingSpinner : IconComponent} />
-    {title}
+    {children}
   </button>
 );
 
-export const ModalSyncButtonItem = ({ title, syncing, onClick, style }) => (
+export const ModalSyncButtonItem = ({ children, syncing, style, onClick }) => (
   <button type="button" css={[modalStyles.item, style]} onClick={onClick} disabled={syncing}>
     <Sync css={[modalStyles.icon, modalStyles.selectedIcon, syncing && modalStyles.iconSpinning]} />
-    {title}
+    {children}
   </button>
 );
 
-export const ModalLinkItem = ({ title, isSelected, children, count, IconComponent, to, style, replace = false }) => (
-  <Link replace={replace} to={to} css={[modalStyles.item, style]}>
+export const ModalLinkItem = ({ children, isSelected, IconComponent, style, ...linkProps }) => (
+  <Link css={[modalStyles.item, style]} {...linkProps}>
     <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
     {children}
-    {title}
-    {count ? <span css={modalStyles.count}>{count}</span> : null}
   </Link>
 );
 
-export const ModalAnchorItem = ({ title, isSelected, IconComponent, href, style }) => (
-  <a css={[modalStyles.item, style]} href={href}>
+export const ModalAnchorItem = ({ children, isSelected, IconComponent, style, ...anchorProps }) => (
+  <a css={[modalStyles.item, style]} {...anchorProps}>
     <ItemIcon isSelected={isSelected} IconComponent={IconComponent} />
-    {title}
+    {children}
   </a>
 );
