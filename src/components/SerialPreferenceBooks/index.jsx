@@ -1,4 +1,4 @@
-import { Book } from '@ridi/web-ui/dist/index.node';
+import { Book } from '@ridi/web-ui';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
