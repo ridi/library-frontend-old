@@ -1,6 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import * as filterActions from 'services/purchased/filter/actions';
+import * as mainRequests from 'services/purchased/main/requests';
+import * as selectionActions from 'services/selection/actions';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as shelfSelectors from 'services/shelf/selectors';
+
 import BottomActionBar from '../../../../components/BottomActionBar';
 import { ButtonType } from '../../../../components/ActionBar/constants';
 import Empty from '../../../../components/Empty';
@@ -11,19 +17,16 @@ import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../../constants/page';
 import { BooksPageKind } from '../../../../constants/urls';
 import ViewType from '../../../../constants/viewType';
-import * as mainRequests from '../../../../services/purchased/main/requests';
-import * as selectionActions from '../../../../services/selection/actions';
-import * as selectionSelectors from '../../../../services/selection/selectors';
-import * as shelfSelectors from '../../../../services/shelf/selectors';
 import SearchIcon from '../../../../svgs/Search.svg';
 import * as paginationUtils from '../../../../utils/pagination';
 import { ResponsiveBooks } from '../../../base/Responsive';
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
 
-function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClick, shelfTitle, uuid }) {
+function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClick, shelfTitle, updateCategories, uuid }) {
+  const [categoryFilter, setCategoryFilter] = React.useState(null);
   const [keyword, setKeyword] = React.useState('');
-  const [isSearching, setSearching] = React.useState(false);
+  const [searchingKeyword, setSearchingKeyword] = React.useState('');
   const [searchItems, setSearchItems] = React.useState(null);
   const searchItemRequestId = React.useRef(0);
   const [totalItemCount, setTotalItemCount] = React.useState(null);
@@ -31,17 +34,43 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
   const [page, setPage] = React.useState(1);
   const totalPages = totalItemCount == null ? null : paginationUtils.calcPage(totalItemCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
 
+  const handleSearchConfirm = React.useCallback(() => {
+    setSearchingKeyword(keyword);
+  }, [keyword]);
+
   const handleSearchClear = React.useCallback(() => {
-    setSearching(false);
-    setSearchItems(null);
-    setTotalItemCount(null);
-    clearSelectedItems();
+    setSearchingKeyword('');
+    setKeyword('');
   }, []);
-  const handleSearchConfirm = React.useCallback(async () => {
-    const processedKeyword = keyword === '' ? undefined : keyword;
-    const newSearching = keyword !== '';
+
+  const handlePageChange = React.useCallback(
+    async newPage => {
+      const processedKeyword = searchingKeyword === '' ? undefined : searchingKeyword;
+      setSearchItems(null);
+      setPage(newPage);
+      clearSelectedItems();
+      window.scrollTo(0, 0);
+
+      searchItemRequestId.current += 1;
+      const searchItemRid = searchItemRequestId.current;
+      const { items } = await mainRequests.fetchMainItems({
+        kind: BooksPageKind.SEARCH,
+        keyword: processedKeyword,
+        categoryFilter,
+        page: newPage,
+      });
+      if (searchItemRid === searchItemRequestId.current) {
+        setSearchItems(items);
+      }
+    },
+    [categoryFilter, keyword],
+  );
+
+  const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+
+  React.useEffect(() => {
+    const processedKeyword = searchingKeyword === '' ? undefined : searchingKeyword;
     const newPage = 1;
-    setSearching(newSearching);
     setSearchItems(null);
     setTotalItemCount(null);
     setPage(newPage);
@@ -52,49 +81,37 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
 
     const searchItemRid = searchItemRequestId.current;
     const totalItemCountRid = totalItemCountRequestId.current;
-    await Promise.all([
-      mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, page: newPage }).then(({ items }) => {
+
+    const mainItemsPromise = mainRequests
+      .fetchMainItems({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, categoryFilter, page: newPage })
+      .then(({ items }) => {
         if (searchItemRid === searchItemRequestId.current) {
           setSearchItems(items);
         }
-      }),
-      mainRequests.fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword: processedKeyword }).then(({ unit_total_count: totalCount }) => {
+      });
+    const mainItemsCountPromise = mainRequests
+      .fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, categoryFilter })
+      .then(({ unit_total_count: totalCount }) => {
         if (totalItemCountRid === totalItemCountRequestId.current) {
           setTotalItemCount(totalCount);
         }
-      }),
-    ]);
-  }, [keyword]);
-  const handlePageChange = React.useCallback(
-    async newPage => {
-      const processedKeyword = keyword === '' ? undefined : keyword;
-      setSearchItems(null);
-      setPage(newPage);
-      clearSelectedItems();
-      window.scrollTo(0, 0);
-
-      searchItemRequestId.current += 1;
-      const searchItemRid = searchItemRequestId.current;
-      const { items } = await mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword: processedKeyword, page: newPage });
-      if (searchItemRid === searchItemRequestId.current) {
-        setSearchItems(items);
-      }
-    },
-    [keyword],
-  );
-  const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+      });
+    Promise.all([mainItemsPromise, mainItemsCountPromise]);
+  }, [categoryFilter, searchingKeyword]);
 
   React.useEffect(() => {
-    handleSearchConfirm();
+    updateCategories();
   }, []);
 
   function renderSearchBar() {
     return (
       <SearchBar
-        isSearching={isSearching}
+        isSearching={searchingKeyword !== ''}
+        filter={categoryFilter}
         keyword={keyword}
         onClear={handleSearchClear}
         onConfirm={handleSearchConfirm}
+        onFilterChange={setCategoryFilter}
         onKeywordChange={setKeyword}
       />
     );
@@ -126,8 +143,9 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
         </ResponsiveBooks>
       );
     }
+    // TODO: 카테고리 필터에 따라 메시지 변경
     if (searchItems.length === 0) {
-      return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+      return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${searchingKeyword}'에 대한 검색 결과가 없습니다.`} />;
     }
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
@@ -153,6 +171,7 @@ function mapStateToProps(state, props) {
 
 const mapDispatchToProps = {
   clearSelectedItems: selectionActions.clearSelectedItems,
+  updateCategories: filterActions.updateCategories,
 };
 
 export default connect(

@@ -1,6 +1,12 @@
 import { css } from '@emotion/core';
-import FlexBar from '../../../../components/FlexBar';
-import SearchBox from '../../../../components/SearchBox';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import FlexBar from 'components/FlexBar';
+import SearchBox from 'components/SearchBox';
+import * as Tools from 'components/Tool';
+
+import * as filterSelectors from 'services/purchased/filter/selectors';
 
 const searchBarStyles = {
   bar: css`
@@ -10,7 +16,9 @@ const searchBarStyles = {
   `,
 };
 
-export default function SearchBar({ keyword, onClear, onConfirm, onKeywordChange }) {
+export default function SearchBar({ filter, keyword, onClear, onConfirm, onFilterChange, onKeywordChange }) {
+  const filterOptions = useSelector(filterSelectors.getFilterOptions);
   const left = <SearchBox keyword={keyword} onClear={onClear} onSubmit={onConfirm} onKeywordChange={onKeywordChange} />;
-  return <FlexBar css={searchBarStyles.bar} flexLeft={left} flexRight={null} />;
+  const right = <Tools.Filter filter={filter} filterOptions={filterOptions} onFilterChange={onFilterChange} />;
+  return <FlexBar css={searchBarStyles.bar} flexLeft={left} flexRight={right} />;
 }
