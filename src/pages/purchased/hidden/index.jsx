@@ -11,7 +11,6 @@ import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import TitleBar from '../../../components/TitleBar';
-import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { getUnits } from '../../../services/book/selectors';
 import { showConfirm } from '../../../services/confirm/actions';
@@ -106,8 +105,7 @@ const Hidden = props => {
   };
 
   const makeEditingBarProps = () => {
-    const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
-    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
       totalSelectedCount,

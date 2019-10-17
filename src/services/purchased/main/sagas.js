@@ -1,5 +1,4 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
-import { UnitType } from '../../../constants/unitType';
 import { BooksPageKind, URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -144,8 +143,7 @@ function* downloadSelectedBooks(action) {
 function* selectAllBooks(action) {
   const { pageOptions } = action.payload;
   const items = yield select(getItemsByPage, pageOptions);
-  const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
-  const bookIds = toFlatten(filteredItems, 'b_id');
+  const bookIds = toFlatten(items, 'b_id');
   yield put(selectItems(bookIds));
 }
 

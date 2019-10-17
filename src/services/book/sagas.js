@@ -2,8 +2,6 @@ import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
 import { toFlatten } from '../../utils/array';
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
-import { showToast } from '../toast/actions';
-import { ToastStyle } from '../toast/constants';
 import {
   LOAD_BOOK_DATA,
   LOAD_BOOK_DATA_FROM_STORAGE,
@@ -14,7 +12,6 @@ import {
   setBookStarRatings,
   setUnitData,
   setUnitOrders,
-  SHOW_SHELF_BOOK_ALERT_TOAST,
 } from './actions';
 import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
 import { getBooks } from './selectors';
@@ -129,20 +126,9 @@ export function* loadUnitOrders(unitId, orderType, orderBy, page) {
   yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
 }
 
-export function* showShelfBookAlertToast() {
-  yield put(
-    showToast({
-      message: '해당 도서는 상세페이지에서 선택할 수 있습니다.',
-      toastStyle: ToastStyle.BLUE,
-      withBottomFixedButton: true,
-    }),
-  );
-}
-
 export default function* bookRootSaga() {
   yield all([
     takeEvery(LOAD_BOOK_DATA_FROM_STORAGE, loadBookDataFromStorage),
-    takeEvery(SHOW_SHELF_BOOK_ALERT_TOAST, showShelfBookAlertToast),
     takeEvery(LOAD_BOOK_DATA, loadBookDataFromAction),
     takeEvery(LOAD_UNIT_DATA, loadUnitDataFromAction),
   ]);

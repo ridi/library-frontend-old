@@ -11,11 +11,9 @@ import { BookError } from '../../../components/Error';
 import PageRedirect from '../../../components/PageRedirect';
 import ResponsivePaginator from '../../../components/ResponsivePaginator';
 import SearchBar from '../../../components/SearchBar';
-import SelectShelfModal from '../../../components/SelectShelfModal';
 import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
-import { UnitType } from '../../../constants/unitType';
 import { BooksPageKind, PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
 import { getUnits } from '../../../services/book/selectors';
@@ -24,7 +22,6 @@ import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } f
 import { getIsFetchingBooks, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
-import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import SearchIcon from '../../../svgs/Search.svg';
 import Footer from '../../base/Footer';
@@ -84,7 +81,6 @@ function useDispatchOptions(actionDispatcher, options) {
 function PurchasedMain(props) {
   const { listInstruction, location, match, totalPages } = props;
   const {
-    dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
     dispatchDownloadSelectedBooks,
     dispatchHideSelectedBooks,
@@ -96,7 +92,6 @@ function PurchasedMain(props) {
   const currentPage = pageOptions.page;
 
   const [isEditing, setIsEditing] = React.useState(false);
-  const [showShelves, setShowShelves] = React.useState(false);
 
   const dispatchDownloadSelectedBooksWithOptions = useDispatchOptions(dispatchDownloadSelectedBooks, pageOptions);
   const dispatchHideSelectedBooksWithOptions = useDispatchOptions(dispatchHideSelectedBooks, pageOptions);
@@ -210,6 +205,7 @@ function PurchasedMain(props) {
     }
     setIsEditing(!isEditing);
   }, [dispatchClearSelectedBooks, isEditing]);
+
   function renderSearchBar() {
     let searchBarProps = {};
 
@@ -236,8 +232,7 @@ function PurchasedMain(props) {
 
   function makeEditingBarProps() {
     const { items, totalSelectedCount } = props;
-    const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
-    const isSelectedAllBooks = totalSelectedCount === filteredItems.length;
+    const isSelectedAllBooks = totalSelectedCount === items.length;
 
     return {
       totalSelectedCount,
@@ -253,26 +248,12 @@ function PurchasedMain(props) {
     dispatchClearSelectedBooks();
     setIsEditing(false);
   }, [dispatchClearSelectedBooks, dispatchHideSelectedBooksWithOptions]);
+
   const handleDownloadClick = React.useCallback(() => {
     dispatchDownloadSelectedBooksWithOptions();
     dispatchClearSelectedBooks();
     setIsEditing(false);
   }, [dispatchClearSelectedBooks, dispatchDownloadSelectedBooksWithOptions]);
-  const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
-  const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
-  const handleShelfSelect = React.useCallback(
-    uuid => {
-      dispatchAddSelectedToShelf({
-        uuid,
-        onComplete: () => {
-          setIsEditing(false);
-          setShowShelves(false);
-          dispatchClearSelectedBooks();
-        },
-      });
-    },
-    [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
-  );
 
   function makeActionBarProps() {
     const { totalSelectedCount } = props;
@@ -280,11 +261,6 @@ function PurchasedMain(props) {
 
     return {
       buttonProps: [
-        {
-          name: '책장에 추가',
-          onClick: handleAddToShelf,
-          disable,
-        },
         {
           name: '숨기기',
           onClick: handleHideClick,
@@ -304,29 +280,17 @@ function PurchasedMain(props) {
 
   let title;
   if (pageOptions.kind === BooksPageKind.MAIN) {
-    title = '모든 책 - 내 서재';
+    title = '모든 책';
   } else if (pageOptions.keyword !== '') {
-    title = `'${pageOptions.keyword}' 검색 결과 - 내 서재`;
+    title = `'${pageOptions.keyword}' 검색 결과`;
   } else {
-    title = '검색 - 내 서재';
-  }
-
-  if (showShelves) {
-    return (
-      <>
-        <Helmet>
-          <title>{title}</title>
-        </Helmet>
-        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
-        <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
-      </>
-    );
+    title = '검색';
   }
 
   return (
     <>
       <Helmet>
-        <title>{title}</title>
+        <title>{title} - 내 서재</title>
       </Helmet>
       <PageRedirect currentPage={currentPage} totalPages={totalPages} />
       <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
@@ -382,7 +346,6 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
-  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
 };
 
 export default connect(
