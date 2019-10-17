@@ -7,23 +7,29 @@ import { makeURI } from '../../../utils/uri';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
-export async function fetchMainItems({ kind, keyword, orderType, orderBy, categoryFilter, page }) {
-  const options = {
-    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-    limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
-  };
+function makeCommonOptions({ kind, keyword, orderType, orderBy, categoryFilter }) {
+  const options = {};
   if (kind === BooksPageKind.MAIN) {
     options.category = categoryFilter;
+    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+      options.expiredBooksOnly = true;
+    } else {
+      options.orderType = orderType;
+      options.orderBy = orderBy;
+    }
   } else if (kind === BooksPageKind.SEARCH) {
     options.keyword = keyword;
   }
+  return options;
+}
 
-  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-    options.expiredBooksOnly = true;
-  } else {
-    options.orderType = orderType;
-    options.orderBy = orderBy;
-  }
+export async function fetchMainItems(pageOptions) {
+  const { kind, page } = pageOptions;
+  const options = {
+    offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
+    limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
+    ...makeCommonOptions(pageOptions),
+  };
 
   const api = getApi();
   let data = { items: [] };
@@ -39,20 +45,9 @@ export async function fetchMainItems({ kind, keyword, orderType, orderBy, catego
   return data;
 }
 
-export async function fetchMainItemsTotalCount({ kind, keyword, orderType, orderBy, categoryFilter }) {
-  const options = {};
-
-  if (kind === BooksPageKind.MAIN) {
-    options.category = categoryFilter;
-    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-      options.expiredBooksOnly = true;
-    } else {
-      options.orderType = orderType;
-      options.orderBy = orderBy;
-    }
-  } else if (kind === BooksPageKind.SEARCH) {
-    options.keyword = keyword;
-  }
+export async function fetchMainItemsTotalCount(pageOptions) {
+  const { kind } = pageOptions;
+  const options = makeCommonOptions(pageOptions);
 
   const api = getApi();
   let data = {
