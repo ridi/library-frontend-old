@@ -22,7 +22,7 @@ export default class More extends React.Component {
 
   render() {
     const { isMoreModalShow } = this.state;
-    const { order, orderOptions, query, showViewType, showOrder, showHidden } = this.props;
+    const { orderOptions, orderType, orderBy, query, showViewType, showOrder, showHidden } = this.props;
 
     return (
       <div css={styles.buttonWrapper}>
@@ -41,8 +41,9 @@ export default class More extends React.Component {
         </IconButton>
         {isMoreModalShow && (
           <MoreModal
-            order={order}
             orderOptions={orderOptions}
+            orderType={orderType}
+            orderBy={orderBy}
             query={query}
             isActive={isMoreModalShow}
             onClickModalBackground={() => {

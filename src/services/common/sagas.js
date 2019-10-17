@@ -1,4 +1,7 @@
 import { call } from 'redux-saga/effects';
+
+import { BooksPageKind } from 'constants/urls';
+
 import { requestGetBookIdsByUnitIds, requestGetBookIdsByUnitIdsForHidden } from './requests';
 
 const _reduceSelectedBookIds = (items, selectedBookIds) =>
@@ -21,14 +24,15 @@ const _flattenBookIds = bookIdsInUnitData =>
     return [...previous, ..._bookIds];
   }, []);
 
-export function* getBookIdsByUnitIds(unitIds, orderType, orderBy) {
-  const bookIdsInUnitData = yield call(requestGetBookIdsByUnitIds, orderType, orderBy, unitIds);
+export function* getBookIdsByUnitIds(unitIds, pageOptions) {
+  const bookIdsInUnitData = yield call(requestGetBookIdsByUnitIds, unitIds, pageOptions);
   return _flattenBookIds(bookIdsInUnitData);
 }
 
-export function* getBookIdsByItems(items, selectedBookIds, orderType, orderBy) {
+export function* getBookIdsByItems(items, selectedBookIds, pageOptions) {
   const { bookIds, unitIds } = _reduceSelectedBookIds(items, selectedBookIds);
-  const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, orderType, orderBy);
+  const bookIdsInUnitData = yield call(getBookIdsByUnitIds, unitIds, pageOptions);
+  const bookIdsInUnit = pageOptions.kind === BooksPageKind.HIDDEN ? _flattenBookIds(bookIdsInUnitData) : bookIdsInUnitData;
 
   return [...bookIds, ...bookIdsInUnit];
 }

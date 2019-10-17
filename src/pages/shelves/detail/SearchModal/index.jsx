@@ -9,8 +9,9 @@ import PageNavigationBar, { NavigationBarColor } from '../../../../components/Pa
 import { ResponsivePaginatorWithHandler } from '../../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../../constants/page';
+import { BooksPageKind } from '../../../../constants/urls';
 import ViewType from '../../../../constants/viewType';
-import * as searchRequests from '../../../../services/purchased/search/requests';
+import * as mainRequests from '../../../../services/purchased/main/requests';
 import * as selectionActions from '../../../../services/selection/actions';
 import * as selectionSelectors from '../../../../services/selection/selectors';
 import * as shelfSelectors from '../../../../services/shelf/selectors';
@@ -55,12 +56,12 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     const searchItemRid = searchItemRequestId.current;
     const totalItemCountRid = totalItemCountRequestId.current;
     await Promise.all([
-      searchRequests.fetchSearchItems(keyword, newPage).then(({ items }) => {
+      mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage }).then(({ items }) => {
         if (searchItemRid === searchItemRequestId.current) {
           setSearchItems(items);
         }
       }),
-      searchRequests.fetchSearchItemsTotalCount(keyword).then(({ unit_total_count: totalCount }) => {
+      mainRequests.fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword }).then(({ unit_total_count: totalCount }) => {
         if (totalItemCountRid === totalItemCountRequestId.current) {
           setTotalItemCount(totalCount);
         }
@@ -75,7 +76,7 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
 
       searchItemRequestId.current += 1;
       const searchItemRid = searchItemRequestId.current;
-      const { items } = await searchRequests.fetchSearchItems(keyword, newPage);
+      const { items } = await mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage });
       if (searchItemRid === searchItemRequestId.current) {
         setSearchItems(items);
       }

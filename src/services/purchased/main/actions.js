@@ -1,7 +1,6 @@
 export const LOAD_MAIN_ITEMS = 'LOAD_MAIN_ITEMS';
 
 export const UPDATE_MAIN_ITEMS = 'UPDATE_MAIN_ITEMS';
-export const UPDATE_MAIN_OPTIONS = 'UPDATE_MAIN_OPTIONS';
 
 export const SELECT_ALL_MAIN_BOOKS = 'SELECT_ALL_MAIN_BOOKS';
 export const HIDE_SELECTED_MAIN_BOOKS = 'HIDE_SELECTED_MAIN_BOOKS';
@@ -16,14 +15,13 @@ export const loadItems = pageOptions => ({
   },
 });
 
-export const updateItems = ({ pageOptions, items, unitTotalCount, itemTotalCount, filterOptions }) => ({
+export const updateItems = ({ pageOptions, items, unitTotalCount, itemTotalCount }) => ({
   type: UPDATE_MAIN_ITEMS,
   payload: {
     pageOptions,
     items,
     unitTotalCount,
     itemTotalCount,
-    filterOptions,
   },
 });
 
