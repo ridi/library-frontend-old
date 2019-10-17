@@ -8,8 +8,9 @@ import { setViewType } from '../../services/ui/actions';
 import { makeLinkProps } from '../../utils/uri';
 
 const MoreModal = ({
-  order,
   orderOptions,
+  orderType,
+  orderBy,
   isActive,
   query,
   onClickModalBackground,
@@ -57,7 +58,7 @@ const MoreModal = ({
             const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderType: option.orderType, orderBy: option.orderBy });
             return (
               <li key={option.key}>
-                <ModalLinkItem isSelected={option.key === order} to={to} replace>
+                <ModalLinkItem isSelected={option.orderType === orderType && option.orderBy === orderBy} to={to} replace>
                   {option.title}
                 </ModalLinkItem>
               </li>

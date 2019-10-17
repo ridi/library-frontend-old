@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Link, withRouter } from 'react-router-dom';
-import { OrderOptions } from '../../constants/orderOptions';
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
@@ -48,7 +47,6 @@ class SearchBar extends React.Component {
   render() {
     const { hideTools, keyword } = this.state;
     const { filter, filterOptions, orderOptions, orderBy, orderType, toggleEditingMode, isSearchPage } = this.props;
-    const order = OrderOptions.toKey(orderType, orderBy);
 
     const left = (
       <div css={styles.searchBoxWrapper}>
@@ -66,7 +64,9 @@ class SearchBar extends React.Component {
       <div css={styles.toolsWrapper}>
         {filterOptions && <Filter filter={filter} filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />}
         {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
-        {orderOptions && <More order={order} orderOptions={orderOptions} query={{ filter }} showViewType showOrder showHidden />}
+        {orderOptions && (
+          <More orderOptions={orderOptions} orderType={orderType} orderBy={orderBy} query={{ filter }} showViewType showOrder showHidden />
+        )}
         {isSearchPage && (
           <Link {...makeLinkProps({}, URLMap.main.as)} css={styles.cancelSearchButton}>
             취소
