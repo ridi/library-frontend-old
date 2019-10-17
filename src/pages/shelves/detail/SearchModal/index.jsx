@@ -17,6 +17,7 @@ import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../../constants/page';
 import { BooksPageKind } from '../../../../constants/urls';
 import ViewType from '../../../../constants/viewType';
+import BookOutline from '../../../../svgs/BookOutline.svg';
 import SearchIcon from '../../../../svgs/Search.svg';
 import * as paginationUtils from '../../../../utils/pagination';
 import { ResponsiveBooks } from '../../../base/Responsive';
@@ -143,9 +144,20 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
         </ResponsiveBooks>
       );
     }
-    // TODO: 카테고리 필터에 따라 메시지 변경
     if (searchItems.length === 0) {
-      return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${searchingKeyword}'에 대한 검색 결과가 없습니다.`} />;
+      let message;
+      let iconWidth;
+      let icon;
+      if (searchingKeyword === '') {
+        message = '구매/대여하신 책이 없습니다.';
+        iconWidth = 30;
+        icon = BookOutline;
+      } else {
+        message = `'${searchingKeyword}'에 대한 검색 결과가 없습니다.`;
+        iconWidth = 38;
+        icon = SearchIcon;
+      }
+      return <Empty IconComponent={icon} iconWidth={iconWidth} message={message} />;
     }
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }

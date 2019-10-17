@@ -18,7 +18,7 @@ const searchBarStyles = {
 
 export default function SearchBar({ filter, keyword, onClear, onConfirm, onFilterChange, onKeywordChange }) {
   const filterOptions = useSelector(filterSelectors.getFilterOptions);
-  const left = <SearchBox keyword={keyword} onClear={onClear} onSubmit={onConfirm} onKeywordChange={onKeywordChange} />;
+  const left = <SearchBox allowEmptySearch keyword={keyword} onClear={onClear} onSubmit={onConfirm} onKeywordChange={onKeywordChange} />;
   const right = <Tools.Filter filter={filter} filterOptions={filterOptions} onFilterChange={onFilterChange} />;
   return <FlexBar css={searchBarStyles.bar} flexLeft={left} flexRight={right} />;
 }
