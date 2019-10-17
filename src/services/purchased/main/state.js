@@ -1,4 +1,5 @@
-import { OrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from 'constants/orderOptions';
+import { BooksPageKind } from 'constants/urls';
 
 export const initialState = {
   data: {},
@@ -15,10 +16,10 @@ export const createInitialDataState = () => ({
 export function mapPageOptionsToKey(pageOptions) {
   const { kind, keyword, orderType, orderBy, categoryFilter } = pageOptions;
   let key = '';
-  if (kind === 'main') {
+  if (kind === BooksPageKind.MAIN) {
     const order = OrderOptions.toKey(orderType, orderBy);
     key = `${categoryFilter}_${order}`;
-  } else if (kind === 'search') {
+  } else if (kind === BooksPageKind.SEARCH) {
     key = keyword;
   }
   return `${kind}_${key}`;

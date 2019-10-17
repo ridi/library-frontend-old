@@ -1,6 +1,6 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { UnitType } from '../../../constants/unitType';
-import { URLMap } from '../../../constants/urls';
+import { BooksPageKind, URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { loadBookData, loadUnitData } from '../../book/sagas';
@@ -32,13 +32,13 @@ function* loadMainItems(action) {
 
   const { pageOptions } = action.payload;
 
-  if (pageOptions.kind === 'search' && !pageOptions.keyword) {
+  if (pageOptions.kind === BooksPageKind.SEARCH && !pageOptions.keyword) {
     yield put(setIsFetchingBooks(false));
     return;
   }
 
   let categoryTask;
-  if (pageOptions.kind === 'main') {
+  if (pageOptions.kind === BooksPageKind.MAIN) {
     categoryTask = yield fork(function* loadCategories() {
       const categories = yield call(fetchPurchaseCategories);
       yield put(setFilterOptions(categories));

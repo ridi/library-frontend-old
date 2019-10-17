@@ -1,6 +1,7 @@
 import { getApi } from '../../../api';
 import config from '../../../config';
 import { OrderType } from '../../../constants/orderOptions';
+import { BooksPageKind } from '../../../constants/urls';
 import { calcOffset } from '../../../utils/pagination';
 import { makeURI } from '../../../utils/uri';
 
@@ -11,9 +12,9 @@ export async function fetchMainItems({ kind, keyword, orderType, orderBy, catego
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   };
-  if (kind === 'main') {
+  if (kind === BooksPageKind.MAIN) {
     options.category = categoryFilter;
-  } else if (kind === 'search') {
+  } else if (kind === BooksPageKind.SEARCH) {
     options.keyword = keyword;
   }
 
@@ -31,7 +32,7 @@ export async function fetchMainItems({ kind, keyword, orderType, orderBy, catego
     ({ data } = response);
   } catch (err) {
     // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
-    if (kind !== 'search' || err.response?.status !== 400) {
+    if (kind !== BooksPageKind.SEARCH || err.response?.status !== 400) {
       throw err;
     }
   }
@@ -41,7 +42,7 @@ export async function fetchMainItems({ kind, keyword, orderType, orderBy, catego
 export async function fetchMainItemsTotalCount({ kind, keyword, orderType, orderBy, categoryFilter }) {
   const options = {};
 
-  if (kind === 'main') {
+  if (kind === BooksPageKind.MAIN) {
     options.category = categoryFilter;
     if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
       options.expiredBooksOnly = true;
@@ -49,7 +50,7 @@ export async function fetchMainItemsTotalCount({ kind, keyword, orderType, order
       options.orderType = orderType;
       options.orderBy = orderBy;
     }
-  } else if (kind === 'search') {
+  } else if (kind === BooksPageKind.SEARCH) {
     options.keyword = keyword;
   }
 
@@ -63,7 +64,7 @@ export async function fetchMainItemsTotalCount({ kind, keyword, orderType, order
     ({ data } = response);
   } catch (err) {
     // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
-    if (kind !== 'search' || err.response?.status !== 400) {
+    if (kind !== BooksPageKind.SEARCH || err.response?.status !== 400) {
       throw err;
     }
   }

@@ -3,6 +3,7 @@ import { all, call, put } from 'redux-saga/effects';
 import config from '../../config';
 import { getAPI } from '../../api/actions';
 import { OrderType } from '../../constants/orderOptions';
+import { BooksPageKind } from '../../constants/urls';
 
 import { makeURI } from '../../utils/uri';
 import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
@@ -57,7 +58,7 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy 
   };
   let endpoint = '';
 
-  if (kind === 'hidden') {
+  if (kind === BooksPageKind.HIDDEN) {
     endpoint = '/items/hidden/fields/b_ids/';
   } else {
     endpoint = '/items/fields/b_ids/';
@@ -79,7 +80,7 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy 
 }
 
 export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
-  yield call(requestGetBookIdsByUnitIds, unitIds, { kind: 'hidden' });
+  yield call(requestGetBookIdsByUnitIds, unitIds, { kind: BooksPageKind.HIDDEN });
 }
 
 export function* requestUnhide(bookIds, revision) {
