@@ -80,7 +80,7 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy 
 }
 
 export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
-  yield call(requestGetBookIdsByUnitIds, unitIds, { kind: BooksPageKind.HIDDEN });
+  return yield call(requestGetBookIdsByUnitIds, unitIds, { kind: BooksPageKind.HIDDEN });
 }
 
 export function* requestUnhide(bookIds, revision) {
