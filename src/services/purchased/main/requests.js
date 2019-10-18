@@ -1,71 +1,67 @@
-import { put } from 'redux-saga/effects';
-
+import { getApi } from '../../../api';
 import config from '../../../config';
 import { OrderType } from '../../../constants/orderOptions';
+import { BooksPageKind } from '../../../constants/urls';
 import { calcOffset } from '../../../utils/pagination';
-import { getAPI } from '../../../api/actions';
-
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { makeURI } from '../../../utils/uri';
 
-export function* fetchMainItems(orderType, orderBy, filter, page) {
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
+
+function makeCommonOptions({ kind, keyword, orderType, orderBy, categoryFilter }) {
+  const options = {};
+  if (kind === BooksPageKind.MAIN) {
+    options.category = categoryFilter;
+    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+      options.expiredBooksOnly = true;
+    } else {
+      options.orderType = orderType;
+      options.orderBy = orderBy;
+    }
+  } else if (kind === BooksPageKind.SEARCH) {
+    options.keyword = keyword;
+  }
+  return options;
+}
+
+export async function fetchMainItems(pageOptions) {
+  const { kind, page } = pageOptions;
   const options = {
-    category: filter,
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
+    ...makeCommonOptions(pageOptions),
   };
 
-  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-    options.expiredBooksOnly = true;
-  } else {
-    options.orderType = orderType;
-    options.orderBy = orderBy;
+  const api = getApi();
+  let data = { items: [] };
+  try {
+    const response = await api.get(makeURI(`/items/${kind}/`, options, config.LIBRARY_API_BASE_URL));
+    ({ data } = response);
+  } catch (err) {
+    // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+    if (kind !== BooksPageKind.SEARCH || err.response?.status !== 400) {
+      throw err;
+    }
   }
-
-  const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/main', options, config.LIBRARY_API_BASE_URL));
-  return response.data;
+  return data;
 }
 
-export function* fetchMainItemsTotalCount(orderType, orderBy, filter) {
-  const options = { category: filter };
+export async function fetchMainItemsTotalCount(pageOptions) {
+  const { kind } = pageOptions;
+  const options = makeCommonOptions(pageOptions);
 
-  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-    options.expiredBooksOnly = true;
-  } else {
-    options.orderType = orderType;
-    options.orderBy = orderBy;
+  const api = getApi();
+  let data = {
+    unit_total_count: 0,
+    item_total_count: 0,
+  };
+  try {
+    const response = await api.get(makeURI(`/items/${kind}/count/`, options, config.LIBRARY_API_BASE_URL));
+    ({ data } = response);
+  } catch (err) {
+    // 잘못된 Keyword는 별도의 에러핸들링이 아닌 Empty페이지 처리
+    if (kind !== BooksPageKind.SEARCH || err.response?.status !== 400) {
+      throw err;
+    }
   }
-
-  const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/main/count', options, config.LIBRARY_API_BASE_URL));
-  return response.data;
-}
-
-const _createFilterOption = (title, value, count = 0, hasChildren = false) => ({
-  title,
-  value,
-  count,
-  hasChildren,
-});
-
-const _reformatCategories = categories =>
-  categories.reduce((previous, value) => {
-    const hasChildren = value.children && value.children.length > 0;
-    const filterOption = _createFilterOption(value.name, value.id, value.count, hasChildren);
-    filterOption.children = hasChildren ? _reformatCategories(value.children) : null;
-
-    previous.push(filterOption);
-    return previous;
-  }, []);
-
-const _countAllCategory = categories => categories.reduce((previous, value) => previous + value.count, 0);
-
-export function* fetchPurchaseCategories() {
-  const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/items/categories', {}, config.LIBRARY_API_BASE_URL));
-  return [
-    _createFilterOption('전체 카테고리', null, _countAllCategory(response.data.categories)),
-    ..._reformatCategories(response.data.categories),
-  ];
+  return data;
 }

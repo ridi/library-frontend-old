@@ -38,9 +38,15 @@ class SearchBar extends React.Component {
     });
   };
 
+  handleFilterChange = filter => {
+    const { history, orderType, orderBy } = this.props;
+    const { to } = makeLinkProps({}, URLMap.main.as, { orderType, orderBy, filter });
+    history.push(to);
+  };
+
   render() {
     const { hideTools, keyword } = this.state;
-    const { filter, filterOptions, order, orderOptions, orderBy, orderType, toggleEditingMode, isSearchPage } = this.props;
+    const { filter, filterOptions, orderOptions, orderBy, orderType, toggleEditingMode, isSearchPage } = this.props;
 
     const left = (
       <div css={styles.searchBoxWrapper}>
@@ -56,9 +62,11 @@ class SearchBar extends React.Component {
     );
     const right = (
       <div css={styles.toolsWrapper}>
-        {filterOptions && <Filter filter={filter} filterOptions={filterOptions} query={{ orderType, orderBy }} />}
+        {filterOptions && <Filter filter={filter} filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />}
         {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
-        {orderOptions && <More order={order} orderOptions={orderOptions} query={{ filter }} showViewType showOrder showHidden />}
+        {orderOptions && (
+          <More orderOptions={orderOptions} orderType={orderType} orderBy={orderBy} query={{ filter }} showViewType showOrder showHidden />
+        )}
         {isSearchPage && (
           <Link {...makeLinkProps({}, URLMap.main.as)} css={styles.cancelSearchButton}>
             취소

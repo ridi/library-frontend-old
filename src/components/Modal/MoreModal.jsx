@@ -8,8 +8,9 @@ import { setViewType } from '../../services/ui/actions';
 import { makeLinkProps } from '../../utils/uri';
 
 const MoreModal = ({
-  order,
   orderOptions,
+  orderType,
+  orderBy,
   isActive,
   query,
   onClickModalBackground,
@@ -27,25 +28,25 @@ const MoreModal = ({
         <ul>
           <li>
             <ModalButtonItem
-              title="표지만 보기"
               isSelected={viewType === ViewType.PORTRAIT}
               onClick={() => {
                 onClickModalBackground();
                 dispatchSetViewType(ViewType.PORTRAIT);
               }}
-              replace
-            />
+            >
+              표지만 보기
+            </ModalButtonItem>
           </li>
           <li>
             <ModalButtonItem
-              title="목록 보기"
               isSelected={viewType === ViewType.LANDSCAPE}
               onClick={() => {
                 onClickModalBackground();
                 dispatchSetViewType(ViewType.LANDSCAPE);
               }}
-              replace
-            />
+            >
+              목록 보기
+            </ModalButtonItem>
           </li>
         </ul>
       </ModalItemGroup>
@@ -57,7 +58,9 @@ const MoreModal = ({
             const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderType: option.orderType, orderBy: option.orderBy });
             return (
               <li key={option.key}>
-                <ModalLinkItem title={option.title} isSelected={option.key === order} to={to} replace />
+                <ModalLinkItem isSelected={option.orderType === orderType && option.orderBy === orderBy} to={to} replace>
+                  {option.title}
+                </ModalLinkItem>
               </li>
             );
           })}
@@ -67,22 +70,23 @@ const MoreModal = ({
     {showHidden ? (
       <ModalItemGroup groupTitle="숨김 메뉴">
         <ModalButtonItem
-          title="만료 도서 모두 숨기기"
           onClick={() => {
             onClickModalBackground();
             dispatchConfirmHideAllExpiredBooks();
           }}
-          replace
-        />
+        >
+          만료 도서 모두 숨기기
+        </ModalButtonItem>
         <ModalLinkItem
-          title="숨긴 도서 목록"
           to={{
             pathname: URLMap.hidden.as,
             state: {
               backLocation: location,
             },
           }}
-        />
+        >
+          숨긴 도서 목록
+        </ModalLinkItem>
       </ModalItemGroup>
     ) : null}
   </Modal>

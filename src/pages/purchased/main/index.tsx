@@ -1,5 +1,5 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ButtonType } from '../../../components/ActionBar/constants';
@@ -16,40 +16,73 @@ import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
 import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { UnitType } from '../../../constants/unitType';
-import { URLMap } from '../../../constants/urls';
+import { BooksPageKind, PageType, URLMap } from '../../../constants/urls';
+import ViewType from '../../../constants/viewType';
 import { getUnits } from '../../../services/book/selectors';
+import { getFilterOptions } from '../../../services/purchased/filter/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import {
-  getFilterOptions,
-  getIsFetchingBooks,
-  getItemsByPage,
-  getTotalPages,
-  getUnitIdsByPage,
-} from '../../../services/purchased/main/selectors';
+import { getIsFetchingBooks, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import * as shelfActions from '../../../services/shelf/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
+import SearchIcon from '../../../svgs/Search.svg';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
 
-function extractPageOptions(location) {
+interface MainPageOptions {
+  kind: BooksPageKind.MAIN;
+  page: number;
+  orderType: string;
+  orderBy: string;
+  categoryFilter: number;
+}
+
+interface SearchPageOptions {
+  kind: BooksPageKind.SEARCH;
+  keyword: string;
+  page: number;
+}
+
+type PageOptions = MainPageOptions | SearchPageOptions;
+
+function extractPageOptions({ location, path }): PageOptions {
   const urlParams = new URLSearchParams(location.search);
-  const currentPage = parseInt(urlParams.get('page'), 10) || 1;
+  const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
   const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
-  return { page: currentPage, orderType, orderBy, categoryFilter };
+  const keyword = urlParams.get('keyword') || '';
+
+  switch (path) {
+    case URLMap[PageType.INDEX].path:
+    case URLMap[PageType.MAIN].path:
+      return {
+        kind: BooksPageKind.MAIN,
+        page,
+        orderType,
+        orderBy,
+        categoryFilter,
+      };
+    case URLMap[PageType.SEARCH].path:
+      return {
+        kind: BooksPageKind.SEARCH,
+        keyword,
+        page,
+      };
+    default:
+      throw new Error('Invalid page for Main');
+  }
 }
 
 function useDispatchOptions(actionDispatcher, options) {
-  const { page, orderType, orderBy, categoryFilter } = options;
-  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, page, orderType, orderBy, categoryFilter]);
+  const { kind, keyword, page, orderType, orderBy, categoryFilter } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, keyword, kind, page, orderType, orderBy, categoryFilter]);
 }
 
 function PurchasedMain(props) {
-  const { listInstruction, location, totalPages } = props;
+  const { listInstruction, location, match, totalPages } = props;
   const {
     dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
@@ -59,8 +92,8 @@ function PurchasedMain(props) {
     dispatchSelectAllBooks,
   } = props;
 
-  const pageOptions = extractPageOptions(location);
-  const { page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
+  const pageOptions = extractPageOptions({ location, ...match });
+  const currentPage = pageOptions.page;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [showShelves, setShowShelves] = React.useState(false);
@@ -72,18 +105,26 @@ function PurchasedMain(props) {
 
   const linkBuilder = React.useCallback(
     libraryBookData => {
-      const order = OrderOptions.toKey(orderType, orderBy);
-
+      let pathname = '';
       const params = new URLSearchParams();
-      if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-        params.append('order_type', orderType);
-        params.append('order_by', orderBy);
+      if (pageOptions.kind === BooksPageKind.MAIN) {
+        pathname = URLMap.mainUnit.as({ unitId: libraryBookData.unit_id });
+
+        const { orderType, orderBy } = pageOptions;
+        const order = OrderOptions.toKey(orderType, orderBy);
+        if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+          params.append('order_type', orderType);
+          params.append('order_by', orderBy);
+        }
+      } else {
+        pathname = URLMap.searchUnit.as({ unitId: libraryBookData.unit_id });
+        params.append('keyword', pageOptions.keyword);
       }
       const search = params.toString();
 
       // TODO: react-router 5.1 나오면 함수로 바꿀 것
       const to = {
-        pathname: URLMap.mainUnit.as({ unitId: libraryBookData.unit_id }),
+        pathname,
         search: search === '' ? '' : `?${search}`,
         state: {
           backLocation: location,
@@ -92,7 +133,7 @@ function PurchasedMain(props) {
 
       return <Link to={to}>더보기</Link>;
     },
-    [location, orderType, orderBy],
+    [location],
   );
 
   React.useEffect(() => {
@@ -128,27 +169,38 @@ function PurchasedMain(props) {
   }
 
   function getEmptyMessage() {
-    const order = OrderOptions.toKey(orderType, orderBy);
-
-    if (OrderOptions.EXPIRE_DATE.key === order) {
-      return '대여 중인 도서가 없습니다.';
+    if (pageOptions.kind === BooksPageKind.MAIN) {
+      const order = OrderOptions.toKey(pageOptions.orderType, pageOptions.orderBy);
+      if (OrderOptions.EXPIRE_DATE.key === order) {
+        return '대여 중인 도서가 없습니다.';
+      }
+      if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
+        return '만료된 도서가 없습니다.';
+      }
+      return '구매/대여하신 책이 없습니다.';
     }
-    if (OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-      return '만료된 도서가 없습니다.';
+    if (pageOptions.keyword === '') {
+      return '검색어를 입력해주세요.';
     }
-
-    return '구매/대여하신 책이 없습니다.';
+    return `'${pageOptions.keyword}'에 대한 검색 결과가 없습니다.`;
   }
 
   function renderMain() {
     const { isError } = props;
+
     if (isError) {
       return <BookError onClickRefreshButton={handleRefresh} />;
     }
 
     if (listInstruction === ListInstructions.EMPTY) {
-      return <Empty IconComponent={BookOutline} message={getEmptyMessage()} />;
+      const emptyProps = {
+        message: getEmptyMessage(),
+        IconComponent: pageOptions.kind === BooksPageKind.MAIN ? BookOutline : SearchIcon,
+        iconWidth: pageOptions.kind === BooksPageKind.MAIN ? 30 : 38,
+      };
+      return <Empty {...emptyProps} />;
     }
+
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
 
@@ -159,21 +211,27 @@ function PurchasedMain(props) {
     setIsEditing(!isEditing);
   }, [dispatchClearSelectedBooks, isEditing]);
   function renderSearchBar() {
-    const { filterOptions } = props;
-    const order = OrderOptions.toKey(orderType, orderBy);
-    const orderOptions = OrderOptions.toMainList();
+    let searchBarProps = {};
 
-    const searchBarProps = {
-      filter: categoryFilter,
-      filterOptions,
-      order,
-      orderOptions,
-      orderBy,
-      orderType,
-      toggleEditingMode,
-    };
+    if (pageOptions.kind === BooksPageKind.MAIN) {
+      const { filterOptions } = props;
+      const orderOptions = OrderOptions.toMainList();
 
-    return <SearchBar {...searchBarProps} />;
+      searchBarProps = {
+        filter: pageOptions.categoryFilter,
+        filterOptions,
+        orderOptions,
+        orderBy: pageOptions.orderBy,
+        orderType: pageOptions.orderType,
+      };
+    } else {
+      searchBarProps = {
+        isSearchPage: true,
+        keyword: pageOptions.keyword,
+      };
+    }
+
+    return <SearchBar toggleEditingMode={toggleEditingMode} {...searchBarProps} />;
   }
 
   function makeEditingBarProps() {
@@ -244,11 +302,20 @@ function PurchasedMain(props) {
     };
   }
 
+  let title;
+  if (pageOptions.kind === BooksPageKind.MAIN) {
+    title = '모든 책 - 내 서재';
+  } else if (pageOptions.keyword !== '') {
+    title = `'${pageOptions.keyword}' 검색 결과 - 내 서재`;
+  } else {
+    title = '검색 - 내 서재';
+  }
+
   if (showShelves) {
     return (
       <>
         <Helmet>
-          <title>모든 책 - 내 서재</title>
+          <title>{title}</title>
         </Helmet>
         <PageRedirect currentPage={currentPage} totalPages={totalPages} />
         <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />
@@ -259,7 +326,7 @@ function PurchasedMain(props) {
   return (
     <>
       <Helmet>
-        <title>모든 책 - 내 서재</title>
+        <title>{title}</title>
       </Helmet>
       <PageRedirect currentPage={currentPage} totalPages={totalPages} />
       <TabBar activeMenu={TabMenuTypes.ALL_BOOKS} />
@@ -271,7 +338,7 @@ function PurchasedMain(props) {
         actionBarProps={makeActionBarProps()}
       >
         <main>{renderMain()}</main>
-        <Footer />
+        {pageOptions.kind === BooksPageKind.MAIN && <Footer />}
       </Editable>
       <BookDownLoader />
     </>
@@ -279,8 +346,8 @@ function PurchasedMain(props) {
 }
 
 const mapStateToProps = (state, props) => {
-  const pageOptions = extractPageOptions(props.location);
-
+  const { location, match } = props;
+  const pageOptions = extractPageOptions({ location, ...match });
   const totalPages = getTotalPages(state, pageOptions);
   const filterOptions = getFilterOptions(state);
   const items = getItemsByPage(state, pageOptions);
@@ -304,7 +371,7 @@ const mapStateToProps = (state, props) => {
     units,
     totalSelectedCount,
     listInstruction,
-    viewType: state.ui.viewType,
+    viewType: pageOptions.kind === BooksPageKind.MAIN ? state.ui.viewType : ViewType.LANDSCAPE,
     isError: state.ui.isError,
   };
 };

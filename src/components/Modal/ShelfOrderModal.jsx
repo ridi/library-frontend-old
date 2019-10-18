@@ -7,12 +7,13 @@ const ShelfOrderModal = ({ order, orderOptions, isActive, onClickModalBackground
         {orderOptions.map(option => (
           <li key={option.key}>
             <ModalButtonItem
-              title={option.title}
               isSelected={option.key === order}
               onClick={() => {
                 onClickOrderOption(option);
               }}
-            />
+            >
+              {option.title}
+            </ModalButtonItem>
           </li>
         ))}
       </ul>

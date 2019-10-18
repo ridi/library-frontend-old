@@ -1,6 +1,6 @@
-import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { UnitType } from '../../../constants/unitType';
-import { URLMap } from '../../../constants/urls';
+import { BooksPageKind, URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
 import { loadBookData, loadUnitData } from '../../book/sagas';
@@ -14,6 +14,8 @@ import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
+import { fetchPurchaseCategories } from '../filter/requests';
+import { setFilterOptions } from '../filter/actions';
 import {
   DOWNLOAD_SELECTED_MAIN_BOOKS,
   HIDE_SELECTED_MAIN_BOOKS,
@@ -22,20 +24,31 @@ import {
   setIsFetchingBooks,
   updateItems,
 } from './actions';
-import { fetchMainItems, fetchMainItemsTotalCount, fetchPurchaseCategories } from './requests';
+import { fetchMainItems, fetchMainItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';
 
-function* loadMainItemsWithPageOptions(pageOptions) {
-  // Clear Error
+function* loadMainItems(action) {
   yield put(setError(false));
 
-  const { page: currentPage, orderType, orderBy, categoryFilter } = pageOptions;
+  const { pageOptions } = action.payload;
+
+  if (pageOptions.kind === BooksPageKind.SEARCH && !pageOptions.keyword) {
+    yield put(setIsFetchingBooks(false));
+    return;
+  }
+
+  let categoryTask;
+  if (pageOptions.kind === BooksPageKind.MAIN) {
+    categoryTask = yield fork(function* loadCategories() {
+      const categories = yield call(fetchPurchaseCategories);
+      yield put(setFilterOptions(categories));
+    });
+  }
+
   try {
-    const [itemResponse, countResponse, categories] = yield all([
-      call(fetchMainItems, orderType, orderBy, categoryFilter, currentPage),
-      call(fetchMainItemsTotalCount, orderType, orderBy, categoryFilter),
-      call(fetchPurchaseCategories),
-    ]);
+    yield put(setIsFetchingBooks(true));
+
+    const [itemResponse, countResponse] = yield all([call(fetchMainItems, pageOptions), call(fetchMainItemsTotalCount, pageOptions)]);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
     if (!itemResponse.items.length && countResponse.unit_total_count) {
@@ -52,10 +65,12 @@ function* loadMainItemsWithPageOptions(pageOptions) {
         items: itemResponse.items,
         unitTotalCount: countResponse.unit_total_count,
         itemTotalCount: countResponse.item_total_count,
-        filterOptions: categories,
       }),
     );
     yield fork(loadRecentlyUpdatedData, bookIds);
+    if (categoryTask != null) {
+      yield join(categoryTask);
+    }
   } catch (err) {
     console.error(err);
     yield put(setError(true));
@@ -63,13 +78,8 @@ function* loadMainItemsWithPageOptions(pageOptions) {
   yield put(setIsFetchingBooks(false));
 }
 
-function* loadMainItems(action) {
-  yield call(loadMainItemsWithPageOptions, action.payload.pageOptions);
-}
-
 function* hideSelectedBooks(action) {
   const { pageOptions } = action.payload;
-  const { orderType, orderBy } = pageOptions;
 
   yield put(setFullScreenLoading(true));
   const items = yield select(getItems, pageOptions);
@@ -77,7 +87,7 @@ function* hideSelectedBooks(action) {
 
   let queueIds;
   try {
-    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), pageOptions);
     const revision = yield call(getRevision);
     queueIds = yield call(requestHide, bookIds, revision);
   } catch (err) {
@@ -98,7 +108,7 @@ function* hideSelectedBooks(action) {
   }
 
   if (isFinish) {
-    yield call(loadMainItemsWithPageOptions, pageOptions);
+    yield call(loadMainItems, action);
   }
 
   yield all([
@@ -115,13 +125,12 @@ function* hideSelectedBooks(action) {
 
 function* downloadSelectedBooks(action) {
   const { pageOptions } = action.payload;
-  const { orderType, orderBy } = pageOptions;
 
   const items = yield select(getItems, pageOptions);
   const selectedBooks = yield select(getSelectedItems);
 
   try {
-    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), orderType, orderBy);
+    const bookIds = yield call(getBookIdsByItems, items, Object.keys(selectedBooks), pageOptions);
     yield call(downloadBooks, bookIds);
   } catch (err) {
     let message = '일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';

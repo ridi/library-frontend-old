@@ -1,4 +1,4 @@
-import { Book } from '@ridi/web-ui/dist/index.node';
+import { Book } from '@ridi/web-ui';
 import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';

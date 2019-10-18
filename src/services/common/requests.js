@@ -3,6 +3,7 @@ import { all, call, put } from 'redux-saga/effects';
 import config from '../../config';
 import { getAPI } from '../../api/actions';
 import { OrderType } from '../../constants/orderOptions';
+import { BooksPageKind } from '../../constants/urls';
 
 import { makeURI } from '../../utils/uri';
 import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
@@ -47,7 +48,7 @@ export function* requestCheckQueueStatus(queueIds) {
   return yield _request(queueIds);
 }
 
-export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
+export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy }) {
   if (unitIds.length === 0) {
     return {};
   }
@@ -55,17 +56,23 @@ export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
   const query = {
     unitIds,
   };
+  let endpoint = '';
 
-  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-    query.expiredBooksOnly = true;
+  if (kind === BooksPageKind.HIDDEN) {
+    endpoint = '/items/hidden/fields/b_ids/';
   } else {
-    query.orderType = orderType;
-    query.orderBy = orderBy;
+    endpoint = '/items/fields/b_ids/';
+    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+      query.expiredBooksOnly = true;
+    } else {
+      query.orderType = orderType;
+      query.orderBy = orderBy;
+    }
   }
 
   const api = yield put(getAPI());
   try {
-    const response = yield api.get(makeURI('/items/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
+    const response = yield api.get(makeURI(endpoint, query, config.LIBRARY_API_BASE_URL));
     return response.data.result;
   } catch (err) {
     throw new MakeBookIdsError();
@@ -73,21 +80,7 @@ export function* requestGetBookIdsByUnitIds(orderType, orderBy, unitIds) {
 }
 
 export function* requestGetBookIdsByUnitIdsForHidden(unitIds) {
-  if (unitIds.length === 0) {
-    return {};
-  }
-
-  const query = {
-    unitIds,
-  };
-
-  const api = yield put(getAPI());
-  try {
-    const response = yield api.get(makeURI('/items/hidden/fields/b_ids/', query, config.LIBRARY_API_BASE_URL));
-    return response.data.result;
-  } catch (err) {
-    throw new MakeBookIdsError();
-  }
+  return yield call(requestGetBookIdsByUnitIds, unitIds, { kind: BooksPageKind.HIDDEN });
 }
 
 export function* requestUnhide(bookIds, revision) {

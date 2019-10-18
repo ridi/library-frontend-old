@@ -23,7 +23,6 @@ const mainReducer = produce((draft, action) => {
       draft.data[key].itemIdsForPage[page] = toFlatten(action.payload.items, 'b_id');
       draft.data[key].unitTotalCount = action.payload.unitTotalCount;
       draft.data[key].itemTotalCount = action.payload.itemTotalCount;
-      draft.filter.options = action.payload.filterOptions;
       break;
     case SET_MAIN_IS_FETCHING_BOOKS:
       draft.isFetchingBooks = action.payload.isFetchingBooks;

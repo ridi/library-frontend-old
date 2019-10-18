@@ -1,17 +1,7 @@
-import { OrderOptions } from '../../../constants/orderOptions';
+import { OrderOptions } from 'constants/orderOptions';
+import { BooksPageKind } from 'constants/urls';
 
 export const initialState = {
-  // 공용
-  filter: {
-    options: [
-      {
-        title: '전체 카테고리',
-        value: null,
-        hasChildren: false,
-        children: null,
-      },
-    ],
-  },
   data: {},
   isFetchingBooks: false,
 };
@@ -24,7 +14,13 @@ export const createInitialDataState = () => ({
 });
 
 export function mapPageOptionsToKey(pageOptions) {
-  const { orderType, orderBy, categoryFilter } = pageOptions;
-  const order = OrderOptions.toKey(orderType, orderBy);
-  return `${categoryFilter}_${order}`;
+  const { kind, keyword, orderType, orderBy, categoryFilter } = pageOptions;
+  let key = '';
+  if (kind === BooksPageKind.MAIN) {
+    const order = OrderOptions.toKey(orderType, orderBy);
+    key = `${categoryFilter}_${order}`;
+  } else if (kind === BooksPageKind.SEARCH) {
+    key = keyword;
+  }
+  return `${kind}_${key}`;
 }

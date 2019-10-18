@@ -38,7 +38,7 @@ jobs:
     parameters:
       env:
         type: string
-        default: prod
+        default: production
     steps:
       - checkout
       - install
@@ -48,7 +48,7 @@ jobs:
             NODE_ENV: <<parameters.env>>
           command: |
             SENTRY_RELEASE_VERSION="${CIRCLE_SHA1}" \
-              yarn build webpack.<<parameters.env>>.js
+              yarn build <<parameters.env>>
       - persist_to_workspace:
           root: .
           paths:
@@ -97,12 +97,6 @@ jobs:
                 aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
-            - aws-s3/copy:
-                from: ${S3_BUCKET_DEV}/static/maintenance.json
-                to: ${S3_BUCKET_DEV}/static/maintenance.json
-                aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
-                arguments: ${S3_RELEASE_PARAMS}
             - slack/notify:
                 color: good
                 message: $GIT_COMMIT_MESSAGE
@@ -116,19 +110,13 @@ jobs:
           steps:
             - aws-s3/sync:
                 from: dist
-                to: ${S3_BUCKET_PROD}/staging/
+                to: ${S3_BUCKET_PROD}/
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: --exclude "*.map" ${S3_ASSETS_PARAMS}
             - aws-s3/copy:
-                from: ${S3_BUCKET_PROD}/staging/index.html
-                to: ${S3_BUCKET_PROD}/staging/index.html
-                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-                arguments: ${S3_RELEASE_PARAMS}
-            - aws-s3/copy:
-                from: ${S3_BUCKET_PROD}/staging/static/maintenance.json
-                to: ${S3_BUCKET_PROD}/staging/static/maintenance.json
+                from: ${S3_BUCKET_PROD}/staging.html
+                to: ${S3_BUCKET_PROD}/staging.html
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
@@ -144,12 +132,6 @@ jobs:
             - aws-s3/copy:
                 from: ${S3_BUCKET_PROD}/index.html
                 to: ${S3_BUCKET_PROD}/index.html
-                aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-                aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-                arguments: ${S3_RELEASE_PARAMS}
-            - aws-s3/copy:
-                from: ${S3_BUCKET_PROD}/static/maintenance.json
-                to: ${S3_BUCKET_PROD}/static/maintenance.json
                 aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
                 aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
                 arguments: ${S3_RELEASE_PARAMS}
