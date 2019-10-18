@@ -3,7 +3,6 @@ import { BooksPageKind } from 'constants/urls';
 
 export const initialState = {
   data: {},
-  isFetchingBooks: false,
 };
 
 export const createInitialDataState = () => ({

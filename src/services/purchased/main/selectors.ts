@@ -51,4 +51,8 @@ export const getTotalPages = createSelector(
   dataState => calcPage(dataState.unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
-export const getIsFetchingBooks = state => state.purchasedMain.isFetchingBooks;
+export const getIsPageCold = createCachedSelector(
+  getDataState,
+  (_, pageOptions) => pageOptions.page,
+  (dataState, page) => dataState.itemIdsForPage[page] == null,
+)((_, pageOptions) => pageOptions.page);

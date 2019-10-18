@@ -19,7 +19,7 @@ import ViewType from '../../../constants/viewType';
 import { getUnits } from '../../../services/book/selectors';
 import { getFilterOptions } from '../../../services/purchased/filter/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import { getIsFetchingBooks, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
+import { getIsPageCold, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
 import { clearSelectedItems } from '../../../services/selection/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
 import BookOutline from '../../../svgs/BookOutline.svg';
@@ -318,13 +318,12 @@ const mapStateToProps = (state, props) => {
   const unitIds = getUnitIdsByPage(state, pageOptions);
   const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
-  const isFetchingBooks = getIsFetchingBooks(state);
 
   let listInstruction;
-  if (items.length !== 0) {
-    listInstruction = ListInstructions.SHOW;
-  } else if (isFetchingBooks) {
+  if (getIsPageCold(state, pageOptions)) {
     listInstruction = ListInstructions.SKELETON;
+  } else if (items.length !== 0) {
+    listInstruction = ListInstructions.SHOW;
   } else {
     listInstruction = ListInstructions.EMPTY;
   }
