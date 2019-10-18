@@ -1,5 +1,4 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
-import { UnitType } from '../../../constants/unitType';
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -129,8 +128,7 @@ function* deleteSelectedBooks(action) {
 function* selectAllBooks(action) {
   const { page } = action.payload;
   const items = yield select(getItemsByPage, page);
-  const filteredItems = items.filter(item => !UnitType.isCollection(item.unit_type));
-  const bookIds = toFlatten(filteredItems, 'b_id');
+  const bookIds = toFlatten(items, 'b_id');
   yield put(selectItems(bookIds));
 }
 

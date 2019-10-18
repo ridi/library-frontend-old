@@ -65,10 +65,6 @@ export const loadBookDataFromStorage = () => ({
   type: LOAD_BOOK_DATA_FROM_STORAGE,
 });
 
-export const showShelfBookAlertToast = () => ({
-  type: SHOW_SHELF_BOOK_ALERT_TOAST,
-});
-
 export const loadBookData = bookIds => ({
   type: LOAD_BOOK_DATA,
   payload: {
