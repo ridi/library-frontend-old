@@ -9,8 +9,8 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 
 function makeCommonOptions({ kind, keyword, orderType, orderBy, categoryFilter }) {
   const options = {};
+  options.category = categoryFilter;
   if (kind === BooksPageKind.MAIN) {
-    options.category = categoryFilter;
     if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
       options.expiredBooksOnly = true;
     } else {
