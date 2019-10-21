@@ -13,7 +13,6 @@ import uiRootSaga from '../services/ui/sagas';
 import unitPageRootSaga from '../services/unitPage/sagas';
 import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
-import trackingRootSaga from '../services/tracking/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -30,7 +29,6 @@ export default function* rootSaga() {
     unitPageRootSaga(),
     shelfRootSaga(),
     toastRootSaga(),
-    trackingRootSaga(),
     bookDownloadRootSaga(),
   ]);
 }
