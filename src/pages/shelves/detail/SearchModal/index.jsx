@@ -64,7 +64,7 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
         setSearchItems(items);
       }
     },
-    [categoryFilter, keyword],
+    [categoryFilter, searchingKeyword],
   );
 
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
