@@ -15,14 +15,7 @@ import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
 import { fetchPurchaseCategories } from '../filter/requests';
 import { setFilterOptions } from '../filter/actions';
-import {
-  DOWNLOAD_SELECTED_MAIN_BOOKS,
-  HIDE_SELECTED_MAIN_BOOKS,
-  LOAD_MAIN_ITEMS,
-  SELECT_ALL_MAIN_BOOKS,
-  setIsFetchingBooks,
-  updateItems,
-} from './actions';
+import { DOWNLOAD_SELECTED_MAIN_BOOKS, HIDE_SELECTED_MAIN_BOOKS, LOAD_MAIN_ITEMS, SELECT_ALL_MAIN_BOOKS, updateItems } from './actions';
 import { fetchMainItems, fetchMainItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';
 
@@ -32,7 +25,6 @@ function* loadMainItems(action) {
   const { pageOptions } = action.payload;
 
   if (pageOptions.kind === BooksPageKind.SEARCH && !pageOptions.keyword) {
-    yield put(setIsFetchingBooks(false));
     return;
   }
 
@@ -45,8 +37,6 @@ function* loadMainItems(action) {
   }
 
   try {
-    yield put(setIsFetchingBooks(true));
-
     const [itemResponse, countResponse] = yield all([call(fetchMainItems, pageOptions), call(fetchMainItemsTotalCount, pageOptions)]);
 
     // 전체 데이터가 있는데 데이터가 없는 페이지에 오면 1페이지로 이동한다.
@@ -74,7 +64,6 @@ function* loadMainItems(action) {
     console.error(err);
     yield put(setError(true));
   }
-  yield put(setIsFetchingBooks(false));
 }
 
 function* hideSelectedBooks(action) {

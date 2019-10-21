@@ -45,10 +45,3 @@ export const downloadSelectedBooks = pageOptions => ({
     pageOptions,
   },
 });
-
-export const setIsFetchingBooks = isFetchingBooks => ({
-  type: SET_MAIN_IS_FETCHING_BOOKS,
-  payload: {
-    isFetchingBooks,
-  },
-});
