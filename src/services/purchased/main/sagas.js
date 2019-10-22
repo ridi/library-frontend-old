@@ -23,10 +23,6 @@ function* loadMainItems(action) {
 
   const { pageOptions } = action.payload;
 
-  if (pageOptions.kind === BooksPageKind.SEARCH && !pageOptions.keyword) {
-    return;
-  }
-
   let categoryTask;
   if (pageOptions.kind === BooksPageKind.MAIN) {
     categoryTask = yield fork(updateCategories);
