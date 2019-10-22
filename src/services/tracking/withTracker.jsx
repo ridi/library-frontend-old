@@ -1,7 +1,6 @@
 import { DeviceType, Tracker } from '@ridi/event-tracker';
 import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { useSelector } from 'react-redux';
 import config from '../../config';
 
 let tracker;
@@ -39,9 +38,11 @@ const trackPage = (page, account) => {
   }
 };
 
-const withTracker = WrappedComponent => {
+export default function withTracker(WrappedComponent) {
+  const account = useSelector(state => state.account);
   const HOC = props => {
-    const { location, account } = props;
+    const { location } = props;
+
     React.useEffect(() => {
       trackPage(location.pathname, account);
     }, [location.pathname]);
@@ -50,16 +51,4 @@ const withTracker = WrappedComponent => {
   };
 
   return HOC;
-};
-
-const mapStateToProps = state => ({
-  account: state.account,
-});
-
-export default compose(
-  connect(
-    mapStateToProps,
-    null,
-  ),
-  withTracker,
-);
+}
