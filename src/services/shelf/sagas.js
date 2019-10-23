@@ -1,5 +1,6 @@
 import lodashChunk from 'lodash.chunk';
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
+import { trackEvent } from 'services/tracking/actions';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { ITEMS_LIMIT_PER_SHELF, SHELF_OPERATION_LIMIT, SHELF_ITEM_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
@@ -200,6 +201,14 @@ function* addShelf({ payload }) {
     const uuid = uuidv4();
     const results = yield call(performOperation, OperationType.ADD_SHELF, { uuid, name });
     if (results[0].result === OperationStatus.DONE) {
+      yield put(
+        trackEvent({
+          eventName: 'make_shelf',
+          trackingParams: {
+            shelf_id: uuid,
+          },
+        }),
+      );
       break;
     }
   }
@@ -215,7 +224,15 @@ function* renameShelf({ payload }) {
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(uiActions.setFullScreenLoading(false));
   if (results[0].result === OperationStatus.DONE) {
-    yield all([put(actions.setShelfInfo({ uuid, name })), put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' }))]);
+    yield all([
+      put(actions.setShelfInfo({ uuid, name })),
+      put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' })),
+      put(
+        trackEvent({
+          eventName: 'modify_shelf_name',
+        }),
+      ),
+    ]);
   } else {
     yield put(toastActions.showToast({ message: '책장 이름 변경에 실패했습니다.', toastStyle: ToastStyle.RED }));
   }
@@ -244,6 +261,14 @@ function* deleteShelves({ payload }) {
       ),
       put(actions.loadShelves(pageOptions)),
       put(actions.loadShelfCount()),
+      put(
+        trackEvent({
+          eventName: 'delete_shelf',
+          trackingParams: {
+            shelf_id: uuids,
+          },
+        }),
+      ),
     ]);
   } catch (err) {
     yield put(
@@ -265,7 +290,17 @@ function* addShelfItem({ payload }) {
   }));
   yield call(performOperation, OperationType.ADD_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
-  yield put(actions.loadShelfBookCount(uuid));
+  yield all([
+    put(actions.loadShelfBookCount(uuid)),
+    put(
+      trackEvent({
+        eventName: 'add_book',
+        trackingParams: {
+          book_id: ops.map(op => op.bookIds).flat(),
+        },
+      }),
+    ),
+  ]);
 }
 
 function* deleteShelfItem({ payload }) {
@@ -277,7 +312,17 @@ function* deleteShelfItem({ payload }) {
   }));
   yield call(performOperation, OperationType.DELETE_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
-  yield put(actions.loadShelfBookCount(uuid));
+  yield all([
+    put(actions.loadShelfBookCount(uuid)),
+    put(
+      trackEvent({
+        eventName: 'delete_book',
+        trackingParams: {
+          book_id: ops.map(op => op.bookIds).flat(),
+        },
+      }),
+    ),
+  ]);
 }
 
 function* deleteShelfFromDetail({ payload }) {
@@ -290,6 +335,14 @@ function* deleteShelfFromDetail({ payload }) {
     put(
       toastActions.showToast({
         message: '책장을 삭제했습니다.',
+      }),
+    ),
+    put(
+      trackEvent({
+        eventName: 'delete_shelf',
+        trackingParams: {
+          shelf_id: uuid,
+        },
       }),
     ),
   ]);

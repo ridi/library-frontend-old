@@ -36,7 +36,7 @@ function* watchTrackPage({ payload }) {
   }
 }
 
-function* watchTrackClick({ payload }) {
+function* watchTrackEvent({ payload }) {
   const { eventName, trackingParams } = payload;
   if (!tracker) yield call(initializeTracker);
   tracker.sendEvent(eventName, trackingParams);
@@ -46,6 +46,6 @@ export default function* trackingRootSaga() {
   yield all([
     takeEvery(actions.INIT_TRACKER, initializeTracker),
     takeEvery(actions.TRACK_PAGE, watchTrackPage),
-    takeEvery(actions.TRACK_CLICK, watchTrackClick),
+    takeEvery(actions.TRACK_EVENT, watchTrackEvent),
   ]);
 }
