@@ -37,10 +37,9 @@ function* watchTrackPage({ payload }) {
 }
 
 function* watchTrackClick({ payload }) {
-  const { trackingParams } = payload;
+  const { eventName, trackingParams } = payload;
   if (!tracker) yield call(initializeTracker);
-  tracker.sendEvent('Click', payload.trackingParams);
-  console.log('click!', trackingParams);
+  tracker.sendEvent(eventName, trackingParams);
 }
 
 export default function* trackingRootSaga() {

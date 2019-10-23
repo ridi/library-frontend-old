@@ -13,9 +13,10 @@ export const trackPage = pathName => ({
   },
 });
 
-export const trackClick = trackingParams => ({
+export const trackClick = ({ eventName, trackingParams }) => ({
   type: 'TRACK_CLICK',
   payload: {
+    eventName: eventName || 'Click',
     trackingParams,
   },
 });
