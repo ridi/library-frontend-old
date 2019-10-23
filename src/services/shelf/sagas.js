@@ -1,6 +1,7 @@
 import lodashChunk from 'lodash.chunk';
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import { trackEvent } from 'services/tracking/actions';
+import { EventNames } from 'services/tracking/constants';
 import uuidv4 from 'uuid/v4';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { ITEMS_LIMIT_PER_SHELF, SHELF_OPERATION_LIMIT, SHELF_ITEM_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
@@ -203,7 +204,7 @@ function* addShelf({ payload }) {
     if (results[0].result === OperationStatus.DONE) {
       yield put(
         trackEvent({
-          eventName: 'make_shelf',
+          eventName: EventNames.MAKE_SHELF,
           trackingParams: {
             shelf_id: uuid,
           },
@@ -229,7 +230,7 @@ function* renameShelf({ payload }) {
       put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' })),
       put(
         trackEvent({
-          eventName: 'modify_shelf_name',
+          eventName: EventNames.MODIFY_SHELF_NAME,
         }),
       ),
     ]);
@@ -263,7 +264,7 @@ function* deleteShelves({ payload }) {
       put(actions.loadShelfCount()),
       put(
         trackEvent({
-          eventName: 'delete_shelf',
+          eventName: EventNames.DELETE_SHELF,
           trackingParams: {
             shelf_id: uuids,
           },
@@ -294,7 +295,7 @@ function* addShelfItem({ payload }) {
     put(actions.loadShelfBookCount(uuid)),
     put(
       trackEvent({
-        eventName: 'add_book',
+        eventName: EventNames.ADD_BOOK,
         trackingParams: {
           book_id: ops.map(op => op.bookIds).flat(),
         },
@@ -316,7 +317,7 @@ function* deleteShelfItem({ payload }) {
     put(actions.loadShelfBookCount(uuid)),
     put(
       trackEvent({
-        eventName: 'delete_book',
+        eventName: EventNames.DELETE_BOOK,
         trackingParams: {
           book_id: ops.map(op => op.bookIds).flat(),
         },
@@ -339,7 +340,7 @@ function* deleteShelfFromDetail({ payload }) {
     ),
     put(
       trackEvent({
-        eventName: 'delete_shelf',
+        eventName: EventNames.DELETE_SHELF,
         trackingParams: {
           shelf_id: uuid,
         },
