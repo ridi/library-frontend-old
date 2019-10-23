@@ -20,7 +20,7 @@ const _reduceBooks = books =>
     file: book.file,
     thumbnail: book.thumbnail,
     property: book.property,
-    authors: book.authors,
+    authorsOrdered: book.authors_ordered,
     series: book.series,
     setbook: book.setbook,
     support: {
