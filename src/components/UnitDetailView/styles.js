@@ -67,7 +67,7 @@ export const authorList = {
 export const authorDelimiter = {
   width: 1,
   height: 10,
-  margin: '0 2px',
+  margin: '0 6px',
   backgroundColor: '#d1d5d9',
   display: 'inline-block',
 };

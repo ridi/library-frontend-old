@@ -200,15 +200,15 @@ class UnitDetailView extends React.Component {
   }
 
   renderAuthors() {
-    const { unit, book } = this.props;
-    const bookMetadata = new BookMetaData(book, unit);
+    const { bookMetadata } = this.props;
+    const { authors } = bookMetadata;
 
     return (
       <div css={styles.authorList}>
-        {bookMetadata.authors.map((author, index) => (
-          <React.Fragment key={`a-f-${author}`}>
-            <span key={`a-s-${author}`}>{` ${author} `}</span>
-            {bookMetadata.authors.length !== index + 1 ? <span key={`a-s-delimiter-${author}`} css={styles.authorDelimiter} /> : null}
+        {authors.map((author, index) => (
+          <React.Fragment key={author}>
+            <span>{author}</span>
+            {authors.length !== index + 1 ? <span css={styles.authorDelimiter} /> : null}
           </React.Fragment>
         ))}
       </div>

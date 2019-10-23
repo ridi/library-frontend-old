@@ -84,7 +84,7 @@ const refineBookData = ({
   };
   const landscapeBookProps = {
     title,
-    author: bookMetaData.authorSimple,
+    author: bookMetaData.authorsSimple,
     thumbnailWidth: 60,
     expiredAt,
   };

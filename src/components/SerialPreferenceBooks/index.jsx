@@ -46,7 +46,7 @@ const toProps = ({
       {genre}
       {isBL && categoryName ? ` ${categoryName}` : ''}
       <span css={serialPreferenceStyles.authorFieldSeparator} key={`${platformBookData.id}-a-f-s`} />
-      {bookMetaData.authorSimple}
+      {bookMetaData.authorsSimple}
     </>
   );
 
