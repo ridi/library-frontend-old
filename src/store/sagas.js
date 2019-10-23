@@ -1,4 +1,5 @@
 import { all } from 'redux-saga/effects';
+import trackingRootSaga from 'services/tracking/sagas';
 import accountRootSaga from '../services/account/sagas';
 import bookRootSaga from '../services/book/sagas';
 import bookDownloadRootSaga from '../services/bookDownload/sagas';
@@ -9,10 +10,10 @@ import filterRootSaga from '../services/purchased/filter/sagas';
 import purchasedHiddenSaga from '../services/purchased/hidden/sagas';
 import purchasedMainRootSaga from '../services/purchased/main/sagas';
 import serialPreferenceRootSaga from '../services/serialPreference/sagas';
-import uiRootSaga from '../services/ui/sagas';
-import unitPageRootSaga from '../services/unitPage/sagas';
 import shelfRootSaga from '../services/shelf/sagas';
 import toastRootSaga from '../services/toast/sagas';
+import uiRootSaga from '../services/ui/sagas';
+import unitPageRootSaga from '../services/unitPage/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -29,6 +30,7 @@ export default function* rootSaga() {
     unitPageRootSaga(),
     shelfRootSaga(),
     toastRootSaga(),
+    trackingRootSaga(),
     bookDownloadRootSaga(),
   ]);
 }

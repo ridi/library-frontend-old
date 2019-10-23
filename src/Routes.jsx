@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import withTracker from 'src/services/tracking/withTracker';
 
 const NotFound = React.lazy(() => import('./pages/errors/notFound'));
 const Login = React.lazy(() => import('./pages/login'));
@@ -75,10 +74,9 @@ const routes = [
 export default function Routes() {
   return (
     <Switch>
-      {routes.map(props => {
-        const { component, ...extraProps } = props;
-        return <Route key={JSON.stringify(props)} component={withTracker(component)} {...extraProps} />;
-      })}
+      {routes.map(props => (
+        <Route key={JSON.stringify(props)} {...props} />
+      ))}
     </Switch>
   );
 }
