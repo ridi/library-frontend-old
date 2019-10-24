@@ -29,8 +29,11 @@ export const setRecentlyUpdatedData = recentlyUpdatedData => ({
   },
 });
 
-export const confirmHideAllExpiredBooks = () => ({
+export const confirmHideAllExpiredBooks = history => ({
   type: CONFIRM_HIDE_ALL_EXPIRED_BOOKS,
+  payload: {
+    history,
+  },
 });
 
 export const setPrimaryBookId = (unitId, primaryBookId) => ({
