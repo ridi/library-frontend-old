@@ -1,7 +1,7 @@
 import { channel } from 'redux-saga';
 import { all, call, delay, put, take } from 'redux-saga/effects';
 import { OrderOptions } from '../../../../constants/orderOptions';
-import { URLMap } from '../../../../constants/urls';
+import { URLMap, BooksPageKind } from '../../../../constants/urls';
 import { makeLinkProps } from '../../../../utils/uri';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../../common/requests';
 import { getBookIdsByUnitIds } from '../../../common/sagas';
@@ -15,20 +15,25 @@ import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT
 import { NotFoundExpiredBooksError } from '../errors';
 
 const confirmChannel = channel();
+const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
+const expiredBookOnlyOrderOptions = {
+  orderType,
+  orderBy,
+  kind: BooksPageKind.MAIN,
+};
 
 function* getExpiredBookIds() {
-  const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
   let bookIds = [];
 
   let index = 1;
   while (true) {
-    const itemResponse = yield call(fetchMainItems, orderType, orderBy, null, index);
+    const itemResponse = yield call(fetchMainItems, { ...expiredBookOnlyOrderOptions, page: index });
     if (itemResponse.items.length === 0) {
       break;
     }
 
     const unitIds = itemResponse.items.map(item => item.unit_id);
-    const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, orderType, orderBy);
+    const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, expiredBookOnlyOrderOptions);
 
     bookIds = bookIds.concat(bookIdsInUnit);
 
@@ -43,8 +48,7 @@ function* getExpiredBookIds() {
 }
 
 function* checkQueueIsDone(queueIds) {
-  const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
-  const countResponse = yield call(fetchMainItemsTotalCount, orderType, orderBy, null);
+  const countResponse = yield call(fetchMainItemsTotalCount, expiredBookOnlyOrderOptions);
 
   // 이 후에 또 할게 있으면 반영 완료되어야 한다.
   const shouldComplete = countResponse.itemTotalCount > queueIds.length;
@@ -102,7 +106,7 @@ function* internalHideAllExpiredBooks() {
   return isFinish;
 }
 
-export function* hideAllExpiredBooks() {
+export function* hideAllExpiredBooks(history) {
   yield put(setFullScreenLoading(true));
 
   try {
@@ -129,11 +133,13 @@ export function* hideAllExpiredBooks() {
       put(setFullScreenLoading(false)),
     ]);
   } finally {
+    history.push('/');
     // Router.replace(URLMap.main.href, URLMap.main.as);
   }
 }
 
-export function* confirmHideAllExpiredBooks() {
+export function* confirmHideAllExpiredBooks({ payload }) {
+  const { history } = payload;
   yield put(setFullScreenLoading(true));
   const bookIds = yield call(getExpiredBookIds);
   yield put(setFullScreenLoading(false));
@@ -152,7 +158,7 @@ export function* confirmHideAllExpiredBooks() {
       }),
     );
     const action = yield take(confirmChannel);
-    if (action.type === HIDE_ALL_EXPIRED_BOOKS) yield call(hideAllExpiredBooks);
+    if (action.type === HIDE_ALL_EXPIRED_BOOKS) yield call(hideAllExpiredBooks, history);
   } else {
     yield put(showToast({ message: '만료된 도서가 없습니다.' }));
   }

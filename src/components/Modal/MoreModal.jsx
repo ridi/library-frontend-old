@@ -8,6 +8,7 @@ import { setViewType } from '../../services/ui/actions';
 import { makeLinkProps } from '../../utils/uri';
 
 const MoreModal = ({
+  history,
   orderOptions,
   orderType,
   orderBy,
@@ -72,7 +73,7 @@ const MoreModal = ({
         <ModalButtonItem
           onClick={() => {
             onClickModalBackground();
-            dispatchConfirmHideAllExpiredBooks();
+            dispatchConfirmHideAllExpiredBooks(history);
           }}
         >
           만료 도서 모두 숨기기
