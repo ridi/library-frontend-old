@@ -128,7 +128,6 @@ module.exports = (env = 'dev') => {
         template: './src/index.ejs',
         filename: indexName,
         libraryBaseUrl: settings.base_url,
-        storeStaticUrl: settings.store_static_base_url,
       }),
       new ForkTsCheckerWebpackPlugin(),
       new WebpackBar(),
