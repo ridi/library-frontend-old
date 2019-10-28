@@ -17,6 +17,5 @@
   "static_url": "https://library.ridicdn.net/",
   "store_api_base_url": "https://ridibooks.com/",
   "store_base_url": "https://ridibooks.com/",
-  "store_static_base_url": "https://static.ridibooks.com/",
   "viewer_api_base_url": "https://ridibooks.com/"
 }
