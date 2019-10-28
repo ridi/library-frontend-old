@@ -108,22 +108,42 @@ class SeriesList extends React.Component {
     const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
       // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && platformBookData.support.web_viewer) {
-        return <a href={makeWebViewerUri(platformBookData.id, locationHref)}>웹뷰어로 보기</a>;
+        return (
+          <a href={makeWebViewerUri(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
+            웹뷰어로 보기
+          </a>
+        );
       }
 
       // 구매한 책이면 책의 서비스에 따라 이동
       if (libraryBookData.purchased) {
         if (libraryBookData.is_ridiselect) {
-          return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
+          return (
+            <a href={makeRidiSelectUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+              리디셀렉트에서 보기
+            </a>
+          );
         }
-        return <a href={makeRidiStoreUri(platformBookData.id)}>서점에서 보기</a>;
+        return (
+          <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+            서점에서 보기
+          </a>
+        );
       }
 
       // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
       if (primaryItem && primaryItem.is_ridiselect) {
-        return <a href={makeRidiSelectUri(platformBookData.id)}>리디셀렉트에서 보기</a>;
+        return (
+          <a href={makeRidiSelectUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+            리디셀렉트에서 보기
+          </a>
+        );
       }
-      return <a href={makeRidiStoreUri(platformBookData.id)}>서점에서 보기</a>;
+      return (
+        <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+          서점에서 보기
+        </a>
+      );
     };
 
     return (
