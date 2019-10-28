@@ -14,34 +14,28 @@ import { HIDE_ALL_EXPIRED_BOOKS } from '../actions';
 import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER } from '../constants';
 import { NotFoundExpiredBooksError } from '../errors';
 
-const confirmChannel = channel();
-const { orderType, orderBy } = OrderOptions.EXPIRED_BOOKS_ONLY;
 const expiredBookOnlyOrderOptions = {
-  orderType,
-  orderBy,
+  orderType: OrderOptions.EXPIRED_BOOKS_ONLY.orderType,
+  orderBy: OrderOptions.EXPIRED_BOOKS_ONLY.orderBy,
   kind: BooksPageKind.MAIN,
 };
 
 function* getExpiredBookIds() {
-  let bookIds = [];
+  const bookIds = [];
 
-  let index = 1;
-  while (true) {
-    const itemResponse = yield call(fetchMainItems, { ...expiredBookOnlyOrderOptions, page: index });
+  let page = 1;
+  // 최대치를 넘으면 그만 한다.
+  while (bookIds.length < HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER) {
+    const itemResponse = yield call(fetchMainItems, { ...expiredBookOnlyOrderOptions, page });
     if (itemResponse.items.length === 0) {
       break;
     }
 
     const unitIds = itemResponse.items.map(item => item.unit_id);
     const bookIdsInUnit = yield call(getBookIdsByUnitIds, unitIds, expiredBookOnlyOrderOptions);
+    bookIds.push(...bookIdsInUnit);
 
-    bookIds = bookIds.concat(bookIdsInUnit);
-
-    // 최대치를 넘으면 그만 한다.
-    if (bookIds.length >= HIDE_ALL_EXPIRED_MAX_COUNT_PER_ITER) {
-      break;
-    }
-    index += 1;
+    page += 1;
   }
 
   return bookIds;
@@ -99,7 +93,7 @@ function* internalHideAllExpiredBooks() {
     const queueIds = yield call(requestHide, bookIds, revision);
 
     // Step 4. 숨긴 도서를 확인한다.
-    isFinish = isFinish && (yield checkQueueIsDone(queueIds));
+    isFinish = isFinish && (yield call(checkQueueIsDone, queueIds));
     isRequested = true;
   }
 
@@ -145,6 +139,7 @@ export function* confirmHideAllExpiredBooks({ payload }) {
   yield put(setFullScreenLoading(false));
 
   if (bookIds.length) {
+    const confirmChannel = channel();
     yield put(
       showConfirm({
         title: '만료 도서 모두 숨기기',

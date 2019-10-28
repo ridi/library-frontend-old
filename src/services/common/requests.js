@@ -6,7 +6,7 @@ import { OrderType } from '../../constants/orderOptions';
 import { BooksPageKind } from '../../constants/urls';
 
 import { makeURI } from '../../utils/uri';
-import { makeUnique, splitArrayByChunk, toFlatten } from '../../utils/array';
+import { arrayChunk, makeUnique, toFlatten } from '../../utils/array';
 import { snakelize } from '../../utils/snakelize';
 import { delay } from '../../utils/delay';
 import { DELETE_API_CHUNK_COUNT } from './constants';
@@ -136,7 +136,7 @@ export function* requestDelete(bookIds, revision) {
     return toFlatten(response.data, 'id');
   }
 
-  const chunked = splitArrayByChunk(bookIds, DELETE_API_CHUNK_COUNT);
+  const chunked = arrayChunk(bookIds, DELETE_API_CHUNK_COUNT);
   const queueIdChunks = yield all(chunked.map(_bookIds => call(internalRequestDelete, _bookIds)));
   const queueIds = queueIdChunks.flat();
 

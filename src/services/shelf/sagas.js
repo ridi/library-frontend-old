@@ -1,8 +1,10 @@
-import lodashChunk from 'lodash.chunk';
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
+import uuidv4 from 'uuid/v4';
+
 import { trackEvent } from 'services/tracking/actions';
 import { EventNames } from 'services/tracking/constants';
-import uuidv4 from 'uuid/v4';
+import { arrayChunk } from 'utils/array';
+
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { ITEMS_LIMIT_PER_SHELF, SHELF_OPERATION_LIMIT, SHELF_ITEM_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import { URLMap } from '../../constants/urls';
@@ -158,7 +160,7 @@ function* createOperation(endpoint, ops) {
   } else {
     limit = SHELF_ITEM_OPERATION_LIMIT;
   }
-  const chunks = lodashChunk(opsWithRevision, limit);
+  const chunks = arrayChunk(opsWithRevision, limit);
 
   try {
     const opResultsChunked = yield all(chunks.map(chunk => call(createOperationSingleChunk, endpoint, chunk)));

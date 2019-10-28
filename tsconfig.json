@@ -15,6 +15,7 @@
       "components/*": ["src/components/*"],
       "services/*": ["src/services/*"],
       "constants/*": ["src/constants/*"],
+      "utils/*": ["src/utils/*"],
       "static/*": ["src/static/*"]
     }
   },
