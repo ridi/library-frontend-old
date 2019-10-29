@@ -6,12 +6,14 @@ import ResponsivePaginator from 'components/ResponsivePaginator';
 import SeriesToolBar from 'components/SeriesToolBar';
 import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
 import { OrderOptions } from 'constants/orderOptions';
+import { ServiceType } from 'constants/serviceType';
 import { UnitType } from 'constants/unitType';
 import ViewType from 'constants/viewType';
 import { ResponsiveBooks } from 'pages/base/Responsive';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { getOpenInfo } from 'services/book/selectors';
 import { getTotalSelectedCount } from 'services/selection/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
@@ -87,6 +89,7 @@ class SeriesList extends React.Component {
       unit,
       linkWebviewer,
       location,
+      openInfo,
       emptyProps: { message = '구매/대여하신 책이 없습니다.' } = {},
     } = this.props;
     const locationHref = makeLocationHref(location);
@@ -101,43 +104,36 @@ class SeriesList extends React.Component {
       return <Empty IconComponent={BookOutline} message={this.getEmptyMessage(message)} />;
     }
 
-    const linkBuilder = _linkWebviewer => (libraryBookData, platformBookData) => {
+    const linkBuilder = (_linkWebviewer, _openInfo) => (libraryBookData, platformBookData) => {
+      const {
+        id: bookId,
+        support: { web_viewer: isWebViewerContents },
+      } = platformBookData;
+
       // 웹뷰어 지원도서면 웹뷰어로 이동
-      if (_linkWebviewer && platformBookData.support.web_viewer) {
+      if (_linkWebviewer && isWebViewerContents) {
         return (
-          <a href={makeWebViewerUri(platformBookData.id, locationHref)} target="_blank" rel="noopener noreferrer">
+          <a href={makeWebViewerUri(bookId, locationHref)} target="_blank" rel="noopener noreferrer">
             웹뷰어로 보기
           </a>
         );
       }
 
-      // 구매한 책이면 책의 서비스에 따라 이동
-      if (libraryBookData.purchased) {
-        if (libraryBookData.is_ridiselect) {
-          return (
-            <a href={makeRidiSelectUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-              리디셀렉트에서 보기
-            </a>
-          );
-        }
-        return (
-          <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-            서점에서 보기
-          </a>
-        );
+      let openedService = ServiceType.RIDIBOOKS;
+      if (libraryBookData.purchased && libraryBookData.is_ridiselect && _openInfo.isSelectOpen) {
+        // 구매한 책이면 책의 서비스 및 각 서비스별 오픈 여부에 따라 이동
+        openedService = ServiceType.RIDISELECT;
+      } else if (primaryItem && primaryItem.is_ridiselect && _openInfo.isSelectOpen) {
+        // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
+        openedService = ServiceType.RIDISELECT;
       }
 
-      // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
-      if (primaryItem && primaryItem.is_ridiselect) {
-        return (
-          <a href={makeRidiSelectUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-            리디셀렉트에서 보기
-          </a>
-        );
-      }
+      const href = openedService === ServiceType.RIDIBOOKS ? makeRidiStoreUri(bookId) : makeRidiSelectUri(bookId);
+      const title = openedService === ServiceType.RIDIBOOKS ? '서점에서 보기' : '리디셀렉트에서 보기';
+
       return (
-        <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
-          서점에서 보기
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {title}
         </a>
       );
     };
@@ -147,7 +143,7 @@ class SeriesList extends React.Component {
         libraryBookDTO={items}
         isSelectMode={isEditing}
         viewType={ViewType.LANDSCAPE}
-        linkBuilder={linkBuilder(linkWebviewer)}
+        linkBuilder={linkBuilder(linkWebviewer, openInfo)}
         isSeriesView={UnitType.isSeries(unit.type)}
       />
     );
@@ -179,8 +175,13 @@ class SeriesList extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  totalSelectedCount: getTotalSelectedCount(state),
-});
+const mapStateToProps = (state, props) => {
+  const bookIds = props.items && props.items.map(item => item.b_id);
+
+  return {
+    totalSelectedCount: getTotalSelectedCount(state),
+    openInfo: props.items && getOpenInfo(state, bookIds),
+  };
+};
 
 export default withRouter(connect(mapStateToProps)(SeriesList));
