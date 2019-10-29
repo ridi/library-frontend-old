@@ -119,17 +119,17 @@ class SeriesList extends React.Component {
         );
       }
 
-      let openedService = ServiceType.RIDIBOOKS;
+      let openedService = ServiceType.STORE;
       if (libraryBookData.purchased && libraryBookData.is_ridiselect && _openInfo.isSelectOpen) {
         // 구매한 책이면 책의 서비스 및 각 서비스별 오픈 여부에 따라 이동
-        openedService = ServiceType.RIDISELECT;
+        openedService = ServiceType.SELECT;
       } else if (primaryItem && primaryItem.is_ridiselect && _openInfo.isSelectOpen) {
         // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
-        openedService = ServiceType.RIDISELECT;
+        openedService = ServiceType.SELECT;
       }
 
-      const href = openedService === ServiceType.RIDIBOOKS ? makeRidiStoreUri(bookId) : makeRidiSelectUri(bookId);
-      const title = openedService === ServiceType.RIDIBOOKS ? '서점에서 보기' : '리디셀렉트에서 보기';
+      const href = openedService === ServiceType.STORE ? makeRidiStoreUri(bookId) : makeRidiSelectUri(bookId);
+      const title = openedService === ServiceType.STORE ? '서점에서 보기' : '리디셀렉트에서 보기';
 
       return (
         <a href={href} target="_blank" rel="noopener noreferrer">
