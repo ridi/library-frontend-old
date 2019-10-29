@@ -9,7 +9,6 @@ export const tabItem = {
   position: 'relative',
   verticalAlign: 'top',
   marginRight: 16,
-  background: 'white',
 };
 
 export const tabButton = {
@@ -42,12 +41,14 @@ export const activeBar = {
   width: '100%',
   height: 2,
   background: 'white',
-  transition: 'background .3s',
+  opacity: 0,
+  transition: 'background .3s, opacity .3s',
 };
 
 export const activeBarToggle = isActive =>
   isActive
     ? {
         background: '#9ea7ad',
+        opacity: 1,
       }
     : {};
