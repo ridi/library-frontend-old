@@ -40,15 +40,13 @@ export const activeBar = {
   bottom: 0,
   width: '100%',
   height: 2,
-  background: 'white',
-  opacity: 0,
-  transition: 'background .3s, opacity .3s',
+  background: 'transparent',
+  transition: 'background .3s',
 };
 
 export const activeBarToggle = isActive =>
   isActive
     ? {
         background: '#9ea7ad',
-        opacity: 1,
       }
     : {};
