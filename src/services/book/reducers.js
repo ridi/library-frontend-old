@@ -6,6 +6,7 @@ import {
   SET_UNIT_DATA,
   SET_BOOK_STAR_RATINGS,
   SET_UNIT_ORDERS,
+  SET_OPEN_INFO,
   makeUnitOrderKey,
 } from './actions';
 import { isExpiredTTL } from '../../utils/ttl';
@@ -20,6 +21,7 @@ const initialState = {
   bookStarRatings: {},
   units: {},
   unitOrders: {},
+  openInfo: {},
 };
 
 function update(container, entries) {
@@ -59,6 +61,9 @@ const bookReducer = produce((draft, action) => {
     case SET_BOOK_DATA_FROM_STORAGE:
       draft.books = action.payload.books;
       draft.units = action.payload.units;
+      break;
+    case SET_OPEN_INFO:
+      update(draft.openInfo, makeEntries(action.payload.openInfo));
       break;
     default:
       break;

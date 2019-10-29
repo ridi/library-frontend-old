@@ -15,6 +15,10 @@ export class ServiceType {
     return 'ridiselect';
   }
 
+  static get RIDIBOOKS() {
+    return 'ridibooks';
+  }
+
   static isExpirable(serviceType) {
     return serviceType === this.RENT || serviceType === this.FLATRATE || serviceType === this.RIDISELECT;
   }

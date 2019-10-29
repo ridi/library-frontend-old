@@ -44,6 +44,15 @@ const _reduceBookStarRatings = bookStarRatings =>
     buyer_rating_count: bookStarRating.buyer_rating_count,
   }));
 
+const _reduceOpenInfo = books =>
+  books.map(book => ({
+    id: book.b_id,
+    isStoreOpen: book.is_store_open,
+    ridibooksPublish: book.ridibooks_publish,
+    isSelectOpen: book.is_select_open,
+    ridiselectPublish: book.ridiselect_publish,
+  }));
+
 export function* fetchBookData(bookIds) {
   const api = yield put(getAPI());
   const response = yield api.post(makeURI('/books', {}, config.BOOK_API_BASE_URL), stringify({ b_ids: bookIds.join(',') }));
@@ -59,6 +68,23 @@ export function* fetchBookData(bookIds) {
   });
 
   return attatchTTL(_reduceBooks(response.data));
+}
+
+export function* fetchBooksOpenInfo(bookIds) {
+  const api = yield put(getAPI());
+  const response = yield api.post(makeURI('/books/open-info', {}, config.LIBRARY_API_BASE_URL), stringify({ b_ids: bookIds }));
+  const idSet = new Set(response.data.open_info.map(book => book.b_id));
+
+  bookIds.forEach(bookId => {
+    if (!idSet.has(bookId)) {
+      console.error('Book requested but does not exist:', bookId);
+      captureMessage('Book requested but does not exist', {
+        extra: { bookId },
+      });
+    }
+  });
+
+  return attatchTTL(_reduceOpenInfo(response.data.open_info));
 }
 
 export function* fetchBookDescriptions(bookIds) {

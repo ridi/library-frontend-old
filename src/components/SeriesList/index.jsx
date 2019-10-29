@@ -1,25 +1,21 @@
+import { Books } from 'components/Books';
+import Editable from 'components/Editable';
+import Empty from 'components/Empty';
+import HorizontalRuler from 'components/HorizontalRuler';
+import ResponsivePaginator from 'components/ResponsivePaginator';
+import SeriesToolBar from 'components/SeriesToolBar';
+import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
+import { OrderOptions } from 'constants/orderOptions';
+import { UnitType } from 'constants/unitType';
+import ViewType from 'constants/viewType';
+import { ResponsiveBooks } from 'pages/base/Responsive';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { OrderOptions } from '../constants/orderOptions';
-import { UnitType } from '../constants/unitType';
-import ViewType from '../constants/viewType';
-import { ResponsiveBooks } from '../pages/base/Responsive';
-import { getTotalSelectedCount } from '../services/selection/selectors';
-import BookOutline from '../svgs/BookOutline.svg';
-import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../utils/uri';
-import { ACTION_BAR_HEIGHT } from './ActionBar/styles';
-import { Books } from './Books';
-import Editable from './Editable';
-import Empty from './Empty';
-import HorizontalRuler from './HorizontalRuler';
-import ResponsivePaginator from './ResponsivePaginator';
-import SeriesToolBar from './SeriesToolBar';
-import SkeletonBooks from './Skeleton/SkeletonBooks';
-
-const seriesListStyle = {
-  paddingBottom: ACTION_BAR_HEIGHT,
-};
+import { getTotalSelectedCount } from 'services/selection/selectors';
+import BookOutline from 'svgs/BookOutline.svg';
+import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
+import * as styles from './styles';
 
 class SeriesList extends React.Component {
   constructor(props) {
@@ -166,7 +162,7 @@ class SeriesList extends React.Component {
     const { actionBarProps, isEditing } = this.props;
 
     return (
-      <div css={seriesListStyle} ref={this.seriesListRef}>
+      <div css={styles.wrapper} ref={this.seriesListRef}>
         <HorizontalRuler color="#d1d5d9" />
         <Editable
           allowFixed
