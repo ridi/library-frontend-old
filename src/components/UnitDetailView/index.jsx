@@ -199,7 +199,7 @@ class UnitDetailView extends React.Component {
       primaryItem: { is_ridiselect: isRidiSelect },
       openInfo,
     } = this.props;
-    const { isSelectOpen } = openInfo;
+    const { isSelectOpen } = openInfo[bookId];
     const openedService = isRidiSelect && isSelectOpen ? ServiceType.SELECT : ServiceType.STORE;
 
     const href = openedService === ServiceType.SELECT ? makeRidiSelectUri(bookId) : makeRidiStoreUri(bookId);

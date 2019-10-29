@@ -109,6 +109,7 @@ class SeriesList extends React.Component {
         id: bookId,
         support: { web_viewer: isWebViewerContents },
       } = platformBookData;
+      const { isSelectOpen } = _openInfo[bookId];
 
       // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && isWebViewerContents) {
@@ -120,10 +121,10 @@ class SeriesList extends React.Component {
       }
 
       let openedService = ServiceType.STORE;
-      if (libraryBookData.purchased && libraryBookData.is_ridiselect && _openInfo.isSelectOpen) {
+      if (libraryBookData.purchased && libraryBookData.is_ridiselect && isSelectOpen) {
         // 구매한 책이면 책의 서비스 및 각 서비스별 오픈 여부에 따라 이동
         openedService = ServiceType.SELECT;
-      } else if (primaryItem && primaryItem.is_ridiselect && _openInfo.isSelectOpen) {
+      } else if (primaryItem && primaryItem.is_ridiselect && isSelectOpen) {
         // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
         openedService = ServiceType.SELECT;
       }
