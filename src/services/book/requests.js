@@ -77,8 +77,8 @@ export function* fetchBooksOpenInfo(bookIds) {
 
   bookIds.forEach(bookId => {
     if (!idSet.has(bookId)) {
-      console.error('Book requested but does not exist:', bookId);
-      captureMessage('Book requested but does not exist', {
+      console.error('Book open-info requested but does not exist:', bookId);
+      captureMessage('Book open-info requested but does not exist', {
         extra: { bookId },
       });
     }

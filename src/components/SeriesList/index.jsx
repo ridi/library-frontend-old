@@ -125,7 +125,7 @@ class SeriesList extends React.Component {
         // 구매한 책이면 책의 서비스 및 각 서비스별 오픈 여부에 따라 이동
         openService = ServiceType.SELECT;
       } else if (primaryItem && primaryItem.is_ridiselect && isSelectOpen) {
-        // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem 서비스를 따라간다.
+        // 구매하지 않은 책인데 primaryItem 이 있다면 primaryItem의 서비스 및 서비스별 오픈 여부에 따라 이동
         openService = ServiceType.SELECT;
       }
 
