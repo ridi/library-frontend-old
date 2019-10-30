@@ -200,10 +200,10 @@ class UnitDetailView extends React.Component {
       openInfo,
     } = this.props;
     const { isSelectOpen } = openInfo[bookId];
-    const openedService = isRidiSelect && isSelectOpen ? ServiceType.SELECT : ServiceType.STORE;
+    const openService = isRidiSelect && isSelectOpen ? ServiceType.SELECT : ServiceType.STORE;
 
-    const href = openedService === ServiceType.SELECT ? makeRidiSelectUri(bookId) : makeRidiStoreUri(bookId);
-    const serviceName = openedService === ServiceType.SELECT ? '리디셀렉트' : '서점';
+    const href = openService === ServiceType.SELECT ? makeRidiSelectUri(bookId) : makeRidiStoreUri(bookId);
+    const serviceName = openService === ServiceType.SELECT ? '리디셀렉트' : '서점';
 
     return (
       <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
