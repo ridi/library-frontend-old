@@ -1,12 +1,5 @@
-export const toDict = (arr, key, extracter = null) =>
-  arr.reduce((previous, current) => {
-    if (extracter) {
-      previous[current[key]] = extracter(current);
-    } else {
-      previous[current[key]] = current;
-    }
-    return previous;
-  }, {});
+export const toDict = (arr, key, extractor = null) =>
+  Object.fromEntries(arr.map(current => [current[key], extractor ? extractor(current) : current]));
 
 export const toFlatten = (arr, key, skipNull = false) => {
   const splited = key.split('.');
@@ -30,10 +23,10 @@ export const makeRange = (start, end) => Array.from({ length: end - start }, (_,
 
 export const concat = (arr, glue = '_') => arr.join(glue);
 
-export const splitArrayByChunk = (array, chunkSize) =>
-  Array(Math.ceil(array.length / chunkSize))
-    .fill()
-    .map((_, index) => index * chunkSize)
-    .map(begin => array.slice(begin, begin + chunkSize));
+export const arrayChunk = (array, chunkSize) =>
+  Array.from({ length: Math.ceil(array.length / chunkSize) }, (_, idx) => {
+    const begin = idx * chunkSize;
+    return array.slice(begin, begin + chunkSize);
+  });
 
 export const makeUnique = array => [...new Set(array)];

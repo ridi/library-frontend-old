@@ -5,7 +5,6 @@ import { ButtonType } from '../../components/ActionBar/constants';
 import BookDownLoader from '../../components/BookDownLoader';
 import { BookError } from '../../components/Error';
 import PageRedirect from '../../components/PageRedirect';
-import SelectShelfModal from '../../components/SelectShelfModal';
 import SeriesList from '../../components/SeriesList';
 import TitleBar from '../../components/TitleBar';
 import UnitDetailView from '../../components/UnitDetailView';
@@ -17,7 +16,6 @@ import * as confirmActions from '../../services/confirm/actions';
 import * as purchasedCommonSelectors from '../../services/purchased/common/selectors';
 import * as selectionActions from '../../services/selection/actions';
 import * as selectionSelectors from '../../services/selection/selectors';
-import * as shelfActions from '../../services/shelf/actions';
 import * as unitPageActions from '../../services/unitPage/actions';
 import * as unitPageSelectors from '../../services/unitPage/selectors';
 import Responsive from '../base/Responsive';
@@ -112,7 +110,6 @@ function Unit(props) {
 
   const { unit, unitOptions, totalCount, totalPages } = props;
   const {
-    dispatchAddSelectedToShelf,
     dispatchClearSelectedBooks,
     dispatchDeleteSelectedBooks,
     dispatchDownloadSelectedBooks,
@@ -124,7 +121,6 @@ function Unit(props) {
   } = props;
 
   const [isSelecting, setIsSelecting] = React.useState(false);
-  const [showShelves, setShowShelves] = React.useState(false);
 
   React.useEffect(() => {
     dispatchClearSelectedBooks();
@@ -154,24 +150,6 @@ function Unit(props) {
     dispatchClearSelectedBooks();
     setIsSelecting(false);
   }, [dispatchDownloadSelectedBooks, dispatchClearSelectedBooks]);
-
-  const handleAddToShelf = React.useCallback(() => setShowShelves(true), []);
-
-  const handleShelfBackClick = React.useCallback(() => setShowShelves(false), []);
-
-  const handleShelfSelect = React.useCallback(
-    uuid => {
-      dispatchAddSelectedToShelf({
-        uuid,
-        onComplete: () => {
-          setIsSelecting(false);
-          setShowShelves(false);
-          dispatchClearSelectedBooks();
-        },
-      });
-    },
-    [dispatchAddSelectedToShelf, dispatchClearSelectedBooks],
-  );
 
   const handleDeleteClick = React.useCallback(() => {
     dispatchShowConfirm({
@@ -245,19 +223,12 @@ function Unit(props) {
         },
       ];
     } else {
-      buttonProps.push({
-        name: '숨기기',
-        onClick: handleHideClick,
-        disable,
-      });
-      if (UnitType.isCollection(unit.type)) {
-        buttonProps.push({
-          name: '책장에 추가',
-          onClick: handleAddToShelf,
+      buttonProps = [
+        {
+          name: '숨기기',
+          onClick: handleHideClick,
           disable,
-        });
-      }
-      buttonProps.push(
+        },
         {
           type: ButtonType.SPACER,
         },
@@ -266,7 +237,7 @@ function Unit(props) {
           onClick: handleDownloadClick,
           disable,
         },
-      );
+      ];
     }
 
     return { buttonProps };
@@ -318,26 +289,16 @@ function Unit(props) {
   }
 
   const title = unit.title ? `${unit.title} - 내 서재` : '내 서재';
-  let body = null;
-  if (showShelves) {
-    body = <SelectShelfModal onBackClick={handleShelfBackClick} onShelfSelect={handleShelfSelect} />;
-  } else {
-    body = (
-      <>
-        {renderTitleBar()}
-        <PageRedirect currentPage={currentPage} totalPages={totalPages} />
-        <main>{renderMain()}</main>
-        <BookDownLoader />
-      </>
-    );
-  }
 
   return (
     <>
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      {body}
+      {renderTitleBar()}
+      <PageRedirect currentPage={currentPage} totalPages={totalPages} />
+      <main>{renderMain()}</main>
+      <BookDownLoader />
     </>
   );
 }
@@ -363,7 +324,6 @@ const mapStateToProps = (state, props) => {
 };
 
 const mapDispatchToProps = {
-  dispatchAddSelectedToShelf: shelfActions.addSelectedToShelf,
   dispatchClearSelectedBooks: selectionActions.clearSelectedItems,
   dispatchDeleteSelectedBooks: unitPageActions.deleteSelectedBooks,
   dispatchDownloadSelectedBooks: unitPageActions.downloadSelectedBooks,

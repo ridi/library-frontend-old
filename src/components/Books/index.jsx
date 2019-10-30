@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { getAdultVerification } from '../../services/account/selectors';
-import { showShelfBookAlertToast } from '../../services/book/actions';
 import * as bookSelectors from '../../services/book/selectors';
 import { getIsRecentlyUpdated } from '../../services/purchased/common/selectors';
 import { toggleItem } from '../../services/selection/actions';
@@ -21,7 +20,6 @@ import PortraitBook from '../Skeleton/SkeletonBooks/PortraitBook';
 import { Disabled } from './Disabled';
 import EmptyLandscapeBook from './EmptyLandscapeBook';
 import FullButton from './FullButton';
-import { ShelfBookAlertButton } from './ShelfBookAlertButton';
 
 const refineBookData = ({
   libraryBookData,
@@ -52,7 +50,6 @@ const refineBookData = ({
   const isExpired = !isRidiselect && expireDate && isAfter(new Date(), expireDate);
   const isNotAvailable = expireDate ? isAfter(new Date(), expireDate) : false;
   const isPurchasedBook = !!purchaseDate;
-  const isCollectionBook = unitType && UnitType.isCollection(unitType);
   const isUnitBook = unitType && !UnitType.isBook(unitType);
   const unit = unitData;
 
@@ -73,7 +70,7 @@ const refineBookData = ({
     notAvailable: isNotAvailable,
     updateBadge: showUpdateBadge,
     ridiselect: isRidiselect,
-    selectMode: isSelectMode && isPurchasedBook && !isCollectionBook,
+    selectMode: isSelectMode && isPurchasedBook,
     selected: isSelected,
     unitBook: isUnitBook && !isRidiselectSingleUnit,
     unitBookCount,
@@ -87,14 +84,13 @@ const refineBookData = ({
   };
   const landscapeBookProps = {
     title,
-    author: bookMetaData.authorSimple,
+    author: bookMetaData.authorsSimple,
     thumbnailWidth: 60,
     expiredAt,
   };
 
   return {
     isPurchasedBook,
-    isCollectionBook,
     libraryBookProps: {
       ...defaultBookProps,
       ...(viewType === ViewType.LANDSCAPE ? landscapeBookProps : portraitBookProps),
@@ -107,7 +103,6 @@ function BookItem(props) {
   const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth, viewType } = props;
 
   const dispatch = useDispatch();
-  const handleShelfBookAlert = React.useCallback(() => dispatch(showShelfBookAlertToast()), []);
   const platformBookData = useSelector(state => bookSelectors.getBook(state, bookId));
   const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
   const isSelected = useSelector(state => selectionSelectors.getIsItemSelected(state, bookId));
@@ -139,7 +134,7 @@ function BookItem(props) {
   }
   if (platformBookData.isDeleted) return null;
 
-  const { isPurchasedBook, isCollectionBook, libraryBookProps, thumbnailLink } = refineBookData({
+  const { isPurchasedBook, libraryBookProps, thumbnailLink } = refineBookData({
     libraryBookData,
     platformBookData,
     unit: unitData,
@@ -156,14 +151,12 @@ function BookItem(props) {
   return viewType === ViewType.PORTRAIT ? (
     <div className={className} css={styles.portrait}>
       <Book.PortraitBook {...libraryBookProps} />
-      {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
     </div>
   ) : (
     <div className={className} css={styles.landscape}>
       <Book.LandscapeBook {...libraryBookProps} />
       {isSelectMode && !isPurchasedBook && <Disabled />}
       {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
-      {isSelectMode && isCollectionBook && <ShelfBookAlertButton onClickShelfBook={handleShelfBookAlert} />}
     </div>
   );
 }

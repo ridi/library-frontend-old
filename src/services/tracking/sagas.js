@@ -1,12 +1,14 @@
 import { DeviceType, Tracker } from '@ridi/event-tracker';
-import { select, takeEvery } from 'redux-saga/effects';
+import { all, call, select, takeEvery } from 'redux-saga/effects';
 import config from '../../config';
-import { LOCATION_CHANGE } from './actions';
+import * as actions from './actions';
 
 let tracker;
 let previousUrl;
 
-const initializeTracker = userId => {
+function* initializeTracker() {
+  const account = yield select(state => state.account);
+  const userId = account?.userInfo?.id;
   const deviceBP = 840;
   const deviceType = document.body.clientWidth < deviceBP ? DeviceType.Mobile : DeviceType.PC;
 
@@ -19,31 +21,31 @@ const initializeTracker = userId => {
     },
   });
   tracker.initialize();
-};
+}
 
-export function* watchLocationChange(action) {
+function* watchTrackPage({ payload }) {
+  const { pathName } = payload;
   const referrer = previousUrl || document.referrer;
-  const state = yield select(s => s);
-  const isLogin = state.account && state.account.userInfo && state.account.userInfo.id;
-  const url = `${config.BASE_URL}${action.payload.url}`;
+  previousUrl = pathName;
 
-  if (isLogin) {
-    const {
-      account: {
-        userInfo: { id: userId },
-      },
-    } = state;
-    if (!tracker) initializeTracker(userId);
-
-    if (referrer) {
-      tracker.sendPageView(url, referrer);
-    } else {
-      tracker.sendPageView(url);
-    }
-    previousUrl = url;
+  if (!tracker) yield call(initializeTracker);
+  if (referrer) {
+    tracker.sendPageView(pathName, referrer);
+  } else {
+    tracker.sendPageView(pathName);
   }
 }
 
+function* watchTrackEvent({ payload }) {
+  const { eventName, trackingParams } = payload;
+  if (!tracker) yield call(initializeTracker);
+  tracker.sendEvent(eventName, trackingParams);
+}
+
 export default function* trackingRootSaga() {
-  yield takeEvery(LOCATION_CHANGE, watchLocationChange);
+  yield all([
+    takeEvery(actions.INIT_TRACKER, initializeTracker),
+    takeEvery(actions.TRACK_PAGE, watchTrackPage),
+    takeEvery(actions.TRACK_EVENT, watchTrackEvent),
+  ]);
 }

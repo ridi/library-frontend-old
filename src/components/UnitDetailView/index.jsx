@@ -155,7 +155,12 @@ class UnitDetailView extends React.Component {
     }
 
     return (
-      <a css={styles.readLatestButtonAnchor} href={makeWebViewerUri(readLatestBookData.bookId || book.series.id, locationHref)}>
+      <a
+        css={styles.readLatestButtonAnchor}
+        href={makeWebViewerUri(readLatestBookData.bookId || book.series.id, locationHref)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <button type="button" css={styles.readLatestButton}>
           {readLatestBookData.bookId ? '이어보기' : '첫화보기'}
         </button>
@@ -192,7 +197,7 @@ class UnitDetailView extends React.Component {
     const href = this.isPurchased && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
     const serviceName = this.isPurchased && primaryItem.is_ridiselect ? '리디셀렉트' : '서점';
     return (
-      <a css={styles.outerTextLink} href={href}>
+      <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
         {serviceName}에서 보기
         <NoneDashedArrowRight css={styles.outerLinkIcon} />
       </a>
@@ -200,15 +205,15 @@ class UnitDetailView extends React.Component {
   }
 
   renderAuthors() {
-    const { unit, book } = this.props;
-    const bookMetadata = new BookMetaData(book, unit);
+    const { bookMetadata } = this.props;
+    const { authors } = bookMetadata;
 
     return (
       <div css={styles.authorList}>
-        {bookMetadata.authors.map((author, index) => (
-          <React.Fragment key={`a-f-${author}`}>
-            <span key={`a-s-${author}`}>{` ${author} `}</span>
-            {bookMetadata.authors.length !== index + 1 ? <span key={`a-s-delimiter-${author}`} css={styles.authorDelimiter} /> : null}
+        {authors.map((author, index) => (
+          <React.Fragment key={author}>
+            <span>{author}</span>
+            {authors.length !== index + 1 ? <span css={styles.authorDelimiter} /> : null}
           </React.Fragment>
         ))}
       </div>

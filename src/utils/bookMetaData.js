@@ -1,8 +1,13 @@
-import AuthorRole from '../constants/authorRole';
-import Genre from '../constants/category';
+import { ROLE_DESCRIPTIONS } from 'constants/authorRole';
+
 import { BookFileType } from '../services/book/constants';
 import { numberWithUnit } from './number';
 import { formatFileSize } from './file';
+
+function excerpt(names, limit) {
+  const baseNames = names.slice(0, limit).join(', ');
+  return names.length > limit ? `${baseNames} 외 ${names.length - limit}명` : baseNames;
+}
 
 export default class BookMetaData {
   constructor(platformBookData, unitData) {
@@ -12,47 +17,47 @@ export default class BookMetaData {
 
   get authors() {
     const LIMIT = 2;
-    const { authors } = this.bookData;
-    if (!authors) return null;
+    const { authorsOrdered } = this.bookData;
+    if (!authorsOrdered) return null;
 
-    const roles = AuthorRole.getPriorities(authors);
-    return roles.reduce((previous, role) => {
-      const author = authors[role];
-
-      if (author) {
-        const names =
-          author.length > LIMIT
-            ? `${author[0].name}, ${author[1].name} 외 ${author.length - LIMIT}명`
-            : author.map(value => value.name).join(', ');
-
-        // 만화 장르의 저자는 글, 그림으로 노출하기 위해 role 을 변경한다.
-        const roleForString = this.genre === Genre.COMIC && role === AuthorRole.AUTHOR ? AuthorRole.COMIC_AUTHOR : role;
-        previous.push(`${names} ${AuthorRole.convertToString(roleForString)}`);
+    // 같은 역할끼리 묶기
+    const authorsGrouped = [];
+    authorsOrdered.forEach(author => {
+      const ongoingGroup = authorsGrouped[authorsGrouped.length - 1];
+      if (ongoingGroup == null || ongoingGroup.role !== author.role) {
+        authorsGrouped.push({
+          authors: [
+            {
+              name: author.name,
+              id: author.id,
+            },
+          ],
+          role: author.role,
+        });
+      } else {
+        ongoingGroup.authors.push({
+          name: author.name,
+          id: author.id,
+        });
       }
-      return previous;
-    }, []);
+    });
+
+    return authorsGrouped.map(group => {
+      const names = excerpt(group.authors.map(author => author.name), LIMIT);
+      return `${names} ${ROLE_DESCRIPTIONS[group.role]}`;
+    });
+  }
+
+  get authorsSimple() {
+    const LIMIT = 2;
+    const { authorsOrdered } = this.bookData;
+    if (!authorsOrdered) return null;
+    return excerpt(authorsOrdered.map(author => author.name), LIMIT);
   }
 
   get genre() {
     // 카테고리는 무조건 1개 이상 있다.
     return this.bookData.categories[0].genre;
-  }
-
-  get authorSimple() {
-    const { authors } = this.bookData;
-    if (!authors) return null;
-
-    const LIMIT = 2;
-    const names = [];
-    const roles = AuthorRole.getPriorities(authors);
-    roles.forEach(role => {
-      const author = authors[role];
-      if (author) {
-        author.map(value => names.push(value.name));
-      }
-    });
-    const extraCount = names.length > LIMIT ? ` 외 ${names.length - LIMIT}명` : '';
-    return `${names.slice(0, LIMIT).join(', ')}${extraCount}`;
   }
 
   get infos() {

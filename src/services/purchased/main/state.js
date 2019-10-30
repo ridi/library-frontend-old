@@ -3,7 +3,6 @@ import { BooksPageKind } from 'constants/urls';
 
 export const initialState = {
   data: {},
-  isFetchingBooks: false,
 };
 
 export const createInitialDataState = () => ({
@@ -18,9 +17,9 @@ export function mapPageOptionsToKey(pageOptions) {
   let key = '';
   if (kind === BooksPageKind.MAIN) {
     const order = OrderOptions.toKey(orderType, orderBy);
-    key = `${categoryFilter}_${order}`;
+    key = order;
   } else if (kind === BooksPageKind.SEARCH) {
     key = keyword;
   }
-  return `${kind}_${key}`;
+  return `${kind}_${categoryFilter}_${key}`;
 }

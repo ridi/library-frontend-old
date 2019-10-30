@@ -33,7 +33,11 @@ const toProps = ({
   const { series: recentReadSeries = EmptySeries } = recentReadPlatformBookData;
   const bookMetaData = new BookMetaData(platformBookData);
   const { title = platformBookData.title.main } = series.property;
-  const thumbnailLink = <a href={makeRidiStoreUri(platformBookData.id)}>서점 상세페이지로 이동</a>;
+  const thumbnailLink = (
+    <a href={makeRidiStoreUri(platformBookData.id)} target="_blank" rel="noopener noreferrer">
+      서점 상세페이지로 이동
+    </a>
+  );
 
   // 장르
   // 무조건 카테고리는 1개 이상 존재한다.
@@ -46,7 +50,7 @@ const toProps = ({
       {genre}
       {isBL && categoryName ? ` ${categoryName}` : ''}
       <span css={serialPreferenceStyles.authorFieldSeparator} key={`${platformBookData.id}-a-f-s`} />
-      {bookMetaData.authorSimple}
+      {bookMetaData.authorsSimple}
     </>
   );
 
@@ -71,7 +75,12 @@ const toProps = ({
   );
 
   const additionalButton = (
-    <a href={makeWebViewerUri(recentReadBookId, locationHref)} css={serialPreferenceStyles.button}>
+    <a
+      href={makeWebViewerUri(recentReadBookId, locationHref)}
+      css={serialPreferenceStyles.button}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       {recentReadSeries.volume === 1 ? '첫화보기' : '이어보기'}
     </a>
   );

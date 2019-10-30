@@ -1,10 +1,14 @@
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
+
+import { trackEvent } from 'services/tracking/actions';
+import { EventNames } from 'services/tracking/constants';
+import { arrayChunk } from 'utils/array';
+
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
-import { ITEMS_LIMIT_PER_SHELF, SHELVES_LIMIT } from '../../constants/shelves';
-import { PageType, URLMap } from '../../constants/urls';
+import { ITEMS_LIMIT_PER_SHELF, SHELF_OPERATION_LIMIT, SHELF_ITEM_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
+import { URLMap } from '../../constants/urls';
 import { thousandsSeperator } from '../../utils/number';
-import { makeLinkProps } from '../../utils/uri';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import * as bookDownloadActions from '../bookDownload/actions';
@@ -117,6 +121,30 @@ function* waitForOperation(revision, opResults) {
   return [...results.entries()].map(([id, result]) => ({ id, result }));
 }
 
+function* createOperationSingleChunk(endpoint, ops) {
+  while (true) {
+    try {
+      if (endpoint === OperationEndpoint.SHELF) {
+        return yield call(requests.createOperationShelf, ops);
+      }
+      return yield call(requests.createOperationShelfItem, ops);
+    } catch (err) {
+      if (err.response) {
+        const { status } = err.response;
+        if (status === 403) {
+          return ops.map(() => ({ id: null, status: OperationStatus.FORBIDDEN }));
+        }
+        if (status === 404) {
+          return ops.map(() => ({ id: null, status: OperationStatus.FAILURE }));
+        }
+        // TODO: 던지지 말고 처리?
+        throw err;
+      }
+      // 네트워크 에러 등, 재시도
+    }
+  }
+}
+
 function* createOperation(endpoint, ops) {
   if (ops.length === 0) {
     return [];
@@ -126,34 +154,22 @@ function* createOperation(endpoint, ops) {
   const opsWithRevision = ops.map(op => ({ ...op, revision }));
   yield put(actions.beginOperation({ revision }));
 
-  let opResults;
-  while (true) {
-    try {
-      if (endpoint === OperationEndpoint.SHELF) {
-        opResults = yield call(requests.createOperationShelf, opsWithRevision);
-      } else {
-        opResults = yield call(requests.createOperationShelfItem, opsWithRevision);
-      }
-      break;
-    } catch (err) {
-      if (err.response) {
-        const { status } = err.response;
-        if (status === 403) {
-          opResults = ops.map(() => ({ id: null, status: OperationStatus.FORBIDDEN }));
-        } else if (status === 404) {
-          opResults = ops.map(() => ({ id: null, status: OperationStatus.FAILURE }));
-        } else {
-          yield put(actions.endOperation({ revision, hasError: true }));
-          // TODO: 던지지 말고 처리?
-          throw err;
-        }
-        break;
-      }
-      // 네트워크 에러 등, 재시도
-    }
+  let limit;
+  if (endpoint === OperationEndpoint.SHELF) {
+    limit = SHELF_OPERATION_LIMIT;
+  } else {
+    limit = SHELF_ITEM_OPERATION_LIMIT;
   }
+  const chunks = arrayChunk(opsWithRevision, limit);
 
-  return yield fork(waitForOperation, revision, opResults);
+  try {
+    const opResultsChunked = yield all(chunks.map(chunk => call(createOperationSingleChunk, endpoint, chunk)));
+    const opResults = opResultsChunked.flat();
+    return yield fork(waitForOperation, revision, opResults);
+  } catch (err) {
+    yield put(actions.endOperation({ revision, hasError: true }));
+    throw err;
+  }
 }
 
 function* performOperation(type, opArgs) {
@@ -188,6 +204,14 @@ function* addShelf({ payload }) {
     const uuid = uuidv4();
     const results = yield call(performOperation, OperationType.ADD_SHELF, { uuid, name });
     if (results[0].result === OperationStatus.DONE) {
+      yield put(
+        trackEvent({
+          eventName: EventNames.MAKE_SHELF,
+          trackingParams: {
+            shelf_id: uuid,
+          },
+        }),
+      );
       break;
     }
   }
@@ -203,7 +227,15 @@ function* renameShelf({ payload }) {
   // TODO: forbidden인 경우 내 책장이 아닌 것
   yield put(uiActions.setFullScreenLoading(false));
   if (results[0].result === OperationStatus.DONE) {
-    yield all([put(actions.setShelfInfo({ uuid, name })), put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' }))]);
+    yield all([
+      put(actions.setShelfInfo({ uuid, name })),
+      put(toastActions.showToast({ message: '책장 이름을 변경했습니다.' })),
+      put(
+        trackEvent({
+          eventName: EventNames.MODIFY_SHELF_NAME,
+        }),
+      ),
+    ]);
   } else {
     yield put(toastActions.showToast({ message: '책장 이름 변경에 실패했습니다.', toastStyle: ToastStyle.RED }));
   }
@@ -218,21 +250,38 @@ function* deleteShelf({ payload }) {
 function* deleteShelves({ payload }) {
   const { uuids, pageOptions } = payload;
   const ops = uuids.map(uuid => ({ uuid }));
-  yield all([
-    put(uiActions.setFullScreenLoading(true)),
-    put(selectionActions.clearSelectedItems()),
-    call(performOperation, OperationType.DELETE_SHELF, ops),
-  ]);
-  yield all([
-    put(uiActions.setFullScreenLoading(false)),
-    put(
+  try {
+    yield all([
+      put(uiActions.setFullScreenLoading(true)),
+      put(selectionActions.clearSelectedItems()),
+      call(performOperation, OperationType.DELETE_SHELF, ops),
+    ]);
+    yield all([
+      put(
+        toastActions.showToast({
+          message: '책장을 삭제했습니다.',
+        }),
+      ),
+      put(actions.loadShelves(pageOptions)),
+      put(actions.loadShelfCount()),
+      put(
+        trackEvent({
+          eventName: EventNames.DELETE_SHELF,
+          trackingParams: {
+            shelf_id: uuids,
+          },
+        }),
+      ),
+    ]);
+  } catch (err) {
+    yield put(
       toastActions.showToast({
-        message: '책장을 삭제했습니다.',
+        message: '책장을 삭제하는 중 오류가 발생했습니다.',
+        toastStyle: ToastStyle.RED,
       }),
-    ),
-    put(actions.loadShelves(pageOptions)),
-    put(actions.loadShelfCount()),
-  ]);
+    );
+  }
+  yield put(uiActions.setFullScreenLoading(false));
 }
 
 function* addShelfItem({ payload }) {
@@ -244,7 +293,17 @@ function* addShelfItem({ payload }) {
   }));
   yield call(performOperation, OperationType.ADD_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
-  yield put(actions.loadShelfBookCount(uuid));
+  yield all([
+    put(actions.loadShelfBookCount(uuid)),
+    put(
+      trackEvent({
+        eventName: EventNames.ADD_BOOK,
+        trackingParams: {
+          book_id: ops.map(op => op.bookIds).flat(),
+        },
+      }),
+    ),
+  ]);
 }
 
 function* deleteShelfItem({ payload }) {
@@ -256,7 +315,17 @@ function* deleteShelfItem({ payload }) {
   }));
   yield call(performOperation, OperationType.DELETE_SHELF_ITEM, ops);
   // TODO: forbidden인 경우 내 책장이 아닌 것
-  yield put(actions.loadShelfBookCount(uuid));
+  yield all([
+    put(actions.loadShelfBookCount(uuid)),
+    put(
+      trackEvent({
+        eventName: EventNames.DELETE_BOOK,
+        trackingParams: {
+          book_id: ops.map(op => op.bookIds).flat(),
+        },
+      }),
+    ),
+  ]);
 }
 
 function* deleteShelfFromDetail({ payload }) {
@@ -269,6 +338,14 @@ function* deleteShelfFromDetail({ payload }) {
     put(
       toastActions.showToast({
         message: '책장을 삭제했습니다.',
+      }),
+    ),
+    put(
+      trackEvent({
+        eventName: EventNames.DELETE_SHELF,
+        trackingParams: {
+          shelf_id: uuid,
+        },
       }),
     ),
   ]);
@@ -299,29 +376,12 @@ function* addSelectedToShelf({ payload }) {
       bookIds: [book.b_id],
     }));
     yield call(addShelfItem, { payload: { uuid, units } });
-
-    if (fromShelfPageOptions != null) {
-      yield call(loadShelfBooks, { payload: { uuid, ...fromShelfPageOptions } });
-      yield put(
-        toastActions.showToast({
-          message: '선택한 책을 책장에 추가했습니다.',
-        }),
-      );
-    } else {
-      yield put(
-        toastActions.showToast({
-          message: '선택한 책을 책장에 추가했습니다.',
-          linkName: '책장 바로 보기',
-          linkProps: makeLinkProps(
-            {
-              pathname: URLMap[PageType.SHELF_DETAIL].href,
-              query: { uuid },
-            },
-            URLMap[PageType.SHELF_DETAIL].as({ uuid }),
-          ),
-        }),
-      );
-    }
+    yield call(loadShelfBooks, { payload: { uuid, ...fromShelfPageOptions } });
+    yield put(
+      toastActions.showToast({
+        message: '선택한 책을 책장에 추가했습니다.',
+      }),
+    );
     onComplete && onComplete();
   } catch (err) {
     console.error(err);

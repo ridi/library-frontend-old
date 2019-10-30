@@ -83,7 +83,7 @@ const styles = {
   },
 };
 
-export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFocus, onKeywordChange, onSubmit }) {
+export default function SearchBox({ allowEmptySearch, isSearchPage, keyword, onBlur, onClear, onFocus, onKeywordChange, onSubmit }) {
   const [isSearchBoxFocused, setSearchBoxFocused] = React.useState(false);
   const inputRef = React.useRef();
   const handleChange = React.useCallback(e => onKeywordChange(e.target.value), [onKeywordChange]);
@@ -95,13 +95,13 @@ export default function SearchBox({ isSearchPage, keyword, onBlur, onClear, onFo
     e => {
       e.preventDefault();
 
-      if (keyword.trim() === '') {
+      if (!allowEmptySearch && keyword.trim() === '') {
         return;
       }
 
       onSubmit && onSubmit();
     },
-    [keyword, onSubmit],
+    [allowEmptySearch, keyword, onSubmit],
   );
   const handleFocus = React.useCallback(
     e => {

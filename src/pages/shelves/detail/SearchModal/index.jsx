@@ -1,5 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import * as filterActions from 'services/purchased/filter/actions';
+import * as mainActions from 'services/purchased/main/actions';
+import * as mainSelectors from 'services/purchased/main/selectors';
+import * as selectionActions from 'services/selection/actions';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as shelfSelectors from 'services/shelf/selectors';
 
 import BottomActionBar from '../../../../components/BottomActionBar';
 import { ButtonType } from '../../../../components/ActionBar/constants';
@@ -8,92 +15,69 @@ import FixedToolbarView from '../../../../components/FixedToolbarView';
 import PageNavigationBar, { NavigationBarColor } from '../../../../components/PageNavigationBar';
 import { ResponsivePaginatorWithHandler } from '../../../../components/ResponsivePaginator';
 import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../../constants/page';
 import { BooksPageKind } from '../../../../constants/urls';
 import ViewType from '../../../../constants/viewType';
-import * as mainRequests from '../../../../services/purchased/main/requests';
-import * as selectionActions from '../../../../services/selection/actions';
-import * as selectionSelectors from '../../../../services/selection/selectors';
-import * as shelfSelectors from '../../../../services/shelf/selectors';
+import BookOutline from '../../../../svgs/BookOutline.svg';
 import SearchIcon from '../../../../svgs/Search.svg';
-import * as paginationUtils from '../../../../utils/pagination';
 import { ResponsiveBooks } from '../../../base/Responsive';
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
 
-function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClick, shelfTitle, uuid }) {
+export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
+  const [categoryFilter, setCategoryFilter] = React.useState(null);
   const [keyword, setKeyword] = React.useState('');
-  const [isSearching, setSearching] = React.useState(false);
-  const [searchItems, setSearchItems] = React.useState(null);
-  const searchItemRequestId = React.useRef(0);
-  const [totalItemCount, setTotalItemCount] = React.useState(null);
-  const totalItemCountRequestId = React.useRef(0);
+  const [searchingKeyword, setSearchingKeyword] = React.useState('');
   const [page, setPage] = React.useState(1);
-  const totalPages = totalItemCount == null ? null : paginationUtils.calcPage(totalItemCount, LIBRARY_ITEMS_LIMIT_PER_PAGE);
+
+  const processedKeyword = searchingKeyword === '' ? undefined : searchingKeyword;
+  const pageOptions = {
+    kind: BooksPageKind.SEARCH,
+    keyword: processedKeyword,
+    categoryFilter,
+    page,
+  };
+
+  const dispatch = useDispatch();
+  const shelfTitle = useSelector(state => shelfSelectors.getShelfName(state, uuid));
+  const isSelected = useSelector(state => selectionSelectors.getTotalSelectedCount(state) !== 0);
+  const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
+  const searchItems = useSelector(state => {
+    if (mainSelectors.getIsPageCold(state, pageOptions)) {
+      return null;
+    }
+    return mainSelectors.getItemsByPage(state, pageOptions);
+  });
+
+  const handleSearchConfirm = React.useCallback(() => {
+    setSearchingKeyword(keyword);
+  }, [keyword]);
 
   const handleSearchClear = React.useCallback(() => {
-    setSearching(false);
-    setSearchItems(null);
-    setTotalItemCount(null);
-    clearSelectedItems();
+    setSearchingKeyword('');
+    setKeyword('');
   }, []);
-  const handleSearchConfirm = React.useCallback(async () => {
-    const newSearching = keyword !== '';
-    const newPage = 1;
-    setSearching(newSearching);
-    setSearchItems(null);
-    setTotalItemCount(null);
-    setPage(newPage);
-    clearSelectedItems();
 
-    searchItemRequestId.current += 1;
-    totalItemCountRequestId.current += 1;
-
-    if (!newSearching) {
-      return;
-    }
-
-    const searchItemRid = searchItemRequestId.current;
-    const totalItemCountRid = totalItemCountRequestId.current;
-    await Promise.all([
-      mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage }).then(({ items }) => {
-        if (searchItemRid === searchItemRequestId.current) {
-          setSearchItems(items);
-        }
-      }),
-      mainRequests.fetchMainItemsTotalCount({ kind: BooksPageKind.SEARCH, keyword }).then(({ unit_total_count: totalCount }) => {
-        if (totalItemCountRid === totalItemCountRequestId.current) {
-          setTotalItemCount(totalCount);
-        }
-      }),
-    ]);
-  }, [keyword]);
-  const handlePageChange = React.useCallback(
-    async newPage => {
-      setSearchItems(null);
-      setPage(newPage);
-      clearSelectedItems();
-
-      searchItemRequestId.current += 1;
-      const searchItemRid = searchItemRequestId.current;
-      const { items } = await mainRequests.fetchMainItems({ kind: BooksPageKind.SEARCH, keyword, page: newPage });
-      if (searchItemRid === searchItemRequestId.current) {
-        setSearchItems(items);
-      }
-
-      window.scrollTo(0, 0);
-    },
-    [keyword],
-  );
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+
+  React.useEffect(() => {
+    dispatch(selectionActions.clearSelectedItems());
+    dispatch(mainActions.loadItems(pageOptions));
+    window.scrollTo(0, 0);
+  }, [categoryFilter, dispatch, page, searchingKeyword]);
+
+  React.useEffect(() => {
+    dispatch(filterActions.updateCategories());
+  }, [dispatch]);
 
   function renderSearchBar() {
     return (
       <SearchBar
-        isSearching={isSearching}
+        isSearching={searchingKeyword !== ''}
+        filter={categoryFilter}
         keyword={keyword}
         onClear={handleSearchClear}
         onConfirm={handleSearchConfirm}
+        onFilterChange={setCategoryFilter}
         onKeywordChange={setKeyword}
       />
     );
@@ -105,7 +89,7 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
   }
 
   function renderPaginator() {
-    return <ResponsivePaginatorWithHandler currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />;
+    return <ResponsivePaginatorWithHandler currentPage={page} totalPages={totalPages} onPageChange={setPage} />;
   }
 
   function renderBooks() {
@@ -118,9 +102,6 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
   }
 
   function renderMain() {
-    if (!isSearching) {
-      return <Empty IconComponent={SearchIcon} iconWidth={38} message="검색어를 입력해주세요." />;
-    }
     if (searchItems == null) {
       return (
         <ResponsiveBooks>
@@ -129,7 +110,19 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
       );
     }
     if (searchItems.length === 0) {
-      return <Empty IconComponent={SearchIcon} iconWidth={38} message={`'${keyword}'에 대한 검색 결과가 없습니다.`} />;
+      let message;
+      let iconWidth;
+      let icon;
+      if (searchingKeyword === '') {
+        message = '구매/대여하신 책이 없습니다.';
+        iconWidth = 30;
+        icon = BookOutline;
+      } else {
+        message = `'${searchingKeyword}'에 대한 검색 결과가 없습니다.`;
+        iconWidth = 38;
+        icon = SearchIcon;
+      }
+      return <Empty IconComponent={icon} iconWidth={iconWidth} message={message} />;
     }
     return <ResponsiveBooks>{renderBooks()}</ResponsiveBooks>;
   }
@@ -145,19 +138,3 @@ function SearchModal({ clearSelectedItems, isSelected, onAddSelected, onBackClic
     </>
   );
 }
-
-function mapStateToProps(state, props) {
-  return {
-    shelfTitle: shelfSelectors.getShelfName(state, props.uuid),
-    isSelected: selectionSelectors.getTotalSelectedCount(state) !== 0,
-  };
-}
-
-const mapDispatchToProps = {
-  clearSelectedItems: selectionActions.clearSelectedItems,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SearchModal);
