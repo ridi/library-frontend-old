@@ -1,8 +1,8 @@
 import { css } from '@emotion/core';
-import { PageAlert } from '../../../components/PageAlert';
-import { responsiveStylesWidth } from '../../../components/ShelvesWrapper/styles';
+import { MQ, Responsive } from 'commonStyles/responsive';
+import { PageAlert } from 'components/PageAlert';
+import { responsiveStylesWidth } from 'components/ShelvesWrapper/styles';
 import config from '../../../config';
-import { MQ, Responsive } from '../../../styles/responsive';
 
 const styles = {
   alertWrapper: css`

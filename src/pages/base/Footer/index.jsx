@@ -1,6 +1,6 @@
 import React from 'react';
-import * as styles from './styles';
 import config from '../../../config';
+import * as styles from './styles';
 
 const Footer = () => (
   <>
