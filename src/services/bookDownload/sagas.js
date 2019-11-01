@@ -1,15 +1,13 @@
 import { all, call, delay, put, select, takeEvery } from 'redux-saga/effects';
-
+import config from '../../config';
 import { OrderBy, OrderType } from '../../constants/orderOptions';
 import { getDeviceInfo } from '../../utils/device';
 import { convertUriToAndroidIntentUri } from '../../utils/uri';
-
 import { fetchBookData } from '../book/requests';
 import { getBookIdsByUnitIds } from '../common/sagas';
 import * as selectionSelectors from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { Duration, ToastStyle } from '../toast/constants';
-
 import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, setBookDownloadSrc } from './actions';
 import { DownloadError } from './errors';
 import { triggerDownload } from './requests';
@@ -63,7 +61,7 @@ function* _showViewerGuildLink(isIos, isAndroid) {
   // eslint-disable-next-line no-nested-ternary
   const linkName = isIos ? '앱스토어로 가기' : isAndroid ? '플레이스토어로 가기' : '이용 방법 보기';
 
-  const helpLink = 'https://help.ridibooks.com/hc/ko/sections/115003069928';
+  const helpLink = `${config.HELP_BASE_URL}sections/115003069928`;
   const appStoreLink = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   const playStoreLink = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
   // eslint-disable-next-line no-nested-ternary

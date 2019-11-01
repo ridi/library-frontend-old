@@ -4,6 +4,7 @@
   "book_api_base_url": "https://book-api.ridibooks.com/",
   "book_feedback_api_base_url": "https://book-feedback.ridibooks.com/",
   "environment": "production",
+  "help_base_url": "https://help.ridibooks.com/hc/ko/",
   "library_api_base_url": "https://library-api.ridibooks.com",
   "ridi_logout_url": "https://ridibooks.com/account/logout?return_url=https%3A%2F%2Flibrary.ridibooks.com%2Flogin",
   "ridi_oauth2_client_id": "ePgbKKRyPvdAFzTvFg2DvrS7GenfstHdkQ2uvFNd",

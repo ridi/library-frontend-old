@@ -4,6 +4,7 @@
   "book_api_base_url": "https://book-api.dev.ridi.io/",
   "book_feedback_api_base_url": "https://book-feedback.dev.ridi.io/",
   "environment": "local",
+  "help_base_url": "https://help.ridibooks.com/hc/ko/",
   "library_api_base_url": "https://library-api.dev.ridi.io/",
   "ridi_logout_url": "https://master.test.ridi.io/account/logout?return_url=https%3A%2F%2Flibrary.local.ridi.io%2Flogin",
   "ridi_oauth2_client_id": "Nkt2Xdc0zMuWmye6MSkYgqCh9q6JjeMCsUiH1kgL",

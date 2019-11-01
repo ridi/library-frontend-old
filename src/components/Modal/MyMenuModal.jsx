@@ -6,8 +6,6 @@ import Note from '../../svgs/Note.svg';
 import Review from '../../svgs/Review.svg';
 import FeedbackIcon from '../../svgs/FeedbackIcon.svg';
 
-const FEEDBACK_URL = 'https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=664048';
-
 const userIdStyle = {
   padding: '11px 14px 10px 14px',
   fontSize: 15,
@@ -31,7 +29,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem IconComponent={FeedbackIcon} href={FEEDBACK_URL}>
+          <ModalAnchorItem IconComponent={FeedbackIcon} href={`${config.HELP_BASE_URL}requests/new?ticket_form_id=664048`}>
             내 서재 의견 보내기
           </ModalAnchorItem>
         </li>

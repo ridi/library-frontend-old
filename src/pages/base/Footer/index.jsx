@@ -1,5 +1,6 @@
 import React from 'react';
 import * as styles from './styles';
+import config from '../../../config';
 
 const Footer = () => (
   <>
@@ -12,7 +13,7 @@ const Footer = () => (
             <ul css={styles.termsList}>
               <li css={[styles.termsItem, styles.verticalSeparator]}>1644-0331</li>
               <li css={[styles.termsItem, styles.verticalSeparator]}>
-                <a href="https://help.ridibooks.com/hc/ko/" target="_blank" rel="noopener noreferrer">
+                <a href={config.HELP_BASE_URL} target="_blank" rel="noopener noreferrer">
                   고객센터
                 </a>
               </li>
