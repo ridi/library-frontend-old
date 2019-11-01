@@ -18,17 +18,17 @@ const Footer = () => (
                 </a>
               </li>
               <li css={[styles.termsItem, styles.verticalSeparator]}>
-                <a href="https://ridibooks.com/legal/terms" target="_blank" rel="noopener noreferrer">
+                <a href={`${config.POLICY_BASE_URL}/legal/terms`} target="_blank" rel="noopener noreferrer">
                   이용약관
                 </a>
               </li>
               <li css={[styles.termsItem, styles.verticalSeparator]}>
-                <a href="https://ridibooks.com/legal/privacy" target="_blank" rel="noopener noreferrer">
+                <a href={`${config.POLICY_BASE_URL}/legal/privacy`} target="_blank" rel="noopener noreferrer">
                   <strong>개인 정보 처리 방침</strong>
                 </a>
               </li>
               <li css={[styles.termsItem, styles.verticalSeparator]}>
-                <a href="https://ridibooks.com/legal/youth" target="_blank" rel="noopener noreferrer">
+                <a href={`${config.POLICY_BASE_URL}/legal/youth`} target="_blank" rel="noopener noreferrer">
                   청소년 보호 정책
                 </a>
               </li>

@@ -13,6 +13,6 @@ const styles = {
 
 export const BetaAlert = () => (
   <div css={[responsiveStylesWidth, styles.alertWrapper]}>
-    <PageAlert alertMessage="책장 서비스는 BETA 운영중입니다." linkURL={`${config.HELP_BASE_URL}articles/360034317733`} />
+    <PageAlert alertMessage="책장 서비스는 BETA 운영중입니다." linkURL={`${config.HELP_BASE_URL}/articles/360034317733`} />
   </div>
 );

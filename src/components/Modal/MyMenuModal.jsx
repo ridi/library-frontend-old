@@ -29,7 +29,7 @@ const MyMenuModal = ({ userId, isActive, isExcelDownloading, dispatchStartExcelD
     <ModalItemGroup>
       <ul>
         <li>
-          <ModalAnchorItem IconComponent={FeedbackIcon} href={`${config.HELP_BASE_URL}requests/new?ticket_form_id=664048`}>
+          <ModalAnchorItem IconComponent={FeedbackIcon} href={`${config.HELP_BASE_URL}/requests/new?ticket_form_id=664048`}>
             내 서재 의견 보내기
           </ModalAnchorItem>
         </li>

@@ -61,7 +61,7 @@ function* _showViewerGuildLink(isIos, isAndroid) {
   // eslint-disable-next-line no-nested-ternary
   const linkName = isIos ? '앱스토어로 가기' : isAndroid ? '플레이스토어로 가기' : '이용 방법 보기';
 
-  const helpLink = `${config.HELP_BASE_URL}sections/115003069928`;
+  const helpLink = `${config.HELP_BASE_URL}/sections/115003069928`;
   const appStoreLink = 'http://itunes.apple.com/kr/app/id338813698?mt=8';
   const playStoreLink = 'https://play.google.com/store/apps/details?id=com.initialcoms.ridi';
   // eslint-disable-next-line no-nested-ternary
