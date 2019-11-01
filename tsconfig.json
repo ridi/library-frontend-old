@@ -11,6 +11,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
+      "commonStyles/*": ["src/styles/*"],
       "components/*": ["src/components/*"],
       "constants/*": ["src/constants/*"],
       "pages/*": ["src/pages/*"],
