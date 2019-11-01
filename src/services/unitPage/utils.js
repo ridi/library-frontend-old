@@ -10,7 +10,7 @@ export function getRemainTime(libraryItem) {
     return libraryItem.remain_time;
   }
 
-  if (libraryItem.service_type === ServiceType.RIDISELECT) {
+  if (libraryItem.service_type === ServiceType.SELECT) {
     return '';
   }
 

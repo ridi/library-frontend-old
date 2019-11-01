@@ -1,23 +1,24 @@
 import { Book } from '@ridi/web-ui';
+import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
+import { ServiceType } from 'constants/serviceType';
+import { UnitType } from 'constants/unitType';
 import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import { UnitType } from '../../constants/unitType';
-import { getAdultVerification } from '../../services/account/selectors';
-import { getBook } from '../../services/book/selectors';
-import { downloadBooks, downloadBooksByUnitIds } from '../../services/bookDownload/actions';
-import { getFetchingReadLatest, getReadLatestData } from '../../services/purchased/common/selectors';
-import adultCover from '../../static/cover/adult.png';
+import { getAdultVerification } from 'services/account/selectors';
+import { getBook, getOpenInfo } from 'services/book/selectors';
+import { downloadBooks, downloadBooksByUnitIds } from 'services/bookDownload/actions';
+import { getFetchingReadLatest, getReadLatestData } from 'services/purchased/common/selectors';
+import adultCover from 'static/cover/adult.png';
+import NoneDashedArrowDown from 'svgs/NoneDashedArrowDown.svg';
+import NoneDashedArrowRight from 'svgs/NoneDashedArrowRight.svg';
+import Star from 'svgs/Star.svg';
+import BookMetaData from 'utils/bookMetaData';
+import { thousandsSeperator } from 'utils/number';
+import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
-import NoneDashedArrowDown from '../../svgs/NoneDashedArrowDown.svg';
-import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
-import Star from '../../svgs/Star.svg';
-import BookMetaData from '../../utils/bookMetaData';
-import { thousandsSeperator } from '../../utils/number';
-import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from '../../utils/uri';
-import SkeletonUnitDetailView from '../Skeleton/SkeletonUnitDetailView';
 import * as styles from './styles';
 
 const LINE_HEIGHT = 23;
@@ -193,9 +194,17 @@ class UnitDetailView extends React.Component {
   }
 
   renderLink() {
-    const { book, primaryItem } = this.props;
-    const href = this.isPurchased && primaryItem.is_ridiselect ? makeRidiSelectUri(book.id) : makeRidiStoreUri(book.id);
-    const serviceName = this.isPurchased && primaryItem.is_ridiselect ? '리디셀렉트' : '서점';
+    const {
+      book: { id: bookId },
+      primaryItem: { is_ridiselect: isRidiSelect },
+      openInfo,
+    } = this.props;
+    const { isSelectOpen } = openInfo[bookId];
+    const openService = isRidiSelect && isSelectOpen ? ServiceType.SELECT : ServiceType.STORE;
+
+    const href = openService === ServiceType.SELECT ? makeRidiSelectUri(bookId) : makeRidiStoreUri(bookId);
+    const serviceName = openService === ServiceType.SELECT ? '리디셀렉트' : '서점';
+
     return (
       <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
         {serviceName}에서 보기
@@ -279,6 +288,7 @@ const mapStateToPropsFactory = () => {
     fetchingReadLatest: getFetchingReadLatest(state),
     book: props.primaryBookId && getBook(state, props.primaryBookId),
     bookMetadata: props.primaryBookId && selectBookMetadata(state, props.primaryBookId, props.unit),
+    openInfo: props.primaryBookId && getOpenInfo(state, [props.primaryBookId]),
     isVerifiedAdult: getAdultVerification(state),
   });
 };

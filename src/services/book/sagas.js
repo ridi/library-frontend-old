@@ -12,8 +12,9 @@ import {
   setBookStarRatings,
   setUnitData,
   setUnitOrders,
+  setOpenInfo,
 } from './actions';
-import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
+import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders, fetchBooksOpenInfo } from './requests';
 import { getBooks } from './selectors';
 
 function* persistBookDataToStorage() {
@@ -57,8 +58,12 @@ export function* loadBookData(bookIds) {
     return;
   }
 
-  const books = yield call(fetchBookData, bookIdsWithoutInvalidValue);
-  yield put(setBookData(books));
+  const [books, openInfo] = yield all([
+    call(fetchBookData, bookIdsWithoutInvalidValue),
+    call(fetchBooksOpenInfo, bookIdsWithoutInvalidValue),
+  ]);
+
+  yield all([put(setBookData(books)), put(setOpenInfo(openInfo))]);
 
   // TODO: 되살릴 타이밍 잡기 (LRU)
   // yield fork(persistBookDataToStorage);
