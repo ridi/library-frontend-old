@@ -196,9 +196,10 @@ class UnitDetailView extends React.Component {
   renderLink() {
     const {
       book: { id: bookId },
-      primaryItem: { is_ridiselect: isRidiSelect },
+      primaryItem,
       openInfo,
     } = this.props;
+    const isRidiSelect = primaryItem ? primaryItem.is_ridiselect : false;
     const { isSelectOpen } = openInfo[bookId];
     const openService = isRidiSelect && isSelectOpen ? ServiceType.SELECT : ServiceType.STORE;
 
