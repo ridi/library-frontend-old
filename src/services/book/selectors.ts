@@ -35,3 +35,9 @@ export const getUnits = createCachedSelector(
   (state, unitIds) => unitIds,
   (units, unitIds) => Object.fromEntries(unitIds.map(unitId => [unitId, units[unitId]])),
 )((state, unitIds) => [...unitIds].sort().join(','));
+
+export const getOpenInfo = createCachedSelector(
+  (state: any) => state.books.openInfo,
+  (state, bookIds) => bookIds,
+  (openInfo, bookIds) => Object.fromEntries(bookIds.map(bookId => [bookId, openInfo[bookId]])),
+)((state, bookIds) => [...bookIds].sort().join(','));

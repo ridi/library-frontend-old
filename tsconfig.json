@@ -11,12 +11,14 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "pages/*": ["src/pages/*"],
+      "commonStyles/*": ["src/styles/*"],
       "components/*": ["src/components/*"],
-      "services/*": ["src/services/*"],
       "constants/*": ["src/constants/*"],
-      "utils/*": ["src/utils/*"],
-      "static/*": ["src/static/*"]
+      "pages/*": ["src/pages/*"],
+      "services/*": ["src/services/*"],
+      "static/*": ["src/static/*"],
+      "svgs/*": ["src/svgs/*"],
+      "utils/*": ["src/utils/*"]
     }
   },
   "exclude": ["node_modules"],

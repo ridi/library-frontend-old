@@ -72,7 +72,7 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
         expire_date: libraryItem ? libraryItem.expire_date : null,
         purchase_date: libraryItem ? libraryItem.purchase_date : null,
         service_type: libraryItem ? libraryItem.service_type : null,
-        is_ridiselect: libraryItem && libraryItem.service_type === ServiceType.RIDISELECT,
+        is_ridiselect: libraryItem && libraryItem.service_type === ServiceType.SELECT,
         remain_time: libraryItem ? getRemainTime(libraryItem) : '',
         purchased: !!libraryItem,
       };
