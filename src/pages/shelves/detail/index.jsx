@@ -63,10 +63,12 @@ function ShelfDetail(props) {
   const [isAdding, setIsAdding] = React.useState(false);
 
   React.useEffect(() => {
+    loadShelfBookCount(uuid);
+  }, [uuid]);
+  React.useEffect(() => {
     clearSelectedBooks();
     loadShelfBooks(uuid, pageOptions);
-    loadShelfBookCount(uuid);
-  }, [location]);
+  }, [location, uuid]);
 
   const toggleEditingMode = React.useCallback(() => {
     clearSelectedBooks();
@@ -164,6 +166,9 @@ function ShelfDetail(props) {
   );
 
   React.useEffect(() => {
+    if (totalPages == null) {
+      return;
+    }
     const newPage = Math.max(Math.min(page, totalPages), 1);
     if (page !== newPage) {
       const linkProps = makeLinkProps(
