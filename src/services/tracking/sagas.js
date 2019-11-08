@@ -1,5 +1,5 @@
 import { DeviceType, Tracker } from '@ridi/event-tracker';
-import { Environemnt } from 'constants/environment';
+import { ENV } from 'constants/environment';
 import { all, call, select, takeEvery } from 'redux-saga/effects';
 import config from '../../config';
 import * as actions from './actions';
@@ -14,7 +14,7 @@ function* initializeTracker() {
   const deviceType = document.body.clientWidth < deviceBP ? DeviceType.Mobile : DeviceType.PC;
 
   tracker = new Tracker({
-    debug: config.ENVIRONMENT !== Environemnt.PRODUCTION,
+    debug: config.ENVIRONMENT !== ENV.PRODUCTION,
     deviceType,
     userId,
     tagManagerOptions: {

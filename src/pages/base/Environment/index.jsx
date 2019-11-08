@@ -1,13 +1,13 @@
-import { Environemnt } from 'constants/environment';
+import { ENV } from 'constants/environment';
 import config from '../../../config';
 
 const environmentBandStyle = environment => {
   let background = '';
-  if (environment === Environemnt.LOCAL) {
+  if (environment === ENV.LOCAL) {
     background = 'darkgray';
-  } else if (environment === Environemnt.DEV) {
+  } else if (environment === ENV.DEV) {
     background = 'green';
-  } else if (environment === Environemnt.STAGING) {
+  } else if (environment === ENV.STAGING) {
     background = 'red';
   }
 
@@ -25,10 +25,10 @@ const environmentBandStyle = environment => {
 export const Environment = () => {
   const { ENVIRONMENT: environment } = config;
   switch (environment) {
-    case Environemnt.LOCAL:
-    case Environemnt.DEV:
+    case ENV.LOCAL:
+    case ENV.DEV:
       return <p css={environmentBandStyle(environment)}>{environment}</p>;
-    case Environemnt.STAGING:
+    case ENV.STAGING:
       return (
         <a css={environmentBandStyle(environment)} href={`${config.BASE_URL}/production`}>
           {environment}
