@@ -1,15 +1,9 @@
 import axios from 'axios';
-import { ENV } from 'constants/environment';
-import config from '../config';
 import { retry, throwNetworkError } from '../utils/retry';
 
 export default class API {
   constructor(withCredentials = false, headers = {}, retryCount = 3, retryDelay = 1000) {
-    const { ENVIRONMENT: environment } = config;
-    const timeout = environment === ENV.PRODUCTION || environment === ENV.STAGING ? 10000 : 60000;
-    this.http = axios.create({
-      timeout,
-    });
+    this.http = axios.create();
     this.withCredentials = withCredentials;
     this.headers = headers;
     this.retryCount = retryCount;

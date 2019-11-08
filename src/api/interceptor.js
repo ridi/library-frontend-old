@@ -1,11 +1,16 @@
 import * as Sentry from '@sentry/browser';
 import axios from 'axios';
+import { ENV } from 'constants/environment';
 import config from '../config';
 import * as accountActions from '../services/account/actions';
 import * as maintenanceAction from '../services/maintenance/actions';
 import { getMaintenanceStatus } from '../services/maintenance/requests';
 import { retry, throwNetworkError } from '../utils/retry';
 import { HttpStatusCode } from './constants';
+
+const { ENVIRONMENT: environment } = config;
+const timeout = environment === ENV.PRODUCTION || environment === ENV.STAGING ? 10000 : 60000;
+axios.defaults.timeout = timeout;
 
 const createInterceptor = (onSuccess, onFailure) => ({
   onSuccess: data => {
