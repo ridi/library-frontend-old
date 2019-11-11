@@ -10,7 +10,7 @@ const BooksWrapper = ({ viewType, books, renderBook, children }) => {
   const setBooksAdditionalPadding = () => {
     const booksNode = document.querySelector(`.${booksWrapperClassName}`);
     const bookNode = document.querySelector(`.${bookClassName}`);
-    setAdditionalPadding(Math.floor((booksNode.offsetWidth % bookNode.offsetWidth) / 2));
+    booksNode && bookNode && setAdditionalPadding(Math.floor((booksNode.offsetWidth % bookNode.offsetWidth) / 2));
   };
 
   useEffect(() => {
