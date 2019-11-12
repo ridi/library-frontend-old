@@ -33,7 +33,7 @@ interface MainPageOptions {
   page: number;
   orderType: string;
   orderBy: string;
-  categoryFilter: number;
+  filter: number | string;
 }
 
 interface SearchPageOptions {
@@ -49,8 +49,9 @@ function extractPageOptions({ location, path }): PageOptions {
   const page = parseInt(urlParams.get('page'), 10) || 1;
   const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
-  const categoryFilter = parseInt(urlParams.get('filter'), 10) || null;
   const keyword = urlParams.get('keyword') || '';
+  const urlFilterParam = urlParams.get('filter');
+  let filter = parseInt(urlFilterParam, 10) || urlFilterParam || null;
 
   switch (path) {
     case URLMap[PageType.INDEX].path:
@@ -60,7 +61,7 @@ function extractPageOptions({ location, path }): PageOptions {
         page,
         orderType,
         orderBy,
-        categoryFilter,
+        filter,
       };
     case URLMap[PageType.SEARCH].path:
       return {
@@ -74,8 +75,8 @@ function extractPageOptions({ location, path }): PageOptions {
 }
 
 function useDispatchOptions(actionDispatcher, options) {
-  const { kind, keyword, page, orderType, orderBy, categoryFilter } = options;
-  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, keyword, kind, page, orderType, orderBy, categoryFilter]);
+  const { kind, keyword, page, orderType, orderBy, filter } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, keyword, kind, page, orderType, orderBy, filter]);
 }
 
 function PurchasedMain(props) {
@@ -214,7 +215,7 @@ function PurchasedMain(props) {
       const orderOptions = OrderOptions.toMainList();
 
       searchBarProps = {
-        filter: pageOptions.categoryFilter,
+        filter: pageOptions.filter,
         filterOptions,
         orderOptions,
         orderBy: pageOptions.orderBy,

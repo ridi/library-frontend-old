@@ -30,11 +30,11 @@ const searchBarStyles = {
 };
 
 export default function SearchBar({ filter, isSearching, keyword, onClear, onConfirm, onFilterChange, onKeywordChange }) {
-  const filterOptions = useSelector(filterSelectors.getFilterOptions);
+  const { categoryOptions } = useSelector(filterSelectors.getFilterOptions);
   const left = <SearchBox allowEmptySearch keyword={keyword} onClear={onClear} onSubmit={onConfirm} onKeywordChange={onKeywordChange} />;
   const right = (
     <>
-      <Tools.Filter filter={filter} filterOptions={filterOptions} onFilterChange={onFilterChange} />
+      <Tools.Filter filter={filter} filterOptions={{ categoryOptions }} onFilterChange={onFilterChange} />
       {isSearching && (
         <button type="button" css={searchBarStyles.cancelButton} onClick={onClear}>
           취소

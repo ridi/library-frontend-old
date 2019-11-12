@@ -24,7 +24,7 @@ import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
 
 export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
-  const [categoryFilter, setCategoryFilter] = React.useState(null);
+  const [filter, setFilter] = React.useState(null);
   const [keyword, setKeyword] = React.useState('');
   const [searchingKeyword, setSearchingKeyword] = React.useState('');
   const [page, setPage] = React.useState(1);
@@ -33,7 +33,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   const pageOptions = {
     kind: BooksPageKind.SEARCH,
     keyword: processedKeyword,
-    categoryFilter,
+    filter,
     page,
   };
 
@@ -63,7 +63,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
     dispatch(selectionActions.clearSelectedItems());
     dispatch(mainActions.loadItems(pageOptions));
     window.scrollTo(0, 0);
-  }, [categoryFilter, dispatch, page, searchingKeyword]);
+  }, [filter, dispatch, page, searchingKeyword]);
 
   React.useEffect(() => {
     dispatch(filterActions.updateCategories());
@@ -73,11 +73,11 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
     return (
       <SearchBar
         isSearching={searchingKeyword !== ''}
-        filter={categoryFilter}
+        filter={filter}
         keyword={keyword}
         onClear={handleSearchClear}
         onConfirm={handleSearchConfirm}
-        onFilterChange={setCategoryFilter}
+        onFilterChange={setFilter}
         onKeywordChange={setKeyword}
       />
     );

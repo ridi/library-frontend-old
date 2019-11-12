@@ -1,15 +1,19 @@
+import { ServiceType } from 'constants/serviceType';
 import { getApi } from '../../../api';
 import config from '../../../config';
 import { OrderType } from '../../../constants/orderOptions';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
 import { BooksPageKind } from '../../../constants/urls';
 import { calcOffset } from '../../../utils/pagination';
 import { makeURI } from '../../../utils/uri';
 
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-
-function makeCommonOptions({ kind, keyword, orderType, orderBy, categoryFilter }) {
+function makeCommonOptions({ kind, keyword, orderType, orderBy, filter }) {
   const options = {};
-  options.category = categoryFilter;
+  if (ServiceType.isIncluded(filter)) {
+    options.serviceType = filter;
+  } else {
+    options.category = filter;
+  }
   if (kind === BooksPageKind.MAIN) {
     if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
       options.expiredBooksOnly = true;

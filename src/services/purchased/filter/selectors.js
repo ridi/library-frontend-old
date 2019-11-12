@@ -1,1 +1,4 @@
-export const getFilterOptions = state => state.filter.categoryOptions;
+export const getFilterOptions = state => ({
+  categoryOptions: state.filter.categoryOptions,
+  serviceTypeOptions: state.filter.serviceTypeOptions,
+});

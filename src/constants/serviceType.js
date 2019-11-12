@@ -26,4 +26,8 @@ export class ServiceType {
   static isRidiselect(serviceType) {
     return serviceType === this.SELECT;
   }
+
+  static isIncluded(value) {
+    return value === this.NORMAL || value === this.RENT || value === this.FLATRATE || value === this.SELECT || value === this.STORE;
+  }
 }
