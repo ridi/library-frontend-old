@@ -1,5 +1,6 @@
 export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
 export const UPDATE_SERVICE_TYPES = 'UPDATE_SERVICE_TYPES';
+export const SET_ALL_CATEGORY_COUNT = 'SET_ALL_CATEGORY_COUNT';
 export const SET_CATEGORY_FILTER_OPTIONS = 'SET_CATEGORY_FILTER_OPTIONS';
 export const SET_SERVICE_TYPE_FILTER_OPTIONS = 'SET_SERVICE_TYPE_FILTER_OPTIONS';
 
@@ -11,10 +12,16 @@ export const updateServiceTypes = () => ({
   type: UPDATE_SERVICE_TYPES,
 });
 
-export const setCategoryFilterOptions = (allCategoryOption, categoryFilterOptions) => ({
+export const setAllCategoryCount = count => ({
+  type: SET_ALL_CATEGORY_COUNT,
+  payload: {
+    count,
+  },
+});
+
+export const setCategoryFilterOptions = categoryFilterOptions => ({
   type: SET_CATEGORY_FILTER_OPTIONS,
   payload: {
-    allCategoryOption,
     categoryFilterOptions,
   },
 });

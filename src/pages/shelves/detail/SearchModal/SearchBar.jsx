@@ -1,11 +1,9 @@
 import { css } from '@emotion/core';
-import React from 'react';
-import { useSelector } from 'react-redux';
-
 import FlexBar from 'components/FlexBar';
 import SearchBox from 'components/SearchBox';
 import * as Tools from 'components/Tool';
-
+import React from 'react';
+import { useSelector } from 'react-redux';
 import * as filterSelectors from 'services/purchased/filter/selectors';
 
 const searchBarStyles = {

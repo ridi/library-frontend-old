@@ -24,7 +24,10 @@ const countAllCategory = categories => categories.reduce((previous, value) => pr
 export async function fetchPurchaseCategories() {
   const api = getApi();
   const response = await api.get(makeURI('/items/categories', {}, config.LIBRARY_API_BASE_URL));
-  return [createFilterOption('전체', null, countAllCategory(response.data.categories)), ...reformatCategories(response.data.categories)];
+  return {
+    allCategoryCount: countAllCategory(response.data.categories),
+    categories: [...reformatCategories(response.data.categories)],
+  };
 }
 
 export async function fetchPurchaseServiceTypesCount(serviceType) {

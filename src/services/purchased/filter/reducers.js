@@ -1,11 +1,11 @@
 import produce from 'immer';
-import { SET_CATEGORY_FILTER_OPTIONS, SET_SERVICE_TYPE_FILTER_OPTIONS } from './actions';
+import { SET_ALL_CATEGORY_COUNT, SET_CATEGORY_FILTER_OPTIONS, SET_SERVICE_TYPE_FILTER_OPTIONS } from './actions';
 
 const initialState = {
   allCategoryOption: {
     title: '전체',
     value: null,
-    hasChildren: false,
+    count: 0,
   },
   categoryOptions: [],
   serviceTypeOptions: [],
@@ -13,8 +13,10 @@ const initialState = {
 
 const filterReducer = produce((draft, action) => {
   switch (action.type) {
+    case SET_ALL_CATEGORY_COUNT:
+      draft.allCategoryOption.count = action.payload.count;
+      break;
     case SET_CATEGORY_FILTER_OPTIONS:
-      draft.allCategoryOption = action.payload.allCategoryOption;
       draft.categoryOptions = action.payload.categoryFilterOptions;
       break;
     case SET_SERVICE_TYPE_FILTER_OPTIONS:

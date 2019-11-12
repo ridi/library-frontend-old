@@ -1,44 +1,41 @@
+import { ServiceType } from 'constants/serviceType';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
-
 import * as actions from './actions';
 import * as requests from './requests';
-import { ServiceType } from 'constants/serviceType';
 
 export function* updateCategories() {
-  const categories = yield call(requests.fetchPurchaseCategories);
-  const allCategory = categories.shift();
-
-  yield put(actions.setCategoryFilterOptions(allCategory, categories));
+  const { allCategoryCount, categories } = yield call(requests.fetchPurchaseCategories);
+  yield all([put(actions.setCategoryFilterOptions(categories)), put(actions.setAllCategoryCount(allCategoryCount))]);
 }
 
+const ServiceTypeFilter = [
+  {
+    title: '구매',
+    value: ServiceType.NORMAL,
+    count: 0,
+  },
+  {
+    title: '대여',
+    value: ServiceType.RENT,
+    count: 0,
+  },
+  {
+    title: '리디셀렉트',
+    value: ServiceType.SELECT,
+    count: 0,
+  },
+];
+
 export function* updateServiceTypes() {
-  const ServiceTypeFilterList = [
-    {
-      serviceType: ServiceType.NORMAL,
-      title: '구매',
-      count: 0,
-    },
-    {
-      serviceType: ServiceType.RENT,
-      title: '대여',
-      count: 0,
-    },
-    {
-      serviceType: ServiceType.SELECT,
-      title: '리디셀렉트',
-      count: 0,
-    },
-  ];
-  const [...serviceTypesCounts] = yield all(
-    ServiceTypeFilterList.map(filter => call(requests.fetchPurchaseServiceTypesCount, filter.serviceType)),
-  );
+  const serviceTypeCounts = yield all(ServiceTypeFilter.map(filter => call(requests.fetchPurchaseServiceTypesCount, filter.value)));
+
+  // 서비스 타입에 해당하는 도서가 1권 이상일 때에만 노출
   yield put(
     actions.setServiceTypeFilterOptions(
-      ServiceTypeFilterList.map((serviceTypeFilter, index) => ({
-        title: serviceTypeFilter.title,
-        value: serviceTypeFilter.serviceType,
-        count: serviceTypesCounts[index].item_total_count,
-      })).filter(serviceTypeFilter => serviceTypeFilter.count > 0),
+      ServiceTypeFilter.map((filter, index) => {
+        filter.count = serviceTypeCounts[index] ? serviceTypeCounts[index].item_total_count : 0;
+        return filter;
+      }).filter(filter => filter.count > 0),
     ),
   );
 }
