@@ -11,9 +11,10 @@ export const updateServiceTypes = () => ({
   type: UPDATE_SERVICE_TYPES,
 });
 
-export const setCategoryFilterOptions = categoryFilterOptions => ({
+export const setCategoryFilterOptions = (allCategoryOption, categoryFilterOptions) => ({
   type: SET_CATEGORY_FILTER_OPTIONS,
   payload: {
+    allCategoryOption,
     categoryFilterOptions,
   },
 });

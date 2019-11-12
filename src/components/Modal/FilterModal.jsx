@@ -61,7 +61,7 @@ const FilterModal = props => {
   const { filter, filterOptions, onFilterChange, onModalBackgroundClick } = props;
   const checkedItemEl = React.useRef(null);
   const modalEl = React.useRef(null);
-  const { categoryOptions, serviceTypeOptions } = filterOptions;
+  const { allCategoryOption, categoryOptions, serviceTypeOptions } = filterOptions;
 
   React.useLayoutEffect(() => {
     const modal = modalEl.current;
@@ -73,7 +73,14 @@ const FilterModal = props => {
 
   return (
     <Modal modalRef={modalEl} isActive a11y="카테고리 필터" onClickModalBackground={onModalBackgroundClick}>
-      <FilterGrouop filterOptions={serviceTypeOptions} filter={filter} handleFilterChange={onFilterChange} checkedItemEl={checkedItemEl} />
+      {allCategoryOption && (
+        <FilterGrouop
+          filterOptions={[allCategoryOption]}
+          filter={filter}
+          handleFilterChange={onFilterChange}
+          checkedItemEl={checkedItemEl}
+        />
+      )}
       {serviceTypeOptions && (
         <FilterGrouop
           groupTitle="구매 방식별 카테고리"

@@ -1,4 +1,1 @@
-export const getFilterOptions = state => ({
-  categoryOptions: state.filter.categoryOptions,
-  serviceTypeOptions: state.filter.serviceTypeOptions,
-});
+export const getFilterOptions = state => state.filter;

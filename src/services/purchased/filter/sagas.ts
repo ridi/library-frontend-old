@@ -6,7 +6,9 @@ import { ServiceType } from 'constants/serviceType';
 
 export function* updateCategories() {
   const categories = yield call(requests.fetchPurchaseCategories);
-  yield put(actions.setCategoryFilterOptions(categories));
+  const allCategory = categories.shift();
+
+  yield put(actions.setCategoryFilterOptions(allCategory, categories));
 }
 
 export function* updateServiceTypes() {
