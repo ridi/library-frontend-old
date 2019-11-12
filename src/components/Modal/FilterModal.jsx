@@ -72,7 +72,7 @@ const FilterModal = props => {
   }, []);
 
   return (
-    <Modal modalRef={modalEl} isActive a11y="카테고리 필터" onClickModalBackground={onModalBackgroundClick}>
+    <Modal modalRef={modalEl} isActive a11y="필터" onClickModalBackground={onModalBackgroundClick}>
       {allCategoryOption && (
         <FilterGrouop
           filterOptions={[allCategoryOption]}
@@ -83,7 +83,7 @@ const FilterModal = props => {
       )}
       {serviceTypeOptions && (
         <FilterGrouop
-          groupTitle="구매 방식별 카테고리"
+          groupTitle="구매 방식 필터"
           filterOptions={serviceTypeOptions}
           filter={filter}
           handleFilterChange={onFilterChange}
@@ -92,7 +92,7 @@ const FilterModal = props => {
       )}
       {categoryOptions && (
         <FilterGrouop
-          groupTitle="장르별 카테고리"
+          groupTitle="카테고리 필터"
           filterOptions={categoryOptions}
           filter={filter}
           handleFilterChange={onFilterChange}
