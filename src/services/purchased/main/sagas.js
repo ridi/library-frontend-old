@@ -13,7 +13,7 @@ import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
 import { loadRecentlyUpdatedData } from '../common/sagas/rootSagas';
-import { updateCategories } from '../filter/sagas';
+import { updateCategories, updateServiceTypes } from '../filter/sagas';
 import { DOWNLOAD_SELECTED_MAIN_BOOKS, HIDE_SELECTED_MAIN_BOOKS, LOAD_MAIN_ITEMS, SELECT_ALL_MAIN_BOOKS, updateItems } from './actions';
 import { fetchMainItems, fetchMainItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';
@@ -25,7 +25,7 @@ function* loadMainItems(action) {
 
   let categoryTask;
   if (pageOptions.kind === BooksPageKind.MAIN) {
-    categoryTask = yield fork(updateCategories);
+    categoryTask = yield all([fork(updateCategories), fork(updateServiceTypes)]);
   }
 
   try {

@@ -1,11 +1,9 @@
 import { css } from '@emotion/core';
-import React from 'react';
-import { useSelector } from 'react-redux';
-
 import FlexBar from 'components/FlexBar';
 import SearchBox from 'components/SearchBox';
 import * as Tools from 'components/Tool';
-
+import React from 'react';
+import { useSelector } from 'react-redux';
 import * as filterSelectors from 'services/purchased/filter/selectors';
 
 const searchBarStyles = {
@@ -30,11 +28,11 @@ const searchBarStyles = {
 };
 
 export default function SearchBar({ filter, isSearching, keyword, onClear, onConfirm, onFilterChange, onKeywordChange }) {
-  const filterOptions = useSelector(filterSelectors.getFilterOptions);
+  const { allCategoryOption, categoryOptions } = useSelector(filterSelectors.getFilterOptions);
   const left = <SearchBox allowEmptySearch keyword={keyword} onClear={onClear} onSubmit={onConfirm} onKeywordChange={onKeywordChange} />;
   const right = (
     <>
-      <Tools.Filter filter={filter} filterOptions={filterOptions} onFilterChange={onFilterChange} />
+      <Tools.Filter filter={filter} filterOptions={{ allCategoryOption, categoryOptions }} onFilterChange={onFilterChange} />
       {isSearching && (
         <button type="button" css={searchBarStyles.cancelButton} onClick={onClear}>
           취소
