@@ -1,10 +1,5 @@
+import { ENV } from 'constants/environment';
 import config from '../../../config';
-
-const ENV = {
-  LOCAL: 'local',
-  DEV: 'development',
-  STAGING: 'staging',
-};
 
 const environmentBandStyle = environment => {
   let background = '';
@@ -28,15 +23,15 @@ const environmentBandStyle = environment => {
 };
 
 export const Environment = () => {
-  const { ENVIRONMENT: environmentTitle } = config;
-  switch (environmentTitle) {
+  const { ENVIRONMENT: environment } = config;
+  switch (environment) {
     case ENV.LOCAL:
     case ENV.DEV:
-      return <p css={environmentBandStyle(environmentTitle)}>{environmentTitle}</p>;
+      return <p css={environmentBandStyle(environment)}>{environment}</p>;
     case ENV.STAGING:
       return (
-        <a css={environmentBandStyle(environmentTitle)} href={`${config.BASE_URL}/production`}>
-          {environmentTitle}
+        <a css={environmentBandStyle(environment)} href={`${config.BASE_URL}/production`}>
+          {environment}
         </a>
       );
     default:
