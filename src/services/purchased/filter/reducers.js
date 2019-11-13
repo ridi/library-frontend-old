@@ -7,8 +7,8 @@ const initialState = {
     value: null,
     count: 0,
   },
-  categoryOptions: [],
-  serviceTypeOptions: [],
+  categoryOptions: null,
+  serviceTypeOptions: null,
 };
 
 const filterReducer = produce((draft, action) => {
