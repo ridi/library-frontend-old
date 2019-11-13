@@ -83,8 +83,9 @@ function makeBackLocation({ location, match }) {
         pathname: URLMap[PageType.MAIN].as,
       };
     case URLMap[PageType.SHELF_UNIT].path:
+      const { uuid } = match.params;
       return {
-        pathname: URLMap[PageType.SHELF_DETAIL].as(match.params.uuid),
+        pathname: URLMap[PageType.SHELF_DETAIL].as({ uuid }),
       };
     case URLMap[PageType.HIDDEN_UNIT].path:
       return {
@@ -334,7 +335,4 @@ const mapDispatchToProps = {
   dispatchUnhideSelectedBooks: unitPageActions.unhideSelectedBooks,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Unit);
+export default connect(mapStateToProps, mapDispatchToProps)(Unit);
