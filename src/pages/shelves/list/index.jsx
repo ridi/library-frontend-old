@@ -1,34 +1,35 @@
+import { ButtonType } from 'components/ActionBar/constants';
+import Editable from 'components/Editable';
+import { EmptyShelves } from 'components/Empty/EmptyShelves';
+import FlexBar from 'components/FlexBar';
+import PageRedirect from 'components/PageRedirect';
+import ResponsivePaginator from 'components/ResponsivePaginator';
+import { Shelves } from 'components/Shelves';
+import { SkeletonShelves } from 'components/Skeleton/SkeletonShelves';
+import { Editing, ShelfOrder } from 'components/Tool';
+import { Add } from 'components/Tool/Add';
+import TotalCount from 'components/Tool/TotalCount';
+import { OrderOptions } from 'constants/orderOptions';
+import { SHELVES_LIMIT_PER_PAGE } from 'constants/page';
+import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from 'constants/shelves';
+import { URLMap } from 'constants/urls';
+import Footer from 'pages/base/Footer';
+import { TabBar, TabMenuTypes } from 'pages/base/LNB';
+import Responsive from 'pages/base/Responsive';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+import * as confirmActions from 'services/confirm/actions';
+import * as promptActions from 'services/prompt/actions';
+import * as selectionActions from 'services/selection/actions';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as shelfActions from 'services/shelf/actions';
+import * as shelfSelectors from 'services/shelf/selectors';
+import * as toastActions from 'services/toast/actions';
+import { ToastStyle } from 'services/toast/constants';
+import * as paginationUtils from 'utils/pagination';
+import { makeLinkProps } from 'utils/uri';
 
-import { ButtonType } from '../../../components/ActionBar/constants';
-import Editable from '../../../components/Editable';
-import { EmptyShelves } from '../../../components/Empty/EmptyShelves';
-import FlexBar from '../../../components/FlexBar';
-import PageRedirect from '../../../components/PageRedirect';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import { Shelves } from '../../../components/Shelves';
-import { SkeletonShelves } from '../../../components/Skeleton/SkeletonShelves';
-import { Editing, ShelfOrder } from '../../../components/Tool';
-import { Add } from '../../../components/Tool/Add';
-import { OrderOptions } from '../../../constants/orderOptions';
-import { SHELVES_LIMIT_PER_PAGE } from '../../../constants/page';
-import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../../constants/shelves';
-import { URLMap } from '../../../constants/urls';
-import * as confirmActions from '../../../services/confirm/actions';
-import * as promptActions from '../../../services/prompt/actions';
-import * as selectionActions from '../../../services/selection/actions';
-import * as selectionSelectors from '../../../services/selection/selectors';
-import * as shelfActions from '../../../services/shelf/actions';
-import * as shelfSelectors from '../../../services/shelf/selectors';
-import * as toastActions from '../../../services/toast/actions';
-import { ToastStyle } from '../../../services/toast/constants';
-import * as paginationUtils from '../../../utils/pagination';
-import { makeLinkProps } from '../../../utils/uri';
-import Footer from '../../base/Footer';
-import { TabBar, TabMenuTypes } from '../../base/LNB';
-import Responsive from '../../base/Responsive';
 import { BetaAlert } from './BetaAlert';
 import * as styles from './styles';
 
@@ -167,7 +168,13 @@ const ShelvesList = props => {
     );
   };
 
-  const renderToolBar = () => <FlexBar css={styles.toolBar} flexLeft={<div />} flexRight={renderTools()} />;
+  const renderToolBar = () => (
+    <FlexBar
+      css={styles.toolBar}
+      flexLeft={totalShelfCount ? <TotalCount count={totalShelfCount} unit="개" /> : <div />}
+      flexRight={renderTools()}
+    />
+  );
   const renderPaginator = () => <ResponsivePaginator currentPage={pageOptions.page} totalPages={totalPages} />;
   const renderMain = () => {
     const { loading: isLoading, items: shelfIds } = shelves;

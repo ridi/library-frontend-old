@@ -1,7 +1,8 @@
+import FlexBar from 'components/FlexBar';
+import { Editing } from 'components/Tool';
+import TotalCount from 'components/Tool/TotalCount';
 import React from 'react';
 
-import FlexBar from '../FlexBar';
-import { Editing } from '../Tool';
 import * as styles from './styles';
 
 const SerialPreferenceToolBar = props => {
@@ -10,7 +11,7 @@ const SerialPreferenceToolBar = props => {
   return (
     <FlexBar
       css={styles.toolBar}
-      flexLeft={<span css={styles.totalCount}>{!isFetchingBooks ? `총 ${totalCount}작품` : ''}</span>}
+      flexLeft={!isFetchingBooks ? <TotalCount count={totalCount} unit="작품" /> : <div />}
       flexRight={<Editing toggleEditingMode={toggleEditingMode} />}
     />
   );
