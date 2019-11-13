@@ -21,7 +21,7 @@ const FilterItem = ({ option, filter, isChild, innerRef, onFilterChange }) => {
   );
 };
 
-const FilterGrouop = ({ groupTitle, filterOptions, filter, handleFilterChange, checkedItemEl }) => (
+const FilterGroup = ({ groupTitle, filterOptions, filter, handleFilterChange, checkedItemEl }) => (
   <ModalItemGroup groupTitle={groupTitle}>
     <ul>
       {filterOptions.map(option => {
@@ -74,7 +74,7 @@ const FilterModal = props => {
   return (
     <Modal modalRef={modalEl} isActive a11y="필터" onClickModalBackground={onModalBackgroundClick}>
       {allCategoryOption && (
-        <FilterGrouop
+        <FilterGroup
           filterOptions={[allCategoryOption]}
           filter={filter}
           handleFilterChange={onFilterChange}
@@ -82,7 +82,7 @@ const FilterModal = props => {
         />
       )}
       {serviceTypeOptions && (
-        <FilterGrouop
+        <FilterGroup
           groupTitle="구매 방식 필터"
           filterOptions={serviceTypeOptions}
           filter={filter}
@@ -91,7 +91,7 @@ const FilterModal = props => {
         />
       )}
       {categoryOptions && (
-        <FilterGrouop
+        <FilterGroup
           groupTitle="카테고리 필터"
           filterOptions={categoryOptions}
           filter={filter}
