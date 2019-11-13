@@ -32,10 +32,10 @@ export function* updateServiceTypes() {
   // 서비스 타입에 해당하는 도서가 1권 이상일 때에만 노출
   yield put(
     actions.setServiceTypeFilterOptions(
-      ServiceTypeFilter.map((filter, index) => {
-        filter.count = serviceTypeCounts[index] ? serviceTypeCounts[index].item_total_count : 0;
-        return filter;
-      }).filter(filter => filter.count > 0),
+      ServiceTypeFilter.map((filter, index) => ({
+        ...filter,
+        count: serviceTypeCounts[index] ? serviceTypeCounts[index].item_total_count : 0,
+      })).filter(filter => filter.count > 0),
     ),
   );
 }

@@ -51,7 +51,7 @@ function extractPageOptions({ location, path }): PageOptions {
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
   const keyword = urlParams.get('keyword') || '';
   const urlFilterParam = urlParams.get('filter');
-  let filter = parseInt(urlFilterParam, 10) || urlFilterParam || null;
+  const filter = parseInt(urlFilterParam, 10) || urlFilterParam || null;
 
   switch (path) {
     case URLMap[PageType.INDEX].path:
