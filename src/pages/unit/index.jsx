@@ -255,7 +255,7 @@ function Unit(props) {
     const order = OrderOptions.toKey(orderType, orderBy);
     const orderOptions = UnitType.isSeries(unit.type)
       ? OrderOptions.toSeriesList(bookUnitOfCount)
-      : OrderOptions.toShelfList(bookUnitOfCount);
+      : OrderOptions.toCollectionList(bookUnitOfCount);
 
     return (
       <SeriesList

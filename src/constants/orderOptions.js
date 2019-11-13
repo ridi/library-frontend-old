@@ -9,6 +9,9 @@ export const OrderType = {
   EXPIRED_BOOKS_ONLY: 'expired_books_only',
   SHELF_CREATED: 'created',
   SHELF_NAME: 'name',
+  SHELF_BOOK_REVISION: 'revision',
+  SHELF_BOOK_TITLE: 'title',
+  SHELF_BOOK_AUTHOR: 'author',
   UNIT_TITLE: 'unit_title',
   BOOK_TITLE: 'book_title',
   UNIT_AUTHOR: 'unit_author',
@@ -60,11 +63,7 @@ export class OrderOptions extends BaseOrderOptions {
     ];
   }
 
-  static toShelves() {
-    return [this.SHELF_CREATED, this.SHELF_NAME];
-  }
-
-  static toShelfList(unitOfCount) {
+  static toCollectionList(unitOfCount) {
     return [
       applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
       applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
@@ -76,6 +75,14 @@ export class OrderOptions extends BaseOrderOptions {
     ];
   }
 
+  static toShelves() {
+    return [this.SHELF_CREATED, this.SHELF_NAME];
+  }
+
+  static toShelfList() {
+    return [this.SHELF_BOOK_REVISION, this.SHELF_BOOK_TITLE, this.SHELF_BOOK_AUTHOR];
+  }
+
   static toList() {
     return [
       this.PURCHASE_DATE,
@@ -85,6 +92,9 @@ export class OrderOptions extends BaseOrderOptions {
       this.EXPIRED_BOOKS_ONLY,
       this.SHELF_CREATED,
       this.SHELF_NAME,
+      this.SHELF_BOOK_REVISION,
+      this.SHELF_BOOK_TITLE,
+      this.SHELF_BOOK_AUTHOR,
       this.UNIT_ORDER_DESC,
       this.UNIT_ORDER_ASC,
       this.BOOK_TITLE,
@@ -94,6 +104,10 @@ export class OrderOptions extends BaseOrderOptions {
 
   static get DEFAULT() {
     return this.PURCHASE_DATE;
+  }
+
+  static get SHELF_BOOK_DEFAULT() {
+    return this.SHELF_BOOK_REVISION;
   }
 
   static get SHELF_CREATED() {
@@ -111,6 +125,30 @@ export class OrderOptions extends BaseOrderOptions {
       title: '이름 가나다순',
       orderType: OrderType.SHELF_NAME,
       orderBy: OrderBy.ASC,
+    };
+  }
+
+  static get SHELF_BOOK_REVISION() {
+    return {
+      key: 'SHELF_BOOK_REVISION',
+      title: '최근 추가순',
+      orderType: OrderType.SHELF_BOOK_REVISION,
+    };
+  }
+
+  static get SHELF_BOOK_TITLE() {
+    return {
+      key: 'SHELF_BOOK_TITLE',
+      title: '제목 가나다순',
+      orderType: OrderType.SHELF_BOOK_TITLE,
+    };
+  }
+
+  static get SHELF_BOOK_AUTHOR() {
+    return {
+      key: 'SHELF_BOOK_AUTHOR',
+      title: '작가 가나다순',
+      orderType: OrderType.SHELF_BOOK_AUTHOR,
     };
   }
 
