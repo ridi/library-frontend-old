@@ -13,7 +13,7 @@ export const createInitialDataState = () => ({
 });
 
 export function mapPageOptionsToKey(pageOptions) {
-  const { kind, keyword, orderType, orderBy, categoryFilter } = pageOptions;
+  const { kind, keyword, orderType, orderBy, filter } = pageOptions;
   let key = '';
   if (kind === BooksPageKind.MAIN) {
     const order = OrderOptions.toKey(orderType, orderBy);
@@ -21,5 +21,5 @@ export function mapPageOptionsToKey(pageOptions) {
   } else if (kind === BooksPageKind.SEARCH) {
     key = keyword;
   }
-  return `${kind}_${categoryFilter}_${key}`;
+  return `${kind}_${filter}_${key}`;
 }

@@ -1,25 +1,30 @@
-import { SET_FILTER_OPTIONS } from './actions';
+import produce from 'immer';
+import { SET_ALL_CATEGORY_COUNT, SET_CATEGORY_FILTER_OPTIONS, SET_SERVICE_TYPE_FILTER_OPTIONS } from './actions';
 
 const initialState = {
-  options: [
-    {
-      title: '전체 카테고리',
-      value: null,
-      hasChildren: false,
-      children: null,
-    },
-  ],
+  allCategoryOption: {
+    title: '전체',
+    value: null,
+    count: 0,
+  },
+  categoryOptions: null,
+  serviceTypeOptions: null,
 };
 
-const filterReducer = (state = initialState, action) => {
+const filterReducer = produce((draft, action) => {
   switch (action.type) {
-    case SET_FILTER_OPTIONS:
-      return {
-        options: action.payload.filterOptions,
-      };
+    case SET_ALL_CATEGORY_COUNT:
+      draft.allCategoryOption.count = action.payload.count;
+      break;
+    case SET_CATEGORY_FILTER_OPTIONS:
+      draft.categoryOptions = action.payload.categoryFilterOptions;
+      break;
+    case SET_SERVICE_TYPE_FILTER_OPTIONS:
+      draft.serviceTypeOptions = action.payload.serviceTypeFilterOptions;
+      break;
     default:
-      return state;
+      break;
   }
-};
+}, initialState);
 
 export default filterReducer;
