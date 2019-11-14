@@ -1,16 +1,15 @@
+import { OrderType } from 'constants/orderOptions';
+import { ServiceType } from 'constants/serviceType';
+import { BooksPageKind } from 'constants/urls';
 import { all, call, put } from 'redux-saga/effects';
-
-import config from '../../config';
+import { arrayChunk, makeUnique, toFlatten } from 'utils/array';
+import { delay } from 'utils/delay';
+import { snakelize } from 'utils/snakelize';
+import { makeURI } from 'utils/uri';
 import { getAPI } from '../../api/actions';
-import { OrderType } from '../../constants/orderOptions';
-import { BooksPageKind } from '../../constants/urls';
-
-import { makeURI } from '../../utils/uri';
-import { arrayChunk, makeUnique, toFlatten } from '../../utils/array';
-import { snakelize } from '../../utils/snakelize';
-import { delay } from '../../utils/delay';
+import config from '../../config';
 import { DELETE_API_CHUNK_COUNT } from './constants';
-import { UnhideError, MakeBookIdsError } from './errors';
+import { MakeBookIdsError, UnhideError } from './errors';
 
 export function* getRevision() {
   const api = yield put(getAPI());
@@ -48,7 +47,7 @@ export function* requestCheckQueueStatus(queueIds) {
   return yield _request(queueIds);
 }
 
-export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy }) {
+export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy, filter }) {
   if (unitIds.length === 0) {
     return {};
   }
@@ -67,6 +66,7 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy 
     } else {
       query.orderType = orderType;
       query.orderBy = orderBy;
+      query.serviceType = filter && ServiceType.includes(filter) ? filter : null;
     }
   }
 
