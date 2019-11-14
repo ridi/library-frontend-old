@@ -27,7 +27,7 @@ export class ServiceType {
     return serviceType === this.SELECT;
   }
 
-  static isIncluded(value) {
+  static includes(value) {
     return value === this.NORMAL || value === this.RENT || value === this.FLATRATE || value === this.SELECT || value === this.STORE;
   }
 }

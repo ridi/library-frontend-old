@@ -1,15 +1,15 @@
+import { OrderType } from 'constants/orderOptions';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from 'constants/page';
 import { ServiceType } from 'constants/serviceType';
+import { BooksPageKind } from 'constants/urls';
+import { calcOffset } from 'utils/pagination';
+import { makeURI } from 'utils/uri';
 import { getApi } from '../../../api';
 import config from '../../../config';
-import { OrderType } from '../../../constants/orderOptions';
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-import { BooksPageKind } from '../../../constants/urls';
-import { calcOffset } from '../../../utils/pagination';
-import { makeURI } from '../../../utils/uri';
 
 function makeCommonOptions({ kind, keyword, orderType, orderBy, filter }) {
   const options = {};
-  if (ServiceType.isIncluded(filter)) {
+  if (ServiceType.includes(filter)) {
     options.serviceType = filter;
   } else {
     options.category = filter;
