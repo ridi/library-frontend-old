@@ -18,10 +18,7 @@ export const getItemsByPage = createCachedSelector(
   },
 )((_, page) => page);
 
-export const getTotalCount = createSelector(
-  getDataState,
-  dataState => dataState.totalCount,
-);
+export const getTotalCount = createSelector(getDataState, dataState => dataState.totalCount);
 
 export const getIsFetchingBooks = state => state.serialPreference.isFetchingBooks;
 

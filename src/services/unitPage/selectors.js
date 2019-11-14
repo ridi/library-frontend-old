@@ -30,14 +30,11 @@ export const getItemsByPage = createSelector(
 
 export const getPrimaryItem = (state, kind, unitId) => state.unitPage.primaryItems[`${kind}${unitId}`];
 
-export const getTotalPages = createSelector(
-  getDataState,
-  dataState => calcPage(dataState.itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
-);
+export const getTotalPages = createSelector(getDataState, dataState => calcPage(dataState.itemTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE));
 
-export const getTotalCount = createSelector(
-  getDataState,
-  dataState => ({ itemTotalCount: dataState.itemTotalCount, purchasedTotalCount: dataState.purchasedTotalCount }),
-);
+export const getTotalCount = createSelector(getDataState, dataState => ({
+  itemTotalCount: dataState.itemTotalCount,
+  purchasedTotalCount: dataState.purchasedTotalCount,
+}));
 
 export const getIsFetchingBook = state => state.unitPage.isFetchingBook;

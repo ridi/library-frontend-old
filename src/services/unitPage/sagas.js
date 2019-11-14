@@ -221,7 +221,10 @@ function* downloadSelectedBooks() {
 
 function* selectAllBooks(action) {
   const items = yield select(getItemsByPage, action.payload);
-  const bookIds = toFlatten(items.filter(item => item.purchased), 'b_id');
+  const bookIds = toFlatten(
+    items.filter(item => item.purchased),
+    'b_id',
+  );
   yield put(selectItems(bookIds));
 }
 
