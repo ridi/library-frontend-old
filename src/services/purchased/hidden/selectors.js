@@ -6,10 +6,7 @@ import { calcPage } from '../../../utils/pagination';
 
 const getState = state => state.purchasedHidden;
 
-export const getItems = createSelector(
-  getState,
-  state => state.items,
-);
+export const getItems = createSelector(getState, state => state.items);
 
 export const getItemsByPage = createCachedSelector(
   state => state.purchasedHidden.itemIdsForPage,
@@ -26,12 +23,9 @@ export const getTotalPages = createSelector(
   unitTotalCount => calcPage(unitTotalCount, LIBRARY_ITEMS_LIMIT_PER_PAGE),
 );
 
-export const getTotalCount = createSelector(
-  getState,
-  state => ({ unitTotalCount: state.unitTotalCount, itemTotalCount: state.itemTotalCount }),
-);
+export const getTotalCount = createSelector(getState, state => ({
+  unitTotalCount: state.unitTotalCount,
+  itemTotalCount: state.itemTotalCount,
+}));
 
-export const getIsFetchingBooks = createSelector(
-  getState,
-  state => state.isFetchingBooks,
-);
+export const getIsFetchingBooks = createSelector(getState, state => state.isFetchingBooks);

@@ -43,7 +43,10 @@ export default class BookMetaData {
     });
 
     return authorsGrouped.map(group => {
-      const names = excerpt(group.authors.map(author => author.name), LIMIT);
+      const names = excerpt(
+        group.authors.map(author => author.name),
+        LIMIT,
+      );
       return `${names} ${ROLE_DESCRIPTIONS[group.role]}`;
     });
   }
@@ -52,7 +55,10 @@ export default class BookMetaData {
     const LIMIT = 2;
     const { authorsOrdered } = this.bookData;
     if (!authorsOrdered) return null;
-    return excerpt(authorsOrdered.map(author => author.name), LIMIT);
+    return excerpt(
+      authorsOrdered.map(author => author.name),
+      LIMIT,
+    );
   }
 
   get genre() {

@@ -59,7 +59,10 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   let items = [];
   if (bookIds.length > 0) {
     // 내가 갖고있는 도서 목록
-    const libraryItems = toDict((yield call(fetchLibraryBookData, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+    const libraryItems = toDict(
+      (yield call(fetchLibraryBookData, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)),
+      'b_id',
+    );
 
     // unitOrders와 libraryItems을 병합해서 재구성한다.
     items = unitOrders.items.map(unitOrder => {
