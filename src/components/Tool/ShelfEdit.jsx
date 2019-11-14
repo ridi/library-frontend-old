@@ -5,7 +5,6 @@ import { OrderOptions } from 'constants/orderOptions';
 import { URLMap } from 'constants/urls';
 import ViewType from 'constants/viewType';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import ThreeDotsVertical from 'svgs/ThreeDotsVertical.svg';
 import { makeLinkProps } from 'utils/uri';
 import * as styles from './styles';
@@ -14,7 +13,7 @@ const modalStyle = css`
   margin-top: 4px;
 `;
 
-const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, location, uuid }) => {
+const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, orderType, uuid }) => {
   const [isModalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
   const handlePortraitClick = React.useCallback(() => {
@@ -34,8 +33,6 @@ const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, l
     onRenameClick && onRenameClick();
   }, [onRenameClick]);
 
-  const urlParams = new URLSearchParams(location.search);
-  const orderType = urlParams.get('order_type') || OrderOptions.SHELF_BOOK_DEFAULT.orderType;
   const orderOptions = OrderOptions.toShelfList();
   const pathName = URLMap.shelfDetail.as({ uuid });
   const handleOrderClick = () => {
@@ -99,4 +96,4 @@ const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, l
   );
 };
 
-export default withRouter(ShelfEdit);
+export default ShelfEdit;

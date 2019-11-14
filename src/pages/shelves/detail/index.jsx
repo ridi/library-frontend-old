@@ -219,6 +219,7 @@ function ShelfDetail(props) {
           onRenameClick={showShelfRenamePrompt}
           onViewTypeChange={setViewType}
           uuid={uuid}
+          orderType={pageOptions.orderType}
         />
       </div>
     );
