@@ -162,11 +162,11 @@ const shelfReducer = produce((draft, action) => {
       break;
     }
     case SET_SHELF_BOOKS: {
-      const { uuid, orderBy, orderDirection, page, items } = action.payload;
+      const { uuid, orderBy, orderType, orderDirection, page, items } = action.payload;
       if (draft.shelf[uuid] == null) {
         draft.shelf[uuid] = makeBaseShelfData(uuid);
       }
-      draft.shelf[uuid].books[`${orderBy}_${orderDirection}_${page}`] = {
+      draft.shelf[uuid].books[`${orderBy}_${orderType}_${orderDirection}_${page}`] = {
         loading: false,
         items: items.map(({ unitId }) => unitId),
       };

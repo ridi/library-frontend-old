@@ -72,9 +72,9 @@ export async function fetchShelfCount() {
   return data.count;
 }
 
-export async function fetchShelfBooks({ uuid, offset, limit }) {
+export async function fetchShelfBooks({ uuid, orderType, offset, limit }) {
   const api = getApi();
-  const response = await api.get(makeURI(`/shelves/${uuid}/`, { offset, limit }, config.LIBRARY_API_BASE_URL));
+  const response = await api.get(makeURI(`/shelves/${uuid}/`, { offset, orderType, limit }, config.LIBRARY_API_BASE_URL));
   const data = RFetchShelfBooksResponse.check(response.data);
   const items = data.items.map(item => ({
     bookIds: item.b_ids,

@@ -74,11 +74,11 @@ function* loadShelfCount() {
 }
 
 function* loadShelfBooks({ payload }) {
-  const { uuid, orderBy, orderDirection, page } = payload;
+  const { uuid, orderType, orderBy, orderDirection, page } = payload;
   const offset = (page - 1) * LIBRARY_ITEMS_LIMIT_PER_PAGE;
   const limit = LIBRARY_ITEMS_LIMIT_PER_PAGE;
   try {
-    const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
+    const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, orderType, offset, limit });
     yield put(actions.setShelfInfo(shelfInfo));
     const libraryBooks = yield call(
       bookRequests.fetchLibraryUnitData,
@@ -87,7 +87,7 @@ function* loadShelfBooks({ payload }) {
     yield put(actions.setLibraryBooks(libraryBooks));
     const bookIds = libraryBooks.map(book => book.b_id);
     yield call(bookSagas.loadBookData, bookIds);
-    yield put(actions.setShelfBooks(uuid, { orderBy, orderDirection, page, items }));
+    yield put(actions.setShelfBooks(uuid, { orderBy, orderType, orderDirection, page, items }));
   } catch (err) {
     if (!err.response || err.response.status !== 401) {
       throw err;

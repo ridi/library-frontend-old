@@ -68,15 +68,16 @@ export const getShelfBookCount = createCachedSelector(
 export const getShelfBooks = createCachedSelector(
   state => state.shelf.shelf,
   (_, uuid) => uuid,
+  (_, __, { orderType }) => orderType,
   (_, __, { orderBy }) => orderBy,
   (_, __, { orderDirection }) => orderDirection,
   (_, __, { page }) => page,
-  (shelf, uuid, orderBy, orderDirection, page) => {
+  (shelf, uuid, orderType, orderBy, orderDirection, page) => {
     const target = shelf[uuid];
     if (target == null) {
       return { loading: false, items: null };
     }
-    return target.books[`${orderBy}_${orderDirection}_${page}`] || { loading: false, items: null };
+    return target.books[`${orderBy}_${orderType}_${orderDirection}_${page}`] || { loading: false, items: null };
   },
 )((_, uuid) => uuid);
 

@@ -1,32 +1,32 @@
+import { ButtonType } from 'components/ActionBar/constants';
+import { Books } from 'components/Books';
+import Editable from 'components/Editable';
+import Empty from 'components/Empty';
+import FlexBar from 'components/FlexBar';
+import ResponsivePaginator from 'components/ResponsivePaginator';
+import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
+import Title from 'components/TitleBar/Title';
+import * as Tools from 'components/Tool';
+import { OrderOptions } from 'constants/orderOptions';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from 'constants/page';
+import { SHELF_NAME_LIMIT } from 'constants/shelves';
+import { PageType, URLMap } from 'constants/urls';
+import { ResponsiveBooks } from 'pages/base/Responsive';
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-
-import { ButtonType } from '../../../components/ActionBar/constants';
-import { Books } from '../../../components/Books';
-import Editable from '../../../components/Editable';
-import Empty from '../../../components/Empty';
-import FlexBar from '../../../components/FlexBar';
-import ResponsivePaginator from '../../../components/ResponsivePaginator';
-import SkeletonBooks from '../../../components/Skeleton/SkeletonBooks';
-import Title from '../../../components/TitleBar/Title';
-import * as Tools from '../../../components/Tool';
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../../constants/page';
-import { SHELF_NAME_LIMIT } from '../../../constants/shelves';
-import { PageType, URLMap } from '../../../constants/urls';
-import * as bookSelectors from '../../../services/book/selectors';
-import * as confirmActions from '../../../services/confirm/actions';
-import * as promptActions from '../../../services/prompt/actions';
-import * as selectionActions from '../../../services/selection/actions';
-import * as selectionSelectors from '../../../services/selection/selectors';
-import * as actions from '../../../services/shelf/actions';
-import * as selectors from '../../../services/shelf/selectors';
-import * as uiActions from '../../../services/ui/actions';
-import BookOutline from '../../../svgs/BookOutline.svg';
-import * as paginationUtils from '../../../utils/pagination';
-import { makeLinkProps } from '../../../utils/uri';
-import { ResponsiveBooks } from '../../base/Responsive';
+import * as bookSelectors from 'services/book/selectors';
+import * as confirmActions from 'services/confirm/actions';
+import * as promptActions from 'services/prompt/actions';
+import * as selectionActions from 'services/selection/actions';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as actions from 'services/shelf/actions';
+import * as selectors from 'services/shelf/selectors';
+import * as uiActions from 'services/ui/actions';
+import BookOutline from 'svgs/BookOutline.svg';
+import * as paginationUtils from 'utils/pagination';
+import { makeLinkProps } from 'utils/uri';
 import SearchModal from './SearchModal';
 import * as styles from './styles';
 
@@ -218,6 +218,7 @@ function ShelfDetail(props) {
           onRemoveClick={showShelfRemoveConfirm}
           onRenameClick={showShelfRenamePrompt}
           onViewTypeChange={setViewType}
+          uuid={uuid}
         />
       </div>
     );
@@ -316,11 +317,13 @@ function ShelfDetail(props) {
 const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
+  const orderType = urlParams.get('order_type') || OrderOptions.SHELF_BOOK_DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || '';
   const orderDirection = urlParams.get('order_direction') || '';
   return {
     page,
     orderBy,
+    orderType,
     orderDirection,
   };
 };

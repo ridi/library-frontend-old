@@ -1,8 +1,7 @@
+import LoadingSpinner from 'components/LoadingSpinner';
 import { Link } from 'react-router-dom';
-
-import Check from '../../svgs/Check.svg';
-import Sync from '../../svgs/Sync.svg';
-import LoadingSpinner from '../LoadingSpinner';
+import Check from 'svgs/Check.svg';
+import Sync from 'svgs/Sync.svg';
 import * as modalStyles from './styles';
 
 function ItemIcon(props) {
