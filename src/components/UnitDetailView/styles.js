@@ -1,7 +1,6 @@
-import * as defaultLayout from '../../styles/unitDetailViewHeader';
-import { MQ, Responsive } from '../../styles/responsive';
-
 import blueSpinner from '../../static/spinner/blue_spinner.gif';
+import { MQ, Responsive } from '../../styles/responsive';
+import * as defaultLayout from '../../styles/unitDetailViewHeader';
 
 export const unitDetailViewWrapper = {
   ...Responsive.Full({

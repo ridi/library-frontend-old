@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
 import createCachedSelector from 're-reselect';
+import { createSelector } from 'reselect';
 
 const getPurchasedCommonState = state => state.purchasedCommon;
 

@@ -1,4 +1,5 @@
 import { stringify } from 'qs';
+
 import config from '../config';
 import { snakelize } from './snakelize';
 
@@ -46,17 +47,17 @@ export const makeRidiStoreUri = bookId => {
   return storeBaseUrl.toString();
 };
 
-export const makeLinkProps = (href, as, query) => {
-  const snakeQuery = typeof query === 'object' ? snakelize(query) : {};
-  const searchParams = new URLSearchParams();
-  for (const [k, v] of Object.entries(snakeQuery).filter(([, x]) => x != null)) {
+const appendToSearchParams = (queryObject, searchParams) => {
+  const query = Object.entries(snakelize(queryObject)).filter(([, x]) => x != null);
+  query.forEach(([k, v]) => {
     searchParams.append(k, v);
-  }
-  if (typeof as.query === 'object') {
-    for (const [k, v] of Object.entries(snakelize(as.query)).filter(([, x]) => x != null)) {
-      searchParams.append(k, v);
-    }
-  }
+  });
+};
+
+export const makeLinkProps = (href, as, query) => {
+  const searchParams = new URLSearchParams();
+  if (typeof query === 'object') appendToSearchParams(query, searchParams);
+  if (typeof as.query === 'object') appendToSearchParams(as.query, searchParams);
   const search = searchParams.toString();
 
   const to = {

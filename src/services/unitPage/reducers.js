@@ -1,13 +1,14 @@
 import produce from 'immer';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { concat, toDict, toFlatten } from '../../utils/array';
 import {
   LOAD_UNIT_ITEMS,
-  SET_UNIT_ITEMS,
-  SET_UNIT_TOTAL_COUNT,
   SET_IS_FETCHING_BOOK,
+  SET_UNIT_ITEMS,
   SET_UNIT_PRIMARY_ITEM,
   SET_UNIT_PURCHASED_TOTAL_COUNT,
+  SET_UNIT_TOTAL_COUNT,
 } from './actions';
 import { createInitialDataState, initialState } from './state';
 

@@ -1,4 +1,5 @@
 import produce from 'immer';
+
 import { SET_ALL_CATEGORY_COUNT, SET_CATEGORY_FILTER_OPTIONS, SET_SERVICE_TYPE_FILTER_OPTIONS } from './actions';
 
 const initialState = {

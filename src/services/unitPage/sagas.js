@@ -1,6 +1,7 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../constants/orderOptions';
-import { URLMap, PageType } from '../../constants/urls';
+import { PageType, URLMap } from '../../constants/urls';
 import { toFlatten } from '../../utils/array';
 import { isExpiredTTL } from '../../utils/ttl';
 import { makeLinkProps } from '../../utils/uri';

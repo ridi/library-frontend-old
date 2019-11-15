@@ -1,8 +1,8 @@
 import { ROLE_DESCRIPTIONS } from 'constants/authorRole';
 
 import { BookFileType } from '../services/book/constants';
-import { numberWithUnit } from './number';
 import { formatFileSize } from './file';
+import { numberWithUnit } from './number';
 
 function excerpt(names, limit) {
   const baseNames = names.slice(0, limit).join(', ');

@@ -1,16 +1,15 @@
 import { captureMessage } from '@sentry/browser';
 import { stringify } from 'qs';
 import { put } from 'redux-saga/effects';
+
 import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
-
 import config from '../../config';
+import { OrderOptions } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { calcOffset } from '../../utils/pagination';
-
 import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
-import { OrderOptions } from '../../constants/orderOptions';
 
 const _reduceBooks = books =>
   books.map(book => ({

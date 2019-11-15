@@ -1,4 +1,4 @@
-import { Responsive, MQ } from '../../styles/responsive';
+import { MQ, Responsive } from '../../styles/responsive';
 
 export const searchBar = {
   backgroundColor: '#f3f4f5',

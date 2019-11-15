@@ -1,6 +1,6 @@
-import { all, delay, takeEvery, call, put, take, race } from 'redux-saga/effects';
+import { all, call, delay, put, race, take, takeEvery } from 'redux-saga/effects';
 
-import { SHOW_TOAST, CLOSE_TOAST, CLOSE_WITH_DELAY, CANCEL_CLOSE, setToast, unsetToast, cancelClose } from './actions';
+import { CANCEL_CLOSE, cancelClose, CLOSE_TOAST, CLOSE_WITH_DELAY, setToast, SHOW_TOAST, unsetToast } from './actions';
 
 function* closeToast() {
   yield put(unsetToast());

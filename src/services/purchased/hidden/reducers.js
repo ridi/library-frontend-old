@@ -1,6 +1,7 @@
 import produce from 'immer';
+
 import { toDict, toFlatten } from '../../../utils/array';
-import { SET_HIDDEN_ITEMS, SET_HIDDEN_TOTAL_COUNT, SET_HIDDEN_IS_FETCHING_BOOKS } from './actions';
+import { SET_HIDDEN_IS_FETCHING_BOOKS, SET_HIDDEN_ITEMS, SET_HIDDEN_TOTAL_COUNT } from './actions';
 import { initialState } from './state';
 
 const purchasedHiddenReducer = produce((draft, action) => {

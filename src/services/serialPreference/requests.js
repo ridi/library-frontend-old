@@ -1,8 +1,7 @@
 import { put } from 'redux-saga/effects';
 
-import config from '../../config';
 import { getAPI } from '../../api/actions';
-
+import config from '../../config';
 import { SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { calcOffset } from '../../utils/pagination';
 import { makeURI } from '../../utils/uri';

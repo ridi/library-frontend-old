@@ -1,7 +1,8 @@
 import { channel } from 'redux-saga';
 import { all, call, delay, put, take } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../../../constants/orderOptions';
-import { URLMap, BooksPageKind } from '../../../../constants/urls';
+import { BooksPageKind, URLMap } from '../../../../constants/urls';
 import { makeLinkProps } from '../../../../utils/uri';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../../common/requests';
 import { getBookIdsByUnitIds } from '../../../common/sagas';

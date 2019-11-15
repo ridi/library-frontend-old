@@ -1,6 +1,5 @@
 import Cookies from './cookies';
 
-const SettingKeyPrefix = 'ridi_lib';
 const SettingKey = {
   VIEW_TYPE: 'VIEW_TYPE',
 };
@@ -10,8 +9,12 @@ class Settings {
     this.cookies = Cookies;
   }
 
+  static get SETTING_KEY_PREFIX() {
+    return 'ridi_lib';
+  }
+
   makeKey(key) {
-    return `${SettingKeyPrefix}:${key}`;
+    return `${this.SETTING_KEY_PREFIX}:${key}`;
   }
 
   get(keySalt) {

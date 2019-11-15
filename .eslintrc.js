@@ -8,7 +8,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@typescript-eslint', 'import', 'prettier', 'babel', 'react', 'emotion'],
+  plugins: ['@typescript-eslint', 'import', 'simple-import-sort', 'prettier', 'babel', 'react', 'emotion'],
   settings: {
     'import/resolver': {
       node: {
@@ -26,13 +26,6 @@ module.exports = {
     camelcase: 'off',
     'class-methods-use-this': 'error',
     curly: ['error', 'multi-line', 'consistent'],
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: true,
-      },
-    ],
-    'import/prefer-default-export': 'off',
     'max-len': ['error', { code: 140 }],
     'no-bitwise': [
       'error',
@@ -73,6 +66,20 @@ module.exports = {
         },
       },
     ],
+
+    // import
+    'simple-import-sort/sort': 'error',
+    'sort-imports': 'off',
+    'import/first': 'error',
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: true,
+      },
+    ],
+    'import/prefer-default-export': 'off',
 
     // babel
     'babel/camelcase': [
@@ -116,4 +123,19 @@ module.exports = {
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
   },
+  overrides: [
+    {
+      files: 'src/**/*.{js, jsx, ts, tsx}',
+      rules: {
+        'simple-import-sort/sort': 'off',
+        'import/order': [
+          'error',
+          {
+            'newlines-between': 'always',
+            groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
+          },
+        ],
+      },
+    },
+  ],
 };

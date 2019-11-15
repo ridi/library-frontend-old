@@ -241,7 +241,4 @@ const mapDispatchToProps = {
   validateShelvesLimit: shelfActions.validateShelvesLimit,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ShelvesList);
+export default connect(mapStateToProps, mapDispatchToProps)(ShelvesList);

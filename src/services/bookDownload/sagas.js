@@ -1,5 +1,6 @@
-import { OrderBy, OrderType } from 'constants/orderOptions';
 import { all, call, delay, put, select, takeEvery } from 'redux-saga/effects';
+
+import { OrderBy, OrderType } from 'constants/orderOptions';
 import { fetchBookData } from 'services/book/requests';
 import { getBookIdsByUnitIds } from 'services/common/sagas';
 import * as selectionSelectors from 'services/selection/selectors';
@@ -7,6 +8,7 @@ import { showToast } from 'services/toast/actions';
 import { Duration, ToastStyle } from 'services/toast/constants';
 import { getDeviceInfo } from 'utils/device';
 import { convertUriToAndroidIntentUri } from 'utils/uri';
+
 import config from '../../config';
 import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, setBookDownloadSrc } from './actions';
 import { DownloadError } from './errors';

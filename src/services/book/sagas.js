@@ -1,4 +1,5 @@
 import { all, call, fork, put, select, takeEvery } from 'redux-saga/effects';
+
 import { toFlatten } from '../../utils/array';
 import Storage, { StorageKey } from '../../utils/storage';
 import { getCriterion } from '../../utils/ttl';
@@ -10,11 +11,11 @@ import {
   setBookDataFromStorage,
   setBookDescriptions,
   setBookStarRatings,
+  setOpenInfo,
   setUnitData,
   setUnitOrders,
-  setOpenInfo,
 } from './actions';
-import { fetchBookData, fetchBookDescriptions, fetchStarRatings, fetchUnitData, fetchUnitOrders, fetchBooksOpenInfo } from './requests';
+import { fetchBookData, fetchBookDescriptions, fetchBooksOpenInfo, fetchStarRatings, fetchUnitData, fetchUnitOrders } from './requests';
 import { getBooks } from './selectors';
 
 function* persistBookDataToStorage() {

@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+
 import { FULL_MAX_WIDTH, XLARGE_MAX_WIDTH, XXLARGE_MAX_WIDTH } from './constants';
 import { Responsive } from './responsive';
 
