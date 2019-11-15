@@ -45,7 +45,7 @@ function* startExcelDownload() {
   try {
     downloadUrl = yield call(requestExcelDownloadUrl);
   } catch (e) {
-    yield put(showDialog('Excel 다운로드 오류', 'Excel 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
+    yield put(showDialog('모든 책 목록 다운로드 오류', '모든 책 목록 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
     return;
   } finally {
     window.removeEventListener('beforeunload', beforePageUnloadEventFunc);
