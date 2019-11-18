@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { SELECT_ITEMS, TOGGLE_ITEM, CLEAR_SELECTED_ITEMS } from './actions';
+import { CLEAR_SELECTED_ITEMS, SELECT_ITEMS, TOGGLE_ITEM } from './actions';
 
 const initialState = {
   ids: {},

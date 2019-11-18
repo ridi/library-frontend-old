@@ -1,6 +1,8 @@
 import * as Sentry from '@sentry/browser';
 import axios from 'axios';
+
 import { ENV } from 'constants/environment';
+
 import config from '../config';
 import * as accountActions from '../services/account/actions';
 import * as maintenanceAction from '../services/maintenance/actions';

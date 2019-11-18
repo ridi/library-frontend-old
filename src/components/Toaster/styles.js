@@ -1,5 +1,5 @@
 import { ToastStyle } from '../../services/toast/constants';
-import { Responsive, MQ } from '../../styles/responsive';
+import { MQ, Responsive } from '../../styles/responsive';
 
 const isNarrowWrapper = [Responsive.XSmall, Responsive.Small, Responsive.Medium, Responsive.Large];
 const isWideWrapper = [Responsive.XLarge, Responsive.XXLarge, Responsive.Full];

@@ -1,11 +1,13 @@
+import { all, call, put } from 'redux-saga/effects';
+
 import { OrderType } from 'constants/orderOptions';
 import { ServiceType } from 'constants/serviceType';
 import { BooksPageKind } from 'constants/urls';
-import { all, call, put } from 'redux-saga/effects';
 import { arrayChunk, makeUnique, toFlatten } from 'utils/array';
 import { delay } from 'utils/delay';
 import { snakelize } from 'utils/snakelize';
 import { makeURI } from 'utils/uri';
+
 import { getAPI } from '../../api/actions';
 import config from '../../config';
 import { DELETE_API_CHUNK_COUNT } from './constants';

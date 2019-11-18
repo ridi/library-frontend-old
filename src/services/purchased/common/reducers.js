@@ -1,4 +1,5 @@
 import produce from 'immer';
+
 import { SET_FETCHING_READ_LATEST, SET_PRIMARY_BOOK_ID, SET_READ_LATEST_BOOK_ID, SET_RECENTLY_UPDATED_DATA } from './actions';
 
 const initializeState = {

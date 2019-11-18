@@ -1,4 +1,5 @@
 import produce from 'immer';
+
 import { SET_TOAST, UNSET_TOAST } from './actions';
 
 const initialState = {

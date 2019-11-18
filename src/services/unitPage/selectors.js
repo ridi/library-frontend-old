@@ -1,7 +1,7 @@
 import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
-import { OrderOptions } from '../../constants/orderOptions';
 
+import { OrderOptions } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { concat } from '../../utils/array';
 import { calcPage } from '../../utils/pagination';

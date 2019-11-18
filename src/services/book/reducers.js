@@ -1,15 +1,16 @@
 import produce from 'immer';
+
+import { isExpiredTTL } from '../../utils/ttl';
 import {
+  makeUnitOrderKey,
   SET_BOOK_DATA,
   SET_BOOK_DATA_FROM_STORAGE,
   SET_BOOK_DESCRIPTIONS,
-  SET_UNIT_DATA,
   SET_BOOK_STAR_RATINGS,
-  SET_UNIT_ORDERS,
   SET_OPEN_INFO,
-  makeUnitOrderKey,
+  SET_UNIT_DATA,
+  SET_UNIT_ORDERS,
 } from './actions';
-import { isExpiredTTL } from '../../utils/ttl';
 
 const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
 const compareWithTTL = (oldValue, newValue) => oldValue.ttl < newValue.ttl;

@@ -1,6 +1,8 @@
 import { DeviceType, Tracker } from '@ridi/event-tracker';
-import { ENV } from 'constants/environment';
 import { all, call, select, takeEvery } from 'redux-saga/effects';
+
+import { ENV } from 'constants/environment';
+
 import config from '../../config';
 import * as actions from './actions';
 

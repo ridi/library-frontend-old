@@ -373,9 +373,4 @@ const mapDispatchToProps = {
   loadShelfBookCount: actions.loadShelfBookCount,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(ShelfDetail),
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShelfDetail));

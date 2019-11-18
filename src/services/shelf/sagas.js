@@ -6,7 +6,7 @@ import { EventNames } from 'services/tracking/constants';
 import { arrayChunk } from 'utils/array';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
-import { ITEMS_LIMIT_PER_SHELF, SHELF_OPERATION_LIMIT, SHELF_ITEM_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
+import { ITEMS_LIMIT_PER_SHELF, SHELF_ITEM_OPERATION_LIMIT, SHELF_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
 import { URLMap } from '../../constants/urls';
 import { thousandsSeperator } from '../../utils/number';
 import * as bookRequests from '../book/requests';

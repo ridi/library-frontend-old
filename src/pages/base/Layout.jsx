@@ -1,6 +1,7 @@
 import { Global } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import BookDownLoader from '../../components/BookDownLoader';
 import Confirm from '../../components/Confirm';
 import Dialog from '../../components/Dialog';
@@ -65,7 +66,4 @@ const mapDispatchToProps = {
   dispatchClosePrompt: closePrompt,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Layout);
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

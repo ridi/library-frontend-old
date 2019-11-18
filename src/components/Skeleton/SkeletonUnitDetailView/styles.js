@@ -1,5 +1,5 @@
+import { MQ, Responsive } from '../../../styles/responsive';
 import * as defaultLayout from '../../../styles/unitDetailViewHeader';
-import { Responsive, MQ } from '../../../styles/responsive';
 
 const backgroundImage = 'linear-gradient(147deg, #e6e8eb, #edeff2 55%, #e6e8eb)';
 

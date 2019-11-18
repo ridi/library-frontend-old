@@ -1,5 +1,6 @@
 import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
+
 import { createInitialDataState, getKey } from './state';
 
 const getDataState = state => {

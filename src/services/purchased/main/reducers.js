@@ -1,4 +1,5 @@
 import produce from 'immer';
+
 import { toDict, toFlatten } from '../../../utils/array';
 import { LOAD_MAIN_ITEMS, UPDATE_MAIN_ITEMS } from './actions';
 import { createInitialDataState, initialState, mapPageOptionsToKey } from './state';

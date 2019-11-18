@@ -1,4 +1,5 @@
 import produce from 'immer';
+
 import { toDict, toFlatten } from '../../utils/array';
 import {
   SET_SERIAL_IS_FETCHING_BOOKS,

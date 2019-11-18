@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+
 import { MQ, Responsive } from '../../styles/responsive';
 
 const wrapperAndShelvesStyles = (shelfSize, countPerLine, shelfSpacing, wrapperSpacing) => {
