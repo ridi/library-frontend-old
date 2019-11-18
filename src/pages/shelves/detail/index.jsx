@@ -27,6 +27,7 @@ import * as uiActions from 'services/ui/actions';
 import BookOutline from 'svgs/BookOutline.svg';
 import * as paginationUtils from 'utils/pagination';
 import { makeLinkProps } from 'utils/uri';
+
 import SearchModal from './SearchModal';
 import * as styles from './styles';
 

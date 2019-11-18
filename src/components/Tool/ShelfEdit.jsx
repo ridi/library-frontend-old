@@ -7,6 +7,7 @@ import ViewType from 'constants/viewType';
 import React from 'react';
 import ThreeDotsVertical from 'svgs/ThreeDotsVertical.svg';
 import { makeLinkProps } from 'utils/uri';
+
 import * as styles from './styles';
 
 const modalStyle = css`
