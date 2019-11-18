@@ -1,3 +1,13 @@
+import { ButtonType } from 'components/ActionBar/constants';
+import BottomActionBar from 'components/BottomActionBar';
+import Empty from 'components/Empty';
+import FixedToolbarView from 'components/FixedToolbarView';
+import { ResponsivePaginatorWithHandler } from 'components/ResponsivePaginator';
+import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
+import TitleBar from 'components/TitleBar';
+import { BooksPageKind } from 'constants/urls';
+import ViewType from 'constants/viewType';
+import { ResponsiveBooks } from 'pages/base/Responsive';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,19 +17,9 @@ import * as mainSelectors from 'services/purchased/main/selectors';
 import * as selectionActions from 'services/selection/actions';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as shelfSelectors from 'services/shelf/selectors';
+import BookOutline from 'svgs/BookOutline.svg';
+import SearchIcon from 'svgs/Search.svg';
 
-import { ButtonType } from '../../../../components/ActionBar/constants';
-import BottomActionBar from '../../../../components/BottomActionBar';
-import Empty from '../../../../components/Empty';
-import FixedToolbarView from '../../../../components/FixedToolbarView';
-import PageNavigationBar, { NavigationBarColor } from '../../../../components/PageNavigationBar';
-import { ResponsivePaginatorWithHandler } from '../../../../components/ResponsivePaginator';
-import SkeletonBooks from '../../../../components/Skeleton/SkeletonBooks';
-import { BooksPageKind } from '../../../../constants/urls';
-import ViewType from '../../../../constants/viewType';
-import BookOutline from '../../../../svgs/BookOutline.svg';
-import SearchIcon from '../../../../svgs/Search.svg';
-import { ResponsiveBooks } from '../../../base/Responsive';
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
 
@@ -129,9 +129,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   return (
     <>
-      <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
-        ‘{shelfTitle}’에 추가
-      </PageNavigationBar>
+      <TitleBar title={`${shelfTitle}에 추가`} onBackClick={onBackClick} invertColor />
       <FixedToolbarView allowFixed toolbar={renderSearchBar()} actionBar={renderActionBar()}>
         <main>{renderMain()}</main>
       </FixedToolbarView>

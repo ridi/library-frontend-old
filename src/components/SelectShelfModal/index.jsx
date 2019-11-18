@@ -1,4 +1,5 @@
 import { css } from '@emotion/core';
+import TitleBar from 'components/TitleBar';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -16,7 +17,6 @@ import * as paginationUtils from '../../utils/pagination';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
 import FlexBar from '../FlexBar';
-import PageNavigationBar, { NavigationBarColor } from '../PageNavigationBar';
 import { ResponsivePaginatorWithHandler } from '../ResponsivePaginator';
 import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
@@ -132,9 +132,7 @@ function SelectShelfModalInner(props) {
     );
     return (
       <>
-        <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
-          책장 선택
-        </PageNavigationBar>
+        <TitleBar title="책장 선택" onBackClick={onBackClick} invertColor />
         <FlexBar css={toolBar} flexLeft={<div />} flexRight={right} />
       </>
     );
