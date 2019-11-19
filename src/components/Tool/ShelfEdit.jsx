@@ -1,10 +1,11 @@
 import { css } from '@emotion/core';
+import React from 'react';
+
 import IconButton from 'components/IconButton';
 import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from 'components/Modal';
 import { OrderOptions } from 'constants/orderOptions';
 import { URLMap } from 'constants/urls';
 import ViewType from 'constants/viewType';
-import React from 'react';
 import ThreeDotsVertical from 'svgs/ThreeDotsVertical.svg';
 import { makeLinkProps } from 'utils/uri';
 

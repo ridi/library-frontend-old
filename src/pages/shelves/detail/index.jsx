@@ -1,3 +1,8 @@
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
+
 import { ButtonType } from 'components/ActionBar/constants';
 import { Books } from 'components/Books';
 import Editable from 'components/Editable';
@@ -12,10 +17,6 @@ import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from 'constants/page';
 import { SHELF_NAME_LIMIT } from 'constants/shelves';
 import { PageType, URLMap } from 'constants/urls';
 import { ResponsiveBooks } from 'pages/base/Responsive';
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
 import * as bookSelectors from 'services/book/selectors';
 import * as confirmActions from 'services/confirm/actions';
 import * as promptActions from 'services/prompt/actions';

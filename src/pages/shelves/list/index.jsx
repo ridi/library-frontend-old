@@ -1,3 +1,7 @@
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { connect } from 'react-redux';
+
 import { ButtonType } from 'components/ActionBar/constants';
 import Editable from 'components/Editable';
 import { EmptyShelves } from 'components/Empty/EmptyShelves';
@@ -16,9 +20,6 @@ import { URLMap } from 'constants/urls';
 import Footer from 'pages/base/Footer';
 import { TabBar, TabMenuTypes } from 'pages/base/LNB';
 import Responsive from 'pages/base/Responsive';
-import React from 'react';
-import { Helmet } from 'react-helmet';
-import { connect } from 'react-redux';
 import * as confirmActions from 'services/confirm/actions';
 import * as promptActions from 'services/prompt/actions';
 import * as selectionActions from 'services/selection/actions';

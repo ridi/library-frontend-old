@@ -1,7 +1,8 @@
+import React from 'react';
+
 import FlexBar from 'components/FlexBar';
 import { Editing } from 'components/Tool';
 import TotalCount from 'components/Tool/TotalCount';
-import React from 'react';
 
 import * as styles from './styles';
 

@@ -1,5 +1,6 @@
-import LoadingSpinner from 'components/LoadingSpinner';
 import { Link } from 'react-router-dom';
+
+import LoadingSpinner from 'components/LoadingSpinner';
 import Check from 'svgs/Check.svg';
 import Sync from 'svgs/Sync.svg';
 
