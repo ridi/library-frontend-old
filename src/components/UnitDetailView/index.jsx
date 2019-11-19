@@ -1,12 +1,13 @@
 import { Book } from '@ridi/web-ui';
-import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
-import { ServiceType } from 'constants/serviceType';
-import { UnitType } from 'constants/unitType';
 import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
+
+import { UnitType } from 'constants/unitType';
+import { ServiceType } from 'constants/serviceType';
+import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
 import { getAdultVerification } from 'services/account/selectors';
 import { getBook, getOpenInfo } from 'services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from 'services/bookDownload/actions';

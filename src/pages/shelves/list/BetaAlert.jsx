@@ -1,7 +1,7 @@
 import { css } from '@emotion/core';
+
 import { PageAlert } from 'components/PageAlert';
 import { responsiveStylesWidth } from 'components/ShelvesWrapper/styles';
-
 import { MQ, Responsive } from 'commonStyles/responsive';
 
 import config from '../../../config';

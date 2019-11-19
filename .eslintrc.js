@@ -125,7 +125,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: 'src/**/*.{js, jsx, ts, tsx}',
+      files: 'src/**/*.{js,jsx,ts,tsx}',
       rules: {
         'simple-import-sort/sort': 'off',
         'import/order': [
