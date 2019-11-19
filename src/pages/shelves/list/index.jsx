@@ -170,11 +170,7 @@ const ShelvesList = props => {
   };
 
   const renderToolBar = () => (
-    <FlexBar
-      css={styles.toolBar}
-      flexLeft={totalShelfCount ? <TotalCount count={totalShelfCount} unit="개" /> : <div />}
-      flexRight={renderTools()}
-    />
+    <FlexBar css={styles.toolBar} flexLeft={<TotalCount count={totalShelfCount} unit="개" />} flexRight={renderTools()} />
   );
   const renderPaginator = () => <ResponsivePaginator currentPage={pageOptions.page} totalPages={totalPages} />;
   const renderMain = () => {
