@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Responsive from '../../pages/base/Responsive';
 import * as styles from './styles';
 

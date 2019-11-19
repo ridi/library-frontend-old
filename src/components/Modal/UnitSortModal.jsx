@@ -1,4 +1,5 @@
 import { withRouter } from 'react-router-dom';
+
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 
 function buildTargetLocation(location, option, scroll) {

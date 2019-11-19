@@ -1,5 +1,5 @@
-import { skeletonShelvesStyle } from './styles';
 import { ShelvesWrapper } from '../../ShelvesWrapper';
+import { skeletonShelvesStyle } from './styles';
 
 const SKELETON_TOTAL_COUNT = 24;
 export const SkeletonShelves = () => (

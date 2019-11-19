@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+
 import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './pages/base/Layout';
 import PageLoadingSpinner from './pages/base/PageLoadingSpinner';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
 import Empty from '../../components/Empty';
@@ -175,7 +176,4 @@ const mapDispatchToProps = {
   dispatchLoadSerialPreferenceBooks: loadItems,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SerialPreference);
+export default connect(mapStateToProps, mapDispatchToProps)(SerialPreference);

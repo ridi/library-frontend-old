@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import React from 'react';
+
 import ViewType from '../../constants/viewType';
 import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
 import IconButton from '../IconButton';

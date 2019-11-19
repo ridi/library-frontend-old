@@ -1,4 +1,5 @@
 import React from 'react';
+
 import config from '../../../config';
 import { Hidden } from '../../../styles';
 import LogoRidibooks from '../../../svgs/LogoRidibooks.svg';

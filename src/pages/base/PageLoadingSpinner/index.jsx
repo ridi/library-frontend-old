@@ -1,4 +1,5 @@
 import React from 'react';
+
 import FullScreenLoading from '../../../components/FullScreenLoading';
 
 const PageLoadingSpinner = () => {

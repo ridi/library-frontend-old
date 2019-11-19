@@ -18,6 +18,7 @@ import Star from 'svgs/Star.svg';
 import BookMetaData from 'utils/bookMetaData';
 import { thousandsSeperator } from 'utils/number';
 import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
+
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import * as styles from './styles';
 
@@ -299,9 +300,4 @@ const mapDispatchToProps = {
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
 };
 
-export default withRouter(
-  connect(
-    mapStateToPropsFactory,
-    mapDispatchToProps,
-  )(UnitDetailView),
-);
+export default withRouter(connect(mapStateToPropsFactory, mapDispatchToProps)(UnitDetailView));

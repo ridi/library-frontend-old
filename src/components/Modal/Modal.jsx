@@ -1,6 +1,7 @@
 import React from 'react';
-import * as modalStyles from './styles';
+
 import { ModalBackground } from './ModalBackground';
+import * as modalStyles from './styles';
 
 export const Modal = ({ a11y, isActive, children, style, onClickModalBackground, horizontalAlign, modalRef }) => (
   <>

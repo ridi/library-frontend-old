@@ -1,4 +1,5 @@
 import { ENV } from 'constants/environment';
+
 import config from '../../../config';
 
 const environmentBandStyle = environment => {

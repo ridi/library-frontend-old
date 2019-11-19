@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { ButtonType } from '../../../components/ActionBar/constants';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
@@ -348,7 +349,4 @@ const mapDispatchToProps = {
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PurchasedMain);
+export default connect(mapStateToProps, mapDispatchToProps)(PurchasedMain);

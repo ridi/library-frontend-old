@@ -17,6 +17,7 @@ import { getOpenInfo } from 'services/book/selectors';
 import { getTotalSelectedCount } from 'services/selection/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
+
 import * as styles from './styles';
 
 class SeriesList extends React.Component {

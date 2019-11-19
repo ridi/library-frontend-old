@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import { toggleItem } from '../../services/selection/actions';
 import { getIsItemSelected } from '../../services/selection/selectors';
 import CheckCircle from '../../svgs/CheckCircle.svg';

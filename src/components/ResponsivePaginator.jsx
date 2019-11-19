@@ -1,5 +1,6 @@
-import { withRouter } from 'react-router-dom';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+
 import { MOBILE_PAGE_COUNT, PAGE_COUNT } from '../constants/page';
 import { MQ, Responsive } from '../styles/responsive';
 import Paginator from './Paginator';

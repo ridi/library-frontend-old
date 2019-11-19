@@ -18,8 +18,8 @@ const TitleBar = ({ backLocation, title, showCount, totalCount, showTools, toggl
     flexRight={
       showTools ? (
         <div css={styles.toolsWrapper}>
-          {<Editing toggleEditingMode={toggleEditingMode} />}
-          {<More showViewType />}
+          <Editing toggleEditingMode={toggleEditingMode} />
+          <More showViewType />
         </div>
       ) : null
     }

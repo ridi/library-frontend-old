@@ -1,6 +1,7 @@
 import { css } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
@@ -192,10 +193,7 @@ const mapDispatchToProps = {
   validateShelvesLimit: shelfActions.validateShelvesLimit,
 };
 
-const SelectShelfModal = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SelectShelfModalInner);
+const SelectShelfModal = connect(mapStateToProps, mapDispatchToProps)(SelectShelfModalInner);
 
 export default function SelectShelfModalContainer({ onBackClick, onShelfSelect }) {
   const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderType);

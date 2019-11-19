@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import React from 'react';
+
 import { PageLoadError } from '../Error';
 
 export default class ErrorBoundary extends React.Component {

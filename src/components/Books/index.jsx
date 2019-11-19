@@ -3,6 +3,7 @@ import isAfter from 'date-fns/is_after';
 import subDays from 'date-fns/sub_days';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { UnitType } from '../../constants/unitType';
 import ViewType from '../../constants/viewType';
 import { getAdultVerification } from '../../services/account/selectors';

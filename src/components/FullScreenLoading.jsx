@@ -1,7 +1,7 @@
-import React from 'react';
 import { css } from '@emotion/core';
-import { disableScroll, enableScroll } from '../utils/scroll';
+import React from 'react';
 
+import { disableScroll, enableScroll } from '../utils/scroll';
 import LoadingSpinner from './LoadingSpinner';
 
 const styles = {

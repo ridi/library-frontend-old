@@ -1,6 +1,7 @@
 import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import { showToast } from '../services/toast/actions';
 import { Duration, ToastStyle } from '../services/toast/constants';
 import settings from '../utils/settings';
@@ -43,7 +44,4 @@ class Toast extends React.Component {
 }
 
 const mapDispatchToProps = { showToast };
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Toast);
+export default connect(null, mapDispatchToProps)(Toast);

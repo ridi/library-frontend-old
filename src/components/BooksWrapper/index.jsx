@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
+
 import * as styles from '../../styles/books';
 
 const BooksWrapper = ({ viewType, books, renderBook, children }) => {

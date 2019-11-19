@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
+
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { confirmHideAllExpiredBooks } from '../../services/purchased/common/actions';
 import { setViewType } from '../../services/ui/actions';
 import { makeLinkProps } from '../../utils/uri';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 
 const MoreModal = ({
   history,
@@ -102,9 +103,4 @@ const mapDispatchToProps = {
   dispatchConfirmHideAllExpiredBooks: confirmHideAllExpiredBooks,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(MoreModal),
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoreModal));

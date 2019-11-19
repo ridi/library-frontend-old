@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+
 import config from '../../config';
 import * as accountSelectors from '../../services/account/selectors';
 import Footer from '../base/Footer';
