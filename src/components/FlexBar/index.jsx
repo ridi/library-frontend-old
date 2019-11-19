@@ -1,4 +1,5 @@
 import classname from 'classnames';
+
 import Responsive from '../../pages/base/Responsive';
 import * as styles from './styles';
 

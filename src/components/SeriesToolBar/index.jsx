@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ArrowTriangleDown from '../../svgs/ArrowTriangleDown.svg';
 import FlexBar from '../FlexBar';
 import { Align } from '../Modal/styles';

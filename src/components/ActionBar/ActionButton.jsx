@@ -1,5 +1,5 @@
-import * as styles from './styles';
 import { ButtonType } from './constants';
+import * as styles from './styles';
 
 export const ActionButton = ({ name, onClick, type = ButtonType.NORMAL, disable = false, className = '' }) =>
   type === ButtonType.SPACER ? (

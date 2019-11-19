@@ -1,6 +1,7 @@
 import { Global } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
+
 import RIDIIcon from '../../svgs/LogoRidi.svg';
 import NoticeIcon from '../../svgs/NoticeFilled.svg';
 import * as styles from './styles';

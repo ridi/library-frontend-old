@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import { startExcelDownload } from '../../../services/excelDownload/actions';
 import { getIsExcelDownloading } from '../../../services/excelDownload/selectors';
 import { Hidden } from '../../../styles';
@@ -87,7 +88,4 @@ const mapDispatchToProps = {
   dispatchStartExcelDownload: startExcelDownload,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(GNB);
+export default connect(mapStateToProps, mapDispatchToProps)(GNB);

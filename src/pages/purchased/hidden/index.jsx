@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { ButtonType } from '../../../components/ActionBar/constants';
 import { Books } from '../../../components/Books';
 import Editable from '../../../components/Editable';
@@ -239,7 +240,4 @@ const mapDispatchToProps = {
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Hidden);
+export default connect(mapStateToProps, mapDispatchToProps)(Hidden);

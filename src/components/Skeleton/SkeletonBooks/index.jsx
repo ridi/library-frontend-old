@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ViewType from '../../../constants/viewType';
 import * as styles from '../../../styles/books';
 import BooksWrapper from '../../BooksWrapper';

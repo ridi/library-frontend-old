@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
+
 import { ButtonType } from '../../../components/ActionBar/constants';
 import Editable from '../../../components/Editable';
 import { EmptyShelves } from '../../../components/Empty/EmptyShelves';

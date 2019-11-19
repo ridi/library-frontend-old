@@ -1,4 +1,5 @@
 import createCachedSelector from 're-reselect';
+
 import { EmptyUnit } from '../../utils/dataObject';
 import { makeUnitOrderKey } from './actions';
 

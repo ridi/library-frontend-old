@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Modal, ModalButtonItem, ModalItemCount, ModalItemGroup } from '.';
 import { filterModalStyle as styles } from './styles';
 

@@ -2,6 +2,7 @@ import { Book } from '@ridi/web-ui';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import Genre from '../../constants/category';
 import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
@@ -10,7 +11,7 @@ import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
 import BookMetaData from '../../utils/bookMetaData';
 import { EmptySeries } from '../../utils/dataObject';
 import { notifyMessage } from '../../utils/sentry';
-import { makeLocationHref, makeWebViewerUri, makeRidiStoreUri } from '../../utils/uri';
+import { makeLocationHref, makeRidiStoreUri, makeWebViewerUri } from '../../utils/uri';
 import BooksWrapper from '../BooksWrapper';
 import FullButton from './FullButton';
 import * as serialPreferenceStyles from './styles';
@@ -154,9 +155,4 @@ const mapDispatchToProps = {
   onSelectedChange: toggleItem,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(SerialPreferenceBooks),
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SerialPreferenceBooks));

@@ -1,11 +1,11 @@
 import React from 'react';
-
 import { Link, withRouter } from 'react-router-dom';
+
 import { URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import FlexBar from '../FlexBar';
-import { Editing, Filter, More } from '../Tool';
 import SearchBox from '../SearchBox';
+import { Editing, Filter, More } from '../Tool';
 import * as styles from './styles';
 
 class SearchBar extends React.Component {

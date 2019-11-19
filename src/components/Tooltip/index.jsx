@@ -1,9 +1,10 @@
 import isBefore from 'date-fns/is_before';
 import React from 'react';
+
 import CheckIcon from '../../svgs/Check.svg';
+import settings from '../../utils/settings';
 import * as toolTipStyles from './styles';
 import { TooltipBackground } from './TooltipBackground';
-import settings from '../../utils/settings';
 
 export const Tooltip = ({ children, name, expires, style, horizontalAlign }) => {
   const [isActive, setActive] = React.useState(false);

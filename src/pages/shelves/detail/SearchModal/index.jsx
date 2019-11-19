@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import * as filterActions from 'services/purchased/filter/actions';
 import * as mainActions from 'services/purchased/main/actions';
 import * as mainSelectors from 'services/purchased/main/selectors';
@@ -8,8 +7,8 @@ import * as selectionActions from 'services/selection/actions';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as shelfSelectors from 'services/shelf/selectors';
 
-import BottomActionBar from '../../../../components/BottomActionBar';
 import { ButtonType } from '../../../../components/ActionBar/constants';
+import BottomActionBar from '../../../../components/BottomActionBar';
 import Empty from '../../../../components/Empty';
 import FixedToolbarView from '../../../../components/FixedToolbarView';
 import PageNavigationBar, { NavigationBarColor } from '../../../../components/PageNavigationBar';

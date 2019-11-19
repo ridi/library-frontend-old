@@ -1,10 +1,10 @@
 import React from 'react';
 
-import * as styles from './styles';
 import NoneDashedArrowLeft from '../../svgs/NoneDashedArrowLeft.svg';
 import NoneDashedArrowRight from '../../svgs/NoneDashedArrowRight.svg';
 import ThreeDotsHorizontal from '../../svgs/ThreeDotsHorizontal.svg';
 import { calcPageBlock, makePageRange } from '../../utils/pagination';
+import * as styles from './styles';
 
 function NavigationButton(props) {
   const { children, onPageChange, page, style } = props;

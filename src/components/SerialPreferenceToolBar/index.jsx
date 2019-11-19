@@ -1,6 +1,7 @@
 import React from 'react';
-import { Editing } from '../Tool';
+
 import FlexBar from '../FlexBar';
+import { Editing } from '../Tool';
 import * as styles from './styles';
 
 const SerialPreferenceToolBar = props => {

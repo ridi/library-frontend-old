@@ -1,5 +1,5 @@
-import { ShelvesWrapper } from '../ShelvesWrapper';
 import Shelf from '../Shelf';
+import { ShelvesWrapper } from '../ShelvesWrapper';
 
 export const Shelves = ({ shelfIds, selectMode, renderLink }) => (
   <ShelvesWrapper>

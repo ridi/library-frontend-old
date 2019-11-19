@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Edit from '../../svgs/Edit.svg';
 import IconButton from '../IconButton';
 import * as styles from './styles';
