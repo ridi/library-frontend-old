@@ -105,12 +105,12 @@ export function* fetchUnitData(unitIds) {
   return attatchTTL(response.data.units);
 }
 
-export function* fetchUnitOrders(unitId, orderType, orderBy, page) {
+export function* fetchUnitOrders(unitId, orderBy, orderDirection, page) {
   const options = {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
-    orderType,
-    orderBy,
+    orderType: orderBy,
+    orderBy: orderDirection,
   };
 
   const api = yield put(getAPI());
@@ -122,8 +122,8 @@ export function* fetchPrimaryBookId(unitId) {
   const options = {
     offset: 0,
     limit: 1,
-    orderType: OrderOptions.UNIT_LIST_DEFAULT.orderType,
-    orderBy: OrderOptions.UNIT_LIST_DEFAULT.orderBy,
+    orderType: OrderOptions.UNIT_LIST_DEFAULT.orderBy,
+    orderBy: OrderOptions.UNIT_LIST_DEFAULT.orderDirection,
   };
 
   const api = yield put(getAPI());

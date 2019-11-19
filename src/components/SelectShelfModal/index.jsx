@@ -103,8 +103,8 @@ function SelectShelfModalInner(props) {
   const handleOrderOptionClick = React.useCallback(option => {
     const newPageOptions = {
       page: 1,
-      orderBy: option.orderType,
-      orderDirection: option.orderBy,
+      orderBy: option.orderBy,
+      orderDirection: option.orderDirection,
     };
     onPageOptionsChange(newPageOptions);
   }, []);
@@ -196,8 +196,8 @@ const mapDispatchToProps = {
 const SelectShelfModal = connect(mapStateToProps, mapDispatchToProps)(SelectShelfModalInner);
 
 export default function SelectShelfModalContainer({ onBackClick, onShelfSelect }) {
-  const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderType);
-  const [orderDirection, setOrderDirection] = React.useState(OrderOptions.SHELF_CREATED.orderBy);
+  const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderBy);
+  const [orderDirection, setOrderDirection] = React.useState(OrderOptions.SHELF_CREATED.orderDirection);
   const [page, setPage] = React.useState(1);
 
   const handlePageOptionsChange = React.useCallback(options => {

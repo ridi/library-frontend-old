@@ -15,7 +15,7 @@ const modalStyle = css`
   margin-top: 4px;
 `;
 
-const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, orderType, uuid }) => {
+const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, orderBy, uuid }) => {
   const [isModalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
   const handlePortraitClick = React.useCallback(() => {
@@ -79,12 +79,12 @@ const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, o
               {orderOptions.map(option => {
                 const newPageOptions = {
                   page: 1,
-                  orderType: option.orderType,
+                  orderBy: option.orderBy,
                 };
                 const { to } = makeLinkProps({}, pathName, newPageOptions);
                 return (
                   <li key={option.key}>
-                    <ModalLinkItem isSelected={option.orderType === orderType} to={to} onClick={handleOrderClick} replace>
+                    <ModalLinkItem isSelected={option.orderBy === orderBy} to={to} onClick={handleOrderClick} replace>
                       {option.title}
                     </ModalLinkItem>
                   </li>

@@ -1,6 +1,6 @@
 import { all, call, put } from 'redux-saga/effects';
 
-import { OrderType } from 'constants/orderOptions';
+import { OrderBy } from 'constants/orderOptions';
 import { ServiceType } from 'constants/serviceType';
 import { BooksPageKind } from 'constants/urls';
 import { arrayChunk, makeUnique, toFlatten } from 'utils/array';
@@ -49,7 +49,7 @@ export function* requestCheckQueueStatus(queueIds) {
   return yield _request(queueIds);
 }
 
-export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy, filter }) {
+export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderBy, orderDirection, filter }) {
   if (unitIds.length === 0) {
     return {};
   }
@@ -63,11 +63,11 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy,
     endpoint = '/items/hidden/fields/b_ids/';
   } else {
     endpoint = '/items/fields/b_ids/';
-    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+    if (orderBy === OrderBy.EXPIRED_BOOKS_ONLY) {
       query.expiredBooksOnly = true;
     } else {
-      query.orderType = orderType;
-      query.orderBy = orderBy;
+      query.orderType = orderBy;
+      query.orderBy = orderDirection;
       query.serviceType = filter && ServiceType.includes(filter) ? filter : null;
     }
   }

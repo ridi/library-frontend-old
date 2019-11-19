@@ -16,8 +16,8 @@ import { HIDE_ALL_EXPIRED_DONE_CHECK_MAX_RETRY_COUNT, HIDE_ALL_EXPIRED_MAX_COUNT
 import { NotFoundExpiredBooksError } from '../errors';
 
 const expiredBookOnlyOrderOptions = {
-  orderType: OrderOptions.EXPIRED_BOOKS_ONLY.orderType,
   orderBy: OrderOptions.EXPIRED_BOOKS_ONLY.orderBy,
+  orderDirection: OrderOptions.EXPIRED_BOOKS_ONLY.orderDirection,
   kind: BooksPageKind.MAIN,
 };
 

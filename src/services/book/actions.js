@@ -14,7 +14,7 @@ export const SHOW_SHELF_BOOK_ALERT_TOAST = 'SHOW_SHELF_BOOK_ALERT_TOAST';
 export const LOAD_BOOK_DATA = 'LOAD_BOOK_DATA';
 export const LOAD_UNIT_DATA = 'LOAD_UNIT_DATA';
 
-export const makeUnitOrderKey = (unitId, orderType, orderBy, page) => `${unitId}-${orderType}-${orderBy}-${page}`;
+export const makeUnitOrderKey = (unitId, orderBy, orderDirection, page) => `${unitId}-${orderBy}-${orderDirection}-${page}`;
 
 export const setBookData = books => ({
   type: SET_BOOK_DATA,
@@ -51,12 +51,12 @@ export const setUnitData = units => ({
   },
 });
 
-export const setUnitOrders = (unitId, orderType, orderBy, page, unitOrders) => ({
+export const setUnitOrders = (unitId, orderBy, orderDirection, page, unitOrders) => ({
   type: SET_UNIT_ORDERS,
   payload: {
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
     unitOrders,
   },

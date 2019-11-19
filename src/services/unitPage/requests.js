@@ -2,7 +2,7 @@ import { put } from 'redux-saga/effects';
 
 import { getAPI } from '../../api/actions';
 import config from '../../config';
-import { OrderOptions, OrderType } from '../../constants/orderOptions';
+import { OrderOptions, OrderBy } from '../../constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import { PageType } from '../../constants/urls';
 import { calcOffset } from '../../utils/pagination';
@@ -10,23 +10,23 @@ import { attatchTTL } from '../../utils/ttl';
 import { makeURI } from '../../utils/uri';
 import { getRemainTime } from './utils';
 
-function enhanceOptions(options, orderType, orderBy) {
-  if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
+function enhanceOptions(options, orderBy, orderDirection) {
+  if (orderBy === OrderBy.EXPIRED_BOOKS_ONLY) {
     options.expiredBooksOnly = true;
   } else {
-    options.orderType = orderType;
-    options.orderBy = orderBy;
+    options.orderType = orderBy;
+    options.orderBy = orderDirection;
   }
 }
 
-export function* fetchUnitItems({ kind, unitId, orderType, orderBy, page }) {
+export function* fetchUnitItems({ kind, unitId, orderBy, orderDirection, page }) {
   const options = {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
   };
 
   if (kind !== PageType.HIDDEN) {
-    enhanceOptions(options, orderType, orderBy);
+    enhanceOptions(options, orderBy, orderDirection);
   }
 
   const api = yield put(getAPI());
@@ -41,11 +41,11 @@ export function* fetchUnitItems({ kind, unitId, orderType, orderBy, page }) {
   return response.data;
 }
 
-export function* fetchUnitItemsTotalCount({ kind, unitId, orderType, orderBy }) {
+export function* fetchUnitItemsTotalCount({ kind, unitId, orderBy, orderDirection }) {
   const options = {};
 
   if (kind !== PageType.HIDDEN) {
-    enhanceOptions(options, orderType, orderBy);
+    enhanceOptions(options, orderBy, orderDirection);
   }
 
   const api = yield put(getAPI());
@@ -60,7 +60,7 @@ export function* getUnitPrimaryItem({ kind, unitId }) {
   };
 
   if (kind !== PageType.HIDDEN) {
-    enhanceOptions(options, OrderOptions.PURCHASE_DATE.orderType, OrderOptions.PURCHASE_DATE.orderBy);
+    enhanceOptions(options, OrderOptions.PURCHASE_DATE.orderBy, OrderOptions.PURCHASE_DATE.orderDirection);
   }
 
   const api = yield put(getAPI());

@@ -42,12 +42,11 @@ export const loadShelfCount = () => ({
   type: LOAD_SHELF_COUNT,
 });
 
-export const loadShelfBooks = (uuid, { orderBy, orderType, orderDirection, page }) => ({
+export const loadShelfBooks = (uuid, { orderBy, orderDirection, page }) => ({
   type: LOAD_SHELF_BOOKS,
   payload: {
     uuid,
     orderBy,
-    orderType,
     orderDirection,
     page,
   },
@@ -108,12 +107,11 @@ export const setShelfCount = count => ({
  *   unitId: number,
  * }>
  * */
-export const setShelfBooks = (uuid, { orderBy, orderType, orderDirection, page, items }) => ({
+export const setShelfBooks = (uuid, { orderBy, orderDirection, page, items }) => ({
   type: SET_SHELF_BOOKS,
   payload: {
     uuid,
     orderBy,
-    orderType,
     orderDirection,
     page,
     items,

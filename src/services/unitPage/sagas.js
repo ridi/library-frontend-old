@@ -54,12 +54,12 @@ function* loadPurchasedItems(options) {
 function* loadItems(action) {
   yield put(setError(false));
 
-  const { kind, unitId, page, orderType, orderBy } = action.payload;
-  const order = OrderOptions.toKey(orderType, orderBy);
+  const { kind, unitId, page, orderBy, orderDirection } = action.payload;
+  const order = OrderOptions.toKey(orderBy, orderDirection);
   const options = {
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   };
 
@@ -92,14 +92,14 @@ function* loadItems(action) {
 
     const countResponse = yield call(requests.fetchUnitItemsTotalCount, {
       ...action.payload,
-      orderType: OrderOptions.PURCHASE_DATE.orderType,
       orderBy: OrderOptions.PURCHASE_DATE.orderBy,
+      orderDirection: OrderOptions.PURCHASE_DATE.orderDirection,
     });
 
     yield put(actions.setPurchasedTotalCount(countResponse.item_total_count, options));
 
     if (yield call(isTotalSeriesView, unitId, order)) {
-      yield loadTotalItems(unitId, orderType, orderBy, page, actions.setItems, actions.setTotalCount);
+      yield loadTotalItems(unitId, orderBy, orderDirection, page, actions.setItems, actions.setTotalCount);
     } else {
       yield loadPurchasedItems(action.payload);
     }

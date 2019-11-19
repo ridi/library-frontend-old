@@ -56,7 +56,7 @@ const bookReducer = produce((draft, action) => {
       update(draft.units, makeEntries(action.payload.units));
       break;
     case SET_UNIT_ORDERS:
-      const key = makeUnitOrderKey(action.payload.unitId, action.payload.orderType, action.payload.orderBy, action.payload.page);
+      const key = makeUnitOrderKey(action.payload.unitId, action.payload.orderBy, action.payload.orderDirection, action.payload.page);
       update(draft.unitOrders, [{ key, value: action.payload.unitOrders }]);
       break;
     case SET_BOOK_DATA_FROM_STORAGE:
