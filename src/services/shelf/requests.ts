@@ -1,5 +1,7 @@
 import * as R from 'runtypes';
 
+import { getOrderParams } from 'utils/order';
+
 import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
@@ -50,11 +52,15 @@ const RFetchOperationStatusResponse = R.Record({
   ),
 });
 
-export async function fetchShelves({ offset, limit, orderType, orderBy }) {
+export async function fetchShelves({ offset, limit, orderBy, orderDirection }) {
   const api = getApi();
-  const response = await api.get(
-    makeURI('/shelves/', { offset, limit, need_three_items: true, order_type: orderType, order_by: orderBy }, config.LIBRARY_API_BASE_URL),
-  );
+  const query = {
+    offset,
+    limit,
+    need_three_items: true,
+    ...getOrderParams(orderBy, orderDirection),
+  };
+  const response = await api.get(makeURI('/shelves/', query, config.LIBRARY_API_BASE_URL));
   const data = RFetchShelvesResponse.check(response.data);
   return data.items.map(item => ({
     id: item.id,
@@ -72,9 +78,14 @@ export async function fetchShelfCount() {
   return data.count;
 }
 
-export async function fetchShelfBooks({ uuid, offset, limit }) {
+export async function fetchShelfBooks({ uuid, orderBy, offset, limit }) {
   const api = getApi();
-  const response = await api.get(makeURI(`/shelves/${uuid}/`, { offset, limit }, config.LIBRARY_API_BASE_URL));
+  const query = {
+    offset,
+    limit,
+    ...getOrderParams(orderBy),
+  };
+  const response = await api.get(makeURI(`/shelves/${uuid}/`, query, config.LIBRARY_API_BASE_URL));
   const data = RFetchShelfBooksResponse.check(response.data);
   const items = data.items.map(item => ({
     bookIds: item.b_ids,

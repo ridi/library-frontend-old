@@ -59,3 +59,8 @@ export const onIcon = {
   marginRignt: 2,
   fill: '#008deb',
 };
+
+export const totalCount = {
+  fontSize: 15,
+  fontWeight: 'normal',
+};

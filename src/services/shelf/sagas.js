@@ -53,7 +53,7 @@ function* loadShelves({ payload }) {
   const offset = (page - 1) * SHELVES_LIMIT_PER_PAGE;
   const limit = SHELVES_LIMIT_PER_PAGE;
   try {
-    const items = yield call(requests.fetchShelves, { offset, limit, orderType: orderBy, orderBy: orderDirection });
+    const items = yield call(requests.fetchShelves, { offset, limit, orderBy, orderDirection });
     yield put(actions.setShelves({ orderBy, orderDirection, page, items }));
   } catch (err) {
     if (!err.response || err.response.status !== 401) {
@@ -78,7 +78,7 @@ function* loadShelfBooks({ payload }) {
   const offset = (page - 1) * LIBRARY_ITEMS_LIMIT_PER_PAGE;
   const limit = LIBRARY_ITEMS_LIMIT_PER_PAGE;
   try {
-    const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, offset, limit });
+    const { items, shelfInfo } = yield call(requests.fetchShelfBooks, { uuid, orderBy, offset, limit });
     yield put(actions.setShelfInfo(shelfInfo));
     const libraryBooks = yield call(
       bookRequests.fetchLibraryUnitData,

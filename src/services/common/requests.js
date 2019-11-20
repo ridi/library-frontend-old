@@ -1,10 +1,10 @@
 import { all, call, put } from 'redux-saga/effects';
 
-import { OrderType } from 'constants/orderOptions';
 import { ServiceType } from 'constants/serviceType';
 import { BooksPageKind } from 'constants/urls';
 import { arrayChunk, makeUnique, toFlatten } from 'utils/array';
 import { delay } from 'utils/delay';
+import { getOrderParams } from 'utils/order';
 import { snakelize } from 'utils/snakelize';
 import { makeURI } from 'utils/uri';
 
@@ -49,12 +49,12 @@ export function* requestCheckQueueStatus(queueIds) {
   return yield _request(queueIds);
 }
 
-export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy, filter }) {
+export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderBy, orderDirection, filter }) {
   if (unitIds.length === 0) {
     return {};
   }
 
-  const query = {
+  let query = {
     unitIds,
   };
   let endpoint = '';
@@ -63,13 +63,13 @@ export function* requestGetBookIdsByUnitIds(unitIds, { kind, orderType, orderBy,
     endpoint = '/items/hidden/fields/b_ids/';
   } else {
     endpoint = '/items/fields/b_ids/';
-    if (orderType === OrderType.EXPIRED_BOOKS_ONLY) {
-      query.expiredBooksOnly = true;
-    } else {
-      query.orderType = orderType;
-      query.orderBy = orderBy;
-      query.serviceType = filter && ServiceType.includes(filter) ? filter : null;
+    if (filter && ServiceType.includes(filter)) {
+      query.serviceType = filter;
     }
+    query = {
+      ...query,
+      ...getOrderParams(orderBy, orderDirection),
+    };
   }
 
   const api = yield put(getAPI());

@@ -25,8 +25,8 @@ function extractOptions({ location, path, params }) {
   const searchParams = new URLSearchParams(location.search);
   const { unitId } = params;
   const page = parseInt(searchParams.get('page'), 10) || 1;
-  const orderType = searchParams.get('order_type') || OrderOptions.UNIT_LIST_DEFAULT.orderType;
   const orderBy = searchParams.get('order_by') || OrderOptions.UNIT_LIST_DEFAULT.orderBy;
+  const orderDirection = searchParams.get('order_direction') || OrderOptions.UNIT_LIST_DEFAULT.orderDirection;
   let kind;
   switch (path) {
     case URLMap[PageType.MAIN_UNIT].path:
@@ -46,8 +46,8 @@ function extractOptions({ location, path, params }) {
   return {
     kind,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   };
 }
@@ -100,14 +100,14 @@ function makeBackLocation({ location, match }) {
 }
 
 function useDispatchOptions(actionDispatcher, options) {
-  const { unitId, orderType, orderBy, page } = options;
-  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, unitId, orderType, orderBy, page]);
+  const { unitId, orderBy, orderDirection, page } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, unitId, orderBy, orderDirection, page]);
 }
 
 function Unit(props) {
   const { location, match } = props;
   const options = extractOptions({ location, ...match });
-  const { kind, orderType, orderBy, page: currentPage } = options;
+  const { kind, orderBy, orderDirection, page: currentPage } = options;
   const backLocation = makeBackLocation({ location, match });
 
   const { unit, unitOptions, totalCount, totalPages } = props;
@@ -170,7 +170,7 @@ function Unit(props) {
   }, [deleteSelectedBooksWithOptions, dispatchShowConfirm]);
 
   function renderTitleBar() {
-    const order = OrderOptions.toKey(orderType, orderBy);
+    const order = OrderOptions.toKey(orderBy, orderDirection);
     const usePurchasedTotalCount = [OrderOptions.UNIT_ORDER_DESC.key, OrderOptions.UNIT_ORDER_ASC.key].includes(order);
     const shownTotalCount = usePurchasedTotalCount ? totalCount.purchasedTotalCount : totalCount.itemTotalCount;
 
@@ -252,10 +252,10 @@ function Unit(props) {
     }
 
     const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;
-    const order = OrderOptions.toKey(orderType, orderBy);
+    const order = OrderOptions.toKey(orderBy, orderDirection);
     const orderOptions = UnitType.isSeries(unit.type)
       ? OrderOptions.toSeriesList(bookUnitOfCount)
-      : OrderOptions.toShelfList(bookUnitOfCount);
+      : OrderOptions.toCollectionList(bookUnitOfCount);
 
     return (
       <SeriesList

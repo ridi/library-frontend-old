@@ -127,9 +127,9 @@ function* loadUnitDataFromAction({ payload: { unitIds } }) {
   yield* loadUnitData(unitIds);
 }
 
-export function* loadUnitOrders(unitId, orderType, orderBy, page) {
-  const unitOrders = yield call(fetchUnitOrders, unitId, orderType, orderBy, page);
-  yield put(setUnitOrders(unitId, orderType, orderBy, page, unitOrders));
+export function* loadUnitOrders(unitId, orderBy, orderDirection, page) {
+  const unitOrders = yield call(fetchUnitOrders, unitId, orderBy, orderDirection, page);
+  yield put(setUnitOrders(unitId, orderBy, orderDirection, page, unitOrders));
 }
 
 export default function* bookRootSaga() {
