@@ -13,14 +13,6 @@ export default class More extends React.Component {
     };
   }
 
-  shouldComponentUpdate(nextProps) {
-    const { order } = this.props;
-    if (nextProps.order !== order) {
-      this.setState({ isMoreModalShow: false });
-    }
-    return true;
-  }
-
   render() {
     const { isMoreModalShow } = this.state;
     const { orderOptions, orderBy, orderDirection, query, showViewType, showOrder, showHidden } = this.props;

@@ -60,7 +60,14 @@ const MoreModal = ({
             const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderBy: option.orderBy, orderDirection: option.orderDirection });
             return (
               <li key={option.key}>
-                <ModalLinkItem isSelected={option.orderBy === orderBy && option.orderDirection === orderDirection} to={to} replace>
+                <ModalLinkItem
+                  isSelected={option.orderBy === orderBy && option.orderDirection === orderDirection}
+                  to={to}
+                  replace
+                  onClick={() => {
+                    onClickModalBackground();
+                  }}
+                >
                   {option.title}
                 </ModalLinkItem>
               </li>
