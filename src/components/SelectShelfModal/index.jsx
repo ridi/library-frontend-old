@@ -1,7 +1,8 @@
 import { css } from '@emotion/core';
-import TitleBar from 'components/TitleBar';
 import React from 'react';
 import { connect } from 'react-redux';
+
+import TitleBar from 'components/TitleBar';
 
 import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';

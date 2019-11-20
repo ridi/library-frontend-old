@@ -1,3 +1,6 @@
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { ButtonType } from 'components/ActionBar/constants';
 import BottomActionBar from 'components/BottomActionBar';
 import Empty from 'components/Empty';
@@ -8,9 +11,6 @@ import TitleBar from 'components/TitleBar';
 import { BooksPageKind } from 'constants/urls';
 import ViewType from 'constants/viewType';
 import { ResponsiveBooks } from 'pages/base/Responsive';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import * as filterActions from 'services/purchased/filter/actions';
 import * as mainActions from 'services/purchased/main/actions';
 import * as mainSelectors from 'services/purchased/main/selectors';

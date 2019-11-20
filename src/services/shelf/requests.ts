@@ -1,10 +1,11 @@
 import * as R from 'runtypes';
 
+import { getOrderParams } from 'utils/order';
+
 import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
 import { OperationStatus } from './constants';
-import { getOrderParams } from 'utils/order';
 
 const RShelfBook = R.Record({
   b_ids: R.Array(R.String),
