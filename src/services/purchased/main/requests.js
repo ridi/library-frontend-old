@@ -1,7 +1,7 @@
-import { OrderBy } from 'constants/orderOptions';
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from 'constants/page';
 import { ServiceType } from 'constants/serviceType';
 import { BooksPageKind } from 'constants/urls';
+import { getOrderParams } from 'utils/order';
 import { calcOffset } from 'utils/pagination';
 import { makeURI } from 'utils/uri';
 
@@ -9,19 +9,17 @@ import { getApi } from '../../../api';
 import config from '../../../config';
 
 function makeCommonOptions({ kind, keyword, orderBy, orderDirection, filter }) {
-  const options = {};
+  let options = {};
   if (ServiceType.includes(filter)) {
     options.serviceType = filter;
   } else {
     options.category = filter;
   }
   if (kind === BooksPageKind.MAIN) {
-    if (orderBy === OrderBy.EXPIRED_BOOKS_ONLY) {
-      options.expiredBooksOnly = true;
-    } else {
-      options.orderType = orderBy;
-      options.orderBy = orderDirection;
-    }
+    options = {
+      ...options,
+      ...getOrderParams(orderBy, orderDirection),
+    };
   } else if (kind === BooksPageKind.SEARCH) {
     options.keyword = keyword;
   }

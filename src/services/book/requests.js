@@ -2,14 +2,16 @@ import { captureMessage } from '@sentry/browser';
 import { stringify } from 'qs';
 import { put } from 'redux-saga/effects';
 
+import { OrderOptions } from 'constants/orderOptions';
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from 'constants/page';
+import { getOrderParams } from 'utils/order';
+import { calcOffset } from 'utils/pagination';
+import { attatchTTL } from 'utils/ttl';
+import { makeURI } from 'utils/uri';
+
 import { getApi as getApiSingleton } from '../../api';
 import { getAPI } from '../../api/actions';
 import config from '../../config';
-import { OrderOptions } from '../../constants/orderOptions';
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
-import { calcOffset } from '../../utils/pagination';
-import { attatchTTL } from '../../utils/ttl';
-import { makeURI } from '../../utils/uri';
 
 const _reduceBooks = books =>
   books.map(book => ({
@@ -109,8 +111,7 @@ export function* fetchUnitOrders(unitId, orderBy, orderDirection, page) {
   const options = {
     offset: calcOffset(page, LIBRARY_ITEMS_LIMIT_PER_PAGE),
     limit: LIBRARY_ITEMS_LIMIT_PER_PAGE,
-    orderType: orderBy,
-    orderBy: orderDirection,
+    ...getOrderParams(orderBy, orderDirection),
   };
 
   const api = yield put(getAPI());
@@ -119,11 +120,11 @@ export function* fetchUnitOrders(unitId, orderBy, orderDirection, page) {
 }
 
 export function* fetchPrimaryBookId(unitId) {
+  const { orderBy, orderDirection } = OrderOptions.UNIT_LIST_DEFAULT;
   const options = {
     offset: 0,
     limit: 1,
-    orderType: OrderOptions.UNIT_LIST_DEFAULT.orderBy,
-    orderBy: OrderOptions.UNIT_LIST_DEFAULT.orderDirection,
+    ...getOrderParams(orderBy, orderDirection),
   };
 
   const api = yield put(getAPI());

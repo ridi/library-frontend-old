@@ -4,6 +4,7 @@ import { getApi } from '../../api';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';
 import { OperationStatus } from './constants';
+import { getOrderParams } from 'utils/order';
 
 const RShelfBook = R.Record({
   b_ids: R.Array(R.String),
@@ -52,13 +53,13 @@ const RFetchOperationStatusResponse = R.Record({
 
 export async function fetchShelves({ offset, limit, orderBy, orderDirection }) {
   const api = getApi();
-  const response = await api.get(
-    makeURI(
-      '/shelves/',
-      { offset, limit, need_three_items: true, order_type: orderBy, order_by: orderDirection },
-      config.LIBRARY_API_BASE_URL,
-    ),
-  );
+  const query = {
+    offset,
+    limit,
+    need_three_items: true,
+    ...getOrderParams(orderBy, orderDirection),
+  };
+  const response = await api.get(makeURI('/shelves/', query, config.LIBRARY_API_BASE_URL));
   const data = RFetchShelvesResponse.check(response.data);
   return data.items.map(item => ({
     id: item.id,
@@ -78,7 +79,12 @@ export async function fetchShelfCount() {
 
 export async function fetchShelfBooks({ uuid, orderBy, offset, limit }) {
   const api = getApi();
-  const response = await api.get(makeURI(`/shelves/${uuid}/`, { offset, order_type: orderBy, limit }, config.LIBRARY_API_BASE_URL));
+  const query = {
+    offset,
+    limit,
+    ...getOrderParams(orderBy),
+  };
+  const response = await api.get(makeURI(`/shelves/${uuid}/`, query, config.LIBRARY_API_BASE_URL));
   const data = RFetchShelfBooksResponse.check(response.data);
   const items = data.items.map(item => ({
     bookIds: item.b_ids,
