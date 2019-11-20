@@ -61,6 +61,7 @@ export const onIcon = {
 };
 
 export const totalCount = {
-  fontSize: 15,
+  fontSize: 13,
+  color: '#525A61',
   fontWeight: 'normal',
 };
