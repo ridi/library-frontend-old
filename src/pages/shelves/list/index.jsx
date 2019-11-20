@@ -135,11 +135,11 @@ const ShelvesList = props => {
 
   const handleOrderOptionClick = option => {
     const { href, as } = URLMap.shelves;
-    const { orderType, orderBy } = option;
+    const { orderBy, orderDirection } = option;
     const newPageOptions = {
       page: 1,
-      orderBy: orderType,
-      orderDirection: orderBy,
+      orderBy,
+      orderDirection,
     };
     const { to } = makeLinkProps(href, as, newPageOptions);
     props.history.push(to);
@@ -215,8 +215,8 @@ const ShelvesList = props => {
 const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
-  const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_CREATED.orderType;
-  const orderDirection = urlParams.get('order_direction') || OrderOptions.SHELF_CREATED.orderBy;
+  const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_CREATED.orderBy;
+  const orderDirection = urlParams.get('order_direction') || OrderOptions.SHELF_CREATED.orderDirection;
   return {
     page,
     orderBy,

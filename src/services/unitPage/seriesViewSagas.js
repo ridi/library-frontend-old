@@ -43,16 +43,16 @@ export function getOpenedBookId(itemBookIds, pageBookData) {
   return openedBookId || itemBookIds[0];
 }
 
-export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
+export function* loadTotalItems(unitId, orderBy, orderDirection, page, setItems, setTotalCount) {
   const options = {
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   };
-  yield call(loadUnitOrders, unitId, orderType, orderBy, page);
+  yield call(loadUnitOrders, unitId, orderBy, orderDirection, page);
   // 시리즈 리스트 페이지별 도서 목록
-  const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
+  const unitOrders = yield select(getUnitOrders, unitId, orderBy, orderDirection, page);
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
   yield call(loadBookData, bookIds);
   const pageBookData = yield select(getBooks, bookIds);

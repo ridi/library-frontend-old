@@ -7,8 +7,8 @@ import { concat } from '../../utils/array';
 import { calcPage } from '../../utils/pagination';
 import { createInitialDataState } from './state';
 
-function makeKeyFromOptions({ unitId, orderType, orderBy }) {
-  const order = OrderOptions.toKey(orderType, orderBy);
+function makeKeyFromOptions({ unitId, orderBy, orderDirection }) {
+  const order = OrderOptions.toKey(orderBy, orderDirection);
   return concat([unitId, order]);
 }
 

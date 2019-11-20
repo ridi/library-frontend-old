@@ -11,8 +11,8 @@ import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 const MoreModal = ({
   history,
   orderOptions,
-  orderType,
   orderBy,
+  orderDirection,
   isActive,
   query,
   onClickModalBackground,
@@ -57,10 +57,10 @@ const MoreModal = ({
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
           {orderOptions.map(option => {
-            const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderType: option.orderType, orderBy: option.orderBy });
+            const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderBy: option.orderBy, orderDirection: option.orderDirection });
             return (
               <li key={option.key}>
-                <ModalLinkItem isSelected={option.orderType === orderType && option.orderBy === orderBy} to={to} replace>
+                <ModalLinkItem isSelected={option.orderBy === orderBy && option.orderDirection === orderDirection} to={to} replace>
                   {option.title}
                 </ModalLinkItem>
               </li>

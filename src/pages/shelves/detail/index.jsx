@@ -221,7 +221,7 @@ function ShelfDetail(props) {
           onRenameClick={showShelfRenamePrompt}
           onViewTypeChange={setViewType}
           uuid={uuid}
-          orderType={pageOptions.orderType}
+          orderBy={pageOptions.orderBy}
         />
       </div>
     );
@@ -320,13 +320,11 @@ function ShelfDetail(props) {
 const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
   const page = parseInt(urlParams.get('page'), 10) || 1;
-  const orderType = urlParams.get('order_type') || OrderOptions.SHELF_BOOK_DEFAULT.orderType;
-  const orderBy = urlParams.get('order_by') || '';
+  const orderBy = urlParams.get('order_by') || OrderOptions.SHELF_BOOK_DEFAULT.orderBy;
   const orderDirection = urlParams.get('order_direction') || '';
   return {
     page,
     orderBy,
-    orderType,
     orderDirection,
   };
 };

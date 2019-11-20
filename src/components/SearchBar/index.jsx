@@ -39,14 +39,14 @@ class SearchBar extends React.Component {
   };
 
   handleFilterChange = filter => {
-    const { history, orderType, orderBy } = this.props;
-    const { to } = makeLinkProps({}, URLMap.main.as, { orderType, orderBy, filter });
+    const { history, orderBy, orderDirection } = this.props;
+    const { to } = makeLinkProps({}, URLMap.main.as, { orderBy, orderDirection, filter });
     history.push(to);
   };
 
   render() {
     const { hideTools, keyword } = this.state;
-    const { filter, filterOptions, orderOptions, orderBy, orderType, toggleEditingMode, isSearchPage } = this.props;
+    const { filter, filterOptions, orderOptions, orderDirection, orderBy, toggleEditingMode, isSearchPage } = this.props;
 
     const left = (
       <div css={styles.searchBoxWrapper}>
@@ -65,7 +65,15 @@ class SearchBar extends React.Component {
         {filterOptions && <Filter filter={filter} filterOptions={filterOptions} onFilterChange={this.handleFilterChange} />}
         {toggleEditingMode && <Editing toggleEditingMode={toggleEditingMode} />}
         {orderOptions && (
-          <More orderOptions={orderOptions} orderType={orderType} orderBy={orderBy} query={{ filter }} showViewType showOrder showHidden />
+          <More
+            orderOptions={orderOptions}
+            orderBy={orderBy}
+            orderDirection={orderDirection}
+            query={{ filter }}
+            showViewType
+            showOrder
+            showHidden
+          />
         )}
         {isSearchPage && (
           <Link {...makeLinkProps({}, URLMap.main.as)} css={styles.cancelSearchButton}>

@@ -1,6 +1,6 @@
 import { all, call, delay, put, select, takeEvery } from 'redux-saga/effects';
 
-import { OrderBy, OrderType } from 'constants/orderOptions';
+import { OrderDirection, OrderBy } from 'constants/orderOptions';
 import { fetchBookData } from 'services/book/requests';
 import { getBookIdsByUnitIds } from 'services/common/sagas';
 import * as selectionSelectors from 'services/selection/selectors';
@@ -115,7 +115,7 @@ export function* downloadBooks(bookIds) {
 
 export function* downloadBooksByUnitIds(unitIds) {
   // 해당 유닛의 전체 데이터 받아야 하기 때문에 기본 값으로 unit 을 조회한다.
-  const bookIds = yield call(getBookIdsByUnitIds, unitIds, OrderType.PURCHASE_DATE, OrderBy.DESC);
+  const bookIds = yield call(getBookIdsByUnitIds, unitIds, OrderBy.PURCHASE_DATE, OrderDirection.DESC);
   yield call(downloadBooks, bookIds);
 }
 
