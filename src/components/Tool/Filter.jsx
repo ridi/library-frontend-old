@@ -1,4 +1,5 @@
 import React from 'react';
+
 import CategoryFilter from '../../svgs/CategoryFilter.svg';
 import On from '../../svgs/On.svg';
 import IconButton from '../IconButton';

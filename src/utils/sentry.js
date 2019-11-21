@@ -1,5 +1,6 @@
 /* global SENTRY_RELEASE_VERSION */
-import { init, captureMessage, captureException, captureEvent, Severity } from '@sentry/browser';
+import { captureEvent, captureException, captureMessage, init, Severity } from '@sentry/browser';
+
 import config from '../config';
 
 export const initializeSentry = () => {

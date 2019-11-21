@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import { URLMap } from '../constants/urls';
 import Close from '../svgs/Close.svg';
 import Search from '../svgs/Search.svg';
-import IconButton from './IconButton';
 import { makeLinkProps } from '../utils/uri';
-import { URLMap } from '../constants/urls';
+import IconButton from './IconButton';
 
 const styles = {
   searchBox: {

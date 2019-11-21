@@ -52,7 +52,4 @@ const mapDispatchToProps = {
   loadUnitData: bookActions.loadUnitData,
 };
 
-export default connect(
-  mapStateToPropsFactory,
-  mapDispatchToProps,
-)(SearchBooks);
+export default connect(mapStateToPropsFactory, mapDispatchToProps)(SearchBooks);

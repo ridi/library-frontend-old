@@ -1,11 +1,12 @@
 import { withRouter } from 'react-router-dom';
+
 import { Modal, ModalItemGroup, ModalLinkItem } from '.';
 
 function buildTargetLocation(location, option, scroll) {
   const params = new URLSearchParams(location.search);
-  const { orderBy, orderType } = option;
-  orderType != null && params.set('order_type', orderType);
+  const { orderDirection, orderBy } = option;
   orderBy != null && params.set('order_by', orderBy);
+  orderDirection != null && params.set('order_direction', orderDirection);
   const search = params.toString();
 
   const calculatedScroll = typeof scroll === 'function' ? scroll() : scroll;

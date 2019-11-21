@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import accountReducer from '../services/account/reducers';
 import bookReducer from '../services/book/reducers';
 import bookDownloadReducer from '../services/bookDownload/reducers';
@@ -12,12 +13,12 @@ import purchasedCommonReducer from '../services/purchased/common/reducers';
 import filterReducer from '../services/purchased/filter/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
-import unitPageReducer from '../services/unitPage/reducers';
 import selectionReducer from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
 import shelfReducer from '../services/shelf/reducers';
 import toastReducer from '../services/toast/reducers';
 import uiReducer from '../services/ui/reducers';
+import unitPageReducer from '../services/unitPage/reducers';
 
 export default combineReducers({
   account: accountReducer,

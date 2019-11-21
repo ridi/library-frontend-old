@@ -1,12 +1,13 @@
 import { Book } from '@ridi/web-ui';
-import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
-import { ServiceType } from 'constants/serviceType';
-import { UnitType } from 'constants/unitType';
 import isAfter from 'date-fns/is_after';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createSelector } from 'reselect';
+
+import { UnitType } from 'constants/unitType';
+import { ServiceType } from 'constants/serviceType';
+import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
 import { getAdultVerification } from 'services/account/selectors';
 import { getBook, getOpenInfo } from 'services/book/selectors';
 import { downloadBooks, downloadBooksByUnitIds } from 'services/bookDownload/actions';
@@ -18,6 +19,7 @@ import Star from 'svgs/Star.svg';
 import BookMetaData from 'utils/bookMetaData';
 import { thousandsSeperator } from 'utils/number';
 import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
+
 import { getResponsiveBookWidthForDetailHeader } from '../../styles/unitDetailViewHeader';
 import * as styles from './styles';
 
@@ -299,9 +301,4 @@ const mapDispatchToProps = {
   dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
 };
 
-export default withRouter(
-  connect(
-    mapStateToPropsFactory,
-    mapDispatchToProps,
-  )(UnitDetailView),
-);
+export default withRouter(connect(mapStateToPropsFactory, mapDispatchToProps)(UnitDetailView));

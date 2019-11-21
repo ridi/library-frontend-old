@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { retry, throwNetworkError } from '../utils/retry';
 
 export default class API {

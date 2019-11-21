@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+
 import { getBookDownloadSrc } from '../services/bookDownload/selectors';
 
 const BookDownLoader = ({ src }) => {
@@ -15,7 +16,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BookDownLoader);
+export default connect(mapStateToProps, mapDispatchToProps)(BookDownLoader);

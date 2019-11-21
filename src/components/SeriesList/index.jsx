@@ -1,3 +1,7 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
 import { Books } from 'components/Books';
 import Editable from 'components/Editable';
 import Empty from 'components/Empty';
@@ -10,13 +14,11 @@ import { ServiceType } from 'constants/serviceType';
 import { UnitType } from 'constants/unitType';
 import ViewType from 'constants/viewType';
 import { ResponsiveBooks } from 'pages/base/Responsive';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { getOpenInfo } from 'services/book/selectors';
 import { getTotalSelectedCount } from 'services/selection/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import { makeLocationHref, makeRidiSelectUri, makeRidiStoreUri, makeWebViewerUri } from 'utils/uri';
+
 import * as styles from './styles';
 
 class SeriesList extends React.Component {

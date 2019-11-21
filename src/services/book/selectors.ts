@@ -1,4 +1,5 @@
 import createCachedSelector from 're-reselect';
+
 import { EmptyUnit } from '../../utils/dataObject';
 import { makeUnitOrderKey } from './actions';
 
@@ -9,8 +10,8 @@ export const getBookDescription = (state, bookId) => {
   const seriesBookId = state.books.books[bookId] && state.books.books[bookId].series ? state.books.books[bookId].series.id : bookId;
   return state.books.bookDescriptions[seriesBookId];
 };
-export const getUnitOrders = (state, unitId, orderType, orderBy, page) =>
-  state.books.unitOrders[makeUnitOrderKey(unitId, orderType, orderBy, page)];
+export const getUnitOrders = (state, unitId, orderBy, orderDirection, page) =>
+  state.books.unitOrders[makeUnitOrderKey(unitId, orderBy, orderDirection, page)];
 
 export const getBooks = createCachedSelector(
   (state: any) => state.books.books,

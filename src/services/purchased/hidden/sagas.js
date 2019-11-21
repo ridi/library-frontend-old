@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
+
 import { URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -15,10 +16,10 @@ import {
   DELETE_SELECTED_HIDDEN_BOOKS,
   LOAD_HIDDEN_ITEMS,
   SELECT_ALL_HIDDEN_BOOKS,
-  UNHIDE_SELECTED_HIDDEN_BOOKS,
   setHiddenIsFetchingBooks,
   setItems,
   setTotalCount,
+  UNHIDE_SELECTED_HIDDEN_BOOKS,
 } from './actions';
 import { fetchHiddenItems, fetchHiddenItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';

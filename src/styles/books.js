@@ -4,8 +4,8 @@ import portraitBookW100 from 'static/separator/portrait_book_w100.png';
 import portraitBookW110 from 'static/separator/portrait_book_w110.png';
 import portraitBookW140 from 'static/separator/portrait_book_w140.png';
 
-import { Responsive, MQ } from './responsive';
 import { BookSize, FULL_MAX_WIDTH } from './constants';
+import { MQ, Responsive } from './responsive';
 
 const responsiveDefaultPadding = 16;
 const separatorHeight = 1;

@@ -3,8 +3,9 @@ import FeedbackIcon from 'svgs/FeedbackIcon.svg';
 import Logout from 'svgs/Logout.svg';
 import Note from 'svgs/Note.svg';
 import Review from 'svgs/Review.svg';
-import { Modal, ModalAnchorItem, ModalButtonItem, ModalItemGroup } from '.';
+
 import config from '../../config';
+import { Modal, ModalAnchorItem, ModalButtonItem, ModalItemGroup } from '.';
 
 const userIdStyle = {
   padding: '11px 14px 10px 14px',

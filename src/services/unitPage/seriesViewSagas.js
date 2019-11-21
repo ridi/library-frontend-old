@@ -1,11 +1,12 @@
 import { all, call, put, select } from 'redux-saga/effects';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { ServiceType } from '../../constants/serviceType';
 import { UnitType } from '../../constants/unitType';
 import { toDict, toFlatten } from '../../utils/array';
-import { loadBookData, loadUnitOrders } from '../book/sagas';
 import { fetchLibraryBookData } from '../book/requests';
-import { getUnit, getUnitOrders, getBooks } from '../book/selectors';
+import { loadBookData, loadUnitOrders } from '../book/sagas';
+import { getBooks, getUnit, getUnitOrders } from '../book/selectors';
 import { getRemainTime } from './utils';
 
 function getLibraryItem(itemBookIds, libraryItems) {
@@ -42,16 +43,16 @@ export function getOpenedBookId(itemBookIds, pageBookData) {
   return openedBookId || itemBookIds[0];
 }
 
-export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setTotalCount) {
+export function* loadTotalItems(unitId, orderBy, orderDirection, page, setItems, setTotalCount) {
   const options = {
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   };
-  yield call(loadUnitOrders, unitId, orderType, orderBy, page);
+  yield call(loadUnitOrders, unitId, orderBy, orderDirection, page);
   // 시리즈 리스트 페이지별 도서 목록
-  const unitOrders = yield select(getUnitOrders, unitId, orderType, orderBy, page);
+  const unitOrders = yield select(getUnitOrders, unitId, orderBy, orderDirection, page);
   const bookIds = toFlatten(unitOrders.items, 'b_ids').reduce((prev, current) => prev.concat(current), []);
   yield call(loadBookData, bookIds);
   const pageBookData = yield select(getBooks, bookIds);
@@ -59,7 +60,10 @@ export function* loadTotalItems(unitId, orderType, orderBy, page, setItems, setT
   let items = [];
   if (bookIds.length > 0) {
     // 내가 갖고있는 도서 목록
-    const libraryItems = toDict((yield call(fetchLibraryBookData, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)), 'b_id');
+    const libraryItems = toDict(
+      (yield call(fetchLibraryBookData, bookIds)).items.filter(x => !(x.hidden || x.is_deleted)),
+      'b_id',
+    );
 
     // unitOrders와 libraryItems을 병합해서 재구성한다.
     items = unitOrders.items.map(unitOrder => {

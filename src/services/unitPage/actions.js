@@ -14,78 +14,78 @@ export const SET_IS_FETCHING_BOOK = 'SET_IS_FETCHING_BOOK';
 export const SET_UNIT_PRIMARY_ITEM = 'SET_UNIT_PRIMARY_ITEM';
 export const SET_UNIT_PURCHASED_TOTAL_COUNT = 'SET_UNIT_PURCHASED_TOTAL_COUNT';
 
-export const loadItems = ({ kind, unitId, orderType, orderBy, page }) => ({
+export const loadItems = ({ kind, unitId, orderBy, orderDirection, page }) => ({
   type: LOAD_UNIT_ITEMS,
   payload: {
     kind,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const setItems = (items, { unitId, orderType, orderBy, page }) => ({
+export const setItems = (items, { unitId, orderBy, orderDirection, page }) => ({
   type: SET_UNIT_ITEMS,
   payload: {
     items,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const setTotalCount = (itemTotalCount, { unitId, orderType, orderBy, page }) => ({
+export const setTotalCount = (itemTotalCount, { unitId, orderBy, orderDirection, page }) => ({
   type: SET_UNIT_TOTAL_COUNT,
   payload: {
     itemTotalCount,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const selectAllBooks = ({ unitId, orderType, orderBy, page }) => ({
+export const selectAllBooks = ({ unitId, orderBy, orderDirection, page }) => ({
   type: SELECT_ALL_UNIT_BOOKS,
   payload: {
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const hideSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
+export const hideSelectedBooks = ({ kind, unitId, orderBy, orderDirection, page }) => ({
   type: HIDE_SELECTED_UNIT_BOOKS,
   payload: {
     kind,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const unhideSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
+export const unhideSelectedBooks = ({ kind, unitId, orderBy, orderDirection, page }) => ({
   type: UNHIDE_SELECTED_UNIT_BOOKS,
   payload: {
     kind,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
 
-export const deleteSelectedBooks = ({ kind, unitId, orderType, orderBy, page }) => ({
+export const deleteSelectedBooks = ({ kind, unitId, orderBy, orderDirection, page }) => ({
   type: DELETE_SELECTED_UNIT_BOOKS,
   payload: {
     kind,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });
@@ -110,13 +110,13 @@ export const setPrimaryItem = (kind, unitId, primaryItem) => ({
   },
 });
 
-export const setPurchasedTotalCount = (purchasedTotalCount, { unitId, orderType, orderBy, page }) => ({
+export const setPurchasedTotalCount = (purchasedTotalCount, { unitId, orderBy, orderDirection, page }) => ({
   type: SET_UNIT_PURCHASED_TOTAL_COUNT,
   payload: {
     purchasedTotalCount,
     unitId,
-    orderType,
     orderBy,
+    orderDirection,
     page,
   },
 });

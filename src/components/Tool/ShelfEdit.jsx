@@ -1,17 +1,21 @@
 import { css } from '@emotion/core';
 import React from 'react';
-import ViewType from '../../constants/viewType';
-import ThreeDotsVertical from '../../svgs/ThreeDotsVertical.svg';
-import IconButton from '../IconButton';
-import { Modal, ModalButtonItem, ModalItemGroup } from '../Modal';
+
+import IconButton from 'components/IconButton';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from 'components/Modal';
+import { OrderOptions } from 'constants/orderOptions';
+import { URLMap } from 'constants/urls';
+import ViewType from 'constants/viewType';
+import ThreeDotsVertical from 'svgs/ThreeDotsVertical.svg';
+import { makeLinkProps } from 'utils/uri';
+
 import * as styles from './styles';
 
 const modalStyle = css`
   margin-top: 4px;
 `;
 
-export default function ShelfEdit(props) {
-  const { onRemoveClick, onRenameClick, onViewTypeChange, viewType } = props;
+const ShelfEdit = ({ onRemoveClick, onRenameClick, onViewTypeChange, viewType, orderBy, uuid }) => {
   const [isModalActive, setModalActive] = React.useState(false);
   const toggleModalActive = React.useCallback(() => setModalActive(prevActive => !prevActive), []);
   const handlePortraitClick = React.useCallback(() => {
@@ -31,15 +35,31 @@ export default function ShelfEdit(props) {
     onRenameClick && onRenameClick();
   }, [onRenameClick]);
 
+  const orderOptions = OrderOptions.toShelfList();
+  const pathName = URLMap.shelfDetail.as({ uuid });
+  const handleOrderClick = () => {
+    setModalActive(false);
+  };
+
   return (
     <div css={styles.buttonWrapper}>
-      <IconButton a11y="책장 보기 방식 변경 및 편집" css={styles.iconButton(isModalActive)} onClick={toggleModalActive}>
+      <IconButton a11y="책장 보기 방식 변경 및 편집, 정렬" css={styles.iconButton(isModalActive)} onClick={toggleModalActive}>
         <div css={styles.iconWrapper}>
           <ThreeDotsVertical css={styles.threeDotsIcon} />
         </div>
       </IconButton>
       {isModalActive && (
         <Modal isActive={isModalActive} a11y="옵션" style={modalStyle} onClickModalBackground={toggleModalActive}>
+          <ModalItemGroup groupTitle="책장 편집">
+            <ul>
+              <li>
+                <ModalButtonItem onClick={handleRenameClick}>책장 이름 변경</ModalButtonItem>
+              </li>
+              <li>
+                <ModalButtonItem onClick={handleRemoveClick}>책장 삭제</ModalButtonItem>
+              </li>
+            </ul>
+          </ModalItemGroup>
           <ModalItemGroup groupTitle="보기 방식">
             <ul>
               <li>
@@ -54,18 +74,28 @@ export default function ShelfEdit(props) {
               </li>
             </ul>
           </ModalItemGroup>
-          <ModalItemGroup groupTitle="책장 편집">
+          <ModalItemGroup groupTitle="정렬 순서">
             <ul>
-              <li>
-                <ModalButtonItem onClick={handleRenameClick}>책장 이름 변경</ModalButtonItem>
-              </li>
-              <li>
-                <ModalButtonItem onClick={handleRemoveClick}>책장 삭제</ModalButtonItem>
-              </li>
+              {orderOptions.map(option => {
+                const newPageOptions = {
+                  page: 1,
+                  orderBy: option.orderBy,
+                };
+                const { to } = makeLinkProps({}, pathName, newPageOptions);
+                return (
+                  <li key={option.key}>
+                    <ModalLinkItem isSelected={option.orderBy === orderBy} to={to} onClick={handleOrderClick} replace>
+                      {option.title}
+                    </ModalLinkItem>
+                  </li>
+                );
+              })}
             </ul>
           </ModalItemGroup>
         </Modal>
       )}
     </div>
   );
-}
+};
+
+export default ShelfEdit;

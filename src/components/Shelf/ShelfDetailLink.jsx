@@ -1,4 +1,5 @@
 import { Link, withRouter } from 'react-router-dom';
+
 import { PageType, URLMap } from '../../constants/urls';
 import { makeLinkProps } from '../../utils/uri';
 import { shelfStyles } from './styles';

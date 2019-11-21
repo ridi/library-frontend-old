@@ -2,6 +2,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { ButtonType } from '../../../components/ActionBar/constants';
 import BookDownLoader from '../../../components/BookDownLoader';
 import { Books } from '../../../components/Books';
@@ -31,8 +32,8 @@ import { ResponsiveBooks } from '../../base/Responsive';
 interface MainPageOptions {
   kind: BooksPageKind.MAIN;
   page: number;
-  orderType: string;
   orderBy: string;
+  orderDirection: string;
   filter: number | string;
 }
 
@@ -47,8 +48,8 @@ type PageOptions = MainPageOptions | SearchPageOptions;
 function extractPageOptions({ location, path }): PageOptions {
   const urlParams = new URLSearchParams(location.search);
   const page = parseInt(urlParams.get('page'), 10) || 1;
-  const orderType = urlParams.get('order_type') || OrderOptions.DEFAULT.orderType;
   const orderBy = urlParams.get('order_by') || OrderOptions.DEFAULT.orderBy;
+  const orderDirection = urlParams.get('order_direction') || OrderOptions.DEFAULT.orderDirection;
   const keyword = urlParams.get('keyword') || '';
   const urlFilterParam = urlParams.get('filter');
   const filter = parseInt(urlFilterParam, 10) || urlFilterParam || null;
@@ -59,8 +60,8 @@ function extractPageOptions({ location, path }): PageOptions {
       return {
         kind: BooksPageKind.MAIN,
         page,
-        orderType,
         orderBy,
+        orderDirection,
         filter,
       };
     case URLMap[PageType.SEARCH].path:
@@ -75,8 +76,8 @@ function extractPageOptions({ location, path }): PageOptions {
 }
 
 function useDispatchOptions(actionDispatcher, options) {
-  const { kind, keyword, page, orderType, orderBy, filter } = options;
-  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, keyword, kind, page, orderType, orderBy, filter]);
+  const { kind, keyword, page, orderBy, orderDirection, filter } = options;
+  return React.useCallback(() => actionDispatcher(options), [actionDispatcher, keyword, kind, page, orderBy, orderDirection, filter]);
 }
 
 function PurchasedMain(props) {
@@ -106,11 +107,11 @@ function PurchasedMain(props) {
       if (pageOptions.kind === BooksPageKind.MAIN) {
         pathname = URLMap.mainUnit.as({ unitId: libraryBookData.unit_id });
 
-        const { orderType, orderBy } = pageOptions;
-        const order = OrderOptions.toKey(orderType, orderBy);
+        const { orderBy, orderDirection } = pageOptions;
+        const order = OrderOptions.toKey(orderBy, orderDirection);
         if (OrderOptions.EXPIRE_DATE.key === order || OrderOptions.EXPIRED_BOOKS_ONLY.key === order) {
-          params.append('order_type', orderType);
           params.append('order_by', orderBy);
+          params.append('order_direction', orderDirection);
         }
       } else {
         pathname = URLMap.searchUnit.as({ unitId: libraryBookData.unit_id });
@@ -166,7 +167,7 @@ function PurchasedMain(props) {
 
   function getEmptyMessage() {
     if (pageOptions.kind === BooksPageKind.MAIN) {
-      const order = OrderOptions.toKey(pageOptions.orderType, pageOptions.orderBy);
+      const order = OrderOptions.toKey(pageOptions.orderBy, pageOptions.orderDirection);
       if (OrderOptions.EXPIRE_DATE.key === order) {
         return '대여 중인 도서가 없습니다.';
       }
@@ -219,7 +220,7 @@ function PurchasedMain(props) {
         filterOptions,
         orderOptions,
         orderBy: pageOptions.orderBy,
-        orderType: pageOptions.orderType,
+        orderDirection: pageOptions.orderDirection,
       };
     } else {
       searchBarProps = {
@@ -348,7 +349,4 @@ const mapDispatchToProps = {
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PurchasedMain);
+export default connect(mapStateToProps, mapDispatchToProps)(PurchasedMain);

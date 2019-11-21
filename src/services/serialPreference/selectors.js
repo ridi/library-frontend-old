@@ -1,5 +1,6 @@
 import createCachedSelector from 're-reselect';
 import { createSelector } from 'reselect';
+
 import { createInitialDataState, getKey } from './state';
 
 const getDataState = state => {
@@ -18,10 +19,7 @@ export const getItemsByPage = createCachedSelector(
   },
 )((_, page) => page);
 
-export const getTotalCount = createSelector(
-  getDataState,
-  dataState => dataState.totalCount,
-);
+export const getTotalCount = createSelector(getDataState, dataState => dataState.totalCount);
 
 export const getIsFetchingBooks = state => state.serialPreference.isFetchingBooks;
 

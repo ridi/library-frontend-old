@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import { put } from 'redux-saga/effects';
+
 import { getAPI } from '../../api/actions';
 import config from '../../config';
 import { makeURI } from '../../utils/uri';

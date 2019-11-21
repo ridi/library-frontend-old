@@ -1,5 +1,5 @@
-import { Responsive, MQ } from './responsive';
 import { Width } from './constants';
+import { MQ, Responsive } from './responsive';
 
 export const header = {
   display: 'flex',

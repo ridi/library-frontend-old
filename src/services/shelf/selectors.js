@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
 import createCachedSelector from 're-reselect';
+import { createSelector } from 'reselect';
 
 /*
  * getShelves(
@@ -84,8 +84,10 @@ export const getIsShelfLoading = createCachedSelector(getShelfBooks, ({ loading 
 
 export const getShelfItems = createCachedSelector(getShelfBooks, ({ items }) => items)((_, uuid) => uuid);
 
-export const getBookIds = createCachedSelector(state => state.shelf.libraryBooks, getShelfItems, (libraryBooks, items) =>
-  items == null ? [] : items.map(item => libraryBooks[item]?.b_id),
+export const getBookIds = createCachedSelector(
+  state => state.shelf.libraryBooks,
+  getShelfItems,
+  (libraryBooks, items) => (items == null ? [] : items.map(item => libraryBooks[item]?.b_id)),
 )((_, uuid) => uuid);
 
 export const getLibraryBooks = createCachedSelector(

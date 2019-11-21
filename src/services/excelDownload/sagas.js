@@ -1,4 +1,7 @@
 import { all, call, delay, put, takeEvery } from 'redux-saga/effects';
+
+import { showDialog } from 'services/dialog/actions';
+
 import { downloadFile } from '../../utils/file';
 import { setExcelDownloadStatus, START_EXCEL_DOWNLOAD } from './actions';
 import { CHECK_EXCEL_DOWNLOAD_STATUS_RETRY_DELAY, EXCEL_FILE_NAME, ExcelDownloadStatusCode } from './constants';
@@ -42,7 +45,7 @@ function* startExcelDownload() {
   try {
     downloadUrl = yield call(requestExcelDownloadUrl);
   } catch (e) {
-    alert('Excel 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+    yield put(showDialog('모든 책 목록 다운로드 오류', '모든 책 목록 다운로드 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.'));
     return;
   } finally {
     window.removeEventListener('beforeunload', beforePageUnloadEventFunc);

@@ -1,20 +1,21 @@
 import produce from 'immer';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { concat, toDict, toFlatten } from '../../utils/array';
 import {
   LOAD_UNIT_ITEMS,
-  SET_UNIT_ITEMS,
-  SET_UNIT_TOTAL_COUNT,
   SET_IS_FETCHING_BOOK,
+  SET_UNIT_ITEMS,
   SET_UNIT_PRIMARY_ITEM,
   SET_UNIT_PURCHASED_TOTAL_COUNT,
+  SET_UNIT_TOTAL_COUNT,
 } from './actions';
 import { createInitialDataState, initialState } from './state';
 
 const unitPageReducer = produce((draft, action) => {
   let key = '';
   if ([SET_UNIT_ITEMS, SET_UNIT_TOTAL_COUNT, SET_UNIT_PURCHASED_TOTAL_COUNT].includes(action.type)) {
-    const order = OrderOptions.toKey(action.payload.orderType, action.payload.orderBy);
+    const order = OrderOptions.toKey(action.payload.orderBy, action.payload.orderDirection);
     key = concat([action.payload.unitId, order]);
     if (draft.data[key] == null) {
       draft.data[key] = createInitialDataState();

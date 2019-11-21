@@ -7,9 +7,3 @@ export const toolBar = {
 
   backgroundColor: '#f3f4f5',
 };
-
-export const totalCount = {
-  fontSize: 15,
-  fontWeight: 'normal',
-  letterSpacing: -0.3,
-};

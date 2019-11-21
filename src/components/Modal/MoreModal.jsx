@@ -1,17 +1,18 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
+
 import { URLMap } from '../../constants/urls';
 import ViewType from '../../constants/viewType';
 import { confirmHideAllExpiredBooks } from '../../services/purchased/common/actions';
 import { setViewType } from '../../services/ui/actions';
 import { makeLinkProps } from '../../utils/uri';
+import { Modal, ModalButtonItem, ModalItemGroup, ModalLinkItem } from '.';
 
 const MoreModal = ({
   history,
   orderOptions,
-  orderType,
   orderBy,
+  orderDirection,
   isActive,
   query,
   onClickModalBackground,
@@ -56,10 +57,17 @@ const MoreModal = ({
       <ModalItemGroup groupTitle="정렬 순서">
         <ul>
           {orderOptions.map(option => {
-            const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderType: option.orderType, orderBy: option.orderBy });
+            const { to } = makeLinkProps({}, URLMap.main.as, { ...query, orderBy: option.orderBy, orderDirection: option.orderDirection });
             return (
               <li key={option.key}>
-                <ModalLinkItem isSelected={option.orderType === orderType && option.orderBy === orderBy} to={to} replace>
+                <ModalLinkItem
+                  isSelected={option.orderBy === orderBy && option.orderDirection === orderDirection}
+                  to={to}
+                  replace
+                  onClick={() => {
+                    onClickModalBackground();
+                  }}
+                >
                   {option.title}
                 </ModalLinkItem>
               </li>
@@ -102,9 +110,4 @@ const mapDispatchToProps = {
   dispatchConfirmHideAllExpiredBooks: confirmHideAllExpiredBooks,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(MoreModal),
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoreModal));

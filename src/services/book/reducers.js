@@ -1,15 +1,16 @@
 import produce from 'immer';
+
+import { isExpiredTTL } from '../../utils/ttl';
 import {
+  makeUnitOrderKey,
   SET_BOOK_DATA,
   SET_BOOK_DATA_FROM_STORAGE,
   SET_BOOK_DESCRIPTIONS,
-  SET_UNIT_DATA,
   SET_BOOK_STAR_RATINGS,
-  SET_UNIT_ORDERS,
   SET_OPEN_INFO,
-  makeUnitOrderKey,
+  SET_UNIT_DATA,
+  SET_UNIT_ORDERS,
 } from './actions';
-import { isExpiredTTL } from '../../utils/ttl';
 
 const makeEntries = entries => entries.map(entry => ({ key: entry.id, value: entry }));
 const compareWithTTL = (oldValue, newValue) => oldValue.ttl < newValue.ttl;
@@ -55,7 +56,7 @@ const bookReducer = produce((draft, action) => {
       update(draft.units, makeEntries(action.payload.units));
       break;
     case SET_UNIT_ORDERS:
-      const key = makeUnitOrderKey(action.payload.unitId, action.payload.orderType, action.payload.orderBy, action.payload.page);
+      const key = makeUnitOrderKey(action.payload.unitId, action.payload.orderBy, action.payload.orderDirection, action.payload.page);
       update(draft.unitOrders, [{ key, value: action.payload.unitOrders }]);
       break;
     case SET_BOOK_DATA_FROM_STORAGE:

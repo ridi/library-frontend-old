@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
+
 import { cancelClose, closeToast, closeWithDelay } from '../../services/toast/actions';
 import { getToast } from '../../services/toast/selectors';
 import Check from '../../svgs/CheckCircleFill.svg';
@@ -124,7 +125,4 @@ const mapDispatchToProps = {
   cancelClose,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Toaster);
+export default connect(mapStateToProps, mapDispatchToProps)(Toaster);

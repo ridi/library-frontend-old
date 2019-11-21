@@ -1,14 +1,17 @@
-export const OrderBy = {
+export const OrderDirection = {
   ASC: 'asc',
   DESC: 'desc',
 };
 
-export const OrderType = {
+export const OrderBy = {
   PURCHASE_DATE: 'purchase_date',
   EXPIRE_DATE: 'expire_date',
   EXPIRED_BOOKS_ONLY: 'expired_books_only',
   SHELF_CREATED: 'created',
   SHELF_NAME: 'name',
+  SHELF_BOOK_REVISION: 'revision',
+  SHELF_BOOK_TITLE: 'title',
+  SHELF_BOOK_AUTHOR: 'author',
   UNIT_TITLE: 'unit_title',
   BOOK_TITLE: 'book_title',
   UNIT_AUTHOR: 'unit_author',
@@ -31,8 +34,8 @@ class BaseOrderOptions {
     return a.key === b.key;
   }
 
-  static toKey(orderType, orderBy) {
-    const option = this.toList().find(value => value.orderType === orderType && value.orderBy === orderBy);
+  static toKey(orderBy, orderDirection) {
+    const option = this.toList().find(value => value.orderBy === orderBy && value.orderDirection === orderDirection);
     return option.key;
   }
 
@@ -60,11 +63,7 @@ export class OrderOptions extends BaseOrderOptions {
     ];
   }
 
-  static toShelves() {
-    return [this.SHELF_CREATED, this.SHELF_NAME];
-  }
-
-  static toShelfList(unitOfCount) {
+  static toCollectionList(unitOfCount) {
     return [
       applyUnitOfCount(this.UNIT_ORDER_DESC, unitOfCount),
       applyUnitOfCount(this.UNIT_ORDER_ASC, unitOfCount),
@@ -76,6 +75,14 @@ export class OrderOptions extends BaseOrderOptions {
     ];
   }
 
+  static toShelves() {
+    return [this.SHELF_CREATED, this.SHELF_NAME];
+  }
+
+  static toShelfList() {
+    return [this.SHELF_BOOK_REVISION, this.SHELF_BOOK_TITLE, this.SHELF_BOOK_AUTHOR];
+  }
+
   static toList() {
     return [
       this.PURCHASE_DATE,
@@ -85,6 +92,9 @@ export class OrderOptions extends BaseOrderOptions {
       this.EXPIRED_BOOKS_ONLY,
       this.SHELF_CREATED,
       this.SHELF_NAME,
+      this.SHELF_BOOK_REVISION,
+      this.SHELF_BOOK_TITLE,
+      this.SHELF_BOOK_AUTHOR,
       this.UNIT_ORDER_DESC,
       this.UNIT_ORDER_ASC,
       this.BOOK_TITLE,
@@ -96,12 +106,16 @@ export class OrderOptions extends BaseOrderOptions {
     return this.PURCHASE_DATE;
   }
 
+  static get SHELF_BOOK_DEFAULT() {
+    return this.SHELF_BOOK_REVISION;
+  }
+
   static get SHELF_CREATED() {
     return {
       key: 'SHELF_CREATED',
       title: '최근 생성순',
-      orderType: OrderType.SHELF_CREATED,
-      orderBy: OrderBy.DESC,
+      orderBy: OrderBy.SHELF_CREATED,
+      orderDirection: OrderDirection.DESC,
     };
   }
 
@@ -109,8 +123,32 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'SHELF_NAME',
       title: '이름 가나다순',
-      orderType: OrderType.SHELF_NAME,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.SHELF_NAME,
+      orderDirection: OrderDirection.ASC,
+    };
+  }
+
+  static get SHELF_BOOK_REVISION() {
+    return {
+      key: 'SHELF_BOOK_REVISION',
+      title: '최근 추가순',
+      orderBy: OrderBy.SHELF_BOOK_REVISION,
+    };
+  }
+
+  static get SHELF_BOOK_TITLE() {
+    return {
+      key: 'SHELF_BOOK_TITLE',
+      title: '제목 가나다순',
+      orderBy: OrderBy.SHELF_BOOK_TITLE,
+    };
+  }
+
+  static get SHELF_BOOK_AUTHOR() {
+    return {
+      key: 'SHELF_BOOK_AUTHOR',
+      title: '작가 가나다순',
+      orderBy: OrderBy.SHELF_BOOK_AUTHOR,
     };
   }
 
@@ -122,8 +160,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'PURCHASE_DATE',
       title: '최근 구매순',
-      orderType: OrderType.PURCHASE_DATE,
-      orderBy: OrderBy.DESC,
+      orderBy: OrderBy.PURCHASE_DATE,
+      orderDirection: OrderDirection.DESC,
     };
   }
 
@@ -131,8 +169,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'EXPIRE_DATE',
       title: '대여 만료 임박순',
-      orderType: OrderType.EXPIRE_DATE,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.EXPIRE_DATE,
+      orderDirection: OrderDirection.ASC,
     };
   }
 
@@ -140,8 +178,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'UNIT_TITLE',
       title: '제목 가나다순',
-      orderType: OrderType.UNIT_TITLE,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.UNIT_TITLE,
+      orderDirection: OrderDirection.ASC,
     };
   }
 
@@ -149,8 +187,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'UNIT_AUTHOR',
       title: '저자 가나다순',
-      orderType: OrderType.UNIT_AUTHOR,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.UNIT_AUTHOR,
+      orderDirection: OrderDirection.ASC,
     };
   }
 
@@ -158,8 +196,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'EXPIRED_BOOKS_ONLY',
       title: '만료 도서만 보기',
-      orderType: OrderType.EXPIRED_BOOKS_ONLY,
-      orderBy: OrderBy.DESC,
+      orderBy: OrderBy.EXPIRED_BOOKS_ONLY,
+      orderDirection: OrderDirection.DESC,
     };
   }
 
@@ -169,8 +207,8 @@ export class OrderOptions extends BaseOrderOptions {
 
       key: 'UNIT_ORDER_DESC',
       title: '최근 업데이트순',
-      orderType: OrderType.UNIT_ORDER,
-      orderBy: OrderBy.DESC,
+      orderBy: OrderBy.UNIT_ORDER,
+      orderDirection: OrderDirection.DESC,
     };
   }
 
@@ -180,8 +218,8 @@ export class OrderOptions extends BaseOrderOptions {
 
       key: 'UNIT_ORDER_ASC',
       title: '1권부터',
-      orderType: OrderType.UNIT_ORDER,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.UNIT_ORDER,
+      orderDirection: OrderDirection.ASC,
     };
   }
 
@@ -189,8 +227,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'BOOK_TITLE',
       title: '제목순',
-      orderType: OrderType.BOOK_TITLE,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.BOOK_TITLE,
+      orderDirection: OrderDirection.ASC,
     };
   }
 
@@ -198,8 +236,8 @@ export class OrderOptions extends BaseOrderOptions {
     return {
       key: 'BOOK_AUTHOR',
       title: '저자순',
-      orderType: OrderType.BOOK_AUTHOR,
-      orderBy: OrderBy.ASC,
+      orderBy: OrderBy.BOOK_AUTHOR,
+      orderDirection: OrderDirection.ASC,
     };
   }
 }

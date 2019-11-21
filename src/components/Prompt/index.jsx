@@ -1,6 +1,7 @@
 import classname from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import * as toastActions from '../../services/toast/actions';
 import { ToastStyle } from '../../services/toast/constants';
 import Close from '../../svgs/Close.svg';
@@ -115,7 +116,4 @@ const mapDispatchToProps = {
   dispatchShowToast: toastActions.showToast,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Prompt);
+export default connect(mapStateToProps, mapDispatchToProps)(Prompt);

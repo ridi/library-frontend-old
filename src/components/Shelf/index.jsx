@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import * as selectors from '../../services/shelf/selectors';
 import { thousandsSeperator } from '../../utils/number';
 import ShelfDetailLink from './ShelfDetailLink';

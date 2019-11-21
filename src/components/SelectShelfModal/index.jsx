@@ -1,6 +1,9 @@
 import { css } from '@emotion/core';
 import React from 'react';
 import { connect } from 'react-redux';
+
+import TitleBar from 'components/TitleBar';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
@@ -15,7 +18,6 @@ import * as paginationUtils from '../../utils/pagination';
 import Editable from '../Editable';
 import { EmptyShelves } from '../Empty/EmptyShelves';
 import FlexBar from '../FlexBar';
-import PageNavigationBar, { NavigationBarColor } from '../PageNavigationBar';
 import { ResponsivePaginatorWithHandler } from '../ResponsivePaginator';
 import { shelfStyles } from '../Shelf/styles';
 import { Shelves } from '../Shelves';
@@ -102,8 +104,8 @@ function SelectShelfModalInner(props) {
   const handleOrderOptionClick = React.useCallback(option => {
     const newPageOptions = {
       page: 1,
-      orderBy: option.orderType,
-      orderDirection: option.orderBy,
+      orderBy: option.orderBy,
+      orderDirection: option.orderDirection,
     };
     onPageOptionsChange(newPageOptions);
   }, []);
@@ -131,9 +133,7 @@ function SelectShelfModalInner(props) {
     );
     return (
       <>
-        <PageNavigationBar color={NavigationBarColor.BLUE} onBackClick={onBackClick}>
-          책장 선택
-        </PageNavigationBar>
+        <TitleBar title="책장 선택" onBackClick={onBackClick} invertColor />
         <FlexBar css={toolBar} flexLeft={<div />} flexRight={right} />
       </>
     );
@@ -192,14 +192,11 @@ const mapDispatchToProps = {
   validateShelvesLimit: shelfActions.validateShelvesLimit,
 };
 
-const SelectShelfModal = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SelectShelfModalInner);
+const SelectShelfModal = connect(mapStateToProps, mapDispatchToProps)(SelectShelfModalInner);
 
 export default function SelectShelfModalContainer({ onBackClick, onShelfSelect }) {
-  const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderType);
-  const [orderDirection, setOrderDirection] = React.useState(OrderOptions.SHELF_CREATED.orderBy);
+  const [orderBy, setOrderBy] = React.useState(OrderOptions.SHELF_CREATED.orderBy);
+  const [orderDirection, setOrderDirection] = React.useState(OrderOptions.SHELF_CREATED.orderDirection);
   const [page, setPage] = React.useState(1);
 
   const handlePageOptionsChange = React.useCallback(options => {

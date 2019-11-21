@@ -1,5 +1,6 @@
 import produce from 'immer';
-import { SET_VIEW_TYPE, SET_FULL_SCREEN_LOADING, SET_IS_ERROR } from './actions';
+
+import { SET_FULL_SCREEN_LOADING, SET_IS_ERROR, SET_VIEW_TYPE } from './actions';
 import { initialState } from './state';
 
 const uiReducer = produce((draft, action) => {
