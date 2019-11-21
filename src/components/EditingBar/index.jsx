@@ -1,5 +1,7 @@
-import Responsive from '../../pages/base/Responsive';
-import Check from '../../svgs/Check.svg';
+import Responsive from 'pages/base/Responsive';
+import Check from 'svgs/Check.svg';
+
+import SelectAllButton from './SelectAllButton';
 import * as styles from './styles';
 
 const EditingBar = ({
@@ -20,15 +22,11 @@ const EditingBar = ({
         </p>
       </div>
       <div>
-        {!isSelectedAllItem || totalSelectedCount === 0 ? (
-          <button type="button" css={styles.editingBarAllSelect} onClick={onClickSelectAllItem}>
-            전체 선택
-          </button>
-        ) : (
-          <button type="button" css={styles.editingBarAllSelect} onClick={onClickUnselectAllItem}>
-            선택 해제
-          </button>
-        )}
+        <SelectAllButton
+          isSelectedAll={isSelectedAllItem && totalSelectedCount !== 0}
+          handleSelectAllClick={onClickSelectAllItem}
+          handleDeselectAllClick={onClickUnselectAllItem}
+        />
         <button type="button" css={styles.editingBarCompleteButton} onClick={onClickSuccessButton}>
           완료
         </button>
