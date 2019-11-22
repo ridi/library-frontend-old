@@ -1,7 +1,7 @@
 {
   "account_base_url": "https://account.dev.ridi.io/",
   "base_url": "https://library.ridi.io/",
-  "book_api_base_url": "https://book-api.dev.ridi.io/",
+  "book_api_base_url": "https://book-api.ridibooks.com/",
   "book_feedback_api_base_url": "https://book-feedback.dev.ridi.io/",
   "environment": "development",
   "help_base_url": "https://help.ridibooks.com/hc/ko",
