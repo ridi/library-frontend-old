@@ -19,6 +19,12 @@ export const getBooks = createCachedSelector(
   (books, bookIds) => Object.fromEntries(bookIds.map(bookId => [bookId, books[bookId]])),
 )((state, bookIds) => [...bookIds].sort().join(','));
 
+export const getDeletedBookIds = createCachedSelector(
+  (state: any) => state.books.books,
+  (state, bookIds) => bookIds,
+  (books, bookIds) => bookIds.filter(bookId => books[bookId].isDeleted),
+)((state, bookIds) => [...bookIds].sort().join(','));
+
 export const getBookDescriptions = createCachedSelector(
   (state: any) => state.books.bookDescriptions,
   (state, bookIds) => bookIds,

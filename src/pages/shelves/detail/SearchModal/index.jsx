@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonType } from 'components/ActionBar/constants';
 import BottomActionBar from 'components/BottomActionBar';
+import EditingBar from 'components/EditingBar';
 import Empty from 'components/Empty';
 import FixedToolbarView from 'components/FixedToolbarView';
 import { ResponsivePaginatorWithHandler } from 'components/ResponsivePaginator';
 import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
-import TitleBar from 'components/TitleBar';
 import { BooksPageKind } from 'constants/urls';
 import ViewType from 'constants/viewType';
 import { ResponsiveBooks } from 'pages/base/Responsive';
@@ -16,9 +16,9 @@ import * as mainActions from 'services/purchased/main/actions';
 import * as mainSelectors from 'services/purchased/main/selectors';
 import * as selectionActions from 'services/selection/actions';
 import * as selectionSelectors from 'services/selection/selectors';
-import * as shelfSelectors from 'services/shelf/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import SearchIcon from 'svgs/Search.svg';
+import { toFlatten } from 'utils/array';
 
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
@@ -38,8 +38,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   };
 
   const dispatch = useDispatch();
-  const shelfTitle = useSelector(state => shelfSelectors.getShelfName(state, uuid));
-  const isSelected = useSelector(state => selectionSelectors.getTotalSelectedCount(state) !== 0);
+  const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -58,9 +57,19 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   }, []);
 
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+  const totalSelectedCount = selectedItemIds.length;
+  const isSelectedAllItem = searchItems && searchItems.every(searchItem => selectedItemIds.includes(searchItem.b_id));
+  const searchItemsBookId = searchItems ? toFlatten(searchItems, 'b_id') : [];
+
+  const selectAllItem = () => {
+    dispatch(selectionActions.selectItems(searchItemsBookId));
+  };
+
+  const unselectAllItem = () => {
+    dispatch(selectionActions.unselectItems(searchItemsBookId));
+  };
 
   React.useEffect(() => {
-    dispatch(selectionActions.clearSelectedItems());
     dispatch(mainActions.loadItems(pageOptions));
     window.scrollTo(0, 0);
   }, [filter, dispatch, page, searchingKeyword]);
@@ -69,22 +78,31 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
     dispatch(filterActions.updateCategories());
   }, [dispatch]);
 
-  function renderSearchBar() {
+  function renderToolBar() {
     return (
-      <SearchBar
-        isSearching={searchingKeyword !== ''}
-        filter={filter}
-        keyword={keyword}
-        onClear={handleSearchClear}
-        onConfirm={handleSearchConfirm}
-        onFilterChange={setFilter}
-        onKeywordChange={setKeyword}
-      />
+      <>
+        <EditingBar
+          totalSelectedCount={totalSelectedCount}
+          isSelectedAllItem={isSelectedAllItem}
+          onClickSelectAllItem={selectAllItem}
+          onClickUnselectAllItem={unselectAllItem}
+          onClickSuccessButton={onBackClick}
+        />
+        <SearchBar
+          isSearching={searchingKeyword !== ''}
+          filter={filter}
+          keyword={keyword}
+          onClear={handleSearchClear}
+          onConfirm={handleSearchConfirm}
+          onFilterChange={setFilter}
+          onKeywordChange={setKeyword}
+        />
+      </>
     );
   }
 
   function renderActionBar() {
-    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick: handleAddToShelf, disable: !isSelected }];
+    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick: handleAddToShelf, disable: totalSelectedCount === 0 }];
     return <BottomActionBar buttonProps={buttons} />;
   }
 
@@ -128,11 +146,8 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   }
 
   return (
-    <>
-      <TitleBar title={`${shelfTitle}에 추가`} onBackClick={onBackClick} invertColor />
-      <FixedToolbarView allowFixed toolbar={renderSearchBar()} actionBar={renderActionBar()}>
-        <main>{renderMain()}</main>
-      </FixedToolbarView>
-    </>
+    <FixedToolbarView allowFixed toolbar={renderToolBar()} actionBar={renderActionBar()}>
+      <main>{renderMain()}</main>
+    </FixedToolbarView>
   );
 }
