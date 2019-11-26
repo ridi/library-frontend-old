@@ -2,16 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { Books } from '../../../../components/Books';
-import ViewType from '../../../../constants/viewType';
-import * as bookActions from '../../../../services/book/actions';
-import * as bookSelectors from '../../../../services/book/selectors';
+import { Books } from 'components/Books';
+import ViewType from 'constants/viewType';
+import * as bookActions from 'services/book/actions';
+import * as bookSelectors from 'services/book/selectors';
 
 function emptyLinkBuilder() {
   return null;
 }
 
-function SearchBooks({ items, loadBookData, loadUnitData, platformBooks, units }) {
+function SearchBooks({ addedBooks, items, loadBookData, loadUnitData, platformBooks, units }) {
+  console.log(addedBooks);
   React.useEffect(() => {
     loadBookData(items.map(item => item.b_id));
     loadUnitData(items.map(item => item.unit_id));

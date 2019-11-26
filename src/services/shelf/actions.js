@@ -1,6 +1,7 @@
 export const LOAD_SHELVES = 'LOAD_SHELVES';
 export const LOAD_SHELF_COUNT = 'LOAD_SHELF_COUNT';
 export const LOAD_SHELF_BOOKS = 'LOAD_SHELF_BOOKS';
+export const LOAD_SHELF_ALL_BOOK = 'LOAD_SHELF_ALL_BOOK';
 export const LOAD_SHELF_BOOK_COUNT = 'LOAD_SHELF_BOOK_COUNT';
 export const INVALIDATE_SHELF_PAGE = 'INVALIDATE_SHELF_PAGE';
 
@@ -8,6 +9,7 @@ export const SET_SHELVES = 'SET_SHELVES';
 export const SET_SHELF_INFO = 'SET_SHELF_INFO';
 export const SET_SHELF_COUNT = 'SET_SHELF_COUNT';
 export const SET_SHELF_BOOKS = 'SET_SHELF_BOOKS';
+export const SET_SHELF_ALL_BOOK = 'SET_SHELF_ALL_BOOK';
 export const SET_SHELF_BOOK_COUNT = 'SET_SHELF_BOOK_COUNT';
 
 export const SET_LIBRARY_BOOKS = 'SET_LIBRARY_BOOKS';
@@ -49,6 +51,13 @@ export const loadShelfBooks = (uuid, { orderBy, orderDirection, page }) => ({
     orderBy,
     orderDirection,
     page,
+  },
+});
+
+export const loadShelfAllBook = uuid => ({
+  type: LOAD_SHELF_ALL_BOOK,
+  payload: {
+    uuid,
   },
 });
 
@@ -114,6 +123,14 @@ export const setShelfBooks = (uuid, { orderBy, orderDirection, page, items }) =>
     orderBy,
     orderDirection,
     page,
+    items,
+  },
+});
+
+export const setShelfAllBook = (uuid, items) => ({
+  type: SET_SHELF_ALL_BOOK,
+  payload: {
+    uuid,
     items,
   },
 });
