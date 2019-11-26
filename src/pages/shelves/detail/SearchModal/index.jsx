@@ -16,6 +16,8 @@ import * as mainActions from 'services/purchased/main/actions';
 import * as mainSelectors from 'services/purchased/main/selectors';
 import * as selectionActions from 'services/selection/actions';
 import * as selectionSelectors from 'services/selection/selectors';
+import * as shelfActions from 'services/shelf/actions';
+import * as shelfSelectors from 'services/shelf/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import SearchIcon from 'svgs/Search.svg';
 import { toFlatten } from 'utils/array';
@@ -39,6 +41,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const dispatch = useDispatch();
   const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
+  const shelfAllBook = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -76,6 +79,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   React.useEffect(() => {
     dispatch(filterActions.updateCategories());
+    dispatch(shelfActions.loadShelfAllBook(uuid));
   }, [dispatch]);
 
   function renderToolBar() {
@@ -113,7 +117,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   function renderBooks() {
     return (
       <>
-        <SearchBooks items={searchItems} />
+        <SearchBooks items={searchItems} addedBooks={shelfAllBook} />
         {renderPaginator()}
       </>
     );
