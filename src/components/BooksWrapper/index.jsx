@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import * as styles from '../../styles/books';
+import * as styles from 'commonStyles/books';
 
 const BooksWrapper = ({ viewType, books, renderBook, children }) => {
   const isLoaded = true;

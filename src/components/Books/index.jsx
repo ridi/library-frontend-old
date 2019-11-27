@@ -9,8 +9,7 @@ import EmptyLandscapeBook from './EmptyLandscapeBook';
 import BookItem from './BookItem';
 
 export function Books(props) {
-  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType } = props;
-
+  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType, inactiveBookIds } = props;
   const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
   const [thumbnailWidth, setThumbnailWidth] = useState(100);
@@ -31,28 +30,39 @@ export function Books(props) {
     finalBookIds = libraryBookDTO.map(book => book.b_id);
     libraryBookMap = new Map(libraryBookDTO.map(book => [book.b_id, book]));
   }
+
+  const renderBook = ({ book: bookId, className }) => {
+    const libraryBookData = libraryBookMap.get(bookId);
+    const { purchase_date: purchaseDate } = libraryBookData;
+    const isPurchased = !!purchaseDate;
+    let inactive = !isPurchased;
+
+    // 구매한 책이더라도 inactiveBookIds 에 포함되어 있다면 비활성화 처리
+    if (isPurchased && !!inactiveBookIds) {
+      inactive = inactiveBookIds.some(inactiveBookId => inactiveBookId === bookId);
+    }
+
+    return (
+      <BookItem
+        key={bookId}
+        bookId={bookId}
+        className={className}
+        isSelectMode={isSelectMode}
+        isSeriesView={isSeriesView}
+        libraryBookData={libraryBookData}
+        linkBuilder={linkBuilder}
+        thumbnailWidth={thumbnailWidth}
+        viewType={viewType}
+        inactive={inactive}
+      />
+    );
+  };
+
   return (
-    <BooksWrapper
-      viewType={viewType}
-      books={finalBookIds}
-      renderBook={({ book: bookId, className }) => (
-        <BookItem
-          key={bookId}
-          bookId={bookId}
-          className={className}
-          isSelectMode={isSelectMode}
-          isSeriesView={isSeriesView}
-          libraryBookData={libraryBookMap.get(bookId)}
-          linkBuilder={linkBuilder}
-          thumbnailWidth={thumbnailWidth}
-          viewType={viewType}
-        />
-      )}
-    >
+    <BooksWrapper viewType={viewType} books={finalBookIds} renderBook={renderBook}>
       {({ books }) => {
         const libraryBooksCount = finalBookIds.length;
         const isNeedLandscapeBookSeparator = viewType === ViewType.LANDSCAPE && libraryBooksCount % 2 !== 0;
-
         return (
           <>
             {books}
