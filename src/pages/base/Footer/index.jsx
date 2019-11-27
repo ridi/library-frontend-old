@@ -12,7 +12,6 @@ const Footer = () => (
           <p css={styles.copyright}>© RIDI Corp.</p>
           <div>
             <ul css={styles.termsList}>
-              <li css={[styles.termsItem, styles.verticalSeparator]}>1644-0331</li>
               <li css={[styles.termsItem, styles.verticalSeparator]}>
                 <a href={config.HELP_BASE_URL} target="_blank" rel="noopener noreferrer">
                   고객센터

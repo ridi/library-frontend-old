@@ -85,7 +85,7 @@ export const getShelfAllBookIds = createCachedSelector(
   (_, uuid) => uuid,
   (shelf, uuid) => {
     const allItem = shelf.shelf[uuid]?.books?.all?.items;
-    return allItem && allItem.length > 0 ? allItem.map(item => shelf.libraryBooks[item]?.b_id) : null;
+    return allItem && allItem.length > 0 ? allItem.map(item => shelf.itemMap[item]?.bookIds[0]) : null;
   },
 )((_, uuid) => uuid);
 
