@@ -181,9 +181,7 @@ const shelfReducer = produce((draft, action) => {
       if (draft.shelf[uuid] == null) {
         draft.shelf[uuid] = makeBaseShelfData(uuid);
       }
-      draft.shelf[uuid].books.all = {
-        items: items.map(({ unitId }) => unitId),
-      };
+      draft.shelf[uuid].books.allItem = items.map(({ unitId }) => unitId);
       items.forEach(({ bookIds, unitId }) => {
         draft.itemMap[unitId] = { bookIds, unitId };
       });
