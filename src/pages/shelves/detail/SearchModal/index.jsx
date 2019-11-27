@@ -41,7 +41,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const dispatch = useDispatch();
   const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
-  const shelfAllBook = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
+  const shelfAllBookIds = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -117,7 +117,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   function renderBooks() {
     return (
       <>
-        <SearchBooks items={searchItems} addedBooks={shelfAllBook} />
+        <SearchBooks items={searchItems} inactiveBookIds={shelfAllBookIds} />
         {renderPaginator()}
       </>
     );

@@ -14,9 +14,9 @@ const selectionReducer = produce((draft, action) => {
       });
       break;
     case UNSELECT_ITEMS:
-      if (draft.ids[action.payload]) {
-        delete draft.ids[action.payload];
-      }
+      action.payload.forEach(id => {
+        draft.ids[id] = false;
+      });
       break;
     case TOGGLE_ITEM:
       if (draft.ids[action.payload]) {

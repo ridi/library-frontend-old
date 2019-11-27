@@ -19,8 +19,7 @@ import FullButton from './FullButton';
 import refineBookData from './refineBookData';
 
 const BookItem = props => {
-  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth, viewType } = props;
-
+  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth, viewType, inactive } = props;
   const dispatch = useDispatch();
   const platformBookData = useSelector(state => bookSelectors.getBook(state, bookId));
   const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
@@ -30,11 +29,9 @@ const BookItem = props => {
     if (!(platformBookData && platformBookData.series)) {
       return false;
     }
-
     if (isSeriesView) {
       return isAfter(platformBookData.publish.ridibooks_publish, subDays(new Date(), 3));
     }
-
     return getIsRecentlyUpdated(state, platformBookData.series.property.opened_last_volume_id);
   });
 
@@ -53,10 +50,10 @@ const BookItem = props => {
   }
   if (platformBookData.isDeleted) return null;
 
-  const { isPurchasedBook, libraryBookProps, thumbnailLink } = refineBookData({
+  const { libraryBookProps, thumbnailLink } = refineBookData({
     libraryBookData,
     platformBookData,
-    unit: unitData,
+    unitData,
     isSelectMode,
     isSelected,
     onSelectedChange: handleSelectedChange,
@@ -65,6 +62,7 @@ const BookItem = props => {
     showUpdateBadge,
     thumbnailWidth,
     isVerifiedAdult,
+    inactive,
   });
 
   return viewType === ViewType.PORTRAIT ? (
@@ -74,7 +72,7 @@ const BookItem = props => {
   ) : (
     <div className={className} css={styles.landscape}>
       <Book.LandscapeBook {...libraryBookProps} />
-      {isSelectMode && !isPurchasedBook && <Disabled />}
+      {isSelectMode && inactive && <Disabled />}
       {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
     </div>
   );
