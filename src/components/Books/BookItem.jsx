@@ -19,7 +19,18 @@ import FullButton from './FullButton';
 import refineBookData from './refineBookData';
 
 const BookItem = props => {
-  const { bookId, className, isSelectMode, isSeriesView, libraryBookData, linkBuilder, thumbnailWidth, viewType, inactive } = props;
+  const {
+    bookId,
+    className,
+    isSelectMode,
+    isSeriesView,
+    libraryBookData,
+    linkBuilder,
+    thumbnailWidth,
+    viewType,
+    inactive,
+    onSelectedChange,
+  } = props;
   const dispatch = useDispatch();
   const platformBookData = useSelector(state => bookSelectors.getBook(state, bookId));
   const unitData = useSelector(state => bookSelectors.getUnit(state, libraryBookData.unit_id));
@@ -35,7 +46,10 @@ const BookItem = props => {
     return getIsRecentlyUpdated(state, platformBookData.series.property.opened_last_volume_id);
   });
 
-  const handleSelectedChange = React.useCallback(() => dispatch(toggleItem(bookId)), [bookId]);
+  const handleSelectedChange = React.useCallback(() => (onSelectedChange ? onSelectedChange(bookId) : dispatch(toggleItem(bookId))), [
+    onSelectedChange,
+    bookId,
+  ]);
 
   if (!libraryBookData || !platformBookData) {
     return viewType === ViewType.PORTRAIT ? (

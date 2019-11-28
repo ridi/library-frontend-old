@@ -41,7 +41,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const dispatch = useDispatch();
   const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
-  const inactiveBookIds = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
+  const shelfAllBookIds = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -62,7 +62,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
   const totalSelectedCount = selectedItemIds.length;
   const searchItemsBookId = searchItems ? toFlatten(searchItems, 'b_id') : [];
-  const activeBookIds = searchItemsBookId.filter(bookId => !inactiveBookIds.includes(bookId));
+  const activeBookIds = searchItemsBookId.filter(bookId => !shelfAllBookIds.includes(bookId));
   const isSelectedAllItem = searchItems && activeBookIds.every(activeBookId => selectedItemIds.includes(activeBookId));
 
   const selectAllItem = () => {
@@ -118,7 +118,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   function renderBooks() {
     return (
       <>
-        <SearchBooks items={searchItems} inactiveBookIds={inactiveBookIds} />
+        <SearchBooks items={searchItems} shelfAllBookIds={shelfAllBookIds} totalSelectedCount={totalSelectedCount} />
         {renderPaginator()}
       </>
     );

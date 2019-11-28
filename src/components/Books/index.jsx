@@ -9,7 +9,7 @@ import EmptyLandscapeBook from './EmptyLandscapeBook';
 import BookItem from './BookItem';
 
 export function Books(props) {
-  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType, inactiveBookIds } = props;
+  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType, inactiveBookIds, onSelectedChange } = props;
   const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
   const [thumbnailWidth, setThumbnailWidth] = useState(100);
@@ -54,6 +54,7 @@ export function Books(props) {
         thumbnailWidth={thumbnailWidth}
         viewType={viewType}
         inactive={inactive}
+        onSelectedChange={onSelectedChange}
       />
     );
   };
