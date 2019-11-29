@@ -41,7 +41,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const dispatch = useDispatch();
   const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
-  const shelfAllBookIds = useSelector(state => shelfSelectors.getShelfAllBookIds(state, uuid));
+  const shelfAllBookUnitIds = useSelector(state => shelfSelectors.getShelfAllBookUnitIds(state, uuid));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -61,10 +61,15 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
   const totalSelectedCount = selectedItemIds.length;
-  const searchItemsBookId = searchItems ? toFlatten(searchItems, 'b_id') : [];
-  const activeBookIds = searchItemsBookId.filter(bookId => !shelfAllBookIds.includes(bookId));
+  const searchItemUnitIds = searchItems ? searchItems.map(searchItem => parseInt(searchItem.unit_id, 10)) : [];
+  const activeBookUnitIds = shelfAllBookUnitIds ? searchItemUnitIds.filter(unitId => !shelfAllBookUnitIds.includes(unitId)) : [];
+  const activeBookIds =
+    activeBookUnitIds && searchItems
+      ? activeBookUnitIds.map(
+          activeBookUnitId => searchItems.find(searchItem => parseInt(searchItem.unit_id, 10) === activeBookUnitId)?.b_id,
+        )
+      : [];
   const isSelectedAllItem = searchItems && activeBookIds.every(activeBookId => selectedItemIds.includes(activeBookId));
-
   const selectAllItem = () => {
     dispatch(selectionActions.selectItems(activeBookIds));
   };
@@ -118,7 +123,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   function renderBooks() {
     return (
       <>
-        <SearchBooks items={searchItems} shelfAllBookIds={shelfAllBookIds} totalSelectedCount={totalSelectedCount} />
+        <SearchBooks items={searchItems} shelfAllBookUnitIds={shelfAllBookUnitIds} totalSelectedCount={totalSelectedCount} />
         {renderPaginator()}
       </>
     );

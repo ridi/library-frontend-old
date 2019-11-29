@@ -20,7 +20,7 @@ const selectBookIds = createSelector(
   items => (items ? items.map(item => item.b_id) : null),
 );
 
-const SearchBooks = ({ items, shelfAllBookIds, totalSelectedCount }) => {
+const SearchBooks = ({ items, shelfAllBookUnitIds, totalSelectedCount }) => {
   const bookIds = selectBookIds(items);
   const dispatch = useDispatch();
   const platformBooks = useSelector(state => bookSelectors.getBooks(state, bookIds));
@@ -32,7 +32,7 @@ const SearchBooks = ({ items, shelfAllBookIds, totalSelectedCount }) => {
 
   const handleSelectedChange = React.useCallback(
     bookId => {
-      const shelfAllBookCount = shelfAllBookIds.length;
+      const shelfAllBookCount = shelfAllBookUnitIds.length;
       if (shelfAllBookCount + totalSelectedCount > ITEMS_LIMIT_PER_SHELF) {
         dispatch(
           showToast({
@@ -45,7 +45,7 @@ const SearchBooks = ({ items, shelfAllBookIds, totalSelectedCount }) => {
         dispatch(toggleItem(bookId));
       }
     },
-    [shelfAllBookIds, totalSelectedCount],
+    [shelfAllBookUnitIds, totalSelectedCount],
   );
 
   return (
@@ -55,7 +55,7 @@ const SearchBooks = ({ items, shelfAllBookIds, totalSelectedCount }) => {
       isSelectMode
       viewType={ViewType.LANDSCAPE}
       linkBuilder={emptyLinkBuilder}
-      inactiveBookIds={shelfAllBookIds}
+      inactiveBookUnitIds={shelfAllBookUnitIds}
       onSelectedChange={handleSelectedChange}
     />
   );

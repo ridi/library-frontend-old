@@ -9,7 +9,7 @@ import EmptyLandscapeBook from './EmptyLandscapeBook';
 import BookItem from './BookItem';
 
 export function Books(props) {
-  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType, inactiveBookIds, onSelectedChange } = props;
+  const { isSelectMode, isSeriesView, libraryBookDTO, linkBuilder, viewType: givenViewType, inactiveBookUnitIds, onSelectedChange } = props;
   const viewType = useSelector(state => givenViewType || state.ui.viewType);
   const isLoaded = true;
   const [thumbnailWidth, setThumbnailWidth] = useState(100);
@@ -33,13 +33,12 @@ export function Books(props) {
 
   const renderBook = ({ book: bookId, className }) => {
     const libraryBookData = libraryBookMap.get(bookId);
-    const { purchase_date: purchaseDate } = libraryBookData;
+    const { purchase_date: purchaseDate, unit_id: unitId } = libraryBookData;
     const isPurchased = !!purchaseDate;
     let inactive = !isPurchased;
-
-    // 구매한 책이더라도 inactiveBookIds 에 포함되어 있다면 비활성화 처리
-    if (isPurchased && !!inactiveBookIds) {
-      inactive = inactiveBookIds.some(inactiveBookId => inactiveBookId === bookId);
+    // 구매한 책이더라도 inactiveBookUnitIds 에 포함되어 있다면 비활성화 처리
+    if (isPurchased && !!inactiveBookUnitIds) {
+      inactive = inactiveBookUnitIds.some(inactiveBookUniId => inactiveBookUniId === parseInt(unitId, 10));
     }
 
     return (
