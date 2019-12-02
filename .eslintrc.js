@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended'],
+  extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended', 'plugin:immer-reducer/recommended'],
   parser: '@typescript-eslint/parser',
   globals: {
     window: true,

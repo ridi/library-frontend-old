@@ -1,6 +1,7 @@
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
 
+import { bookDownloadActions } from 'services/bookDownload/reducers';
 import { trackEvent } from 'services/tracking/actions';
 import { EventNames } from 'services/tracking/constants';
 import { arrayChunk } from 'utils/array';
@@ -11,7 +12,6 @@ import { URLMap } from '../../constants/urls';
 import { thousandsSeperator } from '../../utils/number';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
-import * as bookDownloadActions from '../bookDownload/actions';
 import { MakeBookIdsError } from '../common/errors';
 import * as dialogActions from '../dialog/actions';
 import * as selectionActions from '../selection/actions';
