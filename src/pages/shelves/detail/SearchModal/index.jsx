@@ -20,7 +20,6 @@ import * as shelfActions from 'services/shelf/actions';
 import * as shelfSelectors from 'services/shelf/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import SearchIcon from 'svgs/Search.svg';
-import { toFlatten } from 'utils/array';
 
 import SearchBar from './SearchBar';
 import SearchBooks from './SearchBooks';
@@ -61,13 +60,11 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
 
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
   const totalSelectedCount = selectedItemIds.length;
-  const searchItemUnitIds = searchItems ? searchItems.map(searchItem => parseInt(searchItem.unit_id, 10)) : [];
+  const searchItemUnitIds = searchItems ? searchItems.map(searchItem => searchItem.unit_id) : [];
   const activeBookUnitIds = shelfAllBookUnitIds ? searchItemUnitIds.filter(unitId => !shelfAllBookUnitIds.includes(unitId)) : [];
   const activeBookIds =
     activeBookUnitIds && searchItems
-      ? activeBookUnitIds.map(
-          activeBookUnitId => searchItems.find(searchItem => parseInt(searchItem.unit_id, 10) === activeBookUnitId)?.b_id,
-        )
+      ? activeBookUnitIds.map(activeBookUnitId => searchItems.find(searchItem => searchItem.unit_id === activeBookUnitId)?.b_id)
       : [];
   const isSelectedAllItem = searchItems && activeBookIds.every(activeBookId => selectedItemIds.includes(activeBookId));
   const selectAllItem = () => {
