@@ -38,7 +38,7 @@ export function Books(props) {
     let inactive = !isPurchased;
     // 구매한 책이더라도 inactiveBookUnitIds 에 포함되어 있다면 비활성화 처리
     if (isPurchased && !!inactiveBookUnitIds) {
-      inactive = inactiveBookUnitIds.some(inactiveBookUniId => inactiveBookUniId === parseInt(unitId, 10));
+      inactive = inactiveBookUnitIds.some(inactiveBookUniId => inactiveBookUniId === unitId);
     }
 
     return (
