@@ -4,7 +4,7 @@ const THUMBNAIL_TOTAL_COUNT = 3;
 export const ShelfThumbnails = ({ thumbnailIds, shelfName }) => (
   <ul css={shelfStyles.thumbnails}>
     {Array.from({ length: THUMBNAIL_TOTAL_COUNT }, (_, index) => {
-      const thumbnailUrl = thumbnailIds[index] ? `//misc.ridibooks.com/cover/${thumbnailIds[index]}/xxlarge` : '';
+      const thumbnailUrl = thumbnailIds[index] ? `//img.ridicdn.net/cover/${thumbnailIds[index]}/xxlarge` : '';
       const hasThumbnail = thumbnailUrl.length > 0;
       const key = hasThumbnail ? thumbnailUrl : `empty${index}`;
       return (
