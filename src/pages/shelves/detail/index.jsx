@@ -67,6 +67,7 @@ function ShelfDetail() {
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [isAdding, setIsAdding] = React.useState(false);
+  const [isMoving, setIsMoving] = React.useState(false);
 
   React.useEffect(() => {
     dispatch(actions.loadShelfBookCount(uuid));
@@ -95,6 +96,16 @@ function ShelfDetail() {
         onClickConfirmButton: confirmRemove,
       }),
     );
+  }, []);
+  const showSelectShelfModal = () => {
+    setIsMoving(true);
+  };
+  const moveBooks = React.useCallback(() => {
+    // moveSelectedBooks();
+    dispatch(selectionActions.clearSelectedItems());
+    dispatch(actions.loadShelfBooks(uuid, pageOptions));
+    setIsMoving(false);
+    setIsEditing(false);
   }, []);
   const downloadBooks = React.useCallback(() => {
     dispatch(actions.downloadSelectedUnits());
@@ -283,6 +294,30 @@ function ShelfDetail() {
     );
   }
 
+  if (isMoving) {
+    return (
+      <>
+        <Helmet>
+          <title>{`${name} - 내 서재`}</title>
+        </Helmet>
+        <div>
+          이동 선택!!!
+          <button
+            type="button"
+            onClick={() => {
+              setIsMoving(false);
+            }}
+          >
+            close!
+          </button>
+          <button type="button" onClick={moveBooks}>
+            옮기기!!
+          </button>
+        </div>
+      </>
+    );
+  }
+
   const editingBarProps = {
     totalSelectedCount,
     isSelectedAllItem: totalSelectedCount === visibleBookCount,
@@ -295,6 +330,11 @@ function ShelfDetail() {
 
   const actionBarProps = {
     buttonProps: [
+      {
+        name: '이동',
+        onClick: showSelectShelfModal,
+        disable: totalSelectedCount === 0,
+      },
       {
         name: '삭제',
         onClick: showRemoveConfirm,
