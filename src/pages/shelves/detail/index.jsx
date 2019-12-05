@@ -31,6 +31,7 @@ import { makeLinkProps } from 'utils/uri';
 
 import SearchModal from './SearchModal';
 import * as styles from './styles';
+import SelectShelf from './SelectShelf';
 
 const extractPageOptions = locationSearch => {
   const urlParams = new URLSearchParams(locationSearch);
@@ -103,7 +104,12 @@ function ShelfDetail() {
   const moveBooks = React.useCallback(() => {
     // moveSelectedBooks();
     dispatch(selectionActions.clearSelectedItems());
-    dispatch(actions.loadShelfBooks(uuid, pageOptions));
+    dispatch(
+      actions.loadShelfBooks(uuid, {
+        ...pageOptions,
+        page: 1,
+      }),
+    );
     setIsMoving(false);
     setIsEditing(false);
   }, []);
@@ -296,25 +302,13 @@ function ShelfDetail() {
 
   if (isMoving) {
     return (
-      <>
-        <Helmet>
-          <title>{`${name} - 내 서재`}</title>
-        </Helmet>
-        <div>
-          이동 선택!!!
-          <button
-            type="button"
-            onClick={() => {
-              setIsMoving(false);
-            }}
-          >
-            close!
-          </button>
-          <button type="button" onClick={moveBooks}>
-            옮기기!!
-          </button>
-        </div>
-      </>
+      <SelectShelf
+        pageTitle={name}
+        handleBackButtonClick={() => {
+          setIsMoving(false);
+        }}
+        handleMoveButtonClick={moveBooks}
+      />
     );
   }
 
