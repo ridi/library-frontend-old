@@ -71,8 +71,8 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
     dispatch(selectionActions.selectItems(activeBookIds));
   };
 
-  const unselectAllItem = () => {
-    dispatch(selectionActions.unselectItems(activeBookIds));
+  const deselectAllItem = () => {
+    dispatch(selectionActions.deselectItems(activeBookIds));
   };
 
   React.useEffect(() => {
@@ -92,7 +92,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
           totalSelectedCount={totalSelectedCount}
           isSelectedAllItem={isSelectedAllItem}
           onClickSelectAllItem={selectAllItem}
-          onClickUnselectAllItem={unselectAllItem}
+          onClickDeselectAllItem={deselectAllItem}
           onClickSuccessButton={onBackClick}
         />
         <SearchBar

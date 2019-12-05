@@ -54,16 +54,16 @@ class SeriesList extends React.Component {
   };
 
   makeEditingBarProps() {
-    const { items, totalSelectedCount, onClickSelectAllBooks, onClickUnselectAllBooks, onEditingChange } = this.props;
+    const { items, totalSelectedCount, onClickSelectAllBooks, onClickDeselectAllBooks, onEditingChange } = this.props;
     const isSelectedAllBooks = totalSelectedCount === (items || []).filter(item => item.purchased).length;
 
     return {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
       onClickSelectAllItem: onClickSelectAllBooks,
-      onClickUnselectAllItem: onClickUnselectAllBooks,
+      onClickDeselectAllItem: onClickDeselectAllBooks,
       onClickSuccessButton: () => {
-        onClickUnselectAllBooks();
+        onClickDeselectAllBooks();
         onEditingChange(false);
       },
     };

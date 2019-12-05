@@ -240,7 +240,7 @@ function PurchasedMain(props) {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
       onClickSelectAllItem: dispatchSelectAllBooksWithOptions,
-      onClickUnselectAllItem: dispatchClearSelectedBooks,
+      onClickDeselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: toggleEditingMode,
     };
   }

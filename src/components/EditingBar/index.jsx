@@ -8,7 +8,7 @@ const EditingBar = ({
   totalSelectedCount,
   isSelectedAllItem,
   onClickSelectAllItem,
-  onClickUnselectAllItem,
+  onClickDeselectAllItem,
   onClickSuccessButton,
   countUnit = '권',
 }) => (
@@ -25,7 +25,7 @@ const EditingBar = ({
         <SelectAllButton
           isSelectedAll={isSelectedAllItem && totalSelectedCount !== 0}
           handleSelectAllClick={onClickSelectAllItem}
-          handleDeselectAllClick={onClickUnselectAllItem}
+          handleDeselectAllClick={onClickDeselectAllItem}
         />
         <button type="button" css={styles.editingBarCompleteButton} onClick={onClickSuccessButton}>
           완료
