@@ -4,6 +4,7 @@ import {
   BEGIN_OPERATION,
   END_OPERATION,
   INVALIDATE_SHELF_PAGE,
+  LOAD_ALL_SHELF,
   LOAD_SHELF_BOOK_COUNT,
   LOAD_SHELF_BOOKS,
   LOAD_SHELF_COUNT,
@@ -15,6 +16,7 @@ import {
   SET_SHELF_COUNT,
   SET_SHELF_INFO,
   SET_SHELVES,
+  SET_ALL_SHELF,
 } from './actions';
 
 /*
@@ -81,6 +83,25 @@ const makeBaseShelfData = uuid => ({
   books: {},
 });
 
+const setShelfItems = (draft, items) => {
+  items.forEach(({ id, uuid, name, thumbnails, bookCount }) => {
+    if (draft.shelf[uuid] == null) {
+      draft.shelf[uuid] = makeBaseShelfData(uuid);
+    }
+    draft.shelf[uuid].id = id;
+    draft.shelf[uuid].name = name;
+    const thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
+    if (draft.shelf[uuid].thumbnailIds.length !== thumbnailIds.length) {
+      draft.shelf[uuid].thumbnailIds = thumbnailIds;
+    } else {
+      for (let i = 0; i < thumbnailIds.length; i += 1) {
+        draft.shelf[uuid].thumbnailIds[i] = thumbnailIds[i];
+      }
+    }
+    draft.shelf[uuid].bookCount = bookCount;
+  });
+};
+
 const shelfReducer = produce((draft, action) => {
   switch (action.type) {
     case BEGIN_OPERATION: {
@@ -105,30 +126,32 @@ const shelfReducer = produce((draft, action) => {
       draft.shelves[key].loading = true;
       break;
     }
+    case LOAD_ALL_SHELF: {
+      if (draft.shelves.allShelf == null) {
+        draft.shelves.allShelf = {
+          loading: true,
+          items: null,
+        };
+      }
+      draft.shelves.allShelf.loading = true;
+      break;
+    }
+    case SET_ALL_SHELF: {
+      const { items } = action.payload;
+      draft.shelves.allShelf = {
+        loading: false,
+        items: items.map(item => item.uuid),
+      };
+      setShelfItems(draft, items);
+      break;
+    }
     case SET_SHELVES: {
       const { orderBy, orderDirection, page, items } = action.payload;
       draft.shelves[`${orderBy}_${orderDirection}_${page}`] = {
         loading: false,
         items: items.map(item => item.uuid),
       };
-
-      items.forEach(({ id, uuid, name, thumbnails, bookCount }) => {
-        if (draft.shelf[uuid] == null) {
-          draft.shelf[uuid] = makeBaseShelfData(uuid);
-        }
-        draft.shelf[uuid].id = id;
-        draft.shelf[uuid].name = name;
-        const thumbnailIds = thumbnails ? thumbnails.map(thumbnail => thumbnail.b_ids[0]) : [];
-        if (draft.shelf[uuid].thumbnailIds.length !== thumbnailIds.length) {
-          draft.shelf[uuid].thumbnailIds = thumbnailIds;
-        } else {
-          for (let i = 0; i < thumbnailIds.length; i += 1) {
-            draft.shelf[uuid].thumbnailIds[i] = thumbnailIds[i];
-          }
-        }
-        draft.shelf[uuid].bookCount = bookCount;
-      });
-
+      setShelfItems(draft, items);
       break;
     }
     case SET_SHELF_INFO: {

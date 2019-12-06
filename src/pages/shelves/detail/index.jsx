@@ -308,6 +308,7 @@ function ShelfDetail() {
           setIsMoving(false);
         }}
         handleMoveButtonClick={moveBooks}
+        totalSelectedCount={totalSelectedCount}
       />
     );
   }

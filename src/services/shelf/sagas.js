@@ -62,6 +62,19 @@ function* loadShelves({ payload }) {
   }
 }
 
+function* loadAllShelf() {
+  const offset = 0;
+  const limit = SHELVES_LIMIT;
+  try {
+    const items = yield call(requests.fetchShelves, { offset, limit });
+    yield put(actions.setAllShelf({ items }));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401) {
+      throw err;
+    }
+  }
+}
+
 function* loadShelfCount() {
   try {
     const count = yield call(requests.fetchShelfCount);
@@ -464,6 +477,7 @@ function* downloadSelectedUnits() {
 
 export default function* shelfRootSaga() {
   yield all([
+    takeEvery(actions.LOAD_ALL_SHELF, loadAllShelf),
     takeEvery(actions.LOAD_SHELVES, loadShelves),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks),
