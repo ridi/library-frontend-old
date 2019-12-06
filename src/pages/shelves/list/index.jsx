@@ -70,7 +70,7 @@ const ShelvesList = props => {
     totalSelectedCount,
     isSelectedAllItem: totalSelectedCount === visibleShelvesCount,
     onClickSelectAllItem: selectAllShelf,
-    onClickUnselectAllItem: clearSelectedShelves,
+    onClickDeselectAllItem: clearSelectedShelves,
     onClickSuccessButton: toggleSelectMode,
     countUnit: '개',
   };

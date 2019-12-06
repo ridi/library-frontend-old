@@ -1,5 +1,7 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 
+import { getDeletedBookIds } from 'services/book/selectors';
+
 import { BooksPageKind, URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
 import { makeLinkProps } from '../../../utils/uri';
@@ -18,6 +20,8 @@ import { updateCategories, updateServiceTypes } from '../filter/sagas';
 import { DOWNLOAD_SELECTED_MAIN_BOOKS, HIDE_SELECTED_MAIN_BOOKS, LOAD_MAIN_ITEMS, SELECT_ALL_MAIN_BOOKS, updateItems } from './actions';
 import { fetchMainItems, fetchMainItemsTotalCount } from './requests';
 import { getItems, getItemsByPage } from './selectors';
+
+const removeDeletedBook = (items, deletedBookIds) => items.filter(item => !deletedBookIds.includes(item.b_id));
 
 function* loadMainItems(action) {
   yield put(setError(false));
@@ -41,10 +45,13 @@ function* loadMainItems(action) {
     // Request BookData
     const bookIds = toFlatten(itemResponse.items, 'b_id');
     yield all([call(loadBookData, bookIds), call(loadUnitData, toFlatten(itemResponse.items, 'unit_id'))]);
+    const deletedBookIds = yield select(getDeletedBookIds, bookIds);
+    const items = removeDeletedBook(itemResponse.items, deletedBookIds);
+
     yield put(
       updateItems({
         pageOptions,
-        items: itemResponse.items,
+        items,
         unitTotalCount: countResponse.unit_total_count,
         itemTotalCount: countResponse.item_total_count,
       }),

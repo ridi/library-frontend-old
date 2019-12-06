@@ -11,6 +11,7 @@ import {
   SET_LIBRARY_BOOKS,
   SET_SHELF_BOOK_COUNT,
   SET_SHELF_BOOKS,
+  SET_SHELF_ALL_BOOK,
   SET_SHELF_COUNT,
   SET_SHELF_INFO,
   SET_SHELVES,
@@ -170,6 +171,17 @@ const shelfReducer = produce((draft, action) => {
         loading: false,
         items: items.map(({ unitId }) => unitId),
       };
+      items.forEach(({ bookIds, unitId }) => {
+        draft.itemMap[unitId] = { bookIds, unitId };
+      });
+      break;
+    }
+    case SET_SHELF_ALL_BOOK: {
+      const { uuid, items } = action.payload;
+      if (draft.shelf[uuid] == null) {
+        draft.shelf[uuid] = makeBaseShelfData(uuid);
+      }
+      draft.shelf[uuid].books.allItem = items.map(({ unitId }) => unitId);
       items.forEach(({ bookIds, unitId }) => {
         draft.itemMap[unitId] = { bookIds, unitId };
       });

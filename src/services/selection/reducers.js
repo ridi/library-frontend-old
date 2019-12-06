@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { CLEAR_SELECTED_ITEMS, SELECT_ITEMS, TOGGLE_ITEM } from './actions';
+import { CLEAR_SELECTED_ITEMS, DESELECT_ITEMS, SELECT_ITEMS, TOGGLE_ITEM } from './actions';
 
 const initialState = {
   ids: {},
@@ -9,7 +9,14 @@ const initialState = {
 const selectionReducer = produce((draft, action) => {
   switch (action.type) {
     case SELECT_ITEMS:
-      draft.ids = Object.fromEntries(action.payload.map(id => [id, true]));
+      action.payload.forEach(id => {
+        draft.ids[id] = true;
+      });
+      break;
+    case DESELECT_ITEMS:
+      action.payload.forEach(id => {
+        draft.ids[id] = false;
+      });
       break;
     case TOGGLE_ITEM:
       if (draft.ids[action.payload]) {

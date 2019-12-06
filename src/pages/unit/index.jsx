@@ -272,7 +272,7 @@ function Unit(props) {
         unit={unit}
         linkWebviewer
         onClickSelectAllBooks={selectAllBooksWithOptions}
-        onClickUnselectAllBooks={dispatchClearSelectedBooks}
+        onClickDeselectAllBooks={dispatchClearSelectedBooks}
       />
     );
   }

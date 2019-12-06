@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 
-import { cancelClose, closeToast, closeWithDelay } from '../../services/toast/actions';
-import { getToast } from '../../services/toast/selectors';
-import Check from '../../svgs/CheckCircleFill.svg';
-import Close from '../../svgs/Close.svg';
-import ArrowIcon from '../../svgs/NoneDashedDoubleArrowRight.svg';
-import IconButton from '../IconButton';
+import IconButton from 'components/IconButton';
+import { cancelClose, closeToast, closeWithDelay } from 'services/toast/actions';
+import { getToast } from 'services/toast/selectors';
+import Check from 'svgs/CheckCircleFill.svg';
+import Close from 'svgs/Close.svg';
+import ArrowIcon from 'svgs/NoneDashedDoubleArrowRight.svg';
+
 import * as styles from './styles';
 
 class Toaster extends React.Component {
