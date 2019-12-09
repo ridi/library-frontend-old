@@ -11,7 +11,7 @@ import { retry, throwNetworkError } from '../utils/retry';
 import { HttpStatusCode } from './constants';
 
 const { ENVIRONMENT: environment } = config;
-const timeout = environment === ENV.PRODUCTION || environment === ENV.STAGING ? 10000 : 60000;
+const timeout = environment === ENV.PRODUCTION || environment === ENV.STAGING ? 15000 : 60000;
 axios.defaults.timeout = timeout;
 
 const createInterceptor = (onSuccess, onFailure) => ({
