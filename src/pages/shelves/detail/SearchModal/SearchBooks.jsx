@@ -1,55 +1,64 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { Books } from '../../../../components/Books';
-import ViewType from '../../../../constants/viewType';
-import * as bookActions from '../../../../services/book/actions';
-import * as bookSelectors from '../../../../services/book/selectors';
+import { Books } from 'components/Books';
+import { ITEMS_LIMIT_PER_SHELF } from 'constants/shelves';
+import ViewType from 'constants/viewType';
+import * as bookActions from 'services/book/actions';
+import * as bookSelectors from 'services/book/selectors';
+import { toggleItem } from 'services/selection/actions';
+import { showToast } from 'services/toast/actions';
+import { ToastStyle } from 'services/toast/constants';
 
 function emptyLinkBuilder() {
   return null;
 }
 
-function SearchBooks({ items, loadBookData, loadUnitData, platformBooks, units }) {
+const selectBookIds = createSelector(
+  items => items,
+  items => (items ? items.map(item => item.b_id) : null),
+);
+
+const SearchBooks = ({ items, shelfAllBookUnitIds, totalSelectedCount }) => {
+  const bookIds = selectBookIds(items);
+  const dispatch = useDispatch();
+  const platformBooks = useSelector(state => bookSelectors.getBooks(state, bookIds));
+
   React.useEffect(() => {
-    loadBookData(items.map(item => item.b_id));
-    loadUnitData(items.map(item => item.unit_id));
+    dispatch(bookActions.loadBookData(items.map(item => item.b_id)));
+    dispatch(bookActions.loadUnitData(items.map(item => item.unit_id)));
   }, [items]);
+
+  const handleSelectedChange = React.useCallback(
+    bookId => {
+      const shelfAllBookCount = shelfAllBookUnitIds.length;
+      if (shelfAllBookCount + totalSelectedCount > ITEMS_LIMIT_PER_SHELF) {
+        dispatch(
+          showToast({
+            message: `최대 ${ITEMS_LIMIT_PER_SHELF}권까지 추가할 수 있습니다.`,
+            toastStyle: ToastStyle.BLUE,
+            withBottomFixedButton: true,
+          }),
+        );
+      } else {
+        dispatch(toggleItem(bookId));
+      }
+    },
+    [shelfAllBookUnitIds, totalSelectedCount],
+  );
+
   return (
     <Books
       libraryBookDTO={items}
       platformBookDTO={platformBooks}
-      units={units}
       isSelectMode
       viewType={ViewType.LANDSCAPE}
       linkBuilder={emptyLinkBuilder}
+      inactiveBookUnitIds={shelfAllBookUnitIds}
+      onSelectedChange={handleSelectedChange}
     />
   );
-}
-
-function mapStateToPropsFactory() {
-  const selectBookIds = createSelector(
-    props => props.items,
-    items => items.map(item => item.b_id),
-  );
-  const selectUnitIds = createSelector(
-    props => props.items,
-    items => items.map(item => item.unit_id),
-  );
-  return (state, props) => {
-    const bookIds = selectBookIds(props);
-    const unitIds = selectUnitIds(props);
-    return {
-      platformBooks: bookSelectors.getBooks(state, bookIds),
-      units: bookSelectors.getUnits(state, unitIds),
-    };
-  };
-}
-
-const mapDispatchToProps = {
-  loadBookData: bookActions.loadBookData,
-  loadUnitData: bookActions.loadUnitData,
 };
 
-export default connect(mapStateToPropsFactory, mapDispatchToProps)(SearchBooks);
+export default SearchBooks;

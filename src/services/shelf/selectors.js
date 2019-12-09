@@ -80,6 +80,15 @@ export const getShelfBooks = createCachedSelector(
   },
 )((_, uuid) => uuid);
 
+export const getShelfAllBookUnitIds = createCachedSelector(
+  state => state.shelf,
+  (_, uuid) => uuid,
+  (shelf, uuid) => {
+    const allItem = shelf.shelf[uuid]?.books?.allItem;
+    return allItem ? allItem.map(item => `${item}`) : null;
+  },
+)((_, uuid) => uuid);
+
 export const getIsShelfLoading = createCachedSelector(getShelfBooks, ({ loading }) => loading)((_, uuid) => uuid);
 
 export const getShelfItems = createCachedSelector(getShelfBooks, ({ items }) => items)((_, uuid) => uuid);

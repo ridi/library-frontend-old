@@ -276,7 +276,7 @@ function ShelfDetail(props) {
     totalSelectedCount,
     isSelectedAllItem: totalSelectedCount === visibleBookCount,
     onClickSelectAllItem: selectAllBooks,
-    onClickUnselectAllItem: clearSelectedBooks,
+    onClickDeselectAllItem: clearSelectedBooks,
     onClickSuccessButton: toggleEditingMode,
   };
 

@@ -112,7 +112,7 @@ const Hidden = props => {
       totalSelectedCount,
       isSelectedAllItem: isSelectedAllBooks,
       onClickSelectAllItem: handleSelectAllBooks,
-      onClickUnselectAllItem: dispatchClearSelectedBooks,
+      onClickDeselectAllItem: dispatchClearSelectedBooks,
       onClickSuccessButton: toggleEditingMode,
     };
   };

@@ -95,6 +95,19 @@ function* loadShelfBooks({ payload }) {
   }
 }
 
+function* loadShelfAllBook({ payload }) {
+  const { uuid } = payload;
+  const limit = ITEMS_LIMIT_PER_SHELF;
+  try {
+    const { items } = yield call(requests.fetchShelfBooks, { uuid, limit });
+    yield put(actions.setShelfAllBook(uuid, items));
+  } catch (err) {
+    if (!err.response || err.response.status !== 401) {
+      throw err;
+    }
+  }
+}
+
 function* waitForOperation(revision, opResults) {
   const results = new Map(opResults.map(({ id, status }) => [id, status]));
   while (true) {
@@ -454,6 +467,7 @@ export default function* shelfRootSaga() {
     takeEvery(actions.LOAD_SHELVES, loadShelves),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks),
+    takeEvery(actions.LOAD_SHELF_ALL_BOOK, loadShelfAllBook),
     takeEvery(actions.LOAD_SHELF_BOOK_COUNT, loadShelfBookCount),
     takeEvery(actions.ADD_SHELF, addShelf),
     takeEvery(actions.RENAME_SHELF, renameShelf),

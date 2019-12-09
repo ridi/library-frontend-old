@@ -110,7 +110,7 @@ function SerialPreference(props) {
     totalSelectedCount,
     isSelectedAllItem: totalSelectedCount === items.length,
     onClickSelectAllItem: dispatchSelectAllBooksWithPage,
-    onClickUnselectAllItem: dispatchClearSelectedBooks,
+    onClickDeselectAllItem: dispatchClearSelectedBooks,
     onClickSuccessButton: toggleEditingMode,
   };
 

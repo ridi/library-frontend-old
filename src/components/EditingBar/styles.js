@@ -32,13 +32,6 @@ export const editingBarSelectCount = css`
   color: white;
 `;
 
-export const editingBarAllSelect = css`
-  font-size: 15px;
-  color: white;
-  padding: 8px;
-  margin-right: 8px;
-`;
-
 export const editingBarCompleteButton = css`
   width: 52px;
   height: 30px;

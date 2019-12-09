@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonType } from 'components/ActionBar/constants';
 import BottomActionBar from 'components/BottomActionBar';
+import EditingBar from 'components/EditingBar';
 import Empty from 'components/Empty';
 import FixedToolbarView from 'components/FixedToolbarView';
 import { ResponsivePaginatorWithHandler } from 'components/ResponsivePaginator';
 import SkeletonBooks from 'components/Skeleton/SkeletonBooks';
-import TitleBar from 'components/TitleBar';
 import { BooksPageKind } from 'constants/urls';
 import ViewType from 'constants/viewType';
 import { ResponsiveBooks } from 'pages/base/Responsive';
@@ -16,6 +16,7 @@ import * as mainActions from 'services/purchased/main/actions';
 import * as mainSelectors from 'services/purchased/main/selectors';
 import * as selectionActions from 'services/selection/actions';
 import * as selectionSelectors from 'services/selection/selectors';
+import * as shelfActions from 'services/shelf/actions';
 import * as shelfSelectors from 'services/shelf/selectors';
 import BookOutline from 'svgs/BookOutline.svg';
 import SearchIcon from 'svgs/Search.svg';
@@ -38,8 +39,8 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   };
 
   const dispatch = useDispatch();
-  const shelfTitle = useSelector(state => shelfSelectors.getShelfName(state, uuid));
-  const isSelected = useSelector(state => selectionSelectors.getTotalSelectedCount(state) !== 0);
+  const selectedItemIds = useSelector(state => selectionSelectors.getSelectedItemIds(state));
+  const shelfAllBookUnitIds = useSelector(state => shelfSelectors.getShelfAllBookUnitIds(state, uuid));
   const totalPages = useSelector(state => mainSelectors.getTotalPages(state, pageOptions));
   const searchItems = useSelector(state => {
     if (mainSelectors.getIsPageCold(state, pageOptions)) {
@@ -58,33 +59,66 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   }, []);
 
   const handleAddToShelf = React.useCallback(() => onAddSelected(uuid), [uuid]);
+  const totalSelectedCount = selectedItemIds.length;
+  const searchItemUnitIds = searchItems ? searchItems.map(searchItem => searchItem.unit_id) : [];
+  const activeBookUnitIds = shelfAllBookUnitIds ? searchItemUnitIds.filter(unitId => !shelfAllBookUnitIds.includes(unitId)) : [];
+  const activeBookIds =
+    activeBookUnitIds && searchItems
+      ? activeBookUnitIds.map(activeBookUnitId => searchItems.find(searchItem => searchItem.unit_id === activeBookUnitId)?.b_id)
+      : [];
+  const isSelectedAllItem = searchItems && activeBookIds.every(activeBookId => selectedItemIds.includes(activeBookId));
+  const selectAllItem = () => {
+    dispatch(selectionActions.selectItems(activeBookIds));
+  };
+
+  const deselectAllItem = () => {
+    dispatch(selectionActions.deselectItems(activeBookIds));
+  };
 
   React.useEffect(() => {
-    dispatch(selectionActions.clearSelectedItems());
     dispatch(mainActions.loadItems(pageOptions));
     window.scrollTo(0, 0);
-  }, [filter, dispatch, page, searchingKeyword]);
+  }, [dispatch, page]);
+
+  React.useEffect(() => {
+    if (page !== 1) {
+      setPage(1);
+      return;
+    }
+    dispatch(mainActions.loadItems(pageOptions));
+    window.scrollTo(0, 0);
+  }, [filter, searchingKeyword]);
 
   React.useEffect(() => {
     dispatch(filterActions.updateCategories());
+    dispatch(shelfActions.loadShelfAllBook(uuid));
   }, [dispatch]);
 
-  function renderSearchBar() {
+  function renderToolBar() {
     return (
-      <SearchBar
-        isSearching={searchingKeyword !== ''}
-        filter={filter}
-        keyword={keyword}
-        onClear={handleSearchClear}
-        onConfirm={handleSearchConfirm}
-        onFilterChange={setFilter}
-        onKeywordChange={setKeyword}
-      />
+      <>
+        <EditingBar
+          totalSelectedCount={totalSelectedCount}
+          isSelectedAllItem={isSelectedAllItem}
+          onClickSelectAllItem={selectAllItem}
+          onClickDeselectAllItem={deselectAllItem}
+          onClickSuccessButton={onBackClick}
+        />
+        <SearchBar
+          isSearching={searchingKeyword !== ''}
+          filter={filter}
+          keyword={keyword}
+          onClear={handleSearchClear}
+          onConfirm={handleSearchConfirm}
+          onFilterChange={setFilter}
+          onKeywordChange={setKeyword}
+        />
+      </>
     );
   }
 
   function renderActionBar() {
-    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick: handleAddToShelf, disable: !isSelected }];
+    const buttons = [{ type: ButtonType.SPACER }, { name: '추가', onClick: handleAddToShelf, disable: totalSelectedCount === 0 }];
     return <BottomActionBar buttonProps={buttons} />;
   }
 
@@ -95,7 +129,7 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   function renderBooks() {
     return (
       <>
-        <SearchBooks items={searchItems} />
+        <SearchBooks items={searchItems} shelfAllBookUnitIds={shelfAllBookUnitIds} totalSelectedCount={totalSelectedCount} />
         {renderPaginator()}
       </>
     );
@@ -128,11 +162,8 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   }
 
   return (
-    <>
-      <TitleBar title={`${shelfTitle}에 추가`} onBackClick={onBackClick} invertColor />
-      <FixedToolbarView allowFixed toolbar={renderSearchBar()} actionBar={renderActionBar()}>
-        <main>{renderMain()}</main>
-      </FixedToolbarView>
-    </>
+    <FixedToolbarView allowFixed toolbar={renderToolBar()} actionBar={renderActionBar()}>
+      <main>{renderMain()}</main>
+    </FixedToolbarView>
   );
 }
