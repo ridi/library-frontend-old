@@ -55,6 +55,7 @@ const ShelvesList = props => {
   } = props;
   const [selectMode, setSelectMode] = React.useState(false);
   React.useEffect(() => {
+    clearSelectedShelves();
     loadShelves(pageOptions);
     loadShelfCount();
   }, [location]);
