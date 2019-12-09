@@ -78,7 +78,16 @@ export default function SearchModal({ onAddSelected, onBackClick, uuid }) {
   React.useEffect(() => {
     dispatch(mainActions.loadItems(pageOptions));
     window.scrollTo(0, 0);
-  }, [filter, dispatch, page, searchingKeyword]);
+  }, [dispatch, page]);
+
+  React.useEffect(() => {
+    if (page !== 1) {
+      setPage(1);
+      return;
+    }
+    dispatch(mainActions.loadItems(pageOptions));
+    window.scrollTo(0, 0);
+  }, [filter, searchingKeyword]);
 
   React.useEffect(() => {
     dispatch(filterActions.updateCategories());
