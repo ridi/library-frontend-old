@@ -54,11 +54,8 @@ export const createAuthorizationInterceptor = store => ({
       // 네트워크 에러가 하나로 묶이도록 fingerprint 수정
       Sentry.withScope(scope => {
         scope.setFingerprint(['network-error']);
-        if (error.request != null) {
-          scope.setExtra('url', error.request.url);
-          scope.setExtra('baseURL', error.request.baseURL);
-          scope.setExtra('method', error.request.method);
-        }
+        scope.setExtra('url', String(error.config.url));
+        scope.setExtra('method', error.config.method);
         Sentry.captureException(error);
       });
     } else if (response.status === HttpStatusCode.HTTP_401_UNAUTHORIZED) {
