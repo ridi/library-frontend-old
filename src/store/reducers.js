@@ -13,7 +13,7 @@ import purchasedCommonReducer from '../services/purchased/common/reducers';
 import filterReducer from '../services/purchased/filter/reducers';
 import purchasedHiddenReducer from '../services/purchased/hidden/reducers';
 import purchasedMainReducer from '../services/purchased/main/reducers';
-import selectionReducer from '../services/selection/reducers';
+import { selectionReducer } from '../services/selection/reducers';
 import serialPreferenceReducer from '../services/serialPreference/reducers';
 import shelfReducer from '../services/shelf/reducers';
 import toastReducer from '../services/toast/reducers';

@@ -16,7 +16,7 @@ import { PageType, URLMap } from 'constants/urls';
 import * as bookSelectors from 'services/book/selectors';
 import * as confirmActions from 'services/confirm/actions';
 import * as purchasedCommonSelectors from 'services/purchased/common/selectors';
-import * as selectionActions from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as unitPageActions from 'services/unitPage/actions';
 import * as unitPageSelectors from 'services/unitPage/selectors';

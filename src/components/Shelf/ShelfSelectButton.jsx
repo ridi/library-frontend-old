@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
-import { toggleItem } from '../../services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
+
 import { getIsItemSelected } from '../../services/selection/selectors';
 import CheckCircle from '../../svgs/CheckCircle.svg';
 import { shelfStyles } from './styles';
@@ -10,7 +11,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleItem,
+  onSelectedChange: selectionActions.toggleItem,
 };
 
 export const ShelfSelectButton = connect(

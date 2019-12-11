@@ -1,4 +1,5 @@
 export const LOAD_ALL_SHELF = 'LOAD_ALL_SHELF';
+export const LOAD_ALL_SHELF_AFTER_ADD = 'LOAD_ALL_SHELF_AFTER_ADD';
 export const LOAD_SHELVES = 'LOAD_SHELVES';
 export const LOAD_SHELF_COUNT = 'LOAD_SHELF_COUNT';
 export const LOAD_SHELF_BOOKS = 'LOAD_SHELF_BOOKS';
@@ -168,6 +169,13 @@ export const addShelf = ({ name, pageOptions }) => ({
   payload: {
     name,
     pageOptions,
+  },
+});
+
+export const loadAllShelfAfterAdd = ({ name }) => ({
+  type: LOAD_ALL_SHELF_AFTER_ADD,
+  payload: {
+    name,
   },
 });
 

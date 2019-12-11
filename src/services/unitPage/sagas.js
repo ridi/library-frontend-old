@@ -1,5 +1,7 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 
+import { selectionActions } from 'services/selection/reducers';
+
 import { OrderOptions } from '../../constants/orderOptions';
 import { PageType, URLMap } from '../../constants/urls';
 import { toFlatten } from '../../utils/array';
@@ -12,7 +14,6 @@ import * as commonRequests from '../common/requests';
 import { showDialog } from '../dialog/actions';
 import { setPrimaryBookId } from '../purchased/common/actions';
 import { loadReadLatestBookId } from '../purchased/common/sagas/rootSagas';
-import { selectItems } from '../selection/actions';
 import { getSelectedItems } from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
@@ -226,7 +227,7 @@ function* selectAllBooks(action) {
     items.filter(item => item.purchased),
     'b_id',
   );
-  yield put(selectItems(bookIds));
+  yield put(selectionActions.selectItems(bookIds));
 }
 
 export default function* UnitPageRootSaga() {

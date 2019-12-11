@@ -2,6 +2,7 @@ import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga
 import uuidv4 from 'uuid/v4';
 
 import { bookDownloadActions } from 'services/bookDownload/reducers';
+import { selectionActions } from 'services/selection/reducers';
 import { trackEvent } from 'services/tracking/actions';
 import { EventNames } from 'services/tracking/constants';
 import { arrayChunk } from 'utils/array';
@@ -14,7 +15,6 @@ import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
 import { MakeBookIdsError } from '../common/errors';
 import * as dialogActions from '../dialog/actions';
-import * as selectionActions from '../selection/actions';
 import * as selectionSelectors from '../selection/selectors';
 import * as toastActions from '../toast/actions';
 import { ToastStyle } from '../toast/constants';
@@ -241,7 +241,15 @@ function* addShelf({ payload }) {
       break;
     }
   }
-  yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelves(pageOptions)), put(actions.loadShelfCount())]);
+  yield all([put(uiActions.setFullScreenLoading(false)), put(actions.loadShelfCount())]);
+  if (pageOptions) {
+    yield put(actions.loadShelves(pageOptions));
+  }
+}
+
+function* loadAllShelfAfterAdd({ payload }) {
+  yield call(addShelf, { payload });
+  yield put(actions.loadAllShelf());
 }
 
 function* renameShelf({ payload }) {
@@ -478,6 +486,7 @@ function* downloadSelectedUnits() {
 export default function* shelfRootSaga() {
   yield all([
     takeEvery(actions.LOAD_ALL_SHELF, loadAllShelf),
+    takeEvery(actions.LOAD_ALL_SHELF_AFTER_ADD, loadAllShelfAfterAdd),
     takeEvery(actions.LOAD_SHELVES, loadShelves),
     takeEvery(actions.LOAD_SHELF_COUNT, loadShelfCount),
     takeEvery(actions.LOAD_SHELF_BOOKS, loadShelfBooks),

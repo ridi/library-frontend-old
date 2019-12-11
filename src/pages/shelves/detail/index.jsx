@@ -20,7 +20,7 @@ import { ResponsiveBooks } from 'pages/base/Responsive';
 import * as bookSelectors from 'services/book/selectors';
 import * as confirmActions from 'services/confirm/actions';
 import * as promptActions from 'services/prompt/actions';
-import * as selectionActions from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as actions from 'services/shelf/actions';
 import * as selectors from 'services/shelf/selectors';
