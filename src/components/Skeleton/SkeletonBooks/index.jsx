@@ -9,21 +9,19 @@ import PortraitBook from './PortraitBook';
 const SkeletonBookCount = 48;
 
 const SkeletonBooks = ({ viewType }) => (
-  <BooksWrapper
-    viewType={viewType}
-    books={[...Array(SkeletonBookCount).keys()]}
-    renderBook={({ book: index, className }) =>
+  <BooksWrapper viewType={viewType}>
+    {Array.from({ length: SkeletonBookCount }, (_, index) =>
       viewType === ViewType.PORTRAIT ? (
-        <div key={index} className={className} css={styles.portrait}>
+        <div key={index} className="Book" css={styles.portrait}>
           <PortraitBook />
         </div>
       ) : (
-        <div key={index} className={className} css={styles.landscape}>
+        <div key={index} className="Book" css={styles.landscape}>
           <LandscapeBook />
         </div>
-      )
-    }
-  />
+      ),
+    )}
+  </BooksWrapper>
 );
 
 export default React.memo(SkeletonBooks);
