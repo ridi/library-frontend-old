@@ -7,6 +7,10 @@ export const simpleShelf = css`
   background: white;
   border-radius: 4px;
   margin: 16px;
+
+  &.disabled {
+    opacity: 0.4;
+  }
 `;
 
 export const shelfName = css`
@@ -25,6 +29,11 @@ export const checkButton = css`
   position: relative;
   width: ${IconSize + IconBorderWidth * 2}px;
   height: ${IconSize + IconBorderWidth * 2}px;
+  cursor: pointer;
+
+  .disabled & {
+    cursor: default;
+  }
 `;
 
 export const checkIconBorder = css`

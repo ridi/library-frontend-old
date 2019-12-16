@@ -8,6 +8,7 @@ import BottomActionBar from 'components/BottomActionBar';
 import { EmptyShelves } from 'components/Empty/EmptyShelves';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from 'constants/shelves';
 import * as promptActions from 'services/prompt/actions';
+import { selectionActions } from 'services/selection/reducers';
 import { getSelectedShelfIds } from 'services/selection/selectors';
 import * as shelfActions from 'services/shelf/actions';
 import * as shelfSelectors from 'services/shelf/selectors';
@@ -20,7 +21,7 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(shelfActions.loadAllShelf());
-  }, []);
+  }, [dispatch]);
   const allShelf = useSelector(shelfSelectors.getAllShelf);
   const allShelfCount = allShelf.items ? allShelf.items.length : 0;
   const selectedShelfIds = useSelector(getSelectedShelfIds);
@@ -42,7 +43,7 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
     );
   };
 
-  const handleAddshelfConfirm = name => {
+  const handleAddShelfConfirm = name => {
     validateAddShelf(() => {
       dispatch(shelfActions.loadAllShelfAfterAdd({ name }));
     });
@@ -56,7 +57,7 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
           message: '새 책장의 이름을 입력해주세요.',
           placeHolder: '책장 이름',
           emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-          onClickConfirmButton: handleAddshelfConfirm,
+          onClickConfirmButton: handleAddShelfConfirm,
           limit: SHELF_NAME_LIMIT,
         }),
       );
@@ -100,13 +101,18 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
     return null;
   };
 
+  const onBackButtonClick = () => {
+    handleBackButtonClick();
+    dispatch(selectionActions.clearSelectedShelves());
+  };
+
   return (
     <>
       <Helmet>
         <title>{`${pageTitle} - 내 서재`}</title>
       </Helmet>
       <div>
-        <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={handleBackButtonClick} invertColor />
+        <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={onBackButtonClick} invertColor />
         {renderMain()}
       </div>
     </>
