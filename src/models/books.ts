@@ -66,8 +66,8 @@ const RSeries = R.Record({
   property: R.Record({
     last_volume_id: R.String,
     opened_last_volume_id: R.String,
-    title: R.String,
-    unit: R.String,
+    title: R.String.Or(R.Null),
+    unit: R.String.Or(R.Null),
     opened_book_count: R.Number,
     total_book_count: R.Number,
     is_serial: R.Boolean,
@@ -81,6 +81,22 @@ const RSeries = R.Record({
     price_info: RSeriesPriceInfo,
   }),
 );
+
+const RSeriesSimple = R.Record({
+  property: R.Record({
+    last_volume_id: R.String,
+    opened_last_volume_id: R.String,
+    title: R.String.Or(R.Null),
+    unit: R.String.Or(R.Null),
+    opened_book_count: R.Number,
+    total_book_count: R.Number,
+    is_serial: R.Boolean,
+    is_completed: R.Boolean,
+    is_comic_hd: R.Boolean,
+    is_serial_complete: R.Boolean,
+    is_wait_free: R.Boolean,
+  }),
+});
 
 const RAuthor = R.Record({
   name: R.String,
@@ -164,12 +180,70 @@ export const RBookData = R.Record({
   }),
 );
 
+export const RBookDataSimple = R.Record({
+  id: R.String,
+  title: R.Record({
+    main: R.String,
+  }),
+  thumbnail: R.Record({
+    small: R.String,
+    large: R.String,
+    xxlarge: R.String,
+  }),
+  categories: R.Array(RCategory).withConstraint(arr => arr.length > 0),
+  file: R.Record({
+    size: R.Number,
+    format: R.String,
+    is_drm_free: R.Boolean,
+    is_comic: R.Boolean,
+    is_webtoon: R.Boolean,
+    is_manga: R.Boolean,
+    is_comic_hd: R.Boolean,
+  }).And(
+    R.Partial({
+      character_count: R.Number,
+      page_count: R.Number,
+    }),
+  ),
+  property: R.Record({
+    is_novel: R.Boolean,
+    is_magazine: R.Boolean,
+    is_adult_only: R.Boolean,
+    is_new_book: R.Boolean,
+    is_open: R.Boolean,
+    is_somedeal: R.Boolean,
+    is_trial: R.Boolean,
+  }),
+  support: R.Record({
+    android: R.Boolean,
+    ios: R.Boolean,
+    mac: R.Boolean,
+    paper: R.Boolean,
+    windows: R.Boolean,
+    web_viewer: R.Boolean,
+  }),
+  publish: R.Record({
+    ridibooks_register: R.String,
+  }).And(
+    R.Partial({
+      ridibooks_publish: R.String,
+    }),
+  ),
+  last_modified: R.String,
+}).And(
+  R.Partial({
+    authors_ordered: R.Array(RAuthor),
+    series: RSeriesSimple,
+  }),
+);
+
 export interface BookData extends R.Static<typeof RBookData> {}
+export interface BookDataSimple extends R.Static<typeof RBookDataSimple> {}
 
 export const Book = types
   .model({
     id: types.identifier,
-    data: types.frozen<BookData>(),
+    data: types.frozen<BookDataSimple>(),
   })
   .views(self => ({
     get lastOpenVolumeId() {

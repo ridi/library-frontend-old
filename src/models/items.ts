@@ -12,7 +12,7 @@ import { calcOffset, calcPage } from 'utils/pagination';
 
 import config from '../config';
 
-import { Book, RBookData } from './books';
+import { Book, RBookData, RBookDataSimple } from './books';
 import Env from './env';
 import { Unit, RUnitData } from './units';
 import { ListInstructions } from 'constants/listInstructions';
@@ -251,16 +251,27 @@ export const ItemStore = types
       const requestUrl = new URL('/books', config.BOOK_API_BASE_URL);
       const params = new URLSearchParams([['b_ids', booksToLoad.join(',')]]);
       const response = yield privateApi.post(requestUrl.toString(), params.toString());
-      const rawBooks = response.data.filter(book => !book.is_deleted);
-      rawBooks.forEach(book => {
-        try {
-          RBookData.check(book);
-        } catch (err) {
-          console.error(err);
-          console.log(book);
-        }
-      });
-      const books = R.Array(RBookData).check(rawBooks);
+      const rawBooks = response.data.filter((book: any) => !book.is_deleted);
+
+      // 간이 데이터 검증
+      const bookCount = rawBooks.length;
+      const validationErrors = rawBooks
+        .map((book: any) => {
+          try {
+            RBookData.check(book);
+          } catch (err) {
+            return { err, book };
+          }
+          return null;
+        })
+        .filter(err => err != null);
+      if (validationErrors.length !== 0) {
+        console.groupCollapsed(`Book full validation errors: ${validationErrors.length} out of ${bookCount}`);
+        console.table(validationErrors);
+        console.groupEnd();
+      }
+
+      const books = R.Array(RBookDataSimple).check(rawBooks);
       const idSet = new Set(books.map(book => book.id));
 
       booksToLoad.forEach(bookId => {
