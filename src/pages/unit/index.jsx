@@ -300,7 +300,6 @@ function Unit(props) {
       {renderTitleBar()}
       <PageRedirect currentPage={currentPage} totalPages={totalPages} />
       <main>{renderMain()}</main>
-      <BookDownLoader />
     </>
   );
 }
