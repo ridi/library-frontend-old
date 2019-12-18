@@ -103,6 +103,7 @@ function ShelfDetail() {
   };
   const moveBooks = React.useCallback(() => {
     // moveSelectedBooks();
+    dispatch(selectionActions.clearSelectedShelves());
     dispatch(selectionActions.clearSelectedItems());
     dispatch(
       actions.loadShelfBooks(uuid, {
@@ -305,6 +306,7 @@ function ShelfDetail() {
       <SelectShelf
         pageTitle={name}
         handleBackButtonClick={() => {
+          dispatch(selectionActions.clearSelectedShelves());
           setIsMoving(false);
         }}
         handleMoveButtonClick={moveBooks}

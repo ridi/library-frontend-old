@@ -45,6 +45,7 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
 
   const handleAddShelfConfirm = name => {
     validateAddShelf(() => {
+      dispatch(selectionActions.clearSelectedShelves());
       dispatch(shelfActions.loadAllShelfAfterAdd({ name }));
     });
   };
@@ -101,18 +102,13 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
     return null;
   };
 
-  const onBackButtonClick = () => {
-    handleBackButtonClick();
-    dispatch(selectionActions.clearSelectedShelves());
-  };
-
   return (
     <>
       <Helmet>
         <title>{`${pageTitle} - 내 서재`}</title>
       </Helmet>
       <div>
-        <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={onBackButtonClick} invertColor />
+        <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={handleBackButtonClick} invertColor />
         {renderMain()}
       </div>
     </>
