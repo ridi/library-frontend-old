@@ -1,3 +1,4 @@
+import { css } from '@emotion/core';
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
@@ -20,6 +21,10 @@ import * as selectionSelectors from '../../services/selection/selectors';
 import * as unitPageActions from '../../services/unitPage/actions';
 import * as unitPageSelectors from '../../services/unitPage/selectors';
 import Responsive from '../base/Responsive';
+
+const filler = css`
+  height: 300vh;
+`;
 
 function extractOptions({ location, path, params }) {
   const searchParams = new URLSearchParams(location.search);
@@ -248,7 +253,7 @@ function Unit(props) {
   function renderSeriesList() {
     const { primaryBook, isFetchingBook, primaryItem, items } = props;
     if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
-      return null;
+      return <div css={filler} />;
     }
 
     const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;

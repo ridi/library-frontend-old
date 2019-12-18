@@ -1,6 +1,11 @@
+import { css } from '@emotion/core';
 import React from 'react';
 
 import FullScreenLoading from '../../../components/FullScreenLoading';
+
+const filler = css`
+  height: 300vh;
+`;
 
 const PageLoadingSpinner = () => {
   const [visible, setVisible] = React.useState(false);
@@ -9,7 +14,12 @@ const PageLoadingSpinner = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  return visible ? <FullScreenLoading /> : null;
+  return (
+    <>
+      <div css={filler} />
+      {visible && <FullScreenLoading />}
+    </>
+  );
 };
 
 export default PageLoadingSpinner;
