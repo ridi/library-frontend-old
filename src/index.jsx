@@ -13,6 +13,7 @@ import TrackManager from './TrackManager';
 const store = makeStoreWithApi({}, {});
 const styleCache = createCache();
 
+const container = document.getElementById('app');
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
@@ -23,5 +24,6 @@ ReactDOM.render(
       </CacheProvider>
     </Provider>
   </BrowserRouter>,
-  document.getElementById('app'),
+  container,
 );
+container.style.height = '';

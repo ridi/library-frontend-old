@@ -161,7 +161,6 @@ class UnitDetailView extends React.Component {
       <a
         css={styles.readLatestButtonAnchor}
         href={makeWebViewerUri(readLatestBookData.bookId || book.series.id, locationHref)}
-        target="_blank"
         rel="noopener noreferrer"
       >
         <button type="button" css={styles.readLatestButton}>
@@ -209,7 +208,7 @@ class UnitDetailView extends React.Component {
     const serviceName = openService === ServiceType.SELECT ? '리디셀렉트' : '서점';
 
     return (
-      <a css={styles.outerTextLink} href={href} target="_blank" rel="noopener noreferrer">
+      <a css={styles.outerTextLink} href={href} rel="noopener noreferrer">
         {serviceName}에서 보기
         <NoneDashedArrowRight css={styles.outerLinkIcon} />
       </a>

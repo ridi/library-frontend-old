@@ -116,7 +116,7 @@ class SeriesList extends React.Component {
       // 웹뷰어 지원도서면 웹뷰어로 이동
       if (_linkWebviewer && isWebViewerContents) {
         return (
-          <a href={makeWebViewerUri(bookId, locationHref)} target="_blank" rel="noopener noreferrer">
+          <a href={makeWebViewerUri(bookId, locationHref)} rel="noopener noreferrer">
             웹뷰어로 보기
           </a>
         );
@@ -135,7 +135,7 @@ class SeriesList extends React.Component {
       const title = openService === ServiceType.STORE ? '서점에서 보기' : '리디셀렉트에서 보기';
 
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer">
+        <a href={href} rel="noopener noreferrer">
           {title}
         </a>
       );

@@ -2,23 +2,25 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
-import { ButtonType } from '../../components/ActionBar/constants';
-import BookDownLoader from '../../components/BookDownLoader';
-import { BookError } from '../../components/Error';
-import PageRedirect from '../../components/PageRedirect';
-import SeriesList from '../../components/SeriesList';
-import TitleBar from '../../components/TitleBar';
-import UnitDetailView from '../../components/UnitDetailView';
-import { OrderOptions } from '../../constants/orderOptions';
-import { UnitType } from '../../constants/unitType';
-import { PageType, URLMap } from '../../constants/urls';
-import * as bookSelectors from '../../services/book/selectors';
-import * as confirmActions from '../../services/confirm/actions';
-import * as purchasedCommonSelectors from '../../services/purchased/common/selectors';
-import * as selectionActions from '../../services/selection/actions';
-import * as selectionSelectors from '../../services/selection/selectors';
-import * as unitPageActions from '../../services/unitPage/actions';
-import * as unitPageSelectors from '../../services/unitPage/selectors';
+import { ButtonType } from 'components/ActionBar/constants';
+import BookDownLoader from 'components/BookDownLoader';
+import { BookError } from 'components/Error';
+import Filler from 'components/Filler';
+import PageRedirect from 'components/PageRedirect';
+import SeriesList from 'components/SeriesList';
+import TitleBar from 'components/TitleBar';
+import UnitDetailView from 'components/UnitDetailView';
+import { OrderOptions } from 'constants/orderOptions';
+import { UnitType } from 'constants/unitType';
+import { PageType, URLMap } from 'constants/urls';
+import * as bookSelectors from 'services/book/selectors';
+import * as confirmActions from 'services/confirm/actions';
+import * as purchasedCommonSelectors from 'services/purchased/common/selectors';
+import * as selectionActions from 'services/selection/actions';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as unitPageActions from 'services/unitPage/actions';
+import * as unitPageSelectors from 'services/unitPage/selectors';
+
 import Responsive from '../base/Responsive';
 
 function extractOptions({ location, path, params }) {
@@ -248,7 +250,7 @@ function Unit(props) {
   function renderSeriesList() {
     const { primaryBook, isFetchingBook, primaryItem, items } = props;
     if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
-      return null;
+      return <Filler />;
     }
 
     const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;
