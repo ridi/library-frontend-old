@@ -1,11 +1,7 @@
-import { css } from '@emotion/core';
 import React from 'react';
 
-import FullScreenLoading from '../../../components/FullScreenLoading';
-
-const filler = css`
-  height: 300vh;
-`;
+import Filler from 'components/Filler';
+import FullScreenLoading from 'components/FullScreenLoading';
 
 const PageLoadingSpinner = () => {
   const [visible, setVisible] = React.useState(false);
@@ -16,7 +12,7 @@ const PageLoadingSpinner = () => {
 
   return (
     <>
-      <div css={filler} />
+      <Filler />
       {visible && <FullScreenLoading />}
     </>
   );
