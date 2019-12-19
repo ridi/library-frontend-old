@@ -302,6 +302,7 @@ function ShelfDetail() {
     return (
       <SelectShelf
         pageTitle={name}
+        uuid={uuid}
         handleBackButtonClick={() => {
           dispatch(selectionActions.clearSelectedShelves());
           setIsMoving(false);

@@ -17,7 +17,7 @@ import { ToastStyle } from 'services/toast/constants';
 
 import SimpleShelves from './SimpleShelves';
 
-const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, totalSelectedCount }) => {
+const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonClick, totalSelectedCount }) => {
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(shelfActions.loadAllShelf());
@@ -85,6 +85,7 @@ const SelectShelf = ({ pageTitle, handleBackButtonClick, handleMoveButtonClick, 
 
   const renderMain = () => {
     const { loading, items: allShelfId } = allShelf;
+    if (allShelfId) allShelfId.splice(allShelfId.indexOf(uuid), 1);
     if (loading) {
       return <p>로딩중!</p>;
     }
