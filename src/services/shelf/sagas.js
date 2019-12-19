@@ -1,29 +1,29 @@
 import { all, call, delay, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 import uuidv4 from 'uuid/v4';
 
+import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from 'constants/page';
+import { ITEMS_LIMIT_PER_SHELF, SHELF_ITEM_OPERATION_LIMIT, SHELF_OPERATION_LIMIT, SHELVES_LIMIT } from 'constants/shelves';
+import { URLMap, PageType } from 'constants/urls';
+import * as bookRequests from 'services/book/requests';
+import * as bookSagas from 'services/book/sagas';
 import { bookDownloadActions } from 'services/bookDownload/reducers';
+import { MakeBookIdsError } from 'services/common/errors';
+import * as dialogActions from 'services/dialog/actions';
 import { selectionActions } from 'services/selection/reducers';
+import * as selectionSelectors from 'services/selection/selectors';
+import * as toastActions from 'services/toast/actions';
+import { ToastStyle } from 'services/toast/constants';
 import { trackEvent } from 'services/tracking/actions';
 import { EventNames } from 'services/tracking/constants';
+import * as uiActions from 'services/ui/actions';
 import { arrayChunk } from 'utils/array';
+import { thousandsSeperator } from 'utils/number';
+import { makeLinkProps } from 'utils/uri';
 
-import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
-import { ITEMS_LIMIT_PER_SHELF, SHELF_ITEM_OPERATION_LIMIT, SHELF_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
-import { URLMap, PageType } from '../../constants/urls';
-import { thousandsSeperator } from '../../utils/number';
-import * as bookRequests from '../book/requests';
-import * as bookSagas from '../book/sagas';
-import { MakeBookIdsError } from '../common/errors';
-import * as dialogActions from '../dialog/actions';
-import * as selectionSelectors from '../selection/selectors';
-import * as toastActions from '../toast/actions';
-import { ToastStyle } from '../toast/constants';
-import * as uiActions from '../ui/actions';
 import * as actions from './actions';
 import { OperationStatus } from './constants';
 import * as requests from './requests';
 import * as selectors from './selectors';
-import { makeLinkProps } from 'utils/uri';
 
 const OperationEndpoint = {
   SHELF: 'shelf',
