@@ -34,6 +34,8 @@ export const DOWNLOAD_SELECTED_UNITS = 'DOWNLOAD_SELECTED_UNITS';
 export const BEGIN_OPERATION = 'BEGIN_OPERATION';
 export const END_OPERATION = 'END_OPERATION';
 
+export const MOVE_SELECTED_BOOKS = 'MOVE_SELECTED_BOOKS';
+
 export const loadShelves = ({ orderBy, orderDirection, page }) => ({
   type: LOAD_SHELVES,
   payload: {
@@ -267,5 +269,13 @@ export const validateShelvesLimit = ({ onValid, onInvalid }) => ({
   payload: {
     onValid,
     onInvalid,
+  },
+});
+
+export const moveSelectedBooks = ({ uuid, pageOptions }) => ({
+  type: MOVE_SELECTED_BOOKS,
+  payload: {
+    uuid,
+    pageOptions,
   },
 });

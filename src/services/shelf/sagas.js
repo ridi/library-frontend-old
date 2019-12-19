@@ -9,7 +9,7 @@ import { arrayChunk } from 'utils/array';
 
 import { LIBRARY_ITEMS_LIMIT_PER_PAGE, SHELVES_LIMIT_PER_PAGE } from '../../constants/page';
 import { ITEMS_LIMIT_PER_SHELF, SHELF_ITEM_OPERATION_LIMIT, SHELF_OPERATION_LIMIT, SHELVES_LIMIT } from '../../constants/shelves';
-import { URLMap } from '../../constants/urls';
+import { URLMap, PageType } from '../../constants/urls';
 import { thousandsSeperator } from '../../utils/number';
 import * as bookRequests from '../book/requests';
 import * as bookSagas from '../book/sagas';
@@ -23,6 +23,7 @@ import * as actions from './actions';
 import { OperationStatus } from './constants';
 import * as requests from './requests';
 import * as selectors from './selectors';
+import { makeLinkProps } from 'utils/uri';
 
 const OperationEndpoint = {
   SHELF: 'shelf',
@@ -385,38 +386,54 @@ function* deleteShelfFromDetail({ payload }) {
   ]);
 }
 
+function* getUnitsFromLibraryBookData() {
+  const selectedBooks = yield select(selectionSelectors.getSelectedItems);
+  const bookIds = Object.entries(selectedBooks)
+    .filter(([, selected]) => selected)
+    .map(([key]) => key);
+  const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
+  const units = libraryBookData.items.map(book => ({
+    unitId: book.search_unit_id,
+    bookIds: [book.b_id],
+  }));
+  return units;
+}
+
+function* validateItemsLimitPerShelf({ itemsCount, uuid }) {
+  let isValide = true;
+  const count = yield call(requests.fetchShelfBookCount, { uuid });
+  if (count + itemsCount > ITEMS_LIMIT_PER_SHELF) {
+    yield put(
+      toastActions.showToast({
+        message: `최대 ${thousandsSeperator(ITEMS_LIMIT_PER_SHELF)}권까지 추가할 수 있습니다.`,
+        toastStyle: ToastStyle.RED,
+      }),
+    );
+    isValide = false;
+  }
+  return isValide;
+}
+
 function* addSelectedToShelf({ payload }) {
   yield put(uiActions.setFullScreenLoading(true));
   const { fromShelfPageOptions, onComplete, uuid } = payload;
   try {
-    const selectedBooks = yield select(selectionSelectors.getSelectedItems);
-    const bookIds = Object.entries(selectedBooks)
-      .filter(([, selected]) => selected)
-      .map(([key]) => key);
-    const count = yield call(requests.fetchShelfBookCount, { uuid });
-    if (count + bookIds.length > ITEMS_LIMIT_PER_SHELF) {
+    const units = yield call(getUnitsFromLibraryBookData);
+    const isValid = yield call(validateItemsLimitPerShelf, {
+      itemsCount: units.length,
+      uuid,
+    });
+    if (isValid) {
+      yield call(addShelfItem, { payload: { uuid, units } });
+      yield call(loadShelfBooks, { payload: { uuid, ...fromShelfPageOptions } });
       yield put(
         toastActions.showToast({
-          message: `최대 ${thousandsSeperator(ITEMS_LIMIT_PER_SHELF)}권까지 추가할 수 있습니다.`,
-          toastStyle: ToastStyle.RED,
+          message: '선택한 책을 책장에 추가했습니다.',
         }),
       );
-      return;
-    }
 
-    const libraryBookData = yield call(bookRequests.fetchLibraryBookData, bookIds);
-    const units = libraryBookData.items.map(book => ({
-      unitId: book.search_unit_id,
-      bookIds: [book.b_id],
-    }));
-    yield call(addShelfItem, { payload: { uuid, units } });
-    yield call(loadShelfBooks, { payload: { uuid, ...fromShelfPageOptions } });
-    yield put(
-      toastActions.showToast({
-        message: '선택한 책을 책장에 추가했습니다.',
-      }),
-    );
-    onComplete && onComplete();
+      onComplete && onComplete();
+    }
   } catch (err) {
     console.error(err);
     yield put(
@@ -430,8 +447,7 @@ function* addSelectedToShelf({ payload }) {
   }
 }
 
-function* removeSelectedFromShelf({ payload }) {
-  const { uuid, pageOptions } = payload;
+function* getUnitsFromShelfItempMap() {
   const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
     .filter(([, checked]) => checked)
     .map(([bookId]) => bookId);
@@ -441,18 +457,26 @@ function* removeSelectedFromShelf({ payload }) {
     const unitId = bookToUnit[bookId];
     return itemMap[unitId];
   });
+  return units;
+}
+
+function* removeSelectedFromShelf({ payload }) {
+  const { uuid, pageOptions } = payload;
+  const units = yield call(getUnitsFromShelfItempMap);
   try {
     yield all([
       put(uiActions.setFullScreenLoading(true)),
       put(selectionActions.clearSelectedItems()),
       call(deleteShelfItem, { payload: { uuid, units } }),
     ]);
-    yield call(loadShelfBooks, { payload: { uuid, ...pageOptions } });
-    yield put(
-      toastActions.showToast({
-        message: '책장에서 삭제했습니다.',
-      }),
-    );
+    if (pageOptions) {
+      yield call(loadShelfBooks, { payload: { uuid, ...pageOptions } });
+      yield put(
+        toastActions.showToast({
+          message: '책장에서 삭제했습니다.',
+        }),
+      );
+    }
   } catch (err) {
     console.error(err);
     yield put(
@@ -483,6 +507,50 @@ function* downloadSelectedUnits() {
   }
 }
 
+function* moveSelectedBooks({ payload }) {
+  const { uuid, pageOptions } = payload;
+  yield put(uiActions.setFullScreenLoading(true));
+  const [targetShelfUuids, units] = yield all([select(selectionSelectors.getSelectedShelfIds), call(getUnitsFromShelfItempMap)]);
+  const isValid = yield call(validateItemsLimitPerShelf, {
+    itemsCount: units.length,
+    uuid,
+  });
+  try {
+    if (isValid) {
+      yield all(targetShelfUuids.map(targetShelfUuid => call(addShelfItem, { payload: { uuid: targetShelfUuid, units } })));
+      yield call(deleteShelfItem, { payload: { uuid, units } });
+      yield put(
+        toastActions.showToast({
+          message: '선택한 책을 이동했습니다.',
+          linkName: '책장 바로가기',
+          linkProps: makeLinkProps({}, URLMap[PageType.SHELF_DETAIL].as({ uuid: targetShelfUuids[0] })),
+        }),
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    yield put(
+      toastActions.showToast({
+        message: '책을 이동하는 중 오류가 발생했습니다. 다시 시도해주세요.',
+        toastStyle: ToastStyle.RED,
+      }),
+    );
+  } finally {
+    yield all([
+      put(selectionActions.clearSelectedShelves()),
+      put(selectionActions.clearSelectedItems()),
+      call(loadShelfBooks, {
+        payload: {
+          uuid,
+          ...pageOptions,
+          page: 1,
+        },
+      }),
+    ]);
+    yield put(uiActions.setFullScreenLoading(false));
+  }
+}
+
 export default function* shelfRootSaga() {
   yield all([
     takeEvery(actions.LOAD_ALL_SHELF, loadAllShelf),
@@ -503,5 +571,6 @@ export default function* shelfRootSaga() {
     takeEvery(actions.REMOVE_SELECTED_FROM_SHELF, removeSelectedFromShelf),
     takeEvery(actions.DOWNLOAD_SELECTED_UNITS, downloadSelectedUnits),
     takeEvery(actions.VALIDATE_SHELVES_LIMIT, validateShelvesLimit),
+    takeEvery(actions.MOVE_SELECTED_BOOKS, moveSelectedBooks),
   ]);
 }

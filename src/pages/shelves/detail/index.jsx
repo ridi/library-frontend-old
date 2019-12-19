@@ -102,13 +102,10 @@ function ShelfDetail() {
     setIsMoving(true);
   };
   const moveBooks = React.useCallback(() => {
-    // moveSelectedBooks();
-    dispatch(selectionActions.clearSelectedShelves());
-    dispatch(selectionActions.clearSelectedItems());
     dispatch(
-      actions.loadShelfBooks(uuid, {
-        ...pageOptions,
-        page: 1,
+      actions.moveSelectedBooks({
+        uuid,
+        pageOptions,
       }),
     );
     setIsMoving(false);
