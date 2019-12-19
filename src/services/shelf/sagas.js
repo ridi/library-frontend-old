@@ -469,14 +469,12 @@ function* removeSelectedFromShelf({ payload }) {
       put(selectionActions.clearSelectedItems()),
       call(deleteShelfItem, { payload: { uuid, units } }),
     ]);
-    if (pageOptions) {
-      yield call(loadShelfBooks, { payload: { uuid, ...pageOptions } });
-      yield put(
-        toastActions.showToast({
-          message: '책장에서 삭제했습니다.',
-        }),
-      );
-    }
+    yield call(loadShelfBooks, { payload: { uuid, ...pageOptions } });
+    yield put(
+      toastActions.showToast({
+        message: '책장에서 삭제했습니다.',
+      }),
+    );
   } catch (err) {
     console.error(err);
     yield put(
@@ -531,7 +529,7 @@ function* moveSelectedBooks({ payload }) {
     console.error(error);
     yield put(
       toastActions.showToast({
-        message: '책을 이동하는 중 오류가 발생했습니다. 다시 시도해주세요.',
+        message: '책 이동 중 오류가 발생했습니다. 다시 시도해주세요.',
         toastStyle: ToastStyle.RED,
       }),
     );
