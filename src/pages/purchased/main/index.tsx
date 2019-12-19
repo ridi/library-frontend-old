@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { captureException } from '@sentry/browser';
 import { observer } from 'mobx-react';
 
 import { selectionActions } from 'services/selection/reducers';
@@ -24,6 +25,7 @@ import { updateCategories, updateServiceTypes } from '../../../services/purchase
 import { getFilterOptions } from '../../../services/purchased/filter/selectors';
 import { downloadSelectedBooks, hideSelectedBooks, selectAllBooks } from '../../../services/purchased/main/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as uiActions from '../../../services/ui/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import SearchIcon from '../../../svgs/Search.svg';
 import Footer from '../../base/Footer';
@@ -91,6 +93,7 @@ function PurchasedMain(props) {
     dispatchHideSelectedBooks,
     dispatchLoadItems,
     dispatchSelectAllBooks,
+    dispatchSetError,
     dispatchUpdateCategories,
     dispatchUpdateServiceTypes,
   } = props;
@@ -145,7 +148,11 @@ function PurchasedMain(props) {
   React.useEffect(() => {
     dispatchClearSelectedBooks();
     const pageGroup = itemStore.getOrCreatePageGroup(pageOptions);
-    pageGroup.loadPage(pageOptions.page);
+    pageGroup.loadPage(pageOptions.page).catch(err => {
+      const eventId = captureException(err);
+      // TODO: use eventId somehow
+      dispatchSetError(true);
+    });
     if (pageOptions.kind === BooksPageKind.MAIN) {
       dispatchUpdateCategories();
       dispatchUpdateServiceTypes();
@@ -343,6 +350,7 @@ const mapDispatchToProps = {
   dispatchClearSelectedBooks: selectionActions.clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchSetError: uiActions.setError,
   dispatchUpdateCategories: updateCategories,
   dispatchUpdateServiceTypes: updateServiceTypes,
 };
