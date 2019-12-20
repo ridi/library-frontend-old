@@ -14,23 +14,27 @@ const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
   const disabled = shelfBookCount >= ITEMS_LIMIT_PER_SHELF;
 
   return (
-    <li css={styles.simpleShelf} className={disabled ? 'disabled' : ''}>
-      <label htmlFor={shelfKey} css={styles.checkButton} className={isSelect ? `active` : ``}>
-        <span css={styles.checkIconBorder} />
-        <CheckCircle css={styles.checkIcon} />
-        <input
-          id={shelfKey}
-          type="radio"
-          name="simpleShelves"
-          onChange={() => {
-            handleShelfSelectChange(shelfId);
-          }}
-          disabled={disabled}
-        />
-      </label>
-      <p css={styles.shelfName}>{shelfName}</p>
-      <p css={styles.shelfBookCount}>{shelfBookCount > 0 ? shelfBookCount : ''}</p>
-    </li>
+    <div css={styles.simpleShelf} className={disabled ? 'disabled' : ''}>
+      <div css={styles.shelfCheckIconWrapper}>
+        <label htmlFor={shelfKey} css={styles.checkButton} className={isSelect ? `active` : ``}>
+          <span css={styles.checkIconBorder} />
+          <CheckCircle css={styles.checkIcon} />
+          <input
+            id={shelfKey}
+            type="radio"
+            name="simpleShelves"
+            onChange={() => {
+              handleShelfSelectChange(shelfId);
+            }}
+            disabled={disabled}
+          />
+        </label>
+      </div>
+      <div css={styles.shelfMetaWrapper}>
+        <p css={styles.shelfName}>{shelfName}</p>
+        <p css={styles.shelfBookCount}>{shelfBookCount > 0 ? shelfBookCount : ''}</p>
+      </div>
+    </div>
   );
 };
 
