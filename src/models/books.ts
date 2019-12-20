@@ -243,7 +243,45 @@ export interface BookDataSimple extends R.Static<typeof RBookDataSimple> {}
 export const Book = types
   .model({
     id: types.identifier,
-    data: types.frozen<BookDataSimple>(),
+    data: types.custom<object, BookDataSimple & { $instance: true }>({
+      name: 'BookData',
+      fromSnapshot(snapshot) {
+        return {
+          ...(snapshot as BookDataSimple),
+          $instance: true,
+        };
+      },
+      toSnapshot(value) {
+        const snapshot = { ...value };
+        delete snapshot['$instance'];
+        return snapshot;
+      },
+      isTargetType(value) {
+        return '$instance' in value;
+      },
+      getValidationMessage(snapshot) {
+        const fullValidationResult = RBookData.validate(snapshot);
+        if (fullValidationResult.success === true) {
+          return '';
+        }
+        console.groupCollapsed('Book full validation error');
+        console.log('Data:', snapshot);
+        console.table({
+          message: fullValidationResult.message,
+          key: fullValidationResult.key,
+        });
+        console.groupEnd();
+
+        const simpleValidationResult = RBookDataSimple.validate(snapshot);
+        if (simpleValidationResult.success === true) {
+          return '';
+        }
+        if (simpleValidationResult.key != null) {
+          return `At ${simpleValidationResult.key}: ${simpleValidationResult.message}`;
+        }
+        return simpleValidationResult.message;
+      },
+    }),
   })
   .views(self => ({
     get lastOpenVolumeId() {

@@ -12,9 +12,9 @@ import { calcOffset, calcPage } from 'utils/pagination';
 
 import config from '../config';
 
-import { Book, RBookData, RBookDataSimple } from './books';
+import { Book } from './books';
 import Env from './env';
-import { Unit, RUnitData } from './units';
+import { Unit } from './units';
 import { ListInstructions } from 'constants/listInstructions';
 
 interface MainPageGroupOptions {
@@ -251,29 +251,9 @@ export const ItemStore = types
       const requestUrl = new URL('/books', config.BOOK_API_BASE_URL);
       const params = new URLSearchParams([['b_ids', booksToLoad.join(',')]]);
       const response = yield privateApi.post(requestUrl.toString(), params.toString());
-      const rawBooks = response.data.filter((book: any) => !book.is_deleted);
+      const books: any[] = response.data.filter((book: any) => !book.is_deleted);
 
-      // 간이 데이터 검증
-      const bookCount = rawBooks.length;
-      const validationErrors = rawBooks
-        .map((book: any) => {
-          try {
-            RBookData.check(book);
-          } catch (err) {
-            return { err, book };
-          }
-          return null;
-        })
-        .filter(err => err != null);
-      if (validationErrors.length !== 0) {
-        console.groupCollapsed(`Book full validation errors: ${validationErrors.length} out of ${bookCount}`);
-        console.table(validationErrors);
-        console.groupEnd();
-      }
-
-      const books = R.Array(RBookDataSimple).check(rawBooks);
       const idSet = new Set(books.map(book => book.id));
-
       booksToLoad.forEach(bookId => {
         if (!idSet.has(bookId)) {
           console.error('Book requested but does not exist:', bookId);
@@ -302,9 +282,9 @@ export const ItemStore = types
 
       const requestUrl = new URL('/books/units/', config.LIBRARY_API_BASE_URL);
       const response = yield privateApi.post(requestUrl.toString(), { unit_ids: unitsToLoad });
-      const units = R.Array(RUnitData).check(response.data.units);
-      const idSet = new Set(units.map(unit => String(unit.id)));
+      const units: any[] = response.data.units;
 
+      const idSet = new Set(units.map(unit => String(unit.id)));
       unitsToLoad.forEach(unitId => {
         if (!idSet.has(unitId)) {
           console.error('Unit requested but does not exist:', unitId);
