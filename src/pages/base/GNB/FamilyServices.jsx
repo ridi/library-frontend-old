@@ -9,13 +9,13 @@ import * as styles from './styles';
 const FamilyServices = () => (
   <ul css={styles.familyServiceList}>
     <li css={styles.familyServiceItem}>
-      <a css={styles.familyServiceLink} href={config.STORE_BASE_URL} target="_blank" rel="noopener noreferrer">
+      <a css={styles.familyServiceLink} href={config.STORE_BASE_URL}>
         <LogoRidibooks css={styles.ridibooksIcon} />
         <span css={Hidden}>RIDIBOOKS</span>
       </a>
     </li>
     <li css={[styles.familyServiceItem, styles.familyServiceItemSeparator]}>
-      <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL} target="_blank" rel="noopener noreferrer">
+      <a css={styles.familyServiceLink} href={config.SELECT_BASE_URL}>
         <LogoRidiselect css={styles.ridiSelectIcon} />
         <span css={Hidden}>RIDI Select</span>
       </a>

@@ -306,7 +306,6 @@ function PurchasedMain(props) {
         <main>{renderMain()}</main>
         {pageOptions.kind === BooksPageKind.MAIN && <Footer />}
       </Editable>
-      <BookDownLoader />
     </>
   );
 }
