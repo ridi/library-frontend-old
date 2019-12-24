@@ -7,6 +7,7 @@ import { ButtonType } from 'components/ActionBar/constants';
 import BottomActionBar from 'components/BottomActionBar';
 import { EmptyShelves } from 'components/Empty/EmptyShelves';
 import FixedToolbarView from 'components/FixedToolbarView';
+import SkeletonSimpleShelves from 'components/Skeleton/SkeletonSimpleShelves';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from 'constants/shelves';
 import * as promptActions from 'services/prompt/actions';
 import { selectionActions } from 'services/selection/reducers';
@@ -88,7 +89,7 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
     const { loading, items: allShelfId } = allShelf;
     if (allShelfId) allShelfId.splice(allShelfId.indexOf(uuid), 1);
     if (loading) {
-      return null;
+      return <SkeletonSimpleShelves />;
     }
     if (allShelfId && allShelfId.length === 0) {
       return <EmptyShelves />;
