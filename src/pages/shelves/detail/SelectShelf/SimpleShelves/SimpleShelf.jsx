@@ -23,6 +23,7 @@ const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
             id={shelfKey}
             type="radio"
             name="simpleShelves"
+            css={styles.invisibleRadioInput}
             onChange={() => {
               handleShelfSelectChange(shelfId);
             }}

@@ -40,7 +40,7 @@ export const simpleShelvesItem = css`
   ${MQ(
     [Responsive.Large, Responsive.XLarge, Responsive.XXLarge, Responsive.Full],
     `
-    width: 50%;
+      width: 50%;
     `,
   )}
 `;
@@ -118,4 +118,9 @@ export const checkIcon = css`
   width: ${IconSize}px;
   height: ${IconSize}px;
   fill: white;
+`;
+
+export const invisibleRadioInput = css`
+  width: 0;
+  height: 0;
 `;

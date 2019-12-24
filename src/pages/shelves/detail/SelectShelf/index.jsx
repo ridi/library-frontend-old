@@ -6,6 +6,7 @@ import TitleBar from 'components/TitleBar';
 import { ButtonType } from 'components/ActionBar/constants';
 import BottomActionBar from 'components/BottomActionBar';
 import { EmptyShelves } from 'components/Empty/EmptyShelves';
+import FixedToolbarView from 'components/FixedToolbarView';
 import { SHELF_NAME_LIMIT, SHELVES_LIMIT } from 'constants/shelves';
 import * as promptActions from 'services/prompt/actions';
 import { selectionActions } from 'services/selection/reducers';
@@ -87,7 +88,7 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
     const { loading, items: allShelfId } = allShelf;
     if (allShelfId) allShelfId.splice(allShelfId.indexOf(uuid), 1);
     if (loading) {
-      return <p>로딩중!</p>;
+      return null;
     }
     if (allShelfId && allShelfId.length === 0) {
       return <EmptyShelves />;
@@ -103,15 +104,18 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
     return null;
   };
 
+  const renderTitle = () => (
+    <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={handleBackButtonClick} invertColor />
+  );
+
   return (
     <>
       <Helmet>
         <title>{`${pageTitle} - 내 서재`}</title>
       </Helmet>
-      <div>
-        <TitleBar title={`${totalSelectedCount}권을 이동할 책장 선택`} onBackClick={handleBackButtonClick} invertColor />
+      <FixedToolbarView allowFixed toolbar={renderTitle()}>
         {renderMain()}
-      </div>
+      </FixedToolbarView>
     </>
   );
 };
