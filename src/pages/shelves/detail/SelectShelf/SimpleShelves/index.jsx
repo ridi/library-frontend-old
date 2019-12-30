@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import SimpleShelvesWrapper from 'components/SimpleShelvesWrapper';
+import SimpleShelfList from 'components/SimpleShelvesWrapper/SimpleShelfList';
 import { selectionActions } from 'services/selection/reducers';
 import { getSelectedShelfIds } from 'services/selection/selectors';
 
@@ -14,17 +15,14 @@ const SimpleShelves = ({ shelfIds }) => {
     dispatch(selectionActions.clearSelectedShelves());
     dispatch(selectionActions.selectShelves([shelfId]));
   };
-  const renderShelves = renderItem =>
-    shelfIds.map(shelfId =>
-      renderItem({
-        key: shelfId,
-        item: (
-          <SimpleShelf shelfId={shelfId} isSelect={selectedShelfIds.includes(shelfId)} handleShelfSelectChange={handleShelfSelectChange} />
-        ),
-      }),
-    );
+  const renderShelves = () =>
+    shelfIds.map(shelfId => (
+      <SimpleShelfList key={shelfId}>
+        <SimpleShelf shelfId={shelfId} isSelect={selectedShelfIds.includes(shelfId)} handleShelfSelectChange={handleShelfSelectChange} />
+      </SimpleShelfList>
+    ));
 
-  return <SimpleShelvesWrapper renderList={renderShelves} />;
+  return <SimpleShelvesWrapper>{renderShelves()}</SimpleShelvesWrapper>;
 };
 
 export default SimpleShelves;

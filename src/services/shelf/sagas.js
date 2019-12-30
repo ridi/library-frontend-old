@@ -400,7 +400,7 @@ function* getUnitsFromLibraryBookData() {
 }
 
 function* validateItemsLimitPerShelf({ addItemCount, uuid }) {
-  let isValide = true;
+  let isValid = true;
   const shelfBookCount = yield call(requests.fetchShelfBookCount, { uuid });
   if (shelfBookCount + addItemCount > ITEMS_LIMIT_PER_SHELF) {
     yield put(
@@ -409,9 +409,9 @@ function* validateItemsLimitPerShelf({ addItemCount, uuid }) {
         toastStyle: ToastStyle.RED,
       }),
     );
-    isValide = false;
+    isValid = false;
   }
-  return isValide;
+  return isValid;
 }
 
 function* addSelectedToShelf({ payload }) {

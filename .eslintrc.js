@@ -1,5 +1,12 @@
 module.exports = {
-  extends: ['@ridi', 'prettier', 'eslint:recommended', 'plugin:react/recommended', 'plugin:immer-reducer/recommended'],
+  extends: [
+    '@ridi',
+    'prettier',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:immer-reducer/recommended',
+    'plugin:jsx-a11y/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   globals: {
     window: true,
@@ -8,7 +15,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@typescript-eslint', 'import', 'simple-import-sort', 'prettier', 'babel', 'react', 'emotion'],
+  plugins: ['@typescript-eslint', 'import', 'simple-import-sort', 'prettier', 'babel', 'react', 'emotion', 'jsx-a11y'],
   settings: {
     'import/resolver': {
       node: {
@@ -100,6 +107,14 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/mouse-events-have-key-events': 'off',
     'jsx-a11y/no-autofocus': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+      },
+    ],
 
     // prettier
     'prettier/prettier': 'error',

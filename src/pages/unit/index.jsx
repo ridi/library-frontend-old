@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
 import { ButtonType } from 'components/ActionBar/constants';
-import BookDownLoader from 'components/BookDownLoader';
 import { BookError } from 'components/Error';
 import Filler from 'components/Filler';
 import PageRedirect from 'components/PageRedirect';

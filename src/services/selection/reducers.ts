@@ -1,7 +1,7 @@
 import { createActionCreators, createReducerFunction, ImmerReducer } from 'immer-reducer';
 
 interface SelectionState {
-  ids: any;
+  ids: { [id: string]: boolean };
   shelfUuids: any;
 }
 
