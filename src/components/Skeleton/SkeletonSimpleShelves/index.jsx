@@ -1,17 +1,19 @@
 import React from 'react';
 
 import SimpleShelvesWrapper from 'components/SimpleShelvesWrapper';
-import SimpleShelfList from 'components/SimpleShelvesWrapper/SimpleShelfList';
+import SimpleShelvesItem from 'components/SimpleShelvesWrapper/SimpleShelvesItem';
 
 import SkeletonSimpleShelf from './SkeletonSimpleShelf';
 
 const SKELETON_TOTAL_COUNT = 40;
+const skeletonIndex = Array.from({ length: SKELETON_TOTAL_COUNT }, (_, index) => index);
+
 const SkeletonSimpleShelves = () => {
   const renderSkeletonShelf = () =>
-    Array.from({ length: SKELETON_TOTAL_COUNT }).map(() => (
-      <SimpleShelfList key={`simpleShelfSkeleton_${Math.random()}`}>
+    skeletonIndex.map(index => (
+      <SimpleShelvesItem key={`simpleShelfSkeleton_${index}`}>
         <SkeletonSimpleShelf />
-      </SimpleShelfList>
+      </SimpleShelvesItem>
     ));
 
   return <SimpleShelvesWrapper>{renderSkeletonShelf()}</SimpleShelvesWrapper>;

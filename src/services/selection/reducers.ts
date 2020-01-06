@@ -2,7 +2,7 @@ import { createActionCreators, createReducerFunction, ImmerReducer } from 'immer
 
 interface SelectionState {
   ids: { [id: string]: boolean };
-  shelfUuids: any;
+  shelfUuids: { [id: string]: boolean };
 }
 
 const selectionState: SelectionState = {
@@ -18,10 +18,10 @@ export class SelectionReducer extends ImmerReducer<SelectionState> {
   }
 
   toggle(stateKey, id) {
-    if (!!this.draftState[stateKey][id]) {
-      delete this.draftState[stateKey][id];
-    } else {
+    if (!this.draftState[stateKey][id]) {
       this.draftState[stateKey][id] = true;
+    } else {
+      delete this.draftState[stateKey][id];
     }
   }
 
@@ -34,24 +34,31 @@ export class SelectionReducer extends ImmerReducer<SelectionState> {
   public selectItems(ids) {
     this.setSelect('ids', ids, true);
   }
+
   public deselectItems(ids) {
     this.setSelect('ids', ids, false);
   }
+
   public toggleItem(id) {
     this.toggle('ids', id);
   }
+
   public clearSelectedItems() {
     this.clear('ids');
   }
+
   public selectShelves(uuids) {
     this.setSelect('shelfUuids', uuids, true);
   }
+
   public deselectShelves(uuids) {
     this.setSelect('shelfUuids', uuids, false);
   }
+
   public toggleShelf(uuid) {
     this.toggle('shelfUuids', uuid);
   }
+
   public clearSelectedShelves() {
     this.clear('shelfUuids');
   }
