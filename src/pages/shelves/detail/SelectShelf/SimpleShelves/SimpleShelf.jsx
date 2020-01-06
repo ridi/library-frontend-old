@@ -13,10 +13,10 @@ const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
   const disabled = shelfBookCount >= ITEMS_LIMIT_PER_SHELF;
 
   return (
-    <div css={styles.simpleShelf} className={disabled ? 'disabled' : ''}>
+    <div css={[styles.simpleShelf, disabled && styles.disabledShelf]}>
       <div css={styles.shelfCheckIconWrapper}>
-        <label css={styles.checkButton} className={isSelect ? `active` : ``}>
-          <span css={styles.checkIconBorder} />
+        <label css={[styles.checkButton, disabled && styles.disabledCheckButton]}>
+          <span css={[styles.checkIconBorder, isSelect && styles.checked]} />
           <CheckCircle css={styles.checkIcon} />
           <input
             type="radio"

@@ -8,10 +8,10 @@ export const simpleShelf = css`
   border-radius: 4px;
   display: flex;
   align-items: center;
+`;
 
-  &.disabled {
-    opacity: 0.4;
-  }
+export const disabledShelf = css`
+  opacity: 0.4;
 `;
 
 export const shelfCheckIconWrapper = css`
@@ -49,10 +49,10 @@ export const checkButton = css`
   height: ${IconSize + IconBorderWidth * 2}px;
   cursor: pointer;
   margin: 0 auto;
+`;
 
-  .disabled & {
-    cursor: default;
-  }
+export const disabledCheckButton = css`
+  cursor: default;
 `;
 
 export const checkIconBorder = css`
@@ -62,10 +62,10 @@ export const checkIconBorder = css`
   background: #b3b3b3;
   border: ${IconBorderWidth}px solid #b3b3b3;
   border-radius: 50%;
+`;
 
-  .active & {
-    background: #1f8ce6;
-  }
+export const checked = css`
+  background: #1f8ce6;
 `;
 
 export const checkIcon = css`
