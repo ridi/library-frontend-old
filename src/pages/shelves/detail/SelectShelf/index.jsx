@@ -86,20 +86,18 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
   };
 
   const renderMain = () => {
-    const { loading, items: allShelfId } = allShelf;
-    if (allShelfId) allShelfId.splice(allShelfId.indexOf(uuid), 1);
-    if (loading) {
+    if (allShelf.loading) {
       return <SkeletonSimpleShelves />;
     }
-    if (allShelfId && allShelfId.length === 0) {
-      return <EmptyShelves />;
-    }
-    if (allShelfId && allShelfId.length > 0) {
-      return (
+    if (allShelf.items) {
+      const allShelfId = allShelf.items.filter(item => item !== uuid);
+      return allShelfId.length > 0 ? (
         <>
           <SimpleShelves shelfIds={allShelfId} />
           <BottomActionBar {...actionBarProps} />
         </>
+      ) : (
+        <EmptyShelves />
       );
     }
     return null;

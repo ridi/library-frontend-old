@@ -65,7 +65,7 @@ function* loadShelves({ payload }) {
 
 function* loadAllShelf() {
   const offset = 0;
-  const limit = SHELVES_LIMIT;
+  const limit = parseInt(0xffffffff, 10);
   try {
     const items = yield call(requests.fetchShelves, { offset, limit });
     yield put(actions.setAllShelf({ items }));
@@ -400,7 +400,6 @@ function* getUnitsFromLibraryBookData() {
 }
 
 function* validateItemsLimitPerShelf({ addItemCount, uuid }) {
-  let isValid = true;
   const shelfBookCount = yield call(requests.fetchShelfBookCount, { uuid });
   if (shelfBookCount + addItemCount > ITEMS_LIMIT_PER_SHELF) {
     yield put(
@@ -409,9 +408,9 @@ function* validateItemsLimitPerShelf({ addItemCount, uuid }) {
         toastStyle: ToastStyle.RED,
       }),
     );
-    isValid = false;
+    return false;
   }
-  return isValid;
+  return true;
 }
 
 function* addSelectedToShelf({ payload }) {
