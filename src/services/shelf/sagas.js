@@ -65,7 +65,7 @@ function* loadShelves({ payload }) {
 
 function* loadAllShelf() {
   const offset = 0;
-  const limit = parseInt(0xffffffff, 10);
+  const limit = 0xffffffff;
   try {
     const items = yield call(requests.fetchShelves, { offset, limit });
     yield put(actions.setAllShelf({ items }));
