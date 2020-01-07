@@ -446,7 +446,7 @@ function* addSelectedToShelf({ payload }) {
   }
 }
 
-function* getUnitsFromShelfItempMap() {
+function* getUnitsFromShelfItemMap() {
   const bookIds = Object.entries(yield select(selectionSelectors.getSelectedItems))
     .filter(([, checked]) => checked)
     .map(([bookId]) => bookId);
@@ -461,7 +461,7 @@ function* getUnitsFromShelfItempMap() {
 
 function* removeSelectedFromShelf({ payload }) {
   const { uuid, pageOptions } = payload;
-  const units = yield call(getUnitsFromShelfItempMap);
+  const units = yield call(getUnitsFromShelfItemMap);
   try {
     yield all([
       put(uiActions.setFullScreenLoading(true)),
@@ -507,7 +507,7 @@ function* downloadSelectedUnits() {
 function* moveSelectedBooks({ payload }) {
   const { uuid, pageOptions } = payload;
   yield put(uiActions.setFullScreenLoading(true));
-  const [targetShelfUuids, units] = yield all([select(selectionSelectors.getSelectedShelfIds), call(getUnitsFromShelfItempMap)]);
+  const [targetShelfUuids, units] = yield all([select(selectionSelectors.getSelectedShelfIds), call(getUnitsFromShelfItemMap)]);
   const isValid = yield call(validateItemsLimitPerShelf, {
     addItemCount: units.length,
     uuid,
