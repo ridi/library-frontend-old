@@ -1,10 +1,11 @@
 import { all, call, put, select, takeEvery } from 'redux-saga/effects';
 
+import { selectionActions } from 'services/selection/reducers';
+
 import { toFlatten } from '../../utils/array';
 import { fetchUnitIdMap } from '../book/requests';
 import { loadBookData } from '../book/sagas';
 import { showDialog } from '../dialog/actions';
-import { selectItems } from '../selection/actions';
 import { getSelectedItems } from '../selection/selectors';
 import { showToast } from '../toast/actions';
 import { setError, setFullScreenLoading } from '../ui/actions';
@@ -61,7 +62,7 @@ function* deleteSelectedBooks(action) {
 function* selectAllBooks(action) {
   const items = yield select(getItemsByPage, action.payload.page);
   const bookIds = toFlatten(items, 'series_id');
-  yield put(selectItems(bookIds));
+  yield put(selectionActions.selectItems(bookIds));
 }
 
 export default function* serialPreferenceRootSaga() {

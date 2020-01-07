@@ -10,7 +10,7 @@ import { ServiceType } from 'constants/serviceType';
 import SkeletonUnitDetailView from 'components/Skeleton/SkeletonUnitDetailView';
 import { getAdultVerification } from 'services/account/selectors';
 import { getBook, getOpenInfo } from 'services/book/selectors';
-import { downloadBooks, downloadBooksByUnitIds } from 'services/bookDownload/actions';
+import { bookDownloadActions } from 'services/bookDownload/reducers';
 import { getFetchingReadLatest, getReadLatestData } from 'services/purchased/common/selectors';
 import adultCover from 'static/cover/adult.png';
 import NoneDashedArrowDown from 'svgs/NoneDashedArrowDown.svg';
@@ -296,8 +296,7 @@ const mapStateToPropsFactory = () => {
 };
 
 const mapDispatchToProps = {
-  dispatchDownloadBooks: downloadBooks,
-  dispatchDownloadBooksByUnitIds: downloadBooksByUnitIds,
+  dispatchDownloadBooksByUnitIds: bookDownloadActions.downloadBooksByUnitIds,
 };
 
 export default withRouter(connect(mapStateToPropsFactory, mapDispatchToProps)(UnitDetailView));

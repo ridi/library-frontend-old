@@ -3,8 +3,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { selectionActions } from 'services/selection/reducers';
+
 import Genre from '../../constants/category';
-import { toggleItem } from '../../services/selection/actions';
 import { getSelectedItems } from '../../services/selection/selectors';
 import * as styles from '../../styles/books';
 import SeriesCompleteIcon from '../../svgs/SeriesCompleteIcon.svg';
@@ -147,7 +148,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  onSelectedChange: toggleItem,
+  onSelectedChange: selectionActions.toggleItem,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SerialPreferenceBooks));

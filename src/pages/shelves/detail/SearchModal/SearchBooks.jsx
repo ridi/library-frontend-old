@@ -7,7 +7,7 @@ import { ITEMS_LIMIT_PER_SHELF } from 'constants/shelves';
 import ViewType from 'constants/viewType';
 import * as bookActions from 'services/book/actions';
 import * as bookSelectors from 'services/book/selectors';
-import { toggleItem } from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import { showToast } from 'services/toast/actions';
 import { ToastStyle } from 'services/toast/constants';
 
@@ -42,7 +42,7 @@ const SearchBooks = ({ items, shelfAllBookUnitIds, totalSelectedCount }) => {
           }),
         );
       } else {
-        dispatch(toggleItem(bookId));
+        dispatch(selectionActions.toggleItem(bookId));
       }
     },
     [shelfAllBookUnitIds, totalSelectedCount],

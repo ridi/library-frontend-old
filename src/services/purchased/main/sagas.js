@@ -1,6 +1,7 @@
 import { all, call, fork, join, put, select, takeEvery } from 'redux-saga/effects';
 
 import { getDeletedBookIds } from 'services/book/selectors';
+import { selectionActions } from 'services/selection/reducers';
 
 import { BooksPageKind, URLMap } from '../../../constants/urls';
 import { toFlatten } from '../../../utils/array';
@@ -11,7 +12,6 @@ import { MakeBookIdsError } from '../../common/errors';
 import { getRevision, requestCheckQueueStatus, requestHide } from '../../common/requests';
 import { getBookIdsByItems } from '../../common/sagas';
 import { showDialog } from '../../dialog/actions';
-import { selectItems } from '../../selection/actions';
 import { getSelectedItems } from '../../selection/selectors';
 import { showToast } from '../../toast/actions';
 import { setError, setFullScreenLoading } from '../../ui/actions';
@@ -133,7 +133,7 @@ function* selectAllBooks(action) {
   const { pageOptions } = action.payload;
   const items = yield select(getItemsByPage, pageOptions);
   const bookIds = toFlatten(items, 'b_id');
-  yield put(selectItems(bookIds));
+  yield put(selectionActions.selectItems(bookIds));
 }
 
 export default function* purchaseMainRootSaga() {
