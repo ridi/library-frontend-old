@@ -248,7 +248,7 @@ function Unit(props) {
 
   function renderSeriesList() {
     const { primaryBook, isFetchingBook, primaryItem, items } = props;
-    if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
+    if (unit == null || !primaryBook) {
       return <Filler />;
     }
 
