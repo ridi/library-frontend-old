@@ -24,3 +24,21 @@ export const getApi = context => {
 
   return api;
 };
+
+let publicApi = null;
+
+export const initializePublicApi = store => {
+  publicApi = new API();
+  publicApi.addInterceptors([createMaintenanceInterceptor(store)]);
+  publicApi.registerInterceptor();
+
+  return publicApi;
+};
+
+export const getPublicApi = () => {
+  if (publicApi == null) {
+    return initializePublicApi();
+  }
+
+  return publicApi;
+};
