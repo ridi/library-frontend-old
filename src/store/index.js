@@ -1,7 +1,7 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import { initializeApi } from '../api';
+import { initializeApi, initializePublicApi } from '../api';
 import createApiMiddleware from '../api/middleware';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
@@ -15,6 +15,7 @@ export const makeStoreWithApi = (initialState, context) => {
 
   const store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middlewares)));
   initializeApi(null, store);
+  initializePublicApi(store);
 
   store.runSagaTask = () => {
     store.sagaTask = sagaMiddleware.run(rootSaga);

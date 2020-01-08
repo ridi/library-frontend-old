@@ -10,7 +10,7 @@ import { attatchTTL } from 'utils/ttl';
 import { makeURI } from 'utils/uri';
 
 import { getApi as getApiSingleton } from '../../api';
-import { getAPI } from '../../api/actions';
+import { getAPI, getPublicAPI } from '../../api/actions';
 import config from '../../config';
 
 const _reduceBooks = books =>
@@ -55,8 +55,8 @@ const _reduceOpenInfo = books =>
   }));
 
 export function* fetchBookData(bookIds) {
-  const api = yield put(getAPI());
-  const response = yield api.post(makeURI('/books', {}, config.BOOK_API_BASE_URL), stringify({ b_ids: bookIds.join(',') }));
+  const publicApi = yield put(getPublicAPI());
+  const response = yield publicApi.post(makeURI('/books', {}, config.BOOK_API_BASE_URL), stringify({ b_ids: bookIds.join(',') }));
 
   const idSet = new Set(response.data.map(book => book.id));
   bookIds.forEach(bookId => {
@@ -89,8 +89,8 @@ export function* fetchBooksOpenInfo(bookIds) {
 }
 
 export function* fetchBookDescriptions(bookIds) {
-  const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
+  const publicApi = yield put(getPublicAPI());
+  const response = yield publicApi.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
   return attatchTTL(_reduceBookDescriptions(response.data));
 }
 
