@@ -248,8 +248,13 @@ function Unit(props) {
 
   function renderSeriesList() {
     const { primaryBook, isFetchingBook, primaryItem, items } = props;
-    if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
+
+    if (unit == null || !primaryBook) {
       return <Filler />;
+    }
+
+    if (UnitType.isBook(unit.type)) {
+      return null;
     }
 
     const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;
