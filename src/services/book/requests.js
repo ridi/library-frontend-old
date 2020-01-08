@@ -89,8 +89,8 @@ export function* fetchBooksOpenInfo(bookIds) {
 }
 
 export function* fetchBookDescriptions(bookIds) {
-  const api = yield put(getAPI());
-  const response = yield api.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
+  const publicApi = yield put(getPublicAPI());
+  const response = yield publicApi.get(makeURI('/books/descriptions', { b_ids: bookIds.join(',') }, config.BOOK_API_BASE_URL));
   return attatchTTL(_reduceBookDescriptions(response.data));
 }
 
