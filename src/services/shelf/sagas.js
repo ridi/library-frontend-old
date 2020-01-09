@@ -508,12 +508,17 @@ function* moveSelectedBooks({ payload }) {
   const { uuid, pageOptions } = payload;
   yield put(uiActions.setFullScreenLoading(true));
   const [targetShelfUuids, units] = yield all([select(selectionSelectors.getSelectedShelfIds), call(getUnitsFromShelfItemMap)]);
-  const isValid = yield call(validateItemsLimitPerShelf, {
-    addItemCount: units.length,
-    uuid,
-  });
+  const limitValidateResult = yield all(
+    targetShelfUuids.map(targetShelfUuid =>
+      call(validateItemsLimitPerShelf, {
+        addItemCount: units.length,
+        uuid: targetShelfUuid,
+      }),
+    ),
+  );
+
   try {
-    if (isValid) {
+    if (limitValidateResult.every(result => result === true)) {
       yield all(targetShelfUuids.map(targetShelfUuid => call(addShelfItem, { payload: { uuid: targetShelfUuid, units } })));
       yield call(deleteShelfItem, { payload: { uuid, units } });
       yield put(

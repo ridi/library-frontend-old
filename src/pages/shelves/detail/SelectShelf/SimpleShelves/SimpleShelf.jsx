@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import * as selectionSelectors from 'services/selection/selectors';
 import { ITEMS_LIMIT_PER_SHELF } from 'constants/shelves';
 import * as shelfSelectors from 'services/shelf/selectors';
 import CheckCircle from 'svgs/CheckCircle.svg';
@@ -10,7 +11,8 @@ import * as styles from './sytles';
 const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
   const shelfName = useSelector(state => shelfSelectors.getShelfName(state, shelfId));
   const shelfBookCount = useSelector(state => shelfSelectors.getShelfBookCount(state, shelfId));
-  const disabled = shelfBookCount >= ITEMS_LIMIT_PER_SHELF;
+  const selectedBookCount = useSelector(selectionSelectors.getTotalSelectedCount);
+  const disabled = shelfBookCount + selectedBookCount >= ITEMS_LIMIT_PER_SHELF;
 
   return (
     <div css={[styles.simpleShelf, disabled && styles.disabledShelf]}>
