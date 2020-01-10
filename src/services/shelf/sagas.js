@@ -528,6 +528,13 @@ function* moveSelectedBooks({ payload }) {
           linkProps: makeLinkProps({}, URLMap[PageType.SHELF_DETAIL].as({ uuid: targetShelfUuids[0] })),
         }),
       );
+    } else {
+      yield put(
+        toastActions.showToast({
+          message: `최대 ${ITEMS_LIMIT_PER_SHELF}권까지 추가할 수 있습니다.`,
+          toastStyle: ToastStyle.BLUE,
+        }),
+      );
     }
   } catch (error) {
     console.error(error);

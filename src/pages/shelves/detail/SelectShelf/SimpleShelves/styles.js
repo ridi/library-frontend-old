@@ -8,6 +8,7 @@ export const simpleShelf = css`
   border-radius: 4px;
   display: flex;
   align-items: center;
+  position: relative;
 `;
 
 export const disabledShelf = css`
@@ -81,4 +82,12 @@ export const checkIcon = css`
 export const invisibleRadioInput = css`
   width: 0;
   height: 0;
+`;
+
+export const disabledButton = css`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 `;
