@@ -19,9 +19,12 @@ const DisabledButton = () => {
   };
 
   return (
-    <button css={styles.disabledButton} type="button" onClick={handleDisabledButtonClick}>
-      <span className="a11y">선택불가 책장 선택</span>
-    </button>
+    <>
+      <p className="a11y">선택이 불가능한 책장입니다.</p>
+      <button css={styles.disabledButton} type="button" onClick={handleDisabledButtonClick}>
+        <span className="a11y">선택 불가 이유 보기</span>
+      </button>
+    </>
   );
 };
 
