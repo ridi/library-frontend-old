@@ -28,18 +28,22 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
   const allShelfCount = allShelf.items ? allShelf.items.length : 0;
   const selectedShelfIds = useSelector(getSelectedShelfIds);
 
+  const showShelvesLimitToast = () => {
+    dispatch(
+      toastActions.showToast({
+        message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
+        toastStyle: ToastStyle.BLUE,
+      }),
+    );
+  };
+
   const validateAddShelf = onValid => {
     dispatch(
       shelfActions.validateShelvesLimit({
         onValid,
         onInvalid: () => {
           dispatch(shelfActions.loadAllShelf());
-          dispatch(
-            toastActions.showToast({
-              message: `최대 ${SHELVES_LIMIT}개까지 추가할 수 있습니다.`,
-              toastStyle: ToastStyle.RED,
-            }),
-          );
+          showShelvesLimitToast();
         },
       }),
     );
@@ -53,18 +57,22 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
   };
 
   const handleAddShelf = () => {
-    validateAddShelf(() => {
-      dispatch(
-        promptActions.showPrompt({
-          title: '새 책장 추가',
-          message: '새 책장의 이름을 입력해주세요.',
-          placeHolder: '책장 이름',
-          emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
-          onClickConfirmButton: handleAddShelfConfirm,
-          limit: SHELF_NAME_LIMIT,
-        }),
-      );
-    });
+    if (allShelfCount >= SHELVES_LIMIT) {
+      showShelvesLimitToast();
+    } else {
+      validateAddShelf(() => {
+        dispatch(
+          promptActions.showPrompt({
+            title: '새 책장 추가',
+            message: '새 책장의 이름을 입력해주세요.',
+            placeHolder: '책장 이름',
+            emptyInputAlertMessage: '책장의 이름을 입력해주세요.',
+            onClickConfirmButton: handleAddShelfConfirm,
+            limit: SHELF_NAME_LIMIT,
+          }),
+        );
+      });
+    }
   };
 
   const actionBarProps = {
@@ -72,7 +80,6 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
       {
         name: '새 책장 추가',
         onClick: handleAddShelf,
-        disable: allShelfCount >= SHELVES_LIMIT,
       },
       {
         type: ButtonType.SPACER,

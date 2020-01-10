@@ -6,7 +6,8 @@ import { ITEMS_LIMIT_PER_SHELF } from 'constants/shelves';
 import * as shelfSelectors from 'services/shelf/selectors';
 import CheckCircle from 'svgs/CheckCircle.svg';
 
-import * as styles from './sytles';
+import DisabledButton from './DisabledButton';
+import * as styles from './styles';
 
 const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
   const shelfName = useSelector(state => shelfSelectors.getShelfName(state, shelfId));
@@ -35,6 +36,7 @@ const SimpleShelf = ({ shelfId, isSelect, handleShelfSelectChange }) => {
         <p css={styles.shelfName}>{shelfName}</p>
         <p css={styles.shelfBookCount}>{shelfBookCount > 0 ? shelfBookCount : ''}</p>
       </div>
+      {disabled && <DisabledButton />}
     </div>
   );
 };
