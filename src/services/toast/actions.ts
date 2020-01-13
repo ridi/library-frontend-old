@@ -20,7 +20,17 @@ export const unsetToast = () => ({
   type: UNSET_TOAST,
 });
 
-export const showToast = ({ message, linkName, linkProps, outLink, duration, toastStyle, withBottomFixedButton }) => ({
+interface ShowToastPayload {
+  message: string;
+  linkName?: string;
+  linkProps?: any;
+  outLink?: string;
+  duration?: Duration | number;
+  toastStyle?: ToastStyle;
+  withBottomFixedButton?: boolean;
+}
+
+export const showToast = ({ message, linkName, linkProps, outLink, duration, toastStyle, withBottomFixedButton }: ShowToastPayload) => ({
   type: SHOW_TOAST,
   payload: {
     message,

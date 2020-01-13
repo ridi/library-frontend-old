@@ -10,8 +10,8 @@ import { getDeviceInfo } from 'utils/device';
 import { convertUriToAndroidIntentUri } from 'utils/uri';
 
 import config from '../../config';
-import { DOWNLOAD_BOOKS, DOWNLOAD_BOOKS_BY_UNIT_IDS, DOWNLOAD_SELECTED_BOOKS, setBookDownloadSrc } from './actions';
 import { DownloadError } from './errors';
+import { bookDownloadActions } from './reducers';
 import { triggerDownload } from './requests';
 
 function* _launchAppToDownload(isIos, isAndroid, isFirefox, bookIds, url) {
@@ -51,13 +51,13 @@ function* _launchAppToDownload(isIos, isAndroid, isFirefox, bookIds, url) {
       );
       yield delay(1000);
     }
-    yield put(setBookDownloadSrc(pcUri));
+    yield put(bookDownloadActions.setBookDownloadSrc({ src: pcUri }));
   }
   return true;
 }
 
 function* _showViewerGuildLink(isIos, isAndroid) {
-  yield put(setBookDownloadSrc(''));
+  yield put(bookDownloadActions.setBookDownloadSrc({ src: '' }));
 
   const message = isIos || isAndroid ? '리디북스 뷰어에서 책을 이용하실 수 있습니다.' : '리디북스 뷰어 내 구매 목록에서 다운로드해주세요.';
   // eslint-disable-next-line no-nested-ternary
@@ -120,7 +120,7 @@ export function* downloadBooksByUnitIds(unitIds) {
 }
 
 export function* downloadBookActionAdaptor(action) {
-  yield call(downloadBooks, action.payload.bookIds);
+  yield call(downloadBooks, action.payload);
 }
 
 function* downloadSelectedBooksActionAdaptor() {
@@ -129,13 +129,13 @@ function* downloadSelectedBooksActionAdaptor() {
 }
 
 export function* downloadBooksByUnitIdsActionAdaptor(action) {
-  yield call(downloadBooksByUnitIds, action.payload.unitIds);
+  yield call(downloadBooksByUnitIds, action.payload);
 }
 
 export default function* commonRootSaga() {
   yield all([
-    takeEvery(DOWNLOAD_BOOKS, downloadBookActionAdaptor),
-    takeEvery(DOWNLOAD_SELECTED_BOOKS, downloadSelectedBooksActionAdaptor),
-    takeEvery(DOWNLOAD_BOOKS_BY_UNIT_IDS, downloadBooksByUnitIdsActionAdaptor),
+    takeEvery(bookDownloadActions.downloadBooks.type, downloadBookActionAdaptor),
+    takeEvery(bookDownloadActions.downloadSelectedBooks.type, downloadSelectedBooksActionAdaptor),
+    takeEvery(bookDownloadActions.downloadBooksByUnitIds.type, downloadBooksByUnitIdsActionAdaptor),
   ]);
 }

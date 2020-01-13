@@ -22,7 +22,7 @@ import { TabBar, TabMenuTypes } from 'pages/base/LNB';
 import Responsive from 'pages/base/Responsive';
 import * as confirmActions from 'services/confirm/actions';
 import * as promptActions from 'services/prompt/actions';
-import * as selectionActions from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as shelfActions from 'services/shelf/actions';
 import * as shelfSelectors from 'services/shelf/selectors';

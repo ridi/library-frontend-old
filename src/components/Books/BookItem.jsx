@@ -11,7 +11,7 @@ import ViewType from 'constants/viewType';
 import { getAdultVerification } from 'services/account/selectors';
 import * as bookSelectors from 'services/book/selectors';
 import { getIsRecentlyUpdated } from 'services/purchased/common/selectors';
-import { toggleItem } from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import * as selectionSelectors from 'services/selection/selectors';
 
 import { Disabled } from './Disabled';
@@ -46,10 +46,10 @@ const BookItem = props => {
     return getIsRecentlyUpdated(state, platformBookData.series.property.opened_last_volume_id);
   });
 
-  const handleSelectedChange = React.useCallback(() => (onSelectedChange ? onSelectedChange(bookId) : dispatch(toggleItem(bookId))), [
-    onSelectedChange,
-    bookId,
-  ]);
+  const handleSelectedChange = React.useCallback(
+    () => (onSelectedChange ? onSelectedChange(bookId) : dispatch(selectionActions.toggleItem(bookId))),
+    [onSelectedChange, bookId],
+  );
 
   if (!libraryBookData || !platformBookData) {
     return viewType === ViewType.PORTRAIT ? (

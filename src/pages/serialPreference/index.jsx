@@ -2,6 +2,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 
+import { selectionActions } from 'services/selection/reducers';
+
 import { ButtonType } from '../../components/ActionBar/constants';
 import Editable from '../../components/Editable';
 import Empty from '../../components/Empty';
@@ -12,7 +14,6 @@ import SkeletonBooks from '../../components/Skeleton/SkeletonBooks';
 import { SERIAL_PREFERENCE_ITEMS_LIMIT_PER_PAGE } from '../../constants/page';
 import ViewType from '../../constants/viewType';
 import { getBooks } from '../../services/book/selectors';
-import { clearSelectedItems } from '../../services/selection/actions';
 import { getTotalSelectedCount } from '../../services/selection/selectors';
 import { deleteSelectedBooks, loadItems, selectAllBooks } from '../../services/serialPreference/actions';
 import { getIsFetchingBooks, getItemsByPage, getTotalCount, getUnitIdsMap } from '../../services/serialPreference/selectors';
@@ -171,7 +172,7 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = {
   dispatchSelectAllBooks: selectAllBooks,
-  dispatchClearSelectedBooks: clearSelectedItems,
+  dispatchClearSelectedBooks: selectionActions.clearSelectedItems,
   dispatchDeleteSelectedBooks: deleteSelectedBooks,
   dispatchLoadSerialPreferenceBooks: loadItems,
 };

@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
 import { ButtonType } from 'components/ActionBar/constants';
-import BookDownLoader from 'components/BookDownLoader';
 import { BookError } from 'components/Error';
 import Filler from 'components/Filler';
 import PageRedirect from 'components/PageRedirect';
@@ -16,7 +15,7 @@ import { PageType, URLMap } from 'constants/urls';
 import * as bookSelectors from 'services/book/selectors';
 import * as confirmActions from 'services/confirm/actions';
 import * as purchasedCommonSelectors from 'services/purchased/common/selectors';
-import * as selectionActions from 'services/selection/actions';
+import { selectionActions } from 'services/selection/reducers';
 import * as selectionSelectors from 'services/selection/selectors';
 import * as unitPageActions from 'services/unitPage/actions';
 import * as unitPageSelectors from 'services/unitPage/selectors';
@@ -249,8 +248,13 @@ function Unit(props) {
 
   function renderSeriesList() {
     const { primaryBook, isFetchingBook, primaryItem, items } = props;
-    if (unit == null || UnitType.isBook(unit.type) || !primaryBook) {
+
+    if (unit == null || !primaryBook) {
       return <Filler />;
+    }
+
+    if (UnitType.isBook(unit.type)) {
+      return null;
     }
 
     const bookUnitOfCount = primaryBook.series ? primaryBook.series.property.unit : null;
