@@ -1,3 +1,6 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/core';
 import React from 'react';
