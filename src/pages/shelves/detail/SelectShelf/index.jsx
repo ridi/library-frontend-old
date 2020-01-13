@@ -33,6 +33,7 @@ const SelectShelf = ({ pageTitle, uuid, handleBackButtonClick, handleMoveButtonC
       toastActions.showToast({
         message: `책장은 최대 ${SHELVES_LIMIT}개까지 만들 수 있습니다.`,
         toastStyle: ToastStyle.BLUE,
+        withBottomFixedButton: true,
       }),
     );
   };
