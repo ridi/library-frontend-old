@@ -14,6 +14,7 @@ const DisabledButton = () => {
       toastActions.showToast({
         message: `최대 ${ITEMS_LIMIT_PER_SHELF}권까지 추가할 수 있습니다.`,
         toastStyle: ToastStyle.BLUE,
+        withBottomFixedButton: true,
       }),
     );
   };
