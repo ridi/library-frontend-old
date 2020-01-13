@@ -80,7 +80,7 @@ module.exports = (env = 'dev') => {
   const config = {
     mode: isProduction ? 'production' : 'development',
     entry: {
-      app: ['core-js/stable', './src/index.jsx'],
+      app: './src/index.jsx',
     },
     output: {
       filename: '[name].[hash].js',
