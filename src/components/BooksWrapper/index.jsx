@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import * as styles from 'commonStyles/books';
 
-const BooksWrapper = ({ viewType, books, renderBook, children }) => {
+const BooksWrapper = ({ viewType, children }) => {
   const isLoaded = true;
   const booksWrapperClassName = 'BooksWrapper';
   const bookClassName = 'Book';
@@ -25,14 +25,9 @@ const BooksWrapper = ({ viewType, books, renderBook, children }) => {
     setBooksAdditionalPadding();
   }, [isLoaded, viewType]);
 
-  const bookElements = books.map(book => renderBook({ book, className: bookClassName }));
-  let body = bookElements;
-  if (typeof children === 'function') {
-    body = children({ books: bookElements });
-  }
   return (
     <div className={booksWrapperClassName} css={styles.booksWrapper(viewType, additionalPadding)}>
-      {body}
+      {children}
     </div>
   );
 };

@@ -3,11 +3,13 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { captureException } from '@sentry/browser';
+import { observer } from 'mobx-react';
+
 import { selectionActions } from 'services/selection/reducers';
 
 import { ButtonType } from '../../../components/ActionBar/constants';
-import BookDownLoader from '../../../components/BookDownLoader';
-import { Books } from '../../../components/Books';
+import { MobxBooks } from '../../../components/Books';
 import Editable from '../../../components/Editable';
 import Empty from '../../../components/Empty';
 import { BookError } from '../../../components/Error';
@@ -19,16 +21,17 @@ import { ListInstructions } from '../../../constants/listInstructions';
 import { OrderOptions } from '../../../constants/orderOptions';
 import { BooksPageKind, PageType, URLMap } from '../../../constants/urls';
 import ViewType from '../../../constants/viewType';
-import { getUnits } from '../../../services/book/selectors';
+import { updateCategories, updateServiceTypes } from '../../../services/purchased/filter/actions';
 import { getFilterOptions } from '../../../services/purchased/filter/selectors';
-import { downloadSelectedBooks, hideSelectedBooks, loadItems, selectAllBooks } from '../../../services/purchased/main/actions';
-import { getIsPageCold, getItemsByPage, getTotalPages, getUnitIdsByPage } from '../../../services/purchased/main/selectors';
+import { downloadSelectedBooks, hideSelectedBooks, selectAllBooks } from '../../../services/purchased/main/actions';
 import { getTotalSelectedCount } from '../../../services/selection/selectors';
+import * as uiActions from '../../../services/ui/actions';
 import BookOutline from '../../../svgs/BookOutline.svg';
 import SearchIcon from '../../../svgs/Search.svg';
 import Footer from '../../base/Footer';
 import { TabBar, TabMenuTypes } from '../../base/LNB';
 import { ResponsiveBooks } from '../../base/Responsive';
+import { useItemStore } from 'src/models/items';
 
 interface MainPageOptions {
   kind: BooksPageKind.MAIN;
@@ -82,17 +85,24 @@ function useDispatchOptions(actionDispatcher, options) {
 }
 
 function PurchasedMain(props) {
-  const { listInstruction, location, match, totalPages } = props;
+  const itemStore = useItemStore();
+  const { location, match } = props;
   const {
     dispatchClearSelectedBooks,
     dispatchDownloadSelectedBooks,
     dispatchHideSelectedBooks,
     dispatchLoadItems,
     dispatchSelectAllBooks,
+    dispatchSetError,
+    dispatchUpdateCategories,
+    dispatchUpdateServiceTypes,
   } = props;
 
   const pageOptions = extractPageOptions({ location, ...match });
   const currentPage = pageOptions.page;
+  const pageGroup = itemStore.pageGroupOf(pageOptions);
+  const listInstruction = pageGroup == null ? ListInstructions.SKELETON : pageGroup.listInstruction(currentPage);
+  const totalPages = pageGroup?.totalPages || 0;
 
   const [isEditing, setIsEditing] = React.useState(false);
 
@@ -102,11 +112,12 @@ function PurchasedMain(props) {
   const handleRefresh = useDispatchOptions(dispatchLoadItems, pageOptions);
 
   const linkBuilder = React.useCallback(
-    libraryBookData => {
+    item => {
+      const unitId = item.unit.id;
       let pathname = '';
       const params = new URLSearchParams();
       if (pageOptions.kind === BooksPageKind.MAIN) {
-        pathname = URLMap.mainUnit.as({ unitId: libraryBookData.unit_id });
+        pathname = URLMap.mainUnit.as({ unitId });
 
         const { orderBy, orderDirection } = pageOptions;
         const order = OrderOptions.toKey(orderBy, orderDirection);
@@ -115,7 +126,7 @@ function PurchasedMain(props) {
           params.append('order_direction', orderDirection);
         }
       } else {
-        pathname = URLMap.searchUnit.as({ unitId: libraryBookData.unit_id });
+        pathname = URLMap.searchUnit.as({ unitId });
         params.append('keyword', pageOptions.keyword);
       }
       const search = params.toString();
@@ -136,7 +147,16 @@ function PurchasedMain(props) {
 
   React.useEffect(() => {
     dispatchClearSelectedBooks();
-    dispatchLoadItems(pageOptions);
+    const pageGroup = itemStore.getOrCreatePageGroup(pageOptions);
+    pageGroup.loadPage(pageOptions.page).catch(err => {
+      const eventId = captureException(err);
+      // TODO: use eventId somehow
+      dispatchSetError(true);
+    });
+    if (pageOptions.kind === BooksPageKind.MAIN) {
+      dispatchUpdateCategories();
+      dispatchUpdateServiceTypes();
+    }
   }, [location]);
 
   function renderPaginator() {
@@ -144,18 +164,17 @@ function PurchasedMain(props) {
   }
 
   function renderBooks() {
-    const { items: libraryBookDTO, units, viewType } = props;
+    const { viewType } = props;
 
-    if (listInstruction === ListInstructions.SKELETON) {
+    if (pageGroup == null || listInstruction === ListInstructions.SKELETON) {
       return <SkeletonBooks viewType={viewType} />;
     }
 
     return (
       <>
-        <Books
+        <MobxBooks
           {...{
-            libraryBookDTO,
-            units,
+            page: pageGroup.pages.get(String(currentPage)),
             isSelectMode: isEditing,
             viewType,
             linkBuilder,
@@ -234,8 +253,9 @@ function PurchasedMain(props) {
   }
 
   function makeEditingBarProps() {
-    const { items, totalSelectedCount } = props;
-    const isSelectedAllBooks = totalSelectedCount === items.length;
+    const { totalSelectedCount } = props;
+    const pageItemCount = pageGroup?.pages.get(String(currentPage))?.items.length || 0;
+    const isSelectedAllBooks = totalSelectedCount === pageItemCount;
 
     return {
       totalSelectedCount,
@@ -314,39 +334,25 @@ function PurchasedMain(props) {
 const mapStateToProps = (state, props) => {
   const { location, match } = props;
   const pageOptions = extractPageOptions({ location, ...match });
-  const totalPages = getTotalPages(state, pageOptions);
   const filterOptions = getFilterOptions(state);
-  const items = getItemsByPage(state, pageOptions);
-  const unitIds = getUnitIdsByPage(state, pageOptions);
-  const units = getUnits(state, unitIds);
   const totalSelectedCount = getTotalSelectedCount(state);
 
-  let listInstruction;
-  if (getIsPageCold(state, pageOptions)) {
-    listInstruction = ListInstructions.SKELETON;
-  } else if (items.length !== 0) {
-    listInstruction = ListInstructions.SHOW;
-  } else {
-    listInstruction = ListInstructions.EMPTY;
-  }
   return {
-    totalPages,
     filterOptions,
-    items,
-    units,
     totalSelectedCount,
-    listInstruction,
     viewType: pageOptions.kind === BooksPageKind.MAIN ? state.ui.viewType : ViewType.LANDSCAPE,
     isError: state.ui.isError,
   };
 };
 
 const mapDispatchToProps = {
-  dispatchLoadItems: loadItems,
   dispatchSelectAllBooks: selectAllBooks,
   dispatchClearSelectedBooks: selectionActions.clearSelectedItems,
   dispatchHideSelectedBooks: hideSelectedBooks,
   dispatchDownloadSelectedBooks: downloadSelectedBooks,
+  dispatchSetError: uiActions.setError,
+  dispatchUpdateCategories: updateCategories,
+  dispatchUpdateServiceTypes: updateServiceTypes,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PurchasedMain);
+export default connect(mapStateToProps, mapDispatchToProps)(observer(PurchasedMain));

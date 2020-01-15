@@ -110,10 +110,8 @@ const SerialPreferenceBooks = props => {
   const { items, platformBookDTO, selectedBooks, isSelectMode, onSelectedChange, viewType, location } = props;
 
   return (
-    <BooksWrapper
-      viewType={viewType}
-      books={items}
-      renderBook={({ book: item, className }) => {
+    <BooksWrapper viewType={viewType}>
+      {items.map(item => {
         const bookSeriesId = item.series_id;
         const recentReadPlatformBookData = platformBookDTO[item.recent_read_b_id];
         const platformBookData = platformBookDTO[bookSeriesId];
@@ -133,13 +131,13 @@ const SerialPreferenceBooks = props => {
         const { thumbnailLink } = libraryBookProps;
 
         return (
-          <div key={bookSeriesId} className={className} css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
+          <div key={bookSeriesId} className="Book" css={[styles.landscape, serialPreferenceStyles.buttonsWrapper]}>
             <Book.LandscapeBook {...libraryBookProps} />
             {!isSelectMode && thumbnailLink && <FullButton>{thumbnailLink}</FullButton>}
           </div>
         );
-      }}
-    />
+      })}
+    </BooksWrapper>
   );
 };
 
