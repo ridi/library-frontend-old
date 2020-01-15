@@ -87,6 +87,7 @@ export const radioButtonLabel = css`
   left: 0;
   top: 0;
   z-index: 10;
+  cursor: pointer;
 `;
 
 export const invisibleRadioInput = css`
