@@ -79,15 +79,17 @@ export const checkIcon = css`
   fill: white;
 `;
 
-export const invisibleRadioInput = css`
-  width: 0;
-  height: 0;
-`;
-
-export const disabledButton = css`
+export const radioButtonLabel = css`
+  display: block;
   width: 100%;
   height: 100%;
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 10;
+`;
+
+export const invisibleRadioInput = css`
+  width: 0;
+  height: 0;
 `;
